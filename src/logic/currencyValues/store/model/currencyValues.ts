@@ -36,9 +36,17 @@ export enum AVAILABLE_CURRENCIES {
   MYR = 'MYR',
 }
 
+type BalanceCurrencyRecord = {
+  currencyName?: string
+  tokenAddress?: string
+  balanceInBaseCurrency: string
+  balanceInSelectedCurrency: string
+}
+
 export type CurrencyRateValue = {
-  currencyRate: number
-  selectedCurrency: AVAILABLE_CURRENCIES
+  currencyRate?: number
+  selectedCurrency?: AVAILABLE_CURRENCIES
+  currencyBalances?: BalanceCurrencyRecord[]
 }
 
 export const makeBalanceCurrency = Record({
