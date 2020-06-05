@@ -1,3 +1,4 @@
+import Collapse from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -18,9 +19,8 @@ import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { extendedTransactionsSelector } from 'src/routes/safe/container/selector'
 import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { Collapse } from '@material-ui/core'
+import { extendedTransactionsSelector } from 'src/routes/safe/store/selectors/transactions'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -101,49 +101,27 @@ const TxsTable = ({ classes }) => {
                     </Row>
                   </TableCell>
                   <TableCell className={classes.expandCellStyle}>
-                    {!row.tx.creationTx && (
-                      <IconButton disableRipple>
-                        {expandedTx === row.safeTxHash ? <ExpandLess /> : <ExpandMore />}
-                      </IconButton>
-                    )}
+                    <IconButton disableRipple>
+                      {expandedTx === row.tx.safeTxHash ? <ExpandLess /> : <ExpandMore />}
+                    </IconButton>
                   </TableCell>
                 </TableRow>
-                {!row.tx.creationTx && (
-                  <TableRow>
-                    <TableCell
-                      className={classes.extendedTxContainer}
-                      colSpan={6}
-                      style={{ paddingBottom: 0, paddingTop: 0 }}
-                    >
-                      <Collapse
-                        component={() => (
-                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
-                        )}
-                        in={expandedTx === row.tx.safeTxHash}
-                        timeout="auto"
-                        unmountOnExit
-                      />
-                    </TableCell>
-                  </TableRow>
-                )}
-                {row.tx.creationTx && (
-                  <TableRow>
-                    <TableCell
-                      className={classes.extendedTxContainer}
-                      colSpan={6}
-                      style={{ paddingBottom: 0, paddingTop: 0 }}
-                    >
-                      <Collapse
-                        component={() => (
-                          <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
-                        )}
-                        in={expandedTx === row.tx.safeTxHash}
-                        timeout="auto"
-                        unmountOnExit
-                      />
-                    </TableCell>
-                  </TableRow>
-                )}
+                <TableRow>
+                  <TableCell
+                    className={classes.extendedTxContainer}
+                    colSpan={6}
+                    style={{ paddingBottom: 0, paddingTop: 0 }}
+                  >
+                    <Collapse
+                      component={() => (
+                        <ExpandedTxComponent cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID]} />
+                      )}
+                      in={expandedTx === row.tx.safeTxHash}
+                      timeout="auto"
+                      unmountOnExit
+                    />
+                  </TableCell>
+                </TableRow>
               </React.Fragment>
             ))
           }

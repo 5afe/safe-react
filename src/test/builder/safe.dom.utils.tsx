@@ -1,13 +1,11 @@
-// 
 import * as React from 'react'
 import TestUtils from 'react-dom/test-utils'
-import { } from 'redux'
 import { Provider } from 'react-redux'
 import { render } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
 import PageFrame from 'src/components/layout/PageFrame'
 import ListItemText from 'src/components/List/ListItemText/index'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
+// import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import { sleep } from 'src/utils/timer'
 import { history, } from 'src/store'
 import AppRoutes from 'src/routes'
@@ -15,13 +13,13 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
-export const EXPAND_BALANCE_INDEX = 0
-export const EXPAND_OWNERS_INDEX = 1
-export const ADD_OWNERS_INDEX = 2
-export const EDIT_THRESHOLD_INDEX = 3
-export const EDIT_INDEX = 4
-export const WITHDRAW_INDEX = 5
-export const LIST_TXS_INDEX = 6
+// export const EXPAND_BALANCE_INDEX = 0
+// export const EXPAND_OWNERS_INDEX = 1
+// export const ADD_OWNERS_INDEX = 2
+// export const EDIT_THRESHOLD_INDEX = 3
+// export const EDIT_INDEX = 4
+// export const WITHDRAW_INDEX = 5
+// export const LIST_TXS_INDEX = 6
 
 export const checkMinedTx = (Transaction, name) => {
   const paragraphs = TestUtils.scryRenderedDOMComponentsWithTag(Transaction, 'p')
@@ -80,10 +78,10 @@ export const checkPendingTx = async (
   }
 }
 
-export const refreshTransactions = async (store, safeAddress) => {
-  await store.dispatch(fetchTransactions(safeAddress))
-  await sleep(1500)
-}
+// export const refreshTransactions = async (store, safeAddress) => {
+//   await store.dispatch(fetchTransactions(safeAddress))
+//   await sleep(1500)
+// }
 
 const renderApp = (store) => ({
   ...render(

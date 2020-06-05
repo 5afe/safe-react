@@ -26,7 +26,7 @@ export const fetchCurrencyValues = (safeAddress) => async (dispatch) => {
       const { currencyRate, selectedCurrency }: any = value
       batch(() => {
         dispatch(setSelectedCurrency(safeAddr, selectedCurrency || AVAILABLE_CURRENCIES.USD))
-        dispatch(setCurrencyRate(safeAddr, currencyRate))
+        dispatch(setCurrencyRate(safeAddr, currencyRate || 1))
       })
     })
   } catch (err) {

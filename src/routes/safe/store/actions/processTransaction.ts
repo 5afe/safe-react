@@ -1,3 +1,4 @@
+import { fromJS } from 'immutable'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -8,10 +9,16 @@ import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/lo
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
+import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
+import {
+  isCancelTransaction,
+  mockTransaction,
+} from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
 
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
+import { makeConfirmation } from '../models/confirmation'
+import { storeTx } from './createTransaction'
 
 const processTransaction = ({
   approveAndExecute,
@@ -47,6 +54,7 @@ const processTransaction = ({
   let txHash
   let transaction
   const txArgs = {
+    ...tx.toJS(), // merge the previous tx with new data
     safeInstance,
     to: tx.recipient,
     valueInWei: tx.value,
@@ -76,11 +84,7 @@ const processTransaction = ({
       if (signature) {
         closeSnackbar(beforeExecutionKey)
 
-        await saveTxToHistory({
-          ...txArgs,
-          signature,
-          origin,
-        } as any)
+        await saveTxToHistory({ ...txArgs, signature })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
         dispatch(fetchTransactions(safeAddress))
@@ -97,6 +101,13 @@ const processTransaction = ({
       sendParams.gas = '7000000'
     }
 
+    const txToMock = {
+      ...txArgs,
+      confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
+      value: txArgs.valueInWei,
+    }
+    const mockedTx = await mockTransaction(txToMock, safeAddress, state)
+
     await transaction
       .send(sendParams)
       .once('transactionHash', async (hash) => {
@@ -106,20 +117,34 @@ const processTransaction = ({
         pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
         try {
-          await saveTxToHistory({
-            ...txArgs,
-            txHash,
-          })
+          await Promise.all([
+            saveTxToHistory({ ...txArgs, txHash }),
+            storeTx(
+              mockedTx.updateIn(
+                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
+                (previous) => previous.push(from),
+              ),
+              safeAddress,
+              dispatch,
+              state,
+            ),
+          ])
           dispatch(fetchTransactions(safeAddress))
-        } catch (err) {
-          console.error(err)
+        } catch (e) {
+          closeSnackbar(pendingExecutionKey)
+          await storeTx(tx, safeAddress, dispatch, state)
+          console.error(e)
         }
       })
       .on('error', (error) => {
+        closeSnackbar(pendingExecutionKey)
+        storeTx(tx, safeAddress, dispatch, state)
         console.error('Processing transaction error: ', error)
       })
-      .then((receipt) => {
-        closeSnackbar(pendingExecutionKey)
+      .then(async (receipt) => {
+        if (pendingExecutionKey) {
+          closeSnackbar(pendingExecutionKey)
+        }
 
         showSnackbar(
           isExecution
@@ -128,6 +153,37 @@ const processTransaction = ({
           enqueueSnackbar,
           closeSnackbar,
         )
+
+        const toStoreTx = isExecution
+          ? mockedTx.withMutations((record) => {
+              record
+                .set('executionTxHash', receipt.transactionHash)
+                .set('blockNumber', receipt.blockNumber)
+                .set('executionDate', record.submissionDate)
+                .set('executor', from)
+                .set('isExecuted', true)
+                .set('isSuccessful', receipt.status)
+                .set(
+                  'status',
+                  receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
+                )
+                .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
+            })
+          : mockedTx.set('status', 'awaiting_confirmations')
+
+        await storeTx(
+          toStoreTx.withMutations((record) => {
+            record
+              .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
+              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+                previous.pop(from),
+              )
+          }),
+          safeAddress,
+          dispatch,
+          state,
+        )
+
         dispatch(fetchTransactions(safeAddress))
 
         if (isExecution) {
@@ -138,13 +194,20 @@ const processTransaction = ({
       })
   } catch (err) {
     console.error(err)
-    closeSnackbar(beforeExecutionKey)
-    closeSnackbar(pendingExecutionKey)
-    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
-    const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
-    console.error(`Error executing the TX: ${errMsg}`)
+    if (txHash !== undefined) {
+      closeSnackbar(beforeExecutionKey)
+
+      if (pendingExecutionKey) {
+        closeSnackbar(pendingExecutionKey)
+      }
+
+      showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
+
+      const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
+      const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+      console.error(`Error executing the TX: ${errMsg}`)
+    }
   }
 
   return txHash

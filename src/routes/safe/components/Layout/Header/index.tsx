@@ -51,7 +51,7 @@ const LayoutHeader = (props) => {
           className={classes.send}
           color="primary"
           disabled={!granted}
-          onClick={() => showSendFunds('Ether')}
+          onClick={() => showSendFunds('')}
           size="small"
           variant="contained"
         >

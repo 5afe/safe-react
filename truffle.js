@@ -1,5 +1,3 @@
-// @flow
-
 module.exports = {
   migrations_directory: './migrations',
   networks: {
