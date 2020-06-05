@@ -5,7 +5,7 @@ import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollect
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchEtherBalance from 'src/routes/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/fetchTransactions'
+import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { TIMEOUT } from 'src/utils/constants'
 

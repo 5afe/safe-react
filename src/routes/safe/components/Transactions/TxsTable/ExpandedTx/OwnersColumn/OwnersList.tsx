@@ -38,7 +38,7 @@ const OwnersList = ({
         userAddress={userAddress}
       />
     ))}
-    {ownersUnconfirmed.map((owner) => (
+    {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
       <OwnerComponent
         classes={classes}
         executor={executor}
@@ -48,6 +48,8 @@ const OwnersList = ({
         onTxExecute={onTxExecute}
         onTxReject={onTxReject}
         owner={owner}
+        pendingAcceptAction={hasPendingAcceptActions}
+        pendingRejectAction={hasPendingRejectActions}
         showConfirmBtn={showConfirmBtn}
         showExecuteBtn={showExecuteBtn}
         showExecuteRejectBtn={showExecuteRejectBtn}

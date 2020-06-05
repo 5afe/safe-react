@@ -1,9 +1,11 @@
-// @flow
 import axios from 'axios'
 import { List } from 'immutable'
-import { buildSafeCreationTxUrl } from '../../../../config'
+
+import { buildSafeCreationTxUrl } from 'src/config'
 import { addOrUpdateTransactions } from './transactions/addOrUpdateTransactions'
-import { makeTransaction } from '../models/transaction'
+import { makeTransaction } from 'src/routes/safe/store/models/transaction'
+import { TransactionTypes, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 const getCreationTx = async (safeAddress) => {
   const url = buildSafeCreationTxUrl(safeAddress)
@@ -29,17 +31,21 @@ const fetchSafeCreationTx = (safeAddress) => async (dispatch) => {
     transactionHash,
     type,
   } = creationTxFetched
-  const txType = type || 'creation'
+  const txType = type || TransactionTypes.CREATION
+  const safeTxHash = web3ReadOnly.utils.toHex('this is the creation transaction')
 
   const creationTxAsRecord = makeTransaction({
     created,
     creator,
     factoryAddress,
     masterCopy,
+    nonce: -1,
     setupData,
     creationTx,
     executionTxHash: transactionHash,
     type: txType,
+    safeTxHash,
+    status: TransactionStatus.SUCCESS,
     submissionDate: created,
   })
 
