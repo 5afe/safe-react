@@ -1,9 +1,12 @@
 import axios from 'axios'
 
 import { getExchangeRatesUrl } from 'src/config'
-import { Currency } from '../store/model/currencyValues'
+import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
 
-const fetchCurrenciesRates = async (baseCurrency: Currency, targetCurrencyValue: Currency): Promise<number> => {
+const fetchCurrenciesRates = async (
+  baseCurrency: AVAILABLE_CURRENCIES,
+  targetCurrencyValue: AVAILABLE_CURRENCIES,
+): Promise<number> => {
   let rate = 0
   const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
 

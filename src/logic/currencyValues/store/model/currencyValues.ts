@@ -36,11 +36,9 @@ export enum AVAILABLE_CURRENCIES {
   MYR = 'MYR',
 }
 
-export type Currency = keyof typeof AVAILABLE_CURRENCIES
-
 export type CurrencyRateValue = {
   currencyRate: number
-  selectedCurrency: Currency
+  selectedCurrency: AVAILABLE_CURRENCIES
 }
 
 export const makeBalanceCurrency = Record({
