@@ -32,7 +32,7 @@ export type TransactionProps = {
   baseGas: number
   blockNumber?: number | null
   cancelled?: boolean
-  confirmations: import('immutable').List<any>
+  confirmations: import('immutable').List<import('./confirmation').Confirmation>
   created: boolean
   creator: string
   creationTx: boolean
@@ -44,7 +44,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
-  gasPrice: number
+  gasPrice: string
   gasToken: string
   isCancellationTx: boolean
   isCollectibleTransfer: boolean
@@ -68,7 +68,7 @@ export type TransactionProps = {
   status?: TransactionStatus
   submissionDate?: string | null
   symbol?: string | null
-  transactionHash: string
+  transactionHash: string | null
   type: TransactionTypes
   upgradeTx: boolean
   value: string
@@ -77,17 +77,17 @@ export type TransactionProps = {
 export type Transaction = import('immutable').RecordOf<TransactionProps>
 
 export type TxArgs = {
-  data: any
   baseGas: number
+  data?: string | null
+  gasPrice: string
   gasToken: string
-  safeInstance: any
   nonce: number
-  valueInWei: any
-  safeTxGas: number
+  operation: number
   refundReceiver: string
-  sender: any
+  safeInstance: any
+  safeTxGas: number
+  sender?: string
   sigs: string
-  to: any
-  operation: any
-  gasPrice: number
+  to: string
+  valueInWei: string
 }
