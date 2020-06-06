@@ -32,10 +32,10 @@ export const getMethodSignatureAndSignatureHash = (
 
 export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
   return abi
-    .filter(({ constant, name, type }) => type === 'function' && !!name && typeof constant === 'boolean')
+    .filter(({ stateMutability, name, type }) => type === 'function' && !!name && stateMutability !== 'pure')
     .map(
       (method): AbiItemExtended => ({
-        action: method.constant ? 'read' : 'write',
+        action: method.stateMutability === 'view' ? 'read' : 'write',
         ...getMethodSignatureAndSignatureHash(method),
         ...method,
       }),
