@@ -1,11 +1,10 @@
 import { RateLimit } from 'async-sema'
 import memoize from 'lodash.memoize'
 
-import ABIService from 'src/logic/contractInteraction/sources/ABIService'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { ETHERSCAN_API_KEY } from 'src/utils/constants'
 
-class EtherscanService extends ABIService {
+class EtherscanService {
   _rateLimit = async () => {}
 
   _endpointsUrls = {
@@ -38,7 +37,6 @@ class EtherscanService extends ABIService {
   )
 
   constructor(options) {
-    super()
     this._rateLimit = RateLimit(options.rps)
   }
 
