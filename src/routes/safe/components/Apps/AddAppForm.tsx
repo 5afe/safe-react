@@ -102,7 +102,7 @@ const curriedSafeAppValidator = memoize((appList) => async (value: string) => {
   }
 })
 
-const composeValidatorsApps = (...validators: Function[]) => (value, values, meta) => {
+const composeValidatorsApps = (...validators) => (value, values, meta) => {
   if (!meta.modified) {
     return
   }

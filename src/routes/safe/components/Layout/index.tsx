@@ -34,10 +34,10 @@ const AddressBookTable = React.lazy(() => import('src/routes/safe/components/Add
 interface Props {
   sendFunds: Record<string, any>
   showReceive: boolean
-  onShow: Function
-  onHide: Function
-  showSendFunds: Function
-  hideSendFunds: Function
+  onShow: (value: string) => void
+  onHide: (value: string) => void
+  showSendFunds: (value: string) => void
+  hideSendFunds: () => void
   match: Record<string, any>
   location: Record<string, any>
   history: Record<string, any>
