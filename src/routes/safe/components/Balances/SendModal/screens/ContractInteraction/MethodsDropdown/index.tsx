@@ -8,23 +8,28 @@ import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
+import { AbiItem } from 'web3-utils'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
 import { NO_CONTRACT } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
+import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
 const MENU_WIDTH = '452px'
 
-const MethodsDropdown = ({ onChange }) => {
+interface MethodsDropdownProps {
+  onChange: (method: AbiItem) => void
+}
+
+const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
     meta: { valid },
-  } = useField('abi', { value: true, valid: true } as any)
+  } = useField('abi', { subscription: { value: true, valid: true } })
   const {
     initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
@@ -37,14 +42,14 @@ const MethodsDropdown = ({ onChange }) => {
   React.useEffect(() => {
     if (abi) {
       try {
-        setMethodsList(EtherscanService.extractUsefulMethods(JSON.parse(abi)))
+        setMethodsList(extractUsefulMethods(JSON.parse(abi)))
       } catch (e) {
         setMethodsList([])
       }
     }
   }, [abi])
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     setMethodsListFiltered(methodsList.filter(({ name }) => name.toLowerCase().includes(searchParams.toLowerCase())))
   }, [methodsList, searchParams])
 
@@ -56,7 +61,7 @@ const MethodsDropdown = ({ onChange }) => {
     setAnchorEl(null)
   }
 
-  const onMethodSelectedChanged = (chosenMethod) => {
+  const onMethodSelectedChanged = (chosenMethod: AbiItem) => {
     setSelectedMethod(chosenMethod)
     onChange(chosenMethod)
     handleClose()
@@ -69,7 +74,7 @@ const MethodsDropdown = ({ onChange }) => {
           <>
             <button className={classes.button} onClick={handleClick} type="button">
               <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-                {selectedMethod.name}
+                {(selectedMethod as Record<string, string>).name}
               </span>
             </button>
             <Menu
@@ -120,7 +125,7 @@ const MethodsDropdown = ({ onChange }) => {
                     >
                       <ListItemText primary={name} />
                       <ListItemIcon className={classes.iconRight}>
-                        {signatureHash === selectedMethod.signatureHash ? (
+                        {signatureHash === (selectedMethod as Record<string, string>).signatureHash ? (
                           <img alt="checked" src={CheckIcon} />
                         ) : (
                           <span />

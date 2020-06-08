@@ -33,13 +33,15 @@ class TextField extends React.PureComponent<any> {
     } = this.props
     const helperText = value ? text : undefined
     const showError = (meta.touched || !meta.pristine) && !meta.valid
+    const hasError = !!meta.error || (!meta.modifiedSinceLastSubmit && !!meta.submitError)
+    const errorMessage = meta.error || meta.submitError
     const isInactiveAndPristineOrUntouched = !meta.active && (meta.pristine || !meta.touched)
     const isInvalidAndUntouched = typeof meta.error === 'undefined' ? true : !meta.touched
 
     const disableUnderline = isInactiveAndPristineOrUntouched && isInvalidAndUntouched
 
     const inputRoot = helperText ? classes.root : ''
-    const statusClasses = meta.valid ? 'isValid' : meta.error && (meta.dirty || meta.touched) ? 'isInvalid' : ''
+    const statusClasses = meta.valid ? 'isValid' : hasError && showError ? 'isInvalid' : ''
     const inputProps = {
       ...restInput,
       autoComplete: 'off',
@@ -53,8 +55,8 @@ class TextField extends React.PureComponent<any> {
 
     return (
       <MuiTextField
-        error={meta.error && (meta.touched || !meta.pristine)}
-        helperText={showError ? meta.error : helperText || ' '}
+        error={hasError && showError}
+        helperText={hasError && showError ? errorMessage : helperText || ' '}
         inputProps={inputProps} // blank in order to force to have helper text
         InputProps={inputRootProps}
         multiline={multiline}

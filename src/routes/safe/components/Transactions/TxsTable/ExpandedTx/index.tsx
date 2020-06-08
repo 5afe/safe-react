@@ -24,6 +24,7 @@ import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/
 import { IncomingTx } from './IncomingTx'
 import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
+import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles as any)
 
@@ -35,7 +36,7 @@ const ExpandedTx = ({ cancelTx, tx }) => {
   const openApproveModal = () => setOpenModal('approveTx')
   const closeModal = () => setOpenModal(null)
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
-  const isCreationTx = tx.type === 'creation'
+  const isCreationTx = tx.type === TransactionTypes.CREATION
 
   const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
   const canExecute = !isIncomingTx && nonce === tx.nonce
