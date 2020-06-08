@@ -1,7 +1,7 @@
 const os = require('os');
 const { dialog } = require('electron');
 const log = require('electron-log');
-const settings =require('electron-settings');
+const settings = require('electron-settings').default;
 
 const { autoUpdater } = require("electron-updater");
 
@@ -39,12 +39,12 @@ function init(mainWindow) {
       detail: info.releaseNotes.replace(/(<([^>]+)>)/g, ""),
       buttons: ['Install Update', 'Remind me later','Skip this version'],
       cancelId:1,
-    }).then(async result => {
+    }).then(result => {
       if(result.response === 0){
         autoUpdater.downloadUpdate();
       }
       if(result.response === 2) {
-        await settings.set('release', {version: info.version });
+        settings.set('release', {version: info.version });
       }
     });
 
