@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import React from 'react'
 
 import TxType from './TxType'
@@ -43,7 +43,7 @@ export const getIncomingTxAmount = (tx, formatted = true) => {
 
 export const getTxAmount = (tx, formatted = true) => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-  const { value } = isTokenTransfer && decodedParams && decodedParams.value ? decodedParams : tx
+  const { value } = isTokenTransfer && !!decodedParams && !!decodedParams.transfer ? decodedParams.transfer : tx
 
   if (!isTokenTransfer && !(Number(value) > 0)) {
     return NOT_AVAILABLE
@@ -65,22 +65,9 @@ const getIncomingTxTableData = (tx) => ({
 const getTransactionTableData = (tx, cancelTx) => {
   const txDate = tx.submissionDate
 
-  let txType = 'outgoing'
-  if (tx.modifySettingsTx) {
-    txType = 'settings'
-  } else if (tx.cancellationTx) {
-    txType = 'cancellation'
-  } else if (tx.customTx) {
-    txType = 'custom'
-  } else if (tx.creationTx) {
-    txType = 'creation'
-  } else if (tx.upgradeTx) {
-    txType = 'upgrade'
-  }
-
   return {
     [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
+    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
@@ -91,17 +78,12 @@ const getTransactionTableData = (tx, cancelTx) => {
 }
 
 export const getTxTableData = (transactions, cancelTxs) => {
-  const cancelTxsByNonce = cancelTxs.reduce((acc, tx) => acc.set(tx.nonce, tx), Map())
-
   return transactions.map((tx) => {
-    if (INCOMING_TX_TYPES[tx.type]) {
+    if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
     }
 
-    return getTransactionTableData(
-      tx,
-      Number.isInteger(Number.parseInt(tx.nonce, 10)) ? cancelTxsByNonce.get(tx.nonce) : undefined,
-    )
+    return getTransactionTableData(tx, cancelTxs.get(`${tx.nonce}`))
   })
 }
 

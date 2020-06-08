@@ -15,10 +15,10 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
-import { TX_TYPE_CONFIRMATION } from 'src/logic/safe/transactions/send'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
+import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []
@@ -29,34 +29,54 @@ function getOwnersConfirmations(tx, userAddress) {
       currentUserAlreadyConfirmed = true
     }
 
-    if (conf.type === TX_TYPE_CONFIRMATION) {
-      ownersWhoConfirmed.push(conf.owner)
-    }
+    ownersWhoConfirmed.push(conf.owner)
   })
-
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
 function getPendingOwnersConfirmations(owners, tx, userAddress) {
-  const ownersNotConfirmed = []
+  const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 
   owners.forEach((owner) => {
     const confirmationsEntry = tx.confirmations.find((conf) => conf.owner === owner.address)
     if (!confirmationsEntry) {
-      ownersNotConfirmed.push(owner.address)
+      ownersWithNoConfirmations.push(owner.address)
     }
     if (confirmationsEntry && confirmationsEntry.owner === userAddress) {
       currentUserNotConfirmed = false
     }
   })
 
-  return [ownersNotConfirmed, currentUserNotConfirmed]
+  const confirmationPendingActions = tx.ownersWithPendingActions.get('confirm')
+  const confirmationRejectActions = tx.ownersWithPendingActions.get('reject')
+
+  const ownersWithNoConfirmationsSorted = ownersWithNoConfirmations
+    .map((owner) => ({
+      hasPendingAcceptActions: confirmationPendingActions.includes(owner),
+      hasPendingRejectActions: confirmationRejectActions.includes(owner),
+      owner,
+    }))
+    // Reorders the list of unconfirmed owners, owners with pendingActions should be first
+    .sort((ownerA, ownerB) => {
+      // If the first owner has pending actions, A should be before B
+      if (ownerA.hasPendingRejectActions || ownerA.hasPendingAcceptActions) {
+        return -1
+      }
+      // The first owner has not pending actions but the second yes, B should be before A
+      if (ownerB.hasPendingRejectActions || ownerB.hasPendingAcceptActions) {
+        return 1
+      }
+      // Otherwise do not change order
+      return 0
+    })
+
+  return [ownersWithNoConfirmationsSorted, currentUserNotConfirmed]
 }
 
 const OwnersColumn = ({
   tx,
-  cancelTx = makeTransaction(),
+  cancelTx = makeTransaction({ isCancellationTx: true, status: TransactionStatus.AWAITING_YOUR_CONFIRMATION }),
   classes,
   thresholdReached,
   cancelThresholdReached,
@@ -99,6 +119,7 @@ const OwnersColumn = ({
   const showConfirmBtn =
     !tx.isExecuted &&
     tx.status !== 'pending' &&
+    cancelTx.status !== 'pending' &&
     !tx.cancelled &&
     userIsUnconfirmedOwner &&
     !currentUserAlreadyConfirmed &&
@@ -109,6 +130,7 @@ const OwnersColumn = ({
   const showRejectBtn =
     !cancelTx.isExecuted &&
     !tx.isExecuted &&
+    tx.status !== 'pending' &&
     cancelTx.status !== 'pending' &&
     userIsUnconfirmedCancelOwner &&
     !currentUserAlreadyConfirmedCancel &&

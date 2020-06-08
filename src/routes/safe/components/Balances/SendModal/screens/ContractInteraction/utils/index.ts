@@ -1,9 +1,13 @@
+import { FORM_ERROR } from 'final-form'
 import createDecorator from 'final-form-calculate'
+import { AbiItem } from 'web3-utils'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
+import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { TransactionReviewType } from '../Review'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -48,11 +52,32 @@ export const formMutators = {
   },
 }
 
-export const createTxObject = (method, contractAddress, values) => {
+export const handleSubmitError = (error, values) => {
+  for (const key in values) {
+    if (values.hasOwnProperty(key) && values[key] === error.value) {
+      return { [key]: error.reason }
+    }
+  }
+
+  // .call() failed and we're logging a generic error
+  return { [FORM_ERROR]: error.message }
+}
+
+export const createTxObject = (method: AbiItem, contractAddress: string, values) => {
   const web3 = getWeb3()
   const contract: any = new web3.eth.Contract([method], contractAddress)
   const { inputs, name } = method
   const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
 
   return contract.methods[name](...args)
+}
+
+export const isReadMethod = (method: AbiItemExtended): boolean => method && method.action === 'read'
+
+export const getValueFromTxInputs = (key: string, type: string, tx: TransactionReviewType): string => {
+  let value = tx[key]
+  if (type === 'bool') {
+    value = tx[key] ? String(tx[key]) : 'false'
+  }
+  return value
 }

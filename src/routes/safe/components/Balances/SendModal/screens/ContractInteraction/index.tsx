@@ -1,31 +1,45 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useSelector } from 'react-redux'
 
 import { styles } from './style'
-
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import Buttons from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Buttons'
-import ContractABI from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/ContractABI'
-import EthAddressInput from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthAddressInput'
-import EthValue from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/EthValue'
-import FormDivisor from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/FormDivisor'
-import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
-import MethodsDropdown from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/MethodsDropdown'
-import RenderInputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderInputParams'
-import RenderOutputParams from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/RenderOutputParams'
-import {
-  abiExtractor,
-  createTxObject,
-  formMutators,
-} from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { safeSelector } from 'src/routes/safe/store/selectors'
+import Buttons from './Buttons'
+import ContractABI from './ContractABI'
+import EthAddressInput from './EthAddressInput'
+import EthValue from './EthValue'
+import FormDivisor from './FormDivisor'
+import FormErrorMessage from './FormErrorMessage'
+import Header from './Header'
+import MethodsDropdown from './MethodsDropdown'
+import RenderInputParams from './RenderInputParams'
+import RenderOutputParams from './RenderOutputParams'
+import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod } from './utils'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }) => {
+export interface CreatedTx {
+  contractAddress: string
+  data: string
+  selectedMethod: {}
+  value: string | number
+}
+
+export interface ContractInteractionProps {
+  contractAddress: string
+  initialValues: { contractAddress?: string }
+  onClose: () => void
+  onNext: (tx: CreatedTx) => void
+}
+
+const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: ContractInteractionProps) => {
   const classes = useStyles()
+  const { address: safeAddress = '' } = useSelector(safeSelector)
+  let setCallResults
 
   React.useMemo(() => {
     if (contractAddress) {
@@ -35,8 +49,22 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
 
   const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
     if (value || (contractAddress && selectedMethod)) {
-      const data = await createTxObject(selectedMethod, contractAddress, values).encodeABI()
-      onNext({ contractAddress, data, selectedMethod, value, ...values })
+      try {
+        const txObject = createTxObject(selectedMethod, contractAddress, values)
+        const data = txObject.encodeABI()
+
+        if (isReadMethod(selectedMethod)) {
+          const result = await txObject.call({ from: safeAddress })
+          setCallResults(result)
+
+          // this was a read method, so we won't go to the 'review' screen
+          return
+        }
+
+        onNext({ ...values, contractAddress, data, selectedMethod, value })
+      } catch (error) {
+        return handleSubmitError(error, values)
+      }
     }
   }
 
@@ -52,6 +80,8 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
         subscription={{ submitting: true, pristine: true }}
       >
         {(submitting, validating, rest, mutators) => {
+          setCallResults = mutators.setCallResults
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -62,14 +92,15 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                   onScannedValue={mutators.setContractAddress}
                   text="Contract Address*"
                 />
-                <EthValue onSetMax={mutators.setMax} />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
+                <EthValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
+                <FormErrorMessage />
               </Block>
               <Hairline />
-              <Buttons onCallSubmit={mutators.setCallResults} onClose={onClose} />
+              <Buttons onClose={onClose} />
             </>
           )
         }}

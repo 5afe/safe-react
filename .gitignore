@@ -1,7 +1,6 @@
 node_modules/
 build/
 .DS_Store
-build/
 yarn-error.log
 .env*
 .idea/

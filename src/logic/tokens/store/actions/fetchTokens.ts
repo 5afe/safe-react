@@ -1,11 +1,13 @@
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
-import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721'
+import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
+import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
 import contract from 'truffle-contract'
 
 import saveTokens from './saveTokens'
 
+import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { fetchTokenList } from 'src/logic/tokens/api'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
@@ -36,53 +38,6 @@ const createERC721TokenContract = async () => {
   return erc721Token
 }
 
-// For the `batchRequest` of balances, we're just using the `balanceOf` method call.
-// So having a simple ABI only with `balanceOf` prevents errors
-// when instantiating non-standard ERC-20 Tokens.
-export const OnlyBalanceToken = {
-  contractName: 'OnlyBalanceToken',
-  abi: [
-    {
-      constant: true,
-      inputs: [
-        {
-          name: 'owner',
-          type: 'address',
-        },
-      ],
-      name: 'balanceOf',
-      outputs: [
-        {
-          name: '',
-          type: 'uint256',
-        },
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function',
-    },
-    {
-      constant: true,
-      inputs: [
-        {
-          name: 'owner',
-          type: 'address',
-        },
-      ],
-      name: 'balances',
-      outputs: [
-        {
-          name: '',
-          type: 'uint256',
-        },
-      ],
-      payable: false,
-      stateMutability: 'view',
-      type: 'function',
-    },
-  ],
-}
-
 export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
 
 export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
@@ -96,35 +51,45 @@ export const containsMethodByHash = async (contractAddress, methodHash) => {
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
+const getTokenValues = (tokenAddress) =>
+  generateBatchRequests({
+    abi: ERC20Detailed.abi,
+    address: tokenAddress,
+    methods: ['decimals', 'name', 'symbol'],
+  })
+
 export const getTokenInfos = async (tokenAddress) => {
   if (!tokenAddress) {
     return null
   }
+
   const { tokens } = store.getState()
   const localToken = tokens.get(tokenAddress)
+
   // If the token is inside the store we return the store token
   if (localToken) {
     return localToken
   }
+
   // Otherwise we fetch it, save it to the store and return it
-  const tokenContract = await getHumanFriendlyToken()
-  const tokenInstance = await tokenContract.at(tokenAddress)
-  const [tokenSymbol, tokenDecimals, name] = await Promise.all([
-    tokenInstance.symbol(),
-    tokenInstance.decimals(),
-    tokenInstance.name(),
-  ])
-  const savedToken = makeToken({
+  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+
+  if (tokenDecimals === null) {
+    return null
+  }
+
+  const token = makeToken({
     address: tokenAddress,
-    name: name ? name : tokenSymbol,
+    name: tokenName ? tokenName : tokenSymbol,
     symbol: tokenSymbol,
-    decimals: tokenDecimals.toNumber(),
+    decimals: Number(tokenDecimals),
     logoUri: '',
   })
-  const newTokens = tokens.set(tokenAddress, savedToken)
+
+  const newTokens = tokens.set(tokenAddress, token)
   store.dispatch(saveTokens(newTokens))
 
-  return savedToken
+  return token
 }
 
 export const fetchTokens = () => async (dispatch, getState) => {

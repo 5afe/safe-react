@@ -3,19 +3,19 @@ import React from 'react'
 import TextareaField from 'src/components/forms/TextareaField'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import EtherscanService from 'src/logic/contractInteraction/sources/EtherscanService'
+import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
 export const NO_DATA = 'no data'
 
-const mustBeValidABI = (abi) => {
+const mustBeValidABI = (abi: string): undefined | string => {
   try {
-    const parsedABI = EtherscanService.extractUsefulMethods(JSON.parse(abi))
+    const parsedABI = extractUsefulMethods(JSON.parse(abi))
 
     if (parsedABI.length === 0) {
       return NO_DATA
     }
   } catch (e) {
-    return []
+    return NO_DATA
   }
 }
 

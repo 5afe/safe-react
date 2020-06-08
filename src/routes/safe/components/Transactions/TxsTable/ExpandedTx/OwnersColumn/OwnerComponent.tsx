@@ -8,6 +8,7 @@ import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
 import ConfirmSmallGreenCircle from './assets/confirm-small-green.svg'
 import ConfirmSmallGreyCircle from './assets/confirm-small-grey.svg'
 import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
+import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
 import EtherscanLink from 'src/components/EtherscanLink'
@@ -32,6 +33,8 @@ const OwnerComponent = ({
   onTxExecute,
   onTxReject,
   owner,
+  pendingAcceptAction,
+  pendingRejectAction,
   showConfirmBtn,
   showExecuteBtn,
   showExecuteRejectBtn,
@@ -43,18 +46,110 @@ const OwnerComponent = ({
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
+    if (pendingAcceptAction || pendingRejectAction) {
+      setImgCircle(PendingSmallYellowCircle)
+      return
+    }
     if (confirmed) {
       setImgCircle(isCancelTx ? CancelSmallFilledCircle : ConfirmSmallFilledCircle)
-    } else if (thresholdReached || executor) {
-      setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
+      return
     }
-  }, [confirmed, thresholdReached, executor, isCancelTx])
+    if (thresholdReached || executor) {
+      setImgCircle(isCancelTx ? ConfirmSmallRedCircle : ConfirmSmallGreenCircle)
+      return
+    }
+    setImgCircle(ConfirmSmallGreyCircle)
+  }, [confirmed, thresholdReached, executor, isCancelTx, pendingAcceptAction, pendingRejectAction])
 
-  const getTimelineLine = () => (isCancelTx ? classes.verticalLineCancel : classes.verticalLineDone)
+  const getTimelineLine = () => {
+    if (pendingAcceptAction || pendingRejectAction) {
+      return classes.verticalPendingAction
+    }
+    if (isCancelTx) {
+      return classes.verticalLineCancel
+    }
+    return classes.verticalLineDone
+  }
+
+  const confirmButton = () => {
+    if (pendingRejectAction) {
+      return null
+    }
+    if (pendingAcceptAction) {
+      return <Block className={classes.executor}>Pending</Block>
+    }
+    return (
+      <>
+        {showConfirmBtn && (
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={onTxConfirm}
+            testId={CONFIRM_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Confirm
+          </Button>
+        )}
+        {showExecuteBtn && (
+          <Button
+            className={classes.button}
+            color="primary"
+            onClick={onTxExecute}
+            testId={EXECUTE_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Execute
+          </Button>
+        )}
+      </>
+    )
+  }
+
+  const rejectButton = () => {
+    if (pendingRejectAction) {
+      return <Block className={classes.executor}>Pending</Block>
+    }
+    if (pendingAcceptAction) {
+      return null
+    }
+    return (
+      <>
+        {showRejectBtn && (
+          <Button
+            className={cn(classes.button, classes.lastButton)}
+            color="secondary"
+            onClick={onTxReject}
+            testId={REJECT_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Reject
+          </Button>
+        )}
+        {showExecuteRejectBtn && (
+          <Button
+            className={cn(classes.button, classes.lastButton)}
+            color="secondary"
+            onClick={onTxReject}
+            testId={EXECUTE_REJECT_TX_BTN_TEST_ID}
+            variant="contained"
+          >
+            Execute
+          </Button>
+        )}
+      </>
+    )
+  }
 
   return (
     <Block className={classes.container}>
-      <div className={cn(classes.verticalLine, (confirmed || thresholdReached || executor) && getTimelineLine())} />
+      <div
+        className={cn(
+          classes.verticalLine,
+          (confirmed || thresholdReached || executor || pendingAcceptAction || pendingRejectAction) &&
+            getTimelineLine(),
+        )}
+      />
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
@@ -66,61 +161,7 @@ const OwnerComponent = ({
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
       </Block>
       <Block className={classes.spacer} />
-      {owner === userAddress && (
-        <Block>
-          {isCancelTx ? (
-            <>
-              {showRejectBtn && (
-                <Button
-                  className={cn(classes.button, classes.lastButton)}
-                  color="secondary"
-                  onClick={onTxReject}
-                  testId={REJECT_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Reject
-                </Button>
-              )}
-              {showExecuteRejectBtn && (
-                <Button
-                  className={cn(classes.button, classes.lastButton)}
-                  color="secondary"
-                  onClick={onTxReject}
-                  testId={EXECUTE_REJECT_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Execute
-                </Button>
-              )}
-            </>
-          ) : (
-            <>
-              {showConfirmBtn && (
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  onClick={onTxConfirm}
-                  testId={CONFIRM_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Confirm
-                </Button>
-              )}
-              {showExecuteBtn && (
-                <Button
-                  className={classes.button}
-                  color="primary"
-                  onClick={onTxExecute}
-                  testId={EXECUTE_TX_BTN_TEST_ID}
-                  variant="contained"
-                >
-                  Execute
-                </Button>
-              )}
-            </>
-          )}
-        </Block>
-      )}
+      {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
       {owner === executor && <Block className={classes.executor}>Executor</Block>}
     </Block>
   )
