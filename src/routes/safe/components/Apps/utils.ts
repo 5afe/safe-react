@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-
+import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { SafeApp } from './types'
 
 const removeLastTrailingSlash = (url) => {
@@ -11,13 +11,14 @@ const removeLastTrailingSlash = (url) => {
   return url
 }
 
-const gnosisAppsUrl = removeLastTrailingSlash(process.env.REACT_APP_GNOSIS_APPS_URL)
+const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
 export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQapdJP6zERqpDKKPECNeMDDgwmGUqbKk1PjHpYj8gfDJ`, disabled: false },
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
+  { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
   { url: `${gnosisAppsUrl}/aave`, disabled: false },
   { url: `${gnosisAppsUrl}/pool-together`, disabled: false },
   { url: `${gnosisAppsUrl}/open-zeppelin`, disabled: false },
-  { url: `${gnosisAppsUrl}/request`, disabled: false },
   { url: `${gnosisAppsUrl}/synthetix`, disabled: false },
 ]
 
