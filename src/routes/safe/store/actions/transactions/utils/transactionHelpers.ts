@@ -351,7 +351,7 @@ export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string 
       { type: 'uint256', name: 'nonce' },
     ],
   }
-  const primaryType: 'SafeTx' = 'SafeTx'
+  const primaryType = 'SafeTx' as const
 
   const typedData = {
     types: messageTypes,

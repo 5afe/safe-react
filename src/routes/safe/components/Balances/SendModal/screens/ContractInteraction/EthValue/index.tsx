@@ -11,21 +11,24 @@ import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import ABIService from 'src/logic/contractInteraction/sources/ABIService'
+import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { safeSelector } from 'src/routes/safe/store/selectors'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const EthValue = ({ onSetMax }) => {
+interface EthValueProps {
+  onSetMax: (ethBalance: string) => void
+}
+const EthValue = ({ onSetMax }: EthValueProps) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector)
   const {
     input: { value: method },
-  } = useField('selectedMethod', { value: true })
-  const disabled = !ABIService.isPayable(method)
+  } = useField('selectedMethod', { subscription: { value: true } })
+  const disabled = !isPayable(method)
 
-  return (
+  return disabled ? null : (
     <>
       <Row className={classes.fullWidth} margin="xs">
         <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -42,7 +45,6 @@ const EthValue = ({ onSetMax }) => {
       <Row margin="md">
         <Col>
           <Field
-            className={classes.addressInput}
             component={TextField}
             disabled={disabled}
             inputAdornment={{

@@ -8,10 +8,10 @@ import InputComponent from './InputComponent'
 const RenderInputParams = () => {
   const {
     meta: { valid: validABI },
-  } = useField('abi', { value: true })
+  } = useField('abi', { subscription: { valid: true, value: true } })
   const {
     input: { value: method },
-  }: any = useField('selectedMethod', { value: true })
+  }: any = useField('selectedMethod', { subscription: { value: true } })
   const renderInputs = validABI && !!method && method.inputs.length
 
   return !renderInputs

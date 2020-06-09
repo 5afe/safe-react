@@ -3,8 +3,6 @@ import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
-
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -13,11 +11,13 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
@@ -31,14 +31,7 @@ export type TransactionReviewType = {
   contractAddress?: string
   data?: string
   value?: string
-  selectedMethod?: {
-    action: string
-    signature: string
-    signatureHash: string
-    constant: boolean
-    inputs: []
-    name: string
-  }
+  selectedMethod?: AbiItemExtended
 }
 
 type Props = {
@@ -102,7 +95,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
     <>
       <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
       <Hairline />
-      <Block className={classes.container}>
+      <Block className={classes.formContainer}>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Contract Address
