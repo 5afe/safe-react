@@ -32,29 +32,26 @@ import {
 } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { TypedDataUtils } from 'eth-sig-util'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/routes/safe/store/models/safe'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
 }
 
-export function isInnerTransaction(tx: Transaction, safeAddress: string): boolean
-export function isInnerTransaction(tx: TxServiceModel, safeAddress: string): boolean
-export function isInnerTransaction(tx: any, safeAddress: string): boolean {
+export const isInnerTransaction = (tx: TxServiceModel | Transaction, safeAddress: string): boolean => {
   let isSameAddress = false
 
-  if (tx.to !== undefined) {
-    isSameAddress = sameAddress(tx.to, safeAddress)
-  } else if (tx.recipient !== undefined) {
-    isSameAddress = sameAddress(tx.recipient, safeAddress)
+  if ((tx as TxServiceModel).to !== undefined) {
+    isSameAddress = sameAddress((tx as TxServiceModel).to, safeAddress)
+  } else if ((tx as Transaction).recipient !== undefined) {
+    isSameAddress = sameAddress((tx as Transaction).recipient, safeAddress)
   }
 
   return isSameAddress && Number(tx.value) === 0
 }
 
-export function isCancelTransaction(tx: Transaction, safeAddress: string): boolean
-export function isCancelTransaction(tx: TxServiceModel, safeAddress: string): boolean
-export function isCancelTransaction(tx: any, safeAddress: string): boolean {
+export const isCancelTransaction = (tx: TxServiceModel | Transaction, safeAddress: string): boolean => {
   return isInnerTransaction(tx, safeAddress) && isEmptyData(tx.data)
 }
 
@@ -330,7 +327,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promi
   }
 
   const knownTokens: Record<string, Token> = state[TOKEN_REDUCER_ID]
-  const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
   const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
 
@@ -345,7 +342,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promi
   })
 }
 
-export const updateStoredTransactionsStatus = (dispatch, walletRecord): void => {
+export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRecord: ProviderRecord): void => {
   const state = store.getState()
   const safe = safeSelector(state)
 
@@ -361,10 +358,6 @@ export const updateStoredTransactionsStatus = (dispatch, walletRecord): void => 
       }),
     )
   }
-}
-
-enum PrimaryTypes {
-  SafeTx = 'SafeTx',
 }
 
 export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string {
@@ -384,12 +377,14 @@ export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string 
     ],
   }
 
+  const primaryType: 'SafeTx' = 'SafeTx' as const
+
   const typedData = {
     types: messageTypes,
     domain: {
       verifyingContract: safeAddress,
     },
-    primaryType: PrimaryTypes.SafeTx,
+    primaryType,
     message: {
       to: txArgs.to,
       value: txArgs.valueInWei,

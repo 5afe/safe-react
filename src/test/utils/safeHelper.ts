@@ -1,4 +1,4 @@
-// 
+//
 import { } from 'react-router-dom'
 import { buildMatchPropsFrom } from 'src/test/utils/buildReactRouterProps'
 import { safeSelector } from 'src/routes/safe/store/selectors/index'

@@ -1,6 +1,6 @@
 import { List, Map, Record, RecordOf, Set } from 'immutable'
 
-export type SafeRecord = {
+export type SafeRecordProps = {
   name: string
   address: string
   threshold: number
@@ -19,7 +19,7 @@ export type SafeRecord = {
   featuresEnabled: Array<string>
 }
 
-const Safe = Record({
+const makeSafe = Record<SafeRecordProps>({
   name: '',
   address: '',
   threshold: 0,
@@ -38,6 +38,6 @@ const Safe = Record({
   featuresEnabled: [],
 })
 
-export type Safe = RecordOf<SafeRecord>
+export type SafeRecord = RecordOf<SafeRecordProps>
 
-export default Safe
+export default makeSafe
