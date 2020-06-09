@@ -1,3 +1,7 @@
+import { List, Map, RecordOf } from 'immutable'
+import { DecodedMethods } from 'src/logic/contracts/methodIds'
+import { Confirmation } from './confirmation'
+
 export enum TransactionTypes {
   INCOMING = 'incoming',
   OUTGOING = 'outgoing',
@@ -32,14 +36,14 @@ export type TransactionProps = {
   baseGas: number
   blockNumber?: number | null
   cancelled?: boolean
-  confirmations: import('immutable').List<import('./confirmation').Confirmation>
+  confirmations: List<Confirmation>
   created: boolean
   creator: string
   creationTx: boolean
   customTx: boolean
   data?: string | null
   decimals?: (number | string) | null
-  decodedParams: import('src/logic/contracts/methodIds').DecodedMethods
+  decodedParams: DecodedMethods
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string
@@ -58,7 +62,7 @@ export type TransactionProps = {
   nonce?: number | null
   operation: number
   origin: string | null
-  ownersWithPendingActions: import('immutable').Map<PendingActionValues, import('immutable').List<any>>
+  ownersWithPendingActions: Map<PendingActionValues, List<any>>
   recipient: string
   refundParams: any
   refundReceiver: string
@@ -74,7 +78,7 @@ export type TransactionProps = {
   value: string
 }
 
-export type Transaction = import('immutable').RecordOf<TransactionProps>
+export type Transaction = RecordOf<TransactionProps>
 
 export type TxArgs = {
   baseGas: number
