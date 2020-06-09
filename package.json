@@ -149,7 +149,7 @@
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "^0.1.2",
+    "@gnosis.pm/safe-react-components": "^0.1.3",
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid": "5.16.0",
     "@material-ui/core": "4.10.1",
