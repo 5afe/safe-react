@@ -25,7 +25,7 @@ const useStyles = makeStyles(styles)
 export interface CreatedTx {
   contractAddress: string
   data: string
-  selectedMethod: {}
+  selectedMethod: any
   value: string | number
 }
 

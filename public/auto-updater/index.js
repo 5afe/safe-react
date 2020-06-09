@@ -1,8 +1,8 @@
 const os = require('os');
-const fetch = require('node-fetch');
-const { dialog, app } = require('electron');
+const { dialog } = require('electron');
 const log = require('electron-log');
-const isDev = require("electron-is-dev");
+const settings = require('electron-settings').default;
+
 const { autoUpdater } = require("electron-updater");
 
 // This logging setup is not required for auto-updates to work,
@@ -19,7 +19,7 @@ let downloadProgress = 0;
 
 function init(mainWindow) {
 
-  if(initialized || isDev) return;
+  if(initialized) return;
 
   initialized = true;
 
@@ -27,16 +27,24 @@ function init(mainWindow) {
     log.error(error == null ? "unknown" : (error.stack || error).toString());
   });
 
-  autoUpdater.on('update-available', () => {
+  autoUpdater.on('update-available', (info) => {
+    if(info.version === settings.get('release.version')) {
+      log.info(`Skipped version ${info.version}`);
+      return;
+    }
     dialog.showMessageBox({
       type: 'info',
       title: 'Found Updates',
       message: 'There is a newer version of this app available. Do you want to update now?',
-      buttons: ['Yes', 'Remind me later'],
+      detail: info.releaseNotes.replace(/(<([^>]+)>)/g, ""),
+      buttons: ['Install Update', 'Remind me later','Skip this version'],
       cancelId:1,
     }).then(result => {
       if(result.response === 0){
         autoUpdater.downloadUpdate();
+      }
+      if(result.response === 2) {
+        settings.set('release', {version: info.version });
       }
     });
 
@@ -44,7 +52,7 @@ function init(mainWindow) {
       autoUpdater.logger.info("Update Downloaded...");
       dialog.showMessageBox({
         title: 'Install Updates',
-        message: process.platform === 'win32' ? releaseNotes : releaseName,
+        message: releaseName,
         detail: 'A new version has been downloaded. Restart the application to apply the updates.',
         buttons: ['Restart', 'Cancel'],
         cancelId:1,

@@ -36,14 +36,14 @@ export const ContinueFooter = ({
   onContinue,
 }: {
   continueButtonDisabled: boolean
-  onContinue: Function
+  onContinue: () => void
 }) => (
   <Button color="primary" disabled={continueButtonDisabled} onClick={onContinue} variant="contained">
     Continue
   </Button>
 )
 
-export const ErrorFooter = ({ onCancel, onRetry }: { onCancel: Function; onRetry: Function }) => (
+export const ErrorFooter = ({ onCancel, onRetry }: { onCancel: () => void; onRetry: () => void }) => (
   <>
     <ButtonWithMargin onClick={onCancel} variant="contained">
       Cancel
