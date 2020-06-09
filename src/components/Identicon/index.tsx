@@ -1,7 +1,6 @@
 import * as React from 'react'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
-import { toDataUrl } from './blockies'
+import makeBlockie from 'ethereum-blockies-base64'
 
 export default class Identicon extends React.PureComponent<any> {
   private identicon: React.RefObject<HTMLImageElement>
@@ -47,7 +46,7 @@ export default class Identicon extends React.PureComponent<any> {
 
   generateBlockieIdenticon = (address, diameter) => {
     const image = new window.Image()
-    image.src = toDataUrl(address || ZERO_ADDRESS)
+    image.src = makeBlockie(address)
     image.height = diameter
     image.width = diameter
     image.style.borderRadius = `${diameter / 2}px`
