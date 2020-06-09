@@ -12,11 +12,12 @@ const removeLastTrailingSlash = (url: string) => {
 
 const gnosisAppsUrl = removeLastTrailingSlash(process.env.REACT_APP_GNOSIS_APPS_URL)
 export const staticAppsList = [
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQapdJP6zERqpDKKPECNeMDDgwmGUqbKk1PjHpYj8gfDJ`, disabled: false },
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
+  { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
   { url: `${gnosisAppsUrl}/aave`, disabled: false },
   { url: `${gnosisAppsUrl}/pool-together`, disabled: false },
   { url: `${gnosisAppsUrl}/open-zeppelin`, disabled: false },
-  { url: `${gnosisAppsUrl}/request`, disabled: false },
   { url: `${gnosisAppsUrl}/synthetix`, disabled: false },
 ]
 
