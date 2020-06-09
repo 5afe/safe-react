@@ -4,8 +4,7 @@ const devConfig = {
   [TX_SERVICE_HOST]: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
   [SIGNATURES_VIA_METAMASK]: false,
   [RELAY_API_URL]: 'https://safe-relay.staging.gnosisdev.com/api/v1/',
-  //[SAFE_APPS_URL]: 'https://safe-apps.dev.gnosisdev.com/'
-  [SAFE_APPS_URL]: 'http://localhost:3002/'
+  [SAFE_APPS_URL]: 'https://safe-apps.dev.gnosisdev.com/'  
 }
 
 export default devConfig
