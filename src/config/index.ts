@@ -3,7 +3,8 @@ import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
-  TX_SERVICE_HOST
+  TX_SERVICE_HOST,
+  SAFE_APPS_URL
 } from 'src/config/names'
 import devConfig from './development'
 import testConfig from './testing'
@@ -65,6 +66,12 @@ export const signaturesViaMetamask = () => {
   const config = getConfig()
 
   return config[SIGNATURES_VIA_METAMASK]
+}
+
+export const getGnosisSafeAppsUrl = () => {
+  const config = getConfig()
+
+  return config[SAFE_APPS_URL]
 }
 
 export const getGoogleAnalyticsTrackingID = () =>

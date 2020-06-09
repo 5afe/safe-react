@@ -57,7 +57,7 @@ function getOpenedWindow(url,options) {
       height:700,
       x: width - 1300,
       parent:mainWindow,
-      y: height - 200,
+      y: height - (process.platform === 'win32' ? 750 : 200),
       webContents: options.webContents, // use existing webContents if provided
       fullscreen: false,
       show: false,
@@ -140,9 +140,7 @@ process.on('uncaughtException',function(error){
   log.error(error);
 });
 
-app.userAgentFallback = process.platform ==='win32' ?
-'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/80.0.3987.100 Safari/537.36' :
-'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/7.1.7 Safari/537.36';
+app.userAgentFallback = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/7.1.7 Safari/537.36';
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
