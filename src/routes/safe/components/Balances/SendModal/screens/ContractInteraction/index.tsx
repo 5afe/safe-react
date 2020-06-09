@@ -19,13 +19,14 @@ import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
 import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
+import { TransactionReviewType } from './Review'
 
 const useStyles = makeStyles(styles)
 
 export interface CreatedTx {
   contractAddress: string
   data: string
-  selectedMethod: any
+  selectedMethod: TransactionReviewType
   value: string | number
 }
 

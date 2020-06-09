@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
@@ -36,14 +36,20 @@ export const ContinueFooter = ({
   onContinue,
 }: {
   continueButtonDisabled: boolean
-  onContinue: () => void
+  onContinue: (event: SyntheticEvent) => void
 }) => (
   <Button color="primary" disabled={continueButtonDisabled} onClick={onContinue} variant="contained">
     Continue
   </Button>
 )
 
-export const ErrorFooter = ({ onCancel, onRetry }: { onCancel: () => void; onRetry: () => void }) => (
+export const ErrorFooter = ({
+  onCancel,
+  onRetry,
+}: {
+  onCancel: (event: SyntheticEvent) => void
+  onRetry: (event: SyntheticEvent) => void
+}) => (
   <>
     <ButtonWithMargin onClick={onCancel} variant="contained">
       Cancel

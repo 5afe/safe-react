@@ -27,13 +27,14 @@ import { removeTransaction } from 'src/routes/safe/store/actions/transactions/re
 import {
   generateSafeTxHash,
   mockTransaction,
+  TxToMock,
 } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
 
 export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
@@ -120,7 +121,7 @@ const createTransaction = ({
 
   let txHash
   let tx
-  const txArgs = {
+  const txArgs: TxArgs = {
     safeInstance,
     to,
     valueInWei,
@@ -129,7 +130,7 @@ const createTransaction = ({
     nonce,
     safeTxGas,
     baseGas: 0,
-    gasPrice: 0,
+    gasPrice: '0',
     gasToken: ZERO_ADDRESS,
     refundReceiver: ZERO_ADDRESS,
     sender: from,
@@ -164,7 +165,7 @@ const createTransaction = ({
       sendParams.gas = '7000000'
     }
 
-    const txToMock = {
+    const txToMock: TxToMock = {
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
@@ -223,9 +224,9 @@ const createTransaction = ({
                 .set('executor', from)
                 .set('isExecuted', true)
                 .set('isSuccessful', receipt.status)
-                .set('status', receipt.status ? 'success' : 'failed')
+                .set('status', receipt.status ? TransactionStatus.SUCCESS : TransactionStatus.FAILED)
             })
-          : mockedTx.set('status', 'awaiting_confirmations')
+          : mockedTx.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
 
         await storeTx(
           toStoreTx.withMutations((record) => {
