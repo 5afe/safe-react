@@ -2,16 +2,16 @@ import fetchCurrenciesRates from 'src/logic/currencyValues/api/fetchCurrenciesRa
 import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
-// eslint-disable-next-line max-len
-const fetchCurrencyRate = (safeAddress, selectedCurrency) => async (dispatch) => {
+const fetchCurrencyRate = (safeAddress: string, selectedCurrency: AVAILABLE_CURRENCIES) => async (dispatch) => {
   if (AVAILABLE_CURRENCIES.USD === selectedCurrency) {
     return dispatch(setCurrencyRate(safeAddress, 1))
   }
 
-  const selectedCurrencyRateInBaseCurrency = await fetchCurrenciesRates(
-    AVAILABLE_CURRENCIES.USD as any,
-    selectedCurrency as any,
+  const selectedCurrencyRateInBaseCurrency: number = await fetchCurrenciesRates(
+    AVAILABLE_CURRENCIES.USD,
+    selectedCurrency,
   )
+
   dispatch(setCurrencyRate(safeAddress, selectedCurrencyRateInBaseCurrency))
 }
 
