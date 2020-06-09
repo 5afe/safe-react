@@ -55,7 +55,7 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
-const isTxValid = (t) => {
+const isTxValid = (t): boolean => {
   try {
     if (!['string', 'number'].includes(typeof t.value)) {
       return false
