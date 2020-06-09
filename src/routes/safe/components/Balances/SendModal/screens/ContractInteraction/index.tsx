@@ -18,7 +18,7 @@ import Header from './Header'
 import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod } from './utils'
+import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 
 const useStyles = makeStyles(styles)
 
@@ -73,7 +73,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
       <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
       <Hairline />
       <GnoForm
-        decorators={[abiExtractor]}
+        decorators={[abiExtractor, ensResolver]}
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}

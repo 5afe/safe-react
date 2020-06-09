@@ -43,3 +43,5 @@ export const isUserOwner = (safe, userAccount) => {
 }
 
 export const isUserOwnerOnAnySafe = (safes, userAccount) => safes.some((safe) => isUserOwner(safe, userAccount))
+
+export const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
