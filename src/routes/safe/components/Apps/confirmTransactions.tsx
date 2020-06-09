@@ -15,6 +15,20 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 
+export type SafeAppTx = {
+  to: string
+  value: string | number
+  data: string
+}
+
+// TODO: This should be exported by safe-rect-components
+type GenericModalProps = {
+  title: ReactElement
+  body: ReactElement
+  footer: ReactElement
+  onClose: () => void
+}
+
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 
 const Wrapper = styled.div`
@@ -65,17 +79,8 @@ const confirmTransactions = (
   ethBalance: string,
   nameApp: string,
   iconApp: string,
-  txs: Array<{
-    to: string
-    value: string | number
-    data: string
-  }>,
-  openModal: (modalInfo: {
-    title: ReactElement
-    body: ReactElement
-    footer: ReactElement
-    onClose: () => void
-  }) => void,
+  txs: Array<SafeAppTx>,
+  openModal: (modalInfo: GenericModalProps) => void,
   closeModal: () => void,
   onConfirm: () => void,
 ): any => {
