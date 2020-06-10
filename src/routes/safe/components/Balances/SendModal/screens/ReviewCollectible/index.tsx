@@ -64,7 +64,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
 
       const ERC721Token = methodToCall === 'transfer' ? await getHumanFriendlyToken() : await getERC721TokenContract()
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
+      const txData = tokenInstance.contract.methods[`0x${methodToCall}`](...params).encodeABI()
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')

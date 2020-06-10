@@ -4,6 +4,7 @@ import { DecodedMethods, decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
+  getERC21Symbol,
   isSendERC20Transaction,
   isSendERC721Transaction,
 } from 'src/logic/tokens/utils/tokenHelpers'
@@ -266,7 +267,7 @@ export const buildTx = async ({
     safeTxGas: tx.safeTxGas,
     safeTxHash: tx.safeTxHash,
     submissionDate: tx.submissionDate,
-    symbol,
+    symbol: isSendERC721Tx ? await getERC21Symbol(tx.to) : symbol,
     upgradeTx: isUpgradeTx,
     value: tx.value.toString(),
   })
