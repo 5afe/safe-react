@@ -18,14 +18,15 @@ import Header from './Header'
 import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod } from './utils'
+import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
+import { TransactionReviewType } from './Review'
 
 const useStyles = makeStyles(styles)
 
 export interface CreatedTx {
   contractAddress: string
   data: string
-  selectedMethod: any
+  selectedMethod: TransactionReviewType
   value: string | number
 }
 
@@ -73,7 +74,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
       <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
       <Hairline />
       <GnoForm
-        decorators={[abiExtractor]}
+        decorators={[abiExtractor, ensResolver]}
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}

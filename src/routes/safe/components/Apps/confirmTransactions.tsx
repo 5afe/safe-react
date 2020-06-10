@@ -1,8 +1,9 @@
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
 import Collapse from 'src/components/Collapse'
@@ -13,6 +14,20 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+
+export type SafeAppTx = {
+  to: string
+  value: string | number
+  data: string
+}
+
+// TODO: This should be exported by safe-rect-components
+type GenericModalProps = {
+  title: ReactElement
+  body: ReactElement
+  footer: ReactElement
+  onClose: () => void
+}
 
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 
@@ -40,22 +55,35 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
-const isTxValid = (t) => {
+const isTxValid = (t): boolean => {
+  try {
+    if (!['string', 'number'].includes(typeof t.value)) {
+      return false
+    }
+
+    if (typeof t.value === 'string') {
+      const web3 = getWeb3()
+      web3.eth.abi.decodeParameter('uint256', t.value)
+    }
+  } catch (error) {
+    return false
+  }
+
   const isAddressValid = mustBeEthereumAddress(t.to) === undefined
-  return isAddressValid && t.value !== undefined && typeof t.value === 'number' && t.data && typeof t.data === 'string'
+  return isAddressValid && t.data && typeof t.data === 'string'
 }
 
 const confirmTransactions = (
-  safeAddress,
-  safeName,
-  ethBalance,
-  nameApp,
-  iconApp,
-  txs,
-  openModal,
-  closeModal,
-  onConfirm,
-) => {
+  safeAddress: string,
+  safeName: string,
+  ethBalance: string,
+  nameApp: string,
+  iconApp: string,
+  txs: Array<SafeAppTx>,
+  openModal: (modalInfo: GenericModalProps) => void,
+  closeModal: () => void,
+  onConfirm: () => void,
+): any => {
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />

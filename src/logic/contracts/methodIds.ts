@@ -57,6 +57,7 @@ type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
 
 type DecodedValues = Array<{
   name: string
+  type?: string
   value: string
 }>
 
@@ -70,7 +71,12 @@ type TokenDecodedParams = {
 
 export type DecodedMethods = SafeDecodedParams | TokenDecodedParams | null
 
-export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | null => {
+export interface DataDecoded {
+  method: SafeMethods | TokenMethods
+  parameters: DecodedValues
+}
+
+export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => {
   const [methodId, params] = [data.slice(0, 10) as keyof typeof METHOD_TO_ID | string, data.slice(10)]
 
   switch (methodId) {
@@ -78,10 +84,11 @@ export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | nu
     case '0xe318b52b': {
       const decodedParameters = web3.eth.abi.decodeParameters(['uint', 'address', 'address'], params)
       return {
-        [METHOD_TO_ID[methodId]]: [
+        method: METHOD_TO_ID[methodId],
+        parameters: [
           { name: 'oldOwner', value: decodedParameters[1] },
           { name: 'newOwner', value: decodedParameters[2] },
-        ]
+        ],
       }
     }
 
@@ -89,10 +96,11 @@ export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | nu
     case '0x0d582f13': {
       const decodedParameters = web3.eth.abi.decodeParameters(['address', 'uint'], params)
       return {
-        [METHOD_TO_ID[methodId]]: [
+        method: METHOD_TO_ID[methodId],
+        parameters: [
           { name: 'owner', value: decodedParameters[0] },
           { name: '_threshold', value: decodedParameters[1] },
-        ]
+        ],
       }
     }
 
@@ -100,10 +108,11 @@ export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | nu
     case '0xf8dc5dd9': {
       const decodedParameters = web3.eth.abi.decodeParameters(['address', 'address', 'uint'], params)
       return {
-        [METHOD_TO_ID[methodId]]: [
+        method: METHOD_TO_ID[methodId],
+        parameters: [
           { name: 'oldOwner', value: decodedParameters[1] },
           { name: '_threshold', value: decodedParameters[2] },
-        ]
+        ],
       }
     }
 
@@ -111,9 +120,10 @@ export const decodeParamsFromSafeMethod = (data: string): SafeDecodedParams | nu
     case '0x694e80c3': {
       const decodedParameters = web3.eth.abi.decodeParameters(['uint'], params)
       return {
-        [METHOD_TO_ID[methodId]]: [
+        method: METHOD_TO_ID[methodId],
+        parameters: [
           { name: '_threshold', value: decodedParameters[0] },
-        ]
+        ],
       }
     }
 
@@ -126,7 +136,7 @@ const isSafeMethod = (methodId: string): boolean => {
   return !!METHOD_TO_ID[methodId]
 }
 
-export const decodeMethods = (data: string): DecodedMethods => {
+export const decodeMethods = (data: string): DataDecoded | null => {
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   if (isSafeMethod(methodId)) {
@@ -138,10 +148,11 @@ export const decodeMethods = (data: string): DecodedMethods => {
     case '0xa9059cbb': {
       const decodeParameters = web3.eth.abi.decodeParameters(['address', 'uint'], params)
       return {
-        transfer: [
+        method: 'transfer',
+        parameters: [
           { name: 'to', value: decodeParameters[0] },
           { name: 'value', value: decodeParameters[1] },
-        ]
+        ],
       }
     }
 
@@ -149,23 +160,25 @@ export const decodeMethods = (data: string): DecodedMethods => {
     case '0x23b872dd': {
       const decodeParameters = web3.eth.abi.decodeParameters(['address', 'address', 'uint'], params)
       return {
-        transferFrom: [
+        method: 'transferFrom',
+        parameters: [
           { name: 'from', value: decodeParameters[0] },
           { name: 'to', value: decodeParameters[1] },
           { name: 'value', value: decodeParameters[2] },
-        ]
+        ],
       }
     }
 
     // 42842e0e - safeTransferFrom(address,address,uint256)
-    case '0x42842e0e':{
+    case '0x42842e0e': {
       const decodedParameters = web3.eth.abi.decodeParameters(['address', 'address', 'uint'], params)
       return {
-        safeTransferFrom: [
+        method: 'safeTransferFrom',
+        parameters: [
           { name: 'from', value: decodedParameters[0] },
           { name: 'to', value: decodedParameters[1] },
           { name: 'value', value: decodedParameters[2] },
-        ]
+        ],
       }
     }
 

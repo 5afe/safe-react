@@ -30,12 +30,20 @@ export const getMethodSignatureAndSignatureHash = (
   return { methodSignature, signatureHash }
 }
 
+export const isAllowedMethod = ({ name, type }: AbiItem): boolean => {
+  return type === 'function' && !!name
+}
+
+export const getMethodAction = ({ stateMutability }: AbiItem): 'read' | 'write' => {
+  return ['view', 'pure'].includes(stateMutability) ? 'read' : 'write'
+}
+
 export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
   return abi
-    .filter(({ constant, name, type }) => type === 'function' && !!name && typeof constant === 'boolean')
+    .filter(isAllowedMethod)
     .map(
       (method): AbiItemExtended => ({
-        action: method.constant ? 'read' : 'write',
+        action: getMethodAction(method),
         ...getMethodSignatureAndSignatureHash(method),
         ...method,
       }),

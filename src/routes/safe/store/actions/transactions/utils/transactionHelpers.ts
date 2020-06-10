@@ -27,18 +27,32 @@ import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transacti
 import { store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
-import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import {
+  BatchProcessTxsProps,
+  TxServiceModel,
+} from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { TypedDataUtils } from 'eth-sig-util'
+import { Token } from 'src/logic/tokens/store/model/token'
+import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
+import { SafeRecord } from 'src/routes/safe/store/models/safe'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
 }
 
-export const isInnerTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
-  return sameAddress(tx.to, safeAddress) && Number(tx.value) === 0
+export const isInnerTransaction = (tx: TxServiceModel | Transaction, safeAddress: string): boolean => {
+  let isSameAddress = false
+
+  if ((tx as TxServiceModel).to !== undefined) {
+    isSameAddress = sameAddress((tx as TxServiceModel).to, safeAddress)
+  } else if ((tx as Transaction).recipient !== undefined) {
+    isSameAddress = sameAddress((tx as Transaction).recipient, safeAddress)
+  }
+
+  return isSameAddress && Number(tx.value) === 0
 }
 
-export const isCancelTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
+export const isCancelTransaction = (tx: TxServiceModel | Transaction, safeAddress: string): boolean => {
   return isInnerTransaction(tx, safeAddress) && isEmptyData(tx.data)
 }
 
@@ -71,7 +85,7 @@ export const isCustomTransaction = async (
   tx: TxServiceModel,
   txCode: string,
   safeAddress: string,
-  knownTokens: any,
+  knownTokens: Record<string, Token>,
 ): Promise<boolean> => {
   return (
     isOutgoingTransaction(tx, safeAddress) &&
@@ -82,12 +96,13 @@ export const isCustomTransaction = async (
 }
 
 export const getRefundParams = async (
-  tx: any,
+  tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
 ): Promise<any> => {
+  const txGasPrice = Number(tx.gasPrice)
   let refundParams = null
 
-  if (tx.gasPrice > 0) {
+  if (txGasPrice > 0) {
     let refundSymbol = 'ETH'
     let refundDecimals = 18
 
@@ -100,7 +115,9 @@ export const getRefundParams = async (
       }
     }
 
-    const feeString = (tx.gasPrice * (tx.baseGas + tx.safeTxGas)).toString().padStart(refundDecimals, '0')
+    const feeString = (txGasPrice * (Number(tx.baseGas) + Number(tx.safeTxGas)))
+      .toString()
+      .padStart(refundDecimals, '0')
     const whole = feeString.slice(0, feeString.length - refundDecimals) || '0'
     const fraction = feeString.slice(feeString.length - refundDecimals)
 
@@ -115,18 +132,15 @@ export const getRefundParams = async (
 
 export const getDecodedParams = (tx: TxServiceModel): DecodedMethods => {
   if (tx.dataDecoded) {
-    return Object.keys(tx.dataDecoded).reduce((acc, key) => {
-      acc[key] = {
-        ...tx.dataDecoded[key].reduce(
-          (acc, param) => ({
-            ...acc,
-            [param.name]: param.value,
-          }),
-          {},
-        ),
-      }
-      return acc
-    }, {})
+    return {
+      [tx.dataDecoded.method]: tx.dataDecoded.parameters.reduce(
+        (acc, param) => ({
+          ...acc,
+          [param.name]: param.value,
+        }),
+        {},
+      ),
+    }
   }
   return null
 }
@@ -160,7 +174,7 @@ export const isTransactionCancelled = (
 
 export const calculateTransactionStatus = (
   tx: Transaction,
-  { owners, threshold }: any,
+  { owners, threshold }: SafeRecord,
   currentUser?: string | null,
 ): TransactionStatusValues => {
   let txStatus
@@ -213,6 +227,11 @@ export const calculateTransactionType = (tx: Transaction): TransactionTypeValues
   return txType
 }
 
+export type BuildTx = BatchProcessTxsProps & {
+  tx: TxServiceModel
+  txCode: string | null
+}
+
 export const buildTx = async ({
   cancellationTxs,
   currentUser,
@@ -221,7 +240,7 @@ export const buildTx = async ({
   safe,
   tx,
   txCode,
-}): Promise<Transaction> => {
+}: BuildTx): Promise<Transaction> => {
   const safeAddress = safe.address
   const isModifySettingsTx = isModifySettingsTransaction(tx, safeAddress)
   const isTxCancelled = isTransactionCancelled(tx, outgoingTxs, cancellationTxs)
@@ -236,7 +255,7 @@ export const buildTx = async ({
   const confirmations = getConfirmations(tx)
   const { decimals = 18, symbol = 'ETH' } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
 
-  const txToStore: Transaction = makeTransaction({
+  const txToStore = makeTransaction({
     baseGas: tx.baseGas,
     blockNumber: tx.blockNumber,
     cancelled: isTxCancelled,
@@ -277,7 +296,13 @@ export const buildTx = async ({
     .set('type', calculateTransactionType(txToStore))
 }
 
-export const mockTransaction = (tx, safeAddress: string, state): Promise<any> => {
+export type TxToMock = TxArgs & {
+  confirmations: []
+  safeTxHash: string
+  value: string
+}
+
+export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promise<Transaction> => {
   const submissionDate = new Date().toISOString()
 
   const transactionStructure: TxServiceModel = {
@@ -302,8 +327,8 @@ export const mockTransaction = (tx, safeAddress: string, state): Promise<any> =>
     ...tx,
   }
 
-  const knownTokens = state[TOKEN_REDUCER_ID]
-  const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+  const knownTokens: Record<string, Token> = state[TOKEN_REDUCER_ID]
+  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
   const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
 
@@ -318,7 +343,7 @@ export const mockTransaction = (tx, safeAddress: string, state): Promise<any> =>
   })
 }
 
-export const updateStoredTransactionsStatus = (dispatch, walletRecord): void => {
+export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRecord: ProviderRecord): void => {
   const state = store.getState()
   const safe = safeSelector(state)
 
@@ -352,7 +377,8 @@ export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string 
       { type: 'uint256', name: 'nonce' },
     ],
   }
-  const primaryType = 'SafeTx' as const
+
+  const primaryType: 'SafeTx' = 'SafeTx' as const
 
   const typedData = {
     types: messageTypes,

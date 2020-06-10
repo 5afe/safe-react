@@ -2,8 +2,8 @@ import { List, Map, Record } from 'immutable'
 
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import {
-  TransactionProps,
   PendingActionType,
+  TransactionProps,
   TransactionStatus,
   TransactionTypes,
 } from 'src/routes/safe/store/models/types/transaction'
@@ -24,7 +24,7 @@ export const makeTransaction = Record<TransactionProps>({
   executionTxHash: undefined,
   executor: '',
   factoryAddress: '',
-  gasPrice: 0,
+  gasPrice: '0',
   gasToken: ZERO_ADDRESS,
   isCancellationTx: false,
   isCollectibleTransfer: false,

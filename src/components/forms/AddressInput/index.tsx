@@ -5,8 +5,7 @@ import { OnChange } from 'react-final-form-listeners'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
-
-const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
