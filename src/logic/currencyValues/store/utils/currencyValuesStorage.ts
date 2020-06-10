@@ -11,6 +11,6 @@ export const saveCurrencyValues = async (currencyValues: Map<string, CurrencyRat
   }
 }
 
-export const loadCurrencyValues = async (): Promise<Map<string, CurrencyRateValue> | {}> => {
+export const loadCurrencyValues = async (): Promise<Map<string, CurrencyRateValue> | any> => {
   return (await loadFromStorage(CURRENCY_VALUES_STORAGE_KEY)) || {}
 }

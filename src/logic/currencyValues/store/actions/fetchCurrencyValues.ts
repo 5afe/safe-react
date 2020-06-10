@@ -9,7 +9,7 @@ import { loadCurrencyValues } from 'src/logic/currencyValues/store/utils/currenc
 
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch) => {
   try {
-    const storedCurrencies: Map<string, CurrencyRateValue> | {} = await loadCurrencyValues()
+    const storedCurrencies: Map<string, CurrencyRateValue> | any = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]
     if (!storedCurrency) {
       return batch(() => {

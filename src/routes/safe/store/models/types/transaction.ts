@@ -1,3 +1,7 @@
+import { List, Map, RecordOf } from 'immutable'
+import { DecodedMethods } from 'src/logic/contracts/methodIds'
+import { Confirmation } from './confirmation'
+
 export enum TransactionTypes {
   INCOMING = 'incoming',
   OUTGOING = 'outgoing',
@@ -32,19 +36,19 @@ export type TransactionProps = {
   baseGas: number
   blockNumber?: number | null
   cancelled?: boolean
-  confirmations: import('immutable').List<any>
+  confirmations: List<Confirmation>
   created: boolean
   creator: string
   creationTx: boolean
   customTx: boolean
   data?: string | null
   decimals?: (number | string) | null
-  decodedParams: import('src/logic/contracts/methodIds').DecodedMethods
+  decodedParams: DecodedMethods
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
-  gasPrice: number
+  gasPrice: string
   gasToken: string
   isCancellationTx: boolean
   isCollectibleTransfer: boolean
@@ -58,7 +62,7 @@ export type TransactionProps = {
   nonce?: number | null
   operation: number
   origin: string | null
-  ownersWithPendingActions: import('immutable').Map<PendingActionValues, import('immutable').List<any>>
+  ownersWithPendingActions: Map<PendingActionValues, List<any>>
   recipient: string
   refundParams: any
   refundReceiver: string
@@ -68,26 +72,26 @@ export type TransactionProps = {
   status?: TransactionStatus
   submissionDate?: string | null
   symbol?: string | null
-  transactionHash: string
+  transactionHash: string | null
   type: TransactionTypes
   upgradeTx: boolean
   value: string
 }
 
-export type Transaction = import('immutable').RecordOf<TransactionProps>
+export type Transaction = RecordOf<TransactionProps>
 
 export type TxArgs = {
-  data: any
   baseGas: number
+  data?: string | null
+  gasPrice: string
   gasToken: string
-  safeInstance: any
   nonce: number
-  valueInWei: any
-  safeTxGas: number
+  operation: number
   refundReceiver: string
-  sender: any
+  safeInstance: any
+  safeTxGas: number
+  sender?: string
   sigs: string
-  to: any
-  operation: any
-  gasPrice: number
+  to: string
+  valueInWei: string
 }

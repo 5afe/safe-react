@@ -51,6 +51,11 @@ export const getTxData = (tx) => {
         txData.addedOwner = newOwner
       }
     }
+    if (tx.multiSendTx) {
+      txData.recipient = tx.recipient
+      txData.data = tx.data
+      txData.customTx = true
+    }
   } else if (tx.customTx) {
     txData.recipient = tx.recipient
     txData.data = tx.data

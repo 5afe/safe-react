@@ -13,12 +13,14 @@ import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchT
 import {
   isCancelTransaction,
   mockTransaction,
+  TxToMock,
 } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
 
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
 import { storeTx } from './createTransaction'
+import { TransactionStatus } from '../models/types/transaction'
 
 const processTransaction = ({
   approveAndExecute,
@@ -101,7 +103,7 @@ const processTransaction = ({
       sendParams.gas = '7000000'
     }
 
-    const txToMock = {
+    const txToMock: TxToMock = {
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
@@ -165,11 +167,15 @@ const processTransaction = ({
                 .set('isSuccessful', receipt.status)
                 .set(
                   'status',
-                  receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
+                  receipt.status
+                    ? isCancelTransaction(record, safeAddress)
+                      ? TransactionStatus.CANCELLED
+                      : TransactionStatus.SUCCESS
+                    : TransactionStatus.FAILED,
                 )
                 .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
             })
-          : mockedTx.set('status', 'awaiting_confirmations')
+          : mockedTx.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
 
         await storeTx(
           toStoreTx.withMutations((record) => {

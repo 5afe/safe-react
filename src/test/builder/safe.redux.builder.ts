@@ -1,7 +1,5 @@
-// 
-/* eslint-disable max-classes-per-file */
-import SafeRecord, { } from 'src/routes/safe/store/models/safe'
-import addSafe, { buildOwnersFrom } from 'src/routes/safe/store/actions/addSafe'
+import makeSafe from 'src/routes/safe/store/models/safe'
+import { buildOwnersFrom } from 'src/routes/safe/store/actions/addSafe'
 import {
   FIELD_NAME,
   FIELD_CONFIRMATIONS,
@@ -11,7 +9,6 @@ import {
 } from 'src/routes/open/components/fields'
 import { getWeb3, getProviderInfo } from 'src/logic/wallets/getWeb3'
 import { createSafe, } from 'src/routes/open/container/Open'
-import { } from 'src/store/index'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import addProvider from 'src/logic/wallets/store/actions/addProvider'
 
@@ -19,7 +16,7 @@ class SafeBuilder {
   safe
 
   constructor() {
-    this.safe = SafeRecord()
+    this.safe = makeSafe()
   }
 
   withAddress(address) {
@@ -90,7 +87,7 @@ export const aMinedSafe = async (
     form[getOwnerNameBy(i)] = `Adol ${i + 1} Eth Account`
     form[getOwnerAddressBy(i)] = accounts[i]
   }
-  
+
   const openSafeProps = await createSafe(form, accounts[0])
 
   return openSafeProps.safeAddress

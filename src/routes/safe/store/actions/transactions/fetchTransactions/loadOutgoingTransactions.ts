@@ -7,14 +7,18 @@ import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { store } from 'src/store'
-import { DecodedMethods } from 'src/logic/contracts/methodIds'
+import { DataDecoded } from 'src/logic/contracts/methodIds'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { Token } from 'src/logic/tokens/store/model/token'
+import { SafeRecord } from 'src/routes/safe/store/models/safe'
 
 export type ConfirmationServiceModel = {
+  confirmationType: string
   owner: string
-  submissionDate: Date
+  submissionDate: string
   signature: string
+  signatureType: string
   transactionHash: string
 }
 
@@ -22,25 +26,32 @@ export type TxServiceModel = {
   baseGas: number
   blockNumber?: number | null
   confirmations: ConfirmationServiceModel[]
+  confirmationsRequired: number
   creationTx?: boolean | null
   data?: string | null
-  dataDecoded?: DecodedMethods
+  dataDecoded?: DataDecoded
+  ethGasPrice: string
   executionDate?: string | null
   executor: string
-  gasPrice: number
+  fee: string
+  gasPrice: string
   gasToken: string
+  gasUsed: number
   isExecuted: boolean
   isSuccessful: boolean
+  modified: string
   nonce?: number | null
   operation: number
   origin?: string | null
   refundReceiver: string
+  safe: string
   safeTxGas: number
   safeTxHash: string
+  signatures: string
   submissionDate?: string | null
   to: string
   transactionHash?: string | null
-  value: number
+  value: string
 }
 
 export type SafeTransactionsType = {
@@ -55,8 +66,8 @@ export type OutgoingTxs = {
 
 export type BatchProcessTxsProps = OutgoingTxs & {
   currentUser?: string
-  knownTokens: any
-  safe: any
+  knownTokens: Record<string, Token>
+  safe: SafeRecord
 }
 
 /**
@@ -127,8 +138,8 @@ const batchProcessOutgoingTransactions = async ({
   outgoingTxs,
   safe,
 }: BatchProcessTxsProps): Promise<{
-  cancel: any
-  outgoing: any
+  cancel: Record<string, Transaction>
+  outgoing: Array<Transaction>
 }> => {
   // cancellation transactions
   const cancelTxsValues = Object.values(cancellationTxs)
