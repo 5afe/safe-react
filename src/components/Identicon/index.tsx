@@ -1,10 +1,11 @@
 import * as React from 'react'
 
 import makeBlockie from 'ethereum-blockies-base64'
+import { useEffect, useState } from 'react'
 
 type Props = {
   address: string
-  className: string
+  className?: string
   diameter: number
 }
 
@@ -13,62 +14,47 @@ type StyleProps = {
   height: number
 }
 
-export default class Identicon extends React.PureComponent<any> {
-  private identicon: React.RefObject<HTMLImageElement>
+const getStyleFrom = (diameter: number): StyleProps => ({
+  width: diameter,
+  height: diameter,
+})
 
-  static defaultProps = {
-    className: '',
-  }
+const generateBlockieIdenticon = (address: string, diameter: number): HTMLImageElement => {
+  const image = new window.Image()
+  image.src = makeBlockie(address)
+  image.height = diameter
+  image.width = diameter
+  image.style.borderRadius = `${diameter / 2}px`
 
-  constructor(props: Props) {
-    super(props)
+  return image
+}
 
-    this.identicon = React.createRef<HTMLImageElement>()
-  }
+const Identicon = (props: Props) => {
+  const { address, diameter, className } = props
+  const style: StyleProps = getStyleFrom(diameter)
 
-  componentDidMount = (): void => {
-    const { address, diameter } = this.props
-    const image = this.generateBlockieIdenticon(address, diameter)
-    if (this.identicon.current) {
-      this.identicon.current.appendChild(image)
-    }
-  }
+  const [identicon, setIdenticon] = useState(null)
 
-  componentDidUpdate = (): void => {
-    const { address, diameter } = this.props
-    const image = this.generateBlockieIdenticon(address, diameter)
+  useEffect(() => {
+    setIdenticon(React.createRef<HTMLImageElement>())
+  }, [])
 
-    if (!this.identicon.current) {
+  useEffect(() => {
+    const image = generateBlockieIdenticon(address, diameter)
+
+    if (!identicon || !identicon.current) {
       return
     }
 
-    const { children } = this.identicon.current
+    const { children } = identicon.current
     for (let i = 0; i < children.length; i += 1) {
-      this.identicon.current.removeChild(children[i])
+      identicon.current.removeChild(children[i])
     }
 
-    this.identicon.current.appendChild(image)
-  }
+    identicon.current.appendChild(image)
+  }, [address, diameter, identicon])
 
-  getStyleFrom = (diameter: number): StyleProps => ({
-    width: diameter,
-    height: diameter,
-  })
-
-  generateBlockieIdenticon = (address: string, diameter: number): HTMLImageElement => {
-    const image = new window.Image()
-    image.src = makeBlockie(address)
-    image.height = diameter
-    image.width = diameter
-    image.style.borderRadius = `${diameter / 2}px`
-
-    return image
-  }
-
-  render() {
-    const { className, diameter } = this.props
-    const style: StyleProps = this.getStyleFrom(diameter)
-
-    return <div className={className} ref={this.identicon} style={style} />
-  }
+  return <div className={className} ref={identicon} style={style} />
 }
+
+export default Identicon
