@@ -1,3 +1,4 @@
+import { Checkbox } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 
 import Col from 'src/components/layout/Col'
@@ -5,7 +6,8 @@ import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
-import { Checkbox } from '@gnosis.pm/safe-react-components'
+import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import ArrayTypeInput from './ArrayTypeInput'
 
 type Props = {
   type: string
@@ -13,10 +15,11 @@ type Props = {
   placeholder: string
 }
 
-const InputComponent = ({ type, keyValue, placeholder }: Props) => {
+const InputComponent = ({ type, keyValue, placeholder }: Props): JSX.Element => {
   if (!type) {
     return null
   }
+
   switch (type) {
     case 'bool': {
       const inputProps = {
@@ -46,15 +49,19 @@ const InputComponent = ({ type, keyValue, placeholder }: Props) => {
     default: {
       return (
         <Col>
-          <Field
-            component={TextField}
-            name={keyValue}
-            placeholder={placeholder}
-            testId={keyValue}
-            text={placeholder}
-            type="text"
-            validate={required}
-          />
+          {isArrayParameter(type) ? (
+            <ArrayTypeInput name={keyValue} text={placeholder} type={type} />
+          ) : (
+            <Field
+              component={TextField}
+              name={keyValue}
+              placeholder={placeholder}
+              testId={keyValue}
+              text={placeholder}
+              type="text"
+              validate={required}
+            />
+          )}
         </Col>
       )
     }
