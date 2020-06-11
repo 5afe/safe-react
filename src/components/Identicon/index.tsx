@@ -1,32 +1,24 @@
 import * as React from 'react'
 
 import makeBlockie from 'ethereum-blockies-base64'
+import styled from 'styled-components'
 
 type Props = {
   address: string
-  className?: string
   diameter: number
+  className?: string
 }
 
-type StyleProps = {
-  width: number
-  height: number
-  borderRadius: string
-}
+const StyledImg = styled.img<{ diameter: number }>`
+  height: ${({ diameter }) => (diameter ? diameter : 32)}px;
+  width: ${({ diameter }) => (diameter ? diameter : 32)}px;
+  border-radius: ${({ diameter }) => (diameter ? diameter / 2 : 16)}px;
+`
 
-const getStyleFrom = (diameter: number): StyleProps => ({
-  width: diameter,
-  height: diameter,
-  borderRadius: `${diameter / 2}px`,
-})
-
-const Identicon = (props: Props) => {
-  const { address, diameter } = props
-  const style: StyleProps = getStyleFrom(diameter)
-
+const Identicon: React.FC<Props> = ({ diameter = 32, address, className }) => {
   const iconSrc = React.useMemo(() => makeBlockie(address), [address])
 
-  return <img src={iconSrc} style={style} {...props} />
+  return <StyledImg src={iconSrc} diameter={diameter} className={className} />
 }
 
 export default Identicon
