@@ -10,9 +10,9 @@ type Props = {
 }
 
 const StyledImg = styled.img<{ diameter: number }>`
-  height: ${({ diameter }) => (diameter ? diameter : 32)}px;
-  width: ${({ diameter }) => (diameter ? diameter : 32)}px;
-  border-radius: ${({ diameter }) => (diameter ? diameter / 2 : 16)}px;
+  height: ${({ diameter }) => diameter}px;
+  width: ${({ diameter }) => diameter}px;
+  border-radius: 50%;
 `
 
 const Identicon: React.FC<Props> = ({ diameter = 32, address, className }) => {
