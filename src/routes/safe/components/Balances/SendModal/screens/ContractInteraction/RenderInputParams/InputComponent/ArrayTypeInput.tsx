@@ -37,34 +37,34 @@ const typeValidator = (type: string) => (value: string): string | undefined => {
   }
 }
 
-const typePlaceholder = (type: string): string => {
+const typePlaceholder = (text: string, type: string): string => {
   if (isAddress(type)) {
-    return '["0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E","0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e"]'
+    return `${text} E.g.: ["0xACa94ef8bD5ffEE41947b4585a84BdA5a3d3DA6E","0x1dF62f291b2E969fB0849d99D9Ce41e2F137006e"]`
   }
 
   if (isBoolean(type)) {
-    return '[true, false, false, true]'
+    return `${text} E.g.: [true, false, false, true]`
   }
 
   if (isUint(type)) {
-    return '[1000, 212, 320000022, 23]'
+    return `${text} E.g.: [1000, 212, 320000022, 23]`
   }
 
   if (isInt(type)) {
-    return '[1000, -212, 1232, -1]'
+    return `${text} E.g.: [1000, -212, 1232, -1]`
   }
 
   if (isByte(type)) {
-    return `["0xc00000000000000000000000000000000000", "0xc00000000000000000000000000000000001"]`
+    return `${text} E.g.: ["0xc00000000000000000000000000000000000", "0xc00000000000000000000000000000000001"]`
   }
 
-  return '["first value", "second value", "third value"]'
+  return `${text} E.g.: ["first value", "second value", "third value"]`
 }
 
 const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): JSX.Element => (
   <TextareaField
     name={name}
-    placeholder={typePlaceholder(type)}
+    placeholder={typePlaceholder(text, type)}
     text={text}
     type="text"
     validate={typeValidator(type)}
