@@ -51,11 +51,13 @@ export const isSendERC721Transaction = (tx: any, txCode: string, knownTokens: an
   )
 }
 
-export const getERC721Symbol = memoize(async (contractAddress) => {
-  const ERC21token = await getERC721TokenContract()
-  const tokenInstance = await ERC21token.at(contractAddress)
-  return tokenInstance.symbol()
-})
+export const getERC721Symbol = memoize(
+  async (contractAddress: string): Promise<string> => {
+    const ERC721token = await getERC721TokenContract()
+    const tokenInstance = await ERC721token.at(contractAddress)
+    return tokenInstance.symbol()
+  },
+)
 
 export const getERC20DecimalsAndSymbol = async (
   tokenAddress: string,
