@@ -220,11 +220,12 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       placeholder="Amount*"
                       text="Amount*"
                       type="text"
+                      disabled={!selectedTokenRecord}
                       validate={composeValidators(
                         required,
                         mustBeFloat,
                         greaterThan(0),
-                        maxValue(selectedTokenRecord && selectedTokenRecord.balance),
+                        maxValue(selectedTokenRecord?.balance),
                       )}
                     />
                     <OnChange name="token">
