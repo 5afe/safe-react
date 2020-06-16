@@ -38,6 +38,16 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
 
   const ButtonLinkAux: any = ButtonLink
 
+  const Form = (
+    <AddAppFrom
+      formId={FORM_ID}
+      appList={appList}
+      closeModal={closeModal}
+      onAppAdded={onAppAdded}
+      setIsSubmitDisabled={setIsSubmitDisabled}
+    />
+  )
+
   return (
     <>
       <ButtonLinkAux color="primary" onClick={toggleOpen as any}>
@@ -47,15 +57,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
         <ManageListModal
           addButtonLabel="Add custom app"
           defaultIconUrl={appsIconSvg}
-          formBody={
-            <AddAppFrom
-              formId={FORM_ID}
-              appList={appList}
-              closeModal={closeModal}
-              onAppAdded={onAppAdded}
-              setIsSubmitDisabled={setIsSubmitDisabled}
-            />
-          }
+          formBody={Form}
           isSubmitFormDisabled={isSubmitDisabled}
           itemList={getItemList()}
           onClose={closeModal}

@@ -84,23 +84,24 @@ const getUrlFromFormValue = memoize(async (value: string) => {
   return isUrlValid ? value : ensContent
 })
 
-const curriedSafeAppValidator = memoize((appList) => async (value: string) => {
-  const url = await getUrlFromFormValue(value)
+const curriedSafeAppValidator = (appList) =>
+  memoize(async (value: string) => {
+    const url = await getUrlFromFormValue(value)
 
-  if (!url) {
-    return 'Provide a valid url or ENS name.'
-  }
+    if (!url) {
+      return 'Provide a valid url or ENS name.'
+    }
 
-  const appExistsRes = uniqueAppValidator(appList, url)
-  if (appExistsRes) {
-    return appExistsRes
-  }
+    const appExistsRes = uniqueAppValidator(appList, url)
+    if (appExistsRes) {
+      return appExistsRes
+    }
 
-  const appInfo = await getAppInfoFromUrl(url)
-  if (appInfo.error) {
-    return 'This is not a valid Safe app.'
-  }
-})
+    const appInfo = await getAppInfoFromUrl(url)
+    if (appInfo.error) {
+      return 'This is not a valid Safe app.'
+    }
+  })
 
 const composeValidatorsApps = (...validators) => (value, values, meta) => {
   if (!meta.modified) {
@@ -120,6 +121,13 @@ type Props = {
 const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabled }: Props) => {
   const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
   const safeAppValidator = curriedSafeAppValidator(appList)
+
+  const initialValues = {
+    appUrl: '',
+    agreed: false,
+  }
+
+  const subscription = { submitting: true }
 
   const onFormStatusChange = async ({ pristine, valid, validating, values, errors }) => {
     if (!pristine) {
@@ -145,12 +153,12 @@ const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabl
     onAppAdded(appInfo)
   }
 
+  const validators = composeValidatorsApps(required, safeAppValidator)
+
   return (
     <GnoForm
-      initialValues={{
-        appUrl: '',
-        agreed: false,
-      }}
+      initialValues={initialValues}
+      subscription={subscription}
       // submit is triggered from ManageApps Component
       onSubmit={handleSubmit}
       testId={formId}
@@ -164,7 +172,7 @@ const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabl
             name="appUrl"
             placeholder="App URL"
             type="text"
-            validate={composeValidatorsApps(required, safeAppValidator)}
+            validate={validators}
           />
 
           <AppInfo>
