@@ -58,13 +58,13 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const { fromWei, toBN } = getWeb3().utils
 
       const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
-      const methodToCall = supportsSafeTransfer ? SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH : 'transfer'
+      const methodToCall = supportsSafeTransfer ? `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}` : 'transfer'
       const transferParams = [tx.recipientAddress, tx.nftTokenId]
       const params = methodToCall === 'transfer' ? transferParams : [safeAddress, ...transferParams]
 
       const ERC721Token = methodToCall === 'transfer' ? await getHumanFriendlyToken() : await getERC721TokenContract()
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[`0x${methodToCall}`](...params).encodeABI()
+      const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
