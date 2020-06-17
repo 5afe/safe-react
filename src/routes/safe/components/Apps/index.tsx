@@ -26,18 +26,32 @@ import { SafeApp } from './types'
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
-const StyledIframe = styled.iframe<{ hidden: boolean }>`
+const StyledIframe = styled.iframe`
   padding: 24px;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: ${({ hidden }) => (hidden ? 'none' : 'block')};
 `
 const Centered = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+`
+
+const IframeWrapper = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+`
+
+const IframeCoverLoading = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
 `
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
@@ -134,17 +148,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     const app = getSelectedApp()
 
     return (
-      <>
-        {appIsLoading && <Loader size="md" />}
-        <StyledIframe
-          frameBorder="0"
-          id={`iframe-${app.name}`}
-          ref={iframeRef}
-          src={app.url}
-          title={app.name}
-          hidden={appIsLoading}
-        />
-      </>
+      <IframeWrapper>
+        {appIsLoading && (
+          <IframeCoverLoading>
+            <Loader size="md" />
+          </IframeCoverLoading>
+        )}
+        <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
+      </IframeWrapper>
     )
   }
 
