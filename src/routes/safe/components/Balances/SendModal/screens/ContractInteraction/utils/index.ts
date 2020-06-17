@@ -1,7 +1,6 @@
 import { FORM_ERROR, Mutator, SubmissionErrors } from 'final-form'
 import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
-import { AbiItem } from 'web3-utils'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { getNetwork } from 'src/config'
@@ -81,11 +80,7 @@ export const isUint = (type: string): boolean => type.indexOf('uint') === 0
 export const isInt = (type: string): boolean => type.indexOf('int') === 0
 export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 
-export const isNotStringType = (item: string): boolean => typeof item !== 'string'
-export const isNotBooleanType = (item: string): boolean => typeof item !== 'boolean'
-export const isNotNumberType = (item: string): boolean => !Number.isInteger(item)
-
-export const isArrayParameter = (parameter: string): boolean => /\[]$/.test(parameter)
+export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
 
 export const handleSubmitError = (error: SubmissionErrors, values: Record<string, string>): Record<string, string> => {
   for (const key in values) {
@@ -98,27 +93,30 @@ export const handleSubmitError = (error: SubmissionErrors, values: Record<string
   return { [FORM_ERROR]: error.message }
 }
 
-const extractMethodArgs = (methodName: string, values: Record<string, string>) => ({ type }, index) => {
-  const key = `methodInput-${methodName}_${index}_${type}`
+export const generateFormFieldKey = (type: string, signatureHash: string, index: number): string => {
+  const keyType = isArrayParameter(type) ? 'arrayParam' : type
+  return `methodInput-${signatureHash}_${index}_${keyType}`
+}
+
+const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
+  const key = generateFormFieldKey(type, signatureHash, index)
 
   if (isArrayParameter(type)) {
-    // react-final-form removes the `[]` from the values key
-    const argument = values[key.replace('[]', '')]
-    return JSON.parse(argument)
+    return JSON.parse(values[key])
   }
 
   return values[key]
 }
 
 export const createTxObject = (
-  method: AbiItem,
+  method: AbiItemExtended,
   contractAddress: string,
   values: Record<string, string>,
 ): ContractSendMethod => {
   const web3 = getWeb3()
   const contract: any = new web3.eth.Contract([method], contractAddress)
-  const { inputs, name } = method
-  const args = inputs.map(extractMethodArgs(name, values))
+  const { inputs, name, signatureHash } = method
+  const args = inputs.map(extractMethodArgs(signatureHash, values))
 
   return contract.methods[name](...args)
 }
@@ -127,7 +125,6 @@ export const isReadMethod = (method: AbiItemExtended): boolean => method && meth
 
 export const getValueFromTxInputs = (key: string, type: string, tx: TransactionReviewType): string => {
   if (isArrayParameter(type)) {
-    // react-final-form removes the `[]` from the values key
     key = key.replace('[]', '')
   }
 

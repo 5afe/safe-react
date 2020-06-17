@@ -6,31 +6,15 @@ import {
   isBoolean,
   isByte,
   isInt,
-  isNotBooleanType,
-  isNotNumberType,
-  isNotStringType,
-  isString,
   isUint,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-const typeValidator = (type: string) => (value: string): string | undefined => {
+const validator = (value: string): string | undefined => {
   try {
     const values = JSON.parse(value)
 
     if (!Array.isArray(values)) {
       return 'be sure to surround value with []'
-    }
-
-    if ((isAddress(type) || isString(type) || isByte(type)) && values.some(isNotStringType)) {
-      return 'values must be surrounded with "'
-    }
-
-    if (isBoolean(type) && values.some(isNotBooleanType)) {
-      return 'values must be of boolean type'
-    }
-
-    if ((isUint(type) || isInt(type)) && values.some(isNotNumberType)) {
-      return 'values must be of integer type'
     }
   } catch (e) {
     return 'invalid format'
@@ -62,13 +46,7 @@ const typePlaceholder = (text: string, type: string): string => {
 }
 
 const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): JSX.Element => (
-  <TextareaField
-    name={name}
-    placeholder={typePlaceholder(text, type)}
-    text={text}
-    type="text"
-    validate={typeValidator(type)}
-  />
+  <TextareaField name={name} placeholder={typePlaceholder(text, type)} text={text} type="text" validate={validator} />
 )
 
 export default ArrayTypeInput
