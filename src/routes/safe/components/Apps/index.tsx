@@ -31,7 +31,7 @@ const StyledIframe = styled.iframe`
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: ${({ appIsLoading }) => (appIsLoading ? 'none' : 'block')};
+  display: ${({ hidden }: { hidden: boolean }) => (hidden ? 'none' : 'block')};
 `
 const Centered = styled.div`
   display: flex;
@@ -142,7 +142,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           ref={iframeRef}
           src={app.url}
           title={app.name}
-          appIsLoading={appIsLoading}
+          hidden={appIsLoading}
         />
       </>
     )
