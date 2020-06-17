@@ -26,12 +26,12 @@ import { SafeApp } from './types'
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
-const StyledIframe = styled.iframe`
+const StyledIframe = styled.iframe<{ hidden: boolean }>`
   padding: 24px;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
-  display: ${({ hidden }: { hidden: boolean }) => (hidden ? 'none' : 'block')};
+  display: ${({ hidden }) => (hidden ? 'none' : 'block')};
 `
 const Centered = styled.div`
   display: flex;
