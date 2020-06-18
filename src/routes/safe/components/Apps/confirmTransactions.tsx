@@ -3,7 +3,6 @@ import { BigNumber } from 'bignumber.js'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
 import Collapse from 'src/components/Collapse'
@@ -56,16 +55,11 @@ const IconText = styled.div`
   }
 `
 const isTxValid = (t): boolean => {
-  try {
-    if (!['string', 'number'].includes(typeof t.value)) {
-      return false
-    }
+  if (!['string', 'number'].includes(typeof t.value)) {
+    return false
+  }
 
-    if (typeof t.value === 'string') {
-      const web3 = getWeb3()
-      web3.eth.abi.decodeParameter('uint256', t.value)
-    }
-  } catch (error) {
+  if (typeof t.value === 'string' && !/^\d+$/.test(t.value)) {
     return false
   }
 
