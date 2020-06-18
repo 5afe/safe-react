@@ -22,7 +22,7 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/routes/safe/store/selectors'
-import { getValueFromTxInputs } from '../utils'
+import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
 
@@ -133,7 +133,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
           </Paragraph>
         </Row>
         {tx.selectedMethod.inputs.map(({ name, type }, index) => {
-          const key = `methodInput-${tx.selectedMethod.name}_${index}_${type}`
+          const key = generateFormFieldKey(type, tx.selectedMethod.signatureHash, index)
           const value: string = getValueFromTxInputs(key, type, tx)
 
           return (
