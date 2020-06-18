@@ -220,7 +220,6 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       placeholder="Amount*"
                       text="Amount*"
                       type="text"
-                      disabled={!selectedTokenRecord}
                       validate={composeValidators(
                         required,
                         mustBeFloat,
