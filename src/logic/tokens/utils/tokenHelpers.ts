@@ -1,6 +1,11 @@
+import memoize from 'lodash.memoize'
 import logo from 'src/assets/icons/icon_etherTokens.svg'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getStandardTokenContract, getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
+import {
+  getStandardTokenContract,
+  getTokenInfos,
+  getERC721TokenContract,
+} from 'src/logic/tokens/store/actions/fetchTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
@@ -45,6 +50,14 @@ export const isSendERC721Transaction = (tx: any, txCode: string, knownTokens: an
     (isTokenTransfer(tx) && !knownTokens.get(tx.to))
   )
 }
+
+export const getERC721Symbol = memoize(
+  async (contractAddress: string): Promise<string> => {
+    const ERC721token = await getERC721TokenContract()
+    const tokenInstance = await ERC721token.at(contractAddress)
+    return tokenInstance.symbol()
+  },
+)
 
 export const getERC20DecimalsAndSymbol = async (
   tokenAddress: string,
