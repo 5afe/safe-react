@@ -1,13 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
-
+import Switch from '@material-ui/core/Switch'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { safeSelector } from 'src/routes/safe/store/selectors'
+import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import EthAddressInput from './EthAddressInput'
@@ -33,11 +34,20 @@ export interface CreatedTx {
 export interface ContractInteractionProps {
   contractAddress: string
   initialValues: { contractAddress?: string }
+  isABI: boolean
   onClose: () => void
+  switchMethod: () => void
   onNext: (tx: CreatedTx) => void
 }
 
-const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: ContractInteractionProps) => {
+const ContractInteraction: React.FC<ContractInteractionProps> = ({
+  contractAddress,
+  initialValues,
+  onClose,
+  onNext,
+  switchMethod,
+  isABI,
+}) => {
   const classes = useStyles()
   const { address: safeAddress = '' } = useSelector(safeSelector)
   let setCallResults
@@ -99,6 +109,10 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
+                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                  Use custom data (hex encoded)
+                  <Switch checked={!isABI} onChange={switchMethod} />
+                </Paragraph>
               </Block>
               <Hairline />
               <Buttons onClose={onClose} />
