@@ -1,6 +1,7 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
@@ -20,7 +21,7 @@ export const getApprovalTransaction = async ({
   sender,
   to,
   valueInWei,
-}) => {
+}: TxArgs) => {
   const txHash = await safeInstance.getTransactionHash(
     to,
     valueInWei,
@@ -40,7 +41,7 @@ export const getApprovalTransaction = async ({
   try {
     const web3 = getWeb3()
 
-    const contract = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
+    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
 
     return contract.methods.approveHash(txHash)
   } catch (err) {
@@ -61,10 +62,10 @@ export const getExecutionTransaction = async ({
   sigs,
   to,
   valueInWei,
-}) => {
+}: TxArgs) => {
   try {
     const web3 = getWeb3()
-    const contract = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
+    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
 
     return contract.methods.execTransaction(
       to,

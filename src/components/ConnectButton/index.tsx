@@ -50,9 +50,9 @@ export const onboard = Onboard({
   walletCheck: [
     { checkName: 'derivationPath' },
     { checkName: 'connect' },
-    transactionDataCheck(),
-    { checkName: 'network' },
     { checkName: 'accounts' },
+    { checkName: 'network' },
+    transactionDataCheck(),
   ],
 })
 

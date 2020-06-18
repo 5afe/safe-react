@@ -12,7 +12,7 @@ import { SET_DEFAULT_SAFE } from 'src/routes/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/routes/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
-import SafeRecord from 'src/routes/safe/store/models/safe'
+import makeSafe from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -74,7 +74,7 @@ export default handleActions(
         return state.updateIn([SAFE_REDUCER_ID, safe.address], (prevSafe) => prevSafe.merge(safe))
       }
 
-      return state.setIn([SAFE_REDUCER_ID, safe.address], SafeRecord(safe))
+      return state.setIn([SAFE_REDUCER_ID, safe.address], makeSafe(safe))
     },
     [REMOVE_SAFE]: (state, action) => {
       const safeAddress = action.payload

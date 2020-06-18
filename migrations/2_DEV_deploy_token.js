@@ -1,4 +1,3 @@
-// @flow
 /* eslint-disable no-console */
 const TokenOMG = artifacts.require('TokenOMG')
 const TokenRDN = artifacts.require('TokenRDN')

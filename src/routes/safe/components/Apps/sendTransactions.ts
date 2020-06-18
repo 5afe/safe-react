@@ -17,7 +17,7 @@ const multiSendAbi = [
 
 const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnackbar, origin) => {
   const web3 = getWeb3()
-  const multiSend = new web3.eth.Contract(multiSendAbi as any, multiSendAddress)
+  const multiSend: any = new web3.eth.Contract(multiSendAbi as any, multiSendAddress)
 
   const joinedTxs = txs
     .map((tx) =>

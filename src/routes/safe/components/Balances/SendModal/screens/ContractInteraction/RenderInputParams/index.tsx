@@ -1,44 +1,35 @@
 import React from 'react'
 import { useField } from 'react-final-form'
 
-import Field from 'src/components/forms/Field'
-import TextField from 'src/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
-import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 
-const RenderInputParams = () => {
+import InputComponent from './InputComponent'
+import { generateFormFieldKey } from '../utils'
+import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
+
+const RenderInputParams = (): JSX.Element => {
   const {
     meta: { valid: validABI },
-  } = useField('abi', { valid: true } as any)
+  } = useField('abi', { subscription: { valid: true, value: true } })
   const {
     input: { value: method },
-  }: any = useField('selectedMethod', { value: true })
+  }: { input: { value: AbiItemExtended } } = useField('selectedMethod', { subscription: { value: true } })
   const renderInputs = validABI && !!method && method.inputs.length
 
-  return !renderInputs
-    ? null
-    : method.inputs.map(({ name, type }, index) => {
+  return !renderInputs ? null : (
+    <>
+      {method.inputs.map(({ name, type }, index) => {
         const placeholder = name ? `${name} (${type})` : type
-        const key = `methodInput-${method.name}_${index}_${type}`
-        const validate = type === 'address' ? composeValidators(required, mustBeEthereumAddress) : required
+        const key = generateFormFieldKey(type, method.signatureHash, index)
 
         return (
           <Row key={key} margin="sm">
-            <Col>
-              <Field
-                component={TextField}
-                name={key}
-                placeholder={placeholder}
-                testId={key}
-                text={placeholder}
-                type="text"
-                validate={validate}
-              />
-            </Col>
+            <InputComponent type={type} keyValue={key} placeholder={placeholder} />
           </Row>
         )
-      })
+      })}
+    </>
+  )
 }
 
 export default RenderInputParams

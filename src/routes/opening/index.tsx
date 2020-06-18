@@ -103,7 +103,7 @@ const BackButton = styled(Button)`
 
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: any) => {
   const [loading, setLoading] = useState(true)
-  const [stepIndex, setStepIndex] = useState()
+  const [stepIndex, setStepIndex] = useState(0)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()
   const [createdSafeAddress, setCreatedSafeAddress] = useState()
 

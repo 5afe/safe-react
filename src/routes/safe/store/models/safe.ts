@@ -1,6 +1,25 @@
-import { List, Map, Record, Set } from 'immutable'
+import { List, Map, Record, RecordOf, Set } from 'immutable'
 
-const SafeRecord = Record({
+export type SafeRecordProps = {
+  name: string
+  address: string
+  threshold: number
+  ethBalance: number
+  owners: List<{ name: string; address: string }>
+  activeTokens: Set<string>
+  activeAssets: Set<string>
+  blacklistedTokens: Set<string>
+  blacklistedAssets: Set<string>
+  balances: Map<string, string>
+  nonce: number
+  latestIncomingTxBlock: number
+  recurringUser?: boolean
+  currentVersion: string
+  needsUpdate: boolean
+  featuresEnabled: Array<string>
+}
+
+const makeSafe = Record<SafeRecordProps>({
   name: '',
   address: '',
   threshold: 0,
@@ -19,4 +38,6 @@ const SafeRecord = Record({
   featuresEnabled: [],
 })
 
-export default SafeRecord
+export type SafeRecord = RecordOf<SafeRecordProps>
+
+export default makeSafe

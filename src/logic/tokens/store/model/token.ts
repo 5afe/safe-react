@@ -1,6 +1,15 @@
-import { Record } from 'immutable'
+import { Record, RecordOf } from 'immutable'
 
-export const makeToken = Record({
+export type TokenProps = {
+  address: string
+  name: string
+  symbol: string
+  decimals: number | string
+  logoUri?: string | null
+  balance?: number | string
+}
+
+export const makeToken = Record<TokenProps>({
   address: '',
   name: '',
   symbol: '',
@@ -8,5 +17,6 @@ export const makeToken = Record({
   logoUri: '',
   balance: undefined,
 })
-
 // balance is only set in extendedSafeTokensSelector when we display user's token balances
+
+export type Token = RecordOf<TokenProps>

@@ -1,4 +1,3 @@
-import ENS from 'ethereum-ens'
 import Web3 from 'web3'
 
 import { sameAddress } from './ethAddresses'
@@ -116,10 +115,9 @@ export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => 
   }
 }
 
-export const getAddressFromENS = async (name) => {
-  const ens = new ENS(web3)
-  return await ens.resolver(name).addr()
-}
+export const getAddressFromENS = (name: string) => web3.eth.ens.getAddress(name)
+
+export const getContentFromENS = (name: string) => web3.eth.ens.getContenthash(name)
 
 export const setWeb3 = (provider) => {
   web3 = new Web3(provider)
