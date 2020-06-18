@@ -35,6 +35,7 @@ export const CreateSafe = ({ provider, size }: any) => (
     size={size || 'medium'}
     to={OPEN_ADDRESS}
     variant="contained"
+    testId="create-new-safe-btn"
   >
     <Img alt="Safe" height={14} src={plus} />
     <div style={buttonStyle}>Create new Safe</div>
@@ -50,6 +51,7 @@ export const LoadSafe = ({ provider, size }) => (
     size={size || 'medium'}
     to={LOAD_ADDRESS}
     variant="outlined"
+    testId="load-existing-safe-btn"
   >
     <Img alt="Safe" height={14} src={safe} />
     <div style={buttonStyle}>Load existing Safe</div>

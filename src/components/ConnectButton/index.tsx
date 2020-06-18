@@ -78,6 +78,7 @@ const ConnectButton = (props) => (
       }
     }}
     variant="contained"
+    testId="connect-btn"
     {...props}
   >
     Connect

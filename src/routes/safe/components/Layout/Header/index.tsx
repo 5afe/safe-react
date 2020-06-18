@@ -38,7 +38,13 @@ const LayoutHeader = (props) => {
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>
           <Block className={classes.user} justify="center">
-            <Paragraph className={classes.address} color="disabled" noMargin size="md">
+            <Paragraph
+              className={classes.address}
+              color="disabled"
+              noMargin
+              size="md"
+              data-testid="safe-address-heading"
+            >
               {address}
             </Paragraph>
             <CopyBtn content={address} />
@@ -54,6 +60,7 @@ const LayoutHeader = (props) => {
           onClick={() => showSendFunds('Ether')}
           size="small"
           variant="contained"
+          testId="main-send-btn"
         >
           <CallMade
             alt="Send Transaction"

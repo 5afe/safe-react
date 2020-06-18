@@ -39,7 +39,13 @@ export const ContinueFooter = ({
   continueButtonDisabled: boolean
   onContinue: Function
 }) => (
-  <Button color="primary" disabled={continueButtonDisabled} onClick={onContinue} variant="contained">
+  <Button
+    color="primary"
+    disabled={continueButtonDisabled}
+    onClick={onContinue}
+    variant="contained"
+    data-testid="continue-btn"
+  >
     Continue
   </Button>
 )

@@ -163,7 +163,14 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
       )}
       <Row className={classes.disconnect}>
-        <Button color="primary" fullWidth onClick={onDisconnect} size="medium" variant="contained">
+        <Button
+          color="primary"
+          fullWidth
+          onClick={onDisconnect}
+          size="medium"
+          variant="contained"
+          data-testid="disconnect-btn"
+        >
           <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
             Disconnect
           </Paragraph>
