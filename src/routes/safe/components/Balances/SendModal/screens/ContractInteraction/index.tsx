@@ -37,7 +37,7 @@ export interface ContractInteractionProps {
   isABI: boolean
   onClose: () => void
   switchMethod: () => void
-  onNext: (tx: CreatedTx) => void
+  onNext: (tx: CreatedTx, submit: boolean) => void
 }
 
 const ContractInteraction: React.FC<ContractInteractionProps> = ({
@@ -58,13 +58,18 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
     }
   }, [contractAddress, initialValues.contractAddress])
 
-  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
+  const saveForm = async (values) => {
+    await handleSubmit(values, false)
+    switchMethod()
+  }
+
+  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }, submit = true) => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
         const data = txObject.encodeABI()
 
-        if (isReadMethod(selectedMethod)) {
+        if (isReadMethod(selectedMethod) && submit) {
           const result = await txObject.call({ from: safeAddress })
           setCallResults(result)
 
@@ -72,7 +77,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
           return
         }
 
-        onNext({ ...values, contractAddress, data, selectedMethod, value })
+        onNext({ ...values, contractAddress, data, selectedMethod, value }, submit)
       } catch (error) {
         return handleSubmitError(error, values)
       }
@@ -88,7 +93,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        subscription={{ submitting: true, pristine: true }}
+        subscription={{ submitting: true, pristine: true, values: true }}
       >
         {(submitting, validating, rest, mutators) => {
           setCallResults = mutators.setCallResults
@@ -111,7 +116,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <FormErrorMessage />
                 <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                   Use custom data (hex encoded)
-                  <Switch checked={!isABI} onChange={switchMethod} />
+                  <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
                 </Paragraph>
               </Block>
               <Hairline />

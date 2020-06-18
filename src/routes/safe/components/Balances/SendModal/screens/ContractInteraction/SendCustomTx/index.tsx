@@ -19,7 +19,7 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import TextareaField from 'src/components/forms/TextareaField'
-import { composeValidators, maxValue, mustBeFloat } from 'src/components/forms/validator'
+import { composeValidators, maxValue, mustBeFloat, greaterThan } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -34,12 +34,12 @@ import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
 type Props = {
-  initialValues: { contractAddress?: string; recipientAddress?: string }
+  initialValues: { contractAddress?: string }
   onClose: () => void
-  onNext: (any) => void
+  onNext: (any, submit: boolean) => void
   isABI: boolean
   switchMethod: () => void
-  recipientAddress: string
+  contractAddress: string
 }
 
 const useStyles = makeStyles(styles)
@@ -48,7 +48,7 @@ const SendCustomTx: React.FC<Props> = ({
   initialValues,
   onClose,
   onNext,
-  recipientAddress,
+  contractAddress,
   switchMethod,
   isABI,
 }: Props) => {
@@ -56,7 +56,7 @@ const SendCustomTx: React.FC<Props> = ({
   const { ethBalance } = useSelector(safeSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
-    address: recipientAddress || initialValues.recipientAddress,
+    address: contractAddress || initialValues.contractAddress,
     name: '',
   })
   const [pristine, setPristine] = useState<boolean>(true)
@@ -68,9 +68,14 @@ const SendCustomTx: React.FC<Props> = ({
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values: any) => {
+  const saveForm = async (values) => {
+    await handleSubmit(values, false)
+    switchMethod()
+  }
+
+  const handleSubmit = (values: any, submit = true) => {
     if (values.data || values.value) {
-      onNext(values)
+      onNext(values, submit)
     }
   }
 
@@ -87,7 +92,7 @@ const SendCustomTx: React.FC<Props> = ({
       utils.changeValue(state, 'value', () => ethBalance)
     },
     setRecipient: (args, state, utils) => {
-      utils.changeValue(state, 'recipientAddress', () => args[0])
+      utils.changeValue(state, 'contractAddress', () => args[0])
     },
   }
 
@@ -106,7 +111,6 @@ const SendCustomTx: React.FC<Props> = ({
       <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
           const mutators = args[3]
-
           let shouldDisableSubmitButton = !isValidAddress
           if (selectedEntry) {
             shouldDisableSubmitButton = !selectedEntry.address
@@ -228,7 +232,7 @@ const SendCustomTx: React.FC<Props> = ({
                       placeholder="Value*"
                       text="Value*"
                       type="text"
-                      validate={composeValidators(mustBeFloat, maxValue(ethBalance))}
+                      validate={composeValidators(mustBeFloat, maxValue(ethBalance), greaterThan(0))}
                     />
                   </Col>
                 </Row>
@@ -244,7 +248,7 @@ const SendCustomTx: React.FC<Props> = ({
                 </Row>
                 <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                   Use custom data (hex encoded)
-                  <Switch checked={!isABI} onChange={switchMethod} />
+                  <Switch onChange={() => saveForm(args[2].values)} checked={!isABI} />
                 </Paragraph>
               </Block>
               <Hairline />

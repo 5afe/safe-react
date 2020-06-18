@@ -30,7 +30,7 @@ export const required = (value?: string) => {
 export const mustBeInteger = (value: string) =>
   !Number.isInteger(Number(value)) || value.includes('.') ? 'Must be an integer' : undefined
 
-export const mustBeFloat = (value: string) => (value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined)
+export const mustBeFloat = (value: string) => (value && Number.isNaN(Number(value)) ? 'Must be a  number' : undefined)
 
 export const greaterThan = (min: number | string) => (value: string) => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {

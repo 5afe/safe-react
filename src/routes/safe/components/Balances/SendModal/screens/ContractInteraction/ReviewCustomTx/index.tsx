@@ -33,7 +33,7 @@ import { sm } from 'src/theme/variables'
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: { recipientAddress?: string; data?: string; value?: string }
+  tx: { contractAddress?: string; data?: string; value?: string }
 }
 
 const useStyles = makeStyles(styles)
@@ -52,7 +52,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props) => {
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -66,11 +66,11 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props) => {
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, tx.data, tx.recipientAddress])
+  }, [safeAddress, tx.data, tx.contractAddress])
 
   const submitTx = async () => {
     const web3 = getWeb3()
-    const txRecipient = tx.recipientAddress
+    const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
 
@@ -118,15 +118,15 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props) => {
         </Row>
         <Row align="center" margin="md">
           <Col xs={1}>
-            <Identicon address={tx.recipientAddress} diameter={32} />
+            <Identicon address={tx.contractAddress} diameter={32} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
               <Paragraph noMargin weight="bolder">
-                {tx.recipientAddress}
+                {tx.contractAddress}
               </Paragraph>
-              <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type="address" value={tx.recipientAddress} />
+              <CopyBtn content={tx.contractAddress} />
+              <EtherscanBtn type="address" value={tx.contractAddress} />
             </Block>
           </Col>
         </Row>

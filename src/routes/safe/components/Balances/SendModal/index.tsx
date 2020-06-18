@@ -59,14 +59,14 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
     setTx(txInfo)
   }
 
-  const handleContractInteractionCreation = (contractInteractionInfo) => {
+  const handleContractInteractionCreation = (contractInteractionInfo, submit) => {
     setTx(contractInteractionInfo)
-    setActiveScreen('contractInteractionReview')
+    if (submit) setActiveScreen('contractInteractionReview')
   }
 
-  const handleCustomTxCreation = (customTxInfo) => {
-    setActiveScreen('reviewCustomTx')
+  const handleCustomTxCreation = (customTxInfo, submit) => {
     setTx(customTxInfo)
+    if (submit) setActiveScreen('reviewCustomTx')
   }
 
   const handleSendCollectible = (txInfo) => {
@@ -128,7 +128,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
             switchMethod={handleSwitchMethod}
             onClose={onClose}
             onNext={handleCustomTxCreation}
-            recipientAddress={recipientAddress}
+            contractAddress={recipientAddress}
           />
         )}
         {activeScreen === 'reviewCustomTx' && (
