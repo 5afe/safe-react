@@ -110,7 +110,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
           <Heading align="center" margin="md" tag="h3">
             Get Started by Connecting a Wallet
           </Heading>
-          <ConnectButton minHeight={42} minWidth={240} />
+          <ConnectButton minHeight={42} minWidth={240} data-testid="connect-btn" />
         </Block>
       )}
     </Block>
