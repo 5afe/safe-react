@@ -8,7 +8,7 @@ export interface AbiItemExtended extends AbiItem {
   signatureHash: string
 }
 
-export const getMethodSignature = ({ inputs, name }: AbiItem) => {
+export const getMethodSignature = ({ inputs, name }: AbiItem): string => {
   const params = inputs.map((x) => x.type).join(',')
   return `${name}(${params})`
 }

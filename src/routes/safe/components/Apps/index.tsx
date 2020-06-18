@@ -38,6 +38,21 @@ const Centered = styled.div`
   justify-content: center;
   flex-direction: column;
 `
+
+const IframeWrapper = styled.div`
+  position: relative;
+  height: 100%;
+  width: 100%;
+`
+
+const IframeCoverLoading = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+`
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -133,17 +148,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     const app = getSelectedApp()
 
     return (
-      <>
-        {appIsLoading && <Loader size="md" />}
-        <StyledIframe
-          frameBorder="0"
-          id={`iframe-${app.name}`}
-          ref={iframeRef}
-          shouldDisplay={!appIsLoading}
-          src={app.url}
-          title={app.name}
-        />
-      </>
+      <IframeWrapper>
+        {appIsLoading && (
+          <IframeCoverLoading>
+            <Loader size="md" />
+          </IframeCoverLoading>
+        )}
+        <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
+      </IframeWrapper>
     )
   }
 
