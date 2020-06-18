@@ -45,7 +45,6 @@ const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, on
           style={secondButtonStyle}
           type="submit"
           variant="contained"
-          testId={`${next.toLowerCase()}-btn`}
         >
           {next}
         </Button>
