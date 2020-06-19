@@ -20,6 +20,12 @@ import { Dispatch } from 'redux'
 import { SafeOwner, SafeRecordProps } from '../../safe/store/models/safe'
 import { List } from 'immutable'
 
+type RecordPropType = Partial<SafeRecordProps>
+
+type StoredSafesType = {
+  [address: string]: RecordPropType
+}
+
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
@@ -29,7 +35,7 @@ export const loadSafe = async (
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
-  const storedSafes: SafeRecordProps = (await loadFromStorage(SAFES_KEY)) || {}
+  const storedSafes: StoredSafesType = (await loadFromStorage(SAFES_KEY)) || {}
 
   storedSafes[safeAddress] = safeProps
 
