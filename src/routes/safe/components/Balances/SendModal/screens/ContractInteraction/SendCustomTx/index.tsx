@@ -33,10 +33,16 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
+export interface CreatedTx {
+  contractAddress: string
+  data: string
+  value: string | number
+}
+
 type Props = {
   initialValues: { contractAddress?: string }
   onClose: () => void
-  onNext: (any, submit: boolean) => void
+  onNext: (tx: CreatedTx, submit: boolean) => void
   isABI: boolean
   switchMethod: () => void
   contractAddress: string
@@ -44,14 +50,7 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const SendCustomTx: React.FC<Props> = ({
-  initialValues,
-  onClose,
-  onNext,
-  contractAddress,
-  switchMethod,
-  isABI,
-}: Props) => {
+const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
@@ -59,14 +58,7 @@ const SendCustomTx: React.FC<Props> = ({
     address: contractAddress || initialValues.contractAddress,
     name: '',
   })
-  const [pristine, setPristine] = useState<boolean>(true)
   const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
-
-  React.useMemo(() => {
-    if (selectedEntry === null && pristine) {
-      setPristine(false)
-    }
-  }, [selectedEntry, pristine])
 
   const saveForm = async (values) => {
     await handleSubmit(values, false)
@@ -108,9 +100,15 @@ const SendCustomTx: React.FC<Props> = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={initialValues}
+        subscription={{ submitting: true, pristine: true, values: true }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const mutators = args[3]
+          const pristine = args[2].pristine
           let shouldDisableSubmitButton = !isValidAddress
           if (selectedEntry) {
             shouldDisableSubmitButton = !selectedEntry.address

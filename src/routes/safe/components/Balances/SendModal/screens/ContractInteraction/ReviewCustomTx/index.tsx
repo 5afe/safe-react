@@ -68,7 +68,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props) => {
     }
   }, [safeAddress, tx.data, tx.contractAddress])
 
-  const submitTx = async () => {
+  const submitTx = async (): Promise<void> => {
     const web3 = getWeb3()
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''

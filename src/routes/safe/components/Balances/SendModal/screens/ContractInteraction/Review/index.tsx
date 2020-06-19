@@ -50,7 +50,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
   useEffect(() => {
     let isCurrent = true
 
-    const estimateGas = async () => {
+    const estimateGas = async (): Promise<void> => {
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 

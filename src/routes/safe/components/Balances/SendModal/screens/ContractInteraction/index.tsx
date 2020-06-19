@@ -58,12 +58,15 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
     }
   }, [contractAddress, initialValues.contractAddress])
 
-  const saveForm = async (values) => {
+  const saveForm = async (values: CreatedTx): Promise<void> => {
     await handleSubmit(values, false)
     switchMethod()
   }
 
-  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }, submit = true) => {
+  const handleSubmit = async (
+    { contractAddress, selectedMethod, value, ...values },
+    submit = true,
+  ): Promise<void | any> => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)

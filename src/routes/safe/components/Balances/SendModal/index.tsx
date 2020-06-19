@@ -59,12 +59,12 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
     setTx(txInfo)
   }
 
-  const handleContractInteractionCreation = (contractInteractionInfo, submit) => {
+  const handleContractInteractionCreation = (contractInteractionInfo: any, submit: boolean): void => {
     setTx(contractInteractionInfo)
     if (submit) setActiveScreen('contractInteractionReview')
   }
 
-  const handleCustomTxCreation = (customTxInfo, submit) => {
+  const handleCustomTxCreation = (customTxInfo: any, submit: boolean): void => {
     setTx(customTxInfo)
     if (submit) setActiveScreen('reviewCustomTx')
   }
@@ -74,7 +74,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
     setTx(txInfo)
   }
 
-  const handleSwitchMethod = () => {
+  const handleSwitchMethod = (): void => {
     setIsABI(!isABI)
   }
 
