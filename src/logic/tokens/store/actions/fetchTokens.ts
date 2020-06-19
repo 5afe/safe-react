@@ -34,7 +34,6 @@ const createERC721TokenContract = async () => {
   const web3 = getWeb3()
   const erc721Token = await contract(ERC721)
   erc721Token.setProvider(web3.currentProvider)
-
   return erc721Token
 }
 

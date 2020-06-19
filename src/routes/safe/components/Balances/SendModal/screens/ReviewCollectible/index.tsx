@@ -58,7 +58,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const { fromWei, toBN } = getWeb3().utils
 
       const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
-      const methodToCall = supportsSafeTransfer ? SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH : 'transfer'
+      const methodToCall = supportsSafeTransfer ? `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}` : 'transfer'
       const transferParams = [tx.recipientAddress, tx.nftTokenId]
       const params = methodToCall === 'transfer' ? transferParams : [safeAddress, ...transferParams]
 
