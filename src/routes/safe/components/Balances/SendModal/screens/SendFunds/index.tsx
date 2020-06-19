@@ -39,7 +39,7 @@ const formMutators = {
     utils.changeValue(state, 'amount', () => args[0])
   },
   onTokenChange: (args, state, utils) => {
-    utils.changeValue(state, 'amount', () => '')
+    utils.changeValue(state, 'amount', () => state.formState.values.amount)
   },
   setRecipient: (args, state, utils) => {
     utils.changeValue(state, 'recipientAddress', () => args[0])
