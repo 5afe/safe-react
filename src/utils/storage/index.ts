@@ -10,7 +10,7 @@ export const storage = new ImmortalStorage(stores)
 
 const PREFIX = `v2_${getNetwork()}`
 
-export const loadFromStorage = async (key) => {
+export const loadFromStorage = async (key: string) => {
   try {
     const stringifiedValue = await storage.get(`${PREFIX}__${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {

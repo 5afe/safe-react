@@ -1,5 +1,10 @@
 import { List, Map, Record, RecordOf, Set } from 'immutable'
 
+export type SafeOwner = {
+  name: string
+  address: string
+}
+
 export type SafeRecordProps = {
   name: string
   address: string

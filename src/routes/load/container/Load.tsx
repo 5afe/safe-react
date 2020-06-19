@@ -17,17 +17,20 @@ import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage } from 'src/utils/storage'
 import { Dispatch } from 'redux'
+import { SafeOwner, SafeRecordProps } from '../../safe/store/models/safe'
+import { List } from 'immutable'
 
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
-  owners: any,
+  owners: List<SafeOwner>,
   addSafe: Dispatch<any>,
 ): Promise<void> => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
-  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
+  const storedSafes: SafeRecordProps = (await loadFromStorage(SAFES_KEY)) || {}
+
   storedSafes[safeAddress] = safeProps
 
   await saveSafes(storedSafes)
