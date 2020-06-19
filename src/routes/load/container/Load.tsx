@@ -16,17 +16,22 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage } from 'src/utils/storage'
+import { Dispatch } from 'redux'
 
-export const loadSafe = async (safeName, safeAddress, owners, addSafe) => {
+export const loadSafe = async (
+  safeName: string,
+  safeAddress: string,
+  owners: any,
+  addSafe: Dispatch<any>,
+): Promise<void> => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
-
-  await addSafe(safeProps)
 
   const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
   storedSafes[safeAddress] = safeProps
 
-  saveSafes(storedSafes)
+  await saveSafes(storedSafes)
+  await addSafe(safeProps)
 }
 
 class Load extends React.Component<any> {
