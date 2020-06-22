@@ -7,11 +7,13 @@ import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
+import { Dispatch } from 'redux'
+import { backOff } from 'exponential-backoff'
 
 const noFunc = () => {}
 
-export default (safeAddress: string) => async (dispatch) => {
-  const transactions = await loadOutgoingTransactions(safeAddress)
+export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
+  const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
 
   if (transactions) {
     const { cancel, outgoing } = transactions

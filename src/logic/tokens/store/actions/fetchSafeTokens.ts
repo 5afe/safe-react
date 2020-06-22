@@ -11,12 +11,17 @@ import { makeToken } from 'src/logic/tokens/store/model/token'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import { Dispatch } from 'redux'
+import { backOff } from 'exponential-backoff'
 
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}
 const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ...valueToUpdate })
 
-const fetchSafeTokens = (safeAddress) => async (dispatch, getState) => {
+const fetchSafeTokens = (safeAddress: string) => async <T extends () => unknown>(
+  dispatch: Dispatch,
+  getState: T,
+): Promise<void> => {
   try {
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
@@ -26,7 +31,7 @@ const fetchSafeTokens = (safeAddress) => async (dispatch, getState) => {
       return
     }
 
-    const result = await fetchTokenCurrenciesBalances(safeAddress)
+    const result = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
     const currentEthBalance = safe.get('ethBalance')
     const safeBalances = safe.get('balances')
     const alreadyActiveTokens = safe.get('activeTokens')
@@ -96,7 +101,7 @@ const fetchSafeTokens = (safeAddress) => async (dispatch, getState) => {
     console.error('Error fetching active token list', err)
   }
 
-  return null
+  return
 }
 
 export default fetchSafeTokens

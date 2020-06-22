@@ -9,7 +9,7 @@ import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchT
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { TIMEOUT } from 'src/utils/constants'
 
-export const useCheckForUpdates = () => {
+export const useCheckForUpdates = (): void => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   useEffect(() => {
