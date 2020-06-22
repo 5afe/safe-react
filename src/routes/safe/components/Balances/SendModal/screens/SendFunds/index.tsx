@@ -17,7 +17,14 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, greaterThan, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  greaterThan,
+  maxValue,
+  maxValueCheck,
+  mustBeFloat,
+  required,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -56,6 +63,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
+
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(true)
 
@@ -86,7 +94,18 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={initialValues}
+        onSubmit={handleSubmit}
+        validation={(values) => {
+          const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
+
+          return {
+            amount: maxValueCheck(selectedTokenRecord?.balance, values.amount),
+          }
+        }}
+      >
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
@@ -229,6 +248,10 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                     />
                     <OnChange name="token">
                       {() => {
+                        setSelectedEntry({
+                          name: selectedEntry?.name,
+                          address: selectedEntry?.address,
+                        })
                         mutators.onTokenChange()
                       }}
                     </OnChange>
