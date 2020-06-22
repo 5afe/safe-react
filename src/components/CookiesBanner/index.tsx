@@ -144,6 +144,7 @@ const CookiesBanner = () => {
         onKeyDown={closeCookiesBannerHandler}
         role="button"
         tabIndex={0}
+        data-testid="accept-preferences"
       >
         Accept preferences &gt;
       </span>
