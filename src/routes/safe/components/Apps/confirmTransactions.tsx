@@ -54,7 +54,7 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
-const isTxValid = (t): boolean => {
+const isTxValid = (t: SafeAppTx): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
     return false
   }
