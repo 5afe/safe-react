@@ -44,7 +44,7 @@ const SafeListHeader = ({ safesCount }) => {
   return (
     <Col className={classes.container} middle="xs" start="xs">
       Safes
-      <Paragraph className={classes.counter} size="xs">
+      <Paragraph className={classes.counter} size="xs" data-testid="safe-counter-heading">
         {safesCount}
       </Paragraph>
       <IconButton

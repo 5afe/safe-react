@@ -109,7 +109,7 @@ const OwnerListComponent = (props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph color="primary" noMargin size="md">
+        <Paragraph color="primary" noMargin size="md" data-testid="load-safe-step-two">
           {`This Safe has ${owners.length} owners. Optional: Provide a name for each owner.`}
         </Paragraph>
       </Block>
@@ -122,7 +122,7 @@ const OwnerListComponent = (props) => {
         <Hairline />
         <Block margin="md" padding="md">
           {owners.map((address, index) => (
-            <Row className={classes.owner} key={address}>
+            <Row className={classes.owner} key={address} data-testid="owner-row">
               <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
@@ -133,6 +133,7 @@ const OwnerListComponent = (props) => {
                   text="Owner Name"
                   type="text"
                   validate={required}
+                  testId={`load-safe-owner-name-${index}`}
                 />
               </Col>
               <Col xs={8}>

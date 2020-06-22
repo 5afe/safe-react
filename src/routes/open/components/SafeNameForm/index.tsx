@@ -45,6 +45,7 @@ const SafeName = ({ classes, safeName }) => (
         text="Safe name"
         type="text"
         validate={required}
+        testId="create-safe-name-field"
       />
     </Block>
     <Block margin="lg">

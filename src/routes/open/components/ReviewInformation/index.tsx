@@ -112,7 +112,7 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
         <Col className={classes.detailsColumn} layout="column" xs={4}>
           <Block className={classes.details}>
             <Block margin="lg">
-              <Paragraph color="primary" noMargin size="lg">
+              <Paragraph color="primary" noMargin size="lg" data-testid="create-safe-step-three">
                 Details
               </Paragraph>
             </Block>
@@ -120,7 +120,14 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
               <Paragraph color="disabled" noMargin size="sm">
                 Name of new Safe
               </Paragraph>
-              <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+              <Paragraph
+                className={classes.name}
+                color="primary"
+                noMargin
+                size="lg"
+                weight="bolder"
+                data-testid="create-safe-review-name"
+              >
                 {values[FIELD_NAME]}
               </Paragraph>
             </Block>
@@ -128,7 +135,13 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
               <Paragraph color="disabled" noMargin size="sm">
                 Any transaction requires the confirmation of:
               </Paragraph>
-              <Paragraph color="primary" noMargin size="lg" weight="bolder">
+              <Paragraph
+                color="primary"
+                noMargin
+                size="lg"
+                weight="bolder"
+                data-testid={`create-safe-review-req-owners-${values[FIELD_CONFIRMATIONS]}`}
+              >
                 {`${values[FIELD_CONFIRMATIONS]} out of ${numOwners} owners`}
               </Paragraph>
             </Block>
@@ -150,11 +163,16 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg">
+                      <Paragraph noMargin size="lg" data-testid={`create-safe-owner-name-${index}`}>
                         {name}
                       </Paragraph>
                       <Block className={classes.user} justify="center">
-                        <Paragraph color="disabled" noMargin size="md">
+                        <Paragraph
+                          color="disabled"
+                          noMargin
+                          size="md"
+                          data-testid={`create-safe-owner-address-${index}`}
+                        >
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />

@@ -99,7 +99,7 @@ const SafeOwners = (props) => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph color="primary" noMargin size="md">
+        <Paragraph color="primary" noMargin size="md" data-testid="create-safe-step-two">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
           <br />
@@ -120,7 +120,7 @@ const SafeOwners = (props) => {
           const addressName = getOwnerAddressBy(index)
 
           return (
-            <Row className={classes.owner} key={`owner${index}`}>
+            <Row className={classes.owner} key={`owner${index}`} data-testid={`create-safe-owner-row`}>
               <Col className={classes.ownerName} xs={4}>
                 <Field
                   className={classes.name}
@@ -130,6 +130,7 @@ const SafeOwners = (props) => {
                   text="Owner Name"
                   type="text"
                   validate={required}
+                  testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
               <Col className={classes.ownerAddress} xs={6}>
@@ -142,7 +143,7 @@ const SafeOwners = (props) => {
                     noErrorsOn(addressName, errors) && {
                       endAdornment: (
                         <InputAdornment position="end">
-                          <CheckCircle className={classes.check} />
+                          <CheckCircle className={classes.check} data-testid={`valid-address-${index}`} />
                         </InputAdornment>
                       ),
                     }
@@ -152,6 +153,7 @@ const SafeOwners = (props) => {
                   text="Owner Address"
                   type="text"
                   validators={[getAddressValidator(otherAccounts, index)]}
+                  testId={`create-safe-address-field-${index}`}
                 />
               </Col>
               <Col center="xs" className={classes.remove} middle="xs" xs={1}>
@@ -191,14 +193,20 @@ const SafeOwners = (props) => {
               validate={composeValidators(required, mustBeInteger, minValue(1))}
             >
               {[...Array(Number(validOwners))].map((x, index) => (
-                <MenuItem key={`selectOwner${index}`} value={`${index + 1}`}>
+                <MenuItem key={`selectOwner${index}`} value={`${index + 1}`} data-testid={`input-${index + 1}`}>
                   {index + 1}
                 </MenuItem>
               ))}
             </Field>
           </Col>
           <Col className={classes.ownersAmountItem} xs={10}>
-            <Paragraph className={classes.owners} color="primary" noMargin size="lg">
+            <Paragraph
+              className={classes.owners}
+              color="primary"
+              noMargin
+              size="lg"
+              data-testid={`create-safe-req-conf-${validOwners}`}
+            >
               out of {validOwners} owner(s)
             </Paragraph>
           </Col>

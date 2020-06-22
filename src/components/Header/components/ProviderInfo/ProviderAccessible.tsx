@@ -62,7 +62,14 @@ const ProviderInfo = ({ classes, connected, network, provider, userAddress }) =>
       )}
       {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
       <Col className={classes.account} layout="column" start="sm">
-        <Paragraph className={classes.network} noMargin size="xs" transform="capitalize" weight="bolder">
+        <Paragraph
+          className={classes.network}
+          noMargin
+          size="xs"
+          transform="capitalize"
+          weight="bolder"
+          data-testid="connected-wallet"
+        >
           {providerText}
         </Paragraph>
         <Paragraph className={classes.address} color={color} noMargin size="xs">
