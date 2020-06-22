@@ -1,13 +1,14 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
-
+import Switch from '@material-ui/core/Switch'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { safeSelector } from 'src/routes/safe/store/selectors'
+import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import EthAddressInput from './EthAddressInput'
@@ -33,11 +34,20 @@ export interface CreatedTx {
 export interface ContractInteractionProps {
   contractAddress: string
   initialValues: { contractAddress?: string }
+  isABI: boolean
   onClose: () => void
-  onNext: (tx: CreatedTx) => void
+  switchMethod: () => void
+  onNext: (tx: CreatedTx, submit: boolean) => void
 }
 
-const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }: ContractInteractionProps) => {
+const ContractInteraction: React.FC<ContractInteractionProps> = ({
+  contractAddress,
+  initialValues,
+  onClose,
+  onNext,
+  switchMethod,
+  isABI,
+}) => {
   const classes = useStyles()
   const { address: safeAddress = '' } = useSelector(safeSelector)
   let setCallResults
@@ -48,13 +58,21 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
     }
   }, [contractAddress, initialValues.contractAddress])
 
-  const handleSubmit = async ({ contractAddress, selectedMethod, value, ...values }) => {
+  const saveForm = async (values: CreatedTx): Promise<void> => {
+    await handleSubmit(values, false)
+    switchMethod()
+  }
+
+  const handleSubmit = async (
+    { contractAddress, selectedMethod, value, ...values },
+    submit = true,
+  ): Promise<void | any> => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
         const data = txObject.encodeABI()
 
-        if (isReadMethod(selectedMethod)) {
+        if (isReadMethod(selectedMethod) && submit) {
           const result = await txObject.call({ from: safeAddress })
           setCallResults(result)
 
@@ -62,7 +80,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
           return
         }
 
-        onNext({ ...values, contractAddress, data, selectedMethod, value })
+        onNext({ ...values, contractAddress, data, selectedMethod, value }, submit)
       } catch (error) {
         return handleSubmitError(error, values)
       }
@@ -78,7 +96,7 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
-        subscription={{ submitting: true, pristine: true }}
+        subscription={{ submitting: true, pristine: true, values: true }}
       >
         {(submitting, validating, rest, mutators) => {
           setCallResults = mutators.setCallResults
@@ -99,6 +117,10 @@ const ContractInteraction = ({ contractAddress, initialValues, onClose, onNext }
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
+                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                  Use custom data (hex encoded)
+                  <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
+                </Paragraph>
               </Block>
               <Hairline />
               <Buttons onClose={onClose} />
