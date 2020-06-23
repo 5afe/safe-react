@@ -52,9 +52,9 @@ export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
     case ETHEREUM_NETWORK.RINKEBY:
       return getEtherScanLink(ETHEREUM_NETWORK.RINKEBY, type, value)
     case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
-      return 'https://explorer.energyweb.org'
+      return `https://explorer.energyweb.org/${type}/${value}`
     case ETHEREUM_NETWORK.VOLTA:
-      return 'https://volta-explorer.energyweb.org'
+      return `https://volta-explorer.energyweb.org/${type}/${value}`
     default:
       return getEtherScanLink(network, type, value)
   }
