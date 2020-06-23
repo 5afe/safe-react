@@ -2473,7 +2473,7 @@
     enc-utils "2.1.0"
     js-sha3 "0.8.0"
 
-"@walletconnect/web3-provider@^1.0.0-beta.47":
+"@walletconnect/web3-provider@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@walletconnect/web3-provider/-/web3-provider-1.0.5.tgz#c7e3d1a1449b3f1fd6125e3fabd361394dd1ecdd"
   integrity sha512-oxrkE1kMZl7mlno7lmupLZS+slDC83nZh5UbE4B2Gr0aOTfT1lqyQMkvSXYOcl0fjR+p0x6iJ4sh0nvhV6Loug==
@@ -4070,20 +4070,20 @@ bn.js@^5.1.1, bn.js@^5.1.2:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.2.tgz#c9686902d3c9a27729f43ab10f9d79c2004da7b0"
   integrity sha512-40rZaf3bUNKTVYu9sIeeEGOg7g14Yvnj9kH7b50EiwX0Q7A6umbvfI5tvHaOERH0XigqKkfLkFQxzb4e6CIXnA==
 
-bnc-onboard@1.9.4:
-  version "1.9.4"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.9.4.tgz#c70c41652234009708e3a2334ab064a3a4c008c3"
-  integrity sha512-mtecvcE/I4+6fydWXVZrrw1OD/UaiR36IojyIeXqxEg6tI/6pu0DsJhszWF5FeN83dg1qOy24eo4rTNh8WKItQ==
+bnc-onboard@1.10.0:
+  version "1.10.0"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.10.0.tgz#f1c2797b10060808a20b46fa072c57a466bb5f6a"
+  integrity sha512-d/Xj1RxoDOL3IN7bdD0ZENjSkbMXcvn+cWLLOi/7XbI+H+elDZS/knAnYLa99j54Mu+odTSXuBy94EwvXbey0w==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.7.0"
     "@ledgerhq/hw-transport-u2f" "^5.7.0"
     "@portis/web3" "^2.0.0-beta.42"
     "@toruslabs/torus-embed" "^1.3.0"
     "@unilogin/provider" "^0.5.21"
-    "@walletconnect/web3-provider" "^1.0.0-beta.47"
+    "@walletconnect/web3-provider" "^1.0.5"
     authereum "^0.0.4-beta.157"
     bignumber.js "^9.0.0"
-    bnc-sdk "^2.1.3"
+    bnc-sdk "^2.1.4"
     bowser "^2.5.2"
     ethereumjs-tx "^2.1.2"
     ethereumjs-util "^6.2.0"
@@ -4096,10 +4096,10 @@ bnc-onboard@1.9.4:
     walletlink "^2.0.2"
     web3-provider-engine "^15.0.4"
 
-bnc-sdk@^2.1.3:
-  version "2.1.3"
-  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-2.1.3.tgz#62cc865455186bae1dc5ce41b5e0f8b609ea306c"
-  integrity sha512-SkvnM9IAXqHozlllJk5QO82RuptWrRyTwncSxm150ziUVqTSYYa0XDn/5AGfJrQgrxR1iGT47QQs+ZP7RaCf7Q==
+bnc-sdk@^2.1.4:
+  version "2.1.4"
+  resolved "https://registry.yarnpkg.com/bnc-sdk/-/bnc-sdk-2.1.4.tgz#23267198f5a48e800d9c2406f6d04a767cab5643"
+  integrity sha512-aU7DYweE+6tfTvZE7NOOfQsieU2Zyrav6o/xwuLt+uKGvrkblIeg1aqBW1yAQBEg4LCHEygX6TwZk8VznDAh3g==
   dependencies:
     crypto-es "^1.2.2"
     sturdy-websocket "^0.1.12"
@@ -17257,9 +17257,9 @@ web3-provider-engine@^15.0.4:
     xhr "^2.2.0"
     xtend "^4.0.1"
 
-"web3-provider-engine@git+https://github.com/trufflesuite/provider-engine.git#web3-one":
+"web3-provider-engine@https://github.com/trufflesuite/provider-engine#web3-one":
   version "14.0.6"
-  resolved "git+https://github.com/trufflesuite/provider-engine.git#3538c60bc4836b73ccae1ac3f64c8fed8ef19c1a"
+  resolved "https://github.com/trufflesuite/provider-engine#3538c60bc4836b73ccae1ac3f64c8fed8ef19c1a"
   dependencies:
     async "^2.5.0"
     backoff "^2.5.0"
