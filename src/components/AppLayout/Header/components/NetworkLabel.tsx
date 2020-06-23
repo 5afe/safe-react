@@ -4,10 +4,11 @@ import * as React from 'react'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetwork } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
-const interfaceNetwork = getNetwork()
-const formatNetwork = (network: string): string => network[0].toUpperCase() + network.substring(1).toLowerCase()
+const network = getNetwork()
+const formattedNetwork = network[ETHEREUM_NETWORK.UNKNOWN]?.toUpperCase() //+ network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
@@ -37,7 +38,6 @@ interface NetworkLabelProps {
 
 const NetworkLabel = ({ network = interfaceNetwork }: NetworkLabelProps): React.ReactElement => {
   const classes = useStyles()
-  const formattedNetwork = formatNetwork(network)
 
   return (
     <Col className={classes.container} middle="xs" start="xs">
