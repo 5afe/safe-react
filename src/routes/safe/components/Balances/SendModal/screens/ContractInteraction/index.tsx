@@ -100,15 +100,16 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       >
         {(submitting, validating, rest, mutators) => {
           setCallResults = mutators.setCallResults
-
           return (
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
                 <FormDivisor />
                 <EthAddressInput
+                  value={rest.values.contractAddress}
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}
+                  pristine={rest.pristine}
                   text="Contract Address*"
                 />
                 <ContractABI />
