@@ -25,6 +25,7 @@ const fetchSafeTokens = (safeAddress: string) => async <T extends () => unknown>
   getState: T,
 ): Promise<void> => {
   if (isFetchingData) return
+  isFetchingData = true
   try {
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
@@ -105,8 +106,6 @@ const fetchSafeTokens = (safeAddress: string) => async <T extends () => unknown>
   } finally {
     isFetchingData = false
   }
-
-  return
 }
 
 export default fetchSafeTokens
