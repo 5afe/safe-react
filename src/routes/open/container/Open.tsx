@@ -133,7 +133,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   }
 
   const onSafeCreated = async (safeAddress) => {
-    const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
