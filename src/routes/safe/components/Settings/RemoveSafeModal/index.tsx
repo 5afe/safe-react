@@ -17,7 +17,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
+import { getExplorerLink, ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
@@ -34,7 +34,7 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()
-  const etherScanLink = getEtherScanLink('address', safeAddress)
+  const etherScanLink = getExplorerLink(ExplorerTypes.Address, safeAddress)
 
   return (
     <Modal
