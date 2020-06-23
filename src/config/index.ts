@@ -1,5 +1,5 @@
 import { ensureOnce } from 'src/utils/singleton'
-import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getWeb3 } from 'src/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
@@ -13,6 +13,8 @@ import prodConfig from './production'
 import mainnetDevConfig from './development-mainnet'
 import mainnetProdConfig from './production-mainnet'
 import mainnetStagingConfig from './staging-mainnet'
+
+const DEFAULT_NETWORK = ETHEREUM_NETWORK.RINKEBY
 
 const configuration = () => {
   if (process.env.NODE_ENV === 'test') {
@@ -36,13 +38,15 @@ const configuration = () => {
     : devConfig
 }
 
-export const getNetwork = () =>
-  process.env.REACT_APP_NETWORK === 'mainnet'
-    ? ETHEREUM_NETWORK.MAINNET
-    : ETHEREUM_NETWORK.RINKEBY
+export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[process.env.REACT_APP_NETWORK.toUpperCase()] ?? DEFAULT_NETWORK
 
-export const getNetworkId = () =>
-  process.env.REACT_APP_NETWORK === 'mainnet' ? 1 : 4
+export const getNetworkId = (): number => {
+  const findNetworkId = (networkName: string) => Object.keys(ETHEREUM_NETWORK_IDS).find(
+    key => ETHEREUM_NETWORK_IDS[key] === networkName.toUpperCase()
+  )
+
+  return parseInt(findNetworkId(process.env.REACT_APP_NETWORK) ?? findNetworkId(DEFAULT_NETWORK))
+}
 
 const getConfig = ensureOnce(configuration)
 

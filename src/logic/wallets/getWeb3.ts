@@ -5,14 +5,16 @@ import { EMPTY_DATA } from './ethTransactions'
 
 import { getNetwork } from 'src/config/index'
 
-export const ETHEREUM_NETWORK = {
-  MAINNET: 'MAINNET',
-  MORDEN: 'MORDEN',
-  ROPSTEN: 'ROPSTEN',
-  RINKEBY: 'RINKEBY',
-  GOERLI: 'GOERLI',
-  KOVAN: 'KOVAN',
-  UNKNOWN: 'UNKNOWN',
+export enum ETHEREUM_NETWORK {
+  MAINNET = 'MAINNET',
+  MORDEN = 'MORDEN',
+  ROPSTEN = 'ROPSTEN',
+  RINKEBY = 'RINKEBY',
+  GOERLI = 'GOERLI',
+  KOVAN = 'KOVAN',
+  UNKNOWN = 'UNKNOWN',
+  ENERGY_WEB_CHAIN = 'ENERGY_WEB_CHAIN',
+  VOLTA = 'VOLTA',
 }
 
 export const WALLET_PROVIDER = {
@@ -44,26 +46,59 @@ export const ETHEREUM_NETWORK_IDS = {
   5: ETHEREUM_NETWORK.GOERLI,
   // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
+  // $FlowFixMe
+  246: ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+  // $FlowFixMe
+  73799: ETHEREUM_NETWORK.VOLTA,
 }
 
-export const getEtherScanLink = (type, value) => {
+export enum ExplorerTypes {
+  Tx = 'tx',
+  Address = 'address',
+}
+
+export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
   const network = getNetwork()
-  return `https://${
-    network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`
-  }etherscan.io/${type}/${value}`
+
+  const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes, value: string) =>
+    `https://${network === ETHEREUM_NETWORK.MAINNET ? '' : `${network.toLowerCase()}.`}etherscan.io/${type}/${value}`
+
+  switch (network) {
+    case ETHEREUM_NETWORK.MAINNET:
+      return getEtherScanLink(ETHEREUM_NETWORK.MAINNET, type, value)
+    case ETHEREUM_NETWORK.RINKEBY:
+      return getEtherScanLink(ETHEREUM_NETWORK.RINKEBY, type, value)
+    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
+      return 'https://explorer.energyweb.org'
+    case ETHEREUM_NETWORK.VOLTA:
+      return 'https://volta-explorer.energyweb.org'
+    default:
+      return getEtherScanLink(network, type, value)
+  }
 }
 
-export const getInfuraUrl = () => {
-  const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
+export const getInfuraUrl = (networkName: string): string => {
+  const isMainnet = networkName.toUpperCase() === ETHEREUM_NETWORK.MAINNET
 
   return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+}
+
+export const RPC_URLS = {
+  [ETHEREUM_NETWORK.MAINNET]: getInfuraUrl(process.env.REACT_APP_NETWORK),
+  [ETHEREUM_NETWORK.MORDEN]: '',
+  [ETHEREUM_NETWORK.ROPSTEN]: '',
+  [ETHEREUM_NETWORK.RINKEBY]: getInfuraUrl(process.env.REACT_APP_NETWORK),
+  [ETHEREUM_NETWORK.GOERLI]: '',
+  [ETHEREUM_NETWORK.KOVAN]: '',
+  [ETHEREUM_NETWORK.ENERGY_WEB_CHAIN]: 'https://rpc.energyweb.org',
+  [ETHEREUM_NETWORK.VOLTA]: 'https://volta-rpc.energyweb.org',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
 export const web3ReadOnly =
   process.env.NODE_ENV !== 'test'
-    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl(process.env.REACT_APP_NETWORK)))
     : new Web3((window as any).web3.currentProvider)
 
 let web3 = web3ReadOnly

@@ -2,7 +2,7 @@ import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
+import { getExplorerLink, ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { connected } from 'src/theme/variables'
 
 const EtherScanLink = styled.a`
@@ -19,8 +19,8 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
     <p>
       Follow the progress on{' '}
       <EtherScanLink
-        aria-label="Show details on Etherscan"
-        href={getEtherScanLink('tx', safeCreationTxHash)}
+        aria-label="Show details"
+        href={getExplorerLink(ExplorerTypes.Tx, safeCreationTxHash)}
         rel="noopener noreferrer"
         target="_blank"
       >
