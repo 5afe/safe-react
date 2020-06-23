@@ -5,7 +5,11 @@ import { getConfiguredSource } from 'src/logic/collectibles/sources'
 import { addNftAssets, addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
+let isFetchingData = false
+
 const fetchCollectibles = () => async (dispatch, getState) => {
+  if (isFetchingData) return
+  isFetchingData = true
   const network = getNetwork()
   const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
   const source = getConfiguredSource()
@@ -15,6 +19,8 @@ const fetchCollectibles = () => async (dispatch, getState) => {
     dispatch(addNftAssets(collectibles.nftAssets))
     dispatch(addNftTokens(collectibles.nftTokens))
   })
+
+  isFetchingData = false
 }
 
 export default fetchCollectibles

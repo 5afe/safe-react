@@ -11,8 +11,10 @@ import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
 
 const noFunc = () => {}
-
+let isFetchingData = false
 export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
+  if (isFetchingData) return
+  isFetchingData = true
   const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
 
   if (transactions) {
@@ -33,4 +35,5 @@ export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void
   if (incomingTransactions.get(safeAddress).size) {
     dispatch(addIncomingTransactions(incomingTransactions))
   }
+  isFetchingData = false
 }

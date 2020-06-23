@@ -18,10 +18,13 @@ const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times
 const noFunc = () => {}
 const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ...valueToUpdate })
 
+let isFetchingData = false
+
 const fetchSafeTokens = (safeAddress: string) => async <T extends () => unknown>(
   dispatch: Dispatch,
   getState: T,
 ): Promise<void> => {
+  if (isFetchingData) return
   try {
     const state = getState()
     const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
@@ -99,6 +102,8 @@ const fetchSafeTokens = (safeAddress: string) => async <T extends () => unknown>
     })
   } catch (err) {
     console.error('Error fetching active token list', err)
+  } finally {
+    isFetchingData = false
   }
 
   return
