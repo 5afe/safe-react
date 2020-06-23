@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 
 export const providerSelector = (state) => state[PROVIDER_REDUCER_ID]
@@ -19,9 +19,8 @@ export const providerNameSelector = createSelector(providerSelector, (provider) 
 
 export const networkSelector = createSelector(providerSelector, (provider) => {
   const networkId = provider.get('network')
-  const network = ETHEREUM_NETWORK_IDS[networkId] || ETHEREUM_NETWORK.UNKNOWN
 
-  return network
+  return networkId ?? ETHEREUM_NETWORK.UNKNOWN
 })
 
 export const loadedSelector = createSelector(providerSelector, (provider) => provider.get('loaded'))

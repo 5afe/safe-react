@@ -17,6 +17,7 @@ import Row from 'src/components/layout/Row'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
@@ -149,7 +150,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         <Spacer />
         <Img alt="Network" className={classes.logo} height={14} src={dot} />
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(network)}
+          {upperFirst(ETHEREUM_NETWORK[network])}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />

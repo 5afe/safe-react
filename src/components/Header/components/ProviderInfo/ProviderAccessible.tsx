@@ -8,6 +8,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const styles = () => ({
   network: {
@@ -47,7 +48,7 @@ const styles = () => ({
 })
 
 const ProviderInfo = ({ classes, connected, network, provider, userAddress }) => {
-  const providerText = `${provider} [${network}]`
+  const providerText = `${provider} [${ETHEREUM_NETWORK[network]}]`
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
   const identiconAddress = userAddress || 'random'

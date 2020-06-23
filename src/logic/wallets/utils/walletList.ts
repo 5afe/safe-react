@@ -1,4 +1,5 @@
-import { getInfuraUrl } from '../getWeb3'
+import { getInfuraUrl, getRPCUrl } from '../getWeb3'
+import { getNetwork } from 'src/config'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
@@ -6,7 +7,8 @@ const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f
 // const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
 const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
 
-const infuraUrl = getInfuraUrl(process.env.REACT_APP_NETWORK)
+const network = getNetwork()
+const infuraUrl = getInfuraUrl(network)
 
 const wallets = [
   { walletName: 'metamask', preferred: true, desktop: false },
@@ -14,6 +16,7 @@ const wallets = [
     walletName: 'walletConnect',
     preferred: true,
     infuraKey: process.env.REACT_APP_INFURA_TOKEN,
+    rpc: { [network]: getRPCUrl(network) },
     desktop: true,
     bridge: 'https://safe-walletconnect.gnosis.io/',
   },

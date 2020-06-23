@@ -1,5 +1,5 @@
 import { ensureOnce } from 'src/utils/singleton'
-import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
@@ -39,14 +39,6 @@ const configuration = () => {
 }
 
 export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[process.env.REACT_APP_NETWORK.toUpperCase()] ?? DEFAULT_NETWORK
-
-export const getNetworkId = (): number => {
-  const findNetworkId = (networkName: string) => Object.keys(ETHEREUM_NETWORK_IDS).find(
-    key => ETHEREUM_NETWORK_IDS[key] === networkName.toUpperCase()
-  )
-
-  return parseInt(findNetworkId(process.env.REACT_APP_NETWORK) ?? findNetworkId(DEFAULT_NETWORK))
-}
 
 const getConfig = ensureOnce(configuration)
 
