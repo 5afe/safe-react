@@ -27,10 +27,10 @@ export const getLocalSafe = async (safeAddress) => {
   return storedSafes[safeAddress]
 }
 
-export const getDefaultSafe = async () => {
-  const defaultSafe = await loadFromStorage(DEFAULT_SAFE_KEY)
+export const getDefaultSafe = async (): Promise<string | undefined> => {
+  const defaultSafe = await loadFromStorage<string>(DEFAULT_SAFE_KEY)
 
-  return defaultSafe || ''
+  return defaultSafe
 }
 
 export const saveDefaultSafe = async (safeAddress) => {
