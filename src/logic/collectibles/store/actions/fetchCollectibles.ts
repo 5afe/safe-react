@@ -10,17 +10,21 @@ let isFetchingData = false
 const fetchCollectibles = () => async (dispatch, getState) => {
   if (isFetchingData) return
   isFetchingData = true
-  const network = getNetwork()
-  const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
-  const source = getConfiguredSource()
-  const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
+  try {
+    const network = getNetwork()
+    const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
+    const source = getConfiguredSource()
+    const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
 
-  batch(() => {
-    dispatch(addNftAssets(collectibles.nftAssets))
-    dispatch(addNftTokens(collectibles.nftTokens))
-  })
-
-  isFetchingData = false
+    batch(() => {
+      dispatch(addNftAssets(collectibles.nftAssets))
+      dispatch(addNftTokens(collectibles.nftTokens))
+    })
+  } catch (error) {
+    console.log('Error fetching collectibles:', error)
+  } finally {
+    isFetchingData = false
+  }
 }
 
 export default fetchCollectibles

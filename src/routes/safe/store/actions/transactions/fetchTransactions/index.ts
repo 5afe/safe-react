@@ -15,25 +15,35 @@ let isFetchingData = false
 export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
   if (isFetchingData) return
   isFetchingData = true
-  const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
+  try {
+    const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
 
-  if (transactions) {
-    const { cancel, outgoing } = transactions
-    const updateCancellationTxs = cancel.size
-      ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
-      : noFunc
-    const updateOutgoingTxs = outgoing.size ? addOrUpdateTransactions({ safeAddress, transactions: outgoing }) : noFunc
+    if (transactions) {
+      const { cancel, outgoing } = transactions
+      const updateCancellationTxs = cancel.size
+        ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
+        : noFunc
+      const updateOutgoingTxs = outgoing.size
+        ? addOrUpdateTransactions({
+            safeAddress,
+            transactions: outgoing,
+          })
+        : noFunc
 
-    batch(() => {
-      dispatch(updateCancellationTxs)
-      dispatch(updateOutgoingTxs)
-    })
+      batch(() => {
+        dispatch(updateCancellationTxs)
+        dispatch(updateOutgoingTxs)
+      })
+    }
+
+    const incomingTransactions = await loadIncomingTransactions(safeAddress)
+
+    if (incomingTransactions.get(safeAddress).size) {
+      dispatch(addIncomingTransactions(incomingTransactions))
+    }
+  } catch (error) {
+    console.log('Error fetching transactions:', error)
+  } finally {
+    isFetchingData = false
   }
-
-  const incomingTransactions = await loadIncomingTransactions(safeAddress)
-
-  if (incomingTransactions.get(safeAddress).size) {
-    dispatch(addIncomingTransactions(incomingTransactions))
-  }
-  isFetchingData = false
 }
