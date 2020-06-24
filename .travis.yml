@@ -38,6 +38,7 @@ after_success:
   - ./config/travis/deploy_pull_request.sh
   # Releases (tagged commits) - Deploy it to a release environment
   - ./config/travis/deploy_release.sh
+  - yarn coveralls
 
 deploy:
   # Development environment
