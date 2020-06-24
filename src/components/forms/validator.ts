@@ -58,12 +58,16 @@ export const minValue = (min: number | string) => (value: string) => {
   return `Should be at least ${min}`
 }
 
-export const maxValue = (max: number | string) => (value: string) => {
-  if (Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max.toString())) {
+export const maxValueCheck = (max: number | string, value: string): string | undefined => {
+  if (!max || Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max.toString())) {
     return undefined
   }
 
   return `Maximum value is ${max}`
+}
+
+export const maxValue = (max: number | string) => (value: string) => {
+  return maxValueCheck(max, value)
 }
 
 export const ok = () => undefined

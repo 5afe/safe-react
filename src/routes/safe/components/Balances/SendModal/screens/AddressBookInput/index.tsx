@@ -101,6 +101,9 @@ const AddressBookInput = ({
         )
       })
       setADBKList(filteredADBK)
+      if (!isValidText) {
+        setSelectedEntry({ address: addressValue })
+      }
     }
     setIsValidForm(isValidText === undefined)
     setValidationText(isValidText)
