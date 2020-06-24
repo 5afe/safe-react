@@ -16,13 +16,12 @@ import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export interface AddressBookProps {
   classes: any
-  fieldMutator
-  isCustomTx: boolean
+  fieldMutator: (address: string) => void
+  isCustomTx?: boolean
   pristine: boolean
-  recipientAddress: string
-  setIsValidAddress: string
-  setSelectedEntry: string
-  onScannedValue: (scannedValue: string) => void
+  recipientAddress?: string
+  setSelectedEntry: (entry?: any) => void
+  setIsValidAddress: (valid?: boolean) => void
 }
 
 const textFieldLabelStyle = makeStyles(() => ({
@@ -60,7 +59,7 @@ const AddressBookInput = ({
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: any) => {
+}: AddressBookProps) => {
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<any>('')
