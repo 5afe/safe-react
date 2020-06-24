@@ -14,6 +14,17 @@ import { getAddressBookListSelector } from 'src/logic/addressBook/store/selector
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
+export interface AddressBookProps {
+  classes: any
+  fieldMutator
+  isCustomTx: boolean
+  pristine: boolean
+  recipientAddress: string
+  setIsValidAddress: string
+  setSelectedEntry: string
+  onScannedValue: (scannedValue: string) => void
+}
+
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
     overflow: 'hidden',
@@ -30,13 +41,15 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async (addressBook) => {
+const filterAddressBookWithContractAddresses = async (addressBook: Array<any>): Promise<any> => {
   const abFlags = await Promise.all(
-    addressBook.map(async ({ address }) => {
-      return (await mustBeEthereumContractAddress(address)) === undefined
-    }),
+    addressBook.map(
+      async ({ address }: { address: string }): Promise<boolean> => {
+        return (await mustBeEthereumContractAddress(address)) === undefined
+      },
+    ),
   )
-  return addressBook.filter((adbkEntry, index) => abFlags[index])
+  return addressBook.filter((_, index) => abFlags[index])
 }
 
 const AddressBookInput = ({
@@ -57,7 +70,7 @@ const AddressBookInput = ({
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async (addressValue) => {
+  const onAddressInputChanged = async (addressValue: string): Promise<void> => {
     setInputAddValue(addressValue)
     let resolvedAddress = addressValue
     let isValidText
@@ -96,7 +109,7 @@ const AddressBookInput = ({
   }
 
   useEffect(() => {
-    const filterAdbkContractAddresses = async () => {
+    const filterAdbkContractAddresses = async (): Promise<void> => {
       if (!isCustomTx) {
         setADBKList(addressBook)
         return
