@@ -35,7 +35,7 @@
     "prettier": "prettier './src/**/*.{js,jsx,ts,tsx}'",
     "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
-    "start": "react-app-rewired start",
+    "start": "HTTPS=true react-app-rewired start",
     "test": "NODE_ENV=test && react-app-rewired test --env=jsdom"
   },
   "husky": {
