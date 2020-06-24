@@ -36,7 +36,8 @@
     "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "start": "react-app-rewired start",
-    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom"
+    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom --coverage",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "husky": {
     "hooks": {
@@ -163,6 +164,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.2.0",
     "connected-react-router": "6.8.0",
+    "coveralls": "^3.1.0",
     "currency-flags": "2.1.2",
     "date-fns": "2.14.0",
     "electron-is-dev": "^1.1.0",
