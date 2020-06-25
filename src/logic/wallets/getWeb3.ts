@@ -5,15 +5,6 @@ import { EMPTY_DATA } from './ethTransactions'
 
 import { getNetwork } from '../../config'
 
-declare global {
-  interface Window {
-    web3: {
-      currentProvider: any
-    }
-    testAccountIndex: string
-  }
-}
-
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',
   MORDEN: 'MORDEN',
