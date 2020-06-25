@@ -64,7 +64,7 @@ export const getInfuraUrl = () => {
 export const web3ReadOnly =
   process.env.NODE_ENV !== 'test'
     ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
-    : new Web3((window as any).web3.currentProvider)
+    : new Web3((window as any).web3?.currentProvider || 'ws://localhost:8545')
 
 let web3 = web3ReadOnly
 export const getWeb3 = () => web3
