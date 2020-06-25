@@ -18,15 +18,13 @@ export const getTxData = (tx) => {
       const { to } = tx.decodedParams.transfer
       txData.recipient = to
       txData.isTokenTransfer = true
-    }
-    if (tx.isCollectibleTransfer) {
+    } else if (tx.isCollectibleTransfer) {
       const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
       const { to, value } = safeTransferFrom || transferFrom || transfer
       txData.recipient = to
       txData.tokenId = value
       txData.isCollectibleTransfer = true
-    }
-    if (tx.modifySettingsTx) {
+    } else if (tx.modifySettingsTx) {
       txData.recipient = tx.recipient
       txData.modifySettingsTx = true
 
@@ -50,11 +48,12 @@ export const getTxData = (tx) => {
         txData.removedOwner = oldOwner
         txData.addedOwner = newOwner
       }
-    }
-    if (tx.multiSendTx) {
+    } else if (tx.multiSendTx) {
       txData.recipient = tx.recipient
       txData.data = tx.data
       txData.customTx = true
+    } else {
+      txData.recipient = tx.recipient
     }
   } else if (tx.customTx) {
     txData.recipient = tx.recipient
