@@ -1,11 +1,11 @@
 // 
-import prodConfig from './production'
+import devConfig from './development'
 import { TX_SERVICE_HOST, RELAY_API_URL } from 'src/config/names'
 
-const prodMainnetConfig = {
-  ...prodConfig,
-  [TX_SERVICE_HOST]: 'https://safe-transaction.mainnet.gnosis.io/api/v1/',
-  [RELAY_API_URL]: 'https://safe-relay.gnosis.io/api/v1/',
+const devMainnetConfig = {
+  ...devConfig,
+  [TX_SERVICE_HOST]: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',
+  [RELAY_API_URL]: 'https://safe-relay.mainnet.staging.gnosisdev.com/api/v1/',
 }
 
-export default prodMainnetConfig
+export default devMainnetConfig
