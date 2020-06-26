@@ -26,7 +26,7 @@ export const getEthAsToken = (balance: string): Token => {
   })
 }
 
-export const isAddressAToken = async (tokenAddress): Promise<boolean> => {
+export const isAddressAToken = async (tokenAddress: string): Promise<boolean> => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
@@ -45,36 +45,51 @@ export const isTokenTransfer = (tx: any): boolean => {
 }
 
 export const isSendERC721Transaction = (tx: any, txCode: string, knownTokens: any) => {
+  // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
+  // but no proper ERC721 standard implemented
   return (
-    (txCode && txCode.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) ||
+    (txCode &&
+      txCode.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) &&
+      tx.to !== '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85') ||
     (isTokenTransfer(tx) && !knownTokens.get(tx.to))
   )
 }
 
 export const getERC721Symbol = memoize(
   async (contractAddress: string): Promise<string> => {
-    const ERC721token = await getERC721TokenContract()
-    const tokenInstance = await ERC721token.at(contractAddress)
-    return tokenInstance.symbol()
+    let tokenSymbol = 'UNKNOWN'
+    try {
+      const ERC721token = await getERC721TokenContract()
+      const tokenInstance = await ERC721token.at(contractAddress)
+      tokenSymbol = tokenInstance.symbol()
+    } catch (err) {
+      console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
+    }
+    return tokenSymbol
   },
 )
 
 export const getERC20DecimalsAndSymbol = async (
   tokenAddress: string,
 ): Promise<{ decimals: number; symbol: string }> => {
-  const tokenInfos = await getTokenInfos(tokenAddress)
+  const tokenInfo = { decimals: 18, symbol: 'UNKNOWN' }
+  try {
+    const storedTokenInfo = await getTokenInfos(tokenAddress)
 
-  if (tokenInfos === null) {
-    const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
-      abi: ALTERNATIVE_TOKEN_ABI,
-      address: tokenAddress,
-      methods: ['decimals', 'symbol'],
-    })
+    if (storedTokenInfo === null) {
+      const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
+        abi: ALTERNATIVE_TOKEN_ABI,
+        address: tokenAddress,
+        methods: ['decimals', 'symbol'],
+      })
 
-    return { decimals: Number(tokenDecimals), symbol: tokenSymbol }
+      return { decimals: Number(tokenDecimals), symbol: tokenSymbol }
+    }
+  } catch (err) {
+    console.error(`Failed to retrieve token info for ERC20 token ${tokenAddress}`)
   }
 
-  return { decimals: Number(tokenInfos.decimals), symbol: tokenInfos.symbol }
+  return tokenInfo
 }
 
 export const isSendERC20Transaction = async (
