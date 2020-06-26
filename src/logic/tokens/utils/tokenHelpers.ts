@@ -15,7 +15,7 @@ import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetch
 export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
-export const getEthAsToken = (balance: string): Token => {
+export const getEthAsToken = (balance: string | number): Token => {
   return makeToken({
     address: ETH_ADDRESS,
     name: 'Ether',
@@ -26,7 +26,7 @@ export const getEthAsToken = (balance: string): Token => {
   })
 }
 
-export const isAddressAToken = async (tokenAddress): Promise<boolean> => {
+export const isAddressAToken = async (tokenAddress: string): Promise<boolean> => {
   // SECOND APPROACH:
   // They both seem to work the same
   // const tokenContract = await getStandardTokenContract()
