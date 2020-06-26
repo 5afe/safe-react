@@ -1,4 +1,4 @@
-import { lg, sm } from 'src/theme/variables'
+import { lg, screenMdMax, sm } from 'src/theme/variables'
 
 export const styles = () => ({
   formContainer: {
@@ -44,5 +44,11 @@ export const styles = () => ({
   removeOwnerIcon: {
     marginLeft: lg,
     cursor: 'pointer',
+  },
+  tableRootContainer: {
+    [`@media (min-width: ${screenMdMax}px)`]: {
+      paddingRight: 0,
+      paddingTop: '8px',
+    },
   },
 })

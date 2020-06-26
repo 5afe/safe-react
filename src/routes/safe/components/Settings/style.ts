@@ -6,6 +6,7 @@ import {
   largeFontSize,
   md,
   screenSm,
+  screenMdMax,
   secondary,
   sm,
   xs,
@@ -104,6 +105,9 @@ export const styles = () => ({
   },
   contents: {
     width: '100%',
+    [`@media (min-width: ${screenMdMax}px)`]: {
+      width: '50%',
+    },
   },
   hairline: {
     display: 'none',
