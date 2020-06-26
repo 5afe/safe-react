@@ -1,3 +1,5 @@
+import { createStyles } from '@material-ui/core'
+
 import {
   background,
   bolderFont,
@@ -11,7 +13,7 @@ import {
   xs,
 } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     backgroundColor: 'white',
     borderRadius: sm,
@@ -31,7 +33,7 @@ export const styles = () => ({
   menuWrapper: {
     display: 'flex',
     flexDirection: 'row',
-    flexGrow: '0',
+    flexGrow: 0,
     maxWidth: '100%',
 
     [`@media (min-width: ${screenSm}px)`]: {
@@ -43,7 +45,7 @@ export const styles = () => ({
     borderBottom: `solid 2px ${border}`,
     display: 'flex',
     flexDirection: 'row',
-    flexGrow: '1',
+    flexGrow: 1,
     height: '100%',
     width: '100%',
 
@@ -59,8 +61,8 @@ export const styles = () => ({
     borderRight: `solid 1px ${border}`,
     boxSizing: 'border-box',
     cursor: 'pointer',
-    flexGrow: '1',
-    flexShrink: '1',
+    flexGrow: 1,
+    flexShrink: 1,
     fontSize: '13px',
     justifyContent: 'center',
     lineHeight: '1.2',
@@ -113,7 +115,7 @@ export const styles = () => ({
     },
   },
   container: {
-    flexGrow: '1',
+    flexGrow: 1,
     height: '100%',
     position: 'relative',
   },
