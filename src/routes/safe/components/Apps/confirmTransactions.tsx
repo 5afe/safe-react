@@ -54,6 +54,10 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
+const StyledTextBox = styled(TextBox)`
+  max-width: 444px;
+`
+
 const isTxValid = (t: SafeAppTx): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
     return false
@@ -111,7 +115,7 @@ const confirmTransactions = (
                 </div>
                 <div className="section">
                   <Heading tag="h3">Data (hex encoded)*</Heading>
-                  <TextBox>{tx.data}</TextBox>
+                  <StyledTextBox>{tx.data}</StyledTextBox>
                 </div>
               </CollapseContent>
             </Collapse>
