@@ -1,4 +1,3 @@
-import memoize from 'lodash.memoize'
 import logo from 'src/assets/icons/icon_etherTokens.svg'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import {
@@ -55,19 +54,17 @@ export const isSendERC721Transaction = (tx: any, txCode: string, knownTokens: an
   )
 }
 
-export const getERC721Symbol = memoize(
-  async (contractAddress: string): Promise<string> => {
-    let tokenSymbol = 'UNKNOWN'
-    try {
-      const ERC721token = await getERC721TokenContract()
-      const tokenInstance = await ERC721token.at(contractAddress)
-      tokenSymbol = tokenInstance.symbol()
-    } catch (err) {
-      console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
-    }
-    return tokenSymbol
-  },
-)
+export const getERC721Symbol = async (contractAddress: string): Promise<string> => {
+  let tokenSymbol = 'UNKNOWN'
+  try {
+    const ERC721token = await getERC721TokenContract()
+    const tokenInstance = await ERC721token.at(contractAddress)
+    tokenSymbol = tokenInstance.symbol()
+  } catch (err) {
+    console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
+  }
+  return tokenSymbol
+}
 
 export const getERC20DecimalsAndSymbol = async (
   tokenAddress: string,

@@ -256,13 +256,16 @@ export const buildTx = async ({
 
   let tokenDecimals = 18
   let tokenSymbol = 'ETH'
-  if (isSendERC20Tx) {
-    const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
-    tokenDecimals = decimals
-    tokenSymbol = symbol
-  } else if (isSendERC721Tx) {
-    const { symbol } = await getERC721Symbol(tx.to)
-    tokenSymbol = symbol
+  try {
+    if (isSendERC20Tx) {
+      const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
+      tokenDecimals = decimals
+      tokenSymbol = symbol
+    } else if (isSendERC721Tx) {
+      tokenSymbol = await getERC721Symbol(tx.to)
+    }
+  } catch (err) {
+    console.log(`Failed to retrieve token data from ${tx.to}`)
   }
 
   const txToStore = makeTransaction({
