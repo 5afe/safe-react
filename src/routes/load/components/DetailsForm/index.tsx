@@ -100,6 +100,7 @@ const Details = ({ classes, errors, form }) => {
             text="Safe name"
             type="text"
             validate={required}
+            testId="load-safe-name-field"
           />
         </Col>
       </Block>
@@ -114,7 +115,7 @@ const Details = ({ classes, errors, form }) => {
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
                   <InputAdornment position="end">
-                    <CheckCircle className={classes.check} />
+                    <CheckCircle className={classes.check} data-testid="valid-address" />
                   </InputAdornment>
                 ),
               }
@@ -123,6 +124,7 @@ const Details = ({ classes, errors, form }) => {
             placeholder="Safe Address*"
             text="Safe Address"
             type="text"
+            testId="load-safe-address-field"
           />
         </Col>
         <Col center="xs" className={classes} middle="xs" xs={1}>

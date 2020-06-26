@@ -1,92 +1,98 @@
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
+import Switch from '@material-ui/core/Switch'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
+import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 
+import QRIcon from 'src/assets/icons/qrcode.svg'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import ScanQRModal from 'src/components/ScanQRModal'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import {
-  composeValidators,
-  greaterThan,
-  maxValue,
-  maxValueCheck,
-  mustBeFloat,
-  required,
-} from 'src/components/forms/validator'
+import TextareaField from 'src/components/forms/TextareaField'
+import { composeValidators, maxValue, mustBeFloat, greaterThan } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
+import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
-
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { safeSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
-const formMutators = {
-  setMax: (args, state, utils) => {
-    utils.changeValue(state, 'amount', () => args[0])
-  },
-  onTokenChange: (args, state, utils) => {
-    utils.changeValue(state, 'amount', () => state.formState.values.amount)
-  },
-  setRecipient: (args, state, utils) => {
-    utils.changeValue(state, 'recipientAddress', () => args[0])
-  },
+export interface CreatedTx {
+  contractAddress: string
+  data: string
+  value: string | number
 }
 
-const useStyles = makeStyles(styles as any)
+type Props = {
+  initialValues: { contractAddress?: string }
+  onClose: () => void
+  onNext: (tx: CreatedTx, submit: boolean) => void
+  isABI: boolean
+  switchMethod: () => void
+  contractAddress: string
+}
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }) => {
+const useStyles = makeStyles(styles)
+
+const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
-    address: recipientAddress || initialValues.recipientAddress,
+  const { ethBalance } = useSelector(safeSelector)
+  const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+    address: contractAddress || initialValues.contractAddress,
     name: '',
   })
+  const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
 
-  const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const saveForm = async (values) => {
+    await handleSubmit(values, false)
+    switchMethod()
+  }
 
-  React.useMemo(() => {
-    if (selectedEntry === null && pristine) {
-      setPristine(false)
+  const handleSubmit = (values: any, submit = true) => {
+    if (values.data || values.value) {
+      onNext(values, submit)
     }
-  }, [selectedEntry, pristine])
+  }
 
-  const handleSubmit = (values) => {
-    const submitValues = values
-    // If the input wasn't modified, there was no mutation of the recipientAddress
-    if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
-    }
-    onNext(submitValues)
+  const openQrModal = () => {
+    setQrModalOpen(true)
+  }
+
+  const closeQrModal = () => {
+    setQrModalOpen(false)
+  }
+
+  const formMutators = {
+    setMax: (args, state, utils) => {
+      utils.changeValue(state, 'value', () => ethBalance)
+    },
+    setRecipient: (args, state, utils) => {
+      utils.changeValue(state, 'contractAddress', () => args[0])
+    },
   }
 
   return (
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send Funds
+          Send custom transactions
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -97,39 +103,26 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
       <GnoForm
         formMutators={formMutators}
         initialValues={initialValues}
+        subscription={{ submitting: true, pristine: true, values: true }}
         onSubmit={handleSubmit}
-        validation={(values) => {
-          const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
-
-          return {
-            amount: maxValueCheck(selectedTokenRecord?.balance, values.amount),
-          }
-        }}
       >
         {(...args) => {
-          const formState = args[2]
           const mutators = args[3]
-          const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
+          const pristine = args[2].pristine
+          let shouldDisableSubmitButton = !isValidAddress
+          if (selectedEntry) {
+            shouldDisableSubmitButton = !selectedEntry.address
+          }
 
-          const handleScan = (value, closeQrModal) => {
+          const handleScan = (value) => {
             let scannedAddress = value
 
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName,
-              address: scannedAddress,
-            })
-            closeQrModal()
-          }
 
-          let shouldDisableSubmitButton = !isValidAddress
-          if (selectedEntry) {
-            shouldDisableSubmitButton = !selectedEntry.address
+            mutators.setRecipient(scannedAddress)
+            closeQrModal()
           }
 
           return (
@@ -195,33 +188,33 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       <Col xs={11}>
                         <AddressBookInput
                           fieldMutator={mutators.setRecipient}
+                          isCustomTx
                           pristine={pristine}
-                          recipientAddress={recipientAddress}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
+                        <Img
+                          alt="Scan QR"
+                          className={classes.qrCodeBtn}
+                          height={20}
+                          onClick={() => {
+                            openQrModal()
+                          }}
+                          role="button"
+                          src={QRIcon}
+                        />
                       </Col>
                     </Row>
                   </>
                 )}
-                <Row margin="sm">
-                  <Col>
-                    <TokenSelectField
-                      initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
-                      tokens={tokens}
-                    />
-                  </Col>
-                </Row>
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                      Amount
+                      Value
                     </Paragraph>
-                    <ButtonLink onClick={() => mutators.setMax(selectedTokenRecord.balance)} weight="bold">
+                    <ButtonLink onClick={mutators.setMax} weight="bold">
                       Send max
                     </ButtonLink>
                   </Col>
@@ -230,33 +223,31 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <Col>
                     <Field
                       component={TextField}
-                      inputAdornment={
-                        selectedTokenRecord && {
-                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
-                        }
-                      }
-                      name="amount"
-                      placeholder="Amount*"
-                      text="Amount*"
-                      type="text"
-                      validate={composeValidators(
-                        required,
-                        mustBeFloat,
-                        greaterThan(0),
-                        maxValue(selectedTokenRecord?.balance),
-                      )}
-                    />
-                    <OnChange name="token">
-                      {() => {
-                        setSelectedEntry({
-                          name: selectedEntry?.name,
-                          address: selectedEntry?.address,
-                        })
-                        mutators.onTokenChange()
+                      inputAdornment={{
+                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
                       }}
-                    </OnChange>
+                      name="value"
+                      placeholder="Value*"
+                      text="Value*"
+                      type="text"
+                      validate={composeValidators(mustBeFloat, maxValue(ethBalance), greaterThan(0))}
+                    />
                   </Col>
                 </Row>
+                <Row margin="sm">
+                  <Col>
+                    <TextareaField
+                      name="data"
+                      placeholder="Data (hex encoded)*"
+                      text="Data (hex encoded)*"
+                      type="text"
+                    />
+                  </Col>
+                </Row>
+                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                  Use custom data (hex encoded)
+                  <Switch onChange={() => saveForm(args[2].values)} checked={!isABI} />
+                </Paragraph>
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
@@ -275,6 +266,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   Review
                 </Button>
               </Row>
+              {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
         }}
@@ -283,4 +275,4 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   )
 }
 
-export default SendFunds
+export default SendCustomTx

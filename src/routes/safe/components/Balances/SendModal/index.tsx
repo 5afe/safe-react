@@ -19,6 +19,10 @@ const ContractInteraction = React.lazy(() => import('./screens/ContractInteracti
 
 const ContractInteractionReview: any = React.lazy(() => import('./screens/ContractInteraction/Review'))
 
+const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
+
+const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
+
 const useStyles = makeStyles({
   scalableModalWindow: {
     height: 'auto',
@@ -40,9 +44,11 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState({})
+  const [isABI, setIsABI] = useState(true)
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
+    setIsABI(true)
     setTx({})
   }, [activeScreenType, isOpen])
 
@@ -53,14 +59,23 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
     setTx(txInfo)
   }
 
-  const handleContractInteractionCreation = (contractInteractionInfo) => {
+  const handleContractInteractionCreation = (contractInteractionInfo: any, submit: boolean): void => {
     setTx(contractInteractionInfo)
-    setActiveScreen('contractInteractionReview')
+    if (submit) setActiveScreen('contractInteractionReview')
+  }
+
+  const handleCustomTxCreation = (customTxInfo: any, submit: boolean): void => {
+    setTx(customTxInfo)
+    if (submit) setActiveScreen('reviewCustomTx')
   }
 
   const handleSendCollectible = (txInfo) => {
     setActiveScreen('reviewCollectible')
     setTx(txInfo)
+  }
+
+  const handleSwitchMethod = (): void => {
+    setIsABI(!isABI)
   }
 
   return (
@@ -93,16 +108,31 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
         {activeScreen === 'reviewTx' && (
           <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx} />
         )}
-        {activeScreen === 'contractInteraction' && (
+        {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
+            isABI={isABI}
+            switchMethod={handleSwitchMethod}
             contractAddress={recipientAddress}
             initialValues={tx}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
           />
         )}
-        {activeScreen === 'contractInteractionReview' && tx && (
+        {activeScreen === 'contractInteractionReview' && isABI && tx && (
           <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
+        )}
+        {activeScreen === 'contractInteraction' && !isABI && (
+          <SendCustomTx
+            initialValues={tx}
+            isABI={isABI}
+            switchMethod={handleSwitchMethod}
+            onClose={onClose}
+            onNext={handleCustomTxCreation}
+            contractAddress={recipientAddress}
+          />
+        )}
+        {activeScreen === 'reviewCustomTx' && (
+          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
         )}
         {activeScreen === 'sendCollectible' && (
           <SendCollectible
