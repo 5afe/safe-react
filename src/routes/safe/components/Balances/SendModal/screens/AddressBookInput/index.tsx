@@ -20,7 +20,9 @@ export interface AddressBookProps {
   isCustomTx?: boolean
   pristine: boolean
   recipientAddress?: string
-  setSelectedEntry: (entry?: any) => void
+  setSelectedEntry: (
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address: any; name: string }>,
+  ) => void
   setIsValidAddress: (valid?: boolean) => void
 }
 
