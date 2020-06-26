@@ -13,6 +13,7 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
+import addSafeModules from './addSafeModules'
 
 const buildOwnersFrom = (
   safeOwners,
@@ -73,8 +74,8 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
 export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const safeParams = ['getThreshold', 'nonce', 'getOwners']
-  const [[remoteThreshold, remoteNonce, remoteOwners], localSafe] = await Promise.all([
+  const safeParams = ['getThreshold', 'nonce', 'getOwners', 'getModules']
+  const [[remoteThreshold, remoteNonce, remoteOwners, remoteModules], localSafe] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
@@ -87,6 +88,13 @@ export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
   const localThreshold = localSafe ? localSafe.threshold : undefined
   const localNonce = localSafe ? localSafe.nonce : undefined
+
+  dispatch(
+    addSafeModules({
+      safeAddress,
+      modulesAddresses: remoteModules,
+    }),
+  )
 
   if (localNonce !== Number(remoteNonce)) {
     dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))

@@ -11,10 +11,11 @@ import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
+import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
 
 const safesStateSelector = (state) => state[SAFE_REDUCER_ID]
 
-export const safesMapSelector = (state) => state[SAFE_REDUCER_ID].get('safes')
+export const safesMapSelector = (state) => safesStateSelector(state).get('safes')
 
 export const safesListSelector = createSelector(safesMapSelector, (safes) => safes.toList())
 
@@ -106,30 +107,36 @@ export const safeIncomingTransactionsSelector = createSelector(
   },
 )
 
-export const safeSelector = createSelector(safesMapSelector, safeParamAddressFromStateSelector, (safes, address) => {
+export const safeSelector = createSelector(safesMapSelector, safeParamAddressFromStateSelector, (safes, address):
+  | SafeRecord
+  | undefined => {
   if (!address) {
     return undefined
   }
   const checksumed = checksumAddress(address)
-  const safe = safes.get(checksumed)
-
-  return safe
+  return safes.get(checksumed)
 })
 
-export const safeActiveTokensSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
+export const safeActiveTokensSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set()
+    }
 
-  return safe.activeTokens
-})
+    return safe.activeTokens
+  },
+)
 
-export const safeActiveAssetsSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
-  return safe.activeAssets
-})
+export const safeActiveAssetsSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set<string>()
+    }
+    return safe.activeAssets
+  },
+)
 
 export const safeActiveAssetsListSelector = createSelector(safeActiveAssetsSelector, (safeList) => {
   if (!safeList) {
@@ -159,15 +166,22 @@ export const safeActiveAssetsSelectorBySafe = (safeAddress, safes) => safes.get(
 export const safeBlacklistedAssetsSelectorBySafe = (safeAddress, safes) =>
   safes.get(safeAddress).get('blacklistedAssets')
 
-export const safeBalancesSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
+export const safeBalancesSelector = createSelector(
+  safeSelector,
+  (safe): Map<string, string> => {
+    if (!safe) {
+      return Map()
+    }
 
-  return safe.balances
-})
+    return safe.balances
+  },
+)
 
-export const safeFieldSelector = (field) => (safe) => safe?.[field]
+const baseSafe = makeSafe()
+
+export const safeFieldSelector = (field: keyof SafeRecordProps) => (
+  safe: SafeRecord,
+): SafeRecord[keyof SafeRecordProps] => safe.get(field, baseSafe.get(field))
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
@@ -182,6 +196,8 @@ export const safeThresholdSelector = createSelector(safeSelector, safeFieldSelec
 export const safeNonceSelector = createSelector(safeSelector, safeFieldSelector('nonce'))
 
 export const safeOwnersSelector = createSelector(safeSelector, safeFieldSelector('owners'))
+
+export const safeModulesSelector = createSelector(safeSelector, safeFieldSelector('modules'))
 
 export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
 
