@@ -9,7 +9,12 @@ const Box = styled.p`
   border: solid 2px ${border};
 `
 
-const TextBox = ({ children, ...rest }: { children: React.ReactNode }): React.ReactElement => {
+type Props = {
+  children: React.ReactNode
+  classNames?: string
+}
+
+const TextBox = ({ children, ...rest }: Props): React.ReactElement => {
   return <Box {...rest}>{children}</Box>
 }
 
