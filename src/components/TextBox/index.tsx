@@ -11,7 +11,7 @@ const Box = styled.p`
 
 type Props = {
   children: React.ReactNode
-  classNames?: string
+  className?: string
 }
 
 const TextBox = ({ children, ...rest }: Props): React.ReactElement => {
