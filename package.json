@@ -50,6 +50,16 @@
       "prettier --write"
     ]
   },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.{.test.*}",
+      "!<rootDir>/node_modules/",
+      "!<rootDir>/src/assets/**",
+      "!<rootDir>/config",
+      "!<rootDir>/src/test"
+    ]
+  },
   "productName": "Safe Multisig",
   "build": {
     "appId": "io.gnosis.safe.macos",
