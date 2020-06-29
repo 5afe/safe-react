@@ -106,10 +106,8 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <SafeInfo />
                 <FormDivisor />
                 <EthAddressInput
-                  value={rest.values.contractAddress}
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}
-                  pristine={rest.pristine}
                   text="Contract Address*"
                 />
                 <ContractABI />

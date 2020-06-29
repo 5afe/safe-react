@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
+import { useFormState, useField } from 'react-final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -17,14 +18,12 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 
 const useStyles = makeStyles(styles)
 
-export interface EthAddressProps {
+export interface AddressBookInputProps {
   isContract?: boolean
   isRequired?: boolean
   name: string
   onScannedValue: (scannedValue: string) => void
   text: string
-  value?: string
-  pristine: boolean
 }
 
 const EthAddressInput = ({
@@ -33,12 +32,14 @@ const EthAddressInput = ({
   name,
   onScannedValue,
   text,
-  value,
-  pristine,
-}: EthAddressProps) => {
+}: AddressBookInputProps) => {
   const classes = useStyles()
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))
+  const { pristine } = useFormState({ subscription: { pristine: true } })
+  const {
+    input: { value },
+  } = useField('contractAddress', { subscription: { value: true } })
   const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
     address: value,
     name: '',
@@ -59,7 +60,7 @@ const EthAddressInput = ({
     <>
       <Row margin="md">
         <Col xs={11}>
-          {selectedEntry && selectedEntry.address ? (
+          {selectedEntry?.address ? (
             <Field
               component={TextField}
               name={name}

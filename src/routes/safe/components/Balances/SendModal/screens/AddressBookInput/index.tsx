@@ -15,16 +15,17 @@ import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export interface AddressBookProps {
-  classes: any
   fieldMutator: (address: string) => void
   isCustomTx?: boolean
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address: any; name: string }>,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
   ) => void
   setIsValidAddress: (valid?: boolean) => void
 }
+
+const useStyles = makeStyles(styles)
 
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
@@ -42,7 +43,9 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async (addressBook: Array<any>): Promise<any> => {
+const filterAddressBookWithContractAddresses = async (
+  addressBook: List<{ address: string }>,
+): Promise<List<{ address: string }>> => {
   const abFlags = await Promise.all(
     addressBook.map(
       async ({ address }: { address: string }): Promise<boolean> => {
@@ -50,11 +53,11 @@ const filterAddressBookWithContractAddresses = async (addressBook: Array<any>): 
       },
     ),
   )
+
   return addressBook.filter((_, index) => abFlags[index])
 }
 
 const AddressBookInput = ({
-  classes,
   fieldMutator,
   isCustomTx,
   pristine,
@@ -62,12 +65,13 @@ const AddressBookInput = ({
   setIsValidAddress,
   setSelectedEntry,
 }: AddressBookProps) => {
+  const classes = useStyles()
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
-  const [validationText, setValidationText] = useState<any>('')
+  const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState(List([]))
+  const [adbkList, setADBKList] = useState<List<{ address: string }>>(List([]))
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 

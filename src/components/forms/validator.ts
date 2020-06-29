@@ -40,7 +40,7 @@ export const greaterThan = (min: number | string) => (value: string) => {
   return `Should be greater than ${min}`
 }
 
-export const equalOrGreaterThan = (min: number | string) => (value: string) => {
+export const equalOrGreaterThan = (min: number | string) => (value: string): undefined | string => {
   if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
