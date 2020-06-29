@@ -1,6 +1,6 @@
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore, CombinedState } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -29,6 +29,8 @@ import incomingTransactions, {
 } from 'src/routes/safe/store/reducer/incomingTransactions'
 import safe, { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import { ProviderRecord } from '../logic/wallets/store/model/provider'
+import { SafeRecordProps } from '../routes/safe/store/models/safe'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -62,6 +64,22 @@ const reducers = combineReducers({
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
+
+export type GnosisState = CombinedState<{
+  [PROVIDER_REDUCER_ID]: ProviderRecord
+  [SAFE_REDUCER_ID]: SafeRecordProps
+  // [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
+  // [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
+  // [TOKEN_REDUCER_ID]: tokens,
+  // [TRANSACTIONS_REDUCER_ID]: transactions,
+  // [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
+  // [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
+  // [NOTIFICATIONS_REDUCER_ID]: notifications,
+  // [CURRENCY_VALUES_KEY]: currencyValues,
+  // [COOKIES_REDUCER_ID]: cookies,
+  // [ADDRESS_BOOK_REDUCER_ID]: addressBook,
+  // [CURRENT_SESSION_REDUCER_ID]: currentSession,
+}>
 
 export const store: any = createStore(reducers, finalCreateStore)
 

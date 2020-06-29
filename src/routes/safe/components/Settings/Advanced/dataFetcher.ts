@@ -10,30 +10,31 @@ export const getModuleData = (modules: Set<string>): List<{ [MODULES_TABLE_ADDRE
 }
 
 interface TableColumn {
-  id: string
-  order: boolean
-  disablePadding: boolean
-  label: string
+  align?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
   custom: boolean
-  align?: string
+  disablePadding: boolean
+  id: string
+  label: string
+  order: boolean
+  width?: number
 }
 
 export const generateColumns = (): List<TableColumn> => {
   const addressColumn: TableColumn = {
-    id: MODULES_TABLE_ADDRESS_ID,
-    order: false,
-    disablePadding: false,
-    label: 'Address',
-    custom: false,
     align: 'left',
+    custom: false,
+    disablePadding: false,
+    id: MODULES_TABLE_ADDRESS_ID,
+    label: 'Address',
+    order: false,
   }
 
   const actionsColumn: TableColumn = {
-    id: MODULES_TABLE_ACTIONS_ID,
-    order: false,
-    disablePadding: false,
-    label: '',
     custom: true,
+    disablePadding: false,
+    id: MODULES_TABLE_ACTIONS_ID,
+    label: '',
+    order: false,
   }
 
   return List([addressColumn, actionsColumn])

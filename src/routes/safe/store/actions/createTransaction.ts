@@ -1,5 +1,6 @@
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
+import { WithSnackbarProps } from 'notistack'
 import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
 
@@ -35,6 +36,8 @@ import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { Dispatch } from 'redux'
+import { GnosisState } from 'src/store'
 
 export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
@@ -79,6 +82,18 @@ export const storeTx = async (tx, safeAddress, dispatch, state) => {
   }
 }
 
+interface CreateTransaction extends WithSnackbarProps {
+  navigateToTransactionsTab?: boolean
+  notifiedTransaction: string
+  operation?: number
+  origin?: string
+  safeAddress: string
+  to: string
+  txData: string
+  txNonce?: number | string
+  valueInWei: string
+}
+
 const createTransaction = ({
   safeAddress,
   to,
@@ -91,7 +106,7 @@ const createTransaction = ({
   operation = CALL,
   navigateToTransactionsTab = true,
   origin = null,
-}) => async (dispatch, getState) => {
+}: CreateTransaction) => async (dispatch: Dispatch, getState: () => GnosisState): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {

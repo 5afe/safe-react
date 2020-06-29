@@ -1,101 +1,86 @@
-import { Set } from 'immutable'
+import { GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-// import { useSnackbar } from 'notistack'
-import React, { useState } from 'react'
-import { /*useDispatch, */ useSelector } from 'react-redux'
+import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
+import { Set } from 'immutable'
+import { useSnackbar } from 'notistack'
+import React from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 
-// import ChangeThreshold from './ChangeThreshold'
+import { generateColumns, MODULES_TABLE_ADDRESS_ID, getModuleData } from './dataFetcher'
 import { styles } from './style'
+import BinIcon from '../assets/icons/bin.svg'
 
-import Modal from 'src/components/Modal'
+import DividerLine from 'src/components/DividerLine'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-// import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
+import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-// import Row from 'src/components/layout/Row'
-// import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-// import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-// import { grantedSelector } from 'src/routes/safe/container/selector'
-// import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import Row from 'src/components/layout/Row'
+import { TableCell, TableRow } from 'src/components/layout/Table'
+import Table from 'src/components/Table'
+
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import {
-  // safeOwnersSelector,
-  // safeParamAddressFromStateSelector,
-  // safeThresholdSelector,
+  safeParamAddressFromStateSelector,
   safeNonceSelector,
   safeModulesSelector,
 } from 'src/routes/safe/store/selectors'
-import DividerLine from 'src/components/DividerLine'
-import TableContainer from '@material-ui/core/TableContainer'
-import Table from '../../../../../components/Table'
-import TableRow from '@material-ui/core/TableRow'
-import TableCell from '@material-ui/core/TableCell'
-import { cellWidth } from '../../../../../components/Table/TableHead'
-import OwnerAddressTableCell from '../ManageOwners/OwnerAddressTableCell'
-import Row from '../../../../../components/layout/Row'
-import Img from '../../../../../components/layout/Img'
-// import RenameOwnerIcon from '../ManageOwners/assets/icons/rename-owner.svg'
-// import ReplaceOwnerIcon from '../ManageOwners/assets/icons/replace-owner.svg'
-import RemoveOwnerIcon from '../assets/icons/bin.svg'
-import { generateColumns, MODULES_TABLE_ADDRESS_ID, getModuleData } from './dataFetcher'
-import { grantedSelector } from '../../../container/selector'
-// import RemoveOwnerModal from '../ManageOwners/RemoveOwnerModal'
-// import { getOwnersWithNameFromAddressBook } from '../../../../../logic/addressBook/utils'
-// import { getOwnerData } from '../ManageOwners/dataFetcher'
 
 export const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 export const MODULES_ROW_TEST_ID = 'owners-row'
 
 const useStyles = makeStyles(styles)
 
-const useToggle = (initialOn = false) => {
-  const [on, setOn] = useState(initialOn)
-  const toggle = () => setOn(!on)
-
-  return { on, toggle }
-}
-
 const Advanced: React.FC = () => {
   const classes = useStyles()
+
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  // const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  // const dispatch = useDispatch()
-
-  const { on, toggle } = useToggle()
-
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nonce = useSelector(safeNonceSelector)
   const granted = useSelector(grantedSelector)
   const modules = useSelector(safeModulesSelector)
-  console.log(modules)
   const moduleData = getModuleData(Set(modules))
-  // const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
-  // const ownerData = getOwnerData(ownersAdbk)
 
-  // const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  // const owners = useSelector(safeOwnersSelector)
+  const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
+  const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  // const onChangeThreshold = async (newThreshold) => {
-  //   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  //   const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
-  //
-  //   dispatch(
-  //     createTransaction({
-  //       safeAddress,
-  //       to: safeAddress,
-  //       valueInWei: 0,
-  //       txData,
-  //       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-  //       enqueueSnackbar,
-  //       closeSnackbar,
-  //     } as any),
-  //   )
-  // }
+  const [selectedModule, setSelectedModule] = React.useState(null)
+  const triggerRemoveSelectedModule = (moduleAddress: string): void => {
+    setSelectedModule(moduleAddress)
+    setViewRemoveModuleModal(true)
+  }
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
+
+  const removeSelectedModule = async (): Promise<void> => {
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const txData = safeInstance.contract.methods.disableModule(selectedModule).encodeABI()
+
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: '0',
+        txData,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+      }),
+    )
+  }
 
   return (
     <>
+      {/* Nonce */}
       <Block className={classes.container}>
         <Heading tag="h2">Safe Nonce</Heading>
         <Paragraph>
@@ -107,6 +92,8 @@ const Advanced: React.FC = () => {
         </Paragraph>
       </Block>
       <DividerLine withArrow={false} />
+
+      {/* Modules */}
       <Block className={classes.container}>
         <Heading tag="h2">Safe Modules</Heading>
         <Paragraph>
@@ -145,23 +132,31 @@ const Advanced: React.FC = () => {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column: any) => (
-                      <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
-                        {column.id === MODULES_TABLE_ADDRESS_ID ? (
-                          <OwnerAddressTableCell address={row[column.id]} showLinks />
-                        ) : (
-                          row[column.id]
-                        )}
-                      </TableCell>
-                    ))}
+                    {autoColumns.map((column) => {
+                      const columnId = column.id
+                      const rowElement = row[columnId]
+
+                      return (
+                        <TableCell align={column.align} component="td" key={columnId}>
+                          {columnId === MODULES_TABLE_ADDRESS_ID ? (
+                            <Block justify="left">
+                              <Identicon address={rowElement} diameter={32} />
+                              <Paragraph style={{ marginLeft: 10 }}>{rowElement}</Paragraph>
+                            </Block>
+                          ) : (
+                            rowElement
+                          )}
+                        </TableCell>
+                      )
+                    })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
                         {granted && (
                           <Img
                             alt="Remove module"
                             className={classes.removeModuleIcon}
-                            onClick={toggle}
-                            src={RemoveOwnerIcon}
+                            onClick={triggerRemoveSelectedModule}
+                            src={BinIcon}
                             testId={REMOVE_MODULE_BTN_TEST_ID}
                           />
                         )}
@@ -174,21 +169,21 @@ const Advanced: React.FC = () => {
           </TableContainer>
         )}
       </Block>
-      {/*<RemoveModuleModal*/}
-      {/*  isOpen={showRemoveModal}*/}
-      {/*  onClose={onHide('RemoveModal')}*/}
-      {/*  ownerAddress={selectedModalAddress}*/}
-      {/*  ownerName={selectedModalName}*/}
-      {/*/>*/}
-      <Modal description="Disable Module" handleClose={toggle} open={on} title="Disable Module">
-        {/*<ChangeThreshold*/}
-        {/*  onChangeThreshold={onChangeThreshold}*/}
-        {/*  onClose={toggle}*/}
-        {/*  owners={owners}*/}
-        {/*  safeAddress={safeAddress}*/}
-        {/*  threshold={threshold}*/}
-        {/*/>*/}
-      </Modal>
+      {viewRemoveModuleModal && (
+        <GenericModal
+          onClose={hideRemoveModuleModal}
+          title="Disable Module"
+          body={<div>This is the body</div>}
+          footer={
+            <ModalFooterConfirmation
+              okText="Remove"
+              cancelText="Cancel"
+              handleCancel={hideRemoveModuleModal}
+              handleOk={removeSelectedModule}
+            />
+          }
+        />
+      )}
     </>
   )
 }

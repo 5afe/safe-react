@@ -32,17 +32,11 @@ export const WALLET_PROVIDER = {
 }
 
 export const ETHEREUM_NETWORK_IDS = {
-  // $FlowFixMe
   1: ETHEREUM_NETWORK.MAINNET,
-  // $FlowFixMe
   2: ETHEREUM_NETWORK.MORDEN,
-  // $FlowFixMe
   3: ETHEREUM_NETWORK.ROPSTEN,
-  // $FlowFixMe
   4: ETHEREUM_NETWORK.RINKEBY,
-  // $FlowFixMe
   5: ETHEREUM_NETWORK.GOERLI,
-  // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
