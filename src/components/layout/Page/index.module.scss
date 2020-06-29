@@ -13,6 +13,13 @@
   }
 }
 
+@media only screen and (min-width: #{$screenLg}px) {
+  .page {
+    padding: 96px $md 0px $md;
+  }
+}
+
+
 .center {
   align-self: center;
 }
