@@ -12,7 +12,7 @@ export const CUSTOM_TOKENS_KEY = 'CUSTOM_TOKENS'
 
 export const saveActiveTokens = async (tokens: Map<string, Token>): Promise<void> => {
   try {
-    await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS())
+    await saveToStorage(ACTIVE_TOKENS_KEY, tokens.toJS() as Record<string, TokenProps>)
   } catch (err) {
     console.error('Error storing tokens in localstorage', err)
   }
