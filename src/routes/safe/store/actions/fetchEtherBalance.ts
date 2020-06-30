@@ -6,10 +6,7 @@ import { backOff } from 'exponential-backoff'
 import { State } from '../../../../store'
 
 let isFetchingData = false
-const fetchEtherBalance = (safeAddress: string) => async <T extends () => unknown>(
-  dispatch: Dispatch,
-  getState: () => State,
-): Promise<void> => {
+const fetchEtherBalance = (safeAddress: string) => async (dispatch: Dispatch, getState: () => State): Promise<void> => {
   if (isFetchingData) {
     return
   }
