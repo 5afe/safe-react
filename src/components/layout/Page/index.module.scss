@@ -13,7 +13,7 @@
   }
 }
 
-@media only screen and (min-width: #{$screenLg}px) {
+@media only screen and (min-width: #{$screenLg}px) and (max-width: 1360px) {
   .page {
     padding: 96px $md 0px $md;
   }
