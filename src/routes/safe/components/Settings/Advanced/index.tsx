@@ -1,4 +1,4 @@
-import { GenericModal, ModalFooterConfirmation, Text } from '@gnosis.pm/safe-react-components'
+import { Button, GenericModal, Text, Title, theme } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
@@ -9,15 +9,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { generateColumns, MODULES_TABLE_ADDRESS_ID, getModuleData } from './dataFetcher'
 import { styles } from './style'
-import BinIcon from '../assets/icons/bin.svg'
 
-import DividerLine from 'src/components/DividerLine'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
-import Bold from 'src/components/layout/Bold'
-import Heading from 'src/components/layout/Heading'
-import Img from 'src/components/layout/Img'
-import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
@@ -31,11 +25,36 @@ import {
   safeNonceSelector,
   safeModulesSelector,
 } from 'src/routes/safe/store/selectors'
+import styled from 'styled-components'
 
 export const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 export const MODULES_ROW_TEST_ID = 'owners-row'
 
 const useStyles = makeStyles(styles)
+
+const AddressText = styled(Text)`
+  margin-left: 12px;
+`
+
+const InfoText = styled(Text)`
+  margin-top: 16px;
+`
+
+const Bold = styled.strong`
+  color: ${theme.colors.text};
+`
+
+const TableActionButton = styled(Button)`
+  background-color: transparent;
+
+  &:hover {
+    background-color: transparent;
+  }
+`
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
 
 const Advanced: React.FC = () => {
   const classes = useStyles()
@@ -82,21 +101,24 @@ const Advanced: React.FC = () => {
     <>
       {/* Nonce */}
       <Block className={classes.container}>
-        <Heading tag="h2">Safe Nonce</Heading>
-        <Text size="md">
+        <Title size="xs" withoutMargin>
+          Safe Nonce
+        </Title>
+        <InfoText size="lg">
           For security reasons, transactions made with the Safe need to be executed in order. The nonce shows you which
           transaction was executed most recently. You can find the nonce for a transaction in the transaction details.
-        </Text>
-        <Paragraph className={classes.ownersText} size="lg">
+        </InfoText>
+        <InfoText color="secondaryLight" size="xl">
           Current Nonce: <Bold>{nonce}</Bold>
-        </Paragraph>
+        </InfoText>
       </Block>
-      <DividerLine withArrow={false} />
 
       {/* Modules */}
       <Block className={classes.container}>
-        <Heading tag="h2">Safe Modules</Heading>
-        <Paragraph>
+        <Title size="xs" withoutMargin>
+          Safe Modules
+        </Title>
+        <InfoText size="lg">
           Modules allow you to customize the access-control logic of your Safe. Modules are potentially risky, so make
           sure to only use modules from trusted sources. Learn more about modules{' '}
           <a
@@ -107,11 +129,11 @@ const Advanced: React.FC = () => {
             here
           </a>
           .
-        </Paragraph>
+        </InfoText>
         {moduleData.size === 0 ? (
-          <Paragraph className={classes.ownersText} size="lg">
+          <InfoText color="secondaryLight" size="xl">
             No modules enabled
-          </Paragraph>
+          </InfoText>
         ) : (
           <TableContainer>
             <Table
@@ -137,31 +159,36 @@ const Advanced: React.FC = () => {
                       const rowElement = row[columnId]
 
                       return (
-                        <TableCell align={column.align} component="td" key={columnId}>
-                          {columnId === MODULES_TABLE_ADDRESS_ID ? (
-                            <Block justify="left">
-                              <Identicon address={rowElement} diameter={32} />
-                              <Paragraph style={{ marginLeft: 10 }}>{rowElement}</Paragraph>
-                            </Block>
-                          ) : (
-                            rowElement
-                          )}
-                        </TableCell>
+                        <>
+                          <TableCell align={column.align} component="td" key={columnId}>
+                            {columnId === MODULES_TABLE_ADDRESS_ID ? (
+                              <Block justify="left">
+                                <Identicon address={rowElement} diameter={32} />
+                                <AddressText size="lg">{rowElement}</AddressText>
+                              </Block>
+                            ) : (
+                              rowElement
+                            )}
+                          </TableCell>
+                          <TableCell component="td">
+                            <Row align="end" className={classes.actions}>
+                              {granted && (
+                                <TableActionButton
+                                  size="md"
+                                  iconType="delete"
+                                  color="error"
+                                  variant="outlined"
+                                  onClick={() => triggerRemoveSelectedModule(columnId)}
+                                  data-testid={REMOVE_MODULE_BTN_TEST_ID}
+                                >
+                                  {null}
+                                </TableActionButton>
+                              )}
+                            </Row>
+                          </TableCell>
+                        </>
                       )
                     })}
-                    <TableCell component="td">
-                      <Row align="end" className={classes.actions}>
-                        {granted && (
-                          <Img
-                            alt="Remove module"
-                            className={classes.removeModuleIcon}
-                            onClick={triggerRemoveSelectedModule}
-                            src={BinIcon}
-                            testId={REMOVE_MODULE_BTN_TEST_ID}
-                          />
-                        )}
-                      </Row>
-                    </TableCell>
                   </TableRow>
                 ))
               }
@@ -175,12 +202,14 @@ const Advanced: React.FC = () => {
           title="Disable Module"
           body={<div>This is the body</div>}
           footer={
-            <ModalFooterConfirmation
-              okText="Remove"
-              cancelText="Cancel"
-              handleCancel={hideRemoveModuleModal}
-              handleOk={removeSelectedModule}
-            />
+            <FooterWrapper>
+              <Button size="md" color="secondary" onClick={hideRemoveModuleModal}>
+                Cancel
+              </Button>
+              <Button color="error" size="md" variant="contained" onClick={removeSelectedModule}>
+                Remove
+              </Button>
+            </FooterWrapper>
           }
         />
       )}
