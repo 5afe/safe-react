@@ -1,3 +1,4 @@
+import { Map } from 'immutable'
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState } from 'redux'
@@ -31,6 +32,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
 import { ProviderRecord } from '../logic/wallets/store/model/provider'
 import { SafeRecordProps } from '../routes/safe/store/models/safe'
+import { Token } from '../logic/tokens/store/model/token'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -66,11 +68,11 @@ const reducers = combineReducers({
 })
 
 export type GnosisState = CombinedState<{
-  [PROVIDER_REDUCER_ID]: ProviderRecord
-  [SAFE_REDUCER_ID]: SafeRecordProps
+  [PROVIDER_REDUCER_ID]?: ProviderRecord
+  [SAFE_REDUCER_ID]?: SafeRecordProps
   // [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
   // [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
-  // [TOKEN_REDUCER_ID]: tokens,
+  [TOKEN_REDUCER_ID]?: Map<string, Token>
   // [TRANSACTIONS_REDUCER_ID]: transactions,
   // [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
   // [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,

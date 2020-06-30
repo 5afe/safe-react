@@ -26,9 +26,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeOwnersSelector } from 'src/routes/safe/store/selectors'
+import { safeOwnersSelector, safeNeedsUpdateSelector } from 'src/routes/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -43,7 +42,7 @@ const Settings: React.FC = () => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
   const owners = useSelector(safeOwnersSelector)
-  const needsUpdate = useSelector(safeNeedsUpdate)
+  const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
   const addressBook = useSelector(getAddressBook)
 

@@ -39,10 +39,10 @@ const StyledBlock = styled(Block)`
 interface Props {
   safeName?: string
   safeAddress: string
-  ethBalance?: string
+  ethBalance?: number | string
 }
 
-const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
+const AddressInfo: React.FC<Props> = ({ ethBalance, safeAddress, safeName }: Props) => {
   return (
     <Wrapper>
       <div className="icon-section">

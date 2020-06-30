@@ -74,7 +74,7 @@ const isTxValid = (t: SafeAppTx): boolean => {
 const confirmTransactions = (
   safeAddress: string,
   safeName: string,
-  ethBalance: string,
+  ethBalance: number | string,
   nameApp: string,
   iconApp: string,
   txs: Array<SafeAppTx>,

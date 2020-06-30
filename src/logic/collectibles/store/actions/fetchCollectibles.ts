@@ -4,8 +4,13 @@ import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/collectibles/sources'
 import { addNftAssets, addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { Dispatch } from 'redux'
+import { GnosisState } from 'src/store'
 
-const fetchCollectibles = () => async (dispatch, getState) => {
+const fetchCollectibles = (): ((dispatch: Dispatch, getState: () => GnosisState) => Promise<void>) => async (
+  dispatch,
+  getState,
+) => {
   const network = getNetwork()
   const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
   const source = getConfiguredSource()

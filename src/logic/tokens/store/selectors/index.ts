@@ -3,8 +3,9 @@ import { createSelector } from 'reselect'
 
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import { Token } from '../model/token'
+import { GnosisState } from 'src/store'
 
-export const tokensSelector = (state: Map<string, unknown>): Map<string, Token> => state[TOKEN_REDUCER_ID]
+export const tokensSelector = (state: GnosisState): Map<string, Token> => state[TOKEN_REDUCER_ID]
 
 export const tokenListSelector = createSelector(tokensSelector, (tokens) => tokens.toList())
 

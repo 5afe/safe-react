@@ -153,13 +153,16 @@ export const safeBlacklistedTokensSelector = createSelector(safeSelector, (safe)
   return safe.blacklistedTokens
 })
 
-export const safeBlacklistedAssetsSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
+export const safeBlacklistedAssetsSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set()
+    }
 
-  return safe.blacklistedAssets
-})
+    return safe.blacklistedAssets
+  },
+)
 
 export const safeActiveAssetsSelectorBySafe = (safeAddress, safes) => safes.get(safeAddress).get('activeAssets')
 
@@ -179,9 +182,9 @@ export const safeBalancesSelector = createSelector(
 
 const baseSafe = makeSafe()
 
-export const safeFieldSelector = (field: keyof SafeRecordProps) => (
+export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
   safe: SafeRecord,
-): SafeRecord[keyof SafeRecordProps] | null => (safe ? safe.get(field, baseSafe.get(field)) : null)
+): SafeRecordProps[K] | null => (safe ? safe.get(field, baseSafe.get(field)) : null)
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 

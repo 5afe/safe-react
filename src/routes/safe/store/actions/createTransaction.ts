@@ -89,9 +89,9 @@ interface CreateTransaction extends WithSnackbarProps {
   origin?: string
   safeAddress: string
   to: string
-  txData: string
+  txData?: string
   txNonce?: number | string
-  valueInWei: string
+  valueInWei: number | string
 }
 
 const createTransaction = ({
@@ -166,7 +166,10 @@ const createTransaction = ({
         await saveTxToHistory({ ...txArgs, signature, origin })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
-        dispatch(fetchTransactions(safeAddress))
+        dispatch({
+          type: 'FETCH_TRANSACTION',
+          payload: fetchTransactions(safeAddress),
+        })
         return
       }
     }
@@ -183,7 +186,7 @@ const createTransaction = ({
     const txToMock: TxToMock = {
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
-      value: txArgs.valueInWei,
+      value: `${txArgs.valueInWei}`,
       safeTxHash: generateSafeTxHash(safeAddress, txArgs),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
@@ -209,7 +212,10 @@ const createTransaction = ({
               state,
             ),
           ])
-          dispatch(fetchTransactions(safeAddress))
+          dispatch({
+            type: 'FETCH_TRANSACTIONS',
+            payload: fetchTransactions(safeAddress),
+          })
         } catch (e) {
           removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         }
@@ -255,8 +261,7 @@ const createTransaction = ({
           dispatch,
           state,
         )
-
-        dispatch(fetchTransactions(safeAddress))
+        ;(await fetchTransactions(safeAddress))(dispatch)
 
         return receipt.transactionHash
       })

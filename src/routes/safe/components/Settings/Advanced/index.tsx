@@ -1,4 +1,4 @@
-import { GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
+import { GenericModal, ModalFooterConfirmation, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
@@ -83,10 +83,10 @@ const Advanced: React.FC = () => {
       {/* Nonce */}
       <Block className={classes.container}>
         <Heading tag="h2">Safe Nonce</Heading>
-        <Paragraph>
+        <Text size="md">
           For security reasons, transactions made with the Safe need to be executed in order. The nonce shows you which
           transaction was executed most recently. You can find the nonce for a transaction in the transaction details.
-        </Paragraph>
+        </Text>
         <Paragraph className={classes.ownersText} size="lg">
           Current Nonce: <Bold>{nonce}</Bold>
         </Paragraph>

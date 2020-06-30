@@ -93,5 +93,5 @@ export type TxArgs = {
   sender?: string
   sigs: string
   to: string
-  valueInWei: string
+  valueInWei: number | string
 }
