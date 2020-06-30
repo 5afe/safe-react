@@ -18,12 +18,9 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // request
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQapdJP6zERqpDKKPECNeMDDgwmGUqbKk1PjHpYj8gfDJ`, disabled: false },
   // Aave
-  // { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUfgEqdJ5kVjWTQofnDmvxdhDLBAaejiHkhQhfw6aYvBg`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfHFQHCSyaSL8Aq4eWZeB3buy4neiUCPchob2pYdV9gJT`, disabled: false },
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
-  { url: `${gnosisAppsUrl}/pool-together`, disabled: false },
-  { url: `${gnosisAppsUrl}/open-zeppelin`, disabled: false },
-  { url: `${gnosisAppsUrl}/synthetix`, disabled: false },
 ]
 
 export const getAppInfoFromOrigin = (origin) => {
