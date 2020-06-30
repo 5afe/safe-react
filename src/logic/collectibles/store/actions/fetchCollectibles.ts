@@ -4,10 +4,12 @@ import { getNetwork } from 'src/config'
 import { getConfiguredSource } from 'src/logic/collectibles/sources'
 import { addNftAssets, addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { State } from '../../../../store'
+import { Dispatch } from 'redux'
 
 let isFetchingData = false
 
-const fetchCollectibles = () => async (dispatch, getState) => {
+const fetchCollectibles = () => async (dispatch: Dispatch, getState: () => State): Promise<void> => {
   if (isFetchingData) return
   isFetchingData = true
   try {

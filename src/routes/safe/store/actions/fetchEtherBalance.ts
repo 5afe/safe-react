@@ -3,11 +3,12 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
+import { State } from '../../../../store'
 
 let isFetchingData = false
 const fetchEtherBalance = (safeAddress: string) => async <T extends () => unknown>(
   dispatch: Dispatch,
-  getState: T,
+  getState: () => State,
 ): Promise<void> => {
   if (isFetchingData) {
     return

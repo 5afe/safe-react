@@ -13,6 +13,7 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { Dispatch } from 'redux'
 
 const buildOwnersFrom = (
   safeOwners,
@@ -70,7 +71,7 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
+export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const safeParams = ['getThreshold', 'nonce', 'getOwners']
