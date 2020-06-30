@@ -36,7 +36,7 @@
     "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "start": "react-app-rewired start",
-    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom --coverage",
+    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom --coverage --watchAll=false",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "husky": {
