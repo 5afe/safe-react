@@ -1,3 +1,4 @@
+import { IconText } from '@gnosis.pm/safe-react-components'
 import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -10,9 +11,6 @@ import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
-import { OwnersIcon } from './assets/icons/OwnersIcon'
-import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
-import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
@@ -27,7 +25,7 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeOwnersSelector, safeNeedsUpdateSelector } from 'src/routes/safe/store/selectors'
+import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/routes/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -75,7 +73,6 @@ const Settings: React.FC = () => {
         <Col className={classes.menuWrapper} layout="column">
           <Block className={classes.menu}>
             <Row className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)} onClick={handleChange(1)}>
-              <SafeDetailsIcon />
               <Badge
                 badgeContent=" "
                 color="error"
@@ -83,7 +80,13 @@ const Settings: React.FC = () => {
                 style={{ paddingRight: '10px' }}
                 variant="dot"
               >
-                Safe details
+                <IconText
+                  iconSize="sm"
+                  textSize="xl"
+                  iconType="info"
+                  text="Safe Details"
+                  color={menuOptionIndex === 1 ? 'primary' : 'secondary'}
+                />
               </Badge>
             </Row>
             <Hairline className={classes.hairline} />
@@ -92,21 +95,36 @@ const Settings: React.FC = () => {
               onClick={handleChange(2)}
               testId={OWNERS_SETTINGS_TAB_TEST_ID}
             >
-              <OwnersIcon />
-              Owners
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="owners"
+                text="Owners"
+                color={menuOptionIndex === 2 ? 'primary' : 'secondary'}
+              />
               <Paragraph className={classes.counter} size="xs">
                 {owners.size}
               </Paragraph>
             </Row>
             <Hairline className={classes.hairline} />
             <Row className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)} onClick={handleChange(3)}>
-              <RequiredConfirmationsIcon />
-              Policies
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="requiredConfirmations"
+                text="Policies"
+                color={menuOptionIndex === 3 ? 'primary' : 'secondary'}
+              />
             </Row>
             <Hairline className={classes.hairline} />
             <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
-              <RequiredConfirmationsIcon />
-              Advanced
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="settingsChange"
+                text="Advanced"
+                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+              />
             </Row>
             <Hairline className={classes.hairline} />
           </Block>
