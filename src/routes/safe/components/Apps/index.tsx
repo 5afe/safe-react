@@ -27,7 +27,7 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
-  padding: 24px;
+  padding: 15px;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -53,6 +53,11 @@ const IframeCoverLoading = styled.div`
   right: 0;
   background: white;
 `
+
+const MarginTop = styled.div`
+  margin-top: 5px;
+`
+
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -410,13 +415,17 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         </Card>
       )}
       <Centered>
-        <IconText
-          color="secondary"
-          iconSize="sm"
-          iconType="info"
-          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
-          textSize="sm"
-        />
+        <MarginTop>
+          {/* TODO: Override IconText with styled-components to add margin-top once this PR is released
+        https://github.com/gnosis/safe-react-components/pull/28 */}
+          <IconText
+            color="secondary"
+            iconSize="sm"
+            iconType="info"
+            text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
+            textSize="sm"
+          />
+        </MarginTop>
       </Centered>
     </>
   )
