@@ -87,7 +87,7 @@ class OpenSea {
   async fetchAllUserCollectiblesByCategoryAsync(
     safeAddress: string,
     network: string,
-  ): Promise<{ nftAssets: unknown; nftTokens: unknown }> {
+  ): Promise<{ nftAssets: Map<string, unknown>; nftTokens: Array<unknown> }> {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
