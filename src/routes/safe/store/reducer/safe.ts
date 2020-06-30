@@ -16,6 +16,7 @@ import makeSafe from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const SAFE_REDUCER_ID = 'safes'
+export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
 
 export const buildSafe = (storedSafe) => {
   const names = storedSafe.owners.map((owner) => owner.name)
@@ -125,10 +126,8 @@ export default handleActions(
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action) => state.set('latestMasterContractVersion', action.payload),
   },
   Map({
-    // $FlowFixMe
-    defaultSafe: undefined,
+    defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
     safes: Map(),
-    // $FlowFixMe
     latestMasterContractVersion: '',
   }),
 )

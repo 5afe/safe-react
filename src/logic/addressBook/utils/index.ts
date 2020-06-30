@@ -1,11 +1,12 @@
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { AddressBookEntryProps } from './../model/addressBook'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-export const getAddressBookFromStorage = async () => {
-  const data = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+export const getAddressBookFromStorage = async (): Promise<Array<AddressBookEntryProps> | undefined> => {
+  const data = await loadFromStorage<Array<AddressBookEntryProps>>(ADDRESS_BOOK_STORAGE_KEY)
 
-  return data || []
+  return data
 }
 
 export const saveAddressBook = async (addressBook) => {
