@@ -21,7 +21,7 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
-import { SafeApp } from './types'
+import { SafeApp, StoredSafeApp } from './types'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -195,7 +195,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     setAppList(copyAppList)
 
     // update storage list
-    const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+    const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
     let storageApp = persistedAppList.find((a) => a.url === app.url)
 
     if (!storageApp) {
@@ -303,7 +303,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       // recover apps from storage:
       // * third-party apps added by the user
       // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage(APPS_STORAGE_KEY)) || []
+      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
       const list = [...persistedAppList]
 
       staticAppsList.forEach((staticApp) => {

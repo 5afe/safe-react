@@ -17,6 +17,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_SAFE_MODULES } from '../actions/addSafeModules'
 
 export const SAFE_REDUCER_ID = 'safes'
+export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
 
 export const buildSafe = (storedSafe) => {
   const names = storedSafe.owners.map((owner) => owner.name)
@@ -140,7 +141,7 @@ export default handleActions(
       state.set('latestMasterContractVersion', action.payload),
   },
   Map({
-    defaultSafe: undefined,
+    defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
     safes: Map(),
     latestMasterContractVersion: '',
   }),
