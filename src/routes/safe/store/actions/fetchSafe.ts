@@ -13,6 +13,7 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { SafeOwner } from '../models/safe'
 import { Dispatch } from 'redux'
 
 const buildOwnersFrom = (
@@ -52,7 +53,7 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
 
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
-  const owners = List(buildOwnersFrom(remoteOwners, localSafe))
+  const owners = List<SafeOwner>(buildOwnersFrom(remoteOwners, localSafe))
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 

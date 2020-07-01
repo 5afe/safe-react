@@ -1,6 +1,7 @@
 import { List } from 'immutable'
 
 import { makeOwner } from 'src/routes/safe/store/models/owner'
+import { SafeOwner } from '../../safe/store/models/safe'
 
 export const getAccountsFrom = (values) => {
   const accounts = Object.keys(values)
@@ -18,7 +19,7 @@ export const getNamesFrom = (values) => {
   return accounts.map((account) => values[account]).slice(0, values.owners)
 }
 
-export const getOwnersFrom = (names, addresses) => {
+export const getOwnersFrom = (names, addresses): List<SafeOwner> => {
   const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
 
   return List(owners)

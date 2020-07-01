@@ -7,6 +7,7 @@ import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCO
 import Loader from 'src/components/Loader'
 import { defaultSafeSelector } from 'src/routes/safe/store/selectors'
 import { useAnalytics } from 'src/utils/googleAnalytics'
+import { DEFAULT_SAFE_INITIAL_STATE } from 'src/routes/safe/store/reducer/safe'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 
@@ -44,7 +45,7 @@ const Routes = ({ location }) => {
             return <Redirect to={WELCOME_ADDRESS} />
           }
 
-          if (typeof defaultSafe === 'undefined') {
+          if (defaultSafe === DEFAULT_SAFE_INITIAL_STATE) {
             return <Loader />
           }
 
