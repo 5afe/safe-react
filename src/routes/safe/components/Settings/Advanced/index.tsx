@@ -262,8 +262,8 @@ const Advanced: React.FC = () => {
             <Hairline />
             <Row className={classes.modalDescription}>
               <Paragraph noMargin>
-                By removing a Module you will sign a new Safe Transaction. The Safe will not be able to interact with it
-                any longer until it is enabled again through a new Safe Transaction.
+                After removing this module, any feature or app that uses this module might no longer work. If this Safe
+                requires more then one signature, the module removal will have to be confirmed by other owners as well.
               </Paragraph>
             </Row>
           </Block>
