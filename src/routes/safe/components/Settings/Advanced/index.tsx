@@ -227,7 +227,7 @@ const Advanced: React.FC = () => {
         >
           <Row align="center" className={classes.modalHeading} grow>
             <Paragraph className={classes.modalManage} noMargin weight="bolder">
-              Remove Modal
+              Remove Module
             </Paragraph>
             <IconButton disableRipple onClick={hideRemoveModuleModal}>
               <Close className={classes.modalClose} />
