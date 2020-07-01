@@ -121,7 +121,7 @@ const Settings: React.FC = () => {
               <IconText
                 iconSize="sm"
                 textSize="xl"
-                iconType="settingsChange"
+                iconType="settingsTool"
                 text="Advanced"
                 color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
               />
