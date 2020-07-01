@@ -9,18 +9,25 @@ import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchT
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { TIMEOUT } from 'src/utils/constants'
 
+let isFetchingData = false
 export const useCheckForUpdates = (): void => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   useEffect(() => {
     if (safeAddress) {
       const collectiblesInterval = setInterval(() => {
-        batch(() => {
-          dispatch(fetchEtherBalance(safeAddress))
-          dispatch(fetchSafeTokens(safeAddress))
-          dispatch(fetchTransactions(safeAddress))
-          dispatch(fetchCollectibles)
-          dispatch(checkAndUpdateSafe(safeAddress))
+        batch(async () => {
+          if (!isFetchingData) {
+            isFetchingData = true
+            await Promise.all([
+              dispatch(fetchEtherBalance(safeAddress)),
+              dispatch(fetchSafeTokens(safeAddress)),
+              dispatch(fetchTransactions(safeAddress)),
+              dispatch(fetchCollectibles),
+              dispatch(checkAndUpdateSafe(safeAddress)),
+            ])
+            isFetchingData = false
+          }
         })
       }, TIMEOUT * 3)
       return () => {

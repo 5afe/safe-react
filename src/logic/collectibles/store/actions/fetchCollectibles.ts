@@ -7,26 +7,24 @@ import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selecto
 import { State } from '../../../../store'
 import { Dispatch } from 'redux'
 
-let isFetchingData = false
-
 const fetchCollectibles = () => async (dispatch: Dispatch, getState: () => State): Promise<void> => {
-  if (isFetchingData) return
-  isFetchingData = true
-  try {
-    const network = getNetwork()
-    const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
-    const source = getConfiguredSource()
-    const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
+  return new Promise(async (resolve) => {
+    try {
+      const network = getNetwork()
+      const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
+      const source = getConfiguredSource()
+      const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
 
-    batch(() => {
-      dispatch(addNftAssets(collectibles.nftAssets))
-      dispatch(addNftTokens(collectibles.nftTokens))
-    })
-  } catch (error) {
-    console.log('Error fetching collectibles:', error)
-  } finally {
-    isFetchingData = false
-  }
+      batch(() => {
+        dispatch(addNftAssets(collectibles.nftAssets))
+        dispatch(addNftTokens(collectibles.nftTokens))
+      })
+    } catch (error) {
+      console.log('Error fetching collectibles:', error)
+    } finally {
+      resolve()
+    }
+  })
 }
 
 export default fetchCollectibles

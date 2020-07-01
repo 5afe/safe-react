@@ -11,39 +11,39 @@ import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
 
 const noFunc = () => {}
-let isFetchingData = false
+
 export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
-  if (isFetchingData) return
-  isFetchingData = true
-  try {
-    const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
+  return new Promise(async (resolve) => {
+    try {
+      const transactions = await backOff(() => loadOutgoingTransactions(safeAddress))
 
-    if (transactions) {
-      const { cancel, outgoing } = transactions
-      const updateCancellationTxs = cancel.size
-        ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
-        : noFunc
-      const updateOutgoingTxs = outgoing.size
-        ? addOrUpdateTransactions({
-            safeAddress,
-            transactions: outgoing,
-          })
-        : noFunc
+      if (transactions) {
+        const { cancel, outgoing } = transactions
+        const updateCancellationTxs = cancel.size
+          ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
+          : noFunc
+        const updateOutgoingTxs = outgoing.size
+          ? addOrUpdateTransactions({
+              safeAddress,
+              transactions: outgoing,
+            })
+          : noFunc
 
-      batch(() => {
-        dispatch(updateCancellationTxs)
-        dispatch(updateOutgoingTxs)
-      })
+        batch(() => {
+          dispatch(updateCancellationTxs)
+          dispatch(updateOutgoingTxs)
+        })
+      }
+
+      const incomingTransactions = await loadIncomingTransactions(safeAddress)
+
+      if (incomingTransactions.get(safeAddress).size) {
+        dispatch(addIncomingTransactions(incomingTransactions))
+      }
+    } catch (error) {
+      console.log('Error fetching transactions:', error)
+    } finally {
+      resolve()
     }
-
-    const incomingTransactions = await loadIncomingTransactions(safeAddress)
-
-    if (incomingTransactions.get(safeAddress).size) {
-      dispatch(addIncomingTransactions(incomingTransactions))
-    }
-  } catch (error) {
-    console.log('Error fetching transactions:', error)
-  } finally {
-    isFetchingData = false
-  }
+  })
 }
