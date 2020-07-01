@@ -13,12 +13,14 @@ const removeLastTrailingSlash = (url) => {
 
 const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
 export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
+  // Idle
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUoqmq8jw98VwTSf7aTQeBCfPKicQgcJL5k2Bch9QT8BJ`, disabled: false },
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
   // request
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQapdJP6zERqpDKKPECNeMDDgwmGUqbKk1PjHpYj8gfDJ`, disabled: false },
   // Aave
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfHFQHCSyaSL8Aq4eWZeB3buy4neiUCPchob2pYdV9gJT`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`, disabled: false },
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
