@@ -37,6 +37,10 @@ const Centered = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+
+  &.mt {
+    margin-top: 5px;
+  }
 `
 
 const IframeWrapper = styled.div`
@@ -53,11 +57,6 @@ const IframeCoverLoading = styled.div`
   right: 0;
   background: white;
 `
-
-const MarginTop = styled.div`
-  margin-top: 5px;
-`
-
 const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -414,18 +413,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </Centered>
         </Card>
       )}
-      <Centered>
-        <MarginTop>
-          {/* TODO: Override IconText with styled-components to add margin-top once this PR is released
-        https://github.com/gnosis/safe-react-components/pull/28 */}
-          <IconText
-            color="secondary"
-            iconSize="sm"
-            iconType="info"
-            text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
-            textSize="sm"
-          />
-        </MarginTop>
+      <Centered className="mt">
+        <IconText
+          color="secondary"
+          iconSize="sm"
+          iconType="info"
+          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
+          textSize="sm"
+        />
       </Centered>
     </>
   )
