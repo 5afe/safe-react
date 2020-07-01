@@ -203,7 +203,7 @@
     "reselect": "^4.0.0",
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
-    "truffle-contract": "^4.0.31",
+    "truffle-contract": "4.0.31",
     "web3": "1.2.8"
   },
   "devDependencies": {
