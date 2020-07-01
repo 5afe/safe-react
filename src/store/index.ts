@@ -33,6 +33,7 @@ import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/red
 import { ProviderRecord } from '../logic/wallets/store/model/provider'
 import { SafeRecordProps } from '../routes/safe/store/models/safe'
 import { Token } from '../logic/tokens/store/model/token'
+import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -70,8 +71,8 @@ const reducers = combineReducers({
 export type GnosisState = CombinedState<{
   [PROVIDER_REDUCER_ID]?: ProviderRecord
   [SAFE_REDUCER_ID]?: SafeRecordProps
-  // [NFT_ASSETS_REDUCER_ID]: nftAssetReducer,
-  // [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
+  [NFT_ASSETS_REDUCER_ID]?: NFTAssets
+  [NFT_TOKENS_REDUCER_ID]?: NFTTokens
   [TOKEN_REDUCER_ID]?: Map<string, Token>
   // [TRANSACTIONS_REDUCER_ID]: transactions,
   // [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
