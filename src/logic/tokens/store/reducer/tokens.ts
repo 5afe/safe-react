@@ -2,7 +2,6 @@ import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
 import { ADD_TOKEN } from 'src/logic/tokens/store/actions/addToken'
-import { REMOVE_TOKEN } from 'src/logic/tokens/store/actions/removeToken'
 import { ADD_TOKENS } from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 
@@ -26,12 +25,6 @@ export default handleActions(
       const { address: tokenAddress } = token
 
       return state.set(tokenAddress, makeToken(token))
-    },
-    [REMOVE_TOKEN]: (state, action) => {
-      const { token } = action.payload
-      const { address: tokenAddress } = token
-
-      return state.remove(tokenAddress)
     },
   },
   Map(),
