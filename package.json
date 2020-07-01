@@ -36,7 +36,8 @@
     "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "start": "react-app-rewired start",
-    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom --coverage --watchAll=false",
+    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom",
+    "test:coverage": "yarn test --coverage --watchAll=false",
     "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "husky": {
@@ -54,10 +55,9 @@
     "collectCoverageFrom": [
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.{.test.*}",
-      "!<rootDir>/node_modules/",
-      "!<rootDir>/src/assets/**",
-      "!<rootDir>/config",
-      "!<rootDir>/src/test"
+      "!src/**/test/**/*",
+      "!src/**/assets/**",
+      "!src/config/**/*"
     ]
   },
   "productName": "Safe Multisig",
