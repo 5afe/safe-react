@@ -1,11 +1,13 @@
-import { List, Set } from 'immutable'
+import { List } from 'immutable'
 
 export const MODULES_TABLE_ADDRESS_ID = 'address'
 export const MODULES_TABLE_ACTIONS_ID = 'actions'
 
-export const getModuleData = (modules: Set<string>): List<{ [MODULES_TABLE_ADDRESS_ID]: string }> => {
-  return modules.toList().map((module) => ({
-    [MODULES_TABLE_ADDRESS_ID]: module,
+export const getModuleData = (
+  modulesList: List<[string, string]>,
+): List<{ [MODULES_TABLE_ADDRESS_ID]: [string, string] }> => {
+  return modulesList.map((modules) => ({
+    [MODULES_TABLE_ADDRESS_ID]: modules,
   }))
 }
 

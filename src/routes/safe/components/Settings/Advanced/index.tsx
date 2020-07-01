@@ -1,8 +1,8 @@
-import { Button, GenericModal, Text, Title, theme } from '@gnosis.pm/safe-react-components'
+import { Button, Text, Title, theme } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import { Set } from 'immutable'
+import { List } from 'immutable'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -26,6 +26,16 @@ import {
   safeModulesSelector,
 } from 'src/routes/safe/store/selectors'
 import styled from 'styled-components'
+import Modal from '../../../../../components/Modal'
+import Paragraph from '../../../../../components/layout/Paragraph'
+import IconButton from '@material-ui/core/IconButton'
+import Close from '@material-ui/icons/Close'
+import Hairline from '../../../../../components/layout/Hairline'
+import Col from '../../../../../components/layout/Col'
+import Link from '../../../../../components/layout/Link'
+import OpenInNew from '@material-ui/icons/OpenInNew'
+import { getEtherScanLink } from '../../../../../logic/wallets/getWeb3'
+import { md, secondary } from '../../../../../theme/variables'
 
 export const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 export const MODULES_ROW_TEST_ID = 'owners-row'
@@ -51,10 +61,16 @@ const TableActionButton = styled(Button)`
     background-color: transparent;
   }
 `
+
 const FooterWrapper = styled.div`
   display: flex;
   justify-content: space-around;
 `
+
+const openIconStyle = {
+  height: md,
+  color: secondary,
+}
 
 const Advanced: React.FC = () => {
   const classes = useStyles()
@@ -66,14 +82,14 @@ const Advanced: React.FC = () => {
   const nonce = useSelector(safeNonceSelector)
   const granted = useSelector(grantedSelector)
   const modules = useSelector(safeModulesSelector)
-  const moduleData = getModuleData(Set(modules))
+  const moduleData = modules !== null ? getModuleData(List(modules)) : modules
 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
   const [selectedModule, setSelectedModule] = React.useState(null)
-  const triggerRemoveSelectedModule = (moduleAddress: string): void => {
-    setSelectedModule(moduleAddress)
+  const triggerRemoveSelectedModule = (module: [string, string]): void => {
+    setSelectedModule(module)
     setViewRemoveModuleModal(true)
   }
 
@@ -81,20 +97,25 @@ const Advanced: React.FC = () => {
   const dispatch = useDispatch()
 
   const removeSelectedModule = async (): Promise<void> => {
-    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const txData = safeInstance.contract.methods.disableModule(selectedModule).encodeABI()
+    try {
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+      const [module, prevModule] = selectedModule
+      const txData = safeInstance.contract.methods.disableModule(module, prevModule).encodeABI()
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: safeAddress,
-        valueInWei: '0',
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      }),
-    )
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: safeAddress,
+          valueInWei: '0',
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+          enqueueSnackbar,
+          closeSnackbar,
+        }),
+      )
+    } catch (e) {
+      console.error(`failed to remove the module ${selectedModule}`, e.message)
+    }
   }
 
   return (
@@ -130,7 +151,7 @@ const Advanced: React.FC = () => {
           </a>
           .
         </InfoText>
-        {moduleData.size === 0 ? (
+        {moduleData === null ? (
           <InfoText color="secondaryLight" size="xl">
             No modules enabled
           </InfoText>
@@ -163,8 +184,8 @@ const Advanced: React.FC = () => {
                           <TableCell align={column.align} component="td" key={columnId}>
                             {columnId === MODULES_TABLE_ADDRESS_ID ? (
                               <Block justify="left">
-                                <Identicon address={rowElement} diameter={32} />
-                                <AddressText size="lg">{rowElement}</AddressText>
+                                <Identicon address={rowElement[0]} diameter={32} />
+                                <AddressText size="lg">{rowElement[0]}</AddressText>
                               </Block>
                             ) : (
                               rowElement
@@ -178,7 +199,7 @@ const Advanced: React.FC = () => {
                                   iconType="delete"
                                   color="error"
                                   variant="outlined"
-                                  onClick={() => triggerRemoveSelectedModule(columnId)}
+                                  onClick={() => triggerRemoveSelectedModule(rowElement)}
                                   data-testid={REMOVE_MODULE_BTN_TEST_ID}
                                 >
                                   {null}
@@ -197,11 +218,57 @@ const Advanced: React.FC = () => {
         )}
       </Block>
       {viewRemoveModuleModal && (
-        <GenericModal
-          onClose={hideRemoveModuleModal}
-          title="Disable Module"
-          body={<div>This is the body</div>}
-          footer={
+        <Modal
+          description="Remove the selected Module"
+          handleClose={hideRemoveModuleModal}
+          open={viewRemoveModuleModal}
+          paperClassName={classes.modal}
+          title="Remove Module"
+        >
+          <Row align="center" className={classes.modalHeading} grow>
+            <Paragraph className={classes.modalManage} noMargin weight="bolder">
+              Remove Modal
+            </Paragraph>
+            <IconButton disableRipple onClick={hideRemoveModuleModal}>
+              <Close className={classes.modalClose} />
+            </IconButton>
+          </Row>
+          <Hairline />
+          <Block className={classes.modalContainer}>
+            <Row className={classes.modalOwner}>
+              <Col align="center" xs={1}>
+                <Identicon address={selectedModule[0]} diameter={32} />
+              </Col>
+              <Col xs={11}>
+                <Block className={cn(classes.modalName, classes.modalUserName)}>
+                  <Paragraph noMargin size="lg" weight="bolder">
+                    {selectedModule[0]}
+                  </Paragraph>
+                  <Block className={classes.modalUser} justify="center">
+                    <Paragraph color="disabled" noMargin size="md">
+                      {selectedModule[0]}
+                    </Paragraph>
+                    <Link
+                      className={classes.modalOpen}
+                      target="_blank"
+                      to={getEtherScanLink('address', selectedModule[0])}
+                    >
+                      <OpenInNew style={openIconStyle} />
+                    </Link>
+                  </Block>
+                </Block>
+              </Col>
+            </Row>
+            <Hairline />
+            <Row className={classes.modalDescription}>
+              <Paragraph noMargin>
+                By removing a Module you will sign a new Safe Transaction. The Safe will not be able to interact with it
+                any longer until it is enabled again through a new Safe Transaction.
+              </Paragraph>
+            </Row>
+          </Block>
+          <Hairline />
+          <Row align="center" className={classes.modalButtonRow}>
             <FooterWrapper>
               <Button size="md" color="secondary" onClick={hideRemoveModuleModal}>
                 Cancel
@@ -210,8 +277,8 @@ const Advanced: React.FC = () => {
                 Remove
               </Button>
             </FooterWrapper>
-          }
-        />
+          </Row>
+        </Modal>
       )}
     </>
   )

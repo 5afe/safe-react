@@ -15,6 +15,7 @@ import { makeOwner } from 'src/routes/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeOwner } from '../models/safe'
 import addSafeModules from './addSafeModules'
+import { SENTINEL_ADDRESS } from '../../../../logic/contracts/safeContracts'
 
 const buildOwnersFrom = (
   safeOwners,
@@ -36,6 +37,18 @@ const buildOwnersFrom = (
       address: convertedAdd,
     })
   })
+
+const buildModulesLinkedList = (modulesPaginated: [Array<string>, string] | null): Array<[string, string]> | null => {
+  if (modulesPaginated.length) {
+    const [remoteModules, nextModule] = modulesPaginated
+
+    return remoteModules.map((moduleAddress, index, modules) => {
+      const prevModule = modules[index + 1]
+      return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
+    })
+  }
+  return null
+}
 
 export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?: any) => {
   const safeAddress = checksumAddress(safeAdd)
@@ -75,8 +88,14 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
 export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const safeParams = ['getThreshold', 'nonce', 'getOwners', 'getModules']
-  const [[remoteThreshold, remoteNonce, remoteOwners, remoteModules], localSafe] = await Promise.all([
+  const safeParams = [
+    'getThreshold',
+    'nonce',
+    'getOwners',
+    // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
+    { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
+  ]
+  const [[remoteThreshold, remoteNonce, remoteOwners, remoteModulesPaginated], localSafe] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
@@ -93,7 +112,7 @@ export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   dispatch(
     addSafeModules({
       safeAddress,
-      modulesAddresses: remoteModules,
+      modulesAddresses: buildModulesLinkedList(remoteModulesPaginated),
     }),
   )
 

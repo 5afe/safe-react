@@ -11,7 +11,7 @@ export type SafeRecordProps = {
   threshold: number
   ethBalance: number | string
   owners: List<{ name: string; address: string }>
-  modules: Set<string>
+  modules: List<[string, string]> | null
   activeTokens: Set<string>
   activeAssets: Set<string>
   blacklistedTokens: Set<string>
@@ -31,7 +31,7 @@ const makeSafe = Record<SafeRecordProps>({
   threshold: 0,
   ethBalance: '0',
   owners: List([]),
-  modules: Set(),
+  modules: List(),
   activeTokens: Set(),
   activeAssets: Set(),
   blacklistedTokens: Set(),
