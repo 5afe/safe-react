@@ -4,6 +4,58 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from 'src/utils/constants'
 
+export interface OpenSeaAssetContract {
+  address: string
+  name: string
+  image_url: string
+  symbol: string
+}
+
+export interface OpenSeaCollection {
+  name: string
+  slug: string
+}
+
+export interface OpenSeaAsset {
+  asset_contract: OpenSeaAssetContract
+  background_color: string
+  collection: OpenSeaCollection
+  description: string
+  image_thumbnail_url: string
+  name: string
+  token_id: string
+}
+
+export type OpenSeaAssets = Array<OpenSeaAsset>
+
+export interface NFTAsset {
+  address: string
+  assetContract: OpenSeaAssetContract
+  collection: OpenSeaCollection
+  description: string
+  image: string
+  name: string
+  numberOfTokens: number
+  slug: string
+  symbol: string
+}
+export type NFTAssets = Record<string, NFTAsset>
+
+export interface NFTToken {
+  assetAddress: string
+  color: string
+  description: string
+  image: string
+  name: string
+  tokenId: number | string
+}
+export type NFTTokens = Array<NFTToken>
+
+export interface Collectibles {
+  nftAssets: NFTAssets
+  nftTokens: NFTTokens
+}
+
 class OpenSea {
   _rateLimit = async () => {}
 
@@ -29,7 +81,7 @@ class OpenSea {
     this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
   }
 
-  static extractAssets(assets) {
+  static extractAssets(assets: OpenSeaAssets): NFTAssets {
     const extractNFTAsset = (asset) => ({
       address: asset.asset_contract.address,
       assetContract: asset.asset_contract,
@@ -59,7 +111,7 @@ class OpenSea {
     }, {})
   }
 
-  static extractTokens(assets) {
+  static extractTokens(assets: OpenSeaAssets): NFTTokens {
     return assets.map((asset) => ({
       assetAddress: asset.asset_contract.address,
       color: asset.background_color,
@@ -70,7 +122,7 @@ class OpenSea {
     }))
   }
 
-  static extractCollectiblesInfo(assetResponseJson) {
+  static extractCollectiblesInfo(assetResponseJson: { assets: OpenSeaAssets }): Collectibles {
     return {
       nftAssets: OpenSea.extractAssets(assetResponseJson.assets),
       nftTokens: OpenSea.extractTokens(assetResponseJson.assets),
@@ -82,12 +134,9 @@ class OpenSea {
    * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
    * @param {string} network
-   * @returns {Promise<{ nftAssets: Map<string, NFTAsset>, nftTokens: Array<NFTToken> }>}
+   * @returns {Promise<Collectibles>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(
-    safeAddress: string,
-    network: string,
-  ): Promise<{ nftAssets: Map<string, unknown>; nftTokens: Array<unknown> }> {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): Promise<Collectibles> {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
