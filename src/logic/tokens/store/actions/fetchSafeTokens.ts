@@ -23,88 +23,84 @@ const fetchSafeTokens = (safeAddress: string) => async (
   dispatch: Dispatch,
   getState: () => GnosisState,
 ): Promise<void> => {
-  return new Promise(async (resolve) => {
-    try {
-      const state = getState()
-      const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
-      const currentTokens = state[TOKEN_REDUCER_ID]
+  try {
+    const state = getState()
+    const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+    const currentTokens = state[TOKEN_REDUCER_ID]
 
-      if (!safe) {
-        return
-      }
-
-      const result = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
-      const currentEthBalance = safe.get('ethBalance')
-      const safeBalances = safe.get('balances')
-      const alreadyActiveTokens = safe.get('activeTokens')
-      const blacklistedTokens = safe.get('blacklistedTokens')
-      const currencyValues = state[CURRENCY_VALUES_KEY]
-
-      const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
-        (acc, { balance, balanceUsd, token, tokenAddress }) => {
-          if (tokenAddress === null) {
-            acc.ethBalance = humanReadableBalance(balance, 18)
-          } else {
-            acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableBalance(balance, token.decimals) })
-
-            if (currentTokens && !currentTokens.get(tokenAddress)) {
-              acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
-            }
-          }
-
-          acc.currencyList = acc.currencyList.push(
-            makeBalanceCurrency({
-              currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
-              tokenAddress,
-              balanceInBaseCurrency: balanceUsd,
-              balanceInSelectedCurrency: balanceUsd,
-            }),
-          )
-
-          return acc
-        },
-        {
-          balances: Map(),
-          currencyList: List(),
-          ethBalance: '0',
-          tokens: List(),
-        },
-      )
-
-      // need to persist those already active tokens, despite its balances
-      const activeTokens = alreadyActiveTokens.toSet().union(
-        // active tokens by balance, excluding those already blacklisted and the `null` address
-        balances.keySeq().toSet().subtract(blacklistedTokens),
-      )
-
-      const update = updateSafeValue(safeAddress)
-      const updateActiveTokens = activeTokens.equals(alreadyActiveTokens) ? noFunc : update({ activeTokens })
-      const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
-      const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
-      const storedCurrencyBalances =
-        currencyValues && currencyValues.get(safeAddress)
-          ? currencyValues.get(safeAddress).get('currencyBalances')
-          : undefined
-
-      const updateCurrencies = currencyList.equals(storedCurrencyBalances)
-        ? noFunc
-        : setCurrencyBalances(safeAddress, currencyList)
-
-      const updateTokens = tokens.size === 0 ? noFunc : addTokens(tokens)
-
-      batch(() => {
-        dispatch(updateActiveTokens)
-        dispatch(updateBalances)
-        dispatch(updateEthBalance)
-        dispatch(updateCurrencies)
-        dispatch(updateTokens)
-      })
-    } catch (err) {
-      console.error('Error fetching active token list', err)
-    } finally {
-      resolve()
+    if (!safe) {
+      return
     }
-  })
+
+    const result = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
+    const currentEthBalance = safe.get('ethBalance')
+    const safeBalances = safe.get('balances')
+    const alreadyActiveTokens = safe.get('activeTokens')
+    const blacklistedTokens = safe.get('blacklistedTokens')
+    const currencyValues = state[CURRENCY_VALUES_KEY]
+
+    const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
+      (acc, { balance, balanceUsd, token, tokenAddress }) => {
+        if (tokenAddress === null) {
+          acc.ethBalance = humanReadableBalance(balance, 18)
+        } else {
+          acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableBalance(balance, token.decimals) })
+
+          if (currentTokens && !currentTokens.get(tokenAddress)) {
+            acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
+          }
+        }
+
+        acc.currencyList = acc.currencyList.push(
+          makeBalanceCurrency({
+            currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
+            tokenAddress,
+            balanceInBaseCurrency: balanceUsd,
+            balanceInSelectedCurrency: balanceUsd,
+          }),
+        )
+
+        return acc
+      },
+      {
+        balances: Map(),
+        currencyList: List(),
+        ethBalance: '0',
+        tokens: List(),
+      },
+    )
+
+    // need to persist those already active tokens, despite its balances
+    const activeTokens = alreadyActiveTokens.toSet().union(
+      // active tokens by balance, excluding those already blacklisted and the `null` address
+      balances.keySeq().toSet().subtract(blacklistedTokens),
+    )
+
+    const update = updateSafeValue(safeAddress)
+    const updateActiveTokens = activeTokens.equals(alreadyActiveTokens) ? noFunc : update({ activeTokens })
+    const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
+    const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
+    const storedCurrencyBalances =
+      currencyValues && currencyValues.get(safeAddress)
+        ? currencyValues.get(safeAddress).get('currencyBalances')
+        : undefined
+
+    const updateCurrencies = currencyList.equals(storedCurrencyBalances)
+      ? noFunc
+      : setCurrencyBalances(safeAddress, currencyList)
+
+    const updateTokens = tokens.size === 0 ? noFunc : addTokens(tokens)
+
+    batch(() => {
+      dispatch(updateActiveTokens)
+      dispatch(updateBalances)
+      dispatch(updateEthBalance)
+      dispatch(updateCurrencies)
+      dispatch(updateTokens)
+    })
+  } catch (err) {
+    console.error('Error fetching active token list', err)
+  }
 }
 
 export default fetchSafeTokens

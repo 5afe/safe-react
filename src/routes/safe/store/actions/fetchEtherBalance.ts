@@ -9,21 +9,17 @@ const fetchEtherBalance = (safeAddress: string) => async (
   dispatch: Dispatch,
   getState: () => GnosisState,
 ): Promise<void> => {
-  return new Promise(async (resolve) => {
-    try {
-      const state = getState()
-      const ethBalance = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress, 'ethBalance'])
-      const newEthBalance = await backOff(() => getBalanceInEtherOf(safeAddress))
-      if (newEthBalance !== ethBalance) {
-        dispatch(updateSafe({ address: safeAddress, ethBalance: newEthBalance }))
-      }
-    } catch (err) {
-      // eslint-disable-next-line
-      console.error('Error when fetching Ether balance:', err)
-    } finally {
-      resolve()
+  try {
+    const state = getState()
+    const ethBalance = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress, 'ethBalance'])
+    const newEthBalance = await backOff(() => getBalanceInEtherOf(safeAddress))
+    if (newEthBalance !== ethBalance) {
+      dispatch(updateSafe({ address: safeAddress, ethBalance: newEthBalance }))
     }
-  })
+  } catch (err) {
+    // eslint-disable-next-line
+    console.error('Error when fetching Ether balance:', err)
+  }
 }
 
 export default fetchEtherBalance

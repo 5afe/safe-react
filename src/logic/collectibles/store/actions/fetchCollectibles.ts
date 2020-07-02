@@ -8,23 +8,19 @@ import { GnosisState } from '../../../../store'
 import { Dispatch } from 'redux'
 
 const fetchCollectibles = () => async (dispatch: Dispatch, getState: () => GnosisState): Promise<void> => {
-  return new Promise(async (resolve) => {
-    try {
-      const network = getNetwork()
-      const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
-      const source = getConfiguredSource()
-      const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
+  try {
+    const network = getNetwork()
+    const safeAddress = safeParamAddressFromStateSelector(getState()) || ''
+    const source = getConfiguredSource()
+    const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
 
-      batch(() => {
-        dispatch(addNftAssets(collectibles.nftAssets))
-        dispatch(addNftTokens(collectibles.nftTokens))
-      })
-    } catch (error) {
-      console.log('Error fetching collectibles:', error)
-    } finally {
-      resolve()
-    }
-  })
+    batch(() => {
+      dispatch(addNftAssets(collectibles.nftAssets))
+      dispatch(addNftTokens(collectibles.nftTokens))
+    })
+  } catch (error) {
+    console.log('Error fetching collectibles:', error)
+  }
 }
 
 export default fetchCollectibles
