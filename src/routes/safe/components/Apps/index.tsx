@@ -37,10 +37,10 @@ const Centered = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+`
 
-  &.mt {
-    margin-top: 5px;
-  }
+const CenteredMT = styled(Centered)`
+  margin-top: 5px;
 `
 
 const IframeWrapper = styled.div`
@@ -413,7 +413,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </Centered>
         </Card>
       )}
-      <Centered className="mt">
+      <CenteredMT className="mt">
         <IconText
           color="secondary"
           iconSize="sm"
@@ -421,7 +421,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
           textSize="sm"
         />
-      </Centered>
+      </CenteredMT>
     </>
   )
 }
