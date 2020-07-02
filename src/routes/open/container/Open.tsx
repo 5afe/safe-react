@@ -75,7 +75,7 @@ export const createSafe = (values, userAccount) => {
       return { safeAddress: safeProps.address, safeTx: receipt }
     })
     .catch((error) => {
-      console.log(error)
+      console.error(error)
     })
 
   return promiEvent
