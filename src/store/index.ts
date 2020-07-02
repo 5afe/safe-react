@@ -1,6 +1,6 @@
 import { connectRouter, routerMiddleware } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { applyMiddleware, CombinedState, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -68,7 +68,7 @@ const reducers = combineReducers({
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
 
-export type State = {
+export type GnosisState = CombinedState<{
   [PROVIDER_REDUCER_ID]?: ProviderRecord
   [SAFE_REDUCER_ID]: Map<string, SafeRecordProps>
   [NFT_ASSETS_REDUCER_ID]?: NFTAssets
@@ -82,7 +82,7 @@ export type State = {
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
-}
+}>
 
 export const store: any = createStore(reducers, finalCreateStore)
 
