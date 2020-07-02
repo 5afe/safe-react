@@ -38,7 +38,7 @@ const sendAwaitingTransactionNotification = async (
     return
   }
 
-  let lastTimeUserLoggedInForSafes = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || []
+  let lastTimeUserLoggedInForSafes = (await loadFromStorage<Record<string, string>>(LAST_TIME_USED_LOGGED_IN_ID)) || {}
   const lastTimeUserLoggedIn =
     lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
       ? lastTimeUserLoggedInForSafes[safeAddress]

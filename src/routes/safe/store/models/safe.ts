@@ -1,10 +1,15 @@
 import { List, Map, Record, RecordOf, Set } from 'immutable'
 
+export type SafeOwner = {
+  name: string
+  address: string
+}
+
 export type SafeRecordProps = {
   name: string
   address: string
   threshold: number
-  ethBalance: number
+  ethBalance: string
   owners: List<{ name: string; address: string }>
   activeTokens: Set<string>
   activeAssets: Set<string>
@@ -23,7 +28,7 @@ const makeSafe = Record<SafeRecordProps>({
   name: '',
   address: '',
   threshold: 0,
-  ethBalance: 0,
+  ethBalance: '0',
   owners: List([]),
   activeTokens: Set(),
   activeAssets: Set(),
