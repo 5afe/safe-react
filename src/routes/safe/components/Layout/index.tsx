@@ -19,17 +19,13 @@ import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selecto
 import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
-export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
-export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
-export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
-export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
-export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 
 const Apps = React.lazy(() => import('../Apps'))
 const Settings = React.lazy(() => import('../Settings'))
 const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
+const Transactions = React.lazy(() => import('src/routes/safe/components/TransactionsNew'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 interface Props {
@@ -90,6 +86,10 @@ const Layout = (props: Props) => {
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
+        {process.env.REACT_APP_NEW_TX_TAB === 'enabled' && (
+          <Route exact path={`${match.path}/transactionsNew`} render={() => wrapInSuspense(<Transactions />, null)} />
+        )}
+
         <Route
           exact
           path={`${match.path}/apps`}

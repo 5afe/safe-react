@@ -10,7 +10,7 @@ import {
   checkRegisteredTxRemoveOwner,
   checkRegisteredTxReplaceOwner,
 } from './utils/transactions'
-import { SETTINGS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout/index'
+import { SETTINGS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout/Tabs'
 import { OWNERS_SETTINGS_TAB_TEST_ID } from 'src/routes/safe/components/Settings'
 import {
   RENAME_OWNER_BTN_TEST_ID,

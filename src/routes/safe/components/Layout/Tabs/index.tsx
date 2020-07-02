@@ -6,18 +6,18 @@ import { withRouter } from 'react-router-dom'
 
 import { styles } from './style'
 
-import {
-  ADDRESS_BOOK_TAB_BTN_TEST_ID,
-  BALANCES_TAB_BTN_TEST_ID,
-  SETTINGS_TAB_BTN_TEST_ID,
-  APPS_TAB_BTN_TEST_ID,
-  TRANSACTIONS_TAB_BTN_TEST_ID,
-} from 'src/routes/safe/components/Layout'
 import SettingsTab from 'src/routes/safe/components/Layout/Tabs/SettingsTab'
 import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIcon'
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
+
+export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
+export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
+export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
+export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
+export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 
 interface Props {
   classes: Record<string, any>
@@ -26,33 +26,62 @@ interface Props {
   location: Record<string, any>
 }
 
-const BalancesLabel = (
-  <>
-    <BalancesIcon />
-    Assets
-  </>
-)
+const tabs = [
+  {
+    label: (
+      <>
+        <BalancesIcon />
+        Assets
+      </>
+    ),
+    testId: BALANCES_TAB_BTN_TEST_ID,
+    value: '/balances',
+  },
+  {
+    label: (
+      <>
+        <TransactionsIcon />
+        Transactions
+      </>
+    ),
+    testId: TRANSACTIONS_TAB_BTN_TEST_ID,
+    value: '/transactions',
+  },
+  {
+    label: (
+      <>
+        <AppsIcon />
+        Apps
+      </>
+    ),
+    testId: APPS_TAB_BTN_TEST_ID,
+    value: '/apps',
+  },
+  {
+    label: (
+      <>
+        <AddressBookIcon />
+        Address Book
+      </>
+    ),
+    testId: ADDRESS_BOOK_TAB_BTN_TEST_ID,
+    value: '/address-book',
+  },
+  { label: <SettingsTab />, testId: SETTINGS_TAB_BTN_TEST_ID, value: '/settings' },
+]
 
-const AddressBookLabel = (
-  <>
-    <AddressBookIcon />
-    Address Book
-  </>
-)
-
-const AppsLabel = (
-  <>
-    <AppsIcon />
-    Apps
-  </>
-)
-
-const TransactionsLabel = (
-  <>
-    <TransactionsIcon />
-    Transactions
-  </>
-)
+if (process.env.REACT_APP_NEW_TX_TAB === 'enabled') {
+  tabs.push({
+    label: (
+      <>
+        <TransactionsIcon />
+        Txs New
+      </>
+    ),
+    testId: TRANSACTIONS_TAB_NEW_BTN_TEST_ID,
+    value: '/transactionsNew',
+  })
+}
 
 const TabsComponent = (props: Props) => {
   const { classes, location, match } = props
@@ -83,51 +112,18 @@ const TabsComponent = (props: Props) => {
       value={tabsValue()}
       variant="scrollable"
     >
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={BALANCES_TAB_BTN_TEST_ID}
-        label={BalancesLabel}
-        value={`${match.url}/balances`}
-      />
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-        label={TransactionsLabel}
-        value={`${match.url}/transactions`}
-      />
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={APPS_TAB_BTN_TEST_ID}
-        label={AppsLabel}
-        value={`${match.url}/apps`}
-      />
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={ADDRESS_BOOK_TAB_BTN_TEST_ID}
-        label={AddressBookLabel}
-        value={`${match.url}/address-book`}
-      />
-      <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={SETTINGS_TAB_BTN_TEST_ID}
-        label={<SettingsTab />}
-        value={`${match.url}/settings`}
-      />
+      {tabs.map((t, index) => (
+        <Tab
+          key={index}
+          classes={{
+            selected: classes.tabWrapperSelected,
+            wrapper: classes.tabWrapper,
+          }}
+          data-testid={t.testId}
+          label={t.label}
+          value={`${match.url}${t.value}`}
+        />
+      ))}
     </Tabs>
   )
 }
