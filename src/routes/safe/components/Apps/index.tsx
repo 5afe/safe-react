@@ -413,7 +413,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </Centered>
         </Card>
       )}
-      <CenteredMT className="mt">
+      <CenteredMT>
         <IconText
           color="secondary"
           iconSize="sm"
