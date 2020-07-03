@@ -117,6 +117,7 @@ const createTransaction = ({
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
   const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
+
   let pendingExecutionKey
 
   let txHash
@@ -246,6 +247,10 @@ const createTransaction = ({
         return receipt.transactionHash
       })
   } catch (err) {
+    const errorMsg = err.message
+      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
+      : notificationsQueue.afterExecutionError.message
+
     console.error(err)
     closeSnackbar(beforeExecutionKey)
 
@@ -253,7 +258,7 @@ const createTransaction = ({
       closeSnackbar(pendingExecutionKey)
     }
 
-    showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
+    showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
       .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)

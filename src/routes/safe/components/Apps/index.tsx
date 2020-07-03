@@ -27,7 +27,7 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
-  padding: 24px;
+  padding: 15px;
   box-sizing: border-box;
   width: 100%;
   height: 100%;
@@ -37,6 +37,10 @@ const Centered = styled.div`
   align-items: center;
   justify-content: center;
   flex-direction: column;
+`
+
+const CenteredMT = styled(Centered)`
+  margin-top: 5px;
 `
 
 const IframeWrapper = styled.div`
@@ -409,7 +413,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </Centered>
         </Card>
       )}
-      <Centered>
+      <CenteredMT>
         <IconText
           color="secondary"
           iconSize="sm"
@@ -417,7 +421,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
           textSize="sm"
         />
-      </Centered>
+      </CenteredMT>
     </>
   )
 }
