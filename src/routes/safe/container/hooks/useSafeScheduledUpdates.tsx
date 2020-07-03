@@ -13,7 +13,9 @@ export const useSafeScheduledUpdates = (safeAddress: string): void => {
   const timer = useRef<number>(null)
 
   useEffect(() => {
-    let mounted = true // using this variable to prevent setting a timeout when the component is already unmounted
+    // using this variable to prevent setting a timeout when the component is already unmounted or the effect
+    // has to run again
+    let mounted = true
     const fetchSafeData = async (address: string): Promise<void> => {
       await batch(async () => {
         await Promise.all([
