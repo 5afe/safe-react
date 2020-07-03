@@ -69,11 +69,13 @@ export const createSafe = (values, userAccount) => {
     })
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
-
       const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
       const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
       // returning info for testing purposes, in app is fully async
       return { safeAddress: safeProps.address, safeTx: receipt }
+    })
+    .catch((error) => {
+      console.error(error)
     })
 
   return promiEvent
@@ -103,7 +105,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   // check if there is a safe being created
   useEffect(() => {
     const load = async () => {
-      const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+      const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
       if (pendingCreation && pendingCreation.txHash) {
         setSafeCreationPendingInfo(pendingCreation)
         setShowProgress(true)
@@ -133,7 +135,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   }
 
   const onSafeCreated = async (safeAddress) => {
-    const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
@@ -167,7 +169,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   }
 
   const onRetry = async () => {
-    const values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
     delete values.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)
