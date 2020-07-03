@@ -100,7 +100,6 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       >
         {(submitting, validating, rest, mutators) => {
           setCallResults = mutators.setCallResults
-
           return (
             <>
               <Block className={classes.formContainer}>
