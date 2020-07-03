@@ -1,4 +1,4 @@
-import { Button, Text, Title, theme } from '@gnosis.pm/safe-react-components'
+import { Button, Loader, Text, Title, theme } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
@@ -155,6 +155,10 @@ const Advanced: React.FC = () => {
           <InfoText color="secondaryLight" size="xl">
             No modules enabled
           </InfoText>
+        ) : moduleData.size === 0 ? (
+          <Block className={classes.container}>
+            <Loader size="md" />
+          </Block>
         ) : (
           <TableContainer>
             <Table
