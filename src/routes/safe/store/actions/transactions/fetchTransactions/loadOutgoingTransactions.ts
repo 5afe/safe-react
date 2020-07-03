@@ -66,7 +66,7 @@ export type OutgoingTxs = {
 
 export type BatchProcessTxsProps = OutgoingTxs & {
   currentUser?: string
-  knownTokens: Record<string, Token>
+  knownTokens: Map<string, Token>
   safe: SafeRecord
 }
 
