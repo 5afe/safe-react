@@ -18,7 +18,7 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 
 const useStyles = makeStyles(styles)
 
-export interface AddressBookInputProps {
+export interface EthAddressInputProps {
   isContract?: boolean
   isRequired?: boolean
   name: string
@@ -32,7 +32,7 @@ const EthAddressInput = ({
   name,
   onScannedValue,
   text,
-}: AddressBookInputProps) => {
+}: EthAddressInputProps) => {
   const classes = useStyles()
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))
