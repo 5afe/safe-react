@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useRef } from 'react'
 import { batch, useDispatch } from 'react-redux'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
@@ -8,10 +8,12 @@ import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
-export const useCheckForUpdates = (safeAddress: string): void => {
+export const useSafeScheduledUpdates = (safeAddress: string): void => {
   const dispatch = useDispatch()
+  const timer = useRef<number>(null)
 
   useEffect(() => {
+    let mounted = true // using this variable to prevent setting a timeout when the component is already unmounted
     const fetchSafeData = async (address: string): Promise<void> => {
       await batch(async () => {
         await Promise.all([
@@ -23,15 +25,20 @@ export const useCheckForUpdates = (safeAddress: string): void => {
         ])
       })
 
-      setTimeout(() => {
-        fetchSafeData(safeAddress)
-      }, TIMEOUT * 3)
+      if (mounted) {
+        timer.current = setTimeout(() => {
+          fetchSafeData(safeAddress)
+        }, TIMEOUT * 3)
+      }
     }
 
     if (safeAddress) {
       fetchSafeData(safeAddress)
 
-      return () => {}
+      return () => {
+        mounted = false
+        clearTimeout(timer.current)
+      }
     }
   }, [dispatch, safeAddress])
 }
