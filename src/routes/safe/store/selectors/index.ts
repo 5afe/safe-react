@@ -1,20 +1,20 @@
 import { List, Map, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
-
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/incomingTransactions'
-import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import { SAFE_REDUCER_ID, SafesMap } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { SafeRecord } from 'src/routes/safe/store/models/safe'
 
-const safesStateSelector = (state) => state[SAFE_REDUCER_ID]
+const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
-export const safesMapSelector = (state) => state[SAFE_REDUCER_ID].get('safes')
+export const safesMapSelector = (state: AppReduxState): SafesMap => state[SAFE_REDUCER_ID].get('safes')
 
 export const safesListSelector = createSelector(safesMapSelector, (safes) => safes.toList())
 
@@ -26,18 +26,17 @@ export const latestMasterContractVersionSelector = createSelector(safesStateSele
   safeState.get('latestMasterContractVersion'),
 )
 
-const transactionsSelector = (state) => state[TRANSACTIONS_REDUCER_ID]
+const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCER_ID]
 
-const cancellationTransactionsSelector = (state) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
+const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
 
-const incomingTransactionsSelector = (state) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
+const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
-export const safeParamAddressFromStateSelector = (state): string | null => {
+export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
   const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
   if (match) {
-    const web3 = getWeb3()
-    return web3.utils.toChecksumAddress(match.params.safeAddress)
+    return checksumAddress(match.params.safeAddress)
   }
 
   return null
@@ -64,7 +63,7 @@ export const safeTransactionsSelector = createSelector(
   },
 )
 
-export const addressBookQueryParamsSelector = (state) => {
+export const addressBookQueryParamsSelector = (state: AppReduxState): string | null => {
   const { location } = state.router
   let entryAddressToEditOrCreateNew = null
   if (location && location.query) {
@@ -154,20 +153,21 @@ export const safeBlacklistedAssetsSelector = createSelector(safeSelector, (safe)
   return safe.blacklistedAssets
 })
 
-export const safeActiveAssetsSelectorBySafe = (safeAddress, safes) => safes.get(safeAddress).get('activeAssets')
+export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap) =>
+  safes.get(safeAddress).get('activeAssets')
 
 export const safeBlacklistedAssetsSelectorBySafe = (safeAddress, safes) =>
   safes.get(safeAddress).get('blacklistedAssets')
 
 export const safeBalancesSelector = createSelector(safeSelector, (safe) => {
   if (!safe) {
-    return List()
+    return Map()
   }
 
   return safe.balances
 })
 
-export const safeFieldSelector = (field) => (safe) => safe?.[field]
+export const safeFieldSelector = (field: string) => (safe: SafeRecord) => safe?.[field]
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 

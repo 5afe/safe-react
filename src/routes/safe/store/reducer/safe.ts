@@ -44,6 +44,7 @@ export const buildSafe = (storedSafe) => {
 export default handleActions(
   {
     [UPDATE_SAFE]: (state, action) => {
+      console.log(action)
       const safe = action.payload
       const safeAddress = safe.address
 
@@ -131,3 +132,5 @@ export default handleActions(
     latestMasterContractVersion: '',
   }),
 )
+
+export * from './types/safe.d'

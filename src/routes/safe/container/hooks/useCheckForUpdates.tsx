@@ -6,15 +6,13 @@ import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchEtherBalance from 'src/routes/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
-// import { TIMEOUT } from 'src/utils/constants'
+import { TIMEOUT } from 'src/utils/constants'
 
 export const useCheckForUpdates = (safeAddress: string): void => {
   const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchSafeData = async (address: string): Promise<void> => {
-      console.log('fetch safe data called')
-
       await batch(async () => {
         await Promise.all([
           dispatch(fetchEtherBalance(address)),
@@ -24,11 +22,14 @@ export const useCheckForUpdates = (safeAddress: string): void => {
           dispatch(checkAndUpdateSafe(address)),
         ])
       })
+
+      setTimeout(() => {
+        fetchSafeData(safeAddress)
+      }, TIMEOUT * 3)
     }
 
     if (safeAddress) {
       fetchSafeData(safeAddress)
-      console.log('finished fetching safe data')
 
       return () => {}
     }
