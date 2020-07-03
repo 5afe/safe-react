@@ -56,6 +56,11 @@ const EthAddressInput = ({
     closeQrModal()
   }
 
+  const handleInputChange = (event: { target: { value?: string } | null }) => {
+    const { value } = event.target
+    setSelectedEntry({ address: value })
+  }
+
   return (
     <>
       <Row margin="md">
@@ -65,6 +70,7 @@ const EthAddressInput = ({
               component={TextField}
               name={name}
               placeholder={text}
+              onChange={handleInputChange}
               testId={name}
               text={text}
               type="text"
