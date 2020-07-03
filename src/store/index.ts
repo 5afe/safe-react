@@ -68,7 +68,7 @@ const reducers = combineReducers({
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
 
-export type GnosisState = CombinedState<{
+export type AppReduxState = CombinedState<{
   [PROVIDER_REDUCER_ID]?: ProviderRecord
   [SAFE_REDUCER_ID]: Map<string, SafeRecordProps>
   [NFT_ASSETS_REDUCER_ID]?: NFTAssets

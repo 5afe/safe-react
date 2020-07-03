@@ -1,38 +1,36 @@
 import { useEffect } from 'react'
-import { batch, useDispatch, useSelector } from 'react-redux'
+import { batch, useDispatch } from 'react-redux'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchEtherBalance from 'src/routes/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { TIMEOUT } from 'src/utils/constants'
+// import { TIMEOUT } from 'src/utils/constants'
 
-let isFetchingData = false
-export const useCheckForUpdates = (): void => {
+export const useCheckForUpdates = (safeAddress: string): void => {
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+
   useEffect(() => {
+    const fetchSafeData = async (address: string): Promise<void> => {
+      console.log('fetch safe data called')
+
+      await batch(async () => {
+        await Promise.all([
+          dispatch(fetchEtherBalance(address)),
+          dispatch(fetchSafeTokens(address)),
+          dispatch(fetchTransactions(address)),
+          dispatch(fetchCollectibles(address)),
+          dispatch(checkAndUpdateSafe(address)),
+        ])
+      })
+    }
+
     if (safeAddress) {
-      const collectiblesInterval = setInterval(() => {
-        batch(async () => {
-          if (!isFetchingData) {
-            isFetchingData = true
-            await Promise.all([
-              dispatch(fetchEtherBalance(safeAddress)),
-              dispatch(fetchSafeTokens(safeAddress)),
-              dispatch(fetchTransactions(safeAddress)),
-              dispatch(fetchCollectibles),
-              dispatch(checkAndUpdateSafe(safeAddress)),
-            ])
-            isFetchingData = false
-          }
-        })
-      }, TIMEOUT * 3)
-      return () => {
-        clearInterval(collectiblesInterval)
-      }
+      fetchSafeData(safeAddress)
+      console.log('finished fetching safe data')
+
+      return () => {}
     }
   }, [dispatch, safeAddress])
 }

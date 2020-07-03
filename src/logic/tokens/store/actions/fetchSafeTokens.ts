@@ -13,7 +13,7 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
-import { GnosisState } from '../../../../store'
+import { AppReduxState } from 'src/store'
 
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}
@@ -21,7 +21,7 @@ const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ..
 
 const fetchSafeTokens = (safeAddress: string) => async (
   dispatch: Dispatch,
-  getState: () => GnosisState,
+  getState: () => AppReduxState,
 ): Promise<void> => {
   try {
     const state = getState()

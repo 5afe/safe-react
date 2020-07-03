@@ -17,12 +17,12 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = () => {
+const SafeView = (): JSX.Element => {
   const [state, setState] = useState(INITIAL_STATE)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useLoadSafe(safeAddress)
-  useCheckForUpdates()
+  useCheckForUpdates(safeAddress)
 
   const onShow = (action) => () => {
     setState((prevState) => ({
