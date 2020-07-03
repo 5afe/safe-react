@@ -115,20 +115,26 @@ export const safeSelector = createSelector(safesMapSelector, safeParamAddressFro
   return safe
 })
 
-export const safeActiveTokensSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
+export const safeActiveTokensSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set()
+    }
 
-  return safe.activeTokens
-})
+    return safe.activeTokens
+  },
+)
 
-export const safeActiveAssetsSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
-  return safe.activeAssets
-})
+export const safeActiveAssetsSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set()
+    }
+    return safe.activeAssets
+  },
+)
 
 export const safeActiveAssetsListSelector = createSelector(safeActiveAssetsSelector, (safeList) => {
   if (!safeList) {
