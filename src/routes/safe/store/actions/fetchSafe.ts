@@ -39,7 +39,7 @@ const buildOwnersFrom = (
   })
 
 const buildModulesLinkedList = (modulesPaginated: [Array<string>, string] | null): Array<[string, string]> | null => {
-  if (modulesPaginated.length) {
+  if (modulesPaginated?.length) {
     const [remoteModules, nextModule] = modulesPaginated
 
     return remoteModules.map((moduleAddress, index, modules) => {
