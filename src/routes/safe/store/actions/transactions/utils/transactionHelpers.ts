@@ -85,7 +85,7 @@ export const isCustomTransaction = async (
   tx: TxServiceModel,
   txCode: string,
   safeAddress: string,
-  knownTokens: Record<string, Token>,
+  knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
   return (
     isOutgoingTransaction(tx, safeAddress) &&
@@ -340,7 +340,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promi
     ...tx,
   }
 
-  const knownTokens: Record<string, Token> = state[TOKEN_REDUCER_ID]
+  const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
   const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
   const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
