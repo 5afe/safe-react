@@ -7,10 +7,11 @@ import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
+import { Dispatch } from 'redux'
 
 const noFunc = () => {}
 
-export default (safeAddress: string) => async (dispatch) => {
+export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
   const transactions = await loadOutgoingTransactions(safeAddress)
 
   if (transactions) {

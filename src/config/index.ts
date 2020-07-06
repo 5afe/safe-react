@@ -58,6 +58,9 @@ export const getTxServiceUriFrom = (safeAddress) =>
 export const getIncomingTxServiceUriTo = (safeAddress) =>
   `safes/${safeAddress}/incoming-transfers/`
 
+export const getAllTxServiceUriTo = (safeAddress) =>
+  `safes/${safeAddress}/all-transactions/`
+
 export const getSafeCreationTxUri = (safeAddress) => `safes/${safeAddress}/creation/`
 
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]
