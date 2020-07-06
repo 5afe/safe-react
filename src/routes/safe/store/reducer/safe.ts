@@ -14,6 +14,7 @@ import { UPDATE_SAFE } from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 import makeSafe from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { SafeReducerMap } from './types/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -43,13 +44,17 @@ export const buildSafe = (storedSafe) => {
 
 export default handleActions(
   {
-    [UPDATE_SAFE]: (state, action) => {
+    [UPDATE_SAFE]: (state: SafeReducerMap, action) => {
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) => prevSafe.merge(safe))
+      return state.updateIn(
+        [SAFE_REDUCER_ID, safeAddress],
+        makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
+        (prevSafe) => prevSafe.merge(safe),
+      )
     },
-    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state, action) => {
+    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
       const tokenAddress = action.payload
 
       return state.withMutations((map) => {
@@ -64,7 +69,7 @@ export default handleActions(
           })
       })
     },
-    [ADD_SAFE]: (state, action) => {
+    [ADD_SAFE]: (state: SafeReducerMap, action) => {
       const { safe } = action.payload
 
       // if you add a new Safe it needs to be set as a record
@@ -77,12 +82,12 @@ export default handleActions(
 
       return state.setIn([SAFE_REDUCER_ID, safe.address], makeSafe(safe))
     },
-    [REMOVE_SAFE]: (state, action) => {
+    [REMOVE_SAFE]: (state: SafeReducerMap, action) => {
       const safeAddress = action.payload
 
       return state.deleteIn([SAFE_REDUCER_ID, safeAddress])
     },
-    [ADD_SAFE_OWNER]: (state, action) => {
+    [ADD_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) =>
@@ -91,7 +96,7 @@ export default handleActions(
         }),
       )
     },
-    [REMOVE_SAFE_OWNER]: (state, action) => {
+    [REMOVE_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { ownerAddress, safeAddress } = action.payload
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) =>
@@ -100,7 +105,7 @@ export default handleActions(
         }),
       )
     },
-    [REPLACE_SAFE_OWNER]: (state, action) => {
+    [REPLACE_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { oldOwnerAddress, ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) =>
@@ -111,7 +116,7 @@ export default handleActions(
         }),
       )
     },
-    [EDIT_SAFE_OWNER]: (state, action) => {
+    [EDIT_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { ownerAddress, ownerName, safeAddress } = action.payload
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) => {
@@ -131,3 +136,5 @@ export default handleActions(
     latestMasterContractVersion: '',
   }),
 )
+
+export * from './types/safe.d'
