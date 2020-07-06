@@ -100,7 +100,7 @@ const Advanced: React.FC = () => {
     try {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const [module, prevModule] = selectedModule
-      const txData = safeInstance.contract.methods.disableModule(module, prevModule).encodeABI()
+      const txData = safeInstance.contract.methods.disableModule(prevModule, module).encodeABI()
 
       dispatch(
         createTransaction({
