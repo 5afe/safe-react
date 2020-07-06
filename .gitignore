@@ -3,7 +3,7 @@ node_modules/
 .DS_Store
 yarn-error.log
 .env*
-.idea
+.idea/
 dist
 electron-builder.yml
 .yalc/
