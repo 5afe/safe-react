@@ -79,7 +79,10 @@ export type BatchProcessTxsProps = OutgoingTxs & {
 const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxServiceModel[]): OutgoingTxs => {
   return outgoingTxs.reduce(
     (acc, transaction) => {
-      if (isCancelTransaction(transaction, safeAddress)) {
+      if (
+        isCancelTransaction(transaction, safeAddress) &&
+        outgoingTxs.find((tx) => tx.nonce === transaction.nonce && !isCancelTransaction(tx, safeAddress))
+      ) {
         if (!isNaN(Number(transaction.nonce))) {
           acc.cancellationTxs[transaction.nonce] = transaction
         }
