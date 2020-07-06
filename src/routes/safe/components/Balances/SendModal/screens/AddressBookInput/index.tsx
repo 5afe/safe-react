@@ -14,6 +14,19 @@ import { getAddressBookListSelector } from 'src/logic/addressBook/store/selector
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
+export interface AddressBookProps {
+  fieldMutator: (address: string) => void
+  isCustomTx?: boolean
+  pristine: boolean
+  recipientAddress?: string
+  setSelectedEntry: (
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
+  ) => void
+  setIsValidAddress: (valid?: boolean) => void
+}
+
+const useStyles = makeStyles(styles)
+
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
     overflow: 'hidden',
@@ -30,34 +43,39 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async (addressBook) => {
+const filterAddressBookWithContractAddresses = async (
+  addressBook: List<{ address: string }>,
+): Promise<List<{ address: string }>> => {
   const abFlags = await Promise.all(
-    addressBook.map(async ({ address }) => {
-      return (await mustBeEthereumContractAddress(address)) === undefined
-    }),
+    addressBook.map(
+      async ({ address }: { address: string }): Promise<boolean> => {
+        return (await mustBeEthereumContractAddress(address)) === undefined
+      },
+    ),
   )
-  return addressBook.filter((adbkEntry, index) => abFlags[index])
+
+  return addressBook.filter((_, index) => abFlags[index])
 }
 
 const AddressBookInput = ({
-  classes,
   fieldMutator,
   isCustomTx,
   pristine,
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: any) => {
+}: AddressBookProps) => {
+  const classes = useStyles()
   const addressBook = useSelector(getAddressBookListSelector)
   const [isValidForm, setIsValidForm] = useState(true)
-  const [validationText, setValidationText] = useState<any>(true)
+  const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState(List([]))
+  const [adbkList, setADBKList] = useState<List<{ address: string }>>(List([]))
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async (addressValue) => {
+  const onAddressInputChanged = async (addressValue: string): Promise<void> => {
     setInputAddValue(addressValue)
     let resolvedAddress = addressValue
     let isValidText
@@ -99,7 +117,7 @@ const AddressBookInput = ({
   }
 
   useEffect(() => {
-    const filterAdbkContractAddresses = async () => {
+    const filterAdbkContractAddresses = async (): Promise<void> => {
       if (!isCustomTx) {
         setADBKList(addressBook)
         return
