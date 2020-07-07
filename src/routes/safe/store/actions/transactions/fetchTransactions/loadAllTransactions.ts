@@ -1,9 +1,9 @@
 import { List, Map } from 'immutable'
-import { TxServiceModel } from './loadOutgoingTransactions'
 import axios from 'axios'
 
 import { getAllTxServiceUriTo, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { Transaction } from '../../../models/types/transactions'
 
 const getAllTransactionsUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
@@ -16,7 +16,7 @@ const getAllTransactionsUrl = (safeAddress: string) => {
 const fetchAllTransactions = async (
   safeAddress: string,
   eTag: string | null,
-): Promise<{ eTag: string; results: TxServiceModel[] }> => {
+): Promise<{ eTag: string; results: Transaction[] }> => {
   try {
     const url = getAllTransactionsUrl(safeAddress)
     const response = await axios.get(url, eTag ? { headers: { 'If-None-Match': eTag } } : undefined)
