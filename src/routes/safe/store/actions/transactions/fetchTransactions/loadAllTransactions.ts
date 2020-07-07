@@ -1,9 +1,25 @@
 import { List, Map } from 'immutable'
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { getAllTxServiceUriTo, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../../models/types/transactions'
+
+type ServiceUriParams = {
+  safeAddress: string
+  limit?: number
+  offset?: number
+  orderBy?: string // todo: maybe this should be key of MultiSigTransaction | keyof EthereumTransaction
+  queued?: boolean
+  trusted?: boolean
+}
+
+type EndpointResponse = {
+  count: number
+  next?: string
+  previous?: string
+  results: Transaction[]
+}
 
 const getAllTransactionsUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
@@ -14,12 +30,25 @@ const getAllTransactionsUrl = (safeAddress: string) => {
 }
 
 const fetchAllTransactions = async (
-  safeAddress: string,
+  urlParams: ServiceUriParams,
   eTag: string | null,
 ): Promise<{ eTag: string; results: Transaction[] }> => {
+  const { safeAddress, limit, offset, orderBy, queued, trusted } = urlParams
   try {
     const url = getAllTransactionsUrl(safeAddress)
-    const response = await axios.get(url, eTag ? { headers: { 'If-None-Match': eTag } } : undefined)
+
+    const config = {
+      params: {
+        limit,
+        offset,
+        orderBy,
+        queued,
+        trusted,
+      },
+      headers: eTag ? { 'If-None-Match': eTag } : undefined,
+    }
+
+    const response: AxiosResponse<EndpointResponse> = await axios.get(url, config)
 
     if (response.data.count > 0) {
       const { etag } = response.headers
@@ -43,8 +72,9 @@ const fetchAllTransactions = async (
 }
 
 let previousETag = null
-export const loadAllTransactions = async (safeAddress: string): Promise<any> => {
-  const { eTag, results } = await fetchAllTransactions(safeAddress, previousETag)
+
+export const loadAllTransactions = async (safeAddress: string): Promise<Map<string, List<Transaction>>> => {
+  const { eTag, results } = await fetchAllTransactions({ safeAddress }, previousETag)
   previousETag = eTag
 
   return Map({ [safeAddress]: List(results) })
