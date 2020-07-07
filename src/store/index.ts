@@ -29,6 +29,7 @@ import incomingTransactions, {
 } from 'src/routes/safe/store/reducer/incomingTransactions'
 import safe, { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import allTransactions, { TRANSACTIONS_NEW } from '../routes/safe/store/reducer/newTransactions'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -61,6 +62,7 @@ const reducers = combineReducers({
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
+  [TRANSACTIONS_NEW]: allTransactions,
 })
 
 export const store: any = createStore(reducers, finalCreateStore)
