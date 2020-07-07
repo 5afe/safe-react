@@ -9,7 +9,7 @@ import saveTokens from './saveTokens'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { fetchTokenList } from 'src/logic/tokens/api'
-import { makeToken } from 'src/logic/tokens/store/model/token'
+import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
@@ -57,7 +57,7 @@ const getTokenValues = (tokenAddress) =>
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const getTokenInfos = async (tokenAddress) => {
+export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   if (!tokenAddress) {
     return null
   }
