@@ -10,7 +10,6 @@ import selector from './selector'
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
@@ -19,6 +18,7 @@ import { loadFromStorage } from 'src/utils/storage'
 import { Dispatch } from 'redux'
 import { SafeOwner } from '../../safe/store/models/safe'
 import { List } from 'immutable'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const loadSafe = async (
   safeName: string,
@@ -39,14 +39,15 @@ export const loadSafe = async (
 
 class Load extends React.Component<any> {
   onLoadSafeSubmit = async (values) => {
+    let safeAddress = values[FIELD_LOAD_ADDRESS]
+    if (safeAddress) {
+      return
+    }
+
     try {
       const { addSafe } = this.props
-      const web3 = getWeb3()
       const safeName = values[FIELD_LOAD_NAME]
-      let safeAddress = values[FIELD_LOAD_ADDRESS]
-      if (safeAddress) {
-        safeAddress = web3.utils.toChecksumAddress(safeAddress)
-      }
+      safeAddress = checksumAddress(safeAddress)
       const ownerNames = getNamesFrom(values)
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
