@@ -8,6 +8,8 @@ import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import { Dispatch } from 'redux'
+import { loadAllTransactions } from './loadAllTransactions'
+import { addNewTransactions } from '../../addNewTransactions'
 
 const noFunc = () => {}
 
@@ -31,5 +33,10 @@ export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void
 
   if (incomingTransactions.get(safeAddress).size) {
     dispatch(addIncomingTransactions(incomingTransactions))
+  }
+  const allTransactions = await loadAllTransactions(safeAddress)
+
+  if (allTransactions.get(safeAddress).size) {
+    dispatch(addNewTransactions(allTransactions))
   }
 }
