@@ -13,6 +13,8 @@ const removeLastTrailingSlash = (url) => {
 
 const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
 export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
+  // 1inch
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`, disabled: false },
   // Aave
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`, disabled: false },
   // Compound
