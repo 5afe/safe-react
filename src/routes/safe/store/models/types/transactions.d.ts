@@ -44,7 +44,7 @@ export enum SignatureType {
 export interface Confirmation {
   owner: string
   submissionDate: string
-  transactionHash: string
+  transactionHash: string | null
   confirmationType: keyof typeof ConfirmationType
   signature: string
   signatureType: keyof typeof SignatureType
@@ -95,7 +95,7 @@ export interface MultiSigTransaction {
   safe: string
   to: string
   value: string
-  data: string
+  data: string | null
   operation: number
   gasToken: string
   safeTxGas: number
@@ -115,49 +115,62 @@ export interface MultiSigTransaction {
   ethGasPrice: string | null
   gasUsed: number | null
   fee: string | null
-  origin: string
-  dataDecoded: DataDecoded
+  origin: string | null
+  dataDecoded: DataDecoded | null
   confirmationsRequired: number | null
   confirmations: Confirmation[]
   signatures: string | null
   transfers: Transfer[]
   txType: keyof typeof TxType
 }
-
+export interface ModuleTransaction {
+  created: string
+  executionDate: string
+  blockNumber: number
+  transactionHash: string
+  safe: string
+  module: string
+  to: string
+  value: string
+  data: string
+  operation: keyof typeof Operation
+  transfers: Transfer[]
+  txType: keyof typeof TxType
+}
 export interface EthereumTransaction {
   executionDate: string
   to: string
-  data: string
+  data: string | null
   txHash: string
   blockNumber: number
   transfers: Transfer[]
-  txType: TxType
+  txType: keyof typeof TxType
   from: string
 }
-
-export type Transaction = MultiSigTransaction | EthereumTransaction
-
-export const enum TxConstant {
+export type Transaction = MultiSigTransaction | ModuleTransaction | EthereumTransaction
+export const enum TxConstants {
   UNKNOWN = 'UNKNOWN',
 }
-
 // types comes from: https://github.com/gnosis/safe-client-gateway/blob/752e76b6d1d475791dbd7917b174bb41d2d9d8be/src/utils.rs
 export const enum TransferMethods {
   TRANSFER = 'transfer',
   TRANSFER_FROM = 'transferFrom',
   SAFE_TRANSFER_FROM = 'safeTransferFrom',
 }
-
 export const enum SettingsChangeMethods {
+  SETUP = 'setup',
   SET_FALLBACK_HANDLER = 'setFallbackHandler',
   ADD_OWNER_WITH_THRESHOLD = 'addOwnerWithThreshold',
   REMOVE_OWNER = 'removeOwner',
+  REMOVE_OWNER_WITH_THRESHOLD = 'removeOwnerWithThreshold',
   SWAP_OWNER = 'swapOwner',
   CHANGE_THRESHOLD = 'changeThreshold',
   CHANGE_MASTER_COPY = 'changeMasterCopy',
   ENABLE_MODULE = 'enableModule',
   DISABLE_MODULE = 'disableModule',
+  EXEC_TRANSACTION_FROM_MODULE = 'execTransactionFromModule',
+  APPROVE_HASH = 'approveHash',
+  EXEC_TRANSACTION = 'execTransaction',
 }
-
 // note: this extends SAFE_METHODS_NAMES in /logic/contracts/methodIds.ts, we need to figure out which one we are going to use
-export type DataDecodedMethod = TransferMethods | SettingsChangeMethods
+export type DataDecodedMethod = TransferMethods | SettingsChangeMethods | string
