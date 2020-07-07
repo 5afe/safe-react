@@ -222,7 +222,7 @@
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
-    "electron": "7.1.8",
+    "electron": "7.2.4",
     "electron-builder": "22.7.0",
     "electron-notarize": "0.3.0",
     "eslint": "6.8.0",
