@@ -72,7 +72,7 @@ const ProviderInfo = ({ classes, connected, network, provider, userAddress }) =>
         >
           {providerText}
         </Paragraph>
-        <Paragraph className={classes.address} color={color} noMargin size="xs">
+        <Paragraph className={classes.address} color={color} noMargin size="xs" data-testid="cut-address">
           {cutAddress}
         </Paragraph>
       </Col>
