@@ -276,6 +276,7 @@ export const buildTx = async ({
     creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
+    dataDecoded: tx.dataDecoded,
     decimals: tokenDecimals,
     decodedParams,
     executionDate: tx.executionDate,
