@@ -37,8 +37,20 @@ export const loadSafe = async (
   await addSafe(safeProps)
 }
 
-class Load extends React.Component<any> {
-  onLoadSafeSubmit = async (values) => {
+interface ILoad {
+  network: string
+  provider?: string
+  userAddress: string
+}
+
+export interface LoadFormValues {
+  name: string
+  address: string
+  threshold: string
+}
+
+const Load: React.FC<ILoad> = ({ network, provider, userAddress }) => {
+  const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
     // TODO: review this check. It doesn't seems to be necessary at this point
     if (!safeAddress) {
@@ -65,20 +77,11 @@ class Load extends React.Component<any> {
     }
   }
 
-  render() {
-    const { network, provider, userAddress } = this.props
-
-    return (
-      <Page>
-        <Layout
-          network={network}
-          onLoadSafeSubmit={this.onLoadSafeSubmit}
-          provider={provider}
-          userAddress={userAddress}
-        />
-      </Page>
-    )
-  }
+  return (
+    <Page>
+      <Layout network={network} onLoadSafeSubmit={onLoadSafeSubmit} provider={provider} userAddress={userAddress} />
+    </Page>
+  )
 }
 
 export default connect(selector, actions)(Load)
