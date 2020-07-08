@@ -56,7 +56,7 @@ const EthAddressInput = ({
     closeQrModal()
   }
 
-  const handleInputChange = (event: { target: { value?: string } | null }) => {
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
     const { value } = event.target
     setSelectedEntry({ address: value })
   }
