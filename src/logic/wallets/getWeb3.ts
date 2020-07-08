@@ -90,7 +90,7 @@ export const getNetworkIdFrom = (web3Provider: Web3): Promise<number> => web3Pro
 const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
-const isSmartContractWallet = async (web3Provider: Web3, account) => {
+const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
   const contractCode = await web3Provider.eth.getCode(account)
 
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
