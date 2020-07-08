@@ -222,49 +222,45 @@ const Collapsible: React.FC<ICollapsible> = ({ title, description = null, childr
   )
 }
 
-const CustomDescription = ({ classes, recipient, rawTx }: any) => {
-  // const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
-
-  return (
-    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-      {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
-        if (isMultiSendDetails(tx)) {
-          return (
-            <React.Fragment key={`${tx.to}-row-${index}`}>
-              <Collapsible
-                title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index + 1}`} textSize="lg" />}
-              >
-                <TxDetailsContent>
+const CustomDescription = ({ classes, rawTx }: any) => (
+  <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+    {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
+      if (isMultiSendDetails(tx)) {
+        return (
+          <React.Fragment key={`${tx.to}-row-${index}`}>
+            <Collapsible
+              title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index + 1}`} textSize="lg" />}
+            >
+              <TxDetailsContent>
+                <TxInfo>
+                  <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+                  <OwnerAddressTableCell address={tx.to} showLinks />
+                </TxInfo>
+                {tx.data && (
                   <TxInfo>
-                    <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-                    <OwnerAddressTableCell address={recipient} showLinks />
+                    <TxDetailsMethodName size="lg">{tx.data.method}</TxDetailsMethodName>
+                    {tx.data?.parameters.map((param, index) => (
+                      <TxDetailsMethodParam key={`${tx.operation}_${tx.to}_${tx.data.method}_param-${index}`}>
+                        <InlineText size="lg">
+                          {param.name}({param.type}):
+                        </InlineText>
+                        {param.type === 'address' ? (
+                          <EtherscanLink cut={8} value={param.value} />
+                        ) : (
+                          <InlineText size="lg">{param.value}</InlineText>
+                        )}
+                      </TxDetailsMethodParam>
+                    ))}
                   </TxInfo>
-                  {tx.data && (
-                    <TxInfo>
-                      <TxDetailsMethodName size="lg">{tx.data.method}</TxDetailsMethodName>
-                      {tx.data?.parameters.map((param, index) => (
-                        <TxDetailsMethodParam key={`${tx.operation}_${tx.to}_${tx.data.method}_param-${index}`}>
-                          <InlineText size="lg">
-                            {param.name}({param.type}):
-                          </InlineText>
-                          {param.type === 'address' ? (
-                            <EtherscanLink cut={8} value={param.value} />
-                          ) : (
-                            <InlineText size="lg">{param.value}</InlineText>
-                          )}
-                        </TxDetailsMethodParam>
-                      ))}
-                    </TxInfo>
-                  )}
-                </TxDetailsContent>
-              </Collapsible>
-            </React.Fragment>
-          )
-        }
-      })}
-    </Block>
-  )
-}
+                )}
+              </TxDetailsContent>
+            </Collapsible>
+          </React.Fragment>
+        )
+      }
+    })}
+  </Block>
+)
 
 const TxDescription = ({ classes, tx }) => {
   const {
