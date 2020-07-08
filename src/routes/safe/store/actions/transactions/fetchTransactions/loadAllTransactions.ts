@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getAllTxServiceUriTo, getTxServiceHost } from 'src/config'
+import { getNewTransactionsServiceUriFrom, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../../models/types/transactions'
 import { NewTransactionsState } from '../../../reducer/newTransactions'
@@ -24,7 +24,7 @@ type EndpointResponse = {
 const getAllTransactionsUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
-  const base = getAllTxServiceUriTo(address)
+  const base = getNewTransactionsServiceUriFrom(address)
 
   return `${host}${base}`
 }
