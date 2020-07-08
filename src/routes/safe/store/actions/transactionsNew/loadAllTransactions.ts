@@ -5,7 +5,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../models/types/transactions'
 import { NewTransactionsState } from '../../reducer/newTransactions'
 
-type ServiceUriParams = {
+export type ServiceUriParams = {
   safeAddress: string
   limit?: number
   offset?: number
@@ -72,8 +72,9 @@ const fetchAllTransactions = async (
 }
 
 let previousETag = null
-export const loadAllTransactions = async (safeAddress: string): Promise<NewTransactionsState> => {
-  const { eTag, results } = await fetchAllTransactions({ safeAddress }, previousETag)
+export const loadAllTransactions = async (uriParams: ServiceUriParams): Promise<NewTransactionsState> => {
+  const { safeAddress } = uriParams
+  const { eTag, results } = await fetchAllTransactions(uriParams, previousETag)
   previousETag = eTag
 
   return {
