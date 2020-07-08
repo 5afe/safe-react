@@ -1,6 +1,6 @@
-import { connectRouter, routerMiddleware } from 'connected-react-router'
+import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore } from 'redux'
+import { applyMiddleware, CombinedState, combineReducers, compose, createStore } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -27,8 +27,12 @@ import cancellationTransactions, {
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
 } from 'src/routes/safe/store/reducer/incomingTransactions'
-import safe, { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+import { Map } from 'immutable'
+import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
+import { ProviderRecord } from '../logic/wallets/store/model/provider'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -62,6 +66,23 @@ const reducers = combineReducers({
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
 })
+
+export type AppReduxState = CombinedState<{
+  [PROVIDER_REDUCER_ID]?: ProviderRecord
+  [SAFE_REDUCER_ID]: SafeReducerMap
+  [NFT_ASSETS_REDUCER_ID]?: NFTAssets
+  [NFT_TOKENS_REDUCER_ID]?: NFTTokens
+  [TOKEN_REDUCER_ID]?: Map<string, Token>
+  [TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
+  [CURRENCY_VALUES_KEY]: Map<string, any>
+  [COOKIES_REDUCER_ID]: Map<string, any>
+  [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
+  [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
+  router: RouterState
+}>
 
 export const store: any = createStore(reducers, finalCreateStore)
 
