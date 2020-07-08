@@ -32,7 +32,7 @@ const getAllTransactionsUrl = (safeAddress: string) => {
 const fetchAllTransactions = async (
   urlParams: ServiceUriParams,
   eTag: string | null,
-): Promise<{ eTag: string; results: Transaction[] }> => {
+): Promise<{ responseEtag: string; results: Transaction[] }> => {
   const { safeAddress, limit, offset, orderBy, queued, trusted } = urlParams
   try {
     const url = getAllTransactionsUrl(safeAddress)
@@ -55,7 +55,7 @@ const fetchAllTransactions = async (
 
       if (eTag !== etag) {
         return {
-          eTag: etag,
+          responseEtag: etag,
           results: response.data.results,
         }
       }
@@ -68,14 +68,14 @@ const fetchAllTransactions = async (
       // So I check if the returned etag is the same instead (see above)
     }
   }
-  return { eTag, results: [] }
+  return { responseEtag: eTag, results: [] }
 }
 
 let previousETag = null
 export const loadAllTransactions = async (uriParams: ServiceUriParams): Promise<NewTransactionsState> => {
   const { safeAddress } = uriParams
-  const { eTag, results } = await fetchAllTransactions(uriParams, previousETag)
-  previousETag = eTag
+  const { responseEtag, results } = await fetchAllTransactions(uriParams, previousETag)
+  previousETag = responseEtag
 
   return {
     [safeAddress]: results,
