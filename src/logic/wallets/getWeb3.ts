@@ -6,6 +6,7 @@ import { EMPTY_DATA } from './ethTransactions'
 import { getNetwork } from '../../config'
 import { ContentHash } from 'web3-eth-ens'
 import { provider as Provider } from 'web3-core'
+import { ProviderProps } from './store/model/provider'
 
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',
@@ -96,20 +97,10 @@ const isSmartContractWallet = async (web3Provider: Web3, account: string): Promi
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
-type ProviderInfo = {
-  name: string
-  available: boolean
-  loaded: boolean
-  account: string
-  network: number
-  smartContractWallet: boolean
-  hardwareWallet: boolean
-}
-
 export const getProviderInfo = async (
   web3Provider: string | Provider,
   providerName = 'Wallet',
-): Promise<ProviderInfo> => {
+): Promise<ProviderProps> => {
   web3 = new Web3(web3Provider)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
