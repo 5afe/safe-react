@@ -2,8 +2,8 @@ import axios, { AxiosResponse } from 'axios'
 
 import { getNewTransactionsServiceUriFrom, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { Transaction } from '../../../models/types/transactions'
-import { NewTransactionsState } from '../../../reducer/newTransactions'
+import { Transaction } from '../../models/types/transactions'
+import { NewTransactionsState } from '../../reducer/newTransactions'
 
 type ServiceUriParams = {
   safeAddress: string
