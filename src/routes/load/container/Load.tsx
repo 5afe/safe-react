@@ -40,7 +40,8 @@ export const loadSafe = async (
 class Load extends React.Component<any> {
   onLoadSafeSubmit = async (values) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
-    if (safeAddress) {
+    if (!safeAddress) {
+      console.error('failed to load Safe address', JSON.stringify(values))
       return
     }
 
