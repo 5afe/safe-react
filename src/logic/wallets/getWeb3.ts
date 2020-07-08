@@ -4,6 +4,8 @@ import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
 import { getNetwork } from '../../config'
+import { ContentHash } from 'web3-eth-ens'
+import { provider as Provider } from 'web3-core'
 
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',
@@ -46,14 +48,14 @@ export const ETHEREUM_NETWORK_IDS = {
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
-export const getEtherScanLink = (type, value) => {
+export const getEtherScanLink = (type: string, value: string): string => {
   const network = getNetwork()
   return `https://${
     network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`
   }etherscan.io/${type}/${value}`
 }
 
-export const getInfuraUrl = () => {
+export const getInfuraUrl = (): string => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
   return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
@@ -73,7 +75,7 @@ export const resetWeb3 = (): void => {
   web3 = web3ReadOnly
 }
 
-export const getAccountFrom = async (web3Provider) => {
+export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
   if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
@@ -83,20 +85,32 @@ export const getAccountFrom = async (web3Provider) => {
   return accounts && accounts.length > 0 ? accounts[0] : null
 }
 
-export const getNetworkIdFrom = (web3Provider) => web3Provider.eth.net.getId()
+export const getNetworkIdFrom = (web3Provider: Web3): Promise<number> => web3Provider.eth.net.getId()
 
-const isHardwareWallet = (walletName) =>
+const isHardwareWallet = (walletName: string) =>
   sameAddress(WALLET_PROVIDER.LEDGER, walletName) || sameAddress(WALLET_PROVIDER.TREZOR, walletName)
 
-const isSmartContractWallet = async (web3Provider, account) => {
+const isSmartContractWallet = async (web3Provider: Web3, account) => {
   const contractCode = await web3Provider.eth.getCode(account)
 
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
-export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => {
-  web3 = new Web3(web3Provider)
+type ProviderInfo = {
+  name: string
+  available: boolean
+  loaded: boolean
+  account: string
+  network: number
+  smartContractWallet: boolean
+  hardwareWallet: boolean
+}
 
+export const getProviderInfo = async (
+  web3Provider: string | Provider,
+  providerName = 'Wallet',
+): Promise<ProviderInfo> => {
+  web3 = new Web3(web3Provider)
   const account = await getAccountFrom(web3)
   const network = await getNetworkIdFrom(web3)
   const smartContractWallet = await isSmartContractWallet(web3, account)
@@ -115,15 +129,15 @@ export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => 
   }
 }
 
-export const getAddressFromENS = (name: string) => web3.eth.ens.getAddress(name)
+export const getAddressFromENS = (name: string): Promise<string> => web3.eth.ens.getAddress(name)
 
-export const getContentFromENS = (name: string) => web3.eth.ens.getContenthash(name)
+export const getContentFromENS = (name: string): Promise<ContentHash> => web3.eth.ens.getContenthash(name)
 
-export const setWeb3 = (provider) => {
+export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
 
-export const getBalanceInEtherOf = async (safeAddress) => {
+export const getBalanceInEtherOf = async (safeAddress: string): Promise<string> => {
   if (!web3) {
     return '0'
   }
