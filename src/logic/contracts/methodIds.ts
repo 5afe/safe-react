@@ -1,4 +1,5 @@
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js
@@ -71,23 +72,18 @@ type TokenDecodedParams = {
 
 export type DecodedMethods = SafeDecodedParams | TokenDecodedParams | null
 
-export interface DataDecoded {
-  method: SafeMethods | TokenMethods
-  parameters: DecodedValues
-}
-
 export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => {
   const [methodId, params] = [data.slice(0, 10) as keyof typeof METHOD_TO_ID | string, data.slice(10)]
 
   switch (methodId) {
     // swapOwner
     case '0xe318b52b': {
-      const decodedParameters = web3.eth.abi.decodeParameters(['uint', 'address', 'address'], params)
+      const decodedParameters = web3.eth.abi.decodeParameters(['uint', 'address', 'address'], params) as string[]
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'oldOwner', value: decodedParameters[1] },
-          { name: 'newOwner', value: decodedParameters[2] },
+          { name: 'oldOwner', type: '', value: decodedParameters[1] },
+          { name: 'newOwner', type: '', value: decodedParameters[2] },
         ],
       }
     }
@@ -98,8 +94,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'owner', value: decodedParameters[0] },
-          { name: '_threshold', value: decodedParameters[1] },
+          { name: 'owner', type: '', value: decodedParameters[0] },
+          { name: '_threshold', type: '', value: decodedParameters[1] },
         ],
       }
     }
@@ -110,8 +106,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'oldOwner', value: decodedParameters[1] },
-          { name: '_threshold', value: decodedParameters[2] },
+          { name: 'oldOwner', type: '', value: decodedParameters[1] },
+          { name: '_threshold', type: '', value: decodedParameters[2] },
         ],
       }
     }
@@ -122,7 +118,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: '_threshold', value: decodedParameters[0] },
+          { name: '_threshold', type: '', value: decodedParameters[0] },
         ],
       }
     }
@@ -150,8 +146,8 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transfer',
         parameters: [
-          { name: 'to', value: decodeParameters[0] },
-          { name: 'value', value: decodeParameters[1] },
+          { name: 'to', type: '', value: decodeParameters[0] },
+          { name: 'value', type: '', value: decodeParameters[1] },
         ],
       }
     }
@@ -162,9 +158,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transferFrom',
         parameters: [
-          { name: 'from', value: decodeParameters[0] },
-          { name: 'to', value: decodeParameters[1] },
-          { name: 'value', value: decodeParameters[2] },
+          { name: 'from', type: '', value: decodeParameters[0] },
+          { name: 'to', type: '', value: decodeParameters[1] },
+          { name: 'value', type: '', value: decodeParameters[2] },
         ],
       }
     }
@@ -175,9 +171,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'safeTransferFrom',
         parameters: [
-          { name: 'from', value: decodedParameters[0] },
-          { name: 'to', value: decodedParameters[1] },
-          { name: 'value', value: decodedParameters[2] },
+          { name: 'from', type: '', value: decodedParameters[0] },
+          { name: 'to', type: '', value: decodedParameters[1] },
+          { name: 'value', type: '', value: decodedParameters[2] },
         ],
       }
     }

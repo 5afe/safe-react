@@ -1,6 +1,7 @@
 import { List, Map, RecordOf } from 'immutable'
 import { DecodedMethods } from 'src/logic/contracts/methodIds'
 import { Confirmation } from './confirmation'
+import { DataDecoded } from './transactions'
 
 export enum TransactionTypes {
   INCOMING = 'incoming',
@@ -42,6 +43,7 @@ export type TransactionProps = {
   creationTx: boolean
   customTx: boolean
   data?: string | null
+  dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
   decodedParams: DecodedMethods
   executionDate?: string | null
