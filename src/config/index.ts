@@ -1,5 +1,6 @@
+import { checksumAddress } from 'src/utils/checksumAddress';
 import { ensureOnce } from 'src/utils/singleton'
-import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
@@ -93,7 +94,7 @@ export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSIO
 
 export const buildSafeCreationTxUrl = (safeAddress) => {
   const host = getTxServiceHost()
-  const address = getWeb3().utils.toChecksumAddress(safeAddress)
+  const address = checksumAddress(safeAddress)
   const base = getSafeCreationTxUri(address)
 
   return `${host}${base}`
