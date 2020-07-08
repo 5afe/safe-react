@@ -232,7 +232,7 @@ const CustomDescription = ({ classes, recipient, rawTx }: any) => {
           return (
             <React.Fragment key={`${tx.to}-row-${index}`}>
               <Collapsible
-                title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index}`} textSize="lg" />}
+                title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index + 1}`} textSize="lg" />}
               >
                 <TxDetailsContent>
                   <TxInfo>
