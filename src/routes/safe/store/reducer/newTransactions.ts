@@ -8,7 +8,7 @@ export interface NewTransactionsState {
   [safeAddress: string]: Transaction[]
 }
 
-const initialState: Readonly<NewTransactionsState> = {}
+const initialState: Readonly<NewTransactionsState> = null
 
 export default handleActions(
   {
