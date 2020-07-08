@@ -1,21 +1,30 @@
+import { IconText, Text } from '@gnosis.pm/safe-react-components'
+import { Collapse as CollapseMUI } from '@material-ui/core'
 import { withStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { getTxData } from './utils'
 
 import EtherscanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import LinkWithRef from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 import { SAFE_METHODS_NAMES } from 'src/logic/contracts/methodIds'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import { lg, md } from 'src/theme/variables'
+import {
+  extractMultiSendDecodedData,
+  isMultiSendDetails,
+} from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
+import { BigNumber } from 'bignumber.js'
+import IconButton from '@material-ui/core/IconButton'
+import ExpandLess from '@material-ui/icons/ExpandLess'
+import ExpandMore from '@material-ui/icons/ExpandMore'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -41,7 +50,15 @@ export const styles = () => ({
     textDecoration: 'underline',
     cursor: 'pointer',
   },
+  multiSendTxData: {
+    marginTop: `-${lg}`,
+    marginLeft: `-${md}`,
+  },
 })
+
+const humanReadableValue = (value: number | string, decimals = 18): string => {
+  return new BigNumber(value).times(`1e-${decimals}`).toFixed()
+}
 
 const TransferDescription = ({ amount = '', recipient }) => {
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
@@ -135,66 +152,117 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
   )
 }
 
-const TxData = (props) => {
-  const { classes, data } = props
-  const [showTxData, setShowTxData] = useState(false)
-  const showExpandBtn = data.length > 20
+const Wrapper = styled.div``
+const HeaderWrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  align-content: center;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px 8px 8px 16px;
+  border-bottom: 2px solid rgb(232, 231, 230);
+
+  &:hover {
+    cursor: pointer;
+  }
+`
+const Title = styled.div``
+const Header = styled.div`
+  display: flex;
+  flex-direction: column;
+`
+const TxDetailsMethodName = styled(Text)`
+  text-indent: 2%;
+`
+const TxDetailsMethodParam = styled.div`
+  text-indent: 4%;
+`
+const InlineText = styled(Text)`
+  display: inline-flex;
+  margin-right: 6px;
+`
+const Collapse = styled(CollapseMUI)`
+  border-bottom: 2px solid rgb(232, 231, 230);
+`
+const TxDetailsContent = styled.div`
+  padding: 8px 8px 8px 16px;
+`
+
+const TxInfo = styled.div`
+  padding: 8px 8px 8px 16px;
+`
+
+interface ICollapsible {
+  title: React.ReactNode
+  description?: React.ReactNode
+}
+const Collapsible: React.FC<ICollapsible> = ({ title, description = null, children }) => {
+  const [open, setOpen] = React.useState(false)
+
+  const handleClick = () => {
+    setOpen(!open)
+  }
+
   return (
-    <Paragraph className={classes.txDataParagraph} noMargin size="md">
-      {showExpandBtn ? (
-        <>
-          {showTxData ? (
-            <>
-              {data}{' '}
-              <LinkWithRef
-                aria-label="Hide details of the transaction"
-                className={classes.linkTxData}
-                onClick={() => setShowTxData(false)}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Show Less
-              </LinkWithRef>
-            </>
-          ) : (
-            <>
-              {shortVersionOf(data, 20)}{' '}
-              <LinkWithRef
-                aria-label="Show details of the transaction"
-                className={classes.linkTxData}
-                onClick={() => setShowTxData(true)}
-                rel="noopener noreferrer"
-                target="_blank"
-              >
-                Show More
-              </LinkWithRef>
-            </>
-          )}
-        </>
-      ) : (
-        data
-      )}
-    </Paragraph>
+    <Wrapper>
+      <HeaderWrapper onClick={handleClick}>
+        <Title>{title}</Title>
+        <Header>
+          <IconButton disableRipple size="small">
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+          {description}
+        </Header>
+      </HeaderWrapper>
+
+      <Collapse in={open} timeout="auto" unmountOnExit>
+        {children}
+      </Collapse>
+    </Wrapper>
   )
 }
 
-const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+const CustomDescription = ({ classes, recipient, rawTx }: any) => {
+  // const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+
   return (
-    <>
-      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
-        <Bold>Send {amount} to:</Bold>
-        {recipientName ? (
-          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-        ) : (
-          <EtherscanLink knownAddress={false} type="address" value={recipient} />
-        )}
-      </Block>
-      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-        <Bold>Data (hex encoded):</Bold>
-        <TxData classes={classes} data={data} />
-      </Block>
-    </>
+    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+      {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
+        if (isMultiSendDetails(tx)) {
+          return (
+            <React.Fragment key={`${tx.to}-row-${index}`}>
+              <Collapsible
+                title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index}`} textSize="lg" />}
+              >
+                <TxDetailsContent>
+                  <TxInfo>
+                    <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+                    <OwnerAddressTableCell address={recipient} showLinks />
+                  </TxInfo>
+                  {tx.data && (
+                    <TxInfo>
+                      <TxDetailsMethodName size="lg">{tx.data.method}</TxDetailsMethodName>
+                      {tx.data?.parameters.map((param, index) => (
+                        <TxDetailsMethodParam key={`${tx.operation}_${tx.to}_${tx.data.method}_param-${index}`}>
+                          <InlineText size="lg">
+                            {param.name}({param.type}):
+                          </InlineText>
+                          {param.type === 'address' ? (
+                            <EtherscanLink cut={8} value={param.value} />
+                          ) : (
+                            <InlineText size="lg">{param.value}</InlineText>
+                          )}
+                        </TxDetailsMethodParam>
+                      ))}
+                    </TxInfo>
+                  )}
+                </TxDetailsContent>
+              </Collapsible>
+            </React.Fragment>
+          )
+        }
+      })}
+    </Block>
   )
 }
 
@@ -224,7 +292,7 @@ const TxDescription = ({ classes, tx }) => {
         />
       )}
       {!upgradeTx && customTx && (
-        <CustomDescription amount={amount} classes={classes} data={data} recipient={recipient} />
+        <CustomDescription amount={amount} classes={classes} data={data} recipient={recipient} rawTx={tx} />
       )}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (

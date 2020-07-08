@@ -2,7 +2,7 @@ import { secondaryText } from 'src/theme/variables'
 
 export const styles = () => ({
   etherscanLink: {
-    display: 'flex',
+    display: 'inline-flex',
     alignItems: 'center',
 
     '& svg': {
