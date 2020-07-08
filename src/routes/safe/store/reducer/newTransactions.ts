@@ -2,7 +2,7 @@ import { handleActions } from 'redux-actions'
 import { ADD_NEW_TRANSACTIONS } from '../actions/addNewTransactions'
 import { Transaction } from '../models/types/transactions'
 
-export const TRANSACTIONS_NEW = 'transactionsNew'
+export const TRANSACTIONS = 'transactionsNew'
 
 export interface NewTransactionsState {
   [safeAddress: string]: Transaction[]
