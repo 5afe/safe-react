@@ -67,9 +67,9 @@ export const web3ReadOnly =
     : new Web3(window.web3?.currentProvider || 'ws://localhost:8545')
 
 let web3 = web3ReadOnly
-export const getWeb3 = () => web3
+export const getWeb3 = (): Web3 => web3
 
-export const resetWeb3 = () => {
+export const resetWeb3 = (): void => {
   web3 = web3ReadOnly
 }
 

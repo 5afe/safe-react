@@ -252,6 +252,7 @@
     "truffle": "5.1.29",
     "typescript": "^3.9.5",
     "wait-on": "5.0.1",
+    "web3-core": "^1.2.9",
     "web3-eth-contract": "^1.2.9",
     "web3-utils": "^1.2.8"
   }
