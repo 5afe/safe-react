@@ -38,6 +38,7 @@ export const loadSafe = async (
 }
 
 interface ILoad {
+  addSafe: Dispatch<any>
   network: string
   provider?: string
   userAddress: string
@@ -49,7 +50,7 @@ export interface LoadFormValues {
   threshold: string
 }
 
-const Load: React.FC<ILoad> = ({ network, provider, userAddress }) => {
+const Load: React.FC<ILoad> = ({ addSafe, network, provider, userAddress }) => {
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
     // TODO: review this check. It doesn't seems to be necessary at this point
@@ -59,7 +60,6 @@ const Load: React.FC<ILoad> = ({ network, provider, userAddress }) => {
     }
 
     try {
-      const { addSafe } = this.props
       const safeName = values[FIELD_LOAD_NAME]
       safeAddress = checksumAddress(safeAddress)
       const ownerNames = getNamesFrom(values)
