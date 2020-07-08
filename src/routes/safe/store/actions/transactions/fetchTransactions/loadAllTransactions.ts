@@ -1,9 +1,9 @@
-import { List, Map } from 'immutable'
 import axios, { AxiosResponse } from 'axios'
 
 import { getAllTxServiceUriTo, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../../models/types/transactions'
+import { NewTransactionsState } from '../../../reducer/newTransactions'
 
 type ServiceUriParams = {
   safeAddress: string
@@ -72,10 +72,11 @@ const fetchAllTransactions = async (
 }
 
 let previousETag = null
-
-export const loadAllTransactions = async (safeAddress: string): Promise<Map<string, List<Transaction>>> => {
+export const loadAllTransactions = async (safeAddress: string): Promise<NewTransactionsState> => {
   const { eTag, results } = await fetchAllTransactions({ safeAddress }, previousETag)
   previousETag = eTag
 
-  return Map({ [safeAddress]: List(results) })
+  return {
+    [safeAddress]: results,
+  }
 }

@@ -36,7 +36,7 @@ export default (safeAddress: string) => async (dispatch: Dispatch): Promise<void
   }
   const allTransactions = await loadAllTransactions(safeAddress)
 
-  if (allTransactions.get(safeAddress).size) {
+  if (allTransactions[safeAddress].length) {
     dispatch(addNewTransactions(allTransactions))
   }
 }
