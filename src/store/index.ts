@@ -36,10 +36,6 @@ import { Token } from 'src/logic/tokens/store/model/token'
 
 export const history = createHashHistory()
 
-interface Location {
-  query: { entryAddress?: string }
-}
-
 // eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 const finalCreateStore = composeEnhancers(
@@ -85,7 +81,7 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
-  router: RouterState<Location>
+  router: RouterState
 }>
 
 export const store: any = createStore(reducers, finalCreateStore)
