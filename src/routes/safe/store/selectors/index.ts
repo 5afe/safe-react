@@ -1,5 +1,5 @@
 import { List, Map, Set } from 'immutable'
-import { matchPath } from 'react-router-dom'
+import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
@@ -33,7 +33,9 @@ const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELL
 const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
-  const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
+    path: `${SAFELIST_ADDRESS}/:safeAddress`,
+  })
 
   if (match) {
     return checksumAddress(match.params.safeAddress)
@@ -42,7 +44,10 @@ export const safeParamAddressFromStateSelector = (state: AppReduxState): string 
   return null
 }
 
-export const safeParamAddressSelector = (state, props) => {
+export const safeParamAddressSelector = (
+  state: AppReduxState,
+  props: RouteComponentProps<{ [SAFE_PARAM_ADDRESS]?: string }>,
+): string => {
   const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
   return urlAdd ? checksumAddress(urlAdd) : ''
 }

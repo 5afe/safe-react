@@ -34,7 +34,11 @@ import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
 import { ProviderRecord } from '../logic/wallets/store/model/provider'
 import { Token } from 'src/logic/tokens/store/model/token'
 
-export const history = createHashHistory({ hashType: 'slash' })
+export const history = createHashHistory()
+
+interface Location {
+  query: { entryAddress?: string }
+}
 
 // eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -81,7 +85,7 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
-  router: RouterState
+  router: RouterState<Location>
 }>
 
 export const store: any = createStore(reducers, finalCreateStore)

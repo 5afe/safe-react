@@ -2,8 +2,10 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import memoize from 'lodash.memoize'
 
-type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
 type ValidatorReturnType = string | undefined
+type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
+type AsyncValidator = (...args: unknown[]) => Promise<ValidatorReturnType>
+type Validator = GenericValidatorType | AsyncValidator
 
 export const required = (value?: string): ValidatorReturnType => {
   const required = 'Required'
@@ -105,7 +107,7 @@ export const uniqueAddress = (addresses: string[]): GenericValidatorType =>
     },
   )
 
-export const composeValidators = (...validators: GenericValidatorType[]) => (value: unknown): ValidatorReturnType =>
+export const composeValidators = (...validators: Validator[]) => (value: unknown): ValidatorReturnType =>
   validators.reduce(
     (error: string | undefined, validator: GenericValidatorType): ValidatorReturnType => error || validator(value),
     undefined,
