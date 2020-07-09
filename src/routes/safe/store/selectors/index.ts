@@ -105,15 +105,19 @@ export const safeIncomingTransactionsSelector = createSelector(
   },
 )
 
-export const safeSelector = createSelector(safesMapSelector, safeParamAddressFromStateSelector, (safes, address) => {
-  if (!address) {
-    return undefined
-  }
-  const checksumed = checksumAddress(address)
-  const safe = safes.get(checksumed)
+export const safeSelector = createSelector(
+  safesMapSelector,
+  safeParamAddressFromStateSelector,
+  (safes: SafesMap, address: string): SafeRecord | undefined => {
+    if (!address) {
+      return undefined
+    }
+    const checksumed = checksumAddress(address)
+    const safe = safes.get(checksumed)
 
-  return safe
-})
+    return safe
+  },
+)
 
 export const safeActiveTokensSelector = createSelector(
   safeSelector,
