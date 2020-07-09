@@ -1,21 +1,9 @@
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import memoize from 'lodash.memoize'
 
 type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
-type GenericFunction = (...args: unknown[]) => unknown
 type ValidatorReturnType = string | undefined
-
-export const simpleMemoize = (fn: GenericFunction): GenericFunction => {
-  let lastArg
-  let lastResult
-  return (arg, ...args) => {
-    if (arg !== lastArg) {
-      lastArg = arg
-      lastResult = fn(arg, ...args)
-    }
-    return lastResult
-  }
-}
 
 export const required = (value?: string): ValidatorReturnType => {
   const required = 'Required'
@@ -85,20 +73,24 @@ export const maxValue = (max: number | string) => (value: string): ValidatorRetu
 
 export const ok = (): undefined => undefined
 
-export const mustBeEthereumAddress = simpleMemoize((address: string) => {
-  const startsWith0x = address.startsWith('0x')
-  const isAddress = getWeb3().utils.isAddress(address)
+export const mustBeEthereumAddress = memoize(
+  (address: string): ValidatorReturnType => {
+    const startsWith0x = address.startsWith('0x')
+    const isAddress = getWeb3().utils.isAddress(address)
 
-  return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
-})
+    return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
+  },
+)
 
-export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
-  const contractCode = await getWeb3().eth.getCode(address)
+export const mustBeEthereumContractAddress = memoize(
+  async (address: string): Promise<ValidatorReturnType> => {
+    const contractCode = await getWeb3().eth.getCode(address)
 
-  return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
-    ? 'Address should be a valid Ethereum contract address or ENS name'
-    : undefined
-})
+    return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
+      ? 'Address should be a valid Ethereum contract address or ENS name'
+      : undefined
+  },
+)
 
 export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType =>
   value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
@@ -106,7 +98,7 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
 export const uniqueAddress = (addresses: string[]): GenericValidatorType =>
-  simpleMemoize(
+  memoize(
     (value: string): ValidatorReturnType => {
       const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
       return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
