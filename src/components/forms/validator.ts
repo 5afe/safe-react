@@ -28,7 +28,7 @@ export const mustBeFloat = (value: string): ValidatorReturnType =>
   value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined
 
 export const greaterThan = (min: number | string) => (value: string): ValidatorReturnType => {
-  if (Number.isNaN(Number(value)) || Number.parseFloat(value) > Number(min)) {
+  if (Number.parseFloat(value) > Number(min)) {
     return undefined
   }
 
@@ -36,7 +36,7 @@ export const greaterThan = (min: number | string) => (value: string): ValidatorR
 }
 
 export const equalOrGreaterThan = (min: number | string) => (value: string): ValidatorReturnType => {
-  if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
+  if (Number.parseFloat(value) >= Number(min)) {
     return undefined
   }
 
