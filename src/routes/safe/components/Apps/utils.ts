@@ -22,7 +22,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // Idle
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUoqmq8jw98VwTSf7aTQeBCfPKicQgcJL5k2Bch9QT8BJ`, disabled: false },
   // request
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQapdJP6zERqpDKKPECNeMDDgwmGUqbKk1PjHpYj8gfDJ`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
   // TX-Builder
