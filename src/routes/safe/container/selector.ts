@@ -3,16 +3,19 @@ import { createSelector } from 'reselect'
 
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { isUserOwner } from 'src/logic/wallets/ethAddresses'
+import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import { safeActiveTokensSelector, safeBalancesSelector, safeSelector } from 'src/routes/safe/store/selectors'
+import { SafeRecord } from '../store/models/safe'
 
-export const grantedSelector = createSelector(userAccountSelector, safeSelector, (userAccount, safe) =>
-  isUserOwner(safe, userAccount),
+export const grantedSelector = createSelector(
+  userAccountSelector,
+  safeSelector,
+  (userAccount: string, safe: SafeRecord) => isUserAnOwner(safe, userAccount),
 )
 
-const safeEthAsTokenSelector = createSelector(safeSelector, (safe) => {
+const safeEthAsTokenSelector = createSelector(safeSelector, (safe?: SafeRecord) => {
   if (!safe) {
     return undefined
   }

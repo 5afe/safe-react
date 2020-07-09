@@ -5,7 +5,7 @@ import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnac
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getAwaitingTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
-import { isUserOwner } from 'src/logic/wallets/ethAddresses'
+import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -85,7 +85,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!isUserOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
+        if (!isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
           break
         }
 

@@ -1,6 +1,8 @@
+import { List } from 'immutable'
+import { SafeRecord } from 'src/routes/safe/store/models/safe'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const sameAddress = (firstAddress, secondAddress) => {
+export const sameAddress = (firstAddress: string, secondAddress: string): boolean => {
   if (!firstAddress) {
     return false
   }
@@ -12,7 +14,7 @@ export const sameAddress = (firstAddress, secondAddress) => {
   return firstAddress.toLowerCase() === secondAddress.toLowerCase()
 }
 
-export const shortVersionOf = (value, cut) => {
+export const shortVersionOf = (value: string, cut: number): string => {
   if (!value) {
     return 'Unknown'
   }
@@ -25,7 +27,7 @@ export const shortVersionOf = (value, cut) => {
   return `${value.substring(0, cut)}...${value.substring(final)}`
 }
 
-export const isUserOwner = (safe, userAccount) => {
+export const isUserAnOwner = (safe: SafeRecord, userAccount: string): boolean => {
   if (!safe) {
     return false
   }
@@ -42,6 +44,7 @@ export const isUserOwner = (safe, userAccount) => {
   return owners.find((owner) => sameAddress(owner.address, userAccount)) !== undefined
 }
 
-export const isUserOwnerOnAnySafe = (safes, userAccount) => safes.some((safe) => isUserOwner(safe, userAccount))
+export const isUserAnOwnerOfAnySafe = (safes: List<SafeRecord> | SafeRecord[], userAccount: string): boolean =>
+  safes.some((safe: SafeRecord) => isUserAnOwner(safe, userAccount))
 
-export const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+export const isValidEnsName = (name: string): boolean => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)

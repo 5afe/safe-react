@@ -16,7 +16,7 @@ const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
 export const safesMapSelector = (state: AppReduxState): SafesMap => state[SAFE_REDUCER_ID].get('safes')
 
-export const safesListSelector = createSelector(safesMapSelector, (safes) => safes.toList())
+export const safesListSelector = createSelector(safesMapSelector, (safes): List<SafeRecord> => safes.toList())
 
 export const safesCountSelector = createSelector(safesMapSelector, (safes) => safes.size)
 

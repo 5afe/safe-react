@@ -23,7 +23,7 @@ import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddr
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
-import { isUserOwnerOnAnySafe } from 'src/logic/wallets/ethAddresses'
+import { isUserAnOwnerOfAnySafe } from 'src/logic/wallets/ethAddresses'
 import CreateEditEntryModal from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
@@ -136,7 +136,7 @@ const AddressBookTable = ({ classes }) => {
           >
             {(sortedData) =>
               sortedData.map((row, index) => {
-                const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
+                const userOwner = isUserAnOwnerOfAnySafe(safesList, row.address)
                 const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
                   <TableRow
