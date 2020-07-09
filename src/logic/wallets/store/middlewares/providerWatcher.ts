@@ -37,7 +37,7 @@ const providerWatcherMware = (store) => (next) => async (action) => {
 
         watcherInterval = setInterval(async () => {
           const web3 = getWeb3()
-          const providerInfo = await getProviderInfo(web3)
+          const providerInfo = await getProviderInfo(web3.currentProvider)
 
           const networkChanged = currentProviderProps.network !== providerInfo.network
 
