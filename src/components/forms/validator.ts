@@ -27,22 +27,6 @@ export const mustBeInteger = (value: string): ValidatorReturnType =>
 export const mustBeFloat = (value: string): ValidatorReturnType =>
   value && Number.isNaN(Number(value)) ? 'Must be a number' : undefined
 
-export const greaterThan = (min: number | string) => (value: string): ValidatorReturnType => {
-  if (Number.parseFloat(value) > Number(min)) {
-    return undefined
-  }
-
-  return `Should be greater than ${min}`
-}
-
-export const equalOrGreaterThan = (min: number | string) => (value: string): ValidatorReturnType => {
-  if (Number.parseFloat(value) >= Number(min)) {
-    return undefined
-  }
-
-  return `Should be equal or greater than ${min}`
-}
-
 const regexQuery = /^(?:(?:https?|ftp):\/\/)(?:\S+(?::\S*)?@)?(?:(?!(?:10|127)(?:\.\d{1,3}){3})(?!(?:169\.254|192\.168)(?:\.\d{1,3}){2})(?!172\.(?:1[6-9]|2\d|3[0-1])(?:\.\d{1,3}){2})(?:[1-9]\d?|1\d\d|2[01]\d|22[0-3])(?:\.(?:1?\d{1,2}|2[0-4]\d|25[0-5])){2}(?:\.(?:[1-9]\d?|1\d\d|2[0-4]\d|25[0-4]))|(?:(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)(?:\.(?:[a-z\u00a1-\uffff0-9]-*)*[a-z\u00a1-\uffff0-9]+)*(?:\.(?:[a-z\u00a1-\uffff]{2,}))\.?)(?::\d{2,5})?(?:[/?#]\S*)?$/i
 const url = new RegExp(regexQuery)
 export const mustBeUrl = (value: string): ValidatorReturnType => {
@@ -53,24 +37,20 @@ export const mustBeUrl = (value: string): ValidatorReturnType => {
   return 'Please, provide a valid url'
 }
 
-export const minValue = (min: number | string) => (value: string): ValidatorReturnType => {
-  if (Number.isNaN(Number(value)) || Number.parseFloat(value) >= Number(min)) {
+export const minValue = (min: number | string, inclusive = true) => (value: string): ValidatorReturnType => {
+  if (Number.parseFloat(value) > Number(min) || (inclusive && Number.parseFloat(value) >= Number(min))) {
     return undefined
   }
 
   return `Should be at least ${min}`
 }
 
-export const maxValueCheck = (max: number | string, value: string): ValidatorReturnType => {
-  if (!max || Number.isNaN(Number(value)) || parseFloat(value) <= parseFloat(max.toString())) {
+export const maxValue = (max: number | string) => (value: string): ValidatorReturnType => {
+  if (!max || parseFloat(value) <= parseFloat(max.toString())) {
     return undefined
   }
 
   return `Maximum value is ${max}`
-}
-
-export const maxValue = (max: number | string) => (value: string): ValidatorReturnType => {
-  return maxValueCheck(max, value)
 }
 
 export const ok = (): undefined => undefined

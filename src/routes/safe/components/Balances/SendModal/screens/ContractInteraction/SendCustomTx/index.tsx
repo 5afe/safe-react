@@ -19,7 +19,7 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import TextareaField from 'src/components/forms/TextareaField'
-import { composeValidators, maxValue, mustBeFloat, equalOrGreaterThan } from 'src/components/forms/validator'
+import { composeValidators, maxValue, mustBeFloat, minValue } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -230,7 +230,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                       placeholder="Value*"
                       text="Value*"
                       type="text"
-                      validate={composeValidators(mustBeFloat, maxValue(ethBalance), equalOrGreaterThan(0))}
+                      validate={composeValidators(mustBeFloat, maxValue(ethBalance), minValue(0))}
                     />
                   </Col>
                 </Row>
