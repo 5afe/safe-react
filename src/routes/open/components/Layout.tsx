@@ -57,7 +57,7 @@ const iconStyle = {
 }
 
 const back = () => {
-  history.goBack()
+  history.back()
 }
 
 const formMutators = {

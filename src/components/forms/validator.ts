@@ -2,10 +2,10 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
-
+type GenericFunction = (...args: unknown[]) => unknown
 type ValidatorReturnType = string | undefined
 
-export const simpleMemoize = (fn: GenericValidatorType): GenericValidatorType => {
+export const simpleMemoize = (fn: GenericFunction): GenericFunction => {
   let lastArg
   let lastResult
   return (arg, ...args) => {

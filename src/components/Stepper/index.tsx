@@ -76,7 +76,7 @@ const GnoStepper = (props: any) => {
   const previous = () => {
     const firstPage = page === 0
     if (firstPage) {
-      return history.goBack()
+      return history.back()
     }
 
     return setPage(Math.max(page - 1, 0))
