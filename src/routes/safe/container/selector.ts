@@ -1,6 +1,7 @@
 import { Map } from 'immutable'
 import { createSelector } from 'reselect'
 
+import { Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -12,10 +13,10 @@ import { SafeRecord } from '../store/models/safe'
 export const grantedSelector = createSelector(
   userAccountSelector,
   safeSelector,
-  (userAccount: string, safe: SafeRecord) => isUserAnOwner(safe, userAccount),
+  (userAccount: string, safe: SafeRecord): boolean => isUserAnOwner(safe, userAccount),
 )
 
-const safeEthAsTokenSelector = createSelector(safeSelector, (safe?: SafeRecord) => {
+const safeEthAsTokenSelector = createSelector(safeSelector, (safe?: SafeRecord): Token | undefined => {
   if (!safe) {
     return undefined
   }
