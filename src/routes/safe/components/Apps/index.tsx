@@ -8,10 +8,9 @@ import styled from 'styled-components'
 import ManageApps from './components/ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import { getAppInfoFromUrl, staticAppsList } from './utils'
-import { SafeApp, StoredSafeApp } from './types'
 import LegalDisclaimer from './components/LegalDisclaimer'
 import { useLegalConsent } from './hooks/useLegalConsent'
+import { useAppList } from './hooks/useAppList'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -22,10 +21,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/routes/safe/store/selectors'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
-
-const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -64,10 +60,10 @@ const operations = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
-  const [appList, setAppList] = useState<Array<SafeApp>>([])
+  const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
+
+  const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
-  const [loading, setLoading] = useState(true)
-  const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
 
   const history = useHistory()
@@ -137,19 +133,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     )
   }
 
-  const onAppAdded = (app: SafeApp) => {
-    const newAppList = [
-      { url: app.url, disabled: false },
-      ...appList.map((a) => ({
-        url: a.url,
-        disabled: a.disabled,
-      })),
-    ]
-    saveToStorage(APPS_STORAGE_KEY, newAppList)
-
-    setAppList([...appList, { ...app, disabled: false }])
-  }
-
   const selectFirstApp = useCallback(
     (apps) => {
       const firstEnabledApp = apps.find((a) => !a.disabled)
@@ -159,39 +142,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     },
     [onSelectApp],
   )
-
-  const onAppToggle = async (appId, enabled) => {
-    // update in-memory list
-    const copyAppList = [...appList]
-
-    const app = copyAppList.find((a) => a.id === appId)
-    if (!app) {
-      return
-    }
-
-    app.disabled = !enabled
-    setAppList(copyAppList)
-
-    // update storage list
-    const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-    let storageApp = persistedAppList.find((a) => a.url === app.url)
-
-    if (!storageApp) {
-      storageApp = { url: app.url }
-      storageApp.disabled = !enabled
-      persistedAppList.push(storageApp)
-    } else {
-      storageApp.disabled = !enabled
-    }
-
-    saveToStorage(APPS_STORAGE_KEY, persistedAppList)
-
-    // select app
-    if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
-      setSelectedAppId(undefined)
-      selectFirstApp(copyAppList)
-    }
-  }
 
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 
@@ -253,50 +203,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   })
 
-  // Load apps list
-  useEffect(() => {
-    const loadApps = async () => {
-      // recover apps from storage:
-      // * third-party apps added by the user
-      // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
-
-      staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
-          list.push(staticApp)
-        }
-      })
-
-      const apps = []
-      // using the appURL to recover app info
-      for (let index = 0; index < list.length; index++) {
-        try {
-          const currentApp = list[index]
-
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
-          if (appInfo.error) {
-            throw Error(`There was a problem trying to load app ${currentApp.url}`)
-          }
-
-          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
-
-          apps.push(appInfo)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-
-      setAppList(apps)
-      setLoading(false)
-      selectFirstApp(apps)
-    }
-
-    if (!appList.length) {
-      loadApps()
-    }
-  }, [appList.length, selectFirstApp])
-
   // on iframe change
   useEffect(() => {
     const sendMessageToIframe = (messageId, data) => {
@@ -322,7 +228,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   }, [ethBalance, iframeEl, network, safeAddress, selectedApp])
 
-  if (loading || !appList.length) {
+  if (loadingAppList || !appList.length) {
     return <Loader size="md" />
   }
 
