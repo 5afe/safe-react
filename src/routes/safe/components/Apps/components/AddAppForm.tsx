@@ -46,7 +46,7 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
 `
 
-const uniqueAppValidator = (appList, value) => {
+const uniqueAppValidator = (appList: SafeApp[], value: string): string | undefined => {
   const exists = appList.some((a) => {
     try {
       const currentUrl = new URL(a.url)
@@ -59,17 +59,19 @@ const uniqueAppValidator = (appList, value) => {
   return exists ? 'This app is already registered.' : undefined
 }
 
-const getIpfsLinkFromEns = memoize(async (name) => {
-  try {
-    const content = await getContentFromENS(name)
-    if (content && content.protocolType === 'ipfs') {
-      return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+const getIpfsLinkFromEns = memoize(
+  async (name: string): Promise<string | undefined> => {
+    try {
+      const content = await getContentFromENS(name)
+      if (content && content.protocolType === 'ipfs') {
+        return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+      }
+    } catch (error) {
+      console.error(error)
+      return undefined
     }
-  } catch (error) {
-    console.error(error)
-    return undefined
-  }
-})
+  },
+)
 
 const getUrlFromFormValue = memoize(async (value: string) => {
   const isUrlValid = isURLValid(value)
