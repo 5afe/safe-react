@@ -9,6 +9,9 @@ import ManageApps from './components/ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 import { getAppInfoFromUrl, staticAppsList } from './utils'
+import { SafeApp, StoredSafeApp } from './types'
+import LegalDisclaimer from './components/LegalDisclaimer'
+import { useLegalConsent } from './hooks/useLegalConsent'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -21,11 +24,8 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
-import { SafeApp, StoredSafeApp } from './types'
-import LegalDisclaimer from './components/LegalDisclaimer'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
-const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -65,7 +65,6 @@ const operations = {
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const [appList, setAppList] = useState<Array<SafeApp>>([])
-  const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
   const [selectedAppId, setSelectedAppId] = useState<string>()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
@@ -78,6 +77,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
+  const { consentReceived, onConsentReceipt } = useLegalConsent()
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
 
@@ -101,18 +101,13 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
-  const onAcceptLegalDisclaimer = () => {
-    setLegalDisclaimerAccepted(true)
-    saveToStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY, true)
-  }
-
   const getContent = () => {
     if (!selectedApp) {
       return null
     }
 
-    if (!legalDisclaimerAccepted) {
-      return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onAcceptLegalDisclaimer} />
+    if (!consentReceived) {
+      return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
     }
 
     if (network === 'UNKNOWN' || !granted) {
@@ -257,19 +252,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       window.removeEventListener('message', onIframeMessage)
     }
   })
-
-  // load legalDisclaimer
-  useEffect(() => {
-    const checkLegalDisclaimer = async () => {
-      const legalDisclaimer = await loadFromStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY)
-
-      if (legalDisclaimer) {
-        setLegalDisclaimerAccepted(true)
-      }
-    }
-
-    checkLegalDisclaimer()
-  }, [])
 
   // Load apps list
   useEffect(() => {
