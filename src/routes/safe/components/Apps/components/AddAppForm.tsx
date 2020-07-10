@@ -13,8 +13,8 @@ import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import { isValid as isURLValid } from 'src/utils/url'
 
-import { getAppInfoFromUrl } from './utils'
-import { SafeApp } from './types'
+import { getAppInfoFromUrl } from '../utils'
+import { SafeApp } from '../types'
 
 const APP_INFO: SafeApp = {
   id: undefined,
@@ -46,7 +46,7 @@ const StyledCheckbox = styled(Checkbox)`
   margin: 0;
 `
 
-const uniqueAppValidator = memoize((appList, value) => {
+const uniqueAppValidator = (appList, value) => {
   const exists = appList.some((a) => {
     try {
       const currentUrl = new URL(a.url)
@@ -57,7 +57,7 @@ const uniqueAppValidator = memoize((appList, value) => {
     }
   })
   return exists ? 'This app is already registered.' : undefined
-})
+}
 
 const getIpfsLinkFromEns = memoize(async (name) => {
   try {
@@ -84,23 +84,24 @@ const getUrlFromFormValue = memoize(async (value: string) => {
   return isUrlValid ? value : ensContent
 })
 
-const curriedSafeAppValidator = memoize((appList) => async (value: string) => {
-  const url = await getUrlFromFormValue(value)
+const curriedSafeAppValidator = (appList: SafeApp[]) =>
+  memoize(async (value: string) => {
+    const url = await getUrlFromFormValue(value)
 
-  if (!url) {
-    return 'Provide a valid url or ENS name.'
-  }
+    if (!url) {
+      return 'Provide a valid url or ENS name.'
+    }
 
-  const appExistsRes = uniqueAppValidator(appList, url)
-  if (appExistsRes) {
-    return appExistsRes
-  }
+    const appExistsRes = uniqueAppValidator(appList, url)
+    if (appExistsRes) {
+      return appExistsRes
+    }
 
-  const appInfo = await getAppInfoFromUrl(url)
-  if (appInfo.error) {
-    return 'This is not a valid Safe app.'
-  }
-})
+    const appInfo = await getAppInfoFromUrl(url)
+    if (appInfo.error) {
+      return 'This is not a valid Safe app.'
+    }
+  })
 
 const composeValidatorsApps = (...validators) => (value, values, meta) => {
   if (!meta.modified) {
@@ -117,7 +118,7 @@ type Props = {
   setIsSubmitDisabled: (status: boolean) => void
 }
 
-const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabled }: Props) => {
+const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabled }: Props): JSX.Element => {
   const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
   const safeAppValidator = curriedSafeAppValidator(appList)
 

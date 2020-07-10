@@ -13,7 +13,7 @@ type Props = {
   onAppToggle: (appId: string, enabled: boolean) => void
 }
 
-const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props) => {
+const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props): JSX.Element => {
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
