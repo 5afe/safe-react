@@ -1,6 +1,6 @@
-import { Card, FixedDialog, FixedIcon, IconText, Loader, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Card, FixedIcon, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
@@ -22,6 +22,7 @@ import {
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
 import { SafeApp, StoredSafeApp } from './types'
+import LegalDisclaimer from './components/LegalDisclaimer'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -65,7 +66,7 @@ const operations = {
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const [appList, setAppList] = useState<Array<SafeApp>>([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
-  const [selectedApp, setSelectedApp] = useState<string>()
+  const [selectedAppId, setSelectedAppId] = useState<string>()
   const [loading, setLoading] = useState(true)
   const [appIsLoading, setAppIsLoading] = useState(true)
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
@@ -78,7 +79,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
 
-  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp), [appList, selectedApp])
+  const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
@@ -88,16 +89,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const onSelectApp = useCallback(
     (appId) => {
-      const selectedApp = getSelectedApp()
-
-      if (selectedApp && selectedApp.id === appId) {
+      if (selectedAppId === appId) {
         return
       }
 
       setAppIsLoading(true)
-      setSelectedApp(appId)
+      setSelectedAppId(appId)
     },
-    [getSelectedApp],
+    [selectedAppId],
   )
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
@@ -113,31 +112,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
 
     if (!legalDisclaimerAccepted) {
-      return (
-        <FixedDialog
-          body={
-            <>
-              <Text size="md">
-                You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not
-                liable for any loss you may suffer in connection with interacting with the apps, which is at your own
-                risk. You must read our Terms, which contain more detailed provisions binding on you relating to the
-                apps.
-              </Text>
-              <br />
-              <Text size="md">
-                I have read and understood the{' '}
-                <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
-                  Terms
-                </a>{' '}
-                and this Disclaimer, and agree to be bound by them.
-              </Text>
-            </>
-          }
-          onCancel={redirectToBalance}
-          onConfirm={onAcceptLegalDisclaimer}
-          title="Disclaimer"
-        />
-      )
+      return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onAcceptLegalDisclaimer} />
     }
 
     if (network === 'UNKNOWN' || !granted) {
@@ -149,8 +124,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       )
     }
 
-    const app = getSelectedApp()
-
     return (
       <IframeWrapper>
         {appIsLoading && (
@@ -158,7 +131,13 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
             <Loader size="md" />
           </IframeCoverLoading>
         )}
-        <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
+        <StyledIframe
+          frameBorder="0"
+          id={`iframe-${selectedApp.name}`}
+          ref={iframeRef}
+          src={selectedApp.url}
+          title={selectedApp.name}
+        />
       </IframeWrapper>
     )
   }
@@ -213,14 +192,13 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     saveToStorage(APPS_STORAGE_KEY, persistedAppList)
 
     // select app
-    const selectedApp = getSelectedApp()
     if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
-      setSelectedApp(undefined)
+      setSelectedAppId(undefined)
       selectFirstApp(copyAppList)
     }
   }
 
-  const getEnabledApps = () => appList.filter((a) => !a.disabled)
+  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 
   // handle messages from iframe
   useEffect(() => {
@@ -235,22 +213,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           const onConfirm = async () => {
             closeModal()
 
-            await sendTransactions(
-              dispatch,
-              safeAddress,
-              data.data,
-              enqueueSnackbar,
-              closeSnackbar,
-              getSelectedApp().id,
-            )
+            await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
           }
 
           confirmTransactions(
             safeAddress,
             safeName,
             ethBalance,
-            getSelectedApp().name,
-            getSelectedApp().iconUrl,
+            selectedApp.name,
+            selectedApp.iconUrl,
             data.data,
             openModal,
             closeModal,
@@ -272,8 +243,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         return
       }
 
-      const app = getSelectedApp()
-      if (!app.url.includes(origin)) {
+      if (!selectedApp.url.includes(origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
         return
       }
@@ -348,8 +318,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   // on iframe change
   useEffect(() => {
     const sendMessageToIframe = (messageId, data) => {
-      const app = getSelectedApp()
-      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
+      iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
     }
     const onIframeLoaded = () => {
       setAppIsLoading(false)
@@ -360,8 +329,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       })
     }
 
-    const app = getSelectedApp()
-    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, app.url)) {
+    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, selectedApp.url)) {
       return
     }
 
@@ -370,11 +338,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp])
-
-  if (loading) {
-    return <Loader size="md" />
-  }
+  }, [ethBalance, iframeEl, network, safeAddress, selectedApp])
 
   if (loading || !appList.length) {
     return <Loader size="md" />
@@ -385,26 +349,12 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       <Menu>
         <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
       </Menu>
-      {getEnabledApps().length ? (
+      {enabledApps.length ? (
         <LCL.Wrapper>
           <LCL.Menu>
-            <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
+            <LCL.List activeItem={selectedAppId} items={enabledApps} onItemClick={onSelectApp} />
           </LCL.Menu>
           <LCL.Content>{getContent()}</LCL.Content>
-          {/* <LCL.Footer>
-            {getSelectedApp() && getSelectedApp().providedBy && (
-              <>
-                <p>This App is provided by </p>
-                <ButtonLink
-                  onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-                  size="lg"
-                  testId="manage-tokens-btn"
-                >
-                  {selectedApp && getSelectedApp().providedBy.name}
-                </ButtonLink>
-              </>
-            )}
-          </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
         <Card style={{ marginBottom: '24px' }}>
