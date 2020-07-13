@@ -62,6 +62,7 @@ const operations = {
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
+  const [initialAppSelected, setInitialAppSelected] = useState<boolean>(false)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
@@ -82,7 +83,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       if (selectedAppId === appId) {
         return
       }
-
+      console.log({ selectedAppId, appId })
       setAppIsLoading(true)
       setSelectedAppId(appId)
     },
@@ -90,13 +91,27 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   )
 
   useEffect(() => {
-    if (appList.length) {
+    const selectFirstEnabledApp = () => {
       const firstEnabledApp = appList.find((a) => !a.disabled)
       if (firstEnabledApp) {
-        onSelectApp(firstEnabledApp.id)
+        setSelectedAppId(firstEnabledApp.id)
+        setInitialAppSelected(true)
       }
     }
-  }, [appList, onSelectApp])
+
+    if (appList.length) {
+      // select the app for the first time once the list is loaded
+      if (!initialAppSelected) {
+        selectFirstEnabledApp()
+      }
+
+      // check if the current active app was disabled by the user
+      const currentApp = appList.find((app) => selectedAppId === app.id)
+      if (currentApp?.disabled) {
+        selectFirstEnabledApp()
+      }
+    }
+  }, [appList, initialAppSelected, selectedAppId])
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
