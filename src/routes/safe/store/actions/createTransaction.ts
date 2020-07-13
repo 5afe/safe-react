@@ -37,7 +37,7 @@ import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
 import { Dispatch } from 'redux'
-import { GnosisState } from 'src/store'
+import { AppReduxState } from 'src/store'
 
 export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
@@ -106,7 +106,7 @@ const createTransaction = ({
   operation = CALL,
   navigateToTransactionsTab = true,
   origin = null,
-}: CreateTransaction) => async (dispatch: Dispatch, getState: () => GnosisState): Promise<void> => {
+}: CreateTransaction) => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {

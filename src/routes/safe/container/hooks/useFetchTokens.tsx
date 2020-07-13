@@ -25,7 +25,7 @@ export const useFetchTokens = (safeAddress: string): void => {
 
     if (COLLECTIBLES_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
-        dispatch(fetchCollectibles(safeAddress)).then(() => {
+        dispatch<any>(fetchCollectibles(safeAddress)).then(() => {
           dispatch(activateAssetsByBalance(safeAddress))
         })
       })

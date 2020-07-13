@@ -26,7 +26,7 @@ export const activeNftAssetsListSelector = createSelector(
 
 export const safeActiveSelectorMap = createSelector(
   activeNftAssetsListSelector,
-  (activeAssets): RNFTAssets => {
+  (activeAssets): NFTAssets => {
     const assetsMap = {}
 
     activeAssets.forEach((asset) => {

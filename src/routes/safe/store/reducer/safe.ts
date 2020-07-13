@@ -97,7 +97,7 @@ export default handleActions(
         }),
       )
     },
-    [REMOVE_SAFE_OWNER]: (state: SafeStoreState, action) => {
+    [REMOVE_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { ownerAddress, safeAddress } = action.payload
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) =>

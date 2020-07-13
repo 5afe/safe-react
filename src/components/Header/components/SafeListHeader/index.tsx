@@ -10,6 +10,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { safesCountSelector } from 'src/routes/safe/store/selectors'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
+import { AppReduxState } from '../../../../store'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -59,8 +60,4 @@ const SafeListHeader = ({ safesCount }) => {
   )
 }
 
-export default connect(
-  // $FlowFixMe
-  (state) => ({ safesCount: safesCountSelector(state) }),
-  null,
-)(SafeListHeader)
+export default connect((state: AppReduxState) => ({ safesCount: safesCountSelector(state) }), null)(SafeListHeader)
