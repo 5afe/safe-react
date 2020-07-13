@@ -55,7 +55,6 @@ const useAppList = (): UseAppListReturnType => {
 
       setAppList(apps)
       setLoadingAppList(false)
-      selectFirstApp(apps)
     }
 
     loadApps()
@@ -87,12 +86,6 @@ const useAppList = (): UseAppListReturnType => {
       }
 
       saveToStorage(APPS_STORAGE_KEY, persistedAppList)
-
-      // select app
-      if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
-        setSelectedAppId(undefined)
-        selectFirstApp(copyAppList)
-      }
     },
     [appList],
   )

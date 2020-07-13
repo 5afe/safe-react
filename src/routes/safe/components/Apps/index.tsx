@@ -77,12 +77,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
 
-  const iframeRef = useCallback((node) => {
-    if (node !== null) {
-      setIframeEl(node)
-    }
-  }, [])
-
   const onSelectApp = useCallback(
     (appId) => {
       if (selectedAppId === appId) {
@@ -94,6 +88,21 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     },
     [selectedAppId],
   )
+
+  useEffect(() => {
+    if (appList.length) {
+      const firstEnabledApp = appList.find((a) => !a.disabled)
+      if (firstEnabledApp) {
+        onSelectApp(firstEnabledApp.id)
+      }
+    }
+  }, [appList, onSelectApp])
+
+  const iframeRef = useCallback((node) => {
+    if (node !== null) {
+      setIframeEl(node)
+    }
+  }, [])
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
@@ -132,16 +141,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       </IframeWrapper>
     )
   }
-
-  const selectFirstApp = useCallback(
-    (apps) => {
-      const firstEnabledApp = apps.find((a) => !a.disabled)
-      if (firstEnabledApp) {
-        onSelectApp(firstEnabledApp.id)
-      }
-    },
-    [onSelectApp],
-  )
 
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 

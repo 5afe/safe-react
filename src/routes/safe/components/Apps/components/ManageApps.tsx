@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import AddAppFrom from './AddAppForm'
-import { SafeApp } from './types'
+import { SafeApp } from '../types'
 
 const FORM_ID = 'add-apps-form'
 
