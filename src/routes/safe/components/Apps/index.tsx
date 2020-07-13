@@ -83,7 +83,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       if (selectedAppId === appId) {
         return
       }
-      console.log({ selectedAppId, appId })
+
       setAppIsLoading(true)
       setSelectedAppId(appId)
     },
