@@ -7,8 +7,8 @@ import { NewTransactionsState } from '../../reducer/newTransactions'
 
 export type ServiceUriParams = {
   safeAddress: string
-  limit?: number
-  offset?: number
+  limit: number
+  offset: number
   orderBy?: string // todo: maybe this should be key of MultiSigTransaction | keyof EthereumTransaction
   queued?: boolean
   trusted?: boolean
@@ -73,11 +73,15 @@ const fetchAllTransactions = async (
 
 let previousETag = null
 export const loadAllTransactions = async (uriParams: ServiceUriParams): Promise<NewTransactionsState> => {
-  const { safeAddress } = uriParams
+  const { safeAddress, offset, limit } = uriParams
   const { responseEtag, results } = await fetchAllTransactions(uriParams, previousETag)
   previousETag = responseEtag
 
   return {
-    [safeAddress]: results,
+    offset,
+    limit,
+    transactions: {
+      [safeAddress]: results,
+    },
   }
 }
