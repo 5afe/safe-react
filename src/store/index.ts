@@ -33,6 +33,7 @@ import allTransactions, { TRANSACTIONS } from '../routes/safe/store/reducer/newT
 import { ProviderRecord } from '../logic/wallets/store/model/provider'
 import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { Map } from 'immutable'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
