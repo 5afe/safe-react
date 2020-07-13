@@ -8,6 +8,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import { updateStoredTransactionsStatus } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import { Dispatch } from 'redux'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)
@@ -48,9 +49,9 @@ const handleProviderNotification = (provider, dispatch) => {
   }
 }
 
-export default (providerName) => async (dispatch) => {
+export default (providerName: string) => async (dispatch: Dispatch): Promise<void> => {
   const web3 = getWeb3()
-  const providerInfo = await getProviderInfo(web3, providerName)
+  const providerInfo = await getProviderInfo(web3.currentProvider, providerName)
   await handleProviderNotification(providerInfo, dispatch)
   processProviderResponse(dispatch, providerInfo)
 }

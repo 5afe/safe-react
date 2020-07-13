@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { batch, useDispatch, useSelector } from 'react-redux'
+import { batch, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
@@ -8,11 +8,9 @@ import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAsse
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
-export const useFetchTokens = (): void => {
+export const useFetchTokens = (safeAddress: string): void => {
   const dispatch = useDispatch()
-  const address: string | null = useSelector(safeParamAddressFromStateSelector)
   const location = useLocation()
 
   useMemo(() => {
@@ -20,17 +18,17 @@ export const useFetchTokens = (): void => {
       batch(() => {
         // fetch tokens there to get symbols for tokens in TXs list
         dispatch(fetchTokens())
-        dispatch(fetchCurrencyValues(address))
-        dispatch(fetchSafeTokens(address))
+        dispatch(fetchCurrencyValues(safeAddress))
+        dispatch(fetchSafeTokens(safeAddress))
       })
     }
 
     if (COLLECTIBLES_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
-        dispatch<any>(fetchCollectibles()).then(() => {
-          dispatch(activateAssetsByBalance(address))
+        dispatch(fetchCollectibles(safeAddress)).then(() => {
+          dispatch(activateAssetsByBalance(safeAddress))
         })
       })
     }
-  }, [address, dispatch, location])
+  }, [dispatch, location.pathname, safeAddress])
 }

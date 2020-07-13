@@ -2,10 +2,10 @@ import { createSelector } from 'reselect'
 
 import { ETHEREUM_NETWORK, ETHEREUM_NETWORK_IDS } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
-import { GnosisState } from 'src/store'
-import { ProviderRecord } from '../model/provider'
+import { AppReduxState } from 'src/store'
+import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 
-export const providerSelector = (state: GnosisState): ProviderRecord => state[PROVIDER_REDUCER_ID]
+export const providerSelector = (state: AppReduxState): ProviderRecord => state[PROVIDER_REDUCER_ID]
 
 export const userAccountSelector = createSelector(providerSelector, (provider: ProviderRecord): string => {
   const account = provider.get('account')

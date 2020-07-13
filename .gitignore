@@ -1,5 +1,5 @@
 node_modules/
-build/
+./build
 .DS_Store
 yarn-error.log
 .env*
@@ -8,3 +8,5 @@ dist
 electron-builder.yml
 .yalc/
 yalc.lock
+# testing
+/coverage/

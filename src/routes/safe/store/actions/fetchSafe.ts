@@ -13,9 +13,10 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner } from '../models/safe'
+import { SafeOwner } from 'src/routes/safe/store/models/safe'
+import { Dispatch } from 'redux'
 import addSafeModules from './addSafeModules'
-import { SENTINEL_ADDRESS } from '../../../../logic/contracts/safeContracts'
+import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 
 const buildOwnersFrom = (
   safeOwners,
@@ -85,7 +86,7 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
+export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const safeParams = [
