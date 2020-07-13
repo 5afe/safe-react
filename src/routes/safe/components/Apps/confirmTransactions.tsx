@@ -77,7 +77,7 @@ const confirmTransactions = (
   ethBalance: string,
   nameApp: string,
   iconApp: string,
-  txs: Array<SafeAppTx>,
+  txs: SafeAppTx[],
   openModal: (modalInfo: GenericModalProps) => void,
   closeModal: () => void,
   onConfirm: () => void,
