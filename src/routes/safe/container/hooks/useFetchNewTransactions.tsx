@@ -1,5 +1,5 @@
 import { loadAllTransactions, ServiceUriParams } from '../../store/actions/transactionsNew/loadAllTransactions'
-import { addNewTransactions } from '../../store/actions/addNewTransactions'
+import { addNewTransactions } from '../../store/actions/transactionsNew/addNewTransactions'
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 

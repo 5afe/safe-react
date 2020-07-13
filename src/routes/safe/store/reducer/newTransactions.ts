@@ -1,5 +1,5 @@
 import { handleActions } from 'redux-actions'
-import { ADD_NEW_TRANSACTIONS } from '../actions/addNewTransactions'
+import { ADD_NEW_TRANSACTIONS } from '../actions/transactionsNew/addNewTransactions'
 import { Transaction } from '../models/types/transactions'
 
 export const TRANSACTIONS = 'transactionsNew'
