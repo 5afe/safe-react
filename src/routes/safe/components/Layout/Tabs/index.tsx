@@ -11,6 +11,8 @@ import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIc
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
+import { Match } from 'react-router'
+import { History, Location } from 'history'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -21,9 +23,9 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 
 interface Props {
   classes: Record<string, any>
-  match: Record<string, any>
-  history: Record<string, any>
-  location: Record<string, any>
+  match: Match
+  history: History
+  location: Location
 }
 
 const tabs = [
