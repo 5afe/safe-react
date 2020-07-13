@@ -39,11 +39,9 @@ const buildOwnersFrom = (
     })
   })
 
-const buildModulesLinkedList = (modulesPaginated: [Array<string>, string] | null): Array<[string, string]> | null => {
-  if (modulesPaginated?.length) {
-    const [remoteModules, nextModule] = modulesPaginated
-
-    return remoteModules.map((moduleAddress, index, modules) => {
+const buildModulesLinkedList = (modules: Array<string>, nextModule: string): Array<[string, string]> | null => {
+  if (modules?.length) {
+    return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]
       return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
     })
@@ -96,7 +94,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
     { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
   ]
-  const [[remoteThreshold, remoteNonce, remoteOwners, remoteModulesPaginated], localSafe] = await Promise.all([
+  const [[remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
@@ -113,7 +111,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   dispatch(
     addSafeModules({
       safeAddress,
-      modulesAddresses: buildModulesLinkedList(remoteModulesPaginated),
+      modulesAddresses: buildModulesLinkedList(modules.array, modules.next),
     }),
   )
 
