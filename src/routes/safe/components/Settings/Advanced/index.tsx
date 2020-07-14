@@ -26,16 +26,16 @@ import {
   safeModulesSelector,
 } from 'src/routes/safe/store/selectors'
 import styled from 'styled-components'
-import Modal from '../../../../../components/Modal'
-import Paragraph from '../../../../../components/layout/Paragraph'
+import Modal from 'src/components/Modal'
+import Paragraph from 'src/components/layout/Paragraph'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import Hairline from '../../../../../components/layout/Hairline'
-import Col from '../../../../../components/layout/Col'
-import Link from '../../../../../components/layout/Link'
+import Hairline from 'src/components/layout/Hairline'
+import Col from 'src/components/layout/Col'
+import Link from 'src/components/layout/Link'
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import { getEtherScanLink } from '../../../../../logic/wallets/getWeb3'
-import { md, secondary } from '../../../../../theme/variables'
+import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
+import { md, secondary } from 'src/theme/variables'
 
 export const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 export const MODULES_ROW_TEST_ID = 'owners-row'
@@ -72,7 +72,7 @@ const openIconStyle = {
   color: secondary,
 }
 
-const Advanced: React.FC = () => {
+const Advanced = (): JSX.Element => {
   const classes = useStyles()
 
   const columns = generateColumns()
