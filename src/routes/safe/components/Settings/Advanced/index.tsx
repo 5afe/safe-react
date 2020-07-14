@@ -2,7 +2,6 @@ import { Button, Loader, Text, Title, theme } from '@gnosis.pm/safe-react-compon
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
-import { List } from 'immutable'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -82,7 +81,7 @@ const Advanced = (): JSX.Element => {
   const nonce = useSelector(safeNonceSelector)
   const granted = useSelector(grantedSelector)
   const modules = useSelector(safeModulesSelector)
-  const moduleData = modules !== null ? getModuleData(List(modules)) : modules
+  const moduleData = modules ?? getModuleData(modules)
 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
