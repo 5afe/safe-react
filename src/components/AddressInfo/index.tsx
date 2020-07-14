@@ -39,7 +39,7 @@ const StyledBlock = styled(Block)`
 interface Props {
   safeName?: string
   safeAddress: string
-  ethBalance?: number | string
+  ethBalance?: string
 }
 
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): JSX.Element => {
