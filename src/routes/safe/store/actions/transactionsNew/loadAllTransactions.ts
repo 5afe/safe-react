@@ -3,7 +3,6 @@ import axios, { AxiosResponse } from 'axios'
 import { getNewTransactionsServiceUriFrom, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../models/types/transactions'
-import { NewTransactionsState } from '../../reducer/newTransactions'
 
 export type ServiceUriParams = {
   safeAddress: string
@@ -72,16 +71,14 @@ const fetchAllTransactions = async (
 }
 
 let previousETag = null
-export const loadAllTransactions = async (uriParams: ServiceUriParams): Promise<NewTransactionsState> => {
-  const { safeAddress, offset, limit } = uriParams
+export const loadAllTransactions = async (
+  uriParams: ServiceUriParams,
+): Promise<{ [safeAddress: string]: Transaction[] }> => {
+  const { safeAddress } = uriParams
   const { responseEtag, results } = await fetchAllTransactions(uriParams, previousETag)
   previousETag = responseEtag
 
   return {
-    offset,
-    limit,
-    transactions: {
-      [safeAddress]: results,
-    },
+    [safeAddress]: results,
   }
 }

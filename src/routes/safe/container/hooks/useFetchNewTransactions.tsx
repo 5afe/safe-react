@@ -11,8 +11,8 @@ export const useFetchNewTransactions = (uriParams: ServiceUriParams): void => {
     async function loadNewTxs() {
       const allTransactions = await loadAllTransactions(uriParams)
 
-      if (allTransactions.transactions[safeAddress].length) {
-        dispatch(addNewTransactions(allTransactions))
+      if (allTransactions[safeAddress].length) {
+        dispatch(addNewTransactions({ transactions: allTransactions, safeAddress }))
       }
     }
 

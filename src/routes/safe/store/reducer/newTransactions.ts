@@ -17,16 +17,25 @@ export interface NewTransactionsState {
 const initialState: Readonly<NewTransactionsState> = {
   offset: 0,
   limit: 20,
-  transactions: null,
+  transactions: {},
 }
 
 export default handleActions(
   {
     // todo: because we are thinking in remove immutableJS, I will implement this without it so it can be easier removed in future
-    [ADD_NEW_TRANSACTIONS]: (state: NewTransactionsState, action) => {
+    [ADD_NEW_TRANSACTIONS]: (
+      state: NewTransactionsState,
+      action: { payload: { safeAddress: string; transactions: { [safeAddress: string]: Transaction[] } } },
+    ) => {
+      const { safeAddress, transactions } = action.payload
+      const oldTxs = (state.transactions && state.transactions[safeAddress]) || []
+
       return {
         ...state,
-        ...action.payload,
+        transactions: {
+          ...state.transactions,
+          [safeAddress]: [...oldTxs, ...transactions[safeAddress]],
+        },
       }
     },
     [SET_NEXT_PAGE]: (state: NewTransactionsState) => {
