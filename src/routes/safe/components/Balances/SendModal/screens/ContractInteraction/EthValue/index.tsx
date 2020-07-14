@@ -36,7 +36,7 @@ const EthValue = ({ onSetMax }: EthValueProps) => {
         </Paragraph>
         <ButtonLink
           color={disabled ? 'disabled' : 'secondary'}
-          onClick={() => !disabled && onSetMax(`${ethBalance}`)}
+          onClick={() => !disabled && onSetMax(ethBalance)}
           weight="bold"
         >
           Send max
