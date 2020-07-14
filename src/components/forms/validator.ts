@@ -95,7 +95,7 @@ export const composeValidators = (...validators: Validator[]) => (value: unknown
 
 export const differentFrom = (diffValue: number | string) => (value: string): ValidatorReturnType => {
   if (value === diffValue.toString()) {
-    return `Value should be different than ${value}`
+    return `Value should be different than ${diffValue}`
   }
 
   return undefined
