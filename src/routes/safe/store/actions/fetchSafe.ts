@@ -13,7 +13,7 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner } from 'src/routes/safe/store/models/safe'
+import { ModulePair, SafeOwner } from 'src/routes/safe/store/models/safe'
 import { Dispatch } from 'redux'
 import addSafeModules from './addSafeModules'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
@@ -39,7 +39,7 @@ const buildOwnersFrom = (
     })
   })
 
-const buildModulesLinkedList = (modules: Array<string>, nextModule: string): Array<[string, string]> | null => {
+const buildModulesLinkedList = (modules: Array<string>, nextModule: string): Array<ModulePair> | null => {
   if (modules?.length) {
     return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]

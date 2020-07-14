@@ -35,6 +35,7 @@ import Link from 'src/components/layout/Link'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { md, secondary } from 'src/theme/variables'
+import { ModulePair } from 'src/routes/safe/store/models/safe'
 
 export const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 export const MODULES_ROW_TEST_ID = 'owners-row'
@@ -87,7 +88,7 @@ const Advanced = (): JSX.Element => {
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
   const [selectedModule, setSelectedModule] = React.useState(null)
-  const triggerRemoveSelectedModule = (module: [string, string]): void => {
+  const triggerRemoveSelectedModule = (module: ModulePair): void => {
     setSelectedModule(module)
     setViewRemoveModuleModal(true)
   }
