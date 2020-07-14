@@ -42,7 +42,7 @@ export const minValue = (min: number | string, inclusive = true) => (value: stri
     return undefined
   }
 
-  return `Should be at least ${min}`
+  return `Should be greater than ${inclusive ? 'or equal to ' : ''}${min}`
 }
 
 export const maxValue = (max: number | string) => (value: string): ValidatorReturnType => {
