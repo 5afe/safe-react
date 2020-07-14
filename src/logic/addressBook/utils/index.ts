@@ -3,6 +3,11 @@ import { AddressBookEntryProps } from './../model/addressBook'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
+interface OwnerListEntryProps {
+  address: string
+  name: string
+}
+
 export const getAddressBookFromStorage = async (): Promise<Array<AddressBookEntryProps> | undefined> => {
   const data = await loadFromStorage<Array<AddressBookEntryProps>>(ADDRESS_BOOK_STORAGE_KEY)
 
@@ -27,12 +32,15 @@ export const getNameFromAdbk = (addressBook, userAddress) => {
   return null
 }
 
-export const getOwnersWithNameFromAddressBook = (addressBook, ownerList) => {
+export const getOwnersWithNameFromAddressBook = (
+  addressBook: AddressBookEntryProps,
+  ownerList: Array<OwnerListEntryProps>,
+): Array<OwnerListEntryProps> | [] => {
   if (!ownerList) {
     return []
   }
   const ownersListWithAdbkNames = ownerList.map((owner) => {
-    const ownerName = getNameFromAdbk(addressBook, owner.address)
+    const ownerName = addressBook && getNameFromAdbk(addressBook, owner.address)
     return {
       address: owner.address,
       name: ownerName || owner.name,
