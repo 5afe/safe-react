@@ -32,7 +32,7 @@ export const enabledFeatures = (version: string): Array<string> =>
     return acc
   }, [])
 
-interface SafeInfo {
+interface SafeVersionInfo {
   current: string
   latest: string
   needUpdate: boolean
@@ -41,7 +41,7 @@ interface SafeInfo {
 export const checkIfSafeNeedsUpdate = async (
   gnosisSafeInstance: { VERSION: () => Promise<string> },
   lastSafeVersion: string,
-): Promise<SafeInfo> => {
+): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
     return null
   }
@@ -66,7 +66,7 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeInfo> => {
+export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()
