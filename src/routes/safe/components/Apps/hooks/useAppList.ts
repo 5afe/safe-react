@@ -63,29 +63,19 @@ const useAppList = (): UseAppListReturnType => {
   const onAppToggle: onAppToggleHandler = useCallback(
     async (appId, enabled) => {
       // update in-memory list
-      const copyAppList = [...appList]
+      const appListCopy = [...appList]
 
-      const app = copyAppList.find((a) => a.id === appId)
+      const app = appListCopy.find((a) => a.id === appId)
       if (!app) {
         return
       }
 
       app.disabled = !enabled
-      setAppList(copyAppList)
+      setAppList(appListCopy)
 
       // update storage list
-      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      let storageApp = persistedAppList.find((a) => a.url === app.url)
-
-      if (!storageApp) {
-        storageApp = { url: app.url }
-        storageApp.disabled = !enabled
-        persistedAppList.push(storageApp)
-      } else {
-        storageApp.disabled = !enabled
-      }
-
-      saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+      const listToPersist: StoredSafeApp[] = appListCopy.map(({ url, disabled }) => ({ url, disabled }))
+      saveToStorage(APPS_STORAGE_KEY, listToPersist)
     },
     [appList],
   )
