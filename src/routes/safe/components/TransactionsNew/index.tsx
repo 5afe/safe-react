@@ -1,20 +1,17 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
+import { newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
 import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
-import { safeParamAddressFromStateSelector } from '../../store/selectors'
 import { ButtonLink } from '@gnosis.pm/safe-react-components'
 import { setPreviousPage } from '../../store/actions/transactionsNew/setPreviousPage'
 import { setNextPage } from '../../store/actions/transactionsNew/setNextPage'
 
 const Transactions = (): React.ReactElement => {
-  const transactions = useSelector(newTransactionsCurrentPageSelector)
-  const { offset, limit } = useSelector(currentPageSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
-  useFetchNewTransactions({ safeAddress, offset, limit })
+  useFetchNewTransactions()
+  const transactions = useSelector(newTransactionsCurrentPageSelector)
 
-  if (!transactions) return <div>No txs available for safe: {safeAddress}</div>
+  if (!transactions) return <div>No txs available for safe</div>
 
   const nextPageButtonHandler = () => {
     dispatch(setNextPage())

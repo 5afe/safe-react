@@ -1,15 +1,18 @@
-import { loadAllTransactions, ServiceUriParams } from '../../store/actions/transactionsNew/loadAllTransactions'
+import { loadAllTransactions } from '../../store/actions/transactionsNew/loadAllTransactions'
 import { addNewTransactions } from '../../store/actions/transactionsNew/addNewTransactions'
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { currentPageSelector } from '../../store/selectors/newTransactions'
+import { safeParamAddressFromStateSelector } from '../../store/selectors'
 
-export const useFetchNewTransactions = (uriParams: ServiceUriParams): void => {
+export const useFetchNewTransactions = (): void => {
   const dispatch = useDispatch()
-  const { safeAddress } = uriParams
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const { offset, limit } = useSelector(currentPageSelector)
 
   useEffect(() => {
     async function loadNewTxs() {
-      const allTransactions = await loadAllTransactions(uriParams)
+      const allTransactions = await loadAllTransactions({ safeAddress, offset, limit })
 
       if (allTransactions[safeAddress].length) {
         dispatch(addNewTransactions({ transactions: allTransactions, safeAddress }))
@@ -17,5 +20,5 @@ export const useFetchNewTransactions = (uriParams: ServiceUriParams): void => {
     }
 
     loadNewTxs()
-  }, [dispatch, safeAddress, uriParams])
+  }, [dispatch, safeAddress, offset, limit])
 }
