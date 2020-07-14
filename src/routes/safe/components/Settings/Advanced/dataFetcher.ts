@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import { TableColumn } from 'src/routes/safe/components/tableTypes'
 
 export const MODULES_TABLE_ADDRESS_ID = 'address'
 export const MODULES_TABLE_ACTIONS_ID = 'actions'
@@ -9,16 +10,6 @@ export const getModuleData = (
   return modulesList.map((modules) => ({
     [MODULES_TABLE_ADDRESS_ID]: modules,
   }))
-}
-
-interface TableColumn {
-  align?: 'inherit' | 'left' | 'center' | 'right' | 'justify'
-  custom: boolean
-  disablePadding: boolean
-  id: string
-  label: string
-  order: boolean
-  width?: number
 }
 
 export const generateColumns = (): List<TableColumn> => {

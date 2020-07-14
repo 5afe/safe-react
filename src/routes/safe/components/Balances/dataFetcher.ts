@@ -4,6 +4,7 @@ import { List } from 'immutable'
 import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { TableColumn } from 'src/routes/safe/components/tableTypes'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -51,8 +52,8 @@ export const getBalanceData = (activeTokens, currencySelected, currencyValues, c
   return rows
 }
 
-export const generateColumns = () => {
-  const assetColumn = {
+export const generateColumns = (): List<TableColumn> => {
+  const assetColumn: TableColumn = {
     id: BALANCE_TABLE_ASSET_ID,
     order: true,
     disablePadding: false,
@@ -61,7 +62,7 @@ export const generateColumns = () => {
     width: 250,
   }
 
-  const balanceColumn = {
+  const balanceColumn: TableColumn = {
     id: BALANCE_TABLE_BALANCE_ID,
     align: 'right',
     order: true,
@@ -70,7 +71,7 @@ export const generateColumns = () => {
     custom: false,
   }
 
-  const actions = {
+  const actions: TableColumn = {
     id: 'actions',
     order: false,
     disablePadding: false,
@@ -79,7 +80,7 @@ export const generateColumns = () => {
     static: true,
   }
 
-  const value = {
+  const value: TableColumn = {
     id: BALANCE_TABLE_VALUE_ID,
     order: false,
     label: 'Value',
