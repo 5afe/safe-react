@@ -91,7 +91,7 @@ interface CreateTransaction extends WithSnackbarProps {
   to: string
   txData?: string
   txNonce?: number | string
-  valueInWei: number | string
+  valueInWei: string
 }
 
 const createTransaction = ({
@@ -187,7 +187,7 @@ const createTransaction = ({
     const txToMock: TxToMock = {
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
-      value: `${txArgs.valueInWei}`,
+      value: txArgs.valueInWei,
       safeTxHash: generateSafeTxHash(safeAddress, txArgs),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
