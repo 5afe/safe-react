@@ -6,11 +6,13 @@ import { makeProvider, ProviderRecord, ProviderProps } from 'src/logic/wallets/s
 
 export const PROVIDER_REDUCER_ID = 'providers'
 
+export type ProviderState = ProviderRecord
+
 export default handleActions(
   {
-    [ADD_PROVIDER]: (state: { providers: ProviderProps }, { payload }: { payload: ProviderProps }): ProviderRecord =>
+    [ADD_PROVIDER]: (state: ProviderState, { payload }: { payload: ProviderProps }): ProviderState =>
       makeProvider(payload),
-    [REMOVE_PROVIDER]: (): ProviderRecord => makeProvider(),
+    [REMOVE_PROVIDER]: (): ProviderState => makeProvider(),
   },
   makeProvider(),
 )
