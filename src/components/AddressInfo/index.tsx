@@ -42,7 +42,7 @@ interface Props {
   ethBalance?: number | string
 }
 
-const AddressInfo: React.FC<Props> = ({ ethBalance, safeAddress, safeName }: Props) => {
+const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): JSX.Element => {
   return (
     <Wrapper>
       <div className="icon-section">
