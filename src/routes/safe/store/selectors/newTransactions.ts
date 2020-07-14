@@ -27,7 +27,6 @@ export const newTransactionsCurrentPageSelector = createSelector(
   currentPageSelector,
   (transactions, page) => {
     if (!transactions) return []
-    const txsOffset = page.offset
-    return transactions.slice(txsOffset, txsOffset * 2)
+    return transactions.slice(page.offset, page.offset * 2 || page.limit)
   },
 )
