@@ -1,9 +1,9 @@
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import { withStyles } from '@material-ui/core/styles'
-import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { ReactElement } from 'react'
 
+import { useLocation, useRouteMatch, useHistory } from 'react-router-dom'
 import { styles } from './style'
 
 import SettingsTab from 'src/routes/safe/components/Layout/Tabs/SettingsTab'
@@ -20,13 +20,6 @@ export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
-
-interface Props {
-  classes: Record<string, any>
-  match: Match
-  history: History
-  location: Location
-}
 
 const tabs = [
   {
@@ -85,12 +78,15 @@ if (process.env.REACT_APP_NEW_TX_TAB === 'enabled') {
   })
 }
 
-const TabsComponent = (props: Props) => {
-  const { classes, location, match } = props
+const useStyles = makeStyles(styles as any)
+
+const TabsComponent = (): ReactElement => {
+  const classes = useStyles()
+  const location = useLocation<Location>()
+  const history: History = useHistory()
+  const match: Match = useRouteMatch()
 
   const handleCallToRouter = (_, value) => {
-    const { history } = props
-
     history.push(value)
   }
 
@@ -129,4 +125,5 @@ const TabsComponent = (props: Props) => {
     </Tabs>
   )
 }
-export default withStyles(styles as any)(withRouter(TabsComponent))
+
+export default TabsComponent
