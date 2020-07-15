@@ -8,4 +8,5 @@ dist
 electron-builder.yml
 .yalc/
 yalc.lock
-./coverage
+# testing
+/coverage/

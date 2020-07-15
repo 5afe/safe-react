@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.5.2",
+  "version": "2.6.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -36,7 +36,9 @@
     "release": "electron-builder --mac --linux --windows -p always",
     "start-mainnet": "REACT_APP_NETWORK=mainnet yarn start",
     "start": "react-app-rewired start",
-    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom"
+    "test": "NODE_ENV=test && react-app-rewired test --env=jsdom",
+    "test:coverage": "yarn test --coverage --watchAll=false",
+    "coveralls": "cat ./coverage/lcov.info | coveralls"
   },
   "husky": {
     "hooks": {
@@ -47,6 +49,15 @@
     "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
+    ]
+  },
+  "jest": {
+    "collectCoverageFrom": [
+      "src/**/*.{js,jsx,ts,tsx}",
+      "!src/**/*.{.test.*}",
+      "!src/**/test/**/*",
+      "!src/**/assets/**",
+      "!src/config/**/*"
     ]
   },
   "productName": "Safe Multisig",
@@ -163,6 +174,7 @@
     "classnames": "^2.2.6",
     "concurrently": "^5.2.0",
     "connected-react-router": "6.8.0",
+    "coveralls": "^3.1.0",
     "currency-flags": "2.1.2",
     "date-fns": "2.14.0",
     "electron-is-dev": "^1.1.0",
@@ -241,6 +253,7 @@
     "truffle": "5.1.33",
     "typescript": "3.9.6",
     "wait-on": "5.0.1",
+    "web3-core": "^1.2.9",
     "web3-eth-contract": "^1.2.9",
     "web3-utils": "^1.2.8"
   }
