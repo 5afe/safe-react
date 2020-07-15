@@ -9,14 +9,16 @@ import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
 
 export const ETHEREUM_NETWORK = {
-  MAINNET: 'MAINNET',
-  MORDEN: 'MORDEN',
-  ROPSTEN: 'ROPSTEN',
-  RINKEBY: 'RINKEBY',
-  GOERLI: 'GOERLI',
-  KOVAN: 'KOVAN',
-  UNKNOWN: 'UNKNOWN',
+  MAINNET: 'MAINNET' as const,
+  MORDEN: 'MORDEN' as const,
+  ROPSTEN: 'ROPSTEN' as const,
+  RINKEBY: 'RINKEBY' as const,
+  GOERLI: 'GOERLI' as const,
+  KOVAN: 'KOVAN' as const,
+  UNKNOWN: 'UNKNOWN' as const,
 }
+
+export type EthereumNetworks = typeof ETHEREUM_NETWORK[keyof typeof ETHEREUM_NETWORK]
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
