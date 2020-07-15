@@ -31,7 +31,7 @@ const getAllTransactionsUrl = (safeAddress: string) => {
 const fetchAllTransactions = async (
   urlParams: ServiceUriParams,
   eTag: string | null,
-): Promise<{ responseEtag: string; results: Transaction[] }> => {
+): Promise<{ responseEtag: string; results: Transaction[]; count?: number }> => {
   const { safeAddress, limit, offset, orderBy, queued, trusted } = urlParams
   try {
     const url = getAllTransactionsUrl(safeAddress)
@@ -56,6 +56,7 @@ const fetchAllTransactions = async (
         return {
           responseEtag: etag,
           results: response.data.results,
+          count: response.data.count,
         }
       }
     }
@@ -73,13 +74,17 @@ const fetchAllTransactions = async (
 const etagsByPage = {}
 export const loadAllTransactions = async (
   uriParams: ServiceUriParams,
-): Promise<{ [safeAddress: string]: Transaction[] }> => {
+): Promise<{
+  transactions: { [safeAddress: string]: Transaction[] }
+  count?: number
+}> => {
   const { safeAddress } = uriParams
   const previousEtag = etagsByPage && etagsByPage[uriParams.offset]
-  const { responseEtag, results } = await fetchAllTransactions(uriParams, previousEtag)
+  const { responseEtag, results, count } = await fetchAllTransactions(uriParams, previousEtag)
   etagsByPage[uriParams.offset] = responseEtag
 
   return {
-    [safeAddress]: results,
+    transactions: { [safeAddress]: results },
+    count,
   }
 }

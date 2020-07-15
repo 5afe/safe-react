@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
+import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
 import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
 import { setPreviousPage } from '../../store/actions/transactionsNew/setPreviousPage'
@@ -9,6 +9,7 @@ import { setNextPage } from '../../store/actions/transactionsNew/setNextPage'
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
   const transactions = useSelector(newTransactionsCurrentPageSelector)
+  const { currentPage, maxPages } = useSelector(currentPageSelector)
   useFetchNewTransactions()
 
   const nextPageButtonHandler = () => {
@@ -29,10 +30,10 @@ const Transactions = (): React.ReactElement => {
         const txHash = tx.transactionHash || tx.txHash
         return <div key={index}>Tx hash: {txHash}</div>
       })}
-      <ButtonLink color="primary" onClick={() => previousPageButtonHandler()}>
+      <ButtonLink color="primary" onClick={() => previousPageButtonHandler()} disabled={currentPage === 1}>
         Previous Page
       </ButtonLink>
-      <ButtonLink color="primary" onClick={() => nextPageButtonHandler()}>
+      <ButtonLink color="primary" onClick={() => nextPageButtonHandler()} disabled={currentPage >= maxPages}>
         Next Page
       </ButtonLink>
     </>
