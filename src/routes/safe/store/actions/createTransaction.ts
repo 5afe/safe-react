@@ -1,7 +1,9 @@
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
+import { WithSnackbarProps } from 'notistack'
 import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
+import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -34,9 +36,16 @@ import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { AnyAction } from 'redux'
+import { AppReduxState } from 'src/store'
 
-export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
+export const removeTxFromStore = (
+  tx: Transaction,
+  safeAddress: string,
+  dispatch: CTADispatch,
+  state: AppReduxState,
+): void => {
   if (tx.isCancellationTx) {
     const newTxStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
     const transactions = safeTransactionsSelector(state)
@@ -53,7 +62,12 @@ export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   }
 }
 
-export const storeTx = async (tx, safeAddress, dispatch, state) => {
+export const storeTx = async (
+  tx: Transaction,
+  safeAddress: string,
+  dispatch: CTADispatch,
+  state: AppReduxState,
+): Promise<void> => {
   if (tx.isCancellationTx) {
     let newTxStatus: TransactionStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
 
@@ -79,6 +93,21 @@ export const storeTx = async (tx, safeAddress, dispatch, state) => {
   }
 }
 
+interface CreateTransaction extends WithSnackbarProps {
+  navigateToTransactionsTab?: boolean
+  notifiedTransaction: string
+  operation?: number
+  origin?: string
+  safeAddress: string
+  to: string
+  txData?: string
+  txNonce?: number | string
+  valueInWei: string
+}
+
+type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
+type CTADispatch = ThunkDispatch<AppReduxState, undefined, AnyAction>
+
 const createTransaction = ({
   safeAddress,
   to,
@@ -91,7 +120,10 @@ const createTransaction = ({
   operation = CALL,
   navigateToTransactionsTab = true,
   origin = null,
-}) => async (dispatch, getState) => {
+}: CreateTransaction): CreateTransactionAction => async (
+  dispatch: CTADispatch,
+  getState: () => AppReduxState,
+): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {
@@ -152,7 +184,10 @@ const createTransaction = ({
         await saveTxToHistory({ ...txArgs, signature, origin })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
-        dispatch(fetchTransactions(safeAddress))
+        dispatch({
+          type: 'FETCH_TRANSACTION',
+          payload: fetchTransactions(safeAddress),
+        })
         return
       }
     }
@@ -195,7 +230,10 @@ const createTransaction = ({
               state,
             ),
           ])
-          dispatch(fetchTransactions(safeAddress))
+          dispatch({
+            type: 'FETCH_TRANSACTIONS',
+            payload: fetchTransactions(safeAddress),
+          })
         } catch (e) {
           removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         }
@@ -241,8 +279,7 @@ const createTransaction = ({
           dispatch,
           state,
         )
-
-        dispatch(fetchTransactions(safeAddress))
+        await dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
       })

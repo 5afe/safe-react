@@ -15,6 +15,7 @@ import { makeOwner } from 'src/routes/safe/store/models/owner'
 import makeSafe from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from './types/safe'
+import { ADD_SAFE_MODULES } from 'src/routes/safe/store/actions/addSafeModules'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -127,8 +128,13 @@ export default handleActions(
         return prevSafe.merge({ owners: updatedOwners })
       })
     },
-    [SET_DEFAULT_SAFE]: (state, action) => state.set('defaultSafe', action.payload),
-    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action) => state.set('latestMasterContractVersion', action.payload),
+    [ADD_SAFE_MODULES]: (state: SafeReducerMap, action) => {
+      const { modulesAddresses, safeAddress } = action.payload
+      return state.setIn([SAFE_REDUCER_ID, safeAddress, 'modules'], modulesAddresses)
+    },
+    [SET_DEFAULT_SAFE]: (state: SafeReducerMap, action) => state.set('defaultSafe', action.payload),
+    [SET_LATEST_MASTER_CONTRACT_VERSION]: (state: SafeReducerMap, action) =>
+      state.set('latestMasterContractVersion', action.payload),
   },
   Map({
     defaultSafe: DEFAULT_SAFE_INITIAL_STATE,

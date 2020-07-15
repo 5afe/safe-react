@@ -42,7 +42,7 @@ interface Props {
   ethBalance?: string
 }
 
-const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
+const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): JSX.Element => {
   return (
     <Wrapper>
       <div className="icon-section">

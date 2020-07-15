@@ -4,7 +4,11 @@ import TableRow from '@material-ui/core/TableRow'
 import TableSortLabel from '@material-ui/core/TableSortLabel'
 import * as React from 'react'
 
-export const cellWidth = (width) => {
+interface CellWidth {
+  maxWidth: string
+}
+
+export const cellWidth = (width: string | number): CellWidth | undefined => {
   if (!width) {
     return undefined
   }
