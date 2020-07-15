@@ -83,8 +83,8 @@ const useStyles = makeStyles(styles as any)
 const TabsComponent = (): ReactElement => {
   const classes = useStyles()
   const location = useLocation<Location>()
-  const history: History = useHistory()
-  const match: Match = useRouteMatch()
+  const history = useHistory<History>()
+  const match = useRouteMatch<Match>()
 
   const handleCallToRouter = (_, value) => {
     history.push(value)
