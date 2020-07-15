@@ -20,7 +20,7 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = (web3: Web3): any => {
+const createGnosisSafeContract = (web3: Web3): unknown => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
@@ -95,7 +95,7 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress): Promise<any> => {
+export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress): Promise<unknown> => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   return GnosisSafe.at(safeAddress)
