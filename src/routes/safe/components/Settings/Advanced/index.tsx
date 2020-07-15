@@ -72,7 +72,7 @@ const openIconStyle = {
   color: secondary,
 }
 
-const Advanced = (): JSX.Element => {
+const Advanced = (): React.ReactElement => {
   const classes = useStyles()
 
   const columns = generateColumns()
