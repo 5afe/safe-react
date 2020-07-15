@@ -1,7 +1,7 @@
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import CopyIcon from './copy.svg'
 
@@ -27,7 +27,7 @@ const useStyles = makeStyles({
   },
 })
 
-const CopyBtn = ({ className = '', content, increaseZindex = false }) => {
+const CopyBtn = ({ className = '', content, increaseZindex = false }): ReactElement => {
   const [clicked, setClicked] = useState(false)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}

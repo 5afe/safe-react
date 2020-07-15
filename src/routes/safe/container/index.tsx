@@ -8,6 +8,7 @@ import Layout from 'src/routes/safe/components/Layout'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { useLoadSafe } from './hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from './hooks/useSafeScheduledUpdates'
+import { ReactElement } from 'react'
 
 const INITIAL_STATE = {
   sendFunds: {
@@ -17,7 +18,7 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = (): JSX.Element => {
+const SafeView = (): ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 

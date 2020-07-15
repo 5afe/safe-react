@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import TextareaField from 'src/components/forms/TextareaField'
 import {
@@ -45,7 +45,7 @@ const typePlaceholder = (text: string, type: string): string => {
   return `${text} E.g.: ["first value", "second value", "third value"]`
 }
 
-const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): JSX.Element => (
+const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): ReactElement => (
   <TextareaField name={name} placeholder={typePlaceholder(text, type)} text={text} type="text" validate={validator} />
 )
 
