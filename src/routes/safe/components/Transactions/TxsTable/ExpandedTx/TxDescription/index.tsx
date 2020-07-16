@@ -242,11 +242,15 @@ const CustomDescription = ({ classes, rawTx }: any) => (
                 </TxInfo>
                 {tx.data && (
                   <TxInfo>
-                    <TxDetailsMethodName size="lg">{tx.data.method}</TxDetailsMethodName>
+                    <TxDetailsMethodName size="lg">
+                      <strong>{tx.data.method}</strong>
+                    </TxDetailsMethodName>
                     {tx.data?.parameters.map((param, index) => (
                       <TxDetailsMethodParam key={`${tx.operation}_${tx.to}_${tx.data.method}_param-${index}`}>
                         <InlineText size="lg">
-                          {param.name}({param.type}):
+                          <strong>
+                            {param.name}({param.type}):
+                          </strong>
                         </InlineText>
                         {param.type === 'address' ? (
                           <EtherscanLink cut={8} value={param.value} />
