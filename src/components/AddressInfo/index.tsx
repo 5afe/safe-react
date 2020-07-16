@@ -64,7 +64,7 @@ const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props) => {
         {ethBalance && (
           <StyledBlock>
             <Paragraph noMargin>
-              Balance: <Bold>{`${ethBalance} ETH`}</Bold>
+              Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ETH`}</Bold>
             </Paragraph>
           </StyledBlock>
         )}
