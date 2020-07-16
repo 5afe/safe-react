@@ -1,4 +1,3 @@
-import { Text } from '@gnosis.pm/safe-react-components'
 import CollapseMUI from '@material-ui/core/Collapse'
 import IconButton from '@material-ui/core/IconButton'
 import ExpandLess from '@material-ui/icons/ExpandLess'
@@ -9,6 +8,8 @@ import styled from 'styled-components'
 const Wrapper = styled.div``
 
 const HeaderWrapper = styled.div``
+
+const Title = styled.div``
 
 const Header = styled.div`
   display: flex;
@@ -38,7 +39,7 @@ const Collapse: React.FC<Collapse> = ({
   return (
     <Wrapper>
       <HeaderWrapper className={headerWrapperClassName} onClick={handleClick}>
-        <Text size="md">{title}</Text>
+        <Title>{title}</Title>
         <Header>
           <IconButton disableRipple size="small">
             {open ? <ExpandLess /> : <ExpandMore />}
