@@ -5,11 +5,12 @@ import { CALL } from '.'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 
-const estimateDataGasCosts = (data) => {
+const estimateDataGasCosts = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
     if (currentValue === EMPTY_DATA) {
       return accumulator + 0
@@ -25,7 +26,13 @@ const estimateDataGasCosts = (data) => {
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
-export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApprovingOwner?: any) => {
+export const estimateTxGasCosts = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
+): Promise<number> => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
@@ -38,20 +45,19 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
     let txData
     if (isExecution) {
       // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-      const signatures =
-        tx && tx.confirmations
-          ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-          : `0x000000000000000000000000${from.replace(
-              '0x',
-              '',
-            )}000000000000000000000000000000000000000000000000000000000000000001`
+      const signatures = tx?.confirmations
+        ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+        : `0x000000000000000000000000${from.replace(
+            '0x',
+            '',
+          )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
         .execTransaction(
           to,
-          tx ? tx.value : 0,
+          tx?.value || 0,
           data,
           CALL,
-          tx ? tx.safeTxGas : 0,
+          tx?.safeTxGas || 0,
           0,
           0,
           ZERO_ADDRESS,
@@ -61,7 +67,7 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
         .encodeABI()
     } else {
       const txHash = await safeInstance.methods
-        .getTransactionHash(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+        .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
         .call({
           from,
         })
