@@ -36,6 +36,7 @@ const EtherscanBtn = ({ className = '', increaseZindex = false, type, value }) =
       <a
         aria-label="Show details on Etherscan"
         className={cn(classes.container, className)}
+        onClick={(event) => event.stopPropagation()}
         href={getEtherScanLink(type, value)}
         rel="noopener noreferrer"
         target="_blank"

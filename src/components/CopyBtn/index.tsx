@@ -51,7 +51,8 @@ const CopyBtn = ({ className = '', content, increaseZindex = false }) => {
         <Img
           alt="Copy to clipboard"
           height={20}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
             copyToClipboard(content)
             setClicked(true)
           }}
