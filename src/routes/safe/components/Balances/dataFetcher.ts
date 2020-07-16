@@ -41,6 +41,7 @@ export const getBalanceData = (activeTokens, currencySelected, currencyValues, c
       name: token.name,
       logoUri: token.logoUri,
       address: token.address,
+      symbol: token.symbol,
     },
     [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
