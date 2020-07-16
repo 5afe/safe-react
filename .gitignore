@@ -10,3 +10,4 @@ electron-builder.yml
 yalc.lock
 # testing
 /coverage/
+src/types/contracts/
