@@ -5,12 +5,13 @@ import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSaf
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from 'src/utils/singleton'
-import { simpleMemoize } from 'src/components/forms/validator'
+import memoize from 'lodash.memoize'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d';
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0xB522a9f781924eD250A11C54105E51840B138AdD'
@@ -22,7 +23,7 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = (web3) => {
+const createGnosisSafeContract = (web3: Web3) => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
@@ -36,8 +37,8 @@ const createProxyFactoryContract = (web3: Web3, networkId: number): GnosisSafePr
   return proxyFactory
 }
 
-export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract)
-const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
+export const getGnosisSafeContract = memoize(createGnosisSafeContract)
+const getCreateProxyFactoryContract = memoize(createProxyFactoryContract)
 
 const instantiateMasterCopies = async () => {
   const web3 = getWeb3()
@@ -72,7 +73,7 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations, userAccount) => {
+export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()  
@@ -97,10 +98,10 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress) => {
+export const getGnosisSafeInstanceAt = memoize(async (safeAddress: string): Promise<GnosisSafe> => {
   const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = await GnosisSafe.at(safeAddress)
+  const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as unknown as AbiItem, safeAddress) as unknown as GnosisSafe
+
   return gnosisSafe
 })
 

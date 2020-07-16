@@ -90,16 +90,23 @@ export const estimateTxGasCosts = async (
   }
 }
 
-export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei, operation) => {
+export const estimateSafeTxGas = async (
+  safe,
+  safeAddress: string,
+  data: string,
+  to: string,
+  valueInWei: string,
+  operation: number,
+): Promise<number> => {
   try {
     let safeInstance = safe
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
-    const web3: any = await getWeb3()
+    const web3 = await getWeb3()
     const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse: any = await web3.eth.call({
+    const estimateResponse = await web3.eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
@@ -115,6 +122,8 @@ export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei,
     const estimationRequests = additionalGasBatches.map(
       (additionalGas) =>
         new Promise((resolve) => {
+          // eslint-disable-next-line
+          // @ts-ignore
           const request = web3.eth.call.request(
             {
               to: safe.address,
