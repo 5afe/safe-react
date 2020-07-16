@@ -22,14 +22,13 @@ export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data
 const useStyles = makeStyles(styles)
 
 const TxDetailsMethodName = styled(Text)`
-  text-indent: 2%;
+  text-indent: 4px;
 `
 const TxDetailsMethodParam = styled.div`
-  text-indent: 4%;
+  text-indent: 8px;
 `
 const InlineText = styled(Text)`
   display: inline-flex;
-  margin-right: 6px;
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
