@@ -1,5 +1,6 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
+import { AbiItem } from 'web3-utils'
 
 import { CALL } from '.'
 
@@ -9,6 +10,7 @@ import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 const estimateDataGasCosts = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
@@ -36,11 +38,13 @@ export const estimateTxGasCosts = async (
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-    const safeInstance: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeAddress)
+    const safeInstance = (new web3.eth.Contract(
+      (GnosisSafeSol.abi as unknown) as AbiItem,
+      safeAddress,
+    ) as unknown) as GnosisSafe
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
-
-    const isExecution = (tx && tx.confirmations.size === threshold) || !!preApprovingOwner || threshold === '1'
+    const isExecution = (tx && tx.confirmations.size === Number(threshold)) || !!preApprovingOwner || threshold === '1'
 
     let txData
     if (isExecution) {
