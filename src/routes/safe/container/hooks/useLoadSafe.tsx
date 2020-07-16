@@ -1,5 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { AnyAction } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
 
 import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
@@ -7,15 +9,18 @@ import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from 'src/routes/safe/store/actions/fetchLatestMasterContractVersion'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
-import fetchSafeCreationTx from '../../store/actions/fetchSafeCreationTx'
+import fetchSafeCreationTx from 'src/routes/safe/store/actions/fetchSafeCreationTx'
+import { AppReduxState } from 'src/store'
 
-export const useLoadSafe = (safeAddress) => {
-  const dispatch = useDispatch()
+type Dispatch = ThunkDispatch<AppReduxState, undefined, AnyAction>
+
+export const useLoadSafe = (safeAddress: string): void => {
+  const dispatch = useDispatch<Dispatch>()
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       if (safeAddress) {
-        dispatch<any>(fetchLatestMasterContractVersion())
+        dispatch(fetchLatestMasterContractVersion())
           .then(() => {
             dispatch(fetchSafe(safeAddress))
             return dispatch(fetchSafeTokens(safeAddress))
@@ -28,6 +33,7 @@ export const useLoadSafe = (safeAddress) => {
           })
       }
     }
+
     fetchData()
   }, [dispatch, safeAddress])
 }
