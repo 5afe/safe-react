@@ -2,22 +2,18 @@ import { Transfer, TxConstants } from 'src/routes/safe/store/models/types/transa
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { store } from 'src/store'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { BigNumber } from 'bignumber.js'
 import {
   ERC20TransferDetails,
   ERC721TransferDetails,
   ETHTransferDetails,
   UnknownTransferDetails,
 } from './transferDetailsTypes'
+import { humanReadableValue } from 'src/utils/humanReadableValue'
 
 const isIncomingTransfer = (transfer: Transfer): boolean => {
   const state = store.getState()
   const safeAddress = safeParamAddressFromStateSelector(state)
   return sameAddress(transfer.to, safeAddress)
-}
-
-const humanReadableValue = (value: string, decimals = 18): string => {
-  return new BigNumber(value).times(`1e-${decimals}`).toFixed()
 }
 
 export const extractERC20TransferDetails = (transfer: Transfer): ERC20TransferDetails => {

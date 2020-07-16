@@ -1,4 +1,3 @@
-import { BigNumber } from 'bignumber.js'
 import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 
@@ -14,8 +13,8 @@ import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
 import { AppReduxState } from 'src/store'
+import { humanReadableValue } from 'src/utils/humanReadableValue'
 
-const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}
 const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ...valueToUpdate })
 
@@ -42,9 +41,9 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
       (acc, { balance, balanceUsd, token, tokenAddress }) => {
         if (tokenAddress === null) {
-          acc.ethBalance = humanReadableBalance(balance, 18)
+          acc.ethBalance = humanReadableValue(balance, 18)
         } else {
-          acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableBalance(balance, token.decimals) })
+          acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, token.decimals) })
 
           if (currentTokens && !currentTokens.get(tokenAddress)) {
             acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
