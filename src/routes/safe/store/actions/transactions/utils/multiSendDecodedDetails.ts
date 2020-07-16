@@ -1,12 +1,12 @@
 import { TransferDetails } from './transferDetailsTypes'
 import {
+  DataDecoded,
   MultiSigTransaction,
   Operation,
   Parameter,
   Transfer,
   TransferType,
   TxConstants,
-  DataDecoded,
 } from 'src/routes/safe/store/models/types/transactions'
 import {
   extractERC20TransferDetails,
@@ -49,7 +49,7 @@ export const extractTransferDetails = (transfer: Transfer): TransferDetails => {
 
 export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[] | null => {
   if (isMultiSendParameter(parameter)) {
-    const multiSendDetails = parameter.decodedValue.map((decodedValue) => {
+    return parameter.decodedValue.map((decodedValue) => {
       return {
         operation: decodedValue.operation,
         to: decodedValue.to,
@@ -57,8 +57,6 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
         data: decodedValue?.decodedData ?? null,
       }
     })
-    console.log({ multiSendDetails })
-    return multiSendDetails
   }
 
   return null
@@ -72,6 +70,5 @@ export const extractMultiSendDecodedData = (tx: MultiSigTransaction): MultiSendD
       ? extractMultiSendDetails(tx.dataDecoded?.parameters[0])
       : [tx.dataDecoded]
 
-  console.log({ txDetails, transfersDetails })
   return { txDetails, transfersDetails }
 }
