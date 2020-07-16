@@ -112,10 +112,10 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
             <Row align="center" className={classes.buttonRow}>
               <Button minWidth={140} onClick={onClose}>
-                BACK
+                Back
               </Button>
               <Button color="primary" minWidth={140} type="submit" variant="contained">
-                CHANGE
+                Change
               </Button>
             </Row>
           </>
