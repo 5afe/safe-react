@@ -191,12 +191,12 @@ const TxDetailsContent = styled.div`
 const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
-
-interface ICollapsible {
-  title: React.ReactNode
-  description?: React.ReactNode
+interface Collapsible {
+  title: React.ReactElement
+  description?: React.ReactElement
 }
-const Collapsible: React.FC<ICollapsible> = ({ title, description = null, children }) => {
+
+const Collapsible: React.FC<Collapsible> = ({ title, description = null, children }) => {
   const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {
@@ -226,10 +226,14 @@ const CustomDescription = ({ classes, rawTx }: any) => (
   <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
     {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
       if (isMultiSendDetails(tx)) {
+        const usedMethod = tx.data?.method ? ` (${tx.data.method})` : ''
+
         return (
           <React.Fragment key={`${tx.to}-row-${index}`}>
             <Collapsible
-              title={<IconText iconSize="sm" iconType="code" text={`Transaction ${index + 1}`} textSize="lg" />}
+              title={
+                <IconText iconSize="sm" iconType="code" text={`Transaction ${index + 1}${usedMethod}`} textSize="lg" />
+              }
             >
               <TxDetailsContent>
                 <TxInfo>
