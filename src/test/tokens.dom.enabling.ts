@@ -1,4 +1,4 @@
-// 
+//
 import { waitForElement } from '@testing-library/react'
 import { List } from 'immutable'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -8,7 +8,7 @@ import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
 import { sleep } from 'src/utils/timer'
 import saveTokens from 'src/logic/tokens/store/actions/saveTokens'
-import { clickOnManageTokens, toggleToken, closeManageTokensModal } from './utils/DOMNavigation'
+import { clickOnManageTokens, closeManageTokensModal, toggleToken } from './utils/DOMNavigation'
 import { BALANCE_ROW_TEST_ID } from 'src/routes/safe/components/Balances'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import '@testing-library/jest-dom/extend-expect'
