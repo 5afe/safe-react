@@ -25,6 +25,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
+  // Synthetix
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQSVfqPYSSsnmtbJQCg7s9iLykTDYKoK5k98K4Fd6bwdJ`, disabled: false },
   // TX-Builder
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
