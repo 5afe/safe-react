@@ -53,7 +53,7 @@ const METHOD_TO_ID = {
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
 }
 
-type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
+export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
 
 type DecodedValues = Array<{

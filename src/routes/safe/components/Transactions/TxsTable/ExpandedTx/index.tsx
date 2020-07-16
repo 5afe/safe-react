@@ -7,6 +7,9 @@ import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
 import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
+import { IncomingTx } from './IncomingTx'
+import { CreationTx } from './CreationTx'
+import { OutgoingTx } from './OutgoingTx'
 import { styles } from './style'
 
 import EtherScanLink from 'src/components/EtherscanLink'
@@ -19,11 +22,7 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-
 import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { IncomingTx } from './IncomingTx'
-import { CreationTx } from './CreationTx'
-import { OutgoingTx } from './OutgoingTx'
 import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles as any)
