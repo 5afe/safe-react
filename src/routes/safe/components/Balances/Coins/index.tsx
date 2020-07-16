@@ -30,6 +30,7 @@ import {
   getBalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import { Skeleton } from '@material-ui/lab'
 
 const useStyles = makeStyles(styles as any)
 
@@ -76,7 +77,11 @@ const Coins = (props) => {
                     break
                   }
                   case BALANCE_TABLE_VALUE_ID: {
-                    cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                    cellItem = row[id] ? (
+                      <div className={classes.currencyValueRow}>{row[id]}</div>
+                    ) : (
+                      <Skeleton animation="wave" />
+                    )
                     break
                   }
                   default: {
