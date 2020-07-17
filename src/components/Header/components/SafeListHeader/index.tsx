@@ -10,7 +10,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { safesCountSelector } from 'src/routes/safe/store/selectors'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
-import { AppReduxState } from '../../../../store'
+import { AppReduxState } from 'src/store'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
