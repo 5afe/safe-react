@@ -1,6 +1,7 @@
 import { List, Map, RecordOf } from 'immutable'
 import { DecodedMethods } from 'src/logic/contracts/methodIds'
 import { Confirmation } from './confirmation'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 export enum TransactionTypes {
   INCOMING = 'incoming',
@@ -88,7 +89,7 @@ export type TxArgs = {
   nonce: number
   operation: number
   refundReceiver: string
-  safeInstance: any
+  safeInstance: GnosisSafe
   safeTxGas: number
   sender?: string
   sigs: string
