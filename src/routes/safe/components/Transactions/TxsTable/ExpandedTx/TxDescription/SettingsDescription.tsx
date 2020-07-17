@@ -16,7 +16,11 @@ export const TRANSACTIONS_DESC_ADD_MODULE_TEST_ID = 'tx-description-add-module'
 export const TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID = 'tx-description-remove-module'
 export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
-const RemovedOwner = ({ removedOwner }) => {
+interface RemovedOwnerProps {
+  removedOwner: string
+}
+
+const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): React.ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, removedOwner))
 
   return (
@@ -31,7 +35,11 @@ const RemovedOwner = ({ removedOwner }) => {
   )
 }
 
-const AddedOwner = ({ addedOwner }) => {
+interface AddedOwnerProps {
+  addedOwner: string
+}
+
+const AddedOwner = ({ addedOwner }: AddedOwnerProps): React.ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
 
   return (
@@ -46,7 +54,11 @@ const AddedOwner = ({ addedOwner }) => {
   )
 }
 
-const NewThreshold = ({ newThreshold }) => (
+interface NewThresholdProps {
+  newThreshold: string
+}
+
+const NewThreshold = ({ newThreshold }: NewThresholdProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
     <Bold>Change required confirmations:</Bold>
     <Paragraph noMargin size="md">
@@ -55,14 +67,22 @@ const NewThreshold = ({ newThreshold }) => (
   </Block>
 )
 
-const AddModule = ({ module }) => (
+interface AddModuleProps {
+  module: string
+}
+
+const AddModule = ({ module }: AddModuleProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
     <Bold>Add module:</Bold>
     <EtherscanLink value={module} knownAddress={false} type="address" />
   </Block>
 )
 
-const RemoveModule = ({ module }) => (
+interface RemoveModuleProps {
+  module: string
+}
+
+const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
     <Bold>Remove module:</Bold>
     <EtherscanLink value={module} knownAddress={false} type="address" />
