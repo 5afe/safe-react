@@ -84,7 +84,7 @@ const OwnerListComponent = (props) => {
 
   useEffect(() => {
     let isCurrent = true
-
+    console.log('Я ХУЯРЮ НАХУЙ')
     const fetchSafe = async () => {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
@@ -92,7 +92,7 @@ const OwnerListComponent = (props) => {
       const threshold = await gnosisSafe.methods.getThreshold().call()
 
       if (isCurrent && owners) {
-        const sortedOwners = safeOwners.sort()
+        const sortedOwners = safeOwners.slice().sort()
         const initialValues = calculateSafeValues(sortedOwners, threshold, values)
         updateInitialProps(initialValues)
         setOwners(sortedOwners)

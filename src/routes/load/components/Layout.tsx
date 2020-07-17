@@ -14,7 +14,8 @@ import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { LoadFormValues } from '../container/Load'
 
-const getSteps = () => ['Name and address', 'Owners', 'Review']
+const steps = ['Name and address', 'Owners', 'Review']
+const buttonLabels = ['Next', 'Review', 'Load']
 
 const iconStyle = {
   color: secondary,
@@ -32,49 +33,41 @@ const formMutators = {
   },
 }
 
-const buttonLabels = ['Next', 'Review', 'Load']
-
-interface ILayout {
+interface LayoutProps {
   network: string
   provider?: string
   userAddress: string
   onLoadSafeSubmit: (values: LoadFormValues) => void
 }
 
-const Layout: React.FC<ILayout> = ({ network, onLoadSafeSubmit, provider, userAddress }) => {
-  const steps = getSteps()
-  const initialValues = {}
-
-  return (
-    <>
-      {provider ? (
-        <Block>
-          <Row align="center">
-            <IconButton disableRipple onClick={back} style={iconStyle}>
-              <ChevronLeft />
-            </IconButton>
-            <Heading tag="h2">Load existing Safe</Heading>
-          </Row>
-          <Stepper
-            buttonLabels={buttonLabels}
-            initialValues={initialValues}
-            mutators={formMutators}
-            onSubmit={onLoadSafeSubmit}
-            steps={steps}
-            testId="load-safe-form"
-          >
-            <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
-            <StepperPage network={network}>{OwnerList}</StepperPage>
-            <StepperPage network={network} userAddress={userAddress}>
-              {ReviewInformation}
-            </StepperPage>
-          </Stepper>
-        </Block>
-      ) : (
-        <div>No account detected</div>
-      )}
-    </>
-  )
-}
+const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProps): React.ReactElement => (
+  <>
+    {provider ? (
+      <Block>
+        <Row align="center">
+          <IconButton disableRipple onClick={back} style={iconStyle}>
+            <ChevronLeft />
+          </IconButton>
+          <Heading tag="h2">Load existing Safe</Heading>
+        </Row>
+        <Stepper<LoadFormValues>
+          buttonLabels={buttonLabels}
+          mutators={formMutators}
+          onSubmit={onLoadSafeSubmit}
+          steps={steps}
+          testId="load-safe-form"
+        >
+          <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
+          <StepperPage network={network}>{OwnerList}</StepperPage>
+          <StepperPage network={network} userAddress={userAddress}>
+            {ReviewInformation}
+          </StepperPage>
+        </Stepper>
+      </Block>
+    ) : (
+      <div>No account detected</div>
+    )}
+  </>
+)
 
 export default Layout
