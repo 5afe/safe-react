@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { TableColumn } from 'src/routes/safe/components/tableTypes'
+import { TableColumn } from 'src/components/Table/types'
 import { ModulePair } from 'src/routes/safe/store/models/safe'
 
 export const MODULES_TABLE_ADDRESS_ID = 'address'
