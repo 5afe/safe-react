@@ -39,8 +39,8 @@ const buildOwnersFrom = (
     })
   })
 
-const buildModulesLinkedList = (modules: Array<string>, nextModule: string): Array<ModulePair> | null => {
-  if (modules?.length) {
+const buildModulesLinkedList = (modules: string[], nextModule: string): Array<ModulePair> | null => {
+  if (modules.length) {
     return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]
       return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
