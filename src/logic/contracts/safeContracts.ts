@@ -58,8 +58,8 @@ const createMasterCopies = async () => {
   const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
-  const ProxyFactory = getCreateProxyFactoryContract(web3)
-  proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
+  const ProxyFactory = getCreateProxyFactoryContract(web3, 4441)
+  proxyFactoryMaster = await ProxyFactory.deploy({ data: GnosisSafeSol.bytecode }).send({ from: userAccount, gas: 5000000 })
 
   const GnosisSafe = getGnosisSafeContract(web3)
   safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })

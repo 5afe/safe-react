@@ -88,8 +88,8 @@ const OwnerListComponent = (props) => {
     const fetchSafe = async () => {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const safeOwners = await gnosisSafe.getOwners()
-      const threshold = await gnosisSafe.getThreshold()
+      const safeOwners = await gnosisSafe.methods.getOwners().call()
+      const threshold = await gnosisSafe.methods.getThreshold().call()
 
       if (isCurrent && owners) {
         const sortedOwners = safeOwners.sort()

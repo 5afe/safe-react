@@ -51,10 +51,8 @@ export const getEncodedMultiSendCallData = (txs: MultiSendTx[], web3: Web3): str
 
 export const upgradeSafeToLatestVersion = async (safeAddress: string, createTransaction): Promise<void> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const fallbackHandlerTxData = safeInstance.contract.methods
-    .setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS)
-    .encodeABI()
-  const updateSafeTxData = safeInstance.contract.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
+  const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS).encodeABI()
+  const updateSafeTxData = safeInstance.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
   const txs = [
     {
       operation: 0,

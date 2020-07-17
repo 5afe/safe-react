@@ -28,7 +28,7 @@ const styles = () => ({
 
 export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackbar, closeSnackbar, dispatch) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+  const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({

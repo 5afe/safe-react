@@ -37,7 +37,7 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
 
   const onChangeThreshold = async (newThreshold) => {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
+    const txData = safeInstance.methods.changeThreshold(newThreshold).encodeABI()
 
     dispatch(
       createTransaction({

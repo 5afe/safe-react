@@ -213,8 +213,8 @@ const processTransaction = ({
 
       showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
 
-      const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+      const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
+      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
       console.error(`Error executing the TX: ${errMsg}`)
     }
   }

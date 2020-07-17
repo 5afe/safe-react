@@ -40,14 +40,12 @@ export const sendRemoveOwner = async (
   dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const safeOwners = await gnosisSafe.getOwners()
+  const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
   )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.contract.methods
-    .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
-    .encodeABI()
+  const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddressToRemove, values.threshold).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({

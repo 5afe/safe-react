@@ -44,7 +44,7 @@ const renderOpenSafeForm = async (localStore) => {
   )
 }
 
-const deploySafe = async (createSafeForm, threshold, numOwners) => {
+const deploySafe = async (createSafeForm, threshold, numOwners): Promise<string> => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
@@ -112,7 +112,7 @@ const deploySafe = async (createSafeForm, threshold, numOwners) => {
   return whenSafeDeployed()
 }
 
-const aDeployedSafe = async (specificStore, threshold = 1, numOwners = 1) => {
+const aDeployedSafe = async (specificStore, threshold = 1, numOwners = 1): Promise<string> => {
   const safe = await renderOpenSafeForm(specificStore)
   await sleep(1500)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
@@ -130,9 +130,9 @@ describe('DOM > Feature > CREATE a Safe', () => {
     expect(address).not.toBe(undefined)
 
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
-    const storedOwners = await gnosisSafe.getOwners()
+    const storedOwners = await gnosisSafe.methods.getOwners().call()
     expect(storedOwners.length).toEqual(4)
-    const safeThreshold = await gnosisSafe.getThreshold()
+    const safeThreshold = await gnosisSafe.methods.getThreshold().call()
     expect(Number(safeThreshold)).toEqual(4)
   })
 })

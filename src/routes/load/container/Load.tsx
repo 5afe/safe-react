@@ -65,7 +65,7 @@ const Load: React.FC<ILoad> = ({ addSafe, network, provider, userAddress }) => {
       const ownerNames = getNamesFrom(values)
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const ownerAddresses = await gnosisSafe.getOwners()
+      const ownerAddresses = await gnosisSafe.methods.getOwners().call()
       const owners = getOwnersFrom(ownerNames, ownerAddresses.sort())
 
       await loadSafe(safeName, safeAddress, owners, addSafe)
