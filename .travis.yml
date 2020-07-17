@@ -1,16 +1,11 @@
 if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 sudo: required
 dist: xenial
-services:
-  - docker
 language: node_js
 node_js:
   - '10'
 os:
   - linux
-env:
-  global:
-    - DOCKER_COMPOSE_VERSION=1.22.0
 matrix:
   include:
     - env:
@@ -23,6 +18,7 @@ matrix:
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
 cache:
   yarn: true
+  npm: false
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
