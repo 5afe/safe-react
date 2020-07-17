@@ -5,7 +5,9 @@ import { ModulePair } from 'src/routes/safe/store/models/safe'
 export const MODULES_TABLE_ADDRESS_ID = 'address'
 export const MODULES_TABLE_ACTIONS_ID = 'actions'
 
-export const getModuleData = (modulesList: List<ModulePair>): List<{ [MODULES_TABLE_ADDRESS_ID]: ModulePair }> => {
+export const getModuleData = (
+  modulesList: List<ModulePair> | null,
+): List<{ [MODULES_TABLE_ADDRESS_ID]: ModulePair }> | undefined => {
   return modulesList?.map((modules) => ({
     [MODULES_TABLE_ADDRESS_ID]: modules,
   }))

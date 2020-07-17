@@ -82,7 +82,7 @@ const Advanced = (): React.ReactElement => {
   const nonce = useSelector(safeNonceSelector)
   const granted = useSelector(grantedSelector)
   const modules = useSelector(safeModulesSelector)
-  const moduleData = modules ?? getModuleData(modules)
+  const moduleData = getModuleData(modules) ?? modules
 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
