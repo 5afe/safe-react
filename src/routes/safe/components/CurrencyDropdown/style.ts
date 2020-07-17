@@ -18,6 +18,13 @@ export const useDropdownStyles = makeStyles({
     height: '20px !important',
     width: '26px !important',
   },
+  etherFlag: {
+    backgroundPosition: '50% 50%',
+    backgroundRepeat: 'no-repeat',
+    backgroundSize: 'contain',
+    width: '26px',
+    height: '26px',
+  },
   iconLeft: {
     marginRight: '10px',
   },

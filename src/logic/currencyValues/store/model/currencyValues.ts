@@ -1,6 +1,7 @@
 import { Record } from 'immutable'
 
 export enum AVAILABLE_CURRENCIES {
+  ETH = 'ETH',
   USD = 'USD',
   EUR = 'EUR',
   CAD = 'CAD',

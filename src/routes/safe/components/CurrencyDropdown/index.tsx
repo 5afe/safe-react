@@ -18,8 +18,11 @@ import { currentCurrencySelector } from 'src/logic/currencyValues/store/selector
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
+import { setImageToPlaceholder } from '../Balances/utils'
+import Img from '../../../../components/layout/Img'
+import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
 
-const CurrencyDropdown = () => {
+const CurrencyDropdown = (): React.ReactElement => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
@@ -96,14 +99,23 @@ const CurrencyDropdown = () => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  <div
-                    className={classNames(
-                      classes.localFlag,
-                      'currency-flag',
-                      'currency-flag-lg',
-                      `currency-flag-${currencyName.toLowerCase()}`,
-                    )}
-                  />
+                  {currencyName === AVAILABLE_CURRENCIES.ETH ? (
+                    <Img
+                      alt="ether"
+                      onError={setImageToPlaceholder}
+                      src={etherIcon}
+                      className={classNames(classes.etherFlag)}
+                    />
+                  ) : (
+                    <div
+                      className={classNames(
+                        classes.localFlag,
+                        'currency-flag',
+                        'currency-flag-lg',
+                        `currency-flag-${currencyName.toLowerCase()}`,
+                      )}
+                    />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={currencyName} />
                 {currencyName === selectedCurrency ? (
