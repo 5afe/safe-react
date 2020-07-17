@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 import { createSelector } from 'reselect'
 import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 
@@ -9,17 +8,14 @@ import { safeActiveAssetsSelector } from 'src/routes/safe/store/selectors'
 export const nftAssetsSelector = (state: AppReduxState): NFTAssets => state[NFT_ASSETS_REDUCER_ID]
 export const nftTokensSelector = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_REDUCER_ID]
 
-export const nftAssetsListSelector = createSelector(
-  nftAssetsSelector,
-  (assets): List<NFTAsset> => {
-    return assets ? List(Object.values(assets)) : List()
-  },
-)
+export const nftAssetsListSelector = createSelector(nftAssetsSelector, (assets): NFTAsset[] => {
+  return assets ? Object.values(assets) : []
+})
 
 export const activeNftAssetsListSelector = createSelector(
   nftAssetsListSelector,
   safeActiveAssetsSelector,
-  (assets, activeAssetsList): List<NFTAsset> => {
+  (assets, activeAssetsList): NFTAsset[] => {
     return assets.filter(({ address }) => activeAssetsList.has(address))
   },
 )
@@ -27,12 +23,9 @@ export const activeNftAssetsListSelector = createSelector(
 export const safeActiveSelectorMap = createSelector(
   activeNftAssetsListSelector,
   (activeAssets): NFTAssets => {
-    const assetsMap = {}
-
-    activeAssets.forEach((asset) => {
-      assetsMap[asset.address] = asset
-    })
-
-    return assetsMap
+    return activeAssets.reduce((acc, asset) => {
+      acc[asset.address] = asset
+      return acc
+    }, {})
   },
 )
