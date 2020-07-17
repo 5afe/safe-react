@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { getExchangeRatesUrl } from 'src/config'
+import { getExchangeRatesUrl, getExchangeRatesUrlFallback } from 'src/config'
 import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
 
 const fetchCurrenciesRates = async (
@@ -9,11 +9,24 @@ const fetchCurrenciesRates = async (
 ): Promise<number> => {
   let rate = 0
   const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
+  const fallbackUrl = `${getExchangeRatesUrlFallback()}?currency=${baseCurrency}`
 
-  const result = await axios.get(url)
-  if (result && result.data) {
-    const { rates } = result.data
-    rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
+  try {
+    const result = await axios.get(url)
+    if (result && result.data) {
+      const { rates } = result.data
+      rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
+    }
+  } catch (error) {
+    try {
+      const result = await axios.get(fallbackUrl)
+      if (result && result.data) {
+        const { rates } = result.data?.data
+        rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
+      }
+    } catch (error) {
+      console.log('Fetching data from exchangesRatesApiFallback errored', error)
+    }
   }
 
   return rate
