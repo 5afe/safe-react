@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import NetworkLabel from '../NetworkLabel'
@@ -10,7 +10,7 @@ import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 
-const styles = () => ({
+const useStyles = makeStyles({
   network: {
     fontFamily: 'Averta, sans-serif',
   },
@@ -61,13 +61,13 @@ const styles = () => ({
 })
 
 interface ProviderInfoProps {
-  classes: Record<string, any>
   connected: boolean
   provider: string
   userAddress: string
 }
 
-const ProviderInfo: React.FC<ProviderInfoProps> = ({ classes, connected, provider, userAddress }) => {
+const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
+  const classes = useStyles()
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
   const identiconAddress = userAddress || 'random'
@@ -101,4 +101,4 @@ const ProviderInfo: React.FC<ProviderInfoProps> = ({ classes, connected, provide
   )
 }
 
-export default withStyles(styles as any)(ProviderInfo)
+export default ProviderInfo

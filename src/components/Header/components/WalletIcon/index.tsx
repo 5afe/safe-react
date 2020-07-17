@@ -20,7 +20,7 @@ interface WalletIconProps {
   provider: string
 }
 
-const WalletIcon: React.FC<WalletIconProps> = ({ provider }) => {
+const WalletIcon = ({ provider }: WalletIconProps): React.ReactElement => {
   const classes = useStyles()
   return (
     <Col className={classes.container} layout="column" start="sm">
@@ -29,7 +29,6 @@ const WalletIcon: React.FC<WalletIconProps> = ({ provider }) => {
         className={classes.icon}
         height={WALLET_ICONS[provider].height}
         src={WALLET_ICONS[provider].src}
-        srcSet={WALLET_ICONS[provider].srcSet}
       />
     </Col>
   )
