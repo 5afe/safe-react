@@ -41,7 +41,7 @@ export const formatAmount = (number: string): string => {
 }
 
 export const formatAmountInUsFormat = (number: number | string): string => {
-  const options = { style: 'currency', currency: 'USD' }
+  const options = { style: 'currency', currency: 'USD', minimumFractionDigits: 2, maximumFractionDigits: 8 }
   const numberFormat = new Intl.NumberFormat('en-US', options)
   const numberFloat: number = parseFloat(number as string)
   return numberFormat.format(numberFloat).replace('$', '')
