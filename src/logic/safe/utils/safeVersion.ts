@@ -1,6 +1,7 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 import { getSafeLastVersion } from 'src/config'
 import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
@@ -10,7 +11,7 @@ export const FEATURES = [
   { name: 'ERC1155', validVersion: '>=1.1.1' },
 ]
 
-export const safeNeedsUpdate = (currentVersion, latestVersion) => {
+export const safeNeedsUpdate = (currentVersion: string, latestVersion: string): boolean => {
   if (!currentVersion || !latestVersion) {
     return false
   }
@@ -21,9 +22,10 @@ export const safeNeedsUpdate = (currentVersion, latestVersion) => {
   return latest ? semverLessThan(current, latest) : false
 }
 
-export const getCurrentSafeVersion = (gnosisSafeInstance) => gnosisSafeInstance.VERSION()
+export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<string> =>
+  gnosisSafeInstance.methods.VERSION().call()
 
-export const enabledFeatures = (version) =>
+export const enabledFeatures = (version: string): string[] =>
   FEATURES.reduce((acc, feature) => {
     if (semverSatisfies(version, feature.validVersion)) {
       acc.push(feature.name)
@@ -31,7 +33,7 @@ export const enabledFeatures = (version) =>
     return acc
   }, [])
 
-export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
+export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance: GnosisSafe, lastSafeVersion: string) => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
     return null
   }
@@ -56,7 +58,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress) => {
+export const getSafeVersionInfo = async (safeAddress: string) => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()
