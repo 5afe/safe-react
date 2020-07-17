@@ -18,7 +18,6 @@ matrix:
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
 cache:
   yarn: true
-  npm: false
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
