@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -41,7 +41,10 @@ const INITIAL_STATE = {
 export const COINS_LOCATION_REGEX = /\/balances\/?$/
 export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
-const Balances = (props) => {
+const useStyles = makeStyles(styles as any)
+
+const Balances = (): React.ReactElement => {
+  const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
@@ -66,7 +69,7 @@ const Balances = (props) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
-  const showSendFunds = (tokenAddress) => {
+  const showSendFunds = (tokenAddress: string): void => {
     setState((prevState) => ({
       ...prevState,
       sendFunds: {
@@ -95,7 +98,7 @@ const Balances = (props) => {
     manageTokensButton,
     receiveModal,
     tokenControls,
-  } = props.classes
+  } = classes
   const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
 
   return (
@@ -227,4 +230,4 @@ const Balances = (props) => {
   )
 }
 
-export default withStyles(styles as any)(Balances)
+export default Balances

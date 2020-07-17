@@ -31,7 +31,12 @@ import { Skeleton } from '@material-ui/lab'
 
 const useStyles = makeStyles(styles as any)
 
-const Coins = (props) => {
+type Props = {
+  showReceiveFunds: () => void
+  showSendFunds: (tokenAddress: string) => void
+}
+
+const Coins = (props: Props): React.ReactElement => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
   const columns = generateColumns()
