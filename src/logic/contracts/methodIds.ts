@@ -56,7 +56,7 @@ const METHOD_TO_ID = {
   '0xe009cfde': SAFE_METHODS_NAMES.DISABLE_MODULE,
 }
 
-type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
+export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
 
 type DecodedValues = Array<{
