@@ -40,7 +40,7 @@ const TxDescription = ({ tx }): React.ReactElement => {
           removedOwner={removedOwner}
         />
       )}
-      {!upgradeTx && customTx && <CustomDescription rawTx={tx} />}
+      {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} rawTx={tx} />}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (
         <TransferDescription amount={amount} recipient={recipient} />

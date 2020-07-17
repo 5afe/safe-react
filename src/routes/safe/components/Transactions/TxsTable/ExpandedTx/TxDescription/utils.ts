@@ -54,6 +54,8 @@ export const getTxData = (tx) => {
       txData.customTx = true
     } else {
       txData.recipient = tx.recipient
+      txData.data = tx.data
+      txData.customTx = true
     }
   } else if (tx.customTx) {
     txData.recipient = tx.recipient
