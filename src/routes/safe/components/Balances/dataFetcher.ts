@@ -1,9 +1,15 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 
-import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { buildOrderFieldFrom, FIXED } from 'src/components/Table/sorting'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import {
+  AVAILABLE_CURRENCIES,
+  BalanceCurrencyRecord,
+} from '../../../../logic/currencyValues/store/model/currencyValues'
+import { TokenProps } from '../../../../logic/tokens/store/model/token'
+import { BalanceDataRow } from './Coins'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -33,22 +39,25 @@ const getTokenPriceInCurrency = (token, currencySelected, currencyValues, curren
   return `${balance} ${currencySelected}`
 }
 
-// eslint-disable-next-line max-len
-export const getBalanceData = (activeTokens, currencySelected, currencyValues, currencyRate) => {
-  const rows = activeTokens.map((token) => ({
+export const getBalanceData = (
+  activeTokens: List<TokenProps>,
+  currencySelected: AVAILABLE_CURRENCIES,
+  currencyValues: List<BalanceCurrencyRecord>,
+  currencyRate: number,
+): BalanceDataRow => {
+  return activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
       address: token.address,
     },
-    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
-    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
+    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID) as string]: token.name as string,
+    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID) as string]: token.name,
+    [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance)} ${token.symbol}`,
+    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID) as string]: Number(token.balance) as number,
+    [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
-  }))
-
-  return rows
+  })) as BalanceDataRow
 }
 
 export const generateColumns = () => {

@@ -36,6 +36,19 @@ type Props = {
   showSendFunds: (tokenAddress: string) => void
 }
 
+export type BalanceDataRow = List<{
+  asset: {
+    name: string
+    address: string
+    logoUri: string
+  }
+  assetOrder: string
+  balance: string
+  balanceOrder: number
+  fixed: boolean
+  value: string
+}>
+
 const Coins = (props: Props): React.ReactElement => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
@@ -46,7 +59,7 @@ const Coins = (props: Props): React.ReactElement => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
-  const [filteredData, setFilteredData] = React.useState(List())
+  const [filteredData, setFilteredData] = React.useState<BalanceDataRow>(List())
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))

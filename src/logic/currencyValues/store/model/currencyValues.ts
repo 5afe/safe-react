@@ -37,7 +37,7 @@ export enum AVAILABLE_CURRENCIES {
   ZAR = 'ZAR',
 }
 
-type BalanceCurrencyRecord = {
+export type BalanceCurrencyRecord = {
   currencyName?: string
   tokenAddress?: string
   balanceInBaseCurrency: string
