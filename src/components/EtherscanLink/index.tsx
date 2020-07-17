@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 
@@ -11,15 +11,29 @@ import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import EllipsisTransactionDetails from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 
-const EtherscanLink = ({ classes, cut, knownAddress, type, value }: any) => (
-  <Block className={classes.etherscanLink}>
-    <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
-      {cut ? shortVersionOf(value, cut) : value}
-    </Span>
-    <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
-    <EtherscanBtn className={classes.button} type={type} value={value} />
-    {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
-  </Block>
-)
+const useStyles = makeStyles(styles)
 
-export default withStyles(styles as any)(EtherscanLink)
+interface EtherscanLinkProps {
+  className?: string
+  cut?: number
+  knownAddress?: boolean
+  type?: string
+  value: string
+}
+
+const EtherscanLink = ({ className, cut, knownAddress, type, value }: EtherscanLinkProps): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <Block className={cn(classes.etherscanLink, className)}>
+      <Span className={cn(knownAddress && classes.addressParagraph, classes.address)} size="md">
+        {cut ? shortVersionOf(value, cut) : value}
+      </Span>
+      <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
+      <EtherscanBtn className={classes.button} type={type} value={value} />
+      {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
+    </Block>
+  )
+}
+
+export default EtherscanLink

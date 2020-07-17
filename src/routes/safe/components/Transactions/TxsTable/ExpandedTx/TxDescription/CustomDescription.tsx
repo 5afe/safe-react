@@ -15,6 +15,7 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import EtherscanLink from 'src/components/EtherscanLink'
 import { humanReadableValue } from 'src/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
+import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -40,6 +41,18 @@ const TxInfo = styled.div`
 
 const CustomDescription = ({ rawTx }: { rawTx: any }): React.ReactElement => {
   const classes = useStyles()
+  const [cut, setCut] = React.useState(undefined)
+  const { width } = useWindowDimensions()
+
+  React.useEffect(() => {
+    if (width <= 900) {
+      setCut(4)
+    } else if (width <= 1024) {
+      setCut(8)
+    } else {
+      setCut(12)
+    }
+  }, [width])
 
   return (
     <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
@@ -79,7 +92,7 @@ const CustomDescription = ({ rawTx }: { rawTx: any }): React.ReactElement => {
                             </strong>
                           </InlineText>
                           {param.type === 'address' ? (
-                            <EtherscanLink cut={8} value={param.value} />
+                            <EtherscanLink className={classes.address} cut={cut} value={param.value} />
                           ) : (
                             <InlineText size="lg">{param.value}</InlineText>
                           )}

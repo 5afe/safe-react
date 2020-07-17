@@ -37,4 +37,7 @@ export const styles = createStyles({
       cursor: 'pointer',
     },
   },
+  address: {
+    display: 'inline-flex',
+  },
 })

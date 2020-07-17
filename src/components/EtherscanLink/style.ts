@@ -1,8 +1,9 @@
+import { createStyles } from '@material-ui/core/styles'
 import { secondaryText } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   etherscanLink: {
-    display: 'inline-flex',
+    display: 'flex',
     alignItems: 'center',
 
     '& svg': {
@@ -11,7 +12,7 @@ export const styles = () => ({
   },
   address: {
     display: 'block',
-    flexShrink: '1',
+    flexShrink: 1,
     textOverflow: 'ellipsis',
     whiteSpace: 'nowrap',
   },
