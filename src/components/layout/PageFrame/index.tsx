@@ -19,7 +19,7 @@ import Img from 'src/components/layout/Img'
 import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { AppReduxState } from '../../../store'
+import { AppReduxState } from 'src/store'
 
 const notificationStyles = {
   success: {

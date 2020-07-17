@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 import { WithSnackbarProps } from 'notistack'
 import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
-import { ThunkAction, ThunkDispatch } from 'redux-thunk'
+import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -39,11 +39,12 @@ import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { Transaction, TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
 import { AnyAction } from 'redux'
 import { AppReduxState } from 'src/store'
+import { Dispatch } from './types'
 
 export const removeTxFromStore = (
   tx: Transaction,
   safeAddress: string,
-  dispatch: CTADispatch,
+  dispatch: Dispatch,
   state: AppReduxState,
 ): void => {
   if (tx.isCancellationTx) {
@@ -65,7 +66,7 @@ export const removeTxFromStore = (
 export const storeTx = async (
   tx: Transaction,
   safeAddress: string,
-  dispatch: CTADispatch,
+  dispatch: Dispatch,
   state: AppReduxState,
 ): Promise<void> => {
   if (tx.isCancellationTx) {
@@ -106,7 +107,6 @@ interface CreateTransaction extends WithSnackbarProps {
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
-type CTADispatch = ThunkDispatch<AppReduxState, undefined, AnyAction>
 
 const createTransaction = ({
   safeAddress,
@@ -121,7 +121,7 @@ const createTransaction = ({
   navigateToTransactionsTab = true,
   origin = null,
 }: CreateTransaction): CreateTransactionAction => async (
-  dispatch: CTADispatch,
+  dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
   const state = getState()

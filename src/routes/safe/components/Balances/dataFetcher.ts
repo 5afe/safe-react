@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { TableColumn } from 'src/routes/safe/components/tableTypes'
+import { TableColumn } from 'src/components/Table/types'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'

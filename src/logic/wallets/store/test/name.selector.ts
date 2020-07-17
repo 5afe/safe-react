@@ -1,4 +1,3 @@
-//
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { providerNameSelector } from '../selectors'
 import { ProviderFactory } from './builder/index.builder'

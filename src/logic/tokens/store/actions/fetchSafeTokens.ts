@@ -24,7 +24,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
 ): Promise<void> => {
   try {
     const state = getState()
-    const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+    const safe = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
     const currentTokens = state[TOKEN_REDUCER_ID]
 
     if (!safe) {

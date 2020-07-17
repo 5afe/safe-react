@@ -1,8 +1,6 @@
 import { useMemo } from 'react'
 import { batch, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
-import { AnyAction } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchCurrencyValues } from 'src/logic/currencyValues/store/actions/fetchCurrencyValues'
@@ -10,9 +8,7 @@ import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAsse
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
-import { AppReduxState } from 'src/store'
-
-type Dispatch = ThunkDispatch<AppReduxState, undefined, AnyAction>
+import { Dispatch } from 'src/routes/safe/store/actions/types'
 
 export const useFetchTokens = (safeAddress: string): void => {
   const dispatch = useDispatch<Dispatch>()
