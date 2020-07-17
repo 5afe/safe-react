@@ -135,7 +135,6 @@ const SafeOwners = (props) => {
               </Col>
               <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
-                  component={TextField}
                   fieldMutator={(val) => {
                     form.mutators.setValue(addressName, val)
                   }}
@@ -151,7 +150,6 @@ const SafeOwners = (props) => {
                   name={addressName}
                   placeholder="Owner Address*"
                   text="Owner Address"
-                  type="text"
                   validators={[getAddressValidator(otherAccounts, index)]}
                   testId={`create-safe-address-field-${index}`}
                 />

@@ -6,6 +6,9 @@
  * @param {string} opts.ellipsis='...' - ellipsis characters
  * @returns {function} shortener
  */
+
+export const removeSpaces = (value: string): string => value.trim()
+
 export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...' } = {}) =>
   /**
    * @function
