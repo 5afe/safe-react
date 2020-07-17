@@ -1,7 +1,5 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { AnyAction } from 'redux'
-import { ThunkDispatch } from 'redux-thunk'
 
 import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
@@ -10,9 +8,7 @@ import fetchLatestMasterContractVersion from 'src/routes/safe/store/actions/fetc
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import fetchSafeCreationTx from 'src/routes/safe/store/actions/fetchSafeCreationTx'
-import { AppReduxState } from 'src/store'
-
-type Dispatch = ThunkDispatch<AppReduxState, undefined, AnyAction>
+import { Dispatch } from 'src/routes/safe/store/actions/types'
 
 export const useLoadSafe = (safeAddress: string): void => {
   const dispatch = useDispatch<Dispatch>()
