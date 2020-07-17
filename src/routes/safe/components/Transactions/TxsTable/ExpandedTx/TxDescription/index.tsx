@@ -23,6 +23,8 @@ export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
+export const TRANSACTIONS_DESC_ADD_MODULE_TEST_ID = 'tx-description-add-module'
+export const TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID = 'tx-description-remove-module'
 export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
 export const styles = () => ({
@@ -96,7 +98,21 @@ const NewThreshold = ({ newThreshold }) => (
   </Block>
 )
 
-const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }) => {
+const AddModule = ({ module }) => (
+  <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
+    <Bold>Add module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
+const RemoveModule = ({ module }) => (
+  <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
+    <Bold>Remove module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
+const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner, module }) => {
   if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
       <>
@@ -126,6 +142,14 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
         <AddedOwner addedOwner={addedOwner} />
       </>
     )
+  }
+
+  if (action === SAFE_METHODS_NAMES.ENABLE_MODULE && module) {
+    return <AddModule module={module} />
+  }
+
+  if (action === SAFE_METHODS_NAMES.DISABLE_MODULE && module) {
+    return <RemoveModule module={module} />
   }
 
   return (
@@ -207,6 +231,7 @@ const TxDescription = ({ classes, tx }) => {
     customTx,
     data,
     modifySettingsTx,
+    module,
     newThreshold,
     recipient,
     removedOwner,
@@ -221,6 +246,7 @@ const TxDescription = ({ classes, tx }) => {
           addedOwner={addedOwner}
           newThreshold={newThreshold}
           removedOwner={removedOwner}
+          module={module}
         />
       )}
       {!upgradeTx && customTx && (
