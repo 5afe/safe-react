@@ -24,6 +24,7 @@ const TxDescription = ({ tx }): React.ReactElement => {
     customTx,
     data,
     modifySettingsTx,
+    module,
     newThreshold,
     recipient,
     removedOwner,
@@ -38,6 +39,7 @@ const TxDescription = ({ tx }): React.ReactElement => {
           addedOwner={addedOwner}
           newThreshold={newThreshold}
           removedOwner={removedOwner}
+          module={module}
         />
       )}
       {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} rawTx={tx} />}

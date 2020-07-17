@@ -47,6 +47,14 @@ export const getTxData = (tx) => {
         txData.action = SAFE_METHODS_NAMES.SWAP_OWNER
         txData.removedOwner = oldOwner
         txData.addedOwner = newOwner
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]) {
+        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]
+        txData.action = SAFE_METHODS_NAMES.ENABLE_MODULE
+        txData.module = module
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]) {
+        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]
+        txData.action = SAFE_METHODS_NAMES.DISABLE_MODULE
+        txData.module = module
       }
     } else if (tx.multiSendTx) {
       txData.recipient = tx.recipient

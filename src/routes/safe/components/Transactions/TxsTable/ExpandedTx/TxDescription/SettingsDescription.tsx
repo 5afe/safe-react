@@ -12,6 +12,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
 export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change-threshold'
+export const TRANSACTIONS_DESC_ADD_MODULE_TEST_ID = 'tx-description-add-module'
+export const TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID = 'tx-description-remove-module'
 export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
 const RemovedOwner = ({ removedOwner }) => {
@@ -53,11 +55,26 @@ const NewThreshold = ({ newThreshold }) => (
   </Block>
 )
 
+const AddModule = ({ module }) => (
+  <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
+    <Bold>Add module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
+const RemoveModule = ({ module }) => (
+  <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
+    <Bold>Remove module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
 interface SettingsDescriptionProps {
   action: SafeMethods
   addedOwner?: string
   newThreshold?: string
   removedOwner?: string
+  module?: string
 }
 
 const SettingsDescription = ({
@@ -65,6 +82,7 @@ const SettingsDescription = ({
   addedOwner,
   newThreshold,
   removedOwner,
+  module,
 }: SettingsDescriptionProps): React.ReactElement => {
   if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
@@ -95,6 +113,14 @@ const SettingsDescription = ({
         <AddedOwner addedOwner={addedOwner} />
       </>
     )
+  }
+
+  if (action === SAFE_METHODS_NAMES.ENABLE_MODULE && module) {
+    return <AddModule module={module} />
+  }
+
+  if (action === SAFE_METHODS_NAMES.DISABLE_MODULE && module) {
+    return <RemoveModule module={module} />
   }
 
   return (
