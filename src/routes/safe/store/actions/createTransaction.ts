@@ -184,10 +184,7 @@ const createTransaction = ({
         await saveTxToHistory({ ...txArgs, signature, origin })
         showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
 
-        dispatch({
-          type: 'FETCH_TRANSACTION',
-          payload: fetchTransactions(safeAddress),
-        })
+        dispatch(fetchTransactions(safeAddress))
         return
       }
     }
@@ -230,10 +227,7 @@ const createTransaction = ({
               state,
             ),
           ])
-          dispatch({
-            type: 'FETCH_TRANSACTIONS',
-            payload: fetchTransactions(safeAddress),
-          })
+          dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         }
@@ -279,7 +273,7 @@ const createTransaction = ({
           dispatch,
           state,
         )
-        await dispatch(fetchTransactions(safeAddress))
+        dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
       })
