@@ -66,11 +66,11 @@ const reducers = combineReducers({
 })
 
 export type AppReduxState = CombinedState<{
-  [PROVIDER_REDUCER_ID]?: ProviderState
+  [PROVIDER_REDUCER_ID]: ProviderState
   [SAFE_REDUCER_ID]: SafeReducerMap
-  [NFT_ASSETS_REDUCER_ID]?: NFTAssets
-  [NFT_TOKENS_REDUCER_ID]?: NFTTokens
-  [TOKEN_REDUCER_ID]?: TokenState
+  [NFT_ASSETS_REDUCER_ID]: NFTAssets
+  [NFT_TOKENS_REDUCER_ID]: NFTTokens
+  [TOKEN_REDUCER_ID]: TokenState
   [TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
