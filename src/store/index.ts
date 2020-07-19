@@ -29,10 +29,11 @@ import incomingTransactions, {
 } from 'src/routes/safe/store/reducer/incomingTransactions'
 import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
-import { Map } from 'immutable'
+import { Map, RecordOf } from 'immutable'
 import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
 import { ProviderRecord } from '../logic/wallets/store/model/provider'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { CurrencyRateValue } from '../logic/currencyValues/store/model/currencyValues'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -77,7 +78,7 @@ export type AppReduxState = CombinedState<{
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
-  [CURRENCY_VALUES_KEY]: Map<string, any>
+  [CURRENCY_VALUES_KEY]: Map<string, RecordOf<CurrencyRateValue>>
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
