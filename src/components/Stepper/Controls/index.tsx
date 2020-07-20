@@ -20,7 +20,25 @@ const secondButtonStyle = {
   fontWeight: boldFont,
 }
 
-const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, onPrevious, penultimate }) => {
+interface Props {
+  buttonLabels?: string[]
+  currentStep: number
+  disabled: boolean
+  firstPage: boolean
+  lastPage: boolean
+  penultimate: boolean
+  onPrevious: () => void
+}
+
+const Controls = ({
+  buttonLabels,
+  currentStep,
+  disabled,
+  firstPage,
+  lastPage,
+  onPrevious,
+  penultimate,
+}: Props): React.ReactElement => {
   const back = firstPage ? 'Cancel' : 'Back'
 
   let next
@@ -28,7 +46,6 @@ const Controls = ({ buttonLabels, currentStep, disabled, firstPage, lastPage, on
     // eslint-disable-next-line
     next = firstPage ? 'Start' : penultimate ? 'Review' : lastPage ? 'Submit' : 'Next'
   } else {
-    // $FlowFixMe
     next = buttonLabels[currentStep]
   }
 
