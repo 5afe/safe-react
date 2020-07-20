@@ -81,7 +81,7 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]): GenericValidatorType =>
+export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType =>
   memoize(
     (value: string): ValidatorReturnType => {
       const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
