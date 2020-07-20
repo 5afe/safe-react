@@ -39,8 +39,8 @@ const buildOwnersFrom = (
     })
   })
 
-const buildModulesLinkedList = (modules: string[], nextModule: string): Array<ModulePair> | null => {
-  if (modules.length) {
+const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
+  if (modules?.length) {
     return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]
       return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
@@ -111,7 +111,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   dispatch(
     addSafeModules({
       safeAddress,
-      modulesAddresses: buildModulesLinkedList(modules.array, modules.next),
+      modulesAddresses: buildModulesLinkedList(modules?.array, modules?.next),
     }),
   )
 
