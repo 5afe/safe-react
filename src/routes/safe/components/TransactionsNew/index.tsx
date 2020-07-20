@@ -12,6 +12,7 @@ const Transactions = (): React.ReactElement => {
   const { currentPage, maxPages } = useSelector(currentPageSelector)
   useFetchNewTransactions()
 
+  // TODO: Remove this once we implement infinite scroll
   const nextPageButtonHandler = () => {
     dispatch(nextPage())
   }
