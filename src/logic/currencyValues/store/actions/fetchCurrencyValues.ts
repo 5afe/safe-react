@@ -10,7 +10,7 @@ import { Dispatch } from 'redux'
 
 export const fetchCurrencyValues = (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
   try {
-    const storedCurrencies: Map<string, CurrencyRateValue> | any = await loadCurrencyValues()
+    const storedCurrencies: Map<string, CurrencyRateValue> | unknown = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]
     if (!storedCurrency) {
       return batch(() => {
