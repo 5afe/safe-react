@@ -10,6 +10,7 @@ import Block from 'src/components/layout/Block'
 import {
   extractMultiSendDecodedData,
   isMultiSendDetails,
+  MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
@@ -21,6 +22,7 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -44,7 +46,7 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
-const MultiSigCustomData = ({ tx, order }): React.ReactElement => {
+const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
@@ -83,7 +85,7 @@ const MultiSigCustomData = ({ tx, order }): React.ReactElement => {
   )
 }
 
-const TxData = ({ data }) => {
+const TxData = ({ data }: { data: string }): React.ReactElement => {
   const classes = useStyles()
   const [showTxData, setShowTxData] = React.useState(false)
   const showExpandBtn = data.length > 20
@@ -127,7 +129,13 @@ const TxData = ({ data }) => {
   )
 }
 
-const GenericCustomData = ({ amount = 0, data, recipient }: any) => {
+interface GenericCustomDataProps {
+  amount?: number
+  data: string
+  recipient: string
+}
+
+const GenericCustomData = ({ amount = 0, data, recipient }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
 
@@ -149,7 +157,14 @@ const GenericCustomData = ({ amount = 0, data, recipient }: any) => {
   )
 }
 
-const CustomDescription = ({ amount, data, recipient, rawTx }: any): React.ReactElement => {
+interface CustomDescriptionProps {
+  amount?: number
+  data: string
+  recipient: string
+  rawTx: Transaction
+}
+
+const CustomDescription = ({ amount, data, recipient, rawTx }: CustomDescriptionProps): React.ReactElement => {
   const classes = useStyles()
 
   return rawTx.multiSendTx ? (

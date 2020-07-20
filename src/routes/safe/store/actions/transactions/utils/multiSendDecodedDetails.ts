@@ -7,6 +7,7 @@ import {
   Transfer,
   TransferType,
 } from 'src/routes/safe/store/models/types/transactions'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import {
   extractERC20TransferDetails,
   extractERC721TransferDetails,
@@ -22,7 +23,7 @@ export type MultiSendDetails = {
   value: number
 }
 
-type TxDetails = MultiSendDetails | DataDecoded
+export type TxDetails = MultiSendDetails | DataDecoded
 
 export type MultiSendDecodedData = {
   txDetails?: TxDetails[] | null
@@ -61,8 +62,8 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
   return null
 }
 
-export const extractMultiSendDecodedData = (tx: MultiSigTransaction): MultiSendDecodedData => {
-  const transfersDetails = tx.transfers?.map(extractTransferDetails) ?? null
+export const extractMultiSendDecodedData = (tx: Transaction | MultiSigTransaction): MultiSendDecodedData => {
+  const transfersDetails = (tx as MultiSigTransaction).transfers?.map(extractTransferDetails) ?? null
   const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
   return { txDetails, transfersDetails }
