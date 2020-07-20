@@ -4,10 +4,11 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from 'src/utils/singleton'
 import { simpleMemoize } from 'src/components/forms/validator'
-import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
+import { getNetworkIdFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
+import Web3 from 'web3'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0xB522a9f781924eD250A11C54105E51840B138AdD'
@@ -19,7 +20,7 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = (web3) => {
+const createGnosisSafeContract = (web3: Web3): any => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
@@ -72,7 +73,7 @@ export const getSafeMasterContract = async () => {
 export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations, userAccount) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
-    .encodeABI()  
+    .encodeABI()
 
   return proxyFactoryMaster.methods.createProxy(safeMaster.address, gnosisSafeData)
 }
@@ -94,11 +95,10 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress) => {
+export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress): Promise<any> => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
-  const gnosisSafe = await GnosisSafe.at(safeAddress)
-  return gnosisSafe
+  return GnosisSafe.at(safeAddress)
 })
 
 const cleanByteCodeMetadata = (bytecode) => {

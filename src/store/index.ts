@@ -1,6 +1,7 @@
+import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, CombinedState, combineReducers, compose, createStore } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore, CombinedState } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -16,9 +17,9 @@ import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/midd
 import currencyValues, { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
-import tokens, { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
-import provider, { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
+import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import notificationsMiddleware from 'src/routes/safe/store/middleware/notificationsMiddleware'
 import safeStorage from 'src/routes/safe/store/middleware/safeStorage'
 import cancellationTransactions, {
@@ -29,10 +30,7 @@ import incomingTransactions, {
 } from 'src/routes/safe/store/reducer/incomingTransactions'
 import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
-import { Map } from 'immutable'
-import { NFTAssets, NFTTokens } from '../logic/collectibles/sources/OpenSea'
-import { ProviderRecord } from '../logic/wallets/store/model/provider'
-import { Token } from 'src/logic/tokens/store/model/token'
+import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
@@ -68,11 +66,11 @@ const reducers = combineReducers({
 })
 
 export type AppReduxState = CombinedState<{
-  [PROVIDER_REDUCER_ID]?: ProviderRecord
+  [PROVIDER_REDUCER_ID]: ProviderState
   [SAFE_REDUCER_ID]: SafeReducerMap
-  [NFT_ASSETS_REDUCER_ID]?: NFTAssets
-  [NFT_TOKENS_REDUCER_ID]?: NFTTokens
-  [TOKEN_REDUCER_ID]?: Map<string, Token>
+  [NFT_ASSETS_REDUCER_ID]: NFTAssets
+  [NFT_TOKENS_REDUCER_ID]: NFTTokens
+  [TOKEN_REDUCER_ID]: TokenState
   [TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
