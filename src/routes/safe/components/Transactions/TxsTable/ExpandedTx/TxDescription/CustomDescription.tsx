@@ -1,8 +1,9 @@
 import { IconText, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import styled from 'styled-components'
 import React from 'react'
+import styled from 'styled-components'
 
+import RenderValue from './RenderValues'
 import { styles } from './styles'
 
 import Block from 'src/components/layout/Block'
@@ -15,7 +16,6 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import EtherscanLink from 'src/components/EtherscanLink'
 import { humanReadableValue } from 'src/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -46,27 +46,14 @@ const TxInfo = styled.div`
 
 const MultiSigCustomData = ({ tx, order }): React.ReactElement => {
   const classes = useStyles()
-  const [cut, setCut] = React.useState(undefined)
-  const { width } = useWindowDimensions()
-
-  React.useEffect(() => {
-    if (width <= 900) {
-      setCut(4)
-    } else if (width <= 1024) {
-      setCut(8)
-    } else {
-      setCut(12)
-    }
-  }, [width])
-
-  const usedMethod = tx.data?.method ? ` (${tx.data.method})` : ''
+  const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
   return (
     <>
       <Collapse
         collapseClassName={classes.collapse}
         headerWrapperClassName={classes.collapseHeaderWrapper}
-        title={<IconText iconSize="sm" iconType="code" text={`Interaction ${order + 1}${usedMethod}`} textSize="lg" />}
+        title={<IconText iconSize="sm" iconType="code" text={`Interaction ${order + 1}${methodName}`} textSize="lg" />}
       >
         <TxDetailsContent>
           <TxInfo>
@@ -85,11 +72,7 @@ const MultiSigCustomData = ({ tx, order }): React.ReactElement => {
                       {param.name}({param.type}):
                     </strong>
                   </InlineText>
-                  {param.type === 'address' ? (
-                    <EtherscanLink className={classes.address} cut={cut} value={param.value} />
-                  ) : (
-                    <InlineText size="lg">{param.value}</InlineText>
-                  )}
+                  <RenderValue method={methodName} type={param.type} value={param.value} />
                 </TxDetailsMethodParam>
               ))}
             </TxInfo>
@@ -175,7 +158,6 @@ const CustomDescription = ({ amount, data, recipient, rawTx }: any): React.React
         if (isMultiSendDetails(tx)) {
           return <MultiSigCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
         }
-        console.log(tx)
       })}
     </Block>
   ) : (
