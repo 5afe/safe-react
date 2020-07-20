@@ -32,7 +32,7 @@ const EthAddressInput = ({
   name,
   onScannedValue,
   text,
-}: EthAddressInputProps): JSX.Element => {
+}: EthAddressInputProps): React.ReactElement => {
   const classes = useStyles()
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))

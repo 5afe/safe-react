@@ -88,7 +88,7 @@ interface OwnProps extends RouteComponentProps {
   addSafe: any
 }
 
-const Open = ({ addSafe, network, provider, userAccount }: OwnProps): JSX.Element => {
+const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState()

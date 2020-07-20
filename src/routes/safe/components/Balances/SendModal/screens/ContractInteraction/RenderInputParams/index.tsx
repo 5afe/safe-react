@@ -7,7 +7,7 @@ import InputComponent from './InputComponent'
 import { generateFormFieldKey } from '../utils'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 
-const RenderInputParams = (): JSX.Element => {
+const RenderInputParams = (): React.ReactElement => {
   const {
     meta: { valid: validABI },
   } = useField('abi', { subscription: { valid: true, value: true } })
