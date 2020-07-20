@@ -23,7 +23,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 19797.899 returns 19,797.899',  () => {
+  it('Given a number between 10000 and 100000 returns a number of format XX,XXX.XXX',  () => {
     // given
     const input = '19797.899'
     const resultExpected = '19,797.899'
@@ -44,7 +44,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 9999 returns 9,999',  () => {
+  it('Given a number between 1000 and 10000 returns a number of format X,XXX',  () => {
     // given
     const input = 9999
     const resultExpected = '9,999'
@@ -54,7 +54,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 99999 returns 99,999',  () => {
+  it('Given a number between 10000 and 100000 returns a number of format XX,XXX',  () => {
     // given
     const input = 99999
     const resultExpected = '99,999'
@@ -64,7 +64,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 999999 returns 999,999',  () => {
+  it('Given a number between 100000 and 1000000 returns a number of format XXX,XXX',  () => {
     // given
     const input = 999999
     const resultExpected = '999,999'
@@ -74,7 +74,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 9999999 returns 9,999,999',  () => {
+  it('Given a number between 10000000 and 100000000 returns a number of format X,XXX,XXX',  () => {
     // given
     const input = 9999999
     const resultExpected = '9,999,999'
@@ -130,7 +130,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 19797.899 returns 19,797.899',  () => {
+  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX',  () => {
     // given
     const input = 19797.899
     const resultExpected = '19,797.899'
@@ -141,7 +141,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 19797899.479 returns 19,797,899.479',  () => {
+  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX',  () => {
     // given
     const input = 19797899.479
     const resultExpected = '19,797,899.479'
@@ -152,7 +152,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given 19797899479.999 returns 19,797,899,479.999',  () => {
+  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX',  () => {
     // given
     const input = 19797899479.999
     const resultExpected = '19,797,899,479.999'
