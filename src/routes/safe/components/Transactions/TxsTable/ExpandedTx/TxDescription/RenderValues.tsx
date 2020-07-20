@@ -18,6 +18,10 @@ const InlineText = styled(Text)`
   display: inline-flex;
 `
 
+const NestedWrapper = styled.div`
+  text-indent: 24px;
+`
+
 interface RenderValueProps {
   method: string
   type: string
@@ -41,11 +45,11 @@ const RenderEtherscanLink = ({ method, type, value }: RenderValueProps): React.R
 
   if (isArrayParameter(type)) {
     return (
-      <>
+      <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <EtherscanLink key={`${method}-value-${index}`} className={classes.address} cut={cut} value={value} />
+          <EtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
         ))}
-      </>
+      </NestedWrapper>
     )
   }
 
@@ -55,13 +59,13 @@ const RenderEtherscanLink = ({ method, type, value }: RenderValueProps): React.R
 const RenderGenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
   if (isArrayParameter(type)) {
     return (
-      <>
+      <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <InlineText key={`${method}-value-${index}`} size="lg">
+          <Text key={`${method}-value-${index}`} size="lg">
             {value}
-          </InlineText>
+          </Text>
         ))}
-      </>
+      </NestedWrapper>
     )
   }
 
