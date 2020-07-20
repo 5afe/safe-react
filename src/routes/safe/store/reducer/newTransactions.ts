@@ -1,8 +1,7 @@
 import { handleActions } from 'redux-actions'
-import { ADD_NEW_TRANSACTIONS } from '../actions/transactionsNew/addNewTransactions'
+
 import { Transaction } from '../models/types/transactions'
-import { SET_NEXT_PAGE } from '../actions/transactionsNew/setNextPage'
-import { SET_PREVIOUS_PAGE } from '../actions/transactionsNew/setPreviousPage'
+import { ADD_NEW_TRANSACTIONS, SET_NEXT_PAGE, SET_PREVIOUS_PAGE } from '../actions/transactionsNew/pagination'
 
 export const TRANSACTIONS = 'transactionsNew'
 

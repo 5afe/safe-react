@@ -3,8 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
 import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { setPreviousPage } from '../../store/actions/transactionsNew/setPreviousPage'
-import { setNextPage } from '../../store/actions/transactionsNew/setNextPage'
+import { setNextPage, setPreviousPage } from '../../store/actions/transactionsNew/pagination'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()

@@ -1,9 +1,10 @@
 import { loadAllTransactions } from '../../store/actions/transactionsNew/loadAllTransactions'
-import { addNewTransactions } from '../../store/actions/transactionsNew/addNewTransactions'
+
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { currentPageSelector } from '../../store/selectors/newTransactions'
 import { safeParamAddressFromStateSelector } from '../../store/selectors'
+import { addNewTransactions } from '../../store/actions/transactionsNew/pagination'
 
 export const useFetchNewTransactions = (): void => {
   const dispatch = useDispatch()
