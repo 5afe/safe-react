@@ -1,3 +1,5 @@
+import { List } from 'immutable'
+
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
@@ -100,7 +102,7 @@ export const minMaxLength = (minLen, maxLen) => (value) =>
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]) =>
+export const uniqueAddress = (addresses: string[] | List<string>) =>
   simpleMemoize((value: string[]) => {
     const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
     return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined

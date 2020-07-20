@@ -19,6 +19,7 @@ import Img from 'src/components/layout/Img'
 import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const notificationStyles = {
   success: {
@@ -75,7 +76,7 @@ const PageFrame = ({ children, classes, currentNetwork }) => {
 
 export default withStyles(notificationStyles)(
   connect(
-    (state) => ({
+    (state: AppReduxState) => ({
       currentNetwork: networkSelector(state),
     }),
     null,
