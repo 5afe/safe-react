@@ -6,7 +6,6 @@ import {
   Parameter,
   Transfer,
   TransferType,
-  TxConstants,
 } from 'src/routes/safe/store/models/types/transactions'
 import {
   extractERC20TransferDetails,
@@ -63,12 +62,8 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
 }
 
 export const extractMultiSendDecodedData = (tx: MultiSigTransaction): MultiSendDecodedData => {
-  const transfersDetails = null ?? tx.transfers?.map(extractTransferDetails)
-
-  const txDetails =
-    tx.dataDecoded?.method === TxConstants.MULTI_SEND
-      ? extractMultiSendDetails(tx.dataDecoded?.parameters[0])
-      : [tx.dataDecoded]
+  const transfersDetails = tx.transfers?.map(extractTransferDetails) ?? null
+  const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
   return { txDetails, transfersDetails }
 }
