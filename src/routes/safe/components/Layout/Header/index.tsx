@@ -18,7 +18,10 @@ import Row from 'src/components/layout/Row'
 import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'src/routes/safe/components/Layout'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { safeFiatBalancesTotalSelector } from '../../../../../logic/currencyValues/store/selectors'
+import {
+  currentCurrencySelector,
+  safeFiatBalancesTotalSelector,
+} from '../../../../../logic/currencyValues/store/selectors'
 import { formatAmountInUsFormat } from '../../../../../logic/tokens/utils/formatAmount'
 
 const LayoutHeader = (props) => {
@@ -27,6 +30,7 @@ const LayoutHeader = (props) => {
   const granted = useSelector(grantedSelector)
   const name = useSelector(safeNameSelector)
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
+  const currentCurrency = useSelector(currentCurrencySelector)
   if (!address) return null
 
   return (
@@ -36,7 +40,7 @@ const LayoutHeader = (props) => {
         <Block className={classes.name}>
           <Row>
             <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-              {name} | {formatAmountInUsFormat(currentSafeBalance)} USD
+              {name} | {formatAmountInUsFormat(currentSafeBalance)} {currentCurrency}
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>
