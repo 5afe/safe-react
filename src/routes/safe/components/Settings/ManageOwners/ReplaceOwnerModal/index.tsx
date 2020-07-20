@@ -47,7 +47,7 @@ export const sendReplaceOwner = async (
     createTransaction({
       safeAddress,
       to: safeAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,

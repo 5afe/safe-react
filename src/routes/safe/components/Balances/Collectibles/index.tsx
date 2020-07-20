@@ -90,7 +90,7 @@ const Collectibles = () => {
   return (
     <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
-        {activeAssetsList.size ? (
+        {activeAssetsList.length ? (
           activeAssetsList.map((nftAsset) => {
             return (
               <React.Fragment key={nftAsset.slug}>

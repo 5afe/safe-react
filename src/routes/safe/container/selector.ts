@@ -1,4 +1,4 @@
-import { Map } from 'immutable'
+import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -29,8 +29,8 @@ export const extendedSafeTokensSelector = createSelector(
   safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens, balances, tokensList, ethAsToken) => {
-    const extendedTokens = Map().withMutations((map) => {
+  (safeTokens, balances, tokensList, ethAsToken): List<Token> => {
+    const extendedTokens = Map<string, Token>().withMutations((map) => {
       safeTokens.forEach((tokenAddress) => {
         const baseToken = tokensList.get(tokenAddress)
         const tokenBalance = balances.get(tokenAddress)

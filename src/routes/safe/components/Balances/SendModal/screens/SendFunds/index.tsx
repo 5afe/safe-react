@@ -77,7 +77,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
+      <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
         <Paragraph className={classes.manage} noMargin weight="bolder">
           Send Funds
         </Paragraph>
@@ -214,7 +214,11 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Amount
                     </Paragraph>
-                    <ButtonLink onClick={() => mutators.setMax(selectedTokenRecord.balance)} weight="bold">
+                    <ButtonLink
+                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      weight="bold"
+                      testId="send-max-btn"
+                    >
                       Send max
                     </ButtonLink>
                   </Col>
@@ -232,6 +236,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       placeholder="Amount*"
                       text="Amount*"
                       type="text"
+                      testId="amount-input"
                       validate={composeValidators(
                         required,
                         mustBeFloat,

@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import { TableColumn } from 'src/components/Table/types'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'
@@ -13,8 +14,8 @@ export const getOwnerData = (owners) => {
   return rows
 }
 
-export const generateColumns = () => {
-  const nameColumn = {
+export const generateColumns = (): List<TableColumn> => {
+  const nameColumn: TableColumn = {
     id: OWNERS_TABLE_NAME_ID,
     order: false,
     disablePadding: false,
@@ -24,7 +25,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const addressColumn = {
+  const addressColumn: TableColumn = {
     id: OWNERS_TABLE_ADDRESS_ID,
     order: false,
     disablePadding: false,
@@ -33,7 +34,7 @@ export const generateColumns = () => {
     align: 'left',
   }
 
-  const actionsColumn = {
+  const actionsColumn: TableColumn = {
     id: OWNERS_TABLE_ACTIONS_ID,
     order: false,
     disablePadding: false,

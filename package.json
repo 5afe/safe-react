@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.6.1",
+  "version": "2.7.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -160,7 +160,7 @@
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "^0.1.3",
+    "@gnosis.pm/safe-react-components": "^0.2.0",
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid": "5.19.0",
     "@material-ui/core": "4.11.0",
@@ -233,6 +233,7 @@
     "@types/styled-components": "^5.1.1",
     "@typescript-eslint/eslint-plugin": "3.6.0",
     "@typescript-eslint/parser": "3.6.0",
+    "@types/react-redux": "^7.1.9",
     "autoprefixer": "9.8.4",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
