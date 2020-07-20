@@ -1,5 +1,5 @@
 import { Checkbox } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Field from 'src/components/forms/Field'
@@ -15,7 +15,7 @@ type Props = {
   placeholder: string
 }
 
-const InputComponent = ({ type, keyValue, placeholder }: Props): ReactElement => {
+const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElement => {
   if (!type) {
     return null
   }

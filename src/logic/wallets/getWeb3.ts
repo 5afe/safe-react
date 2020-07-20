@@ -9,14 +9,16 @@ import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
 
 export const ETHEREUM_NETWORK = {
-  MAINNET: 'MAINNET',
-  MORDEN: 'MORDEN',
-  ROPSTEN: 'ROPSTEN',
-  RINKEBY: 'RINKEBY',
-  GOERLI: 'GOERLI',
-  KOVAN: 'KOVAN',
-  UNKNOWN: 'UNKNOWN',
+  MAINNET: 'MAINNET' as const,
+  MORDEN: 'MORDEN' as const,
+  ROPSTEN: 'ROPSTEN' as const,
+  RINKEBY: 'RINKEBY' as const,
+  GOERLI: 'GOERLI' as const,
+  KOVAN: 'KOVAN' as const,
+  UNKNOWN: 'UNKNOWN' as const,
 }
+
+export type EthereumNetworks = typeof ETHEREUM_NETWORK[keyof typeof ETHEREUM_NETWORK]
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -26,26 +28,22 @@ export const WALLET_PROVIDER = {
   PORTIS: 'PORTIS',
   FORTMATIC: 'FORTMATIC',
   SQUARELINK: 'SQUARELINK',
+  UNILOGIN: 'UNILOGIN',
   WALLETCONNECT: 'WALLETCONNECT',
   OPERA: 'OPERA',
   DAPPER: 'DAPPER',
+  WALLETLINK: 'WALLETLINK',
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
   TREZOR: 'TREZOR',
 }
 
 export const ETHEREUM_NETWORK_IDS = {
-  // $FlowFixMe
   1: ETHEREUM_NETWORK.MAINNET,
-  // $FlowFixMe
   2: ETHEREUM_NETWORK.MORDEN,
-  // $FlowFixMe
   3: ETHEREUM_NETWORK.ROPSTEN,
-  // $FlowFixMe
   4: ETHEREUM_NETWORK.RINKEBY,
-  // $FlowFixMe
   5: ETHEREUM_NETWORK.GOERLI,
-  // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
 }
 

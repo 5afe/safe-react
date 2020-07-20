@@ -130,12 +130,12 @@ const AssetsList = (props) => {
         </Row>
         <Hairline />
       </Block>
-      {!nftAssetsList.size && (
+      {!nftAssetsList.length && (
         <Block className={classes.progressContainer} justify="center">
           <CircularProgress />
         </Block>
       )}
-      {nftAssetsList.size > 0 && (
+      {nftAssetsList.length > 0 && (
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}

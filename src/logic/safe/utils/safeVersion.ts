@@ -10,7 +10,7 @@ export const FEATURES = [
   { name: 'ERC1155', validVersion: '>=1.1.1' },
 ]
 
-export const safeNeedsUpdate = (currentVersion, latestVersion) => {
+export const safeNeedsUpdate = (currentVersion: string, latestVersion: string): boolean => {
   if (!currentVersion || !latestVersion) {
     return false
   }
@@ -21,9 +21,10 @@ export const safeNeedsUpdate = (currentVersion, latestVersion) => {
   return latest ? semverLessThan(current, latest) : false
 }
 
-export const getCurrentSafeVersion = (gnosisSafeInstance) => gnosisSafeInstance.VERSION()
+export const getCurrentSafeVersion = (gnosisSafeInstance: { VERSION: () => Promise<string> }): Promise<string> =>
+  gnosisSafeInstance.VERSION()
 
-export const enabledFeatures = (version) =>
+export const enabledFeatures = (version: string): Array<string> =>
   FEATURES.reduce((acc, feature) => {
     if (semverSatisfies(version, feature.validVersion)) {
       acc.push(feature.name)
@@ -31,7 +32,16 @@ export const enabledFeatures = (version) =>
     return acc
   }, [])
 
-export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion) => {
+interface SafeVersionInfo {
+  current: string
+  latest: string
+  needUpdate: boolean
+}
+
+export const checkIfSafeNeedsUpdate = async (
+  gnosisSafeInstance: { VERSION: () => Promise<string> },
+  lastSafeVersion: string,
+): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
     return null
   }
@@ -43,7 +53,7 @@ export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance, lastSafeVersion
   return { current, latest, needUpdate }
 }
 
-export const getCurrentMasterContractLastVersion = async () => {
+export const getCurrentMasterContractLastVersion = async (): Promise<string> => {
   const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {
@@ -56,7 +66,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress) => {
+export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()

@@ -37,7 +37,7 @@ const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnac
     createTransaction({
       safeAddress,
       to: multiSendAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData: encodeMultiSendCallData,
       notifiedTransaction: 'STANDARD_TX',
       enqueueSnackbar,

@@ -1,4 +1,4 @@
-import React, { ReactElement } from 'react'
+import React from 'react'
 import { useField } from 'react-final-form'
 
 import Row from 'src/components/layout/Row'
@@ -7,7 +7,7 @@ import InputComponent from './InputComponent'
 import { generateFormFieldKey } from '../utils'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 
-const RenderInputParams = (): ReactElement => {
+const RenderInputParams = (): React.ReactElement => {
   const {
     meta: { valid: validABI },
   } = useField('abi', { subscription: { valid: true, value: true } })
