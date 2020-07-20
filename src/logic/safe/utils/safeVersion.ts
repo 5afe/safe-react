@@ -33,7 +33,16 @@ export const enabledFeatures = (version: string): string[] =>
     return acc
   }, [])
 
-export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance: GnosisSafe, lastSafeVersion: string) => {
+interface SafeVersionInfo {
+  current: string
+  latest: string
+  needUpdate: boolean
+}
+
+export const checkIfSafeNeedsUpdate = async (
+  gnosisSafeInstance: GnosisSafe,
+  lastSafeVersion: string,
+): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
     return null
   }
@@ -45,7 +54,7 @@ export const checkIfSafeNeedsUpdate = async (gnosisSafeInstance: GnosisSafe, las
   return { current, latest, needUpdate }
 }
 
-export const getCurrentMasterContractLastVersion = async () => {
+export const getCurrentMasterContractLastVersion = async (): Promise<string> => {
   const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {
@@ -58,7 +67,7 @@ export const getCurrentMasterContractLastVersion = async () => {
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress: string) => {
+export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
   try {
     const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()

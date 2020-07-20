@@ -1,12 +1,12 @@
-node_modules/
-./build
+/node_modules
+/build
 .DS_Store
 yarn-error.log
 .env*
-.idea/
+/.idea
 dist
 electron-builder.yml
-.yalc/
+/.yalc
 yalc.lock
 # testing
 /coverage/

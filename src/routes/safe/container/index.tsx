@@ -17,7 +17,7 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = (): JSX.Element => {
+const SafeView = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
