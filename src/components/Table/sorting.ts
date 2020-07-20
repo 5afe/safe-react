@@ -2,7 +2,7 @@ import { List } from 'immutable'
 
 export const FIXED = 'fixed'
 
-export const buildOrderFieldFrom = (attr) => `${attr}Order`
+export const buildOrderFieldFrom = (attr: string): string => `${attr}Order`
 
 const desc = (a, b, orderBy, orderProp) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy

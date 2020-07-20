@@ -3,7 +3,10 @@ import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
+import {
+  CANCELLATION_TRANSACTIONS_REDUCER_ID,
+  CancellationTransactions,
+} from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/incomingTransactions'
 import { SAFE_REDUCER_ID, SafesMap } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
@@ -76,7 +79,7 @@ export const addressBookQueryParamsSelector = (state: AppReduxState): string | n
 export const safeCancellationTransactionsSelector = createSelector(
   cancellationTransactionsSelector,
   safeParamAddressFromStateSelector,
-  (cancellationTransactions, address) => {
+  (cancellationTransactions, address): CancellationTransactions => {
     if (!cancellationTransactions) {
       return Map()
     }

@@ -9,12 +9,13 @@ import TransferDescription from './TransferDescription'
 
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Block from 'src/components/layout/Block'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 
 const useStyles = makeStyles(styles)
 
-const TxDescription = ({ tx }): React.ReactElement => {
+const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
   const classes = useStyles()
   const {
     action,

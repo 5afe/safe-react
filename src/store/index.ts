@@ -24,6 +24,7 @@ import notificationsMiddleware from 'src/routes/safe/store/middleware/notificati
 import safeStorage from 'src/routes/safe/store/middleware/safeStorage'
 import cancellationTransactions, {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
+  CancellationTxState,
 } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
@@ -72,7 +73,7 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [TRANSACTIONS_REDUCER_ID]: Map<string, any>
-  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
   [CURRENCY_VALUES_KEY]: Map<string, any>

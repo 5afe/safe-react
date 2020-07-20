@@ -130,12 +130,12 @@ const TxData = ({ data }: { data: string }): React.ReactElement => {
 }
 
 interface GenericCustomDataProps {
-  amount?: number
+  amount?: string
   data: string
   recipient: string
 }
 
-const GenericCustomData = ({ amount = 0, data, recipient }: GenericCustomDataProps): React.ReactElement => {
+const GenericCustomData = ({ amount = '0', data, recipient }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
 
@@ -158,7 +158,7 @@ const GenericCustomData = ({ amount = 0, data, recipient }: GenericCustomDataPro
 }
 
 interface CustomDescriptionProps {
-  amount?: number
+  amount?: string
   data: string
   recipient: string
   rawTx: Transaction
