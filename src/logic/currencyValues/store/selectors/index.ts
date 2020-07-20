@@ -5,6 +5,7 @@ import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/curr
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { AppReduxState } from '../../../../store'
 import { CurrencyRateValue } from '../model/currencyValues'
+import { BigNumber } from 'bignumber.js'
 
 export const currencyValuesSelector = (state: AppReduxState): Map<string, RecordOf<CurrencyRateValue>> =>
   state[CURRENCY_VALUES_KEY]
@@ -31,12 +32,17 @@ export const currencyRateSelector = createSelector(safeFiatBalancesSelector, (cu
   currencyValuesMap ? currencyValuesMap.get('currencyRate') : null,
 )
 
-export const safeFiatBalancesTotalSelector = createSelector(safeFiatBalancesListSelector, (currencyBalances) => {
-  if (!currencyBalances) return 0
+export const safeFiatBalancesTotalSelector = createSelector(
+  safeFiatBalancesListSelector,
+  currencyRateSelector,
+  (currencyBalances, currencyRate) => {
+    if (!currencyBalances) return 0
 
-  return currencyBalances
-    .map((balanceRecord) => balanceRecord.balanceInSelectedCurrency)
-    .reduce((accumulator, currentBalanceInSelectedCurrency) => {
-      return accumulator + parseFloat(currentBalanceInSelectedCurrency)
-    }, 0)
-})
+    const totalInBaseCurrency = currencyBalances
+      .map((balanceRecord) => balanceRecord.balanceInBaseCurrency)
+      .reduce((accumulator, currentBalanceInSelectedCurrency) => {
+        return accumulator + parseFloat(currentBalanceInSelectedCurrency)
+      }, 0)
+    return new BigNumber(totalInBaseCurrency).times(currencyRate).toFixed(2)
+  },
+)
