@@ -29,7 +29,7 @@ export default handleActions(
       action: {
         payload: {
           safeAddress: string
-          transactions: { [safeAddress: string]: Transaction[] }
+          transactions: Transaction[]
           count: number
         }
       },
@@ -41,7 +41,7 @@ export default handleActions(
         ...state,
         transactions: {
           ...state.transactions,
-          [safeAddress]: [...oldTxs, ...transactions[safeAddress]],
+          [safeAddress]: [...oldTxs, ...transactions],
         },
         transactionsCount: count,
       }

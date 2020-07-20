@@ -75,16 +75,15 @@ const etagsByPage = {}
 export const loadAllTransactions = async (
   uriParams: ServiceUriParams,
 ): Promise<{
-  transactions: { [safeAddress: string]: Transaction[] }
+  transactions: Transaction[]
   count?: number
 }> => {
-  const { safeAddress } = uriParams
   const previousEtag = etagsByPage && etagsByPage[uriParams.offset]
   const { responseEtag, results, count } = await fetchAllTransactions(uriParams, previousEtag)
   etagsByPage[uriParams.offset] = responseEtag
 
   return {
-    transactions: { [safeAddress]: results },
+    transactions: results,
     count,
   }
 }

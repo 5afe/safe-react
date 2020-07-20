@@ -15,7 +15,7 @@ export const useFetchNewTransactions = (): void => {
     async function loadNewTxs() {
       const { transactions, count } = await loadAllTransactions({ safeAddress, offset, limit })
 
-      if (transactions[safeAddress].length) {
+      if (transactions.length) {
         dispatch(addNewTransactions({ transactions, safeAddress, count }))
       }
     }
