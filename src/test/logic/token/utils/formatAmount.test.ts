@@ -1,4 +1,5 @@
-import { formatAmountInUsFormat, formatAmount } from '../../../../logic/tokens/utils/formatAmount'
+import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+
 
 describe('formatAmount', () => {
   it('Given 0 returns 0',  () => {

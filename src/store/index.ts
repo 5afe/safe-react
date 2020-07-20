@@ -31,7 +31,7 @@ import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/red
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import { Map } from 'immutable'
-import { CurrencyRateValueRecord } from '../logic/currencyValues/store/model/currencyValues'
+import { CurrencyRateValueRecord } from 'src/logic/currencyValues/store/model/currencyValues'
 
 export const history = createHashHistory({ hashType: 'slash' })
 
