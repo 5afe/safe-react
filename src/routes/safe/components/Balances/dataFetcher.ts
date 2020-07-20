@@ -1,5 +1,5 @@
 import { BigNumber } from 'bignumber.js'
-import { List } from 'immutable'
+import { List, RecordOf } from 'immutable'
 
 import { buildOrderFieldFrom, FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
@@ -16,8 +16,12 @@ export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-// eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (token, currencySelected, currencyValues, currencyRate) => {
+const getTokenPriceInCurrency = (
+  token: RecordOf<TokenProps>,
+  currencySelected: AVAILABLE_CURRENCIES,
+  currencyValues: List<BalanceCurrencyRecord>,
+  currencyRate: number | null,
+): string => {
   if (!currencySelected) {
     return ''
   }
@@ -41,7 +45,7 @@ const getTokenPriceInCurrency = (token, currencySelected, currencyValues, curren
 }
 
 export const getBalanceData = (
-  activeTokens: List<TokenProps>,
+  activeTokens: List<RecordOf<TokenProps>>,
   currencySelected: AVAILABLE_CURRENCIES,
   currencyValues: List<BalanceCurrencyRecord>,
   currencyRate: number,
