@@ -7,7 +7,7 @@ import { ConnectedRouter } from 'connected-react-router'
 import Load from 'src/routes/load/container/Load'
 import { aNewStore, history, } from 'src/store'
 import { sleep } from 'src/utils/timer'
-import { getProviderInfo } from 'src/logic/wallets/getWeb3'
+import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import addProvider from 'src/logic/wallets/store/actions/addProvider'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import { aMinedSafe } from './builder/safe.redux.builder'
@@ -29,7 +29,7 @@ afterAll(() => {
 })
 
 const renderLoadSafe = async (localStore) => {
-  const provider = await getProviderInfo((window as any).web3.currentProvider)
+  const provider = await getProviderInfo(window.web3.currentProvider || 'ws://localhost:8545')
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 

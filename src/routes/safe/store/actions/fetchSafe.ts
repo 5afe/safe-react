@@ -13,7 +13,10 @@ import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner } from '../models/safe'
+import { ModulePair, SafeOwner } from 'src/routes/safe/store/models/safe'
+import { Dispatch } from 'redux'
+import addSafeModules from './addSafeModules'
+import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 
 const buildOwnersFrom = (
   safeOwners,
@@ -35,6 +38,16 @@ const buildOwnersFrom = (
       address: convertedAdd,
     })
   })
+
+const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
+  if (modules?.length) {
+    return modules.map((moduleAddress, index, modules) => {
+      const prevModule = modules[index + 1]
+      return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
+    })
+  }
+  return null
+}
 
 export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?: any) => {
   const safeAddress = checksumAddress(safeAdd)
@@ -71,11 +84,17 @@ export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?:
   return safe
 }
 
-export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
+export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
-  const safeParams = ['getThreshold', 'nonce', 'getOwners']
-  const [[remoteThreshold, remoteNonce, remoteOwners], localSafe] = await Promise.all([
+  const safeParams = [
+    'getThreshold',
+    'nonce',
+    'getOwners',
+    // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
+    { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
+  ]
+  const [[remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
@@ -88,6 +107,13 @@ export const checkAndUpdateSafe = (safeAdd) => async (dispatch) => {
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
   const localThreshold = localSafe ? localSafe.threshold : undefined
   const localNonce = localSafe ? localSafe.nonce : undefined
+
+  dispatch(
+    addSafeModules({
+      safeAddress,
+      modulesAddresses: buildModulesLinkedList(modules?.array, modules?.next),
+    }),
+  )
 
   if (localNonce !== Number(remoteNonce)) {
     dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))

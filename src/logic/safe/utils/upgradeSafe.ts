@@ -15,7 +15,7 @@ export const upgradeSafeToLatestVersion = async (safeAddress, createTransaction)
     createTransaction({
       safeAddress,
       to: MULTI_SEND_ADDRESS,
-      valueInWei: 0,
+      valueInWei: '0',
       txData: encodeMultiSendCallData,
       notifiedTransaction: 'STANDARD_TX',
       enqueueSnackbar: () => {},

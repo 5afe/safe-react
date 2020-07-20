@@ -10,7 +10,6 @@ import selector from './selector'
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
@@ -19,6 +18,7 @@ import { loadFromStorage } from 'src/utils/storage'
 import { Dispatch } from 'redux'
 import { SafeOwner } from '../../safe/store/models/safe'
 import { List } from 'immutable'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const loadSafe = async (
   safeName: string,
@@ -37,16 +37,31 @@ export const loadSafe = async (
   await addSafe(safeProps)
 }
 
-class Load extends React.Component<any> {
-  onLoadSafeSubmit = async (values) => {
+interface ILoad {
+  addSafe: Dispatch<any>
+  network: string
+  provider?: string
+  userAddress: string
+}
+
+export interface LoadFormValues {
+  name: string
+  address: string
+  threshold: string
+}
+
+const Load: React.FC<ILoad> = ({ addSafe, network, provider, userAddress }) => {
+  const onLoadSafeSubmit = async (values: LoadFormValues) => {
+    let safeAddress = values[FIELD_LOAD_ADDRESS]
+    // TODO: review this check. It doesn't seems to be necessary at this point
+    if (!safeAddress) {
+      console.error('failed to load Safe address', JSON.stringify(values))
+      return
+    }
+
     try {
-      const { addSafe } = this.props
-      const web3 = getWeb3()
       const safeName = values[FIELD_LOAD_NAME]
-      let safeAddress = values[FIELD_LOAD_ADDRESS]
-      if (safeAddress) {
-        safeAddress = web3.utils.toChecksumAddress(safeAddress)
-      }
+      safeAddress = checksumAddress(safeAddress)
       const ownerNames = getNamesFrom(values)
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
@@ -62,20 +77,11 @@ class Load extends React.Component<any> {
     }
   }
 
-  render() {
-    const { network, provider, userAddress } = this.props
-
-    return (
-      <Page>
-        <Layout
-          network={network}
-          onLoadSafeSubmit={this.onLoadSafeSubmit}
-          provider={provider}
-          userAddress={userAddress}
-        />
-      </Page>
-    )
-  }
+  return (
+    <Page>
+      <Layout network={network} onLoadSafeSubmit={onLoadSafeSubmit} provider={provider} userAddress={userAddress} />
+    </Page>
+  )
 }
 
 export default connect(selector, actions)(Load)

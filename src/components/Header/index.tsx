@@ -55,13 +55,13 @@ class HeaderComponent extends React.PureComponent<any, any> {
 
   getProviderInfoBased = () => {
     const { hasError } = this.state
-    const { available, loaded, network, provider, userAddress } = this.props
+    const { available, loaded, provider, userAddress } = this.props
 
     if (hasError || !loaded) {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccessible connected={available} network={network} provider={provider} userAddress={userAddress} />
+    return <ProviderAccessible connected={available} provider={provider} userAddress={userAddress} />
   }
 
   getProviderDetailsBased = () => {
