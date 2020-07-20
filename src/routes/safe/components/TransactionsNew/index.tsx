@@ -4,6 +4,7 @@ import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../s
 import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
 import { nextPage, previousPage } from '../../store/actions/transactionsNew/pagination'
+import { Transaction } from '../../store/models/types/transactions'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
@@ -25,8 +26,14 @@ const Transactions = (): React.ReactElement => {
 
   return (
     <>
-      {transactions.map((tx, index) => {
-        const txHash = tx.transactionHash || tx.txHash
+      {transactions.map((tx: Transaction, index) => {
+        let txHash = ''
+        if ('transactionHash' in tx) {
+          txHash = tx.transactionHash
+        }
+        if ('txHash' in tx) {
+          txHash = tx.txHash
+        }
         return <div key={index}>Tx hash: {txHash}</div>
       })}
       <ButtonLink color="primary" onClick={() => previousPageButtonHandler()} disabled={currentPage === 1}>
