@@ -57,11 +57,9 @@ const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProp
           steps={steps}
           testId="load-safe-form"
         >
-          <StepperPage validate={safeFieldsValidation}>{DetailsForm}</StepperPage>
-          <StepperPage network={network}>{OwnerList}</StepperPage>
-          <StepperPage network={network} userAddress={userAddress}>
-            {ReviewInformation}
-          </StepperPage>
+          <StepperPage validate={safeFieldsValidation} component={DetailsForm} />
+          <StepperPage network={network} component={OwnerList} />
+          <StepperPage network={network} userAddress={userAddress} component={ReviewInformation} />
         </Stepper>
       </Block>
     ) : (

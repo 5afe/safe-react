@@ -40,7 +40,7 @@ export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this Safe is not the sa
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
-export const safeFieldsValidation = async (values) => {
+export const safeFieldsValidation = async (values): Promise<Record<string, string>> => {
   const errors = {}
   const web3 = getWeb3()
   const safeAddress = values[FIELD_LOAD_ADDRESS]

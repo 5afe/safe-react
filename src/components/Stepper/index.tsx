@@ -11,8 +11,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Hairline from 'src/components/layout/Hairline'
 import { history } from 'src/store'
 
-export { default as Step } from './Step'
-
 const transitionProps = {
   timeout: {
     enter: 350,
@@ -20,7 +18,12 @@ const transitionProps = {
   },
 }
 
-export const StepperPage = ({ children }: { children: JSX.Element }): JSX.Element => children
+interface StepperPageProps {
+  validate?: (...args: unknown[]) => undefined | string[] | Promise<undefined | Record<string, string>>
+  [key: string]: unknown
+}
+
+export const StepperPage = ({}: StepperPageProps): null => null
 
 type StepperFormValues = Record<string, string>
 
