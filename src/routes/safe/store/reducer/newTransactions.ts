@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { Transaction } from '../models/types/transactions'
-import { ADD_NEW_TRANSACTIONS, SET_NEXT_PAGE, SET_PREVIOUS_PAGE } from '../actions/transactionsNew/pagination'
+import { LOAD_MORE_TRANSACTIONS, SET_NEXT_PAGE, SET_PREVIOUS_PAGE } from '../actions/transactionsNew/pagination'
 
 export const TRANSACTIONS = 'transactionsNew'
 
@@ -24,7 +24,7 @@ const initialState: Readonly<NewTransactionsState> = {
 export default handleActions(
   {
     // todo: because we are thinking in remove immutableJS, I will implement this without it so it can be easier removed in future
-    [ADD_NEW_TRANSACTIONS]: (
+    [LOAD_MORE_TRANSACTIONS]: (
       state: NewTransactionsState,
       action: {
         payload: {

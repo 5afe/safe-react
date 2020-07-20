@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
 import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { setNextPage, setPreviousPage } from '../../store/actions/transactionsNew/pagination'
+import { nextPage, previousPage } from '../../store/actions/transactionsNew/pagination'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
@@ -12,11 +12,11 @@ const Transactions = (): React.ReactElement => {
   useFetchNewTransactions()
 
   const nextPageButtonHandler = () => {
-    dispatch(setNextPage())
+    dispatch(nextPage())
   }
 
   const previousPageButtonHandler = () => {
-    dispatch(setPreviousPage())
+    dispatch(previousPage())
   }
 
   if (!transactions) return <div>No txs available for safe</div>

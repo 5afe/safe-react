@@ -4,7 +4,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { currentPageSelector } from '../../store/selectors/newTransactions'
 import { safeParamAddressFromStateSelector } from '../../store/selectors'
-import { addNewTransactions } from '../../store/actions/transactionsNew/pagination'
+import { loadMore } from '../../store/actions/transactionsNew/pagination'
 
 export const useFetchNewTransactions = (): void => {
   const dispatch = useDispatch()
@@ -16,7 +16,7 @@ export const useFetchNewTransactions = (): void => {
       const { transactions, count } = await loadAllTransactions({ safeAddress, offset, limit })
 
       if (transactions.length) {
-        dispatch(addNewTransactions({ transactions, safeAddress, count }))
+        dispatch(loadMore({ transactions, safeAddress, count }))
       }
     }
 
