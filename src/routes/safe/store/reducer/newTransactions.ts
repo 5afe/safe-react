@@ -8,7 +8,7 @@ export const TRANSACTIONS = 'transactionsNew'
 export interface NewTransactionsState {
   offset: number
   limit: number
-  transactionsCount: number
+  totalTransactionsAmount: number
   transactions: {
     [safeAddress: string]: Transaction[]
   }
@@ -17,7 +17,7 @@ export interface NewTransactionsState {
 const initialState: Readonly<NewTransactionsState> = {
   offset: 0,
   limit: 50,
-  transactionsCount: 0,
+  totalTransactionsAmount: 0,
   transactions: {},
 }
 
@@ -30,11 +30,11 @@ export default handleActions(
         payload: {
           safeAddress: string
           transactions: Transaction[]
-          count: number
+          totalTransactionsAmount: number
         }
       },
     ) => {
-      const { safeAddress, transactions, count } = action.payload
+      const { safeAddress, transactions, totalTransactionsAmount } = action.payload
       const oldTxs = (state.transactions && state.transactions[safeAddress]) || []
 
       return {
@@ -43,7 +43,7 @@ export default handleActions(
           ...state.transactions,
           [safeAddress]: [...oldTxs, ...transactions],
         },
-        transactionsCount: count,
+        totalTransactionsAmount,
       }
     },
     [SET_NEXT_PAGE]: (state: NewTransactionsState) => {

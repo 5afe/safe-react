@@ -76,7 +76,7 @@ export const loadAllTransactions = async (
   uriParams: ServiceUriParams,
 ): Promise<{
   transactions: Transaction[]
-  count?: number
+  totalTransactionsAmount?: number
 }> => {
   const previousEtag = etagsByPage && etagsByPage[uriParams.offset]
   const { responseEtag, results, count } = await fetchAllTransactions(uriParams, previousEtag)
@@ -84,6 +84,6 @@ export const loadAllTransactions = async (
 
   return {
     transactions: results,
-    count,
+    totalTransactionsAmount: count,
   }
 }

@@ -17,12 +17,12 @@ export const safeNewTransactionsSelector = createSelector(
 
 export const currentPageSelector = createSelector(
   getNewTransactionsStateSelector,
-  ({ offset, limit, transactionsCount }) => {
+  ({ offset, limit, totalTransactionsAmount }) => {
     return {
       offset,
       limit,
       currentPage: Math.floor(offset / limit) + 1,
-      maxPages: Math.ceil(transactionsCount / limit),
+      maxPages: Math.ceil(totalTransactionsAmount / limit),
     }
   },
 )

@@ -13,10 +13,10 @@ export const useFetchNewTransactions = (): void => {
 
   useEffect(() => {
     async function loadNewTxs() {
-      const { transactions, count } = await loadAllTransactions({ safeAddress, offset, limit })
+      const { transactions, totalTransactionsAmount } = await loadAllTransactions({ safeAddress, offset, limit })
 
       if (transactions.length) {
-        dispatch(loadMore({ transactions, safeAddress, count }))
+        dispatch(loadMore({ transactions, safeAddress, totalTransactionsAmount }))
       }
     }
 
