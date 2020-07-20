@@ -18,14 +18,15 @@ const fetchCurrenciesRates = async (
       rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
     }
   } catch (error) {
+    console.error('Fetching data from getExchangeRatesUrl errored', error)
     try {
       const result = await axios.get(fallbackUrl)
       if (result && result.data) {
-        const { rates } = result.data?.data
+        const { rates } = result.data.data
         rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
       }
     } catch (error) {
-      console.log('Fetching data from exchangesRatesApiFallback errored', error)
+      console.error('Fetching data from exchangesRatesApiFallback errored', error)
     }
   }
 
