@@ -27,7 +27,13 @@ const useStyles = makeStyles({
   },
 })
 
-const CopyBtn = ({ className = '', content, increaseZindex = false }) => {
+interface CopyBtnProps {
+  className?: string
+  content: string
+  increaseZindex?: boolean
+}
+
+const CopyBtn = ({ className = '', content, increaseZindex = false }: CopyBtnProps): React.ReactElement => {
   const [clicked, setClicked] = useState(false)
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
