@@ -105,7 +105,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         action.payload.forEach((incomingTransactions, safeAddress) => {
           const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress)
           const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
-          const recurringUser = viewedSafes.includes(safeAddress)
+          const recurringUser = viewedSafes?.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
 

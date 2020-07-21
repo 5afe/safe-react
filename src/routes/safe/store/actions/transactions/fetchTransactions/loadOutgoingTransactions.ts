@@ -196,7 +196,7 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
 
   const knownTokens = state[TOKEN_REDUCER_ID]
   const currentUser = state[PROVIDER_REDUCER_ID].get('account')
-  const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+  const safe = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
 
   if (!safe) {
     return defaultResponse

@@ -57,14 +57,14 @@ export interface Collectibles {
 }
 
 class OpenSea {
-  _rateLimit = async () => {}
+  _rateLimit = async (): Promise<void> => {}
 
   _endpointsUrls = {
     [ETHEREUM_NETWORK.MAINNET]: 'https://api.opensea.io/api/v1',
     [ETHEREUM_NETWORK.RINKEBY]: 'https://rinkeby-api.opensea.io/api/v1',
   }
 
-  _fetch = async (url) => {
+  _fetch = async (url: string): Promise<Response> => {
     // eslint-disable-next-line no-underscore-dangle
     return fetch(url, {
       headers: { 'X-API-KEY': OPENSEA_API_KEY || '' },
@@ -76,7 +76,7 @@ class OpenSea {
    * @param {object} options
    * @param {number} options.rps - requests per second
    */
-  constructor(options) {
+  constructor(options: { rps: number }) {
     // eslint-disable-next-line no-underscore-dangle
     this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
   }

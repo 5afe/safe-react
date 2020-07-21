@@ -18,6 +18,7 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import setDefaultSafe from 'src/routes/safe/store/actions/setDefaultSafe'
 
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { AppReduxState } from 'src/store'
 
 const { useEffect, useMemo, useState } = React
 
@@ -123,8 +124,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
 }
 
 export default connect(
-  // $FlowFixMe
-  (state) => ({
+  (state: AppReduxState) => ({
     safes: sortedSafeListSelector(state),
     defaultSafe: defaultSafeSelector(state),
     currentSafe: safeParamAddressFromStateSelector(state),
