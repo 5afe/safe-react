@@ -50,16 +50,15 @@ const SafeName = ({ classes, safeName }) => (
     </Block>
     <Block margin="lg">
       <Paragraph className={classes.links} color="primary" noMargin size="md">
-        By continuing you consent with the{' '}
-        <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
+        By continuing you consent to the{' '}
+        <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
           terms of use
         </a>{' '}
         and{' '}
-        <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
+        <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
           privacy policy
         </a>
-        . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+        .
       </Paragraph>
     </Block>
   </>
