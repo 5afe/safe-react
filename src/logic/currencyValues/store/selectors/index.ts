@@ -37,6 +37,7 @@ export const safeFiatBalancesTotalSelector = createSelector(
   currencyRateSelector,
   (currencyBalances, currencyRate) => {
     if (!currencyBalances) return 0
+    if (!currencyRate) return null
 
     const totalInBaseCurrency = currencyBalances
       .map((balanceRecord) => balanceRecord.balanceInBaseCurrency)

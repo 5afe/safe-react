@@ -33,6 +33,8 @@ const LayoutHeader = (props) => {
   const currentCurrency = useSelector(currentCurrencySelector)
   if (!address) return null
 
+  const totalBalancesFormatted = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
+
   return (
     <Block className={classes.container} margin="xl">
       <Row className={classes.userInfo}>
@@ -40,7 +42,8 @@ const LayoutHeader = (props) => {
         <Block className={classes.name}>
           <Row>
             <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
-              {name} | {formatAmountInUsFormat(currentSafeBalance)} {currentCurrency}
+              {name}
+              <strong>{totalBalancesFormatted ? ` | ${totalBalancesFormatted} ${currentCurrency}` : ''}</strong>
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>
