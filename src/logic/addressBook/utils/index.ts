@@ -1,12 +1,9 @@
+import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { AddressBookEntryProps } from './../model/addressBook'
+import { SafeOwner } from '../../../routes/safe/store/models/safe'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
-
-interface OwnerListEntryProps {
-  address: string
-  name: string
-}
 
 export const getAddressBookFromStorage = async (): Promise<Array<AddressBookEntryProps> | undefined> => {
   const data = await loadFromStorage<Array<AddressBookEntryProps>>(ADDRESS_BOOK_STORAGE_KEY)
@@ -34,8 +31,8 @@ export const getNameFromAdbk = (addressBook, userAddress) => {
 
 export const getOwnersWithNameFromAddressBook = (
   addressBook: AddressBookEntryProps,
-  ownerList: Array<OwnerListEntryProps>,
-): Array<OwnerListEntryProps> | [] => {
+  ownerList: List<SafeOwner>,
+): List<SafeOwner> | [] => {
   if (!ownerList) {
     return []
   }
