@@ -1,17 +1,16 @@
+import { IconText } from '@gnosis.pm/safe-react-components'
 import Badge from '@material-ui/core/Badge'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import * as React from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import Advanced from './Advanced'
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
-import { OwnersIcon } from './assets/icons/OwnersIcon'
-import { RequiredConfirmationsIcon } from './assets/icons/RequiredConfirmationsIcon'
-import { SafeDetailsIcon } from './assets/icons/SafeDetailsIcon'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
@@ -25,9 +24,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeOwnersSelector } from 'src/routes/safe/store/selectors'
+import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/routes/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -36,10 +34,13 @@ const INITIAL_STATE = {
   menuOptionIndex: 1,
 }
 
-const Settings = (props) => {
+const useStyles = makeStyles(styles)
+
+const Settings: React.FC = () => {
+  const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
   const owners = useSelector(safeOwnersSelector)
-  const needsUpdate = useSelector(safeNeedsUpdate)
+  const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
   const addressBook = useSelector(getAddressBook)
 
@@ -56,7 +57,6 @@ const Settings = (props) => {
   }
 
   const { menuOptionIndex, showRemoveSafe } = state
-  const { classes } = props
 
   return !owners ? (
     <Loader />
@@ -73,7 +73,6 @@ const Settings = (props) => {
         <Col className={classes.menuWrapper} layout="column">
           <Block className={classes.menu}>
             <Row className={cn(classes.menuOption, menuOptionIndex === 1 && classes.active)} onClick={handleChange(1)}>
-              <SafeDetailsIcon />
               <Badge
                 badgeContent=" "
                 color="error"
@@ -81,7 +80,13 @@ const Settings = (props) => {
                 style={{ paddingRight: '10px' }}
                 variant="dot"
               >
-                Safe details
+                <IconText
+                  iconSize="sm"
+                  textSize="xl"
+                  iconType="info"
+                  text="Safe Details"
+                  color={menuOptionIndex === 1 ? 'primary' : 'secondary'}
+                />
               </Badge>
             </Row>
             <Hairline className={classes.hairline} />
@@ -90,16 +95,36 @@ const Settings = (props) => {
               onClick={handleChange(2)}
               testId={OWNERS_SETTINGS_TAB_TEST_ID}
             >
-              <OwnersIcon />
-              Owners
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="owners"
+                text="Owners"
+                color={menuOptionIndex === 2 ? 'primary' : 'secondary'}
+              />
               <Paragraph className={classes.counter} size="xs">
                 {owners.size}
               </Paragraph>
             </Row>
             <Hairline className={classes.hairline} />
             <Row className={cn(classes.menuOption, menuOptionIndex === 3 && classes.active)} onClick={handleChange(3)}>
-              <RequiredConfirmationsIcon />
-              Policies
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="requiredConfirmations"
+                text="Policies"
+                color={menuOptionIndex === 3 ? 'primary' : 'secondary'}
+              />
+            </Row>
+            <Hairline className={classes.hairline} />
+            <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
+              <IconText
+                iconSize="sm"
+                textSize="xl"
+                iconType="settingsTool"
+                text="Advanced"
+                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+              />
             </Row>
             <Hairline className={classes.hairline} />
           </Block>
@@ -109,6 +134,7 @@ const Settings = (props) => {
             {menuOptionIndex === 1 && <SafeDetails />}
             {menuOptionIndex === 2 && <ManageOwners addressBook={addressBook} granted={granted} owners={owners} />}
             {menuOptionIndex === 3 && <ThresholdSettings />}
+            {menuOptionIndex === 4 && <Advanced />}
           </Block>
         </Col>
       </Block>
@@ -116,4 +142,4 @@ const Settings = (props) => {
   )
 }
 
-export default withStyles(styles as any)(Settings)
+export default Settings

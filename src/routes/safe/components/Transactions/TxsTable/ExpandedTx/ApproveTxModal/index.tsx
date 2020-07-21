@@ -147,6 +147,7 @@ const ApproveTxModal = ({
                 <FormControlLabel
                   control={<Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />}
                   label="Execute transaction"
+                  data-testid="execute-checkbox"
                 />
               )}
             </>

@@ -43,6 +43,8 @@ export const SAFE_METHODS_NAMES = {
   CHANGE_THRESHOLD: 'changeThreshold',
   REMOVE_OWNER: 'removeOwner',
   SWAP_OWNER: 'swapOwner',
+  ENABLE_MODULE: 'enableModule',
+  DISABLE_MODULE: 'disableModule',
 }
 
 const METHOD_TO_ID = {
@@ -50,9 +52,11 @@ const METHOD_TO_ID = {
   '0x0d582f13': SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD,
   '0xf8dc5dd9': SAFE_METHODS_NAMES.REMOVE_OWNER,
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
+  '0x610b5925': SAFE_METHODS_NAMES.ENABLE_MODULE,
+  '0xe009cfde': SAFE_METHODS_NAMES.DISABLE_MODULE,
 }
 
-type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
+export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
 
 type DecodedValues = Array<{
@@ -123,6 +127,29 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
         method: METHOD_TO_ID[methodId],
         parameters: [
           { name: '_threshold', value: decodedParameters[0] },
+        ],
+      }
+    }
+
+    // enableModule
+    case '0x610b5925': {
+      const decodedParameters = web3.eth.abi.decodeParameters(['address'], params)
+      return {
+        method: METHOD_TO_ID[methodId],
+        parameters: [
+          { name: 'module', type: '', value: decodedParameters[0] },
+        ],
+      }
+    }
+
+    // disableModule
+    case '0xe009cfde': {
+      const decodedParameters = web3.eth.abi.decodeParameters(['address', 'address'], params)
+      return {
+        method: METHOD_TO_ID[methodId],
+        parameters: [
+          { name: 'prevModule', type: '', value: decodedParameters[0] },
+          { name: 'module', type: '', value: decodedParameters[1] },
         ],
       }
     }
