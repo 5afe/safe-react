@@ -29,7 +29,7 @@ const Collapse: React.FC<Collapse> = ({
   title,
   collapseClassName,
   headerWrapperClassName,
-}) => {
+}): React.ReactElement => {
   const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {
