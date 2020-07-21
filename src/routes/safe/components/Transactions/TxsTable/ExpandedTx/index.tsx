@@ -23,11 +23,16 @@ import Span from 'src/components/layout/Span'
 import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles as any)
 
-const ExpandedTx = ({ cancelTx, tx }) => {
+interface ExpandedTxProps {
+  cancelTx: Transaction
+  tx: Transaction
+}
+
+const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector)

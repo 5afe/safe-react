@@ -50,6 +50,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
+  fee?: string
   gasPrice: string
   gasToken: string
   isCancellationTx: boolean
