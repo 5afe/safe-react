@@ -5,7 +5,6 @@ jobs:
   eslint:
     runs-on: ubuntu-latest
     steps:
-      - run: sudo apt-get -y install libusb-1.0-0-dev
       - uses: actions/checkout@v2
       - uses: gnosis/eslint-action@1.0.3
         # GITHUB_TOKEN in forked repositories is read-only
