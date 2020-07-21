@@ -3,9 +3,8 @@ name: Build/Release Desktop app
 # this will help you specify where to run
 on:
   push:
-    branches-ignore:
-      # Temporary disable action
-      - '**'
+    branches:
+      - master
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -89,4 +88,3 @@ jobs:
         with:
           name: Desktop Windows
           path: ./dist/Safe[ ]Multisig*.exe
-
