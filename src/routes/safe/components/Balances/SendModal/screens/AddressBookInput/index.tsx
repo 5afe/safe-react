@@ -10,9 +10,10 @@ import { styles } from './style'
 
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { AddressBookEntryProps } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -66,7 +67,7 @@ const AddressBookInput = ({
   setSelectedEntry,
 }: AddressBookProps) => {
   const classes = useStyles()
-  const addressBook = useSelector(getAddressBookListSelector)
+  const addressBook = useSelector(getAddressBook)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
@@ -144,8 +145,8 @@ const AddressBookInput = ({
     <>
       <Autocomplete
         closeIcon={null}
-        disableOpenOnFocus
-        filterOptions={(optionsArray, { inputValue }) =>
+        openOnFocus={false}
+        filterOptions={(optionsArray: AddressBookEntryProps, { inputValue }) =>
           optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
@@ -156,7 +157,7 @@ const AddressBookInput = ({
         freeSolo
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
-        onChange={(event, value) => {
+        onChange={(_, value) => {
           let address = ''
           let name = ''
           if (value) {

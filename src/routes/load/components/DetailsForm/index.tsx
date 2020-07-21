@@ -1,10 +1,12 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
+import { FormApi } from 'final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
+import { StepperPageFormProps } from 'src/components/Stepper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
@@ -17,7 +19,7 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
 
-const styles = () => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     maxWidth: '460px',
@@ -75,11 +77,19 @@ export const safeFieldsValidation = async (values): Promise<Record<string, strin
   return errors
 }
 
-const Details = ({ classes, errors, form }) => {
-  const handleScan = (value, closeQrModal) => {
+interface DetailsFormProps {
+  errors: Record<string, string>
+  form: FormApi
+}
+
+const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => {
+  const classes = useStyles()
+
+  const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
     closeQrModal()
   }
+
   return (
     <>
       <Block margin="md">
@@ -149,9 +159,7 @@ const Details = ({ classes, errors, form }) => {
   )
 }
 
-const DetailsForm = withStyles(styles as any)(Details)
-
-const DetailsPage = () => (controls, { errors, form }) => (
+const DetailsPage = () => (controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement => (
   <>
     <OpenPaper controls={controls}>
       <DetailsForm errors={errors} form={form} />

@@ -22,7 +22,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserOwnerOnAnySafe } from 'src/logic/wallets/ethAddresses'
 import CreateEditEntryModal from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
@@ -48,7 +48,7 @@ const AddressBookTable = ({ classes }) => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-  const addressBook = useSelector(getAddressBookListSelector)
+  const addressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)

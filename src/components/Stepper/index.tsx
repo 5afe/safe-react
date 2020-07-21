@@ -4,6 +4,7 @@ import StepLabel from '@material-ui/core/StepLabel'
 import Stepper from '@material-ui/core/Stepper'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useCallback, useEffect, useState } from 'react'
+import { FormApi } from 'final-form'
 
 import Controls from './Controls'
 
@@ -18,8 +19,17 @@ const transitionProps = {
   },
 }
 
+export interface StepperPageFormProps {
+  values: Record<string, string>
+  errors: Record<string, string>
+  form: FormApi
+}
+
 interface StepperPageProps {
   validate?: (...args: unknown[]) => undefined | string[] | Promise<undefined | Record<string, string>>
+  component: (
+    ...args: unknown[]
+  ) => (controls: React.ReactElement, formProps: StepperPageFormProps) => React.ReactElement
   [key: string]: unknown
 }
 
@@ -35,7 +45,7 @@ interface GnoStepperProps<V = StepperFormValues> {
   initialValues?: Partial<V>
   onSubmit: (formValues: V) => void
   steps: string[]
-  buttonLabels: string[]
+  buttonLabels?: string[]
   children: React.ReactNode
   disabledWhenValidating?: boolean
   mutators?: Mutators
