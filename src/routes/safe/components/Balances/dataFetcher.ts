@@ -50,21 +50,19 @@ export const getBalanceData = (
   currencyValues: List<BalanceCurrencyRecord>,
   currencyRate: number,
 ): BalanceDataRow => {
-  const rows = activeTokens.map((token) => ({
+  return activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
       address: token.address,
       symbol: token.symbol,
     },
-    ['assetOrder']: token.name,
+    assetOrder: token.name,
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance)} ${token.symbol}`,
-    ['balanceOrder']: Number(token.balance),
+    balanceOrder: Number(token.balance),
     [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
-
-  return rows
 }
 
 export const generateColumns = (): List<TableColumn> => {
