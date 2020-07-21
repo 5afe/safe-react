@@ -1,5 +1,5 @@
 import { AddressBookEntryRecord, AddressBookEntryProps } from 'src/logic/addressBook/model/addressBook'
-import { Map } from 'immutable'
+import { Map, List } from 'immutable'
 
 export interface AddressBookReducerState {
   addressBook: AddressBookMap

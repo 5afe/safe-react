@@ -74,9 +74,9 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
 
   const getActivePageFrom = (pages) => {
     const activePageProps = getPageProps(pages)
-    const { children, ...restProps } = activePageProps
+    const { component, ...restProps } = activePageProps
 
-    return children({ ...restProps, updateInitialProps })
+    return component({ ...restProps, updateInitialProps })
   }
 
   const validate = (valuesToValidate) => {

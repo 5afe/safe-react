@@ -13,7 +13,7 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/compon
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { AddressBookEntryProps } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -45,17 +45,22 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const filterAddressBookWithContractAddresses = async (
-  addressBook: List<{ address: string }>,
-): Promise<List<{ address: string }>> => {
+  addressBook: List<AddressBookEntryRecord>,
+): Promise<List<AddressBookEntryRecord>> => {
   const abFlags = await Promise.all(
     addressBook.map(
-      async ({ address }: { address: string }): Promise<boolean> => {
+      async ({ address }: AddressBookEntryRecord): Promise<boolean> => {
         return (await mustBeEthereumContractAddress(address)) === undefined
       },
     ),
   )
 
   return addressBook.filter((_, index) => abFlags[index])
+}
+
+interface FilteredAddressBookEntry {
+  name: string
+  address: string
 }
 
 const AddressBookInput = ({
@@ -72,7 +77,7 @@ const AddressBookInput = ({
   const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState<List<{ address: string }>>(List([]))
+  const [adbkList, setADBKList] = useState<List<FilteredAddressBookEntry>>(List([]))
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
@@ -146,7 +151,7 @@ const AddressBookInput = ({
       <Autocomplete
         closeIcon={null}
         openOnFocus={false}
-        filterOptions={(optionsArray: AddressBookEntryProps, { inputValue }) =>
+        filterOptions={(optionsArray, { inputValue }) =>
           optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
@@ -157,7 +162,7 @@ const AddressBookInput = ({
         freeSolo
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
-        onChange={(_, value) => {
+        onChange={(_, value: FilteredAddressBookEntry) => {
           let address = ''
           let name = ''
           if (value) {
@@ -219,7 +224,7 @@ const AddressBookInput = ({
         }}
         role="listbox"
         style={{ display: 'flex', flexGrow: 1 }}
-        value={{ address: inputAddValue }}
+        value={{ address: inputAddValue, name: '' }}
       />
     </>
   )
