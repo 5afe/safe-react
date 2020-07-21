@@ -21,7 +21,7 @@
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "build-desktop": "cross-env REACT_APP_BUILD_FOR_DESKTOP=true REACT_APP_ENV=production yarn build-mainnet",
     "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
-    "build": "REACT_APP_APP_VERSION=$npm_package_version react-app-rewired build --max-old-space-size=2048",
+    "build": "REACT_APP_APP_VERSION=$npm_package_version react-app-rewired build",
     "eject": "react-app-rewired eject",
     "electron-build": "electron-builder --mac --windows --linux",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
