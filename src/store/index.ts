@@ -1,7 +1,7 @@
 import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore, CombinedState } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -88,4 +88,5 @@ export type AppReduxState = CombinedState<{
 
 export const store: any = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState?: any) => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
+  createStore(reducers, localState, finalCreateStore)
