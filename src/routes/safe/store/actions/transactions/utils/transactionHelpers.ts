@@ -24,7 +24,7 @@ import {
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
@@ -316,7 +316,7 @@ export type TxToMock = TxArgs & {
   value: string
 }
 
-export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promise<Transaction> => {
+export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
   const submissionDate = new Date().toISOString()
 
   const transactionStructure: TxServiceModel = {
