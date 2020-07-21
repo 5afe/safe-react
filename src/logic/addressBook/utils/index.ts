@@ -37,7 +37,7 @@ export const getOwnersWithNameFromAddressBook = (
     return []
   }
   const ownersListWithAdbkNames = ownerList.map((owner) => {
-    const ownerName = addressBook && getNameFromAdbk(addressBook, owner.address)
+    const ownerName = getNameFromAdbk(addressBook, owner.address)
     return {
       address: owner.address,
       name: ownerName || owner.name,
