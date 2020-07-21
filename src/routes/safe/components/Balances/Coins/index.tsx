@@ -80,7 +80,7 @@ const Coins = (props: Props): React.ReactElement => {
           sortedData.map((row, index) => (
             <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
               {autoColumns.map((column) => {
-                const { align, id, width }: any = column
+                const { align, id, width } = column
                 let cellItem
                 switch (id) {
                   case BALANCE_TABLE_ASSET_ID: {
@@ -92,11 +92,16 @@ const Coins = (props: Props): React.ReactElement => {
                     break
                   }
                   case BALANCE_TABLE_VALUE_ID: {
-                    cellItem = row[id] ? (
-                      <div className={classes.currencyValueRow}>{row[id]}</div>
-                    ) : (
-                      <Skeleton animation="wave" />
-                    )
+                    // If there are no values for that row but we have balances, we display as '0.00 {CurrencySelected}'
+                    // In case we don't have balances, we display a skeleton
+                    const showCurrencyValueRow = row[id] || row[BALANCE_TABLE_BALANCE_ID]
+
+                    cellItem =
+                      showCurrencyValueRow && selectedCurrency ? (
+                        <div className={classes.currencyValueRow}>{row[id] ? row[id] : `0.00 ${selectedCurrency}`}</div>
+                      ) : (
+                        <Skeleton animation="wave" />
+                      )
                     break
                   }
                   default: {
