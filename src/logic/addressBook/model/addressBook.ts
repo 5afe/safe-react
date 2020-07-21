@@ -1,4 +1,4 @@
-import { Record } from 'immutable'
+import { Record, RecordOf } from 'immutable'
 
 export interface AddressBookEntryProps {
   address: string
@@ -11,3 +11,5 @@ export const makeAddressBookEntry = Record<AddressBookEntryProps>({
   name: '',
   isOwner: false,
 })
+
+export type AddressBook = RecordOf<AddressBookEntryProps>

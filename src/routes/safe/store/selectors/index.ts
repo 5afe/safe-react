@@ -1,7 +1,7 @@
 import { List, Map, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 import {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
@@ -43,11 +43,6 @@ export const safeParamAddressFromStateSelector = (state: AppReduxState): string 
   }
 
   return null
-}
-
-export const safeParamAddressSelector = (state, props) => {
-  const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
-  return urlAdd ? checksumAddress(urlAdd) : ''
 }
 
 export const safeTransactionsSelector = createSelector(
@@ -168,10 +163,10 @@ export const safeBlacklistedAssetsSelector = createSelector(
   },
 )
 
-export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap) =>
+export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
   safes.get(safeAddress).get('activeAssets')
 
-export const safeBlacklistedAssetsSelectorBySafe = (safeAddress, safes) =>
+export const safeBlacklistedAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
   safes.get(safeAddress).get('blacklistedAssets')
 
 const baseSafe = makeSafe()
