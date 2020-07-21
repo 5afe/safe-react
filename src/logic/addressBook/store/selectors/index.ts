@@ -16,20 +16,24 @@ export const addressBookCollectionSelector = createSelector(addressBookMapSelect
 export const getAddressBook = createSelector(
   addressBookCollectionSelector,
   safeParamAddressFromStateSelector,
-  (addressBook, safeAddress): AddressBookCollection | undefined => {
+  (addressBook, safeAddress): AddressBookCollection => {
     if (addressBook && safeAddress) {
       return addressBook.get(safeAddress)
     }
+
+    return List()
   },
 )
 
 export const getAddressBookListSelector = createSelector(
   addressBookCollectionSelector,
   safeParamAddressFromStateSelector,
-  (addressBook, safeAddress): AddressBookCollection | undefined => {
+  (addressBook, safeAddress): AddressBookCollection => {
     if (addressBook && safeAddress) {
       return List(addressBook.get(safeAddress))
     }
+
+    return List()
   },
 )
 
