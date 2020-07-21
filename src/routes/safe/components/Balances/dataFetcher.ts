@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { List, RecordOf } from 'immutable'
 
-import { buildOrderFieldFrom, FIXED } from 'src/components/Table/sorting'
+import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types'
@@ -114,7 +114,3 @@ export const generateColumns = (): List<TableColumn> => {
 
   return List([assetColumn, balanceColumn, value, actions])
 }
-
-// eslint-disable-next-line max-len
-export const filterByZero = (data, hideZero) =>
-  data.filter((row) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

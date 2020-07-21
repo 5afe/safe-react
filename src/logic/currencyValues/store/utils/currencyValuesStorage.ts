@@ -3,7 +3,7 @@ import { CurrencyRateValue } from '../model/currencyValues'
 import { Map } from 'immutable'
 
 const CURRENCY_VALUES_STORAGE_KEY = 'CURRENCY_VALUES_STORAGE_KEY'
-export const saveCurrencyValues = async (currencyValues: Map<string, CurrencyRateValue>) => {
+export const saveCurrencyValues = async (currencyValues: Map<string, CurrencyRateValue>): Promise<void> => {
   try {
     await saveToStorage(CURRENCY_VALUES_STORAGE_KEY, currencyValues)
   } catch (err) {
