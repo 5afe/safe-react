@@ -60,18 +60,12 @@ const METHOD_TO_ID = {
 export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
 
-type DecodedValues = {
-  name: string
-  type?: string
-  value: string
-}
-
 type SafeDecodedParams = {
-  [key in SafeMethods]?: DecodedValues
+  [key in SafeMethods]?: Record<string, string>
 }
 
 type TokenDecodedParams = {
-  [key in TokenMethods]?: DecodedValues
+  [key in TokenMethods]?: Record<string, string>
 }
 
 export type DecodedMethods = SafeDecodedParams | TokenDecodedParams | null
