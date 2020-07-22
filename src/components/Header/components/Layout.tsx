@@ -61,7 +61,7 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
   <Row className={classes.summary}>
     <Col className={classes.logo} middle="xs" start="xs">
       <Link to="/">
-        <Img alt="Gnosis Team Safe" height={32} src={logo} />
+        <Img alt="Gnosis Team Safe" height={32} src={logo} testId="heading-gnosis-logo" />
       </Link>
     </Col>
     <Divider />

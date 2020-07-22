@@ -6,3 +6,8 @@ export type SafeApp = {
   disabled?: boolean
   error: boolean
 }
+
+export type StoredSafeApp = {
+  url: string
+  disabled?: boolean
+}

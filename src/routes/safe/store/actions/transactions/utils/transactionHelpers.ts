@@ -4,6 +4,7 @@ import { DecodedMethods, decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
+  getERC721Symbol,
   isSendERC20Transaction,
   isSendERC721Transaction,
 } from 'src/logic/tokens/utils/tokenHelpers'
@@ -84,7 +85,7 @@ export const isCustomTransaction = async (
   tx: TxServiceModel,
   txCode: string,
   safeAddress: string,
-  knownTokens: Record<string, Token>,
+  knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
   return (
     isOutgoingTransaction(tx, safeAddress) &&
@@ -252,7 +253,20 @@ export const buildTx = async ({
   const refundParams = await getRefundParams(tx, getERC20DecimalsAndSymbol)
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
-  const { decimals = 18, symbol = 'ETH' } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
+
+  let tokenDecimals = 18
+  let tokenSymbol = 'ETH'
+  try {
+    if (isSendERC20Tx) {
+      const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
+      tokenDecimals = decimals
+      tokenSymbol = symbol
+    } else if (isSendERC721Tx) {
+      tokenSymbol = await getERC721Symbol(tx.to)
+    }
+  } catch (err) {
+    console.log(`Failed to retrieve token data from ${tx.to}`)
+  }
 
   const txToStore = makeTransaction({
     baseGas: tx.baseGas,
@@ -262,7 +276,7 @@ export const buildTx = async ({
     creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
-    decimals,
+    decimals: tokenDecimals,
     decodedParams,
     executionDate: tx.executionDate,
     executionTxHash: tx.transactionHash,
@@ -285,7 +299,7 @@ export const buildTx = async ({
     safeTxGas: tx.safeTxGas,
     safeTxHash: tx.safeTxHash,
     submissionDate: tx.submissionDate,
-    symbol,
+    symbol: tokenSymbol,
     upgradeTx: isUpgradeTx,
     value: tx.value.toString(),
   })
@@ -326,8 +340,8 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promi
     ...tx,
   }
 
-  const knownTokens: Record<string, Token> = state[TOKEN_REDUCER_ID]
-  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+  const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
+  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
   const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
 

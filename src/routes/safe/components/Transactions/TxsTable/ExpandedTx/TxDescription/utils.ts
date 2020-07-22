@@ -18,15 +18,13 @@ export const getTxData = (tx) => {
       const { to } = tx.decodedParams.transfer
       txData.recipient = to
       txData.isTokenTransfer = true
-    }
-    if (tx.isCollectibleTransfer) {
+    } else if (tx.isCollectibleTransfer) {
       const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
       const { to, value } = safeTransferFrom || transferFrom || transfer
       txData.recipient = to
       txData.tokenId = value
       txData.isCollectibleTransfer = true
-    }
-    if (tx.modifySettingsTx) {
+    } else if (tx.modifySettingsTx) {
       txData.recipient = tx.recipient
       txData.modifySettingsTx = true
 
@@ -49,12 +47,21 @@ export const getTxData = (tx) => {
         txData.action = SAFE_METHODS_NAMES.SWAP_OWNER
         txData.removedOwner = oldOwner
         txData.addedOwner = newOwner
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]) {
+        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]
+        txData.action = SAFE_METHODS_NAMES.ENABLE_MODULE
+        txData.module = module
+      } else if (tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]) {
+        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]
+        txData.action = SAFE_METHODS_NAMES.DISABLE_MODULE
+        txData.module = module
       }
-    }
-    if (tx.multiSendTx) {
+    } else if (tx.multiSendTx) {
       txData.recipient = tx.recipient
       txData.data = tx.data
       txData.customTx = true
+    } else {
+      txData.recipient = tx.recipient
     }
   } else if (tx.customTx) {
     txData.recipient = tx.recipient

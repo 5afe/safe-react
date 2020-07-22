@@ -72,7 +72,7 @@ export const aMinedSafe = async (
   threshold = 1,
   name = 'Safe Name',
 ) => {
-  const provider = await getProviderInfo((window as any).web3.currentProvider)
+  const provider = await getProviderInfo(window.web3?.currentProvider || 'ws://localhost:8545')
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 

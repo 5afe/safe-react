@@ -7,7 +7,7 @@ import { getActiveTokens } from 'src/logic/tokens/utils/tokensStorage'
 
 const loadActiveTokens = () => async (dispatch) => {
   try {
-    const tokens = await getActiveTokens()
+    const tokens = (await getActiveTokens()) || {}
     // The filter of strings was made because of the issue #751. Please see: https://github.com/gnosis/safe-react/pull/755#issuecomment-612969340
     const tokenRecordsList = List(
       Object.values(tokens)

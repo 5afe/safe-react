@@ -66,7 +66,7 @@ export type OutgoingTxs = {
 
 export type BatchProcessTxsProps = OutgoingTxs & {
   currentUser?: string
-  knownTokens: Record<string, Token>
+  knownTokens: Map<string, Token>
   safe: SafeRecord
 }
 
@@ -79,7 +79,10 @@ export type BatchProcessTxsProps = OutgoingTxs & {
 const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxServiceModel[]): OutgoingTxs => {
   return outgoingTxs.reduce(
     (acc, transaction) => {
-      if (isCancelTransaction(transaction, safeAddress)) {
+      if (
+        isCancelTransaction(transaction, safeAddress) &&
+        outgoingTxs.find((tx) => tx.nonce === transaction.nonce && !isCancelTransaction(tx, safeAddress))
+      ) {
         if (!isNaN(Number(transaction.nonce))) {
           acc.cancellationTxs[transaction.nonce] = transaction
         }
@@ -193,7 +196,7 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
 
   const knownTokens = state[TOKEN_REDUCER_ID]
   const currentUser = state[PROVIDER_REDUCER_ID].get('account')
-  const safe = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress])
+  const safe = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
 
   if (!safe) {
     return defaultResponse

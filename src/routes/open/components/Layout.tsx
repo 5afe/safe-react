@@ -87,7 +87,9 @@ const Layout = (props) => {
             <IconButton disableRipple onClick={back} style={iconStyle}>
               <ChevronLeft />
             </IconButton>
-            <Heading tag="h2">Create New Safe</Heading>
+            <Heading tag="h2" testId="create-safe-form-title">
+              Create New Safe
+            </Heading>
           </Row>
           <Stepper
             initialValues={initialValues}

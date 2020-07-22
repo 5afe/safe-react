@@ -199,6 +199,9 @@ const processTransaction = ({
         return receipt.transactionHash
       })
   } catch (err) {
+    const errorMsg = err.message
+      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
+      : notificationsQueue.afterExecutionError.message
     console.error(err)
 
     if (txHash !== undefined) {
@@ -208,7 +211,7 @@ const processTransaction = ({
         closeSnackbar(pendingExecutionKey)
       }
 
-      showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
+      showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
 
       const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
       const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)

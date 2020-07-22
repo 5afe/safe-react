@@ -109,7 +109,7 @@ class ReviewComponent extends React.PureComponent<any> {
           <Col className={classes.detailsColumn} layout="column" xs={4}>
             <Block className={classes.details}>
               <Block margin="lg">
-                <Paragraph color="primary" noMargin size="lg">
+                <Paragraph color="primary" noMargin size="lg" data-testid="load-safe-step-three">
                   Review details
                 </Paragraph>
               </Block>
@@ -117,7 +117,14 @@ class ReviewComponent extends React.PureComponent<any> {
                 <Paragraph color="disabled" noMargin size="sm">
                   Name of the Safe
                 </Paragraph>
-                <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
+                <Paragraph
+                  className={classes.name}
+                  color="primary"
+                  noMargin
+                  size="lg"
+                  weight="bolder"
+                  data-testid="load-form-review-safe-name"
+                >
                   {values[FIELD_LOAD_NAME]}
                 </Paragraph>
               </Block>
@@ -168,7 +175,7 @@ class ReviewComponent extends React.PureComponent<any> {
                     </Col>
                     <Col xs={11}>
                       <Block className={classNames(classes.name, classes.userName)}>
-                        <Paragraph noMargin size="lg">
+                        <Paragraph noMargin size="lg" data-testid="load-safe-review-owner-name">
                           {values[getOwnerNameBy(index)]}
                         </Paragraph>
                         <Block className={classes.user} justify="center">

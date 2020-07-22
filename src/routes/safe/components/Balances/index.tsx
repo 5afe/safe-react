@@ -47,7 +47,7 @@ const Balances = (props) => {
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
 
-  useFetchTokens()
+  useFetchTokens(address)
 
   useEffect(() => {
     const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')

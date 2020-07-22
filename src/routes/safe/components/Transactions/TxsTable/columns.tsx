@@ -45,6 +45,10 @@ export const getTxAmount = (tx, formatted = true) => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
   const { value } = isTokenTransfer && !!decodedParams && !!decodedParams.transfer ? decodedParams.transfer : tx
 
+  if (tx.isCollectibleTransfer) {
+    return `1 ${tx.symbol}`
+  }
+
   if (!isTokenTransfer && !(Number(value) > 0)) {
     return NOT_AVAILABLE
   }

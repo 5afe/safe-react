@@ -105,7 +105,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
+      <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
         <Paragraph className={classes.headingText} noMargin weight="bolder">
           Send Funds
         </Paragraph>
@@ -136,7 +136,12 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
-              <Paragraph className={classes.address} noMargin weight="bolder">
+              <Paragraph
+                className={classes.address}
+                noMargin
+                weight="bolder"
+                data-testid="recipient-address-review-step"
+              >
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
@@ -151,12 +156,12 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         </Row>
         <Row align="center" margin="md">
           <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.logoUri} />
-          <Paragraph className={classes.amount} noMargin size="md">
+          <Paragraph className={classes.amount} noMargin size="md" data-testid={`amount-${txToken.symbol}-review-step`}>
             {tx.amount} {txToken.symbol}
           </Paragraph>
         </Row>
         <Row>
-          <Paragraph>
+          <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>

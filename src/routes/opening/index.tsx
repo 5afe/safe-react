@@ -302,7 +302,9 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
 
   return (
     <Wrapper>
-      <Title tag="h2">Safe creation process</Title>
+      <Title tag="h2" testId="safe-creation-process-title">
+        Safe creation process
+      </Title>
       <Nav>
         <Stepper activeStepIndex={stepIndex} error={error} orientation="vertical" steps={steps} />
       </Nav>
@@ -336,7 +338,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
           ) : null}
         </BodyFooter>
       </Body>
-      <BackButton color="primary" minWidth={140} onClick={onCancel}>
+      <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
         Back
       </BackButton>
     </Wrapper>

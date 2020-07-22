@@ -10,10 +10,10 @@ const watchedActions = [ADD_PROVIDER, REMOVE_PROVIDER]
 
 const LAST_USED_PROVIDER_KEY = 'LAST_USED_PROVIDER'
 
-export const loadLastUsedProvider = async () => {
-  const lastUsedProvider = await loadFromStorage(LAST_USED_PROVIDER_KEY)
+export const loadLastUsedProvider = async (): Promise<string | undefined> => {
+  const lastUsedProvider = await loadFromStorage<string>(LAST_USED_PROVIDER_KEY)
 
-  return lastUsedProvider || ''
+  return lastUsedProvider
 }
 
 let watcherInterval = null
@@ -37,7 +37,7 @@ const providerWatcherMware = (store) => (next) => async (action) => {
 
         watcherInterval = setInterval(async () => {
           const web3 = getWeb3()
-          const providerInfo = await getProviderInfo(web3)
+          const providerInfo = await getProviderInfo(web3.currentProvider)
 
           const networkChanged = currentProviderProps.network !== providerInfo.network
 

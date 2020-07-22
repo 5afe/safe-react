@@ -10,7 +10,7 @@ import Bold from 'src/components/layout/Bold'
 import LinkWithRef from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-import { SAFE_METHODS_NAMES } from 'src/logic/contracts/methodIds'
+import { SAFE_METHODS_NAMES, SafeMethods } from 'src/logic/contracts/methodIds'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
@@ -23,6 +23,8 @@ export const TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID = 'tx-description-change
 export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
+export const TRANSACTIONS_DESC_ADD_MODULE_TEST_ID = 'tx-description-add-module'
+export const TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID = 'tx-description-remove-module'
 export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
 export const styles = () => ({
@@ -43,7 +45,12 @@ export const styles = () => ({
   },
 })
 
-const TransferDescription = ({ amount = '', recipient }) => {
+interface TransferDescriptionProps {
+  amount: string
+  recipient: string
+}
+
+const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProps): React.ReactElement => {
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
@@ -57,7 +64,11 @@ const TransferDescription = ({ amount = '', recipient }) => {
   )
 }
 
-const RemovedOwner = ({ removedOwner }) => {
+interface RemovedOwnerProps {
+  removedOwner: string
+}
+
+const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): React.ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, removedOwner))
 
   return (
@@ -72,7 +83,11 @@ const RemovedOwner = ({ removedOwner }) => {
   )
 }
 
-const AddedOwner = ({ addedOwner }) => {
+interface AddedOwnerProps {
+  addedOwner: string
+}
+
+const AddedOwner = ({ addedOwner }: AddedOwnerProps): React.ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
 
   return (
@@ -87,7 +102,11 @@ const AddedOwner = ({ addedOwner }) => {
   )
 }
 
-const NewThreshold = ({ newThreshold }) => (
+interface NewThresholdProps {
+  newThreshold: string
+}
+
+const NewThreshold = ({ newThreshold }: NewThresholdProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
     <Bold>Change required confirmations:</Bold>
     <Paragraph noMargin size="md">
@@ -96,7 +115,43 @@ const NewThreshold = ({ newThreshold }) => (
   </Block>
 )
 
-const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner }) => {
+interface AddModuleProps {
+  module: string
+}
+
+const AddModule = ({ module }: AddModuleProps): React.ReactElement => (
+  <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
+    <Bold>Add module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
+interface RemoveModuleProps {
+  module: string
+}
+
+const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
+  <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
+    <Bold>Remove module:</Bold>
+    <EtherscanLink value={module} knownAddress={false} type="address" />
+  </Block>
+)
+
+interface SettingsDescriptionProps {
+  action: SafeMethods
+  addedOwner?: string
+  newThreshold?: string
+  removedOwner?: string
+  module?: string
+}
+
+const SettingsDescription = ({
+  action,
+  addedOwner,
+  newThreshold,
+  removedOwner,
+  module,
+}: SettingsDescriptionProps): React.ReactElement => {
   if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
       <>
@@ -126,6 +181,14 @@ const SettingsDescription = ({ action, addedOwner, newThreshold, removedOwner })
         <AddedOwner addedOwner={addedOwner} />
       </>
     )
+  }
+
+  if (action === SAFE_METHODS_NAMES.ENABLE_MODULE && module) {
+    return <AddModule module={module} />
+  }
+
+  if (action === SAFE_METHODS_NAMES.DISABLE_MODULE && module) {
+    return <RemoveModule module={module} />
   }
 
   return (
@@ -207,6 +270,7 @@ const TxDescription = ({ classes, tx }) => {
     customTx,
     data,
     modifySettingsTx,
+    module,
     newThreshold,
     recipient,
     removedOwner,
@@ -221,6 +285,7 @@ const TxDescription = ({ classes, tx }) => {
           addedOwner={addedOwner}
           newThreshold={newThreshold}
           removedOwner={removedOwner}
+          module={module}
         />
       )}
       {!upgradeTx && customTx && (

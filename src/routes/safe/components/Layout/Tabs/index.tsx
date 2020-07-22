@@ -10,6 +10,7 @@ import {
   ADDRESS_BOOK_TAB_BTN_TEST_ID,
   BALANCES_TAB_BTN_TEST_ID,
   SETTINGS_TAB_BTN_TEST_ID,
+  APPS_TAB_BTN_TEST_ID,
   TRANSACTIONS_TAB_BTN_TEST_ID,
 } from 'src/routes/safe/components/Layout'
 import SettingsTab from 'src/routes/safe/components/Layout/Tabs/SettingsTab'
@@ -105,7 +106,7 @@ const TabsComponent = (props: Props) => {
           selected: classes.tabWrapperSelected,
           wrapper: classes.tabWrapper,
         }}
-        data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
+        data-testid={APPS_TAB_BTN_TEST_ID}
         label={AppsLabel}
         value={`${match.url}/apps`}
       />

@@ -21,6 +21,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
+export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
 export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
 export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'

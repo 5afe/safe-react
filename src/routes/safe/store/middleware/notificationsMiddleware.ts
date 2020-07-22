@@ -38,7 +38,7 @@ const sendAwaitingTransactionNotification = async (
     return
   }
 
-  let lastTimeUserLoggedInForSafes = (await loadFromStorage(LAST_TIME_USED_LOGGED_IN_ID)) || []
+  let lastTimeUserLoggedInForSafes = (await loadFromStorage<Record<string, string>>(LAST_TIME_USED_LOGGED_IN_ID)) || {}
   const lastTimeUserLoggedIn =
     lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
       ? lastTimeUserLoggedInForSafes[safeAddress]
@@ -105,7 +105,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         action.payload.forEach((incomingTransactions, safeAddress) => {
           const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress)
           const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
-          const recurringUser = viewedSafes.includes(safeAddress)
+          const recurringUser = viewedSafes?.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
 

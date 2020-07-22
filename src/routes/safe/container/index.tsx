@@ -7,7 +7,7 @@ import Page from 'src/components/layout/Page'
 import Layout from 'src/routes/safe/components/Layout'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { useLoadSafe } from './hooks/useLoadSafe'
-import { useCheckForUpdates } from './hooks/useCheckForUpdates'
+import { useSafeScheduledUpdates } from './hooks/useSafeScheduledUpdates'
 
 const INITIAL_STATE = {
   sendFunds: {
@@ -17,12 +17,12 @@ const INITIAL_STATE = {
   showReceive: false,
 }
 
-const SafeView = () => {
+const SafeView = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useLoadSafe(safeAddress)
-  useCheckForUpdates()
+  useSafeScheduledUpdates(safeAddress)
 
   const onShow = (action) => () => {
     setState((prevState) => ({

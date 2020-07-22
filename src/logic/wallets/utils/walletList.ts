@@ -48,6 +48,7 @@ const wallets = [
   { walletName: 'torus', desktop: true },
   { walletName: 'unilogin', desktop: true },
   { walletName: 'coinbase', desktop: false },
+  { walletName: 'walletLink', rpcUrl: infuraUrl, desktop: false },
   { walletName: 'opera', desktop: false },
   { walletName: 'operaTouch', desktop: false },
 ]

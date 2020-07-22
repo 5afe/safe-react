@@ -100,6 +100,7 @@ const Details = ({ classes, errors, form }) => {
             text="Safe name"
             type="text"
             validate={required}
+            testId="load-safe-name-field"
           />
         </Col>
       </Block>
@@ -114,7 +115,7 @@ const Details = ({ classes, errors, form }) => {
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
                   <InputAdornment position="end">
-                    <CheckCircle className={classes.check} />
+                    <CheckCircle className={classes.check} data-testid="valid-address" />
                   </InputAdornment>
                 ),
               }
@@ -123,6 +124,7 @@ const Details = ({ classes, errors, form }) => {
             placeholder="Safe Address*"
             text="Safe Address"
             type="text"
+            testId="load-safe-address-field"
           />
         </Col>
         <Col center="xs" className={classes} middle="xs" xs={1}>
@@ -131,16 +133,15 @@ const Details = ({ classes, errors, form }) => {
       </Block>
       <Block margin="sm">
         <Paragraph className={classes.links} color="primary" noMargin size="md">
-          By continuing you consent with the{' '}
-          <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
+          By continuing you consent to the{' '}
+          <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </a>{' '}
           and{' '}
-          <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
+          <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </>

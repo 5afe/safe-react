@@ -1,4 +1,4 @@
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 
 import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
@@ -8,11 +8,12 @@ import { safesListSelector } from 'src/routes/safe/store/selectors'
 const loadAddressBookFromStorage = () => async (dispatch, getState) => {
   try {
     const state = getState()
-    let addressBook = await getAddressBookFromStorage()
-    if (!addressBook) {
-      addressBook = Map([])
+    let storedAdBk = await getAddressBookFromStorage()
+    if (!storedAdBk) {
+      storedAdBk = []
     }
-    addressBook = buildAddressBook(addressBook)
+
+    let addressBook = buildAddressBook(storedAdBk)
     // Fetch all the current safes, in case that we don't have a safe on the adbk, we add it
     const safes = safesListSelector(state)
     const adbkEntries = addressBook.keySeq().toArray()

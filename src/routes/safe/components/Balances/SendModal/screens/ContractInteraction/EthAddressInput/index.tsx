@@ -1,7 +1,9 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useState } from 'react'
+import { useFormState, useField } from 'react-final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import {
@@ -16,7 +18,7 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 
 const useStyles = makeStyles(styles)
 
-export interface EthAddressProps {
+export interface EthAddressInputProps {
   isContract?: boolean
   isRequired?: boolean
   name: string
@@ -24,10 +26,24 @@ export interface EthAddressProps {
   text: string
 }
 
-const EthAddressInput = ({ isContract = true, isRequired = true, name, onScannedValue, text }: EthAddressProps) => {
+const EthAddressInput = ({
+  isContract = true,
+  isRequired = true,
+  name,
+  onScannedValue,
+  text,
+}: EthAddressInputProps) => {
   const classes = useStyles()
   const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
   const validate = composeValidators(...validatorsList.filter((_) => _))
+  const { pristine } = useFormState({ subscription: { pristine: true } })
+  const {
+    input: { value },
+  } = useField('contractAddress', { subscription: { value: true } })
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+    address: value,
+    name: '',
+  })
 
   const handleScan = (value, closeQrModal) => {
     let scannedAddress = value
@@ -40,19 +56,35 @@ const EthAddressInput = ({ isContract = true, isRequired = true, name, onScanned
     closeQrModal()
   }
 
+  const handleInputChange: React.ChangeEventHandler<HTMLInputElement> = (event) => {
+    const { value } = event.target
+    setSelectedEntry({ address: value })
+  }
+
   return (
     <>
       <Row margin="md">
         <Col xs={11}>
-          <Field
-            component={TextField}
-            name={name}
-            placeholder={text}
-            testId={name}
-            text={text}
-            type="text"
-            validate={validate}
-          />
+          {selectedEntry?.address ? (
+            <Field
+              component={TextField}
+              name={name}
+              placeholder={text}
+              onChange={handleInputChange}
+              testId={name}
+              text={text}
+              type="text"
+              validate={validate}
+            />
+          ) : (
+            <AddressBookInput
+              setSelectedEntry={setSelectedEntry}
+              setIsValidAddress={() => {}}
+              fieldMutator={onScannedValue}
+              isCustomTx
+              pristine={pristine}
+            />
+          )}
         </Col>
         <Col center="xs" className={classes} middle="xs" xs={1}>
           <ScanQRWrapper handleScan={handleScan} />

@@ -3,7 +3,6 @@ import { BigNumber } from 'bignumber.js'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
 import Collapse from 'src/components/Collapse'
@@ -55,17 +54,16 @@ const IconText = styled.div`
     margin-right: 4px;
   }
 `
-const isTxValid = (t): boolean => {
-  try {
-    if (!['string', 'number'].includes(typeof t.value)) {
-      return false
-    }
+const StyledTextBox = styled(TextBox)`
+  max-width: 444px;
+`
 
-    if (typeof t.value === 'string') {
-      const web3 = getWeb3()
-      web3.eth.abi.decodeParameter('uint256', t.value)
-    }
-  } catch (error) {
+const isTxValid = (t: SafeAppTx): boolean => {
+  if (!['string', 'number'].includes(typeof t.value)) {
+    return false
+  }
+
+  if (typeof t.value === 'string' && !/^(0x)?[0-9a-f]+$/i.test(t.value)) {
     return false
   }
 
@@ -117,7 +115,7 @@ const confirmTransactions = (
                 </div>
                 <div className="section">
                   <Heading tag="h3">Data (hex encoded)*</Heading>
-                  <TextBox>{tx.data}</TextBox>
+                  <StyledTextBox>{tx.data}</StyledTextBox>
                 </div>
               </CollapseContent>
             </Collapse>

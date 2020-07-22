@@ -23,6 +23,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
         href={getEtherScanLink('tx', safeCreationTxHash)}
         rel="noopener noreferrer"
         target="_blank"
+        data-testid="safe-create-etherscan-link"
       >
         Etherscan.io
       </EtherScanLink>
@@ -38,7 +39,13 @@ export const ContinueFooter = ({
   continueButtonDisabled: boolean
   onContinue: (event: SyntheticEvent) => void
 }) => (
-  <Button color="primary" disabled={continueButtonDisabled} onClick={onContinue} variant="contained">
+  <Button
+    color="primary"
+    disabled={continueButtonDisabled}
+    onClick={onContinue}
+    variant="contained"
+    data-testid="continue-btn"
+  >
     Continue
   </Button>
 )

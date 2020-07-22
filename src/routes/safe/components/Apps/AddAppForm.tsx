@@ -177,7 +177,7 @@ const AddAppForm = ({ appList, formId, closeModal, onAppAdded, setIsSubmitDisabl
 
           <AppInfo>
             <Img alt="Token image" height={55} src={appInfo.iconUrl} />
-            <StyledTextFileAppName label="App name" readOnly value={appInfo.name} />
+            <StyledTextFileAppName label="App name" readOnly value={appInfo.name} onChange={() => {}} />
           </AppInfo>
 
           <FormSpy

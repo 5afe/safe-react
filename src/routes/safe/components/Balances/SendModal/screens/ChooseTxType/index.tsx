@@ -110,6 +110,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
             minWidth={260}
             onClick={() => setActiveScreen('sendFunds')}
             variant="contained"
+            testId="modal-send-funds-btn"
           >
             <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
             Send funds
@@ -122,6 +123,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
               minWidth={260}
               onClick={() => setActiveScreen('sendCollectible')}
               variant="contained"
+              testId="modal-send-collectible-btn"
             >
               <Img
                 alt="Send collectible"
@@ -138,6 +140,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
             minWidth={260}
             onClick={() => setActiveScreen('contractInteraction')}
             variant="outlined"
+            testId="modal-contract-interaction-btn"
           >
             <Img
               alt="Contract Interaction"

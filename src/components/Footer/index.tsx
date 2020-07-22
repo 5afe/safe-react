@@ -18,7 +18,7 @@ const useStyles = makeStyles({
     justifyContent: 'center',
     margin: '0 auto',
     maxWidth: '100%',
-    padding: `40px ${sm} 20px`,
+    padding: `20px ${sm} 20px`,
     width: `${screenSm}px`,
   },
   item: {
@@ -57,23 +57,23 @@ const Footer = () => {
     <footer className={classes.footer}>
       <span className={classes.item}>©{date.getFullYear()} Gnosis</span>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/terms">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/terms">
         Terms
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/privacy">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/privacy">
         Privacy
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/licenses">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/licenses">
         Licenses
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/imprint">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/imprint">
         Imprint
       </Link>
       <span className={classes.sep}>|</span>
-      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://safe.gnosis.io/cookie">
+      <Link className={cn(classes.item, classes.link)} target="_blank" to="https://gnosis-safe.io/cookie">
         Cookie Policy
       </Link>
       <span className={classes.sep}>-</span>

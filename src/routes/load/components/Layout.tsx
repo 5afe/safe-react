@@ -12,6 +12,7 @@ import ReviewInformation from 'src/routes/load/components/ReviewInformation'
 
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
+import { LoadFormValues } from '../container/Load'
 
 const getSteps = () => ['Name and address', 'Owners', 'Review']
 
@@ -33,7 +34,14 @@ const formMutators = {
 
 const buttonLabels = ['Next', 'Review', 'Load']
 
-const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }) => {
+interface ILayout {
+  network: string
+  provider?: string
+  userAddress: string
+  onLoadSafeSubmit: (values: LoadFormValues) => void
+}
+
+const Layout: React.FC<ILayout> = ({ network, onLoadSafeSubmit, provider, userAddress }) => {
   const steps = getSteps()
   const initialValues = {}
 

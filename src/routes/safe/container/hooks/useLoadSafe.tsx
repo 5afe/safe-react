@@ -7,10 +7,11 @@ import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from 'src/routes/safe/store/actions/fetchLatestMasterContractVersion'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
-import fetchSafeCreationTx from '../../store/actions/fetchSafeCreationTx'
+import fetchSafeCreationTx from 'src/routes/safe/store/actions/fetchSafeCreationTx'
+import { Dispatch } from 'src/routes/safe/store/actions/types'
 
-export const useLoadSafe = (safeAddress) => {
-  const dispatch = useDispatch()
+export const useLoadSafe = (safeAddress: string): void => {
+  const dispatch = useDispatch<Dispatch>()
 
   useEffect(() => {
     const fetchData = () => {
@@ -28,6 +29,7 @@ export const useLoadSafe = (safeAddress) => {
           })
       }
     }
+
     fetchData()
   }, [dispatch, safeAddress])
 }
