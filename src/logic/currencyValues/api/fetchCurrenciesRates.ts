@@ -13,7 +13,7 @@ const fetchCurrenciesRates = async (
 
   try {
     const result = await axios.get(url)
-    if (result && result.data) {
+    if (result?.data) {
       const { rates } = result.data
       rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
     }
@@ -21,7 +21,7 @@ const fetchCurrenciesRates = async (
     console.error('Fetching data from getExchangeRatesUrl errored', error)
     try {
       const result = await axios.get(fallbackUrl)
-      if (result && result.data) {
+      if (result?.data) {
         const { rates } = result.data.data
         rate = rates[targetCurrencyValue] ? rates[targetCurrencyValue] : 0
       }
