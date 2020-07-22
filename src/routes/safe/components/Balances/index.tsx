@@ -41,7 +41,7 @@ const INITIAL_STATE = {
 export const COINS_LOCATION_REGEX = /\/balances\/?$/
 export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const Balances = (): React.ReactElement => {
   const classes = useStyles()
