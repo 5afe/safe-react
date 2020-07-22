@@ -42,10 +42,10 @@ const LayoutHeader = (props) => {
             <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
               {name}
               {!!totalBalancesFormatted && !!currentCurrency && (
-                <strong>
+                <span className={classes.totalBalance}>
                   {' '}
                   | {totalBalancesFormatted} {currentCurrency}
-                </strong>
+                </span>
               )}
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}

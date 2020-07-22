@@ -1,4 +1,4 @@
-import { screenSm, secondaryText, sm, smallFontSize, xs } from 'src/theme/variables'
+import { screenSm, secondaryText, sm, smallFontSize, xs, disabled, fontSizeHeadingSm } from 'src/theme/variables'
 
 export const styles = () => ({
   container: {
@@ -89,5 +89,9 @@ export const styles = () => ({
     overflowWrap: 'break-word',
     wordBreak: 'break-word',
     whiteSpace: 'normal',
+  },
+  totalBalance: {
+    color: disabled,
+    fontSize: fontSizeHeadingSm,
   },
 })
