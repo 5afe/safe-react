@@ -2,9 +2,7 @@ import memoize from 'lodash.memoize'
 
 import { isAddressAToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-// import { getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 
-// eslint-disable-next-line
 export const addressIsTokenContract = memoize(async (tokenAddress) => {
   // SECOND APPROACH:
   // They both seem to work the same
