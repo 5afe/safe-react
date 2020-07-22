@@ -115,7 +115,7 @@ describe('FormatsAmountsInUsFormat', () => {
     const resultExpected = '0.00'
 
     // when
-    const result = formatAmountInUsFormat(input)
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
@@ -126,7 +126,7 @@ describe('FormatsAmountsInUsFormat', () => {
     const resultExpected = '1.00'
 
     // when
-    const result = formatAmountInUsFormat(input)
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
@@ -137,7 +137,7 @@ describe('FormatsAmountsInUsFormat', () => {
     const resultExpected = '19,797.899'
 
     // when
-    const result = formatAmountInUsFormat(input)
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
@@ -148,7 +148,7 @@ describe('FormatsAmountsInUsFormat', () => {
     const resultExpected = '19,797,899.479'
 
     // when
-    const result = formatAmountInUsFormat(input)
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
@@ -159,7 +159,7 @@ describe('FormatsAmountsInUsFormat', () => {
     const resultExpected = '19,797,899,479.999'
 
     // when
-    const result = formatAmountInUsFormat(input)
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
