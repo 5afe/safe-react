@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import classNames from 'classnames/bind'
@@ -22,8 +22,16 @@ import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/
 import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 
-const LayoutHeader = (props) => {
-  const { classes, onShow, showSendFunds } = props
+const useStyles = makeStyles(styles)
+
+type Props = {
+  onShow: (modalName: string) => void
+  showSendFunds: (modalName: string) => void
+}
+
+const LayoutHeader = (props: Props): React.ReactElement => {
+  const { onShow, showSendFunds } = props
+  const classes = useStyles(styles)
   const address = useSelector(safeParamAddressFromStateSelector)
   const granted = useSelector(grantedSelector)
   const name = useSelector(safeNameSelector)
@@ -100,4 +108,4 @@ const LayoutHeader = (props) => {
     </Block>
   )
 }
-export default withStyles(styles as any)(LayoutHeader)
+export default LayoutHeader
