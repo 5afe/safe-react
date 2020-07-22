@@ -40,7 +40,7 @@ export const getAppInfoFromOrigin = (origin: string): Record<string, any> | null
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl: string | undefined): Promise<SafeApp> => {
+export const getAppInfoFromUrl = async (appUrl?: string): Promise<SafeApp> => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
   if (!appUrl?.length) {
