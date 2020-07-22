@@ -59,7 +59,7 @@ const IframeCoverLoading = styled.div`
 `
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
-  GET_SAFE_INFO: 'GET_SAFE_INFO',
+  SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
@@ -223,10 +223,13 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const getEnabledApps = () => appList.filter((a) => !a.disabled)
 
-  const sendMessageToIframe = useCallback((messageId, data) => {
-    const app = getSelectedApp()
-    iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
-  })
+  const sendMessageToIframe = useCallback(
+    (messageId, data) => {
+      const app = getSelectedApp()
+      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
+    },
+    [getSelectedApp, iframeEl.contentWindow],
+  )
 
   // handle messages from iframe
   useEffect(() => {
@@ -264,7 +267,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           break
         }
 
-        case operations.GET_SAFE_INFO: {
+        case operations.SAFE_APP_SDK_INITIALIZED: {
           sendMessageToIframe(operations.ON_SAFE_INFO, {
             safeAddress,
             network,
