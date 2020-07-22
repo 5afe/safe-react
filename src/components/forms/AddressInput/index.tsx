@@ -4,7 +4,7 @@ import { OnChange } from 'react-final-form-listeners'
 
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
-import { removeSpaces } from 'src/utils/strings'
+import { trimSpaces } from 'src/utils/strings'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
@@ -52,7 +52,7 @@ const AddressInput = ({
     />
     <OnChange name={name}>
       {async (value) => {
-        const address = removeSpaces(value)
+        const address = trimSpaces(value)
         if (isValidEnsName(address)) {
           try {
             const resolverAddr = await getAddressFromENS(address)

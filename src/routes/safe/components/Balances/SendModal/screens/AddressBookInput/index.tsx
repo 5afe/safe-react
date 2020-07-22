@@ -5,7 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { removeSpaces } from 'src/utils/strings'
+import { trimSpaces } from 'src/utils/strings'
 
 import { styles } from './style'
 
@@ -76,8 +76,8 @@ const AddressBookInput = ({
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async (addressValue: string): Promise<void> => {
-    const normalizedAddress = removeSpaces(addressValue)
+  const onAddressInputChanged = async (value: string): Promise<void> => {
+    const normalizedAddress = trimSpaces(value)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
     let isValidText
@@ -103,8 +103,8 @@ const AddressBookInput = ({
       const filteredADBK = adbkToFilter.filter((adbkEntry) => {
         const { address, name } = adbkEntry
         return (
-          name.toLowerCase().includes(addressValue.toLowerCase()) ||
-          address.toLowerCase().includes(addressValue.toLowerCase())
+          name.toLowerCase().includes(normalizedAddress.toLowerCase()) ||
+          address.toLowerCase().includes(normalizedAddress.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
