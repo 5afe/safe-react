@@ -1340,10 +1340,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@^0.2.0":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#7bb55de":
   version "0.2.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.2.0.tgz#a35947fd5f016b7aabe5ac6105b6b873e00de730"
-  integrity sha512-8tAJZPywtxqPZw48z92iRVNWfn173mUeHf+mkWVlw9nqy+eurXEKPM5Jy1fnEcLsWQfiafGzunB3OzsHvXq+BQ==
+  resolved "https://github.com/gnosis/safe-react-components.git#7bb55de2d8a2b6f192466043dc643387fb42dbf6"
   dependencies:
     classnames "^2.2.6"
     polished "3.6.5"
