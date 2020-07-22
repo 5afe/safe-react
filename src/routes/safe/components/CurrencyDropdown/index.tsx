@@ -19,7 +19,7 @@ import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/s
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from '../Balances/utils'
-import Img from '../../../../components/layout/Img'
+import Img from 'src/components/layout/Img/index'
 import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
 
 const CurrencyDropdown = (): React.ReactElement => {

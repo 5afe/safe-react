@@ -18,11 +18,9 @@ import Row from 'src/components/layout/Row'
 import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'src/routes/safe/components/Layout'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import {
-  currentCurrencySelector,
-  safeFiatBalancesTotalSelector,
-} from '../../../../../logic/currencyValues/store/selectors'
-import { formatAmountInUsFormat } from '../../../../../logic/tokens/utils/formatAmount'
+
+import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 
 const LayoutHeader = (props) => {
   const { classes, onShow, showSendFunds } = props

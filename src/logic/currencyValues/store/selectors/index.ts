@@ -3,8 +3,8 @@ import { createSelector } from 'reselect'
 
 import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { AppReduxState } from '../../../../store'
-import { CurrencyRateValue } from '../model/currencyValues'
+import { AppReduxState } from 'src/store/index'
+import { CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
 import { BigNumber } from 'bignumber.js'
 
 export const currencyValuesSelector = (state: AppReduxState): Map<string, RecordOf<CurrencyRateValue>> =>
