@@ -13,6 +13,7 @@ const fetchCurrencyRate = (safeAddress: string, selectedCurrency: AVAILABLE_CURR
   const selectedCurrencyRateInBaseCurrency: number = await fetchCurrenciesRates(
     AVAILABLE_CURRENCIES.USD,
     selectedCurrency,
+    safeAddress,
   )
 
   dispatch(setCurrencyRate(safeAddress, selectedCurrencyRateInBaseCurrency))
