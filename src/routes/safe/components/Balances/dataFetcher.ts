@@ -41,7 +41,7 @@ const getTokenPriceInCurrency = (
   const { balanceInBaseCurrency } = currencyValue
   const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
 
-  return `${balance} ${currencySelected}`
+  return `${formatAmountInUsFormat(balance)} ${currencySelected}`
 }
 
 export const getBalanceData = (

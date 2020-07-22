@@ -24,13 +24,24 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given a number between 10000 and 100000 returns a number of format XX,XXX.XXX',  () => {
+  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX',  () => {
     // given
     const input = '19797.899'
     const resultExpected = '19,797.899'
 
     // when
     const result = formatAmount(input)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX',  () => {
+    // given
+    const input = 311137.30
+    const resultExpected = '311,137.30'
+
+    // when
+    const result = formatAmountInUsFormat(input.toString())
 
     // then
     expect(result).toBe(resultExpected)
@@ -45,7 +56,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(resultExpected)
   })
-  it('Given a number between 1000 and 10000 returns a number of format X,XXX',  () => {
+  it('Given a number between 1000 and 10000 returns a number of format XX,XXX',  () => {
     // given
     const input = 9999
     const resultExpected = '9,999'
