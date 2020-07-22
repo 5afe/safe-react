@@ -8,7 +8,7 @@ import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import { safeActiveTokensSelector, safeBalancesSelector, safeSelector } from 'src/routes/safe/store/selectors'
-import { SafeRecord } from '../store/models/safe'
+import { SafeRecord } from 'src/routes/safe/store/models/safe'
 
 export const grantedSelector = createSelector(
   userAccountSelector,
