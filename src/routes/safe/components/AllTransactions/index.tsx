@@ -5,12 +5,14 @@ import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransa
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
 import { nextPage, previousPage } from '../../store/actions/transactionsNew/pagination'
 import { Transaction } from '../../store/models/types/transactions'
+import { safeParamAddressFromStateSelector } from '../../store/selectors'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
   const transactions = useSelector(newTransactionsCurrentPageSelector)
-  const { currentPage, maxPages } = useSelector(currentPageSelector)
-  useFetchNewTransactions()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const { currentPage, maxPages, limit, offset } = useSelector(currentPageSelector)
+  useFetchNewTransactions({ safeAddress, offset, limit })
 
   // TODO: Remove this once we implement infinite scroll
   const nextPageButtonHandler = () => {

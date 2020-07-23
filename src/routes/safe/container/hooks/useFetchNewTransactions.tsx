@@ -1,15 +1,18 @@
 import { loadAllTransactions } from '../../store/actions/transactionsNew/loadAllTransactions'
 
 import { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { currentPageSelector } from '../../store/selectors/newTransactions'
-import { safeParamAddressFromStateSelector } from '../../store/selectors'
+import { useDispatch } from 'react-redux'
 import { loadMore } from '../../store/actions/transactionsNew/pagination'
 
-export const useFetchNewTransactions = (): void => {
+type Props = {
+  safeAddress: string
+  offset: number
+  limit: number
+}
+
+export const useFetchNewTransactions = (props: Props): void => {
+  const { safeAddress, offset, limit } = props
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const { offset, limit } = useSelector(currentPageSelector)
 
   useEffect(() => {
     async function loadNewTxs() {
