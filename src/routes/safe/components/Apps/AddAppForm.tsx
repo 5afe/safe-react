@@ -119,32 +119,39 @@ const appUrlResolver = createDecorator({
 
 const validateUrl = (url: string): string | undefined => (isURLValid(url) ? undefined : 'Invalid URL')
 
-const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => (
-  <Field
-    label="App URL"
-    name="appUrl"
-    placeholder="App URL"
-    type="text"
-    component={TextField}
-    validate={composeValidators(required, validateUrl, uniqueApp(appList))}
-  />
-)
+const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
+  const { visited } = useFormState({ subscription: { visited: true } })
 
-const AppAgreement = (): React.ReactElement => (
-  <Field
-    component={StyledCheckbox}
-    label={
-      <Text size="xl">
-        This app is not a Gnosis product and I agree to use this app
-        <br />
-        at my own risk.
-      </Text>
-    }
-    name="agreement"
-    type="checkbox"
-    validate={required}
-  />
-)
+  // trick to prevent having the field validated by default. Not sure why this happens in this form
+  const validate = !visited.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
+
+  return (
+    <Field label="App URL" name="appUrl" placeholder="App URL" type="text" component={TextField} validate={validate} />
+  )
+}
+
+const AppAgreement = (): React.ReactElement => {
+  const { visited } = useFormState({ subscription: { visited: true } })
+
+  // trick to prevent having the field validated by default. Not sure why this happens in this form
+  const validate = !visited.agreement ? undefined : required
+
+  return (
+    <Field
+      component={StyledCheckbox}
+      label={
+        <Text size="xl">
+          This app is not a Gnosis product and I agree to use this app
+          <br />
+          at my own risk.
+        </Text>
+      }
+      name="agreement"
+      type="checkbox"
+      validate={validate}
+    />
+  )
+}
 
 const SubmitButtonStatus = ({
   appInfo,
@@ -184,13 +191,7 @@ const AddApp = ({
   }
 
   return (
-    <GnoForm
-      decorators={[appUrlResolver]}
-      initialValues={initialValues}
-      onSubmit={handleSubmit}
-      subscription={{ values: true }}
-      testId={formId}
-    >
+    <GnoForm decorators={[appUrlResolver]} initialValues={initialValues} onSubmit={handleSubmit} testId={formId}>
       {() => (
         <>
           <StyledText size="xl">Add custom app</StyledText>
