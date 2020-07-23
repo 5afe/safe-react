@@ -40,10 +40,10 @@ export const getAppInfoFromOrigin = (origin) => {
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl: string): Promise<SafeApp> => {
+export const getAppInfoFromUrl = async (appUrl?: string): Promise<SafeApp> => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
-  if (!appUrl.length) {
+  if (!appUrl?.length) {
     return res
   }
 
