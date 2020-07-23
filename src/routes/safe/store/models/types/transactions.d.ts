@@ -57,7 +57,7 @@ export enum TokenType {
 }
 
 export interface TokenInfo {
-  type: keyof typeof TokenType
+  type: TokenType
   address: string
   name: string
   symbol: string
@@ -73,7 +73,7 @@ export enum TransferType {
 }
 
 export interface Transfer {
-  type: keyof typeof TransferType
+  type: TransferType
   executionDate: string
   blockNumber: number
   transactionHash: string | null
