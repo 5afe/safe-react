@@ -87,7 +87,7 @@ const Layout = (props: Props) => {
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
         {process.env.REACT_APP_NEW_TX_TAB === 'enabled' && (
-          <Route exact path={`${match.path}/transactionsNew`} render={() => wrapInSuspense(<Transactions />, null)} />
+          <Route exact path={`${match.path}/all-transactions`} render={() => wrapInSuspense(<Transactions />, null)} />
         )}
 
         <Route

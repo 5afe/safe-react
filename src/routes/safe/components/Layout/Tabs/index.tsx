@@ -74,7 +74,7 @@ if (process.env.REACT_APP_NEW_TX_TAB === 'enabled') {
       </>
     ),
     testId: TRANSACTIONS_TAB_NEW_BTN_TEST_ID,
-    value: '/transactionsNew',
+    value: '/all-transactions',
   })
 }
 
