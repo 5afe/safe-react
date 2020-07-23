@@ -144,7 +144,7 @@ const AddressBookInput = ({
     <>
       <Autocomplete
         closeIcon={null}
-        openOnFocus={false}
+        disableOpenOnFocus
         filterOptions={(optionsArray, { inputValue }) =>
           optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
