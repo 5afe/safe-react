@@ -4,6 +4,7 @@ import memoize from 'lodash.memoize'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { SafeApp } from './types'
+import { getContentFromENS } from '../../../../logic/wallets/getWeb3'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
@@ -89,3 +90,29 @@ export const getAppInfoFromUrl = memoize(
     }
   },
 )
+
+export const getIpfsLinkFromEns = memoize(async (name: string) => {
+  try {
+    const content = await getContentFromENS(name)
+    if (content && content.protocolType === 'ipfs') {
+      return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+    }
+  } catch (error) {
+    console.error(error)
+    return undefined
+  }
+})
+
+export const uniqueApp = (appList: SafeApp[]) => (url: string) => {
+  const exists = appList.some((a) => {
+    try {
+      const currentUrl = new URL(a.url)
+      const newUrl = new URL(url)
+      return currentUrl.href === newUrl.href
+    } catch (error) {
+      console.error('There was a problem trying to validate the URL existence.', error.message)
+      return false
+    }
+  })
+  return exists ? 'This app is already registered.' : undefined
+}
