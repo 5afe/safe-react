@@ -55,7 +55,7 @@ const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number
       <Collapse
         collapseClassName={classes.collapse}
         headerWrapperClassName={classes.collapseHeaderWrapper}
-        title={<IconText iconSize="sm" iconType="code" text={`Interaction ${order + 1}${methodName}`} textSize="lg" />}
+        title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
       >
         <TxDetailsContent>
           <TxInfo>
