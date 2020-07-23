@@ -13,7 +13,7 @@ What things you need to install the software and how to install them
 ```
 yarn add truffle // recommended usage of -g flag
 yarn add ganache-cli // recommended usage of -g flag
-yarn add flow-type // recommended usage of -g flag
+yarn add flow-typed // recommended usage of -g flag
 ```
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
