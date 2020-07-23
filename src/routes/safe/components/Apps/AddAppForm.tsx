@@ -93,7 +93,10 @@ const AppInfoUpdater = ({ onAppInfo }: { onAppInfo: (appInfo: SafeApp) => void }
       const appInfo = await getAppInfoFromUrl(debouncedValue)
       onAppInfo({ ...appInfo })
     }
-    updateAppInfo()
+
+    if (isURLValid(debouncedValue)) {
+      updateAppInfo()
+    }
   }, [debouncedValue, onAppInfo])
 
   return null
