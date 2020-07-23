@@ -1,11 +1,10 @@
-import { NewTransactionsState, TRANSACTIONS } from '../reducer/newTransactions'
+import { TransactionsState, TRANSACTIONS } from '../reducer/newTransactions'
 import { createSelector } from 'reselect'
 import { safeParamAddressFromStateSelector } from './index'
 
-export const getNewTransactionsStateSelector = (state: NewTransactionsState): NewTransactionsState =>
-  state[TRANSACTIONS]
+export const getTransactionsStateSelector = (state: TransactionsState): TransactionsState => state[TRANSACTIONS]
 
-export const newTransactionsSelector = createSelector(getNewTransactionsStateSelector, (transactionsState) => {
+export const newTransactionsSelector = createSelector(getTransactionsStateSelector, (transactionsState) => {
   return transactionsState.transactions
 })
 
@@ -16,7 +15,7 @@ export const safeNewTransactionsSelector = createSelector(
 )
 
 export const currentPageSelector = createSelector(
-  getNewTransactionsStateSelector,
+  getTransactionsStateSelector,
   ({ offset, limit, totalTransactionsAmount }) => {
     return {
       offset,

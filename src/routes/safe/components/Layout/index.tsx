@@ -25,7 +25,7 @@ const Apps = React.lazy(() => import('../Apps'))
 const Settings = React.lazy(() => import('../Settings'))
 const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
-const Transactions = React.lazy(() => import('src/routes/safe/components/TransactionsNew'))
+const Transactions = React.lazy(() => import('src/routes/safe/components/AllTransactions'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 interface Props {

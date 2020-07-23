@@ -3,9 +3,9 @@ import { handleActions } from 'redux-actions'
 import { Transaction } from '../models/types/transactions'
 import { LOAD_MORE_TRANSACTIONS, SET_NEXT_PAGE, SET_PREVIOUS_PAGE } from '../actions/transactionsNew/pagination'
 
-export const TRANSACTIONS = 'transactionsNew'
+export const TRANSACTIONS = 'ALL_TRANSACTIONS_REDUCER_ID'
 
-export interface NewTransactionsState {
+export interface TransactionsState {
   offset: number
   limit: number
   totalTransactionsAmount: number
@@ -14,7 +14,7 @@ export interface NewTransactionsState {
   }
 }
 
-const initialState: Readonly<NewTransactionsState> = {
+const initialState: Readonly<TransactionsState> = {
   offset: 0,
   limit: 50,
   totalTransactionsAmount: 0,
@@ -25,7 +25,7 @@ export default handleActions(
   {
     // todo: because we are thinking in remove immutableJS, I will implement this without it so it can be easier removed in future
     [LOAD_MORE_TRANSACTIONS]: (
-      state: NewTransactionsState,
+      state: TransactionsState,
       action: {
         payload: {
           safeAddress: string
@@ -46,13 +46,13 @@ export default handleActions(
         totalTransactionsAmount,
       }
     },
-    [SET_NEXT_PAGE]: (state: NewTransactionsState) => {
+    [SET_NEXT_PAGE]: (state: TransactionsState) => {
       return {
         ...state,
         offset: state.offset + state.limit,
       }
     },
-    [SET_PREVIOUS_PAGE]: (state: NewTransactionsState) => {
+    [SET_PREVIOUS_PAGE]: (state: TransactionsState) => {
       return {
         ...state,
         offset: state.offset > 0 ? state.offset - state.limit : state.offset,

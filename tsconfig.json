@@ -20,9 +20,6 @@
   "paths": {
     "src/*": ["./*"]
   },
-  "include": [
-    "src/**/*",
-    "node_modules/eslint-plugin-react/lib/types.d.ts"
-  ],
+  "include": ["src/**/*"],
   "exclude": ["node_modules"]
 }
