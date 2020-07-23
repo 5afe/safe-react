@@ -7,6 +7,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Advanced from './Advanced'
+import Allowances from './Allowances'
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
@@ -121,9 +122,19 @@ const Settings: React.FC = () => {
               <IconText
                 iconSize="sm"
                 textSize="xl"
+                iconType="allowances"
+                text="Allowances"
+                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+              />
+            </Row>
+            <Hairline className={classes.hairline} />
+            <Row className={cn(classes.menuOption, menuOptionIndex === 5 && classes.active)} onClick={handleChange(5)}>
+              <IconText
+                iconSize="sm"
+                textSize="xl"
                 iconType="settingsTool"
                 text="Advanced"
-                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+                color={menuOptionIndex === 5 ? 'primary' : 'secondary'}
               />
             </Row>
             <Hairline className={classes.hairline} />
@@ -134,7 +145,8 @@ const Settings: React.FC = () => {
             {menuOptionIndex === 1 && <SafeDetails />}
             {menuOptionIndex === 2 && <ManageOwners addressBook={addressBook} granted={granted} owners={owners} />}
             {menuOptionIndex === 3 && <ThresholdSettings />}
-            {menuOptionIndex === 4 && <Advanced />}
+            {menuOptionIndex === 4 && <Allowances />}
+            {menuOptionIndex === 5 && <Advanced />}
           </Block>
         </Col>
       </Block>
