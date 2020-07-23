@@ -15,8 +15,8 @@ const fetchCurrenciesRates = async (
   if (targetCurrencyValue === AVAILABLE_CURRENCIES.ETH) {
     try {
       const result = await fetchTokenCurrenciesBalances(safeAddress)
-      if (result?.data && result?.data.length > 0) {
-        rate = new BigNumber(1).div(new BigNumber(result.data[0].usdConversion)).toNumber()
+      if (result?.data?.length) {
+        rate = new BigNumber(1).div(result.data[0].usdConversion).toNumber()
       }
     } catch (error) {
       console.error('Fetching ETH data from the relayer errored', error)
