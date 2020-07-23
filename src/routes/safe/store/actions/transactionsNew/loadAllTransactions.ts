@@ -13,14 +13,14 @@ export type ServiceUriParams = {
   trusted?: boolean
 }
 
-type EndpointResponse = {
+type TransactionDTO = {
   count: number
   next?: string
   previous?: string
   results: Transaction[]
 }
 
-const getAllTransactionsUrl = (safeAddress: string) => {
+const getAllTransactionsUri = (safeAddress: string): string => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
   const base = getAllTransactionsUriFrom(address)
@@ -34,7 +34,7 @@ const fetchAllTransactions = async (
 ): Promise<{ responseEtag: string; results: Transaction[]; count?: number }> => {
   const { safeAddress, limit, offset, orderBy, queued, trusted } = urlParams
   try {
-    const url = getAllTransactionsUrl(safeAddress)
+    const url = getAllTransactionsUri(safeAddress)
 
     const config = {
       params: {
@@ -47,7 +47,7 @@ const fetchAllTransactions = async (
       headers: eTag ? { 'If-None-Match': eTag } : undefined,
     }
 
-    const response: AxiosResponse<EndpointResponse> = await axios.get(url, config)
+    const response: AxiosResponse<TransactionDTO> = await axios.get(url, config)
 
     if (response.data.count > 0) {
       const { etag } = response.headers
