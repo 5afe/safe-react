@@ -27,7 +27,7 @@ const Transactions = (): React.ReactElement => {
 
   return (
     <>
-      {transactions.map((tx: Transaction, index) => {
+      {transactions.map((tx: Transaction) => {
         let txHash = ''
         if ('transactionHash' in tx) {
           txHash = tx.transactionHash
@@ -35,7 +35,7 @@ const Transactions = (): React.ReactElement => {
         if ('txHash' in tx) {
           txHash = tx.txHash
         }
-        return <div key={index}>Tx hash: {txHash}</div>
+        return <div key={txHash}>Tx hash: {txHash}</div>
       })}
       <ButtonLink color="primary" onClick={previousPageButtonHandler} disabled={currentPage === 1}>
         Previous Page
