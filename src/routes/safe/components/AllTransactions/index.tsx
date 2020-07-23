@@ -37,10 +37,10 @@ const Transactions = (): React.ReactElement => {
         }
         return <div key={index}>Tx hash: {txHash}</div>
       })}
-      <ButtonLink color="primary" onClick={() => previousPageButtonHandler()} disabled={currentPage === 1}>
+      <ButtonLink color="primary" onClick={previousPageButtonHandler} disabled={currentPage === 1}>
         Previous Page
       </ButtonLink>
-      <ButtonLink color="primary" onClick={() => nextPageButtonHandler()} disabled={currentPage >= maxPages}>
+      <ButtonLink color="primary" onClick={nextPageButtonHandler} disabled={currentPage >= maxPages}>
         Next Page
       </ButtonLink>
     </>
