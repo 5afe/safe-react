@@ -5,11 +5,8 @@ import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types'
-import {
-  AVAILABLE_CURRENCIES,
-  BalanceCurrencyRecord,
-} from '../../../../logic/currencyValues/store/model/currencyValues'
-import { TokenProps } from '../../../../logic/tokens/store/model/token'
+import { AVAILABLE_CURRENCIES, BalanceCurrencyRecord } from 'src/logic/currencyValues/store/model/currencyValues'
+import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { BalanceDataRow } from './Coins'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
