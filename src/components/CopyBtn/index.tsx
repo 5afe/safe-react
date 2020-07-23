@@ -27,10 +27,16 @@ const useStyles = makeStyles({
   },
 })
 
-const CopyBtn = ({ className = '', content, increaseZindex = false }): ReactElement => {
+type Props = {
+  className?: string
+  increaseZIndex?: boolean
+  content: string
+}
+
+const CopyBtn = ({ className = '', content, increaseZIndex = false }: Props): ReactElement => {
   const [clicked, setClicked] = useState(false)
   const classes = useStyles()
-  const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
+  const customClasses = increaseZIndex ? { popper: classes.increasedPopperZindex } : {}
 
   return (
     <Tooltip

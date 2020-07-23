@@ -113,7 +113,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
           </Paragraph>
           {userAddress && (
             <>
-              <CopyBtn content={userAddress} increaseZindex />
+              <CopyBtn content={userAddress} increaseZIndex />
               <EtherscanBtn increaseZindex type="address" value={userAddress} />
             </>
           )}
