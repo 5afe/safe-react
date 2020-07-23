@@ -1,10 +1,11 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { SafeApp } from './types'
-import { getContentFromENS } from '../../../../logic/wallets/getWeb3'
+
+import { getGnosisSafeAppsUrl } from 'src/config/index'
+import { getContentFromENS } from 'src/logic/wallets/getWeb3'
+import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
@@ -91,19 +92,21 @@ export const getAppInfoFromUrl = memoize(
   },
 )
 
-export const getIpfsLinkFromEns = memoize(async (name: string) => {
-  try {
-    const content = await getContentFromENS(name)
-    if (content && content.protocolType === 'ipfs') {
-      return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+export const getIpfsLinkFromEns = memoize(
+  async (name: string): Promise<string | undefined> => {
+    try {
+      const content = await getContentFromENS(name)
+      if (content && content.protocolType === 'ipfs') {
+        return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+      }
+    } catch (error) {
+      console.error(error)
+      return
     }
-  } catch (error) {
-    console.error(error)
-    return undefined
-  }
-})
+  },
+)
 
-export const uniqueApp = (appList: SafeApp[]) => (url: string) => {
+export const uniqueApp = (appList: SafeApp[]) => (url: string): string | undefined => {
   const exists = appList.some((a) => {
     try {
       const currentUrl = new URL(a.url)
