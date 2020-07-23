@@ -6,7 +6,7 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types'
 import { AVAILABLE_CURRENCIES, BalanceCurrencyRecord } from 'src/logic/currencyValues/store/model/currencyValues'
-import { TokenProps } from 'src/logic/tokens/store/model/token'
+import { Token, TokenProps } from 'src/logic/tokens/store/model/token'
 import { BalanceDataRow } from './Coins'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
@@ -42,7 +42,7 @@ const getTokenPriceInCurrency = (
 }
 
 export const getBalanceData = (
-  activeTokens: List<RecordOf<TokenProps>>,
+  activeTokens: List<Token>,
   currencySelected: AVAILABLE_CURRENCIES,
   currencyValues: List<BalanceCurrencyRecord>,
   currencyRate: number,
