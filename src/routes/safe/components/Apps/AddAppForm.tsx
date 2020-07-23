@@ -156,7 +156,6 @@ const SubmitButtonStatus = ({
   const { valid, validating, values } = useFormState({ subscription: { valid: true, validating: true, values: true } })
 
   React.useEffect(() => {
-    console.log(validating, valid, appInfo.error, appInfo.url, appInfo.name, values)
     isSubmitDisabled(
       validating || !valid || appInfo.error || !appInfo.url || !appInfo.name || appInfo.name === 'unknown',
     )
