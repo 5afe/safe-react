@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getNewTransactionsServiceUriFrom, getTxServiceHost } from 'src/config'
+import { getAllTransactionsUriFrom, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../models/types/transactions'
 
@@ -23,7 +23,7 @@ type EndpointResponse = {
 const getAllTransactionsUrl = (safeAddress: string) => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
-  const base = getNewTransactionsServiceUriFrom(address)
+  const base = getAllTransactionsUriFrom(address)
 
   return `${host}${base}`
 }

@@ -78,7 +78,7 @@ if (process.env.REACT_APP_NEW_TX_TAB === 'enabled') {
   })
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const TabsComponent = (): ReactElement => {
   const classes = useStyles()
