@@ -191,6 +191,7 @@
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
     "js-cookie": "^2.2.1",
+    "lodash.debounce": "^4.0.8",
     "lodash.memoize": "^4.1.2",
     "material-ui-search-bar": "^1.0.0-beta.13",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
@@ -217,6 +218,7 @@
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
     "truffle-contract": "4.0.31",
+    "use-lodash-debounce": "^1.1.0",
     "web3": "1.2.9"
   },
   "devDependencies": {
