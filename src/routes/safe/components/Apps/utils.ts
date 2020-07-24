@@ -29,7 +29,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
   // Synthetix
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmS6PvFksTQHzxWCNGQ1vto6S9TdVrP83EgLd545DK3aQN`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
   // TX-Builder
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
