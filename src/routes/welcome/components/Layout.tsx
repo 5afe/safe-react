@@ -88,7 +88,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
         {headingText}
         <a
           className={styles.learnMoreLink}
-          href="https://safe.gnosis.io/teams"
+          href="https://gnosis-safe.io/teams"
           rel="noopener noreferrer"
           target="_blank"
         >
