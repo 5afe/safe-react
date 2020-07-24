@@ -35,27 +35,27 @@ const StepsLine = styled.div`
   margin: 46px 0;
 `
 
-const AllowanceStep = styled.div`
+const SpendingLimitStep = styled.div`
   width: 24%;
   min-width: 120px;
   max-width: 164px;
 `
 
-const Allowances = (): React.ReactElement => {
+const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
 
   return (
     <>
       <Block className={classes.container}>
         <Title size="xs" withoutMargin>
-          Allowances
+          Spending Limit
         </Title>
         <InfoText size="lg">
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
           signatures.
         </InfoText>
         <Steps>
-          <AllowanceStep>
+          <SpendingLimitStep>
             <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
             <Text size="lg" color="placeHolder" strong center>
               Select Beneficiary
@@ -66,27 +66,28 @@ const Allowances = (): React.ReactElement => {
             <Text size="lg" color="placeHolder" center>
               The beneficiary does not have to be an owner of this Safe
             </Text>
-          </AllowanceStep>
+          </SpendingLimitStep>
           <StepsLine />
-          <AllowanceStep>
+          <SpendingLimitStep>
             <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
             <Text size="lg" color="placeHolder" strong center>
               Select asset and amount
             </Text>
             <Text size="lg" color="placeHolder" center>
-              You can set allowances for any asset stored in your Safe
+              You can set a spending limit for any asset stored in your Safe
             </Text>
-          </AllowanceStep>
+          </SpendingLimitStep>
           <StepsLine />
-          <AllowanceStep>
+          <SpendingLimitStep>
             <Img alt="Select time" title="Time" height={96} src={Time} />
             <Text size="lg" color="placeHolder" strong center>
               Select time
             </Text>
             <Text size="lg" color="placeHolder" center>
-              You can choose to set a one-time allowance or to have it automatically refill after a defined time-period
+              You can choose to set a one-time spending limit or to have it automatically refill after a defined
+              time-period
             </Text>
-          </AllowanceStep>
+          </SpendingLimitStep>
         </Steps>
       </Block>
       <Row align="end" className={classes.buttonRow} grow>
@@ -95,12 +96,12 @@ const Allowances = (): React.ReactElement => {
             className={classes.actionButton}
             color="primary"
             size="small"
-            testId="new-allowance-button"
+            testId="new-spending-limit-button"
             onClick={() => {}}
             variant="contained"
             disabled
           >
-            New allowance
+            New spending limit
           </Button>
         </Col>
       </Row>
@@ -108,4 +109,4 @@ const Allowances = (): React.ReactElement => {
   )
 }
 
-export default Allowances
+export default SpendingLimit
