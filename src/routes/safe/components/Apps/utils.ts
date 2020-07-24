@@ -67,7 +67,7 @@ export const getAppInfoFromUrl = memoize(
     const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
     try {
-      const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)
+      const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
 
       // verify imported app fulfil safe requirements
       if (!appInfo?.data || isAppManifestValid(appInfo.data)) {

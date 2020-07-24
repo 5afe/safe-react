@@ -58,8 +58,9 @@ const IframeCoverLoading = styled.div`
   background: white;
 `
 const operations = {
-  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
+  SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
+  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
@@ -222,6 +223,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const getEnabledApps = () => appList.filter((a) => !a.disabled)
 
+  const sendMessageToIframe = useCallback(
+    (messageId, data) => {
+      const app = getSelectedApp()
+      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
+    },
+    [getSelectedApp, iframeEl.contentWindow],
+  )
+
   // handle messages from iframe
   useEffect(() => {
     const handleIframeMessage = (data) => {
@@ -234,7 +243,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         case operations.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
-
             await sendTransactions(
               dispatch,
               safeAddress,
@@ -256,7 +264,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
             closeModal,
             onConfirm,
           )
+          break
+        }
 
+        case operations.SAFE_APP_SDK_INITIALIZED: {
+          sendMessageToIframe(operations.ON_SAFE_INFO, {
+            safeAddress,
+            network,
+            ethBalance,
+          })
           break
         }
 
@@ -347,10 +363,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   // on iframe change
   useEffect(() => {
-    const sendMessageToIframe = (messageId, data) => {
-      const app = getSelectedApp()
-      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
-    }
     const onIframeLoaded = () => {
       setAppIsLoading(false)
       sendMessageToIframe(operations.ON_SAFE_INFO, {
@@ -370,7 +382,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp])
+  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
 
   if (loading) {
     return <Loader size="md" />
