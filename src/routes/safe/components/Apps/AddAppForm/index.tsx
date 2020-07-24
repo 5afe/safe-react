@@ -29,6 +29,16 @@ const AppInfo = styled.div`
   }
 `
 
+export interface AddAppFormValues {
+  appUrl: string
+  agreementAccepted: boolean
+}
+
+const INITIAL_VALUES: AddAppFormValues = {
+  appUrl: '',
+  agreementAccepted: false,
+}
+
 const APP_INFO: SafeApp = {
   id: undefined,
   url: '',
@@ -48,18 +58,13 @@ interface AddAppProps {
 const AddApp = ({ appList, closeModal, formId, onAppAdded, setIsSubmitDisabled }: AddAppProps): React.ReactElement => {
   const [appInfo, setAppInfo] = React.useState<SafeApp>(APP_INFO)
 
-  const initialValues = {
-    appUrl: '',
-    agreement: false,
-  }
-
   const handleSubmit = () => {
     closeModal()
     onAppAdded(appInfo)
   }
 
   return (
-    <GnoForm decorators={[appUrlResolver]} initialValues={initialValues} onSubmit={handleSubmit} testId={formId}>
+    <GnoForm decorators={[appUrlResolver]} initialValues={INITIAL_VALUES} onSubmit={handleSubmit} testId={formId}>
       {() => (
         <>
           <StyledText size="xl">Add custom app</StyledText>
