@@ -1,16 +1,31 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { getRelayUrl } from 'src/config/index'
 
-const fetchToken = (tokenAddress) => {
-  const apiUrl = getRelayUrl()
-  const url = `${apiUrl}/tokens/`
+type TokenData = {
+  type: string
+  address: string
+  name: string
+  symbol: string
+  decimals: number
+  logoUri: string
+}
 
-  return axios.get(url, {
-    params: {
-      address: tokenAddress,
-    },
-  })
+interface TokenInfoResponseData extends AxiosResponse {
+  data: TokenData
+}
+
+const fetchToken = async (tokenAddress: string): Promise<TokenData | null> => {
+  const apiUrl = getRelayUrl()
+  const url = `${apiUrl}tokens/${tokenAddress}`
+
+  try {
+    const result: TokenInfoResponseData = await axios.get(url)
+    return result.data
+  } catch (error) {
+    console.error(`Fetching token data for address: ${tokenAddress} errored`, error)
+  }
+  return null
 }
 
 export default fetchToken
