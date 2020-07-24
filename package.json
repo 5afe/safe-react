@@ -218,7 +218,6 @@
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
     "truffle-contract": "4.0.31",
-    "use-lodash-debounce": "^1.1.0",
     "web3": "1.2.9"
   },
   "devDependencies": {

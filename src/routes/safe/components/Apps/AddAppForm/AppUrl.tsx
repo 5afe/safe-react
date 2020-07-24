@@ -2,7 +2,6 @@ import { TextField } from '@gnosis.pm/safe-react-components'
 import createDecorator from 'final-form-calculate'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
-import { useDebounce } from 'use-lodash-debounce'
 
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { getAppInfoFromUrl, getIpfsLinkFromEns, uniqueApp } from 'src/routes/safe/components/Apps/utils'
@@ -10,6 +9,7 @@ import { composeValidators, required } from 'src/components/forms/validator'
 import Field from 'src/components/forms/Field'
 import { isValid as isURLValid } from 'src/utils/url'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { useDebounce } from 'src/routes/safe/container/hooks/useDebounce'
 
 const validateUrl = (url: string): string | undefined => (isURLValid(url) ? undefined : 'Invalid URL')
 
