@@ -45,6 +45,7 @@ const APP_INFO: SafeApp = {
   name: '',
   iconUrl: appsIconSvg,
   error: false,
+  description: '',
 }
 
 interface AddAppProps {

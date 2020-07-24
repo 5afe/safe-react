@@ -43,9 +43,21 @@ export const getAppInfoFromOrigin = (origin: string): Record<string, unknown> | 
   }
 }
 
+export const isAppManifestValid = (appInfo: SafeApp): boolean =>
+  // `appInfo` exists and `name` exists
+  !!appInfo?.name &&
+  // if `name` exists is not 'unknown'
+  appInfo.name !== 'unknown' &&
+  // `description` exists
+  !!appInfo.description &&
+  // `url` exists
+  !!appInfo.url &&
+  // no `error` (or `error` undefined)
+  !appInfo.error
+
 export const getAppInfoFromUrl = memoize(
   async (appUrl?: string): Promise<SafeApp> => {
-    let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
+    let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
 
     if (!appUrl?.length) {
       return res
@@ -58,7 +70,7 @@ export const getAppInfoFromUrl = memoize(
       const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)
 
       // verify imported app fulfil safe requirements
-      if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {
+      if (!appInfo?.data || isAppManifestValid(appInfo.data)) {
         throw Error('The app does not fulfil the structure required.')
       }
 
