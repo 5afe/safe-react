@@ -8,7 +8,7 @@ import contract from 'truffle-contract'
 import saveTokens from './saveTokens'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { fetchTokenList } from 'src/logic/tokens/api'
+import { fetchToken, fetchTokenList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -70,20 +70,39 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
     return localToken
   }
 
-  // Otherwise we fetch it, save it to the store and return it
-  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+  // We try to fetch it from the backend
+  const remoteToken = await fetchToken(tokenAddress)
+  let token = null
 
-  if (tokenDecimals === null) {
-    return null
+  if (remoteToken) {
+    const { address, decimals, symbol, logoUri, name } = remoteToken
+
+    if (decimals === null) {
+      return null
+    }
+
+    token = makeToken({
+      address,
+      name: name ? name : symbol,
+      symbol: symbol,
+      decimals: Number(decimals),
+      logoUri,
+    })
+  } else {
+    // In case it doesn't exists on the backend, we try to fetch it from the blockchain
+    const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+    if (tokenDecimals === null) {
+      return null
+    }
+
+    token = makeToken({
+      address: tokenAddress,
+      name: tokenName ? tokenName : tokenSymbol,
+      symbol: tokenSymbol,
+      decimals: Number(tokenDecimals),
+      logoUri: '',
+    })
   }
-
-  const token = makeToken({
-    address: tokenAddress,
-    name: tokenName ? tokenName : tokenSymbol,
-    symbol: tokenSymbol,
-    decimals: Number(tokenDecimals),
-    logoUri: '',
-  })
 
   const newTokens = tokens.set(tokenAddress, token)
   store.dispatch(saveTokens(newTokens))
