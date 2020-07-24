@@ -42,7 +42,7 @@ interface AddAppProps {
   closeModal: () => void
   formId: string
   onAppAdded: (app: SafeApp) => void
-  setIsSubmitDisabled: (status: boolean) => void
+  setIsSubmitDisabled: (disabled: boolean) => void
 }
 
 const AddApp = ({ appList, closeModal, formId, onAppAdded, setIsSubmitDisabled }: AddAppProps): React.ReactElement => {
@@ -74,7 +74,7 @@ const AddApp = ({ appList, closeModal, formId, onAppAdded, setIsSubmitDisabled }
 
           <AppAgreement />
 
-          <SubmitButtonStatus isSubmitDisabled={setIsSubmitDisabled} appInfo={appInfo} />
+          <SubmitButtonStatus onSubmitButtonStatusChange={setIsSubmitDisabled} appInfo={appInfo} />
         </>
       )}
     </GnoForm>
