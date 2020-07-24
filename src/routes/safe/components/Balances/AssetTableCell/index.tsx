@@ -5,7 +5,15 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
-const AssetTableCell = (props) => {
+type Props = {
+  asset: {
+    name: string
+    address: string
+    logoUri: string
+  }
+}
+
+const AssetTableCell = (props: Props): React.ReactElement => {
   const { asset } = props
 
   return (
