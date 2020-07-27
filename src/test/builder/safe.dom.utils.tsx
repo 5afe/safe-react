@@ -107,7 +107,7 @@ export const renderSafeView = (store, address) => {
 
 const INTERVAL = 500
 const MAX_TIMES_EXECUTED = 30
-export const whenSafeDeployed = () => new Promise((resolve, reject) => {
+export const whenSafeDeployed = () => new Promise<string>((resolve, reject) => {
   let times = 0
   const interval = setInterval(() => {
     if (times >= MAX_TIMES_EXECUTED) {
