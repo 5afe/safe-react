@@ -14,6 +14,8 @@ import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
+import { ETH_ADDRESS } from '../../utils/tokenHelpers'
+import logo from '../../../../assets/icons/icon_etherTokens.svg'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -60,6 +62,16 @@ const getTokenValues = (tokenAddress) =>
 export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   if (!tokenAddress) {
     return null
+  }
+
+  if (tokenAddress === ETH_ADDRESS) {
+    return makeToken({
+      address: ETH_ADDRESS,
+      name: 'Ether',
+      symbol: 'ETH',
+      decimals: 18,
+      logoUri: logo,
+    })
   }
 
   const { tokens } = store.getState()
