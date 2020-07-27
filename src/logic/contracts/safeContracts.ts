@@ -110,7 +110,7 @@ const cleanByteCodeMetadata = (bytecode: string): string => {
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))
 }
 
-export const validateProxy = async (safeAddress) => {
+export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const web3 = getWeb3()
   const code = await web3.eth.getCode(safeAddress)

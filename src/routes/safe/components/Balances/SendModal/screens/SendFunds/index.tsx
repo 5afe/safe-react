@@ -17,14 +17,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import {
-  composeValidators,
-  greaterThan,
-  maxValue,
-  maxValueCheck,
-  mustBeFloat,
-  required,
-} from 'src/components/forms/validator'
+import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -94,18 +87,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm
-        formMutators={formMutators}
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validation={(values) => {
-          const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
-
-          return {
-            amount: maxValueCheck(selectedTokenRecord?.balance, values.amount),
-          }
-        }}
-      >
+      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
@@ -247,7 +229,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       validate={composeValidators(
                         required,
                         mustBeFloat,
-                        greaterThan(0),
+                        minValue(0),
                         maxValue(selectedTokenRecord?.balance),
                       )}
                     />
