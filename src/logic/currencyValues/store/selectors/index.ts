@@ -1,9 +1,13 @@
-import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { CURRENCY_VALUES_KEY, CurrencyValuesState } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import {
+  CURRENCY_VALUES_KEY,
+  CurrencyReducerMap,
+  CurrencyValuesState,
+} from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { AppReduxState } from 'src/store'
+import { CurrencyRateValue } from '../model/currencyValues'
 
 export const currencyValuesSelector = (state: AppReduxState): CurrencyValuesState => state[CURRENCY_VALUES_KEY]
 
@@ -16,15 +20,18 @@ export const safeFiatBalancesSelector = createSelector(
   },
 )
 
-export const safeFiatBalancesListSelector = createSelector(safeFiatBalancesSelector, (currencyValuesMap) => {
-  if (!currencyValuesMap) return
-  return currencyValuesMap.get('currencyBalances') ? currencyValuesMap.get('currencyBalances') : List([])
-})
+const currencyValueSelector = <K extends keyof CurrencyRateValue>(key: K) => (
+  currencyValuesMap?: CurrencyReducerMap,
+): CurrencyRateValue[K] => currencyValuesMap?.get(key) || null
 
-export const currentCurrencySelector = createSelector(safeFiatBalancesSelector, (currencyValuesMap) =>
-  currencyValuesMap ? currencyValuesMap.get('selectedCurrency') : null,
+export const safeFiatBalancesListSelector = createSelector(
+  safeFiatBalancesSelector,
+  currencyValueSelector('currencyBalances'),
 )
 
-export const currencyRateSelector = createSelector(safeFiatBalancesSelector, (currencyValuesMap) =>
-  currencyValuesMap ? currencyValuesMap.get('currencyRate') : null,
+export const currentCurrencySelector = createSelector(
+  safeFiatBalancesSelector,
+  currencyValueSelector('selectedCurrency'),
 )
+
+export const currencyRateSelector = createSelector(safeFiatBalancesSelector, currencyValueSelector('currencyRate'))

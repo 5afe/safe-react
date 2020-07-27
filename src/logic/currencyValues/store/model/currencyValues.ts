@@ -1,4 +1,4 @@
-import { Record, RecordOf } from 'immutable'
+import { List, Record, RecordOf } from 'immutable'
 
 export enum AVAILABLE_CURRENCIES {
   USD = 'USD',
@@ -43,12 +43,6 @@ type BalanceCurrencyRecord = {
   balanceInSelectedCurrency: string
 }
 
-export type CurrencyRateValue = {
-  currencyRate?: number
-  selectedCurrency?: AVAILABLE_CURRENCIES
-  currencyBalances?: BalanceCurrencyRecord[]
-}
-
 export const makeBalanceCurrency = Record<BalanceCurrencyRecord>({
   currencyName: '',
   tokenAddress: '',
@@ -58,4 +52,10 @@ export const makeBalanceCurrency = Record<BalanceCurrencyRecord>({
 
 export type BalanceCurrency = RecordOf<BalanceCurrencyRecord>
 
-export type CurrencyValue = RecordOf<CurrencyRateValue>
+export type BalanceCurrencyList = List<BalanceCurrency>
+
+export interface CurrencyRateValue {
+  currencyRate?: number
+  selectedCurrency?: AVAILABLE_CURRENCIES
+  currencyBalances?: BalanceCurrencyList
+}
