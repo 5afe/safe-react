@@ -51,7 +51,7 @@ export const getAppInfoFromUrl = async (appUrl?: string): Promise<SafeApp> => {
   const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
   try {
-    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)
+    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
 
     // verify imported app fulfil safe requirements
     if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {
