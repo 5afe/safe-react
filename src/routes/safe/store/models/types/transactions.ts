@@ -4,9 +4,9 @@ export enum TxConstants {
 }
 
 export enum Operation {
-  CALL,
-  DELEGATE_CALL,
-  CREATE,
+  CALL = 'CALL',
+  DELEGATE_CALL = 'DELEGATE_CALL',
+  CREATE = 'CREATE',
 }
 
 // types comes from: https://github.com/gnosis/safe-client-gateway/blob/752e76b6d1d475791dbd7917b174bb41d2d9d8be/src/utils.rs
@@ -61,15 +61,15 @@ export interface DataDecoded {
 }
 
 export enum ConfirmationType {
-  CONFIRMATION,
-  EXECUTION,
+  CONFIRMATION = 'CONFIRMATION',
+  EXECUTION = 'EXECUTION',
 }
 
 export enum SignatureType {
-  CONTRACT_SIGNATURE,
-  APPROVED_HASH,
-  EOA,
-  ETH_SIGN,
+  CONTRACT_SIGNATURE = 'CONTRACT_SIGNATURE',
+  APPROVED_HASH = 'APPROVED_HASH',
+  EOA = 'EOA',
+  ETH_SIGN = 'ETH_SIGN',
 }
 
 export interface Confirmation {
@@ -82,9 +82,9 @@ export interface Confirmation {
 }
 
 export enum TokenType {
-  ERC20,
-  ERC721,
-  OTHER,
+  ERC20 = 'ERC20',
+  ERC721 = 'ERC721',
+  OTHER = 'OTHER',
 }
 
 export interface TokenInfo {
@@ -97,10 +97,10 @@ export interface TokenInfo {
 }
 
 export enum TransferType {
-  ETHER_TRANSFER,
-  ERC20_TRANSFER,
-  ERC721_TRANSFER,
-  UNKNOWN,
+  ETHER_TRANSFER = 'ETHER_TRANSFER',
+  ERC20_TRANSFER = 'ERC20_TRANSFER',
+  ERC721_TRANSFER = 'ERC721_TRANSFER',
+  UNKNOWN = 'UNKNOWN',
 }
 
 export interface Transfer {
@@ -117,9 +117,9 @@ export interface Transfer {
 }
 
 export enum TxType {
-  MULTISIG_TRANSACTION,
-  ETHEREUM_TRANSACTION,
-  MODULE_TRANSACTION,
+  MULTISIG_TRANSACTION = 'MULTISIG_TRANSACTION',
+  ETHEREUM_TRANSACTION = 'ETHEREUM_TRANSACTION',
+  MODULE_TRANSACTION = 'MODULE_TRANSACTION',
 }
 
 export interface MultiSigTransaction {
