@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import styled from 'styled-components'
 
-import RenderValue from './RenderValues'
 import { styles } from './styles'
+import Value from './Value'
 
 import Block from 'src/components/layout/Block'
 import {
@@ -74,7 +74,7 @@ const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number
                       {param.name}({param.type}):
                     </strong>
                   </InlineText>
-                  <RenderValue method={methodName} type={param.type} value={param.value} />
+                  <Value method={methodName} type={param.type} value={param.value} />
                 </TxDetailsMethodParam>
               ))}
             </TxInfo>
