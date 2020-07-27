@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -16,6 +16,7 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import { lg, md } from 'src/theme/variables'
+import { Transaction } from '../../../../../store/models/types/transaction'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -27,7 +28,7 @@ export const TRANSACTIONS_DESC_ADD_MODULE_TEST_ID = 'tx-description-add-module'
 export const TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID = 'tx-description-remove-module'
 export const TRANSACTIONS_DESC_NO_DATA = 'tx-description-no-data'
 
-export const styles = () => ({
+export const styles = createStyles({
   txDataContainer: {
     paddingTop: lg,
     paddingLeft: md,
@@ -261,7 +262,13 @@ const CustomDescription = ({ amount = 0, classes, data, recipient }: any) => {
   )
 }
 
-const TxDescription = ({ classes, tx }) => {
+const useStyles = makeStyles(styles)
+
+type TxDescriptionProps = {
+  tx: Transaction
+}
+
+const TxDescription = ({ tx }: TxDescriptionProps): React.ReactElement => {
   const {
     action,
     addedOwner,
@@ -275,7 +282,8 @@ const TxDescription = ({ classes, tx }) => {
     recipient,
     removedOwner,
     upgradeTx,
-  }: any = getTxData(tx)
+  } = getTxData(tx)
+  const classes = useStyles()
   const amount = getTxAmount(tx, false)
   return (
     <Block className={classes.txDataContainer}>
@@ -299,4 +307,4 @@ const TxDescription = ({ classes, tx }) => {
   )
 }
 
-export default withStyles(styles as any)(TxDescription)
+export default TxDescription

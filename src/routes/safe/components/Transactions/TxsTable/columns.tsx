@@ -10,6 +10,7 @@ import TxType from './TxType'
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
+import { Transaction } from '../../../store/models/types/transaction'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -41,9 +42,11 @@ export const getIncomingTxAmount = (tx, formatted = true) => {
   return getAmountWithSymbol(tx, formatted)
 }
 
-export const getTxAmount = (tx, formatted = true) => {
+export const getTxAmount = (tx: Transaction, formatted = true): string => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-  const { value } = isTokenTransfer && !!decodedParams && !!decodedParams.transfer ? decodedParams.transfer : tx
+  const { value } = (isTokenTransfer && !!decodedParams && !!decodedParams.transfer
+    ? decodedParams.transfer
+    : tx) as Transaction
 
   if (tx.isCollectibleTransfer) {
     return `1 ${tx.symbol}`

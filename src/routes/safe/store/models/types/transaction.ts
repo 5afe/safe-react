@@ -42,7 +42,7 @@ export type TransactionProps = {
   creationTx: boolean
   customTx: boolean
   data?: string | null
-  decimals?: (number | string) | null
+  decimals?: number | null
   decodedParams: DecodedMethods
   executionDate?: string | null
   executionTxHash?: string | null
