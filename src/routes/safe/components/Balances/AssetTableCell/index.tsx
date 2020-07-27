@@ -1,9 +1,8 @@
 import * as React from 'react'
 
 import Block from 'src/components/layout/Block'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { TokenSymbol } from '../../../../../components/TokenSymbol'
 
 type Props = {
   asset: {
@@ -18,7 +17,7 @@ const AssetTableCell = (props: Props): React.ReactElement => {
 
   return (
     <Block justify="left">
-      <Img alt={asset.name} height={26} onError={setImageToPlaceholder} src={asset.logoUri} />
+      <TokenSymbol tokenAddress={asset.address} />
       <Paragraph noMargin size="lg" style={{ marginLeft: 10 }}>
         {asset.name}
       </Paragraph>
