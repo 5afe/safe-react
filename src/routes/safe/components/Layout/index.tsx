@@ -39,7 +39,6 @@ interface Props extends RouteComponentProps {
   onHide: (value: string) => void
   showSendFunds: (value: string) => void
   hideSendFunds: () => void
-  match: { path: string }
 }
 
 const useStyles = makeStyles(styles as any)
