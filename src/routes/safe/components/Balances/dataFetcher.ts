@@ -14,15 +14,15 @@ export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const getTokenPriceInCurrency = (
   token: Token,
-  currencySelected: AVAILABLE_CURRENCIES,
-  currencyValues: BalanceCurrencyList,
-  currencyRate: number,
+  currencySelected: AVAILABLE_CURRENCIES | null,
+  currencyValues: BalanceCurrencyList | null,
+  currencyRate: number | null,
 ): string => {
   if (!currencySelected) {
     return ''
   }
 
-  const currencyValue = currencyValues.find(({ tokenAddress }) => {
+  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
     if (token.address === ETH_ADDRESS && !tokenAddress) {
       return true
     }
@@ -49,9 +49,9 @@ export interface BalanceData {
 
 export const getBalanceData = (
   activeTokens: List<Token>,
-  currencySelected: AVAILABLE_CURRENCIES,
-  currencyValues: BalanceCurrencyList,
-  currencyRate: number,
+  currencySelected: AVAILABLE_CURRENCIES | null,
+  currencyValues: BalanceCurrencyList | null,
+  currencyRate: number | null,
 ): List<BalanceData> =>
   activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
