@@ -141,7 +141,7 @@ const createTransaction = ({
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
   const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
-  console.log('Estimated safeTxGas: ', safeTxGas)
+
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
     '0x',
@@ -190,8 +190,6 @@ const createTransaction = ({
     }
 
     const tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
-    console.log('got the transaction')
-    debugger
     const sendParams: PayableTx = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache

@@ -98,13 +98,12 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = memoize(async (safeAddress: string): Promise<GnosisSafe> => {
+export const getGnosisSafeInstanceAt = async (safeAddress: string): Promise<GnosisSafe> => {
   const web3 = getWeb3()
-  console.log({web3})
   const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as unknown as AbiItem, safeAddress) as unknown as GnosisSafe
 
   return gnosisSafe
-})
+}
 
 const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'
