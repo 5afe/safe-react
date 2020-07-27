@@ -19,7 +19,6 @@ const styles = () => ({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
