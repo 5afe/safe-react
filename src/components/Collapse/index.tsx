@@ -9,7 +9,7 @@ const Wrapper = styled.div``
 
 const HeaderWrapper = styled.div``
 
-const Title = styled.div``
+const TitleWrapper = styled.div``
 
 const Header = styled.div`
   display: flex;
@@ -39,7 +39,7 @@ const Collapse: React.FC<Collapse> = ({
   return (
     <Wrapper>
       <HeaderWrapper className={headerWrapperClassName} onClick={handleClick}>
-        <Title>{title}</Title>
+        <TitleWrapper>{title}</TitleWrapper>
         <Header>
           <IconButton disableRipple size="small">
             {open ? <ExpandLess /> : <ExpandMore />}
