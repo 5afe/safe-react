@@ -8,7 +8,7 @@ import {
   ETHTransferDetails,
   UnknownTransferDetails,
 } from './transferDetails.d'
-import { humanReadableValue } from 'src/utils/humanReadableValue'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 const isIncomingTransfer = (transfer: Transfer): boolean => {
   const state = store.getState()

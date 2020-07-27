@@ -15,7 +15,7 @@ import {
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import EtherscanLink from 'src/components/EtherscanLink'
-import { humanReadableValue } from 'src/utils/humanReadableValue'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
