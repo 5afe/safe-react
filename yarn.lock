@@ -1970,10 +1970,10 @@
     "@babel/runtime" "^7.10.3"
     "@testing-library/dom" "^7.17.1"
 
-"@testing-library/user-event@12.0.13":
-  version "12.0.13"
-  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-12.0.13.tgz#585fbb1188df005d16eabd376c3f8e8eb2f2d35c"
-  integrity sha512-JvodPV7CGl2Izf/qWS+vAVKBB1ZNAPGEacabfEeLGfafLmiqXoGJCxNZC1ml3mNTj9tTsIjouHGc42gvlyRTtQ==
+"@testing-library/user-event@12.0.15":
+  version "12.0.15"
+  resolved "https://registry.yarnpkg.com/@testing-library/user-event/-/user-event-12.0.15.tgz#464e0478cbecf2059780c46f119e5ef49a1e07bf"
+  integrity sha512-B+f8lpty7Nnq0i06FBGPDWT+asnHaudpmYBKDw7wqIq5xpUdzfDBSOdlcwRNneM3XrD0RsOZE9BXuDwr5pwsvw==
   dependencies:
     "@babel/runtime" "^7.10.2"
 
@@ -2307,10 +2307,10 @@
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.24.tgz#b0f86f58564fa02a28b68f8b55d4cdec42e3b9d6"
   integrity sha512-btt/oNOiDWcSuI721MdL8VQGnjsKjlTMdrKyTcLCKeQp/n4AAMFJ961wMbp+09y8WuGPClDEv07RIItdXKIXAA==
 
-"@types/node@14.0.25":
-  version "14.0.25"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.25.tgz#7ad8b00a1206d6c9e94810e49f3115f0bcc30456"
-  integrity sha512-okMqUHqrMlGOxfDZliX1yFX5MV6qcd5PpRz96XYtjkM0Ws/hwg23FMUqt6pETrVRZS+EKUB5HY19mmo54EuQbA==
+"@types/node@14.0.26":
+  version "14.0.26"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.26.tgz#22a3b8a46510da8944b67bfc27df02c34a35331c"
+  integrity sha512-W+fpe5s91FBGE0pEa0lnqGLL4USgpLgs4nokw16SrBBco/gQxuua7KnArSEOd5iaMqbbSHV10vUDkJYJJqpXKA==
 
 "@types/node@^10.3.2":
   version "10.17.27"
@@ -7145,10 +7145,10 @@ eslint-plugin-react@7.19.0:
     string.prototype.matchall "^4.0.2"
     xregexp "^4.3.0"
 
-eslint-plugin-react@^7.20.3:
-  version "7.20.3"
-  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.20.3.tgz#0590525e7eb83890ce71f73c2cf836284ad8c2f1"
-  integrity sha512-txbo090buDeyV0ugF3YMWrzLIUqpYTsWSDZV9xLSmExE1P/Kmgg9++PD931r+KEWS66O1c9R4srLVVHmeHpoAg==
+eslint-plugin-react@^7.20.4:
+  version "7.20.4"
+  resolved "https://registry.yarnpkg.com/eslint-plugin-react/-/eslint-plugin-react-7.20.4.tgz#c14d2631221ec694ddd84557d7152f44b66e4aa0"
+  integrity sha512-y4DOQ0LrzuDQFEAnYFGjJMRHQQqfTco02qiWI00eGQYikHTzC15S5aRHGWSffnThv8sBpsmFBLky3K5keniAJg==
   dependencies:
     array-includes "^3.1.1"
     array.prototype.flatmap "^1.2.3"
@@ -14633,10 +14633,10 @@ react-qr-reader@^2.2.1:
     prop-types "^15.7.2"
     webrtc-adapter "^7.2.1"
 
-react-redux@7.2.0:
-  version "7.2.0"
-  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.0.tgz#f970f62192b3981642fec46fd0db18a074fe879d"
-  integrity sha512-EvCAZYGfOLqwV7gh849xy9/pt55rJXPwmYvI4lilPM5rUT/1NxuuN59ipdBksRVSvz0KInbPnp4IfoXJXCqiDA==
+react-redux@7.2.1:
+  version "7.2.1"
+  resolved "https://registry.yarnpkg.com/react-redux/-/react-redux-7.2.1.tgz#8dedf784901014db2feca1ab633864dee68ad985"
+  integrity sha512-T+VfD/bvgGTUA74iW9d2i5THrDQWbweXP0AVNI8tNd1Rk5ch1rnMiJkDD67ejw7YBKM4+REvcvqRuWJb7BLuEg==
   dependencies:
     "@babel/runtime" "^7.5.5"
     hoist-non-react-statics "^3.3.0"
@@ -17197,7 +17197,16 @@ truffle-interface-adapter@^0.2.5:
     lodash "^4.17.13"
     web3 "1.2.1"
 
-truffle@5.1.35, truffle@^5.1.21:
+truffle@5.1.36:
+  version "5.1.36"
+  resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.1.36.tgz#d49c9e0c20558bdee76f442663f81367f62c5559"
+  integrity sha512-BXfDrRJmxECsHFu1ZHeQNDdv3OA3vmwQ6Wp5m9yaE0swKcHS+gd8sBdxQBoliiAI0xvUAsD62PRGowqFfT1CLg==
+  dependencies:
+    app-module-path "^2.2.0"
+    mocha "8.0.1"
+    original-require "1.0.1"
+
+truffle@^5.1.21:
   version "5.1.35"
   resolved "https://registry.yarnpkg.com/truffle/-/truffle-5.1.35.tgz#9b3adfd3aca1a3b6dd00874bc57d7569a3e3b89c"
   integrity sha512-N2b/3OF84c/4jqmPJ4JgQU1g91Cai4JMKdJ3HLUsmEKmo1LZ84+Y0UIeVBFjWHtTX6H7/oXlvZ59xUVzxXyAsg==
@@ -18599,7 +18608,6 @@ websocket@^1.0.31:
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
-    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"
