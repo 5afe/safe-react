@@ -16,7 +16,7 @@ import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/coo
 import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
-  CurrencyValuesState,
+  CurrencyReducerMap,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
@@ -36,7 +36,7 @@ import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/red
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 
-export const history = createHashHistory({ hashType: 'slash' })
+export const history = createHashHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
@@ -79,7 +79,7 @@ export type AppReduxState = CombinedState<{
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
-  [CURRENCY_VALUES_KEY]: CurrencyValuesState
+  [CURRENCY_VALUES_KEY]: CurrencyReducerMap
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>

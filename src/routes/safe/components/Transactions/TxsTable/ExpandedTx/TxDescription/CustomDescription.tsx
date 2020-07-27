@@ -3,8 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import styled from 'styled-components'
 
-import RenderValue from './RenderValues'
 import { styles } from './styles'
+import Value from './Value'
 
 import Block from 'src/components/layout/Block'
 import {
@@ -15,7 +15,7 @@ import {
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import EtherscanLink from 'src/components/EtherscanLink'
-import { humanReadableValue } from 'src/utils/humanReadableValue'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
@@ -65,7 +65,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
                 {param.name}({param.type}):
               </strong>
             </InlineText>
-            <RenderValue method={methodName} type={param.type} value={param.value} />
+            <Value method={methodName} type={param.type} value={param.value} />
           </TxDetailsMethodParam>
         ))}
       </TxInfo>
@@ -82,7 +82,7 @@ const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number
       <Collapse
         collapseClassName={classes.collapse}
         headerWrapperClassName={classes.collapseHeaderWrapper}
-        title={<IconText iconSize="sm" iconType="code" text={`Interaction ${order + 1}${methodName}`} textSize="lg" />}
+        title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
       >
         <TxDetailsContent>
           <TxInfo>

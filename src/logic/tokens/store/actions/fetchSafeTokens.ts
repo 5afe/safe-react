@@ -15,7 +15,7 @@ import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/routes/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
-import { humanReadableValue } from 'src/utils/humanReadableValue'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { SafeRecordProps } from 'src/routes/safe/store/models/safe'
 import {
   safeActiveTokensSelector,

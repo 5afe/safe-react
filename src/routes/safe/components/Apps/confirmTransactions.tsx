@@ -12,7 +12,7 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { humanReadableValue } from 'src/utils/humanReadableValue'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 export type SafeAppTx = {
   to: string

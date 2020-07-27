@@ -10,7 +10,7 @@ import {
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
-import EtherscanLink from 'src/components/EtherscanLink'
+import SafeEtherscanLink from 'src/components/EtherscanLink'
 
 const useStyles = makeStyles(styles)
 
@@ -28,7 +28,7 @@ interface RenderValueProps {
   value: string | string[]
 }
 
-const RenderEtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactElement => {
+const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactElement => {
   const classes = useStyles()
   const [cut, setCut] = React.useState(undefined)
   const { width } = useWindowDimensions()
@@ -47,16 +47,16 @@ const RenderEtherscanLink = ({ method, type, value }: RenderValueProps): React.R
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <EtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
+          <SafeEtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
         ))}
       </NestedWrapper>
     )
   }
 
-  return <EtherscanLink className={classes.address} cut={cut} value={value as string} />
+  return <SafeEtherscanLink className={classes.address} cut={cut} value={value as string} />
 }
 
-const RenderGenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
+const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
   if (isArrayParameter(type)) {
     return (
       <NestedWrapper>
@@ -72,12 +72,12 @@ const RenderGenericValue = ({ method, type, value }: RenderValueProps): React.Re
   return <InlineText size="lg">{value as string}</InlineText>
 }
 
-const RenderValue = ({ type, ...props }: RenderValueProps): React.ReactElement => {
+const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
   if (isAddress(type)) {
-    return <RenderEtherscanLink type={type} {...props} />
+    return <EtherscanLink type={type} {...props} />
   }
 
-  return <RenderGenericValue type={type} {...props} />
+  return <GenericValue type={type} {...props} />
 }
 
-export default RenderValue
+export default Value
