@@ -1,7 +1,7 @@
 import { List, Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
-import { AddressBook, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { ADD_ADDRESS_BOOK } from 'src/logic/addressBook/store/actions/addAddressBook'
 import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
@@ -14,7 +14,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-export type AddressBookCollection = List<AddressBook>
+export type AddressBookCollection = List<AddressBookEntry>
 export type AddressBookState = Map<string, Map<string, AddressBookCollection>>
 
 export const buildAddressBook = (storedAdbk) => {
