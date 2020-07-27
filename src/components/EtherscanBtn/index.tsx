@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 interface EtherscanBtnProps {
   className?: string
   increaseZindex?: boolean
-  type: string
+type: 'tx' | 'address'
   value: string
 }
 
