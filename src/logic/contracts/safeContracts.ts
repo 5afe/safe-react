@@ -100,6 +100,7 @@ export const estimateGasForDeployingSafe = async (
 
 export const getGnosisSafeInstanceAt = memoize(async (safeAddress: string): Promise<GnosisSafe> => {
   const web3 = getWeb3()
+  console.log({web3})
   const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as unknown as AbiItem, safeAddress) as unknown as GnosisSafe
 
   return gnosisSafe
