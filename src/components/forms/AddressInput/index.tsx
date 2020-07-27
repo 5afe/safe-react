@@ -3,7 +3,7 @@ import { Field } from 'react-final-form'
 import { OnChange } from 'react-final-form-listeners'
 
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 import { trimSpaces } from 'src/utils/strings'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
@@ -18,7 +18,7 @@ export interface AddressInputProps {
   placeholder?: string
   inputAdornment?: { endAdornment: React.ReactElement } | undefined
   testId: string
-  validators?: Array<(data: string) => string>
+  validators?: Validator[]
   defaultValue?: string
   disabled?: boolean
   className?: string
