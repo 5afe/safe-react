@@ -17,7 +17,7 @@ interface EtherscanLinkProps {
   className?: string
   cut?: number
   knownAddress?: boolean
-  type?: string
+  type?: 'tx' | 'address'
   value: string
 }
 
