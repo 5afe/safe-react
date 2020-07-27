@@ -91,7 +91,7 @@ export const estimateTxGasCosts = async (
 }
 
 export const estimateSafeTxGas = async (
-  safe,
+  safe: GnosisSafe | undefined,
   safeAddress: string,
   data: string,
   to: string,
@@ -105,7 +105,7 @@ export const estimateSafeTxGas = async (
     }
 
     const web3 = await getWeb3()
-    const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+    const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
     const estimateResponse = await web3.eth.call({
       to: safeAddress,
       from: safeAddress,
@@ -115,7 +115,6 @@ export const estimateSafeTxGas = async (
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
-
     const additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     const batch = new web3.BatchRequest()
@@ -126,8 +125,8 @@ export const estimateSafeTxGas = async (
           // @ts-ignore
           const request = web3.eth.call.request(
             {
-              to: safe.address,
-              from: safe.address,
+              to: safeAddress,
+              from: safeAddress,
               data: estimateData,
               gasPrice: 0,
               gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
