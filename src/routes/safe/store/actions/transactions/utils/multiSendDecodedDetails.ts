@@ -1,4 +1,4 @@
-import { TransferDetails } from './transferDetailsTypes'
+import { TransferDetails } from './transferDetails.d'
 import {
   DataDecoded,
   MultiSigTransaction,

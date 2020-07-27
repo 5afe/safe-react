@@ -7,7 +7,7 @@ import {
   ERC721TransferDetails,
   ETHTransferDetails,
   UnknownTransferDetails,
-} from './transferDetailsTypes'
+} from './transferDetails.d'
 import { humanReadableValue } from 'src/utils/humanReadableValue'
 
 const isIncomingTransfer = (transfer: Transfer): boolean => {
