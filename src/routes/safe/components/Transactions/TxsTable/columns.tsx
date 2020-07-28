@@ -21,7 +21,7 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-export const formatDate = (date) => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
 const NOT_AVAILABLE = 'n/a'
 
@@ -33,7 +33,7 @@ const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, fo
   return `${txAmount} ${symbol}`
 }
 
-export const getIncomingTxAmount = (tx, formatted = true) => {
+export const getIncomingTxAmount = (tx: Transaction, formatted = true): string => {
   // simple workaround to avoid displaying unexpected values for incoming NFT transfer
   if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
     return `1 ${tx.symbol}`
@@ -128,7 +128,17 @@ export const getTxTableData = async (
   return List(await Promise.all(txsData))
 }
 
-export const generateColumns = () => {
+type TxTableColumn = {
+  id: string
+  disablePadding: boolean
+  label: string
+  custom: boolean
+  order: boolean
+  width?: number
+  static?: boolean
+}
+
+export const generateColumns = (): List<TxTableColumn> => {
   const nonceColumn = {
     id: TX_TABLE_ID,
     disablePadding: false,

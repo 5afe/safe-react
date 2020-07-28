@@ -12,10 +12,11 @@ import { fetchToken, fetchTokenList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
 import { ETH_ADDRESS } from '../../utils/tokenHelpers'
 import logo from '../../../../assets/icons/icon_etherTokens.svg'
+import { Dispatch } from 'redux'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -45,7 +46,7 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
-export const containsMethodByHash = async (contractAddress, methodHash) => {
+export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()
   const byteCode = await web3.eth.getCode(contractAddress)
 
@@ -122,7 +123,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   return token
 }
 
-export const fetchTokens = () => async (dispatch, getState) => {
+export const fetchTokens = () => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 
