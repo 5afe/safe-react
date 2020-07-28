@@ -26,7 +26,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
   // Synthetix
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQSVfqPYSSsnmtbJQCg7s9iLykTDYKoK5k98K4Fd6bwdJ`, disabled: true },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
   // TX-Builder
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
@@ -40,10 +40,10 @@ export const getAppInfoFromOrigin = (origin) => {
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl: string): Promise<SafeApp> => {
+export const getAppInfoFromUrl = async (appUrl?: string): Promise<SafeApp> => {
   let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
 
-  if (!appUrl.length) {
+  if (!appUrl?.length) {
     return res
   }
 
@@ -51,7 +51,7 @@ export const getAppInfoFromUrl = async (appUrl: string): Promise<SafeApp> => {
   const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
   try {
-    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`)
+    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
 
     // verify imported app fulfil safe requirements
     if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {

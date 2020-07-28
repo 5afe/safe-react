@@ -3,8 +3,8 @@ import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSaf
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from 'src/utils/singleton'
-import { simpleMemoize } from 'src/components/forms/validator'
-import { getNetworkIdFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import memoize from 'lodash.memoize'
+import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
@@ -34,8 +34,8 @@ const createProxyFactoryContract = (web3, networkId) => {
   return proxyFactory
 }
 
-export const getGnosisSafeContract = simpleMemoize(createGnosisSafeContract)
-const getCreateProxyFactoryContract = simpleMemoize(createProxyFactoryContract)
+export const getGnosisSafeContract = memoize(createGnosisSafeContract)
+const getCreateProxyFactoryContract = memoize(createProxyFactoryContract)
 
 const instantiateMasterCopies = async () => {
   const web3 = getWeb3()
@@ -55,7 +55,7 @@ const createMasterCopies = async () => {
   const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
-  const ProxyFactory = getCreateProxyFactoryContract(web3)
+  const ProxyFactory = getCreateProxyFactoryContract(web3, 4447)
   proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
 
   const GnosisSafe = getGnosisSafeContract(web3)
@@ -95,18 +95,18 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = simpleMemoize(async (safeAddress): Promise<any> => {
+export const getGnosisSafeInstanceAt = memoize(async (safeAddress: string): Promise<any> => {
   const web3 = getWeb3()
   const GnosisSafe = await getGnosisSafeContract(web3)
   return GnosisSafe.at(safeAddress)
 })
 
-const cleanByteCodeMetadata = (bytecode) => {
+const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'
   return bytecode.substring(0, bytecode.lastIndexOf(metaData))
 }
 
-export const validateProxy = async (safeAddress) => {
+export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const web3 = getWeb3()
   const code = await web3.eth.getCode(safeAddress)

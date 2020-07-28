@@ -33,7 +33,7 @@ import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/red
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import allTransactions, { TRANSACTIONS } from '../routes/safe/store/reducer/newTransactions'
 
-export const history = createHashHistory({ hashType: 'slash' })
+export const history = createHashHistory()
 
 // eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose

@@ -44,7 +44,7 @@ const renderOpenSafeForm = async (localStore) => {
   )
 }
 
-const deploySafe = async (createSafeForm, threshold, numOwners) => {
+const deploySafe = async (createSafeForm, threshold, numOwners): Promise<string> => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
 
@@ -112,7 +112,7 @@ const deploySafe = async (createSafeForm, threshold, numOwners) => {
   return whenSafeDeployed()
 }
 
-const aDeployedSafe = async (specificStore, threshold = 1, numOwners = 1) => {
+const aDeployedSafe = async (specificStore, threshold = 1, numOwners = 1): Promise<string> => {
   const safe = await renderOpenSafeForm(specificStore)
   await sleep(1500)
   const safeAddress = await deploySafe(safe, threshold, numOwners)
