@@ -3,11 +3,13 @@ import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 import { Dispatch } from 'redux'
 
-import fetchTokenCurrenciesBalances from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import fetchTokenCurrenciesBalances, {
+  BalanceEndpoint,
+} from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
 import {
   AVAILABLE_CURRENCIES,
-  BalanceCurrency,
+  CurrencyRateValueRecord,
   makeBalanceCurrency,
 } from 'src/logic/currencyValues/store/model/currencyValues'
 import addTokens from 'src/logic/tokens/store/actions/saveTokens'
@@ -34,19 +36,19 @@ const updateSafeValue = (address: string) => (valueToUpdate: Partial<SafeRecordP
 
 interface ExtractedData {
   balances: Map<string, string>
-  currencyList: List<BalanceCurrency>
+  currencyList: List<CurrencyRateValueRecord>
   ethBalance: string
   tokens: List<Token>
 }
 
 const extractDataFromResult = (currentTokens: TokenState) => (
-  acc,
-  { balance, balanceUsd, token, tokenAddress },
+  acc: ExtractedData,
+  { balance, balanceUsd, token, tokenAddress }: BalanceEndpoint,
 ): ExtractedData => {
   if (tokenAddress === null) {
     acc.ethBalance = humanReadableValue(balance, 18)
   } else {
-    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, token.decimals) })
+    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token.decimals)) })
 
     if (currentTokens && !currentTokens.get(tokenAddress)) {
       acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
@@ -85,7 +87,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
     const currencyValues = currencyValuesSelector(state)
 
-    const { balances, currencyList, ethBalance, tokens }: ExtractedData = result.data.reduce(
+    const { balances, currencyList, ethBalance, tokens } = result.data.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
       {
         balances: Map(),

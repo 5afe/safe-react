@@ -1,12 +1,12 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 
-import { buildOrderFieldFrom, FIXED } from 'src/components/Table/sorting'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { FIXED } from 'src/components/Table/sorting'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types'
-import { Token } from 'src/logic/tokens/store/model/token'
 import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -37,7 +37,7 @@ const getTokenPriceInCurrency = (
   const { balanceInBaseCurrency } = currencyValue
   const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
 
-  return `${balance} ${currencySelected}`
+  return `${formatAmountInUsFormat(balance)} ${currencySelected}`
 }
 
 export interface BalanceData {
@@ -60,10 +60,10 @@ export const getBalanceData = (
       address: token.address,
       symbol: token.symbol,
     },
-    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
-    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
+    assetOrder: token.name,
+    [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance.toString())} ${token.symbol}`,
+    balanceOrder: Number(token.balance),
+    [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
 
@@ -116,6 +116,3 @@ export const generateColumns = (): List<TableColumn> => {
 
   return List([assetColumn, balanceColumn, value, actions])
 }
-
-export const filterByZero = (data: List<BalanceData>, hideZero: boolean): List<BalanceData> =>
-  data.filter((row) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

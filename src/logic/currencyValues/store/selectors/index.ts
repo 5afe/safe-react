@@ -7,14 +7,15 @@ import {
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { AppReduxState } from 'src/store'
-import { CurrencyRateValue } from '../model/currencyValues'
+import { CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
+import { BigNumber } from 'bignumber.js'
 
 export const currencyValuesSelector = (state: AppReduxState): CurrencyValuesState => state[CURRENCY_VALUES_KEY]
 
 export const safeFiatBalancesSelector = createSelector(
   currencyValuesSelector,
   safeParamAddressFromStateSelector,
-  (currencyValues, safeAddress) => {
+  (currencyValues, safeAddress): CurrencyReducerMap | undefined => {
     if (!currencyValues) return
     return currencyValues.get(safeAddress)
   },
@@ -35,3 +36,18 @@ export const currentCurrencySelector = createSelector(
 )
 
 export const currencyRateSelector = createSelector(safeFiatBalancesSelector, currencyValueSelector('currencyRate'))
+
+export const safeFiatBalancesTotalSelector = createSelector(
+  safeFiatBalancesListSelector,
+  currencyRateSelector,
+  (currencyBalances, currencyRate): string | null => {
+    if (!currencyBalances) return '0'
+    if (!currencyRate) return null
+
+    const totalInBaseCurrency = currencyBalances.reduce((total, balanceCurrencyRecord) => {
+      return total.plus(balanceCurrencyRecord.balanceInBaseCurrency)
+    }, new BigNumber(0))
+
+    return totalInBaseCurrency.times(currencyRate).toFixed(2)
+  },
+)
