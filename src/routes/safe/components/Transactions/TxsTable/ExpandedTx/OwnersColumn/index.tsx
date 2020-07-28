@@ -18,10 +18,11 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { List } from 'immutable'
 
-function getOwnersConfirmations(tx, userAddress) {
-  const ownersWhoConfirmed = []
+function getOwnersConfirmations(tx: Transaction, userAddress: string): [string[], boolean] {
+  const ownersWhoConfirmed: string[] = []
   let currentUserAlreadyConfirmed = false
 
   tx.confirmations.forEach((conf) => {
@@ -34,7 +35,11 @@ function getOwnersConfirmations(tx, userAddress) {
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
-function getPendingOwnersConfirmations(owners, tx, userAddress) {
+function getPendingOwnersConfirmations(
+  owners: List<{ name: string; address: string }>,
+  tx: Transaction,
+  userAddress: string,
+): [{ hasPendingAcceptActions: boolean; hasPendingRejectActions: boolean; owner: string }[], boolean] {
   const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 

@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -24,25 +24,50 @@ export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
-const OwnerComponent = ({
-  classes,
-  confirmed,
-  executor,
-  isCancelTx,
-  onTxConfirm,
-  onTxExecute,
-  onTxReject,
-  owner,
-  pendingAcceptAction,
-  pendingRejectAction,
-  showConfirmBtn,
-  showExecuteBtn,
-  showExecuteRejectBtn,
-  showRejectBtn,
-  thresholdReached,
-  userAddress,
-}: any) => {
+type OwnerComponentProps = {
+  classes: unknown
+  executor: string
+  isCancelTx?: boolean
+  onTxConfirm?: () => void
+  onTxExecute?: () => void
+  onTxReject?: () => void
+  ownersUnconfirmed: any
+  ownersWhoConfirmed: any
+  showConfirmBtn?: boolean
+  showExecuteBtn?: boolean
+  showExecuteRejectBtn?: boolean
+  showRejectBtn?: boolean
+  thresholdReached: boolean
+  userAddress: string
+
+  confirmed?: boolean
+  owner: string
+  pendingAcceptAction?: boolean
+  pendingRejectAction?: boolean
+}
+
+const useStyles = makeStyles(styles)
+
+const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
+  const {
+    owner,
+    pendingAcceptAction,
+    pendingRejectAction,
+    isCancelTx,
+    thresholdReached,
+    executor,
+    showConfirmBtn,
+    onTxConfirm,
+    onTxExecute,
+    showExecuteBtn,
+    showRejectBtn,
+    userAddress,
+    onTxReject,
+    showExecuteRejectBtn,
+    confirmed,
+  } = props
   const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
+  const classes = useStyles()
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
@@ -167,4 +192,4 @@ const OwnerComponent = ({
   )
 }
 
-export default withStyles(styles as any)(OwnerComponent)
+export default OwnerComponent
