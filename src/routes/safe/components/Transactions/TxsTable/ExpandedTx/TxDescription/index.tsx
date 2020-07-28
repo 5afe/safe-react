@@ -294,7 +294,7 @@ const TxDescription = ({ tx }: TxDescriptionProps): React.ReactElement => {
     fetchTxAmount()
   }, [tx])
 
-  if (!amount || !amount?.lenght) return null
+  if (!amount?.length) return null
 
   return (
     <Block className={classes.txDataContainer}>
