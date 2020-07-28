@@ -1,34 +1,60 @@
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
-import ListItemText from '@material-ui/core/ListItemText'
 import { makeStyles } from '@material-ui/core/styles'
+import { AddressInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-components'
 import * as React from 'react'
+import styled from 'styled-components'
 
 import DefaultBadge from './DefaultBadge'
-
-import check from 'src/assets/icons/check.svg'
-import Identicon from 'src/components/Identicon'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
-import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { sameAddress, shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-
-import { disabled, md, mediumFontSize, primary, sm } from 'src/theme/variables'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
+const StyledIcon = styled(Icon)`
+  margin-right: 4px;
+`
+const AddressWrapper = styled.div`
+  display: flex;
+  padding: 5px 0;
+  width: 100%;
+  justify-content: space-between;
+
+  > nth-child(2) {
+    display: flex;
+    align-items: center;
+  }
+`
+
+const StyledButtonLink = styled(ButtonLink)`
+  visibility: hidden;
+  white-space: nowrap;
+`
+
+const AddressDetails = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 150px;
+
+  div {
+    margin-left: 0px;
+    padding: 5px 20px;
+
+    img {
+      margin-right: 5px;
+    }
+
+    p {
+      margin-top: 3px;
+    }
+  }
+`
+
 const useStyles = makeStyles({
-  icon: {
-    marginRight: sm,
-  },
-  checkIcon: {
-    marginRight: '10px',
-  },
   list: {
     height: '100%',
     overflowX: 'hidden',
@@ -38,25 +64,12 @@ const useStyles = makeStyles({
   listItemRoot: {
     paddingTop: 0,
     paddingBottom: 0,
-    '&:hover $makeDefaultBtn': {
+    '&:hover .safeListMakeDefaultButton': {
       visibility: 'initial',
     },
-    '&:focus $makeDefaultBtn': {
+    '&:focus .safeListMakeDefaultButton': {
       visibility: 'initial',
     },
-  },
-  safeName: {
-    color: primary,
-    overflowWrap: 'break-word',
-  },
-  safeAddress: {
-    color: disabled,
-    fontSize: mediumFontSize,
-  },
-  makeDefaultBtn: {
-    padding: 0,
-    marginLeft: md,
-    visibility: 'hidden',
   },
   noIcon: {
     visibility: 'hidden',
@@ -78,42 +91,32 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
               {sameAddress(currentSafe, safe.address) ? (
-                <ListItemIcon>
-                  <Img alt="check" className={classes.checkIcon} src={check} />
-                </ListItemIcon>
+                <StyledIcon type="check" size="md" color="primary" />
               ) : (
                 <div className={classes.noIcon}>placeholder</div>
               )}
-              <ListItemIcon>
-                <Identicon address={safe.address} className={classes.icon} diameter={32} />
-              </ListItemIcon>
-              <ListItemText
-                classes={{
-                  primary: classes.safeName,
-                  secondary: classes.safeAddress,
-                }}
-                primary={safe.name}
-                secondary={shortVersionOf(safe.address, 4)}
-              />
-              <Paragraph color="primary" size="lg">
-                {`${formatAmount(safe.ethBalance)} ETH`}
-              </Paragraph>
-              {sameAddress(defaultSafe, safe.address) ? (
-                <DefaultBadge />
-              ) : (
-                <ButtonLink
-                  className={classes.makeDefaultBtn}
-                  onClick={(e) => {
-                    e.preventDefault()
-                    e.stopPropagation()
 
-                    setDefaultSafe(safe.address)
-                  }}
-                  size="sm"
-                >
-                  Make default
-                </ButtonLink>
-              )}
+              <AddressWrapper>
+                <AddressInfo address={safe.address} name={safe.name} showIdenticon shortenAddress={4} />
+
+                <AddressDetails>
+                  <Text size="xl">{`${formatAmount(safe.ethBalance)} ETH`}</Text>
+                  {sameAddress(defaultSafe, safe.address) ? (
+                    <DefaultBadge />
+                  ) : (
+                    <StyledButtonLink
+                      className="safeListMakeDefaultButton"
+                      textSize="sm"
+                      onClick={() => {
+                        setDefaultSafe(safe.address)
+                      }}
+                      color="primary"
+                    >
+                      Make default
+                    </StyledButtonLink>
+                  )}
+                </AddressDetails>
+              </AddressWrapper>
             </ListItem>
           </Link>
           <Hairline />
