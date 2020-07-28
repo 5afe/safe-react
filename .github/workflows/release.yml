@@ -44,7 +44,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 10.16
-      - run: yarn install
+      - run: yarn install --network-concurrency 1
 
       - name: Build/Release Desktop App
         env:
