@@ -35,17 +35,6 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX',  () => {
-    // given
-    const input = 311137.30
-    const expectedResult = '311,137.30'
-
-    // when
-    const result = formatAmountInUsFormat(input.toString())
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
   it('Given number > 0.001 && < 1000 returns the same number as string',  () => {
     // given
     const input = 999
@@ -135,6 +124,17 @@ describe('FormatsAmountsInUsFormat', () => {
     // given
     const input = 1
     const expectedResult = '1.00'
+
+    // when
+    const result = formatAmountInUsFormat(input.toString())
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX',  () => {
+    // given
+    const input = 311137.30
+    const expectedResult = '311,137.30'
 
     // when
     const result = formatAmountInUsFormat(input.toString())
