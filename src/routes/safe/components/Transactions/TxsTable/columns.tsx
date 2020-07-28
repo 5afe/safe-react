@@ -117,7 +117,6 @@ export const getTxTableData = async (
   transactions: List<Transaction>,
   cancelTxs: List<Transaction>,
 ): Promise<List<IncomingTxTableData | TransactionTableData>> => {
-  console.log('txs', transactions?.toJS(), 'as', cancelTxs?.toJS())
   const txsData = transactions.map(async (tx) => {
     if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
