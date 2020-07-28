@@ -51,4 +51,4 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
  * @param {string} value
  * @returns {string} string without side whitespaces
  */
-export const trimSpaces = (value: string): string => value.trim()
+export const trimSpaces = (value: string): string => (value === undefined ? '' : value.trim())
