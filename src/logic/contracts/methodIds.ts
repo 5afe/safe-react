@@ -80,8 +80,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'oldOwner', type: '', value: decodedParameters[1] },
-          { name: 'newOwner', type: '', value: decodedParameters[2] },
+          { name: 'oldOwner', type: 'address', value: decodedParameters[1] },
+          { name: 'newOwner', type: 'address', value: decodedParameters[2] },
         ],
       }
     }
@@ -92,8 +92,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'owner', type: '', value: decodedParameters[0] },
-          { name: '_threshold', type: '', value: decodedParameters[1] },
+          { name: 'owner', type: 'address', value: decodedParameters[0] },
+          { name: '_threshold', type: 'uint', value: decodedParameters[1] },
         ],
       }
     }
@@ -104,8 +104,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'oldOwner', type: '', value: decodedParameters[1] },
-          { name: '_threshold', type: '', value: decodedParameters[2] },
+          { name: 'oldOwner', type: 'address', value: decodedParameters[1] },
+          { name: '_threshold', type: 'uint', value: decodedParameters[2] },
         ],
       }
     }
@@ -116,7 +116,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: '_threshold', type: '', value: decodedParameters[0] },
+          { name: '_threshold', type: 'uint', value: decodedParameters[0] },
         ],
       }
     }
@@ -127,7 +127,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'module', type: '', value: decodedParameters[0] },
+          { name: 'module', type: 'address', value: decodedParameters[0] },
         ],
       }
     }
@@ -138,8 +138,8 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'prevModule', type: '', value: decodedParameters[0] },
-          { name: 'module', type: '', value: decodedParameters[1] },
+          { name: 'prevModule', type: 'address', value: decodedParameters[0] },
+          { name: 'module', type: 'address', value: decodedParameters[1] },
         ],
       }
     }
