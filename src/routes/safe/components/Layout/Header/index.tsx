@@ -39,7 +39,7 @@ const LayoutHeader = (props: Props): React.ReactElement => {
   const currentCurrency = useSelector(currentCurrencySelector)
   if (!address) return null
 
-  const totalBalancesFormatted = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
+  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
 
   return (
     <Block className={classes.container} margin="xl">
@@ -49,10 +49,10 @@ const LayoutHeader = (props: Props): React.ReactElement => {
           <Row>
             <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
               {name}
-              {!!totalBalancesFormatted && !!currentCurrency && (
+              {!!formattedTotalBalance && !!currentCurrency && (
                 <span className={classes.totalBalance}>
                   {' '}
-                  | {totalBalancesFormatted} {currentCurrency}
+                  | {formattedTotalBalance} {currentCurrency}
                 </span>
               )}
             </Heading>

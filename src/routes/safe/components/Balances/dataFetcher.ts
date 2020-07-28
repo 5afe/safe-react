@@ -1,12 +1,12 @@
 import { BigNumber } from 'bignumber.js'
-import { List, RecordOf } from 'immutable'
+import { List } from 'immutable'
 
 import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types'
 import { AVAILABLE_CURRENCIES, BalanceCurrencyRecord } from 'src/logic/currencyValues/store/model/currencyValues'
-import { Token, TokenProps } from 'src/logic/tokens/store/model/token'
+import { Token } from 'src/logic/tokens/store/model/token'
 import { BalanceDataRow } from './Coins'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
@@ -14,7 +14,7 @@ export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const getTokenPriceInCurrency = (
-  token: RecordOf<TokenProps>,
+  token: Token,
   currencySelected: AVAILABLE_CURRENCIES,
   currencyValues: List<BalanceCurrencyRecord>,
   currencyRate: number | null,

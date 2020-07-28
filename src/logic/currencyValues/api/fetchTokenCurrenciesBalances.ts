@@ -11,11 +11,7 @@ type BalanceEndpoint = {
   usdConversion: string
 }
 
-interface ResponseData extends AxiosResponse {
-  data: BalanceEndpoint[]
-}
-
-const fetchTokenCurrenciesBalances = (safeAddress?: string): Promise<ResponseData> => {
+const fetchTokenCurrenciesBalances = (safeAddress?: string): Promise<AxiosResponse<BalanceEndpoint[]>> => {
   if (!safeAddress) {
     return null
   }
