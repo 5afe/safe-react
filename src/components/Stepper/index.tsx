@@ -33,7 +33,11 @@ interface StepperPageProps {
   [key: string]: unknown
 }
 
+// TODO: Remove this magic
+/* eslint-disable */
+// @ts-ignore
 export const StepperPage = ({}: StepperPageProps): null => null
+/* eslint-enable */
 
 type StepperFormValues = Record<string, string>
 
