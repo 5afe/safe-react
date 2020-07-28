@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
@@ -28,6 +28,7 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
+  const [filteredData, setFilteredData] = useState(null)
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
@@ -35,33 +36,42 @@ const TxsTable = ({ classes }) => {
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const filteredData = getTxTableData(transactions, cancellationTransactions)
-    .sort((tx1, tx2) => {
-      // First order by nonce
-      const aNonce = tx1.tx.nonce
-      const bNonce = tx1.tx.nonce
-      if (aNonce && bNonce) {
-        const difference = aNonce - bNonce
-        if (difference !== 0) {
-          return difference
-        }
-      }
-      // If can't be ordered by nonce, order by date
-      const aDateOrder = tx1.dateOrder
-      const bDateOrder = tx2.dateOrder
-      // Second by date
-      if (!aDateOrder || !bDateOrder) {
-        return 0
-      }
-      return aDateOrder - bDateOrder
-    })
-    .map((tx, id) => {
-      return {
-        ...tx,
-        id,
-      }
-    })
 
+  useEffect(() => {
+    const fetchTxTableData = async () => {
+      const txTableData = await getTxTableData(transactions, cancellationTransactions)
+      const filteredData = txTableData
+        .sort((tx1, tx2) => {
+          // First order by nonce
+          const aNonce = tx1.tx.nonce
+          const bNonce = tx1.tx.nonce
+          if (aNonce && bNonce) {
+            const difference = aNonce - bNonce
+            if (difference !== 0) {
+              return difference
+            }
+          }
+          // If can't be ordered by nonce, order by date
+          const aDateOrder = tx1.dateOrder
+          const bDateOrder = tx2.dateOrder
+          // Second by date
+          if (!aDateOrder || !bDateOrder) {
+            return 0
+          }
+          return aDateOrder - bDateOrder
+        })
+        .map((tx, id) => {
+          return {
+            ...tx,
+            id,
+          }
+        })
+      setFilteredData(filteredData)
+    }
+    fetchTxTableData()
+  }, [transactions, cancellationTransactions])
+
+  if (!filteredData) return null
   return (
     <Block className={classes.container}>
       <TableContainer>

@@ -7,10 +7,10 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import { Transaction } from '../../../store/models/types/transaction'
+import { Transaction, TransactionStatus } from '../../../store/models/types/transaction'
+import { getTokenInfos } from '../../../../../logic/tokens/store/actions/fetchTokens'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -42,8 +42,9 @@ export const getIncomingTxAmount = (tx, formatted = true) => {
   return getAmountWithSymbol(tx, formatted)
 }
 
-export const getTxAmount = (tx: Transaction, formatted = true): string => {
-  const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
+export const getTxAmount = async (tx: Transaction, formatted = true): Promise<string> => {
+  const { decimals = 18, decodedParams, isTokenTransfer, recipient } = tx
+  let { symbol } = tx
   const { value } = (isTokenTransfer && !!decodedParams && !!decodedParams.transfer
     ? decodedParams.transfer
     : tx) as Transaction
@@ -56,42 +57,76 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
     return NOT_AVAILABLE
   }
 
+  if (!symbol) {
+    const token = await getTokenInfos(recipient)
+    symbol = token.symbol
+  }
+
   return getAmountWithSymbol({ decimals, symbol, value }, formatted)
 }
 
-const getIncomingTxTableData = (tx) => ({
-  [TX_TABLE_ID]: tx.blockNumber,
-  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
-  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
-  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
-  [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
-  [TX_TABLE_STATUS_ID]: tx.status,
-  [TX_TABLE_RAW_TX_ID]: tx,
-})
+type IncomingTxTableData = {
+  id?: number
+  type: React.ReactElement
+  date: string
+  dateOrder: number
+  amount: string
+  status?: TransactionStatus
+  tx: Transaction
+}
 
-const getTransactionTableData = (tx, cancelTx) => {
+const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => {
+  return {
+    [TX_TABLE_ID]: tx.blockNumber,
+    [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
+    [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+    dateOrder: getTime(parseISO(tx.executionDate)),
+    [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+    [TX_TABLE_STATUS_ID]: tx.status,
+    [TX_TABLE_RAW_TX_ID]: tx,
+  }
+}
+
+type TransactionTableData = {
+  id?: number
+  type: React.ReactElement
+  date: string
+  dateOrder?: number
+  amount: string
+  status?: TransactionStatus
+  tx: Transaction
+  cancelTx: Transaction
+}
+
+const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): Promise<TransactionTableData> => {
   const txDate = tx.submissionDate
 
   return {
     [TX_TABLE_ID]: tx.blockNumber,
     [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
-    [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
-    [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
+    dateOrder: txDate ? getTime(parseISO(txDate)) : null,
+    [TX_TABLE_AMOUNT_ID]: await getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
     [TX_TABLE_RAW_CANCEL_TX_ID]: cancelTx,
   }
 }
 
-export const getTxTableData = (transactions, cancelTxs) => {
-  return transactions.map((tx) => {
+export const getTxTableData = async (
+  transactions: List<Transaction>,
+  cancelTxs: List<Transaction>,
+): Promise<List<IncomingTxTableData | TransactionTableData>> => {
+  console.log('txs', transactions?.toJS(), 'as', cancelTxs?.toJS())
+  const txsData = transactions.map(async (tx) => {
     if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
     }
 
-    return getTransactionTableData(tx, cancelTxs.get(`${tx.nonce}`))
+    return getTransactionTableData(tx, cancelTxs.get(Number(`${tx.nonce}`)))
   })
+
+  return List(await Promise.all(txsData))
 }
 
 export const generateColumns = () => {

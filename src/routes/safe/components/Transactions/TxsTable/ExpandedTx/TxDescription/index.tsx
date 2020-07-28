@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTxData } from './utils'
@@ -284,7 +284,18 @@ const TxDescription = ({ tx }: TxDescriptionProps): React.ReactElement => {
     upgradeTx,
   } = getTxData(tx)
   const classes = useStyles()
-  const amount = getTxAmount(tx, false)
+  const [amount, setAmount] = useState(null)
+
+  useEffect(() => {
+    const fetchTxAmount = async () => {
+      const amount = await getTxAmount(tx, false)
+      setAmount(amount)
+    }
+    fetchTxAmount()
+  }, [tx])
+
+  if (!amount || !amount?.lenght) return null
+
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && action && (
