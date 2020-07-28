@@ -13,7 +13,7 @@ class EtherscanService {
   }
 
   _fetch = memoize(
-    async (url, contractAddress) => {
+    async (url: string, contractAddress: string) => {
       let params: any = {
         module: 'contract',
         action: 'getAbi',

@@ -6,8 +6,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { getNetwork } from 'src/config'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
-const network = getNetwork()
-const formattedNetwork = network[0].toUpperCase() + network.substring(1).toLowerCase()
+const interfaceNetwork = getNetwork()
+const formatNetwork = (network: string): string => network[0].toUpperCase() + network.substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
@@ -31,8 +31,13 @@ const useStyles = makeStyles({
   },
 })
 
-const EarlyAccessLabel = () => {
+interface NetworkLabelProps {
+  network?: string
+}
+
+const NetworkLabel = ({ network = interfaceNetwork }: NetworkLabelProps): React.ReactElement => {
   const classes = useStyles()
+  const formattedNetwork = formatNetwork(network)
 
   return (
     <Col className={classes.container} middle="xs" start="xs">
@@ -43,4 +48,4 @@ const EarlyAccessLabel = () => {
   )
 }
 
-export default EarlyAccessLabel
+export default NetworkLabel

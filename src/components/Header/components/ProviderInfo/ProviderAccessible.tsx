@@ -63,10 +63,11 @@ const useStyles = makeStyles({
 interface ProviderInfoProps {
   connected: boolean
   provider: string
+  network: string
   userAddress: string
 }
 
-const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
+const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
   const color = connected ? 'primary' : 'warning'
@@ -95,7 +96,7 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
         </div>
       </Col>
       <Col className={classes.networkLabel} layout="column" start="sm">
-        <NetworkLabel />
+        <NetworkLabel network={network} />
       </Col>
     </>
   )
