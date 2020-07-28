@@ -55,7 +55,7 @@ const TabsComponent = (): React.ReactElement => {
   const location = useLocation()
   const history = useHistory()
 
-  const handleCallToRouter = (_, value) => {
+  const handleCallToRouter = (_: unknown, value: string) => {
     history.push(value)
   }
 

@@ -52,7 +52,7 @@ export const containsMethodByHash = async (contractAddress, methodHash) => {
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-const getTokenValues = (tokenAddress): string[] =>
+const getTokenValues = (tokenAddress: string): string[] =>
   generateBatchRequests({
     abi: ERC20Detailed.abi,
     address: tokenAddress,
