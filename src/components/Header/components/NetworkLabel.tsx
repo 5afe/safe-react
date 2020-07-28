@@ -35,9 +35,9 @@ interface NetworkLabelProps {
   network?: string
 }
 
-const NetworkLabel = ({ network }: NetworkLabelProps): React.ReactElement => {
+const NetworkLabel = ({ network = interfaceNetwork }: NetworkLabelProps): React.ReactElement => {
   const classes = useStyles()
-  const formattedNetwork = formatNetwork(network || interfaceNetwork)
+  const formattedNetwork = formatNetwork(network)
 
   return (
     <Col className={classes.container} middle="xs" start="xs">
