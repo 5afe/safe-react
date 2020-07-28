@@ -31,13 +31,14 @@ const useStyles = makeStyles({
   },
 })
 
-interface EarlyAccessLabelProps {
+interface NetworkLabelProps {
   network?: string
 }
 
-const EarlyAccessLabel = ({ network }: EarlyAccessLabelProps): React.ReactElement => {
+const NetworkLabel = ({ network }: NetworkLabelProps): React.ReactElement => {
   const classes = useStyles()
   const formattedNetwork = formatNetwork(network || interfaceNetwork)
+
   return (
     <Col className={classes.container} middle="xs" start="xs">
       <Paragraph className={classes.text} size="xs">
@@ -47,4 +48,4 @@ const EarlyAccessLabel = ({ network }: EarlyAccessLabelProps): React.ReactElemen
   )
 }
 
-export default EarlyAccessLabel
+export default NetworkLabel
