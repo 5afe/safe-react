@@ -180,8 +180,8 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </div>
       <Identicon address={owner} className={classes.icon} diameter={32} />
       <Block>
-        <Paragraph className={classes.name} noMargin>
-          {nameInAdbk}
+        <Paragraph className={nameInAdbk === 'UNKNOWN' ? null : classes.name} noMargin>
+          {!nameInAdbk || nameInAdbk === 'UNKNOWN' ? null : nameInAdbk}
         </Paragraph>
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
       </Block>
