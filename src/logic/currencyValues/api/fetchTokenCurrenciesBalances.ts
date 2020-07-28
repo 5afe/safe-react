@@ -1,8 +1,17 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
 import { getTxServiceHost } from 'src/config'
+import { TokenProps } from '../../tokens/store/model/token'
 
-const fetchTokenCurrenciesBalances = (safeAddress) => {
+type BalanceEndpoint = {
+  balance: string
+  balanceUsd: string
+  tokenAddress?: string
+  token?: TokenProps
+  usdConversion: string
+}
+
+const fetchTokenCurrenciesBalances = (safeAddress?: string): Promise<AxiosResponse<BalanceEndpoint[]>> => {
   if (!safeAddress) {
     return null
   }
