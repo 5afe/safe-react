@@ -2,7 +2,7 @@ import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
 
 import Receive from '../Balances/Receive'
 
@@ -32,16 +32,13 @@ const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
-interface Props {
+interface Props extends RouteComponentProps {
   sendFunds: Record<string, any>
   showReceive: boolean
   onShow: (value: string) => void
   onHide: (value: string) => void
   showSendFunds: (value: string) => void
   hideSendFunds: () => void
-  match: Record<string, any>
-  location: Record<string, any>
-  history: Record<string, any>
 }
 
 const useStyles = makeStyles(styles as any)
