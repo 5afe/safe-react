@@ -29,7 +29,8 @@ afterAll(() => {
 })
 
 const renderLoadSafe = async (localStore) => {
-  const provider = await getProviderInfo(window.web3.currentProvider || 'ws://localhost:8545')
+  const web3 = getWeb3()
+  const provider = await getProviderInfo(web3.currentProvider)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
