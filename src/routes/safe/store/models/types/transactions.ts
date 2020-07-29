@@ -36,7 +36,7 @@ export enum SettingsChangeMethods {
 export type DataDecodedMethod = TransferMethods | SettingsChangeMethods | string
 
 export interface DecodedValue {
-  operation: keyof typeof Operation
+  operation: Operation
   to: string
   value: number
   data: string
@@ -76,9 +76,9 @@ export interface Confirmation {
   owner: string
   submissionDate: string
   transactionHash: string | null
-  confirmationType: keyof typeof ConfirmationType
+  confirmationType: ConfirmationType
   signature: string
-  signatureType: keyof typeof SignatureType
+  signatureType: SignatureType
 }
 
 export enum TokenType {
@@ -88,7 +88,7 @@ export enum TokenType {
 }
 
 export interface TokenInfo {
-  type: keyof typeof TokenType
+  type: TokenType
   address: string
   name: string
   symbol: string
@@ -104,7 +104,7 @@ export enum TransferType {
 }
 
 export interface Transfer {
-  type: keyof typeof TransferType
+  type: TransferType
   executionDate: string
   blockNumber: number
   transactionHash: string | null
@@ -152,7 +152,7 @@ export interface MultiSigTransaction {
   confirmations: Confirmation[]
   signatures: string | null
   transfers: Transfer[]
-  txType: keyof typeof TxType
+  txType: TxType
 }
 
 export interface ModuleTransaction {
@@ -165,9 +165,9 @@ export interface ModuleTransaction {
   to: string
   value: string
   data: string
-  operation: keyof typeof Operation
+  operation: Operation
   transfers: Transfer[]
-  txType: keyof typeof TxType
+  txType: TxType
 }
 
 export interface EthereumTransaction {
@@ -177,7 +177,7 @@ export interface EthereumTransaction {
   txHash: string
   blockNumber: number
   transfers: Transfer[]
-  txType: keyof typeof TxType
+  txType: TxType
   from: string
 }
 
