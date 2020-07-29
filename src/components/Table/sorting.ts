@@ -2,7 +2,7 @@ import { List } from 'immutable'
 
 export const FIXED = 'fixed'
 
-export const buildOrderFieldFrom = (attr) => `${attr}Order`
+export const buildOrderFieldFrom = (attr: string): string => `${attr}Order`
 
 const desc = (a, b, orderBy, orderProp) => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
@@ -38,5 +38,10 @@ export const stableSort = (dataArray, cmp, fixed) => {
   return fixedElems.concat(sortedElems)
 }
 
-export const getSorting = (order, orderBy, orderProp) =>
-  order === 'desc' ? (a, b) => desc(a, b, orderBy, orderProp) : (a, b) => -desc(a, b, orderBy, orderProp)
+export const getSorting = (
+  order: string,
+  orderBy?: string,
+  orderProp?: boolean,
+): ((a: unknown, b: unknown) => number) => {
+  return order === 'desc' ? (a, b) => desc(a, b, orderBy, orderProp) : (a, b) => -desc(a, b, orderBy, orderProp)
+}
