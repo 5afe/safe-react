@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CallMade from '@material-ui/icons/CallMade'
 import CallReceived from '@material-ui/icons/CallReceived'
 import classNames from 'classnames/bind'
@@ -19,12 +19,27 @@ import { SAFE_VIEW_NAME_HEADING_TEST_ID } from 'src/routes/safe/components/Layou
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
-const LayoutHeader = (props) => {
-  const { classes, onShow, showSendFunds } = props
+import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+
+const useStyles = makeStyles(styles)
+
+type Props = {
+  onShow: (modalName: string) => void
+  showSendFunds: (modalName: string) => void
+}
+
+const LayoutHeader = (props: Props): React.ReactElement => {
+  const { onShow, showSendFunds } = props
+  const classes = useStyles(styles)
   const address = useSelector(safeParamAddressFromStateSelector)
   const granted = useSelector(grantedSelector)
   const name = useSelector(safeNameSelector)
+  const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
+  const currentCurrency = useSelector(currentCurrencySelector)
   if (!address) return null
+
+  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
 
   return (
     <Block className={classes.container} margin="xl">
@@ -34,6 +49,12 @@ const LayoutHeader = (props) => {
           <Row>
             <Heading className={classes.nameText} color="primary" tag="h2" testId={SAFE_VIEW_NAME_HEADING_TEST_ID}>
               {name}
+              {!!formattedTotalBalance && !!currentCurrency && (
+                <span className={classes.totalBalance}>
+                  {' '}
+                  | {formattedTotalBalance} {currentCurrency}
+                </span>
+              )}
             </Heading>
             {!granted && <Block className={classes.readonly}>Read Only</Block>}
           </Row>
@@ -87,4 +108,4 @@ const LayoutHeader = (props) => {
     </Block>
   )
 }
-export default withStyles(styles as any)(LayoutHeader)
+export default LayoutHeader

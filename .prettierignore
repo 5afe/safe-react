@@ -11,5 +11,3 @@ scripts
 src/assets
 src/config
 test
-*.spec*
-*.test*

@@ -2,7 +2,7 @@ import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { withRouter, RouteComponentProps } from 'react-router-dom'
 
 import { styles } from './style'
 
@@ -19,11 +19,8 @@ import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
 
-interface Props {
+interface Props extends RouteComponentProps {
   classes: Record<string, any>
-  match: Record<string, any>
-  history: Record<string, any>
-  location: Record<string, any>
 }
 
 const BalancesLabel = (

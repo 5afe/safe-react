@@ -1,6 +1,7 @@
 import { md, screenSm, secondary, xs } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   controls: {
     alignItems: 'center',
     boxSizing: 'border-box',
@@ -10,7 +11,7 @@ export const styles = () => ({
   assetTabs: {
     alignItems: 'center',
     display: 'flex',
-    order: '2',
+    order: 2,
 
     [`@media (min-width: ${screenSm}px)`]: {
       order: '1',
@@ -41,7 +42,7 @@ export const styles = () => ({
     alignItems: 'center',
     display: 'flex',
     justifyContent: 'space-between',
-    order: '1',
+    order: 1,
     padding: '0 0 10px',
 
     [`@media (min-width: ${screenSm}px)`]: {

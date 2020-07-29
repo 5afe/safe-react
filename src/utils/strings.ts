@@ -45,3 +45,10 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
 
     return `${textStart}${ellipsis}${textEnd}`
   }
+
+/**
+ * Util to remove whitespace from both sides of a string.
+ * @param {string} value
+ * @returns {string} string without side whitespaces
+ */
+export const trimSpaces = (value: string): string => (value === undefined ? '' : value.trim())
