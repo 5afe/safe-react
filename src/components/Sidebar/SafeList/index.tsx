@@ -5,6 +5,7 @@ import { AddressInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-compo
 import * as React from 'react'
 import styled from 'styled-components'
 
+import { getNetwork } from 'src/config'
 import DefaultBadge from './DefaultBadge'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
@@ -97,7 +98,13 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
               )}
 
               <AddressWrapper>
-                <AddressInfo address={safe.address} name={safe.name} showIdenticon shortenAddress={4} />
+                <AddressInfo
+                  address={safe.address}
+                  name={safe.name}
+                  showIdenticon
+                  shortenAddress={4}
+                  network={getNetwork()}
+                />
 
                 <AddressDetails>
                   <Text size="xl">{`${formatAmount(safe.ethBalance)} ETH`}</Text>

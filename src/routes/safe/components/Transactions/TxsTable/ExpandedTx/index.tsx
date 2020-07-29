@@ -10,6 +10,7 @@ import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
 import { styles } from './style'
 
+import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -60,7 +61,13 @@ const ExpandedTx = ({ cancelTx, tx }) => {
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <AddressInfo address={tx.executionTxHash} shortenAddress={4} showCopyBtn showEtherscanBtn />
+                  <AddressInfo
+                    address={tx.executionTxHash}
+                    shortenAddress={4}
+                    showCopyBtn
+                    showEtherscanBtn
+                    network={getNetwork()}
+                  />
                 ) : (
                   'n/a'
                 )}

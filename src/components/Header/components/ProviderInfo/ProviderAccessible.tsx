@@ -99,7 +99,13 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
           {connected ? (
             <AddressWrapper>
               <Identicon address={userAddress || 'random'} size="xs" />
-              <AddressInfo address={userAddress} shortenAddress={4} textColor={addressColor} textSize="sm" />
+              <AddressInfo
+                address={userAddress}
+                shortenAddress={4}
+                textColor={addressColor}
+                textSize="sm"
+                network={network}
+              />
             </AddressWrapper>
           ) : (
             <Text size="md" color={addressColor}>

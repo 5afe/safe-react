@@ -105,7 +105,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <AddressInfo address={userAddress} showCopyBtn showEtherscanBtn shortenAddress={4} />
+            <AddressInfo address={userAddress} showCopyBtn showEtherscanBtn shortenAddress={4} network={network} />
           ) : (
             'Address not available'
           )}
