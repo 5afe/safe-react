@@ -7,7 +7,7 @@ import memoize from 'lodash.memoize'
 type ValidatorReturnType = string | undefined
 type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
 type AsyncValidator = (...args: unknown[]) => Promise<ValidatorReturnType>
-type Validator = GenericValidatorType | AsyncValidator
+export type Validator = GenericValidatorType | AsyncValidator
 
 export const required = (value?: string): ValidatorReturnType => {
   const required = 'Required'
