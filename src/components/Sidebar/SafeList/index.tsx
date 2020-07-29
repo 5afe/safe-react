@@ -38,7 +38,7 @@ const AddressDetails = styled.div`
   display: flex;
   align-items: center;
   justify-content: space-between;
-  width: 150px;
+  width: 175px;
 
   div {
     margin-left: 0px;

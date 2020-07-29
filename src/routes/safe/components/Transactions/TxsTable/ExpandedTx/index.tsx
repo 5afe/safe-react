@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { AddressInfo } from '@gnosis.pm/safe-react-components'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -9,7 +10,6 @@ import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
 import { styles } from './style'
 
-import EtherScanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -59,7 +59,11 @@ const ExpandedTx = ({ cancelTx, tx }) => {
             <Block className={cn(classes.txDataContainer, (isIncomingTx || isCreationTx) && classes.incomingTxBlock)}>
               <Block align="left" className={classes.txData}>
                 <Bold className={classes.txHash}>Hash:</Bold>
-                {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
+                {tx.executionTxHash ? (
+                  <AddressInfo address={tx.executionTxHash} shortenAddress={4} showCopyBtn showEtherscanBtn />
+                ) : (
+                  'n/a'
+                )}
               </Block>
               {!isIncomingTx && !isCreationTx && (
                 <Paragraph noMargin>
