@@ -1,8 +1,10 @@
-import { loadAllTransactions } from '../../store/actions/transactionsNew/loadAllTransactions'
+import { loadAllTransactions } from 'src/routes/safe/store/actions/transactionsNew/loadAllTransactions'
 
 import { useEffect } from 'react'
-import { useDispatch } from 'react-redux'
-import { loadMore } from '../../store/actions/transactionsNew/pagination'
+import { useDispatch, useSelector } from 'react-redux'
+import { loadMore } from 'src/routes/safe/store/actions/transactionsNew/pagination'
+import { safeNewTransactionsSelector } from 'src/routes/safe/store/selectors/newTransactions'
+import { Transaction } from '../../store/models/types/transactions'
 
 type Props = {
   safeAddress: string
@@ -10,10 +12,10 @@ type Props = {
   limit: number
 }
 
-export const useTransactions = (props: Props): void => {
+export const useTransactions = (props: Props): Transaction[] => {
   const { safeAddress, offset, limit } = props
   const dispatch = useDispatch()
-
+  const transactions = useSelector(safeNewTransactionsSelector)
   useEffect(() => {
     async function loadNewTxs() {
       const { transactions, totalTransactionsAmount } = await loadAllTransactions({ safeAddress, offset, limit })
@@ -22,7 +24,8 @@ export const useTransactions = (props: Props): void => {
         dispatch(loadMore({ transactions, safeAddress, totalTransactionsAmount }))
       }
     }
-
     loadNewTxs()
   }, [dispatch, safeAddress, offset, limit])
+
+  return transactions
 }
