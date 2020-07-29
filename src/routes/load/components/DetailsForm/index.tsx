@@ -117,7 +117,6 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
-            component={TextField}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
@@ -133,7 +132,6 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             name={FIELD_LOAD_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"
-            type="text"
             testId="load-safe-address-field"
           />
         </Col>

@@ -3,15 +3,19 @@
 import React from 'react'
 import { Field } from 'react-final-form'
 
+import { trimSpaces } from 'src/utils/strings'
+
 const DebounceValidationField = ({ debounce = 1000, validate, ...rest }: any) => {
   let clearTimeout
 
   const localValidation = (value, values, fieldState) => {
+    const url = trimSpaces(value)
+
     if (fieldState.active) {
       return new Promise((resolve) => {
         if (clearTimeout) clearTimeout()
         const timerId = setTimeout(() => {
-          resolve(validate(value, values, fieldState))
+          resolve(validate(url, values, fieldState))
         }, debounce)
         clearTimeout = () => {
           clearTimeout(timerId)
@@ -19,11 +23,11 @@ const DebounceValidationField = ({ debounce = 1000, validate, ...rest }: any) =>
         }
       })
     } else {
-      return validate(value, values, fieldState)
+      return validate(url, values, fieldState)
     }
   }
 
-  return <Field {...rest} validate={localValidation} />
+  return <Field {...rest} format={trimSpaces} validate={localValidation} />
 }
 
 export default DebounceValidationField
