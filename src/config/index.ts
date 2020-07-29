@@ -87,6 +87,8 @@ export const getIntercomId = () =>
 
 export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
 
+export const getExchangeRatesUrlFallback = () => 'https://api.coinbase.com/v2/exchange-rates'
+
 export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
 
 export const buildSafeCreationTxUrl = (safeAddress) => {
