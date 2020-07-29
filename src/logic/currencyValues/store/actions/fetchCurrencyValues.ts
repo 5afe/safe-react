@@ -6,10 +6,13 @@ import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurre
 import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 import { AVAILABLE_CURRENCIES, CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
 import { loadCurrencyValues } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
+import { Dispatch } from 'redux'
 
-export const fetchCurrencyValues = (safeAddress: string) => async (dispatch) => {
+export const fetchCurrencyValues = (safeAddress: string) => async (
+  dispatch: Dispatch<typeof setCurrencyBalances | typeof setSelectedCurrency | typeof setCurrencyRate>,
+): Promise<void> => {
   try {
-    const storedCurrencies: Map<string, CurrencyRateValue> | any = await loadCurrencyValues()
+    const storedCurrencies: Map<string, CurrencyRateValue> | unknown = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]
     if (!storedCurrency) {
       return batch(() => {
