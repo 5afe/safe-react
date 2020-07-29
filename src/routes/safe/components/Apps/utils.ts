@@ -34,7 +34,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
 
-export const getAppInfoFromOrigin = (origin: string): Record<string, unknown> | null => {
+export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {
   try {
     return JSON.parse(origin)
   } catch (error) {

@@ -47,12 +47,15 @@ const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
   useEffect(() => {
     const getAppInfo = async () => {
       const parsedOrigin = getAppInfoFromOrigin(origin)
+
       if (!parsedOrigin) {
         setForceCustom(true)
         setLoading(false)
         return
       }
-      const appInfo: SafeApp = await getAppInfoFromUrl(parsedOrigin.url)
+
+      const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
+
       setAppInfo(appInfo)
       setLoading(false)
     }
