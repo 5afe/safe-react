@@ -12,7 +12,7 @@ const fetchEtherBalance = (safeAddress) => async (dispatch, getState) => {
     }
   } catch (err) {
     // eslint-disable-next-line
-    console.error('Error when fetching Ether balance:', err)
+    console.error('Error when fetching RBTC balance:', err)
   }
 }
 

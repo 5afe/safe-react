@@ -61,7 +61,7 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   return Promise.all(whenTxsValues).then((txsValues) =>
     txsValues.map(([tx, symbol, decimals, { gas, gasPrice }]) => [
       tx,
-      symbol === null ? 'ETH' : symbol,
+      symbol === null ? 'RBTC' : symbol,
       decimals === null ? '18' : decimals,
       new bn(gas).div(gasPrice).toFixed(),
     ]),

@@ -19,12 +19,12 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
     <p>
       Follow the progress on{' '}
       <EtherScanLink
-        aria-label="Show details on Etherscan"
+        aria-label="Show details on Explorer"
         href={getEtherScanLink('tx', safeCreationTxHash)}
         rel="noopener noreferrer"
         target="_blank"
       >
-        Etherscan.io
+        RSK Explorer
       </EtherScanLink>
       .
     </p>

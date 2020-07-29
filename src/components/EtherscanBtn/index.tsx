@@ -32,15 +32,15 @@ const EtherscanBtn = ({ className = '', increaseZindex = false, type, value }) =
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
   return (
-    <Tooltip classes={customClasses} placement="top" title="Show details on Etherscan">
+    <Tooltip classes={customClasses} placement="top" title="Show details on Explorer">
       <a
-        aria-label="Show details on Etherscan"
+        aria-label="Show details on Explorer"
         className={cn(classes.container, className)}
         href={getEtherScanLink(type, value)}
         rel="noopener noreferrer"
         target="_blank"
       >
-        <Img alt="Show on Etherscan" height={20} src={EtherscanOpenIcon} />
+        <Img alt="Show on Explorer" height={20} src={EtherscanOpenIcon} />
       </a>
     </Tooltip>
   )

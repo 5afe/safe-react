@@ -97,7 +97,7 @@ export const uniqueAddress = (addresses: string[]) =>
 export const composeValidators = (...validators) => (value) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
 
-export const inLimit = (limit, base, baseText, symbol = 'ETH') => (value) => {
+export const inLimit = (limit, base, baseText, symbol = 'RBTC') => (value) => {
   const amount = Number(value)
   const max = limit - base
   if (amount <= max) {

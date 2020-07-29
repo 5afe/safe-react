@@ -96,7 +96,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
                 secondary={shortVersionOf(safe.address, 4)}
               />
               <Paragraph color="primary" size="lg">
-                {`${formatAmount(safe.ethBalance)} ETH`}
+                {`${formatAmount(safe.ethBalance)} RBTC`}
               </Paragraph>
               {sameAddress(defaultSafe, safe.address) ? (
                 <DefaultBadge />

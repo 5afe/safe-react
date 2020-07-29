@@ -124,7 +124,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
             <Block justify="left">
               <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                 {tx.value || 0}
-                {' ETH'}
+                {' RBTC'}
               </Paragraph>
             </Block>
           </Col>
@@ -172,7 +172,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) RBTC in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

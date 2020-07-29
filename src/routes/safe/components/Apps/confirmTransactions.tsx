@@ -84,7 +84,7 @@ const confirmTransactions = (
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
                     <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{humanReadableBalance(tx.value, 18)} ETH</Bold>
+                    <Bold>{humanReadableBalance(tx.value, 18)} RBTC</Bold>
                   </div>
                 </div>
                 <div className="section">

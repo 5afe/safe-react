@@ -192,7 +192,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
+                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'SMART BITCOIN'} // TODO
                       tokens={tokens}
                     />
                   </Col>

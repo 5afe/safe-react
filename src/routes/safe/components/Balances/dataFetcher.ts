@@ -44,7 +44,7 @@ export const getBalanceData = (activeTokens, currencySelected, currencyValues, c
     [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
     [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
+    [FIXED]: token.get('symbol') === 'RBTC',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
 
