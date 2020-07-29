@@ -1,18 +1,21 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { currentPageSelector, newTransactionsCurrentPageSelector } from '../../store/selectors/newTransactions'
-import { useFetchNewTransactions } from '../../container/hooks/useFetchNewTransactions'
+import {
+  currentPageSelector,
+  newTransactionsCurrentPageSelector,
+} from 'src/routes/safe/store/selectors/newTransactions'
+import { useTransactions } from 'src/routes/safe/container/hooks/useTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { nextPage, previousPage } from '../../store/actions/transactionsNew/pagination'
-import { Transaction } from '../../store/models/types/transactions'
-import { safeParamAddressFromStateSelector } from '../../store/selectors'
+import { nextPage, previousPage } from 'src/routes/safe/store/actions/transactionsNew/pagination'
+import { Transaction } from 'src/routes/safe/store/models/types/transactions'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
   const transactions = useSelector(newTransactionsCurrentPageSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const { currentPage, maxPages, limit, offset } = useSelector(currentPageSelector)
-  useFetchNewTransactions({ safeAddress, offset, limit })
+  useTransactions({ safeAddress, offset, limit })
 
   // TODO: Remove this once we implement infinite scroll
   const nextPageButtonHandler = () => {

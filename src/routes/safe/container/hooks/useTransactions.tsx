@@ -10,7 +10,7 @@ type Props = {
   limit: number
 }
 
-export const useFetchNewTransactions = (props: Props): void => {
+export const useTransactions = (props: Props): void => {
   const { safeAddress, offset, limit } = props
   const dispatch = useDispatch()
 

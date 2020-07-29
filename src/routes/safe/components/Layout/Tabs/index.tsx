@@ -14,9 +14,6 @@ import { TransactionsIcon } from 'src/routes/safe/components/assets/Transactions
 import { Match } from 'react-router'
 import { History, Location } from 'history'
 
-interface Props extends RouteComponentProps {
-  classes: Record<string, any>
-}
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
 export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
@@ -113,9 +110,9 @@ const TabsComponent = (): ReactElement => {
       value={tabsValue()}
       variant="scrollable"
     >
-      {tabs.map((t, index) => (
+      {tabs.map((t) => (
         <Tab
-          key={index}
+          key={t.value}
           classes={{
             selected: classes.tabWrapperSelected,
             wrapper: classes.tabWrapper,
