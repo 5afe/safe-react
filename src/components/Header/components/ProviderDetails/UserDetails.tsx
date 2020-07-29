@@ -2,11 +2,11 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
+import { Identicon } from '@gnosis.pm/safe-react-components'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import CircleDot from 'src/components/Header/components/CircleDot'
-import Identicon from 'src/components/Identicon'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -102,7 +102,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
-            <Identicon address={identiconAddress} diameter={60} />
+            <Identicon address={identiconAddress} size="lg" />
           ) : (
             <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
