@@ -5,6 +5,7 @@ import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { trimSpaces } from 'src/utils/strings'
 
 import { styles } from './style'
 
@@ -75,19 +76,20 @@ const AddressBookInput = ({
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
-  const onAddressInputChanged = async (addressValue: string): Promise<void> => {
-    setInputAddValue(addressValue)
-    let resolvedAddress = addressValue
+  const onAddressInputChanged = async (value: string): Promise<void> => {
+    const normalizedAddress = trimSpaces(value)
+    setInputAddValue(normalizedAddress)
+    let resolvedAddress = normalizedAddress
     let isValidText
-    if (inputTouched && !addressValue) {
+    if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
       setIsValidAddress(false)
       return
     }
-    if (addressValue) {
-      if (isValidEnsName(addressValue)) {
-        resolvedAddress = await getAddressFromENS(addressValue)
+    if (normalizedAddress) {
+      if (isValidEnsName(normalizedAddress)) {
+        resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
       }
       isValidText = mustBeEthereumAddress(resolvedAddress)
@@ -101,13 +103,13 @@ const AddressBookInput = ({
       const filteredADBK = adbkToFilter.filter((adbkEntry) => {
         const { address, name } = adbkEntry
         return (
-          name.toLowerCase().includes(addressValue.toLowerCase()) ||
-          address.toLowerCase().includes(addressValue.toLowerCase())
+          name.toLowerCase().includes(normalizedAddress.toLowerCase()) ||
+          address.toLowerCase().includes(normalizedAddress.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
       if (!isValidText) {
-        setSelectedEntry({ address: addressValue })
+        setSelectedEntry({ address: normalizedAddress })
       }
     }
     setIsValidForm(isValidText === undefined)
