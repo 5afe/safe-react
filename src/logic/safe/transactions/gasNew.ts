@@ -38,10 +38,7 @@ export const estimateTxGasCosts = async (
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-    const safeInstance = (new web3.eth.Contract(
-      (GnosisSafeSol.abi as unknown) as AbiItem,
-      safeAddress,
-    ) as unknown) as GnosisSafe
+    const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
     const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
