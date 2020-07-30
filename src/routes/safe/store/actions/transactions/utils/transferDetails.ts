@@ -11,6 +11,7 @@ import {
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 const isIncomingTransfer = (transfer: Transfer): boolean => {
+  // TODO: prevent using `store` here and receive `safeAddress` as a param
   const state = store.getState()
   const safeAddress = safeParamAddressFromStateSelector(state)
   return sameAddress(transfer.to, safeAddress)
