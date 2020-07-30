@@ -44,7 +44,7 @@ export const estimateTxGasCosts = async (
     ) as unknown) as GnosisSafe
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
-    const isExecution = (tx && tx.confirmations.size === Number(threshold)) || !!preApprovingOwner || threshold === '1'
+    const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
 
     let txData
     if (isExecution) {
