@@ -217,7 +217,7 @@
     "semver": "7.3.2",
     "styled-components": "^5.1.1",
     "truffle-contract": "4.0.31",
-    "web3": "1.2.11"
+    "web3": "1.2.9"
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.11.1",
