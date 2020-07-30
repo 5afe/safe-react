@@ -32,7 +32,7 @@ const createGnosisSafeContract = (web3: Web3) => {
 
 const createProxyFactoryContract = (web3: Web3, networkId: number): GnosisSafeProxyFactory => {
   const contractAddress = ProxyFactorySol.networks[networkId].address
-  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi as unknown as AbiItem, contractAddress) as unknown as GnosisSafeProxyFactory
+  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
 
   return proxyFactory
 }
@@ -100,7 +100,7 @@ export const estimateGasForDeployingSafe = async (
 
 export const getGnosisSafeInstanceAt = async (safeAddress: string): Promise<GnosisSafe> => {
   const web3 = getWeb3()
-  const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as unknown as AbiItem, safeAddress) as unknown as GnosisSafe
+  const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown as GnosisSafe
 
   return gnosisSafe
 }
