@@ -122,7 +122,7 @@ const Settings: React.FC = () => {
               <IconText
                 iconSize="sm"
                 textSize="xl"
-                iconType="allowances"
+                iconType="fuelIndicator"
                 text="Spending Limit"
                 color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
               />
