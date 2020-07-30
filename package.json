@@ -160,7 +160,7 @@
   },
   "dependencies": {
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#7bb55de",
+    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#2b4635b",
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid": "5.19.1",
     "@material-ui/core": "4.11.0",
