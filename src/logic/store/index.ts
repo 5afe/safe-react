@@ -31,7 +31,7 @@ import incomingTransactions, {
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
-import allTransactions, { TRANSACTIONS } from '../safe/store/reducer/newTransactions'
+import allTransactions, { TRANSACTIONS, TransactionsState } from '../safe/store/reducer/newTransactions'
 import { CurrencyRateValueRecord } from 'src/logic/currencyValues/store/model/currencyValues'
 import { SafeReducerMap } from '../safe/store/reducer/types/safe'
 
@@ -83,6 +83,7 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
+  [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>
 

@@ -3,7 +3,7 @@ import { handleActions } from 'redux-actions'
 import { Transaction } from '../models/types/transactions'
 import { LOAD_MORE_TRANSACTIONS, SET_NEXT_PAGE, SET_PREVIOUS_PAGE } from '../actions/transactionsNew/pagination'
 
-export const TRANSACTIONS = 'ALL_TRANSACTIONS_REDUCER_ID'
+export const TRANSACTIONS = 'allTransactions'
 
 export interface TransactionsState {
   offset: number
