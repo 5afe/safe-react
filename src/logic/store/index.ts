@@ -28,11 +28,12 @@ import cancellationTransactions, {
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
 } from 'src/logic/safe/store/reducer/incomingTransactions'
-import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/logic/safe/store/reducer/safe'
+import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import allTransactions, { TRANSACTIONS } from '../safe/store/reducer/newTransactions'
 import { CurrencyRateValueRecord } from 'src/logic/currencyValues/store/model/currencyValues'
+import { SafeReducerMap } from '../safe/store/reducer/types/safe'
 
 export const history = createHashHistory()
 

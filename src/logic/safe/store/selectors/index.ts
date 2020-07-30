@@ -5,12 +5,13 @@ import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/incomingTransactions'
-import { SAFE_REDUCER_ID, SafesMap } from 'src/logic/safe/store/reducer/safe'
+import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState } from 'src/logic/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
+import { SafesMap } from '../reducer/types/safe'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
