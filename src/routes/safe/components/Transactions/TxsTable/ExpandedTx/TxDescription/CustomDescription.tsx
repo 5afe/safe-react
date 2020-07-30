@@ -9,7 +9,6 @@ import Value from './Value'
 import Block from 'src/components/layout/Block'
 import {
   extractMultiSendDecodedData,
-  isMultiSendDetails,
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
@@ -73,7 +72,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
   )
 }
 
-const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
+const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
@@ -158,11 +157,11 @@ const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.Reac
 interface GenericCustomDataProps {
   amount?: string
   data: string
-  rawTx: Transaction
   recipient: string
+  storedTx: Transaction
 }
 
-const GenericCustomData = ({ amount = '0', data, rawTx, recipient }: GenericCustomDataProps): React.ReactElement => {
+const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
 
@@ -176,7 +175,7 @@ const GenericCustomData = ({ amount = '0', data, rawTx, recipient }: GenericCust
           <EtherscanLink knownAddress={false} type="address" value={recipient} />
         )}
       </Block>
-      {!!rawTx?.dataDecoded && <TxActionData dataDecoded={rawTx.dataDecoded} />}
+      {!!storedTx?.dataDecoded && <TxActionData dataDecoded={storedTx.dataDecoded} />}
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
         <TxData data={data} />
@@ -189,22 +188,20 @@ interface CustomDescriptionProps {
   amount?: string
   data: string
   recipient: string
-  rawTx: Transaction
+  storedTx: Transaction
 }
 
-const CustomDescription = ({ amount, data, recipient, rawTx }: CustomDescriptionProps): React.ReactElement => {
+const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
   const classes = useStyles()
 
-  return rawTx.multiSendTx ? (
+  return storedTx.multiSendTx ? (
     <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-      {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
-        if (isMultiSendDetails(tx)) {
-          return <MultiSigCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
-        }
-      })}
+      {extractMultiSendDecodedData(storedTx).txDetails?.map((tx, index) => (
+        <MultiSendCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
+      ))}
     </Block>
   ) : (
-    <GenericCustomData amount={amount} data={data} rawTx={rawTx} recipient={recipient} />
+    <GenericCustomData amount={amount} data={data} recipient={recipient} storedTx={storedTx} />
   )
 }
 

@@ -9,7 +9,7 @@ import { CurrencyRateValue } from 'src/logic/currencyValues/store/model/currency
 export const CURRENCY_VALUES_KEY = 'currencyValues'
 
 export interface CurrencyReducerMap extends Map<string, any> {
-  get<K extends keyof CurrencyRateValue>(key: K): CurrencyRateValue[K]
+  get<K extends keyof CurrencyRateValue>(key: K, notSetValue?: unknown): CurrencyRateValue[K]
   setIn<K extends keyof CurrencyRateValue>(keys: [string, K], value: CurrencyRateValue[K]): this
 }
 
