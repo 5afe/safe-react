@@ -1,4 +1,3 @@
-import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
@@ -7,7 +6,7 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount, humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
 import { Transaction, TransactionStatus } from '../../../store/models/types/transaction'
 import { getTokenInfos } from '../../../../../logic/tokens/store/actions/fetchTokens'
@@ -26,7 +25,7 @@ export const formatDate = (date: string): string => format(parseISO(date), 'MMM 
 const NOT_AVAILABLE = 'n/a'
 
 const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, formatted = false) => {
-  const nonFormattedValue = new BigNumber(value).times(`1e-${decimals}`).toFixed()
+  const nonFormattedValue = humanReadableTokenAmount(value, decimals)
   const finalValue = formatted ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 

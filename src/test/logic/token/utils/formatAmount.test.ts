@@ -1,4 +1,4 @@
-import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount, formatAmountInUsFormat, humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
 
 
 describe('formatAmount', () => {
@@ -176,4 +176,41 @@ describe('FormatsAmountsInUsFormat', () => {
     expect(result).toBe(expectedResult)
   })
 })
+describe('humanReadableTokenAmount', () => {
+  it('Given 0 returns 0',  () => {
+    // given
+    const amount = '0'
+    const decimals = 18
+    const expectedResult = '0'
 
+    // when
+    const result = humanReadableTokenAmount(amount, decimals)
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given XXXXXXXXXXX with 8 decimals returns XX.XXXXXXXXX',  () => {
+    // given
+    const amount = '5870701711'
+    const decimals = 8
+    const expectedResult = '58.70701711'
+
+    // when
+    const result = humanReadableTokenAmount(amount, decimals)
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+  it('Given XXXXX000000000000000 with 18 decimals returns XX.XXX000000000000000',  () => {
+    // given
+    const amount = '25599000000000000000'
+    const decimals = 18
+    const expectedResult = '25.599'
+
+    // when
+    const result = humanReadableTokenAmount(amount, decimals)
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
+})
