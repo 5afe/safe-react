@@ -1,8 +1,11 @@
 import axios from 'axios'
+import memoize from 'lodash.memoize'
 
-import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { SafeApp } from './types'
+
+import { getGnosisSafeAppsUrl } from 'src/config/index'
+import { getContentFromENS } from 'src/logic/wallets/getWeb3'
+import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
@@ -31,7 +34,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
 
-export const getAppInfoFromOrigin = (origin) => {
+export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {
   try {
     return JSON.parse(origin)
   } catch (error) {
@@ -40,49 +43,91 @@ export const getAppInfoFromOrigin = (origin) => {
   }
 }
 
-export const getAppInfoFromUrl = async (appUrl?: string): Promise<SafeApp> => {
-  let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true }
+export const isAppManifestValid = (appInfo: SafeApp): boolean =>
+  // `appInfo` exists and `name` exists
+  !!appInfo?.name &&
+  // if `name` exists is not 'unknown'
+  appInfo.name !== 'unknown' &&
+  // `description` exists
+  !!appInfo.description &&
+  // `url` exists
+  !!appInfo.url &&
+  // no `error` (or `error` undefined)
+  !appInfo.error
 
-  if (!appUrl?.length) {
-    return res
-  }
+export const getAppInfoFromUrl = memoize(
+  async (appUrl?: string): Promise<SafeApp> => {
+    let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
 
-  res.url = appUrl.trim()
-  const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
-
-  try {
-    const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
-
-    // verify imported app fulfil safe requirements
-    if (!appInfo || !appInfo.data || !appInfo.data.name || !appInfo.data.description) {
-      throw Error('The app does not fulfil the structure required.')
+    if (!appUrl?.length) {
+      return res
     }
 
-    // the DB origin field has a limit of 100 characters
-    const originFieldSize = 100
-    const jsonDataLength = 20
-    const remainingSpace = originFieldSize - res.url.length - jsonDataLength
+    res.url = appUrl.trim()
+    const noTrailingSlashUrl = removeLastTrailingSlash(res.url)
 
-    res = {
-      ...res,
-      ...appInfo.data,
-      id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
-      error: false,
-    }
+    try {
+      const appInfo = await axios.get(`${noTrailingSlashUrl}/manifest.json`, { timeout: 5_000 })
 
-    if (appInfo.data.iconPath) {
-      try {
-        const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`, { timeout: 1000 * 10 })
-        if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
-          res.iconUrl = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
-        }
-      } catch (error) {
-        console.error(`It was not possible to fetch icon from app ${res.url}`)
+      // verify imported app fulfil safe requirements
+      if (!appInfo?.data || isAppManifestValid(appInfo.data)) {
+        throw Error('The app does not fulfil the structure required.')
       }
+
+      // the DB origin field has a limit of 100 characters
+      const originFieldSize = 100
+      const jsonDataLength = 20
+      const remainingSpace = originFieldSize - res.url.length - jsonDataLength
+
+      res = {
+        ...res,
+        ...appInfo.data,
+        id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
+        error: false,
+      }
+
+      if (appInfo.data.iconPath) {
+        try {
+          const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`, { timeout: 1000 * 10 })
+          if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
+            res.iconUrl = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
+          }
+        } catch (error) {
+          console.error(`It was not possible to fetch icon from app ${res.url}`)
+        }
+      }
+      return res
+    } catch (error) {
+      console.error(`It was not possible to fetch app from ${res.url}: ${error.message}`)
+      return res
     }
-    return res
-  } catch (error) {
-    console.error(`It was not possible to fetch app from ${res.url}: ${error.message}`)
-    return res
-  }
+  },
+)
+
+export const getIpfsLinkFromEns = memoize(
+  async (name: string): Promise<string | undefined> => {
+    try {
+      const content = await getContentFromENS(name)
+      if (content && content.protocolType === 'ipfs') {
+        return `${process.env.REACT_APP_IPFS_GATEWAY}/${content.decoded}/`
+      }
+    } catch (error) {
+      console.error(error)
+      return
+    }
+  },
+)
+
+export const uniqueApp = (appList: SafeApp[]) => (url: string): string | undefined => {
+  const exists = appList.some((a) => {
+    try {
+      const currentUrl = new URL(a.url)
+      const newUrl = new URL(url)
+      return currentUrl.href === newUrl.href
+    } catch (error) {
+      console.error('There was a problem trying to validate the URL existence.', error.message)
+      return false
+    }
+  })
+  return exists ? 'This app is already registered.' : undefined
 }
