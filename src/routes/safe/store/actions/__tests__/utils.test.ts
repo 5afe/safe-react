@@ -5,12 +5,13 @@ describe('Store actions utils > getNewTxNonce', () => {
     // Given
     const txNonce = '45'
     const lastTx = {
-      nonce: 44
+      nonce: 44,
     }
     const safeInstance = {
-      nonce: () => Promise.resolve({
-        toString: () => Promise.resolve('45')
-      })
+      nonce: () =>
+        Promise.resolve({
+          toString: () => Promise.resolve('45'),
+        }),
     }
 
     // When
@@ -24,12 +25,13 @@ describe('Store actions utils > getNewTxNonce', () => {
     // Given
     const txNonce = ''
     const lastTx = {
-      nonce: 44
+      nonce: 44,
     }
     const safeInstance = {
-      nonce: () => Promise.resolve({
-        toString: () => Promise.resolve('45')
-      })
+      nonce: () =>
+        Promise.resolve({
+          toString: () => Promise.resolve('45'),
+        }),
     }
 
     // When
@@ -44,9 +46,10 @@ describe('Store actions utils > getNewTxNonce', () => {
     const txNonce = ''
     const lastTx = null
     const safeInstance = {
-      nonce: () => Promise.resolve({
-        toString: () => Promise.resolve('45')
-      })
+      nonce: () =>
+        Promise.resolve({
+          toString: () => Promise.resolve('45'),
+        }),
     }
 
     // When
@@ -61,13 +64,14 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
   it(`should return false if there's a previous tx pending to be executed`, async () => {
     // Given
     const safeInstance = {
-      getThreshold: () => Promise.resolve({
-        toNumber: () => 1
-      })
+      getThreshold: () =>
+        Promise.resolve({
+          toNumber: () => 1,
+        }),
     }
     const nonce = '1'
     const lastTx = {
-      isExecuted: false
+      isExecuted: false,
     }
 
     // When
@@ -80,13 +84,14 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
   it(`should return false if threshold is greater than 1`, async () => {
     // Given
     const safeInstance = {
-      getThreshold: () => Promise.resolve({
-        toNumber: () => 2
-      })
+      getThreshold: () =>
+        Promise.resolve({
+          toNumber: () => 2,
+        }),
     }
     const nonce = '1'
     const lastTx = {
-      isExecuted: true
+      isExecuted: true,
     }
 
     // When
@@ -99,13 +104,14 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
   it(`should return true is threshold is 1 and previous tx is executed`, async () => {
     // Given
     const safeInstance = {
-      getThreshold: () => Promise.resolve({
-        toNumber: () => 1
-      })
+      getThreshold: () =>
+        Promise.resolve({
+          toNumber: () => 1,
+        }),
     }
     const nonce = '1'
     const lastTx = {
-      isExecuted: true
+      isExecuted: true,
     }
 
     // When
