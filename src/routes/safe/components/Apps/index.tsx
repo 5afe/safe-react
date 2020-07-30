@@ -1,4 +1,5 @@
 import { Card, FixedDialog, FixedIcon, IconText, Loader, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,6 +23,12 @@ import {
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
 import { SafeApp, StoredSafeApp } from './types'
+
+const useStyles = makeStyles(
+  createStyles({
+    card: { marginBottom: '24px' },
+  }),
+)
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
@@ -64,6 +71,7 @@ const operations = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
+  const classes = useStyles()
   const [appList, setAppList] = useState<Array<SafeApp>>([])
   const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
   const [selectedApp, setSelectedApp] = useState<string>()
@@ -419,7 +427,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
+        <Card className={classes.card}>
           <Centered>
             <Title size="xs">No Apps Enabled</Title>
           </Centered>
