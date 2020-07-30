@@ -341,7 +341,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         try {
           const currentApp = list[index]
 
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
+          const appInfo: SafeApp = await getAppInfoFromUrl(currentApp.url)
           if (appInfo.error) {
             throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
