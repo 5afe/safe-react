@@ -90,24 +90,12 @@ const TabsComponent = (): ReactElement => {
     history.push(value)
   }
 
-  const tabsValue = () => {
-    const balanceLocation = `${match.url}/balances`
-    const isInBalance = new RegExp(`^${balanceLocation}.*$`)
-    const { pathname } = location
-
-    if (isInBalance.test(pathname)) {
-      return balanceLocation
-    }
-
-    return pathname
-  }
-
   return (
     <Tabs
       indicatorColor="secondary"
       onChange={handleCallToRouter}
       textColor="secondary"
-      value={tabsValue()}
+      value={location.pathname}
       variant="scrollable"
     >
       {tabs.map((t) => (
