@@ -23,7 +23,7 @@ export const safeFiatBalancesSelector = createSelector(
 
 const currencyValueSelector = <K extends keyof CurrencyRateValue>(key: K) => (
   currencyValuesMap?: CurrencyReducerMap,
-): CurrencyRateValue[K] => currencyValuesMap?.get(key) || null
+): CurrencyRateValue[K] => currencyValuesMap?.get(key)
 
 export const safeFiatBalancesListSelector = createSelector(
   safeFiatBalancesSelector,
