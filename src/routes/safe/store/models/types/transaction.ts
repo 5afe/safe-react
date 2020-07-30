@@ -1,7 +1,7 @@
 import { List, Map, RecordOf } from 'immutable'
 import { DecodedParams } from 'src/logic/contracts/methodIds'
 import { Confirmation } from './confirmation'
-import { DataDecoded } from './transactions'
+import { DataDecoded, Transfer } from './transactions'
 
 export enum TransactionTypes {
   INCOMING = 'incoming',
@@ -76,6 +76,7 @@ export type TransactionProps = {
   submissionDate?: string | null
   symbol?: string | null
   transactionHash: string | null
+  transfers?: Transfer[]
   type: TransactionTypes
   upgradeTx: boolean
   value: string

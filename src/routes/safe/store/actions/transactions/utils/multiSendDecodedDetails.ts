@@ -1,7 +1,6 @@
 import { TransferDetails } from './transferDetails.d'
 import {
   DataDecoded,
-  MultiSigTransaction,
   Operation,
   Parameter,
   Transfer,
@@ -54,8 +53,8 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
   }
 }
 
-export const extractMultiSendDecodedData = (tx: Transaction | MultiSigTransaction): MultiSendDecodedData => {
-  const transfersDetails = (tx as MultiSigTransaction).transfers?.map(extractTransferDetails)
+export const extractMultiSendDecodedData = (tx: Transaction): MultiSendDecodedData => {
+  const transfersDetails = tx.transfers?.map(extractTransferDetails)
   const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
   return { txDetails, transfersDetails }
