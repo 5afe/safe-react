@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { AddressBookEntryProps } from './../model/addressBook'
-import { SafeOwner } from 'src/routes/safe/store/models/safe'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 

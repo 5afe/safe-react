@@ -20,11 +20,7 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import {
-  safeNameSelector,
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 

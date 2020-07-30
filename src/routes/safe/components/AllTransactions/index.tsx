@@ -1,14 +1,11 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {
-  currentPageSelector,
-  newTransactionsCurrentPageSelector,
-} from 'src/routes/safe/store/selectors/newTransactions'
+import { currentPageSelector, newTransactionsCurrentPageSelector } from 'src/logic/safe/store/selectors/newTransactions'
 import { useTransactions } from 'src/routes/safe/container/hooks/useTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { nextPage, previousPage } from 'src/routes/safe/store/actions/transactionsNew/pagination'
-import { Transaction } from 'src/routes/safe/store/models/types/transactions'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { nextPage, previousPage } from 'src/logic/safe/store/actions/transactionsNew/pagination'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()

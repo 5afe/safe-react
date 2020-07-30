@@ -1,7 +1,7 @@
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { userAccountSelector } from '../selectors'
 import { ProviderFactory } from './builder/index.builder'
-import { AppReduxState } from 'src/store'
+import { AppReduxState } from 'src/logic/store'
 
 const providerReducerTests = () => {
   describe('Provider Name Selector[userAccountSelector]', () => {

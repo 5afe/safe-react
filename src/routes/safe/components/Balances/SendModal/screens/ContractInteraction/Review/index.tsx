@@ -20,8 +20,8 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)

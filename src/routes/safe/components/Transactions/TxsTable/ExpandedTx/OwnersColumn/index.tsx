@@ -16,9 +16,9 @@ import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { makeTransaction } from 'src/logic/safe/store/models/transaction'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
 
 function getOwnersConfirmations(tx, userAddress) {
   const ownersWhoConfirmed = []

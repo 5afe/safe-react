@@ -1,7 +1,7 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1

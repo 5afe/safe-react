@@ -6,7 +6,7 @@ import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import EtherscanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 
 const useStyles = makeStyles({
   address: {

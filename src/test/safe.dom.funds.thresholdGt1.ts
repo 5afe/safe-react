@@ -1,6 +1,6 @@
 // 
 import { fireEvent, waitForElement } from '@testing-library/react'
-import { aNewStore } from 'src/store'
+import { aNewStore } from 'src/logic/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { sendEtherTo } from 'src/test/utils/tokenMovements'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'

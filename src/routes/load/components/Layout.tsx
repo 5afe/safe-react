@@ -10,7 +10,7 @@ import DetailsForm, { safeFieldsValidation } from 'src/routes/load/components/De
 import OwnerList from 'src/routes/load/components/OwnerList'
 import ReviewInformation from 'src/routes/load/components/ReviewInformation'
 
-import { history } from 'src/store'
+import { history } from 'src/logic/store'
 import { secondary, sm } from 'src/theme/variables'
 import { LoadFormValues } from '../container/Load'
 

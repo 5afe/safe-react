@@ -15,7 +15,7 @@ import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import LayoutHeader from 'src/routes/safe/components/Layout/Header'
 import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 

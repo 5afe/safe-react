@@ -26,8 +26,8 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
 type Props = {

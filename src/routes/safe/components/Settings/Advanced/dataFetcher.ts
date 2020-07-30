@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 import { TableColumn } from 'src/components/Table/types'
-import { ModulePair } from 'src/routes/safe/store/models/safe'
+import { ModulePair } from 'src/logic/safe/store/models/safe'
 
 export const MODULES_TABLE_ADDRESS_ID = 'address'
 export const MODULES_TABLE_ACTIONS_ID = 'actions'

@@ -11,10 +11,10 @@ import styled from 'styled-components'
 
 import { styles } from './style'
 
-import { ModulePair } from 'src/routes/safe/store/models/safe'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { ModulePair } from 'src/logic/safe/store/models/safe'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import Modal from 'src/components/Modal'
 import Row from 'src/components/layout/Row'

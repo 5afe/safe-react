@@ -25,7 +25,7 @@ import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 

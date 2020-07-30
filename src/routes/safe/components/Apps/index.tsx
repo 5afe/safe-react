@@ -18,7 +18,7 @@ import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
 import { SafeApp, StoredSafeApp } from './types'

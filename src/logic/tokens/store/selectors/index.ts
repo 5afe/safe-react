@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 
 import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import { AppReduxState } from 'src/store'
+import { AppReduxState } from 'src/logic/store'
 
 export const tokensSelector = (state: AppReduxState): TokenState => state[TOKEN_REDUCER_ID]
 
