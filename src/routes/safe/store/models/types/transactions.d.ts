@@ -30,8 +30,8 @@ export interface DataDecoded {
 }
 
 export enum ConfirmationType {
-  CONFIRMATION,
-  EXECUTION,
+  CONFIRMATION = 'CONFIRMATION',
+  EXECUTION = 'EXECUTION',
 }
 
 export enum SignatureType {
