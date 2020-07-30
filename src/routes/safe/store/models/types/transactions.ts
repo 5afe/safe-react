@@ -152,7 +152,7 @@ export interface MultiSigTransaction {
   confirmations: Confirmation[]
   signatures: string | null
   transfers: Transfer[]
-  txType: TxType
+  txType: TxType.MULTISIG_TRANSACTION
 }
 
 export interface ModuleTransaction {
@@ -167,7 +167,7 @@ export interface ModuleTransaction {
   data: string
   operation: Operation
   transfers: Transfer[]
-  txType: TxType
+  txType: TxType.MODULE_TRANSACTION
 }
 
 export interface EthereumTransaction {
@@ -177,7 +177,7 @@ export interface EthereumTransaction {
   txHash: string
   blockNumber: number
   transfers: Transfer[]
-  txType: TxType
+  txType: TxType.ETHEREUM_TRANSACTION
   from: string
 }
 

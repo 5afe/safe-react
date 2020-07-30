@@ -23,15 +23,9 @@ export type MultiSendDetails = {
   value: number
 }
 
-export type TxDetails = MultiSendDetails | DataDecoded
-
 export type MultiSendDecodedData = {
-  txDetails?: TxDetails[] | null
-  transfersDetails: TransferDetails[]
-}
-
-export const isMultiSendDetails = (details: TxDetails): details is MultiSendDetails => {
-  return !!(details as MultiSendDetails)?.operation
+  txDetails?: MultiSendDetails[]
+  transfersDetails?: TransferDetails[]
 }
 
 export const extractTransferDetails = (transfer: Transfer): TransferDetails => {
@@ -47,7 +41,7 @@ export const extractTransferDetails = (transfer: Transfer): TransferDetails => {
   }
 }
 
-export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[] | null => {
+export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[] | undefined => {
   if (isMultiSendParameter(parameter)) {
     return parameter.decodedValue.map((decodedValue) => {
       return {
@@ -58,12 +52,10 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
       }
     })
   }
-
-  return null
 }
 
 export const extractMultiSendDecodedData = (tx: Transaction | MultiSigTransaction): MultiSendDecodedData => {
-  const transfersDetails = (tx as MultiSigTransaction).transfers?.map(extractTransferDetails) ?? null
+  const transfersDetails = (tx as MultiSigTransaction).transfers?.map(extractTransferDetails)
   const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
   return { txDetails, transfersDetails }

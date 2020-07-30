@@ -43,7 +43,7 @@ const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
           module={module}
         />
       )}
-      {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} rawTx={tx} />}
+      {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} storedTx={tx} />}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (
         <TransferDescription amount={amount} recipient={recipient} />

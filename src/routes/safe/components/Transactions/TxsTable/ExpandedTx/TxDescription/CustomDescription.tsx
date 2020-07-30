@@ -9,7 +9,6 @@ import Value from './Value'
 import Block from 'src/components/layout/Block'
 import {
   extractMultiSendDecodedData,
-  isMultiSendDetails,
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
@@ -46,7 +45,7 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
-const MultiSigCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
+const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
@@ -161,19 +160,17 @@ interface CustomDescriptionProps {
   amount?: string
   data: string
   recipient: string
-  rawTx: Transaction
+  storedTx: Transaction
 }
 
-const CustomDescription = ({ amount, data, recipient, rawTx }: CustomDescriptionProps): React.ReactElement => {
+const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
   const classes = useStyles()
 
-  return rawTx.multiSendTx ? (
+  return storedTx.multiSendTx ? (
     <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-      {extractMultiSendDecodedData(rawTx).txDetails?.map((tx, index) => {
-        if (isMultiSendDetails(tx)) {
-          return <MultiSigCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
-        }
-      })}
+      {extractMultiSendDecodedData(storedTx).txDetails?.map((tx, index) => (
+        <MultiSendCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
+      ))}
     </Block>
   ) : (
     <GenericCustomData amount={amount} data={data} recipient={recipient} />
