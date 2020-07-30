@@ -68,7 +68,7 @@ type TokenDecodedParams = {
   [key in TokenMethods]?: Record<string, string>
 }
 
-export type DecodedMethods = SafeDecodedParams | TokenDecodedParams | null
+export type DecodedParams = SafeDecodedParams | TokenDecodedParams | null
 
 export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => {
   const [methodId, params] = [data.slice(0, 10) as keyof typeof METHOD_TO_ID | string, data.slice(10)]

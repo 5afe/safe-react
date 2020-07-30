@@ -1,5 +1,5 @@
 import { List, Map, RecordOf } from 'immutable'
-import { DecodedMethods } from 'src/logic/contracts/methodIds'
+import { DecodedParams } from 'src/logic/contracts/methodIds'
 import { Confirmation } from './confirmation'
 import { DataDecoded } from './transactions'
 
@@ -45,7 +45,7 @@ export type TransactionProps = {
   data?: string | null
   dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
-  decodedParams: DecodedMethods
+  decodedParams: DecodedParams | null
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string

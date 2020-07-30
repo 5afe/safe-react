@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
 
-import { DecodedMethods, decodeMethods } from 'src/logic/contracts/methodIds'
+import { DecodedParams, decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -130,7 +130,7 @@ export const getRefundParams = async (
   return refundParams
 }
 
-export const getDecodedParams = (tx: TxServiceModel): DecodedMethods => {
+export const getDecodedParams = (tx: TxServiceModel): DecodedParams | null => {
   if (tx.dataDecoded) {
     return {
       [tx.dataDecoded.method]: tx.dataDecoded.parameters.reduce(
