@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
-import { AddressInfo, Identicon, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { AddressInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import NetworkLabel from '../NetworkLabel'
 import CircleDot from 'src/components/Header/components/CircleDot'
@@ -9,16 +8,6 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
-
-const AddressWrapper = styled.div`
-  display: flex;
-  align-items: center;
-
-  > div {
-    margin-left: 5px;
-    margin-top: 2px;
-  }
-`
 
 const useStyles = makeStyles({
   network: {
@@ -97,16 +86,15 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
         </Paragraph>
         <div className={classes.providerContainer}>
           {connected ? (
-            <AddressWrapper>
-              <Identicon address={userAddress || 'random'} size="xs" />
-              <AddressInfo
-                address={userAddress}
-                shortenAddress={4}
-                textColor={addressColor}
-                textSize="sm"
-                network={network}
-              />
-            </AddressWrapper>
+            <AddressInfo
+              address={userAddress}
+              shortenAddress={4}
+              showIdenticon
+              identiconSize="xs"
+              textColor={addressColor}
+              textSize="sm"
+              network={network}
+            />
           ) : (
             <Text size="md" color={addressColor}>
               Connection Error

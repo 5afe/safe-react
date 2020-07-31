@@ -2,6 +2,8 @@ import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { AddressInfo } from '@gnosis.pm/safe-react-components'
+import { getNetwork } from 'src/config'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -11,12 +13,9 @@ import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
 import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
-import EtherscanLink from 'src/components/EtherscanLink'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
-import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
@@ -153,13 +152,15 @@ const OwnerComponent = ({
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
-      <Identicon address={owner} className={classes.icon} diameter={32} />
-      <Block>
-        <Paragraph className={classes.name} noMargin>
-          {nameInAdbk}
-        </Paragraph>
-        <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
-      </Block>
+      <AddressInfo
+        address={owner}
+        name={nameInAdbk}
+        shortenAddress={4}
+        showIdenticon
+        showCopyBtn
+        showEtherscanBtn
+        network={getNetwork()}
+      />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
       {owner === executor && <Block className={classes.executor}>Executor</Block>}

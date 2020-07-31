@@ -58,7 +58,7 @@ const ExpandedTx = ({ cancelTx, tx }) => {
         <Row>
           <Col layout="column" xs={6}>
             <Block className={cn(classes.txDataContainer, (isIncomingTx || isCreationTx) && classes.incomingTxBlock)}>
-              <Block align="left" className={classes.txData}>
+              <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
                   <AddressInfo
@@ -71,7 +71,7 @@ const ExpandedTx = ({ cancelTx, tx }) => {
                 ) : (
                   'n/a'
                 )}
-              </Block>
+              </div>
               {!isIncomingTx && !isCreationTx && (
                 <Paragraph noMargin>
                   <Bold>Nonce: </Bold>
