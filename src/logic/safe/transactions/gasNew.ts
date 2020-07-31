@@ -118,6 +118,8 @@ export const estimateSafeTxGas = async (
     const estimationRequests = additionalGasBatches.map(
       (additionalGas) =>
         new Promise((resolve) => {
+          // there are no type definitions for .request, so for now ts-ignore is there
+          // Issue link: https://github.com/ethereum/web3.js/issues/3144
           // eslint-disable-next-line
           // @ts-ignore
           const request = web3.eth.call.request(
