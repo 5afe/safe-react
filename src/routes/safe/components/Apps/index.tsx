@@ -39,6 +39,14 @@ const Centered = styled.div`
   flex-direction: column;
 `
 
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const CenteredMT = styled(Centered)`
   margin-top: 5px;
 `
@@ -47,15 +55,6 @@ const IframeWrapper = styled.div`
   position: relative;
   height: 100%;
   width: 100%;
-`
-
-const IframeCoverLoading = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
 `
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -155,9 +154,9 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return (
       <IframeWrapper>
         {appIsLoading && (
-          <IframeCoverLoading>
+          <LoadingContainer>
             <Loader size="md" />
-          </IframeCoverLoading>
+          </LoadingContainer>
         )}
         <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
       </IframeWrapper>
@@ -338,7 +337,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         try {
           const currentApp = list[index]
 
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
+          const appInfo: SafeApp = await getAppInfoFromUrl(currentApp.url)
           if (appInfo.error) {
             throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
@@ -384,12 +383,12 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
 
-  if (loading) {
-    return <Loader size="md" />
-  }
-
   if (loading || !appList.length) {
-    return <Loader size="md" />
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   return (
