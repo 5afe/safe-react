@@ -161,9 +161,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
 
   const sendMessageToIframe = useCallback(
     (messageId, data) => {
-      iframeEl?.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+      if (iframeEl && selectedApp) {
+        iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+      }
     },
-    [iframeEl, selectedApp.url],
+    [iframeEl, selectedApp],
   )
 
   // handle messages from iframe
