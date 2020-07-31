@@ -1,7 +1,6 @@
 import { List, Map, RecordOf } from 'immutable'
-import { DecodedParams } from 'src/logic/contracts/methodIds'
 import { Confirmation } from './confirmation'
-import { DataDecoded, Transfer } from './transactions'
+import { DataDecoded, DecodedParams, Transfer } from './transactions'
 
 export enum TransactionTypes {
   INCOMING = 'incoming',

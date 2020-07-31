@@ -1,5 +1,5 @@
-import { SAFE_METHODS_NAMES } from 'src/logic/contracts/methodIds'
 import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()

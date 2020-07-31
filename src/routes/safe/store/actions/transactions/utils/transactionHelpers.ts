@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
 
-import { DecodedParams, decodeMethods } from 'src/logic/contracts/methodIds'
+import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -35,6 +35,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
