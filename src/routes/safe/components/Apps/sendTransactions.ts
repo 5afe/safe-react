@@ -1,8 +1,8 @@
 import { DELEGATE_CALL } from 'src/logic/safe/transactions/send'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 
-const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
 const multiSendAbi = [
   {
     type: 'function',
@@ -17,7 +17,7 @@ const multiSendAbi = [
 
 const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnackbar, origin) => {
   const web3 = getWeb3()
-  const multiSend: any = new web3.eth.Contract(multiSendAbi as any, multiSendAddress)
+  const multiSend: any = new web3.eth.Contract(multiSendAbi as any, MULTI_SEND_ADDRESS)
 
   const joinedTxs = txs
     .map((tx) =>
@@ -36,7 +36,7 @@ const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnac
   return dispatch(
     createTransaction({
       safeAddress,
-      to: multiSendAddress,
+      to: MULTI_SEND_ADDRESS,
       valueInWei: '0',
       txData: encodeMultiSendCallData,
       notifiedTransaction: 'STANDARD_TX',

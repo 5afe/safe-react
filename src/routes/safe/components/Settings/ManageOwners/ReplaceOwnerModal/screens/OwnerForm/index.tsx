@@ -120,7 +120,6 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                   <Col xs={8}>
                     <AddressInput
                       className={classes.addressInput}
-                      component={TextField}
                       fieldMutator={mutators.setOwnerAddress}
                       name="ownerAddress"
                       placeholder="Owner address*"

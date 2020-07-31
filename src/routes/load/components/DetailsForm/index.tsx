@@ -107,7 +107,6 @@ const Details = ({ classes, errors, form }) => {
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
-            component={TextField}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
@@ -123,7 +122,6 @@ const Details = ({ classes, errors, form }) => {
             name={FIELD_LOAD_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"
-            type="text"
             testId="load-safe-address-field"
           />
         </Col>
