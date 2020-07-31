@@ -3,8 +3,8 @@ import { loadAllTransactions } from 'src/logic/safe/store/actions/transactionsNe
 import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { loadMore } from 'src/logic/safe/store/actions/transactionsNew/pagination'
-import { safeNewTransactionsSelector } from 'src/logic/safe/store/selectors/newTransactions'
-import { Transaction } from '../../../../logic/safe/store/models/types/transactions'
+import { safeAllTransactionsSelector } from 'src/logic/safe/store/selectors/allTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions'
 
 type Props = {
   safeAddress: string
@@ -15,7 +15,7 @@ type Props = {
 export const useTransactions = (props: Props): Transaction[] => {
   const { safeAddress, offset, limit } = props
   const dispatch = useDispatch()
-  const transactions = useSelector(safeNewTransactionsSelector)
+  const transactions = useSelector(safeAllTransactionsSelector)
   useEffect(() => {
     async function loadNewTxs() {
       const { transactions, totalTransactionsAmount } = await loadAllTransactions({ safeAddress, offset, limit })

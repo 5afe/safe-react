@@ -1,6 +1,6 @@
 import React from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { currentPageSelector, newTransactionsCurrentPageSelector } from 'src/logic/safe/store/selectors/newTransactions'
+import { currentPageSelector, allTransactionsCurrentPageSelector } from 'src/logic/safe/store/selectors/allTransactions'
 import { useTransactions } from 'src/routes/safe/container/hooks/useTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
 import { nextPage, previousPage } from 'src/logic/safe/store/actions/transactionsNew/pagination'
@@ -9,7 +9,7 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 
 const Transactions = (): React.ReactElement => {
   const dispatch = useDispatch()
-  const transactions = useSelector(newTransactionsCurrentPageSelector)
+  const transactions = useSelector(allTransactionsCurrentPageSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const { currentPage, maxPages, limit, offset } = useSelector(currentPageSelector)
   useTransactions({ safeAddress, offset, limit })
