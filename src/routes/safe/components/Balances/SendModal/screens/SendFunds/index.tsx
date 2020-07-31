@@ -240,7 +240,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       validate={composeValidators(
                         required,
                         mustBeFloat,
-                        minValue(0),
+                        minValue(0, false),
                         maxValue(selectedTokenRecord?.balance),
                       )}
                     />
