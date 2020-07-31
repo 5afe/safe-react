@@ -30,7 +30,7 @@ afterAll(() => {
 
 const renderLoadSafe = async (localStore) => {
   const web3 = getWeb3()
-  const provider = await getProviderInfo(web3.currentProvider)
+  const provider = await getProviderInfo(web3)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 

@@ -73,7 +73,7 @@ export const aMinedSafe = async (
   name = 'Safe Name',
 ) => {
   const web3 = getWeb3()
-  const provider = await getProviderInfo(web3.currentProvider)
+  const provider = await getProviderInfo(web3)
   const walletRecord = makeProvider(provider)
   store.dispatch(addProvider(walletRecord))
 
