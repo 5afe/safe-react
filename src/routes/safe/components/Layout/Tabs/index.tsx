@@ -11,7 +11,6 @@ import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIc
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
-import { Match } from 'react-router'
 import { History, Location } from 'history'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -84,7 +83,7 @@ const TabsComponent = (): ReactElement => {
   const classes = useStyles()
   const location = useLocation<Location>()
   const history = useHistory<History>()
-  const match = useRouteMatch<Match>()
+  const match = useRouteMatch()
 
   const handleCallToRouter = (_, value) => {
     history.push(value)
