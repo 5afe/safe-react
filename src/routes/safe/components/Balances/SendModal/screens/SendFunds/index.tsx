@@ -87,18 +87,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm
-        formMutators={formMutators}
-        initialValues={initialValues}
-        onSubmit={handleSubmit}
-        validation={(values) => {
-          const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
-
-          return {
-            amount: maxValue(selectedTokenRecord?.balance)(values.amount),
-          }
-        }}
-      >
+      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
