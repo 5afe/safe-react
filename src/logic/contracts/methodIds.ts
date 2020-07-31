@@ -1,5 +1,5 @@
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
+import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 
 // SAFE METHODS TO ITS ID
 // https://github.com/gnosis/safe-contracts/blob/development/test/safeMethodNaming.js

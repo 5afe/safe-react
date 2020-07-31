@@ -1,4 +1,4 @@
-import { Transfer, TxConstants } from 'src/routes/safe/store/models/types/transactions'
+import { Transfer, TxConstants } from 'src/routes/safe/store/models/types/transactions.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { store } from 'src/store'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'

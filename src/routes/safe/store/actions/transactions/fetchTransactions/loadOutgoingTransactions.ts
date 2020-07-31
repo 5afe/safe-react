@@ -11,7 +11,7 @@ import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchT
 import { Transaction, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { SafeRecord } from 'src/routes/safe/store/models/safe'
-import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
+import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 
 export type ConfirmationServiceModel = {
   confirmationType: string

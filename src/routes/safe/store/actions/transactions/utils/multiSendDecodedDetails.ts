@@ -5,7 +5,7 @@ import {
   Parameter,
   Transfer,
   TransferType,
-} from 'src/routes/safe/store/models/types/transactions'
+} from 'src/routes/safe/store/models/types/transactions.d'
 import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import {
   extractERC20TransferDetails,
