@@ -6,7 +6,7 @@ import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
-import { md, screenSm, sm } from 'src/theme/variables'
+import { screenSm, sm } from 'src/theme/variables'
 
 const styles = () => ({
   root: {
@@ -26,8 +26,8 @@ const styles = () => ({
     flex: '1 1 auto',
     padding: sm,
     [`@media (min-width: ${screenSm}px)`]: {
-      paddingLeft: md,
-      paddingRight: md,
+      paddingLeft: sm,
+      paddingRight: sm,
     },
   },
   expand: {

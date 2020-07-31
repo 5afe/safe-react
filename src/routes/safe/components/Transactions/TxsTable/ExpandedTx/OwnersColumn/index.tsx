@@ -144,9 +144,16 @@ const OwnersColumn = ({
 
   return (
     <Col className={classes.rightCol} layout="block" xs={6}>
-      <Block className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}>
+      <Block
+        className={cn(classes.ownerListTitle, (thresholdReached || tx.isExecuted) && classes.ownerListTitleDone)}
+        data-testid={`confirmed-${tx.confirmations.size}-out-of-${txThreshold}`}
+      >
         <div className={classes.circleState}>
-          <Img alt="" src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} />
+          <Img
+            alt=""
+            src={thresholdReached || tx.isExecuted ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle}
+            data-testid={thresholdReached || tx.isExecuted ? 'confirmed-tx-check' : 'not-confirmed-tx-check'}
+          />
         </div>
         {tx.isExecuted
           ? `Confirmed [${tx.confirmations.size}/${tx.confirmations.size}]`
@@ -169,6 +176,7 @@ const OwnersColumn = ({
           classes.ownerListTitle,
           (cancelThresholdReached || cancelTx.isExecuted) && classes.ownerListTitleCancelDone,
         )}
+        data-testid={`rejected-${cancelTx.confirmations.size}-out-of-${cancelThreshold}`}
       >
         <div
           className={cn(classes.verticalLine, tx.isExecuted ? classes.verticalLineDone : classes.verticalLinePending)}

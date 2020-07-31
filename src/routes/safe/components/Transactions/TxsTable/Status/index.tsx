@@ -42,7 +42,7 @@ const Status = ({ classes, status }) => {
   return (
     <Block className={`${classes.container} ${classes[status]}`}>
       {typeof Icon === 'object' ? Icon : <Img alt={statusToLabel[status]} src={Icon} style={statusIconStyle} />}
-      <Paragraph className={classes.statusText} noMargin>
+      <Paragraph className={classes.statusText} noMargin data-testid={`tx-status-${statusToLabel[status]}`}>
         {statusToLabel[status]}
       </Paragraph>
     </Block>

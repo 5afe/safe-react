@@ -1,5 +1,5 @@
 import { List, Map, Set } from 'immutable'
-import { matchPath } from 'react-router-dom'
+import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
@@ -10,13 +10,13 @@ import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transacti
 import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
-export const safesMapSelector = (state: AppReduxState): SafesMap => state[SAFE_REDUCER_ID].get('safes')
+export const safesMapSelector = (state: AppReduxState): SafesMap => safesStateSelector(state).get('safes')
 
-export const safesListSelector = createSelector(safesMapSelector, (safes) => safes.toList())
+export const safesListSelector = createSelector(safesMapSelector, (safes): List<SafeRecord> => safes.toList())
 
 export const safesCountSelector = createSelector(safesMapSelector, (safes) => safes.size)
 
@@ -33,7 +33,9 @@ const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELL
 const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
-  const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
+    path: `${SAFELIST_ADDRESS}/:safeAddress`,
+  })
 
   if (match) {
     return checksumAddress(match.params.safeAddress)
@@ -42,7 +44,10 @@ export const safeParamAddressFromStateSelector = (state: AppReduxState): string 
   return null
 }
 
-export const safeParamAddressSelector = (state, props) => {
+export const safeParamAddressSelector = (
+  state: AppReduxState,
+  props: RouteComponentProps<{ [SAFE_PARAM_ADDRESS]?: string }>,
+): string => {
   const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
   return urlAdd ? checksumAddress(urlAdd) : ''
 }
@@ -105,15 +110,19 @@ export const safeIncomingTransactionsSelector = createSelector(
   },
 )
 
-export const safeSelector = createSelector(safesMapSelector, safeParamAddressFromStateSelector, (safes, address) => {
-  if (!address) {
-    return undefined
-  }
-  const checksumed = checksumAddress(address)
-  const safe = safes.get(checksumed)
+export const safeSelector = createSelector(
+  safesMapSelector,
+  safeParamAddressFromStateSelector,
+  (safes: SafesMap, address: string): SafeRecord | undefined => {
+    if (!address) {
+      return undefined
+    }
+    const checksumed = checksumAddress(address)
+    const safe = safes.get(checksumed)
 
-  return safe
-})
+    return safe
+  },
+)
 
 export const safeActiveTokensSelector = createSelector(
   safeSelector,
@@ -151,13 +160,16 @@ export const safeBlacklistedTokensSelector = createSelector(safeSelector, (safe)
   return safe.blacklistedTokens
 })
 
-export const safeBlacklistedAssetsSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return List()
-  }
+export const safeBlacklistedAssetsSelector = createSelector(
+  safeSelector,
+  (safe): Set<string> => {
+    if (!safe) {
+      return Set()
+    }
 
-  return safe.blacklistedAssets
-})
+    return safe.blacklistedAssets
+  },
+)
 
 export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap) =>
   safes.get(safeAddress).get('activeAssets')
@@ -165,15 +177,22 @@ export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: Safes
 export const safeBlacklistedAssetsSelectorBySafe = (safeAddress, safes) =>
   safes.get(safeAddress).get('blacklistedAssets')
 
-export const safeBalancesSelector = createSelector(safeSelector, (safe) => {
-  if (!safe) {
-    return Map()
-  }
+export const safeBalancesSelector = createSelector(
+  safeSelector,
+  (safe): Map<string, string> => {
+    if (!safe) {
+      return Map()
+    }
 
-  return safe.balances
-})
+    return safe.balances
+  },
+)
 
-export const safeFieldSelector = (field: string) => (safe: SafeRecord) => safe?.[field]
+const baseSafe = makeSafe()
+
+export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
+  safe: SafeRecord,
+): SafeRecordProps[K] | null => (safe ? safe.get(field, baseSafe.get(field)) : null)
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
@@ -188,6 +207,8 @@ export const safeThresholdSelector = createSelector(safeSelector, safeFieldSelec
 export const safeNonceSelector = createSelector(safeSelector, safeFieldSelector('nonce'))
 
 export const safeOwnersSelector = createSelector(safeSelector, safeFieldSelector('owners'))
+
+export const safeModulesSelector = createSelector(safeSelector, safeFieldSelector('modules'))
 
 export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
 

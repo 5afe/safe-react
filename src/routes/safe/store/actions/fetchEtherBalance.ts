@@ -11,7 +11,7 @@ const fetchEtherBalance = (safeAddress: string) => async (
 ): Promise<void> => {
   try {
     const state = getState()
-    const ethBalance = state[SAFE_REDUCER_ID].getIn([SAFE_REDUCER_ID, safeAddress, 'ethBalance'])
+    const ethBalance = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress, 'ethBalance'])
     const newEthBalance = await backOff(() => getBalanceInEtherOf(safeAddress))
     if (newEthBalance !== ethBalance) {
       dispatch(updateSafe({ address: safeAddress, ethBalance: newEthBalance }))

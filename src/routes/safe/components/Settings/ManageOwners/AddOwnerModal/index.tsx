@@ -21,7 +21,6 @@ const styles = () => ({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
@@ -34,7 +33,7 @@ export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackb
     createTransaction({
       safeAddress,
       to: safeAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,

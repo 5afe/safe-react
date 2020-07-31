@@ -23,6 +23,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
         href={getEtherScanLink('tx', safeCreationTxHash)}
         rel="noopener noreferrer"
         target="_blank"
+        data-testid="safe-create-etherscan-link"
       >
         Etherscan.io
       </EtherScanLink>

@@ -107,7 +107,6 @@ const Details = ({ classes, errors, form }) => {
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
-            component={TextField}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
@@ -123,7 +122,6 @@ const Details = ({ classes, errors, form }) => {
             name={FIELD_LOAD_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"
-            type="text"
             testId="load-safe-address-field"
           />
         </Col>
@@ -133,16 +131,15 @@ const Details = ({ classes, errors, form }) => {
       </Block>
       <Block margin="sm">
         <Paragraph className={classes.links} color="primary" noMargin size="md">
-          By continuing you consent with the{' '}
-          <a href="https://safe.gnosis.io/terms" rel="noopener noreferrer" target="_blank">
+          By continuing you consent to the{' '}
+          <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
           </a>{' '}
           and{' '}
-          <a href="https://safe.gnosis.io/privacy" rel="noopener noreferrer" target="_blank">
+          <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          .
         </Paragraph>
       </Block>
     </>

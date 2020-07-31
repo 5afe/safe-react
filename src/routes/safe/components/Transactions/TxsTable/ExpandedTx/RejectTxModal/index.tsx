@@ -53,7 +53,7 @@ const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClos
       createTransaction({
         safeAddress,
         to: safeAddress,
-        valueInWei: 0,
+        valueInWei: '0',
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
         enqueueSnackbar,
         closeSnackbar,

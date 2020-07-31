@@ -63,7 +63,7 @@ const isTxValid = (t: SafeAppTx): boolean => {
     return false
   }
 
-  if (typeof t.value === 'string' && !/^\d+$/.test(t.value)) {
+  if (typeof t.value === 'string' && !/^(0x)?[0-9a-f]+$/i.test(t.value)) {
     return false
   }
 

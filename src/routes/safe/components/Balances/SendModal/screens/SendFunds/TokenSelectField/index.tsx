@@ -57,7 +57,11 @@ const TokenSelectField = ({ classes, initialValue, isValid, tokens }) => (
         <ListItemIcon>
           <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
         </ListItemIcon>
-        <ListItemText primary={token.name} secondary={`${formatAmount(token.balance)} ${token.symbol}`} />
+        <ListItemText
+          primary={token.name}
+          secondary={`${formatAmount(token.balance)} ${token.symbol}`}
+          data-testid={`select-token-${token.name}`}
+        />
       </MenuItem>
     ))}
   </Field>

@@ -36,6 +36,14 @@ const Centered = styled.div`
   flex-direction: column;
 `
 
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const CenteredMT = styled(Centered)`
   margin-top: 5px;
 `
@@ -45,18 +53,10 @@ const IframeWrapper = styled.div`
   height: 100%;
   width: 100%;
 `
-
-const IframeCoverLoading = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-`
 const operations = {
-  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
   ON_SAFE_INFO: 'ON_SAFE_INFO',
+  SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
+  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
@@ -142,9 +142,9 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return (
       <IframeWrapper>
         {appIsLoading && (
-          <IframeCoverLoading>
+          <LoadingContainer>
             <Loader size="md" />
-          </IframeCoverLoading>
+          </LoadingContainer>
         )}
         <StyledIframe
           frameBorder="0"
@@ -158,6 +158,13 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   }
 
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
+
+  const sendMessageToIframe = useCallback(
+    (messageId, data) => {
+      iframeEl?.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+    },
+    [iframeEl, selectedApp.url],
+  )
 
   // handle messages from iframe
   useEffect(() => {
@@ -186,7 +193,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
             closeModal,
             onConfirm,
           )
+          break
+        }
 
+        case operations.SAFE_APP_SDK_INITIALIZED: {
+          sendMessageToIframe(operations.ON_SAFE_INFO, {
+            safeAddress,
+            network,
+            ethBalance,
+          })
           break
         }
 
@@ -243,7 +258,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   }, [ethBalance, iframeEl, network, safeAddress, selectedApp])
 
   if (loadingAppList || !appList.length) {
-    return <Loader size="md" />
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   return (

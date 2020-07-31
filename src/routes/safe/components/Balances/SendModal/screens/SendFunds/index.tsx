@@ -17,14 +17,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import {
-  composeValidators,
-  greaterThan,
-  maxValue,
-  maxValueCheck,
-  mustBeFloat,
-  required,
-} from 'src/components/forms/validator'
+import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -55,7 +48,7 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }) => {
+const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(getAddressBook)
@@ -84,7 +77,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
 
   return (
     <>
-      <Row align="center" className={classes.heading} grow>
+      <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
         <Paragraph className={classes.manage} noMargin weight="bolder">
           Send Funds
         </Paragraph>
@@ -102,7 +95,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
 
           return {
-            amount: maxValueCheck(selectedTokenRecord?.balance, values.amount),
+            amount: maxValue(selectedTokenRecord?.balance)(values.amount),
           }
         }}
       >
@@ -221,7 +214,11 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Amount
                     </Paragraph>
-                    <ButtonLink onClick={() => mutators.setMax(selectedTokenRecord.balance)} weight="bold">
+                    <ButtonLink
+                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      weight="bold"
+                      testId="send-max-btn"
+                    >
                       Send max
                     </ButtonLink>
                   </Col>
@@ -239,10 +236,11 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       placeholder="Amount*"
                       text="Amount*"
                       type="text"
+                      testId="amount-input"
                       validate={composeValidators(
                         required,
                         mustBeFloat,
-                        greaterThan(0),
+                        minValue(0),
                         maxValue(selectedTokenRecord?.balance),
                       )}
                     />

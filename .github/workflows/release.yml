@@ -3,9 +3,8 @@ name: Build/Release Desktop app
 # this will help you specify where to run
 on:
   push:
-    branches-ignore:
-      # Temporary disable action
-      - '**'
+    branches:
+      - master
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -15,6 +14,7 @@ env:
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL }}
   REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
+  REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -89,4 +89,3 @@ jobs:
         with:
           name: Desktop Windows
           path: ./dist/Safe[ ]Multisig*.exe
-
