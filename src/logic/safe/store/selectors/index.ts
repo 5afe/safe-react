@@ -7,7 +7,7 @@ import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reduc
 import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/incomingTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'

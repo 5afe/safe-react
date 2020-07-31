@@ -1,7 +1,7 @@
 import { createSelector } from 'reselect'
 import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
 import { safeActiveAssetsSelector } from 'src/logic/safe/store/selectors'
 

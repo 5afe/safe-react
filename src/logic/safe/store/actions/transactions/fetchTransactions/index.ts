@@ -10,7 +10,7 @@ import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addOrUpdateCancellationTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 
 const noFunc = () => {}
 

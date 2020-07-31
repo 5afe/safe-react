@@ -13,7 +13,7 @@ import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 const noFunc = () => {}

@@ -24,7 +24,7 @@ import {
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
-import { store } from 'src/logic/store'
+import { store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {

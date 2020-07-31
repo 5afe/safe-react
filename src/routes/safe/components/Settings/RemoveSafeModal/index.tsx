@@ -21,7 +21,7 @@ import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { history } from 'src/logic/store'
+import { history } from 'src/store'
 import { md, secondary } from 'src/theme/variables'
 
 const openIconStyle = {

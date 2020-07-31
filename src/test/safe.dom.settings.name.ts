@@ -1,5 +1,5 @@
 import { fireEvent } from '@testing-library/react'
-import { aNewStore } from 'src/logic/store'
+import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
 import { sleep } from 'src/utils/timer'

@@ -31,9 +31,9 @@ import incomingTransactions, {
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
-import allTransactions, { TRANSACTIONS, TransactionsState } from '../safe/store/reducer/allTransactions'
+import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
 import { CurrencyRateValueRecord } from 'src/logic/currencyValues/store/model/currencyValues'
-import { SafeReducerMap } from '../safe/store/reducer/types/safe'
+import { SafeReducerMap } from '../logic/safe/store/reducer/types/safe'
 
 export const history = createHashHistory()
 

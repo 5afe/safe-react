@@ -38,7 +38,7 @@ import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionStatus, TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { AnyAction } from 'redux'
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 import { Dispatch } from './types'
 
 export const removeTxFromStore = (

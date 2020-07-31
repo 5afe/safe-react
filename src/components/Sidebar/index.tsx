@@ -18,7 +18,7 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { AppReduxState } from 'src/logic/store'
+import { AppReduxState } from 'src/store'
 
 const { useEffect, useMemo, useState } = React
 

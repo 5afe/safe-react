@@ -3,7 +3,7 @@ import { createSelector } from 'reselect'
 
 import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { AppReduxState } from 'src/logic/store/index'
+import { AppReduxState } from 'src/store/index'
 import {
   AVAILABLE_CURRENCIES,
   BalanceCurrencyRecord,

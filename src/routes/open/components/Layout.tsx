@@ -17,7 +17,7 @@ import {
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
 import Welcome from 'src/routes/welcome/components/Layout'
-import { history } from 'src/logic/store'
+import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 
 const { useEffect } = React

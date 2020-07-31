@@ -2,7 +2,7 @@
 import { fireEvent } from '@testing-library/react'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getFirstTokenContract } from 'src/test/utils/tokenMovements'
-import { aNewStore } from 'src/logic/store'
+import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
 import { sleep } from 'src/utils/timer'
