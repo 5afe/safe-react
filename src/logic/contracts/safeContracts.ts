@@ -1,4 +1,6 @@
+import { AbiItem } from 'web3-utils'
 import contract from 'truffle-contract'
+import Web3 from 'web3'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
@@ -8,7 +10,8 @@ import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
-import Web3 from 'web3'
+import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d';
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
@@ -20,16 +23,16 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 let proxyFactoryMaster
 let safeMaster
 
-const createGnosisSafeContract = (web3: Web3): any => {
+const createGnosisSafeContract = (web3: Web3) => {
   const gnosisSafe = contract(GnosisSafeSol)
   gnosisSafe.setProvider(web3.currentProvider)
 
   return gnosisSafe
 }
 
-const createProxyFactoryContract = (web3, networkId) => {
+const createProxyFactoryContract = (web3: Web3, networkId: number): GnosisSafeProxyFactory => {
   const contractAddress = ProxyFactorySol.networks[networkId].address
-  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi as any, contractAddress)
+  const proxyFactory = new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
 
   return proxyFactory
 }
@@ -55,8 +58,8 @@ const createMasterCopies = async () => {
   const accounts = await web3.eth.getAccounts()
   const userAccount = accounts[0]
 
-  const ProxyFactory = getCreateProxyFactoryContract(web3, 4447)
-  proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
+  const ProxyFactory = getCreateProxyFactoryContract(web3, 4441)
+  proxyFactoryMaster = await ProxyFactory.deploy({ data: GnosisSafeSol.bytecode }).send({ from: userAccount, gas: 5000000 })
 
   const GnosisSafe = getGnosisSafeContract(web3)
   safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })
@@ -70,7 +73,7 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations, userAccount) => {
+export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations) => {
   const gnosisSafeData = safeMaster.contract.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
@@ -95,11 +98,12 @@ export const estimateGasForDeployingSafe = async (
   return gas * parseInt(gasPrice, 10)
 }
 
-export const getGnosisSafeInstanceAt = memoize(async (safeAddress: string): Promise<any> => {
+export const getGnosisSafeInstanceAt = async (safeAddress: string): Promise<GnosisSafe> => {
   const web3 = getWeb3()
-  const GnosisSafe = await getGnosisSafeContract(web3)
-  return GnosisSafe.at(safeAddress)
-})
+  const gnosisSafe = await new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown as GnosisSafe
+
+  return gnosisSafe
+}
 
 const cleanByteCodeMetadata = (bytecode: string): string => {
   const metaData = 'a165'
@@ -123,40 +127,4 @@ export const validateProxy = async (safeAddress: string): Promise<boolean> => {
 
 
   return isProxyCode(codeWithoutMetadata)
-}
-
-
-export const getEncodedMultiSendCallData = (txs, web3) => {
-  const multiSendAbi = [
-    {
-      type: 'function',
-      name: 'multiSend',
-      constant: false,
-      payable: false,
-      stateMutability: 'nonpayable',
-      inputs: [{ type: 'bytes', name: 'transactions' }],
-      outputs: [],
-    },
-  ]
-  const multiSend = new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS)
-  const encodeMultiSendCallData = multiSend.methods
-    .multiSend(
-      `0x${txs
-        .map((tx) => [
-          web3.eth.abi.encodeParameter('uint8', 0).slice(-2),
-          web3.eth.abi.encodeParameter('address', tx.to).slice(-40),
-          web3.eth.abi.encodeParameter('uint256', tx.value).slice(-64),
-          web3.eth.abi
-            .encodeParameter(
-              'uint256',
-              web3.utils.hexToBytes(tx.data).length,
-            )
-            .slice(-64),
-          tx.data.replace(/^0x/, ''),
-        ].join(''))
-        .join('')}`,
-    )
-    .encodeABI()
-
-  return encodeMultiSendCallData
 }

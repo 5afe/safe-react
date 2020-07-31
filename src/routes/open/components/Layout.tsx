@@ -98,11 +98,9 @@ const Layout = (props) => {
             steps={steps}
             testId="create-safe-form"
           >
-            <StepperPage>{SafeNameField}</StepperPage>
-            <StepperPage>{SafeOwnersFields}</StepperPage>
-            <StepperPage network={network} userAccount={userAccount}>
-              {Review}
-            </StepperPage>
+            <StepperPage component={SafeNameField} />
+            <StepperPage component={SafeOwnersFields} />
+            <StepperPage network={network} userAccount={userAccount} component={Review} />
           </Stepper>
         </Block>
       ) : (

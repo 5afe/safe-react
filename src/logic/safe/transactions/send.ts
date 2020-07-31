@@ -1,6 +1,4 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
 
 export const CALL = 0
@@ -21,36 +19,22 @@ export const getApprovalTransaction = async ({
   sender,
   to,
   valueInWei,
-}: TxArgs) => {
-  const txHash = await safeInstance.getTransactionHash(
-    to,
-    valueInWei,
-    data,
-    operation,
-    safeTxGas,
-    baseGas,
-    gasPrice,
-    gasToken,
-    refundReceiver,
-    nonce,
-    {
+}: TxArgs): Promise<NonPayableTransactionObject<void>> => {
+  const txHash = await safeInstance.methods
+    .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
+    .call({
       from: sender,
-    },
-  )
+    })
 
   try {
-    const web3 = getWeb3()
-
-    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
-
-    return contract.methods.approveHash(txHash)
+    return safeInstance.methods.approveHash(txHash)
   } catch (err) {
     console.error(`Error while approving transaction: ${err}`)
     throw err
   }
 }
 
-export const getExecutionTransaction = async ({
+export const getExecutionTransaction = ({
   baseGas,
   data,
   gasPrice,
@@ -62,12 +46,9 @@ export const getExecutionTransaction = async ({
   sigs,
   to,
   valueInWei,
-}: TxArgs) => {
+}: TxArgs): NonPayableTransactionObject<boolean> => {
   try {
-    const web3 = getWeb3()
-    const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
-
-    return contract.methods.execTransaction(
+    return safeInstance.methods.execTransaction(
       to,
       valueInWei,
       data,
