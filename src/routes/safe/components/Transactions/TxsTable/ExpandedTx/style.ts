@@ -1,6 +1,6 @@
 import { border, lg, md } from 'src/theme/variables'
 
-export const styles = () => ({
+const cssStyles = {
   expandedTxBlock: {
     borderBottom: `2px solid ${border}`,
   },
@@ -19,4 +19,6 @@ export const styles = () => ({
     paddingBottom: md,
     borderRight: '2px solid rgb(232, 231, 230)',
   },
-})
+}
+
+export const styles = (): typeof cssStyles => cssStyles
