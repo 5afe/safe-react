@@ -8,8 +8,7 @@ import styled from 'styled-components'
 import ManageApps from './components/ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import LegalDisclaimer from './components/LegalDisclaimer'
-import { useLegalConsent } from './hooks/useLegalConsent'
+import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
 
 import LCL from 'src/components/ListContentLayout'
@@ -23,12 +22,6 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { isSameHref } from 'src/utils/url'
 
-const StyledIframe = styled.iframe`
-  padding: 15px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-`
 const Centered = styled.div`
   display: flex;
   align-items: center;
@@ -48,35 +41,30 @@ const CenteredMT = styled(Centered)`
   margin-top: 5px;
 `
 
-const IframeWrapper = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-`
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
   SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
-function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
+const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
   const [initialAppSelected, setInitialAppSelected] = useState<boolean>(false)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
+  const iframeRef = useRef<HTMLIFrameElement>()
 
-  const history = useHistory()
   const granted = useSelector(grantedSelector)
   const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
-  const { consentReceived, onConsentReceipt } = useLegalConsent()
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
+  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 
   const onSelectApp = useCallback(
     (appId) => {
@@ -112,52 +100,6 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       }
     }
   }, [appList, initialAppSelected, selectedAppId])
-
-  const iframeRef = useCallback((node) => {
-    if (node !== null) {
-      setIframeEl(node)
-    }
-  }, [])
-
-  const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
-
-  const getContent = () => {
-    if (!selectedApp) {
-      return null
-    }
-
-    if (!consentReceived) {
-      return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
-    }
-
-    if (network === 'UNKNOWN' || !granted) {
-      return (
-        <Centered style={{ height: '476px' }}>
-          <FixedIcon type="notOwner" />
-          <Title size="xs">To use apps, you must be an owner of this Safe</Title>
-        </Centered>
-      )
-    }
-
-    return (
-      <IframeWrapper>
-        {appIsLoading && (
-          <LoadingContainer>
-            <Loader size="md" />
-          </LoadingContainer>
-        )}
-        <StyledIframe
-          frameBorder="0"
-          id={`iframe-${selectedApp.name}`}
-          ref={iframeRef}
-          src={selectedApp.url}
-          title={selectedApp.name}
-        />
-      </IframeWrapper>
-    )
-  }
-
-  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 
   const sendMessageToIframe = useCallback(
     (messageId, data) => {
@@ -277,7 +219,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           <LCL.Menu>
             <LCL.List activeItem={selectedAppId} items={enabledApps} onItemClick={onSelectApp} />
           </LCL.Menu>
-          <LCL.Content>{getContent()}</LCL.Content>
+          <LCL.Content>
+            <AppFrame
+              granted={granted}
+              selectedApp={selectedApp}
+              safeAddress={safeAddress}
+              network={network}
+              appIsLoading={appIsLoading}
+            />
+          </LCL.Content>
         </LCL.Wrapper>
       ) : (
         <Card style={{ marginBottom: '24px' }}>
