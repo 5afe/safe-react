@@ -24,6 +24,7 @@ export const makeTransaction = Record<TransactionProps>({
   executionTxHash: undefined,
   executor: '',
   factoryAddress: '',
+  fee: null,
   gasPrice: '0',
   gasToken: ZERO_ADDRESS,
   isCancellationTx: false,
