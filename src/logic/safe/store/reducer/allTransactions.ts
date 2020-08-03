@@ -1,7 +1,7 @@
 import { handleActions } from 'redux-actions'
 
 import { Transaction } from '../models/types/transactions'
-import { LOAD_MORE_TRANSACTIONS } from '../actions/transactionsNew/pagination'
+import { LOAD_MORE_TRANSACTIONS } from '../actions/allTransactions/pagination'
 
 export const TRANSACTIONS = 'allTransactions'
 

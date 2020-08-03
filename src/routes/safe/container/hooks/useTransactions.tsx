@@ -1,8 +1,8 @@
-import { loadAllTransactions } from 'src/logic/safe/store/actions/transactionsNew/loadAllTransactions'
+import { loadAllTransactions } from 'src/logic/safe/store/actions/allTransactions/loadAllTransactions'
 
 import { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { loadMore } from 'src/logic/safe/store/actions/transactionsNew/pagination'
+import { loadMore } from 'src/logic/safe/store/actions/allTransactions/pagination'
 import { safeAllTransactionsSelector } from 'src/logic/safe/store/selectors/allTransactions'
 import { Transaction } from 'src/logic/safe/store/models/types/transactions'
 import { safeParamAddressFromStateSelector } from '../../../../logic/safe/store/selectors'
