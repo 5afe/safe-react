@@ -1,8 +1,7 @@
-import { Card, FixedIcon, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
+import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState, useMemo } from 'react'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import ManageApps from './components/ManageApps'
@@ -13,7 +12,6 @@ import { useAppList } from './hooks/useAppList'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   safeEthBalanceSelector,
@@ -53,7 +51,6 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   const [initialAppSelected, setInitialAppSelected] = useState<boolean>(false)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
-  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
   const iframeRef = useRef<HTMLIFrameElement>()
 
   const granted = useSelector(grantedSelector)
@@ -103,11 +100,11 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
 
   const sendMessageToIframe = useCallback(
     (messageId, data) => {
-      if (iframeEl && selectedApp) {
-        iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+      if (iframeRef.current && selectedApp) {
+        iframeRef.current.contentWindow.postMessage({ messageId, data }, selectedApp.url)
       }
     },
-    [iframeEl, selectedApp],
+    [selectedApp],
   )
 
   // handle messages from iframe
@@ -174,32 +171,33 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  })
+  }, [
+    closeModal,
+    closeSnackbar,
+    dispatch,
+    enqueueSnackbar,
+    ethBalance,
+    network,
+    openModal,
+    safeAddress,
+    safeName,
+    selectedApp,
+    sendMessageToIframe,
+  ])
 
-  // on iframe change
-  useEffect(() => {
-    const sendMessageToIframe = (messageId, data) => {
-      iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
-    }
-    const onIframeLoaded = () => {
-      setAppIsLoading(false)
-      sendMessageToIframe(operations.ON_SAFE_INFO, {
-        safeAddress,
-        network,
-        ethBalance,
-      })
-    }
-
-    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, selectedApp.url)) {
+  const handleIframeLoad = useCallback(() => {
+    const iframe = iframeRef.current
+    if (!iframe || !selectedApp || !isSameHref(iframe.src, selectedApp.url)) {
       return
     }
 
-    iframeEl.addEventListener('load', onIframeLoaded)
-
-    return () => {
-      iframeEl.removeEventListener('load', onIframeLoaded)
-    }
-  }, [ethBalance, iframeEl, network, safeAddress, selectedApp])
+    setAppIsLoading(false)
+    sendMessageToIframe(operations.ON_SAFE_INFO, {
+      safeAddress,
+      network,
+      ethBalance,
+    })
+  }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
 
   if (loadingAppList || !appList.length) {
     return (
@@ -221,11 +219,13 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
           </LCL.Menu>
           <LCL.Content>
             <AppFrame
+              ref={iframeRef}
               granted={granted}
               selectedApp={selectedApp}
               safeAddress={safeAddress}
               network={network}
               appIsLoading={appIsLoading}
+              onIframeLoad={handleIframeLoad}
             />
           </LCL.Content>
         </LCL.Wrapper>

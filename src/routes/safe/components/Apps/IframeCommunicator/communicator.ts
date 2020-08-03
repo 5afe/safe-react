@@ -1,7 +1,7 @@
 import { useEffect } from 'react'
 
 class IframeCommunicator {
-  constructor()
+  constructor() {}
 }
 
 const useIframeMessageHandler = (): void => {

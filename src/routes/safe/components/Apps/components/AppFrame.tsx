@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { forwardRef } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title } from '@gnosis.pm/safe-react-components'
 import { useHistory } from 'react-router-dom'
@@ -26,6 +26,7 @@ const IframeWrapper = styled.div`
   position: relative;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 `
 
 const Centered = styled.div`
@@ -41,9 +42,13 @@ type AppFrameProps = {
   network: string
   granted: boolean
   appIsLoading: boolean
+  onIframeLoad: () => void
 }
 
-const AppFrame = ({ selectedApp, safeAddress, network, appIsLoading, granted }: AppFrameProps): React.ReactElement => {
+const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameComponent(
+  { selectedApp, safeAddress, network, appIsLoading, granted, onIframeLoad },
+  iframeRef,
+): React.ReactElement {
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
@@ -75,12 +80,13 @@ const AppFrame = ({ selectedApp, safeAddress, network, appIsLoading, granted }: 
       <StyledIframe
         frameBorder="0"
         id={`iframe-${selectedApp.name}`}
-        // ref={iframeRef}
+        ref={iframeRef}
         src={selectedApp.url}
         title={selectedApp.name}
+        onLoad={onIframeLoad}
       />
     </IframeWrapper>
   )
-}
+})
 
 export default AppFrame
