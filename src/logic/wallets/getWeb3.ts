@@ -95,14 +95,10 @@ const isSmartContractWallet = async (web3Provider: Web3, account: string): Promi
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
-export const getProviderInfo = async (
-  web3Provider: string | Provider,
-  providerName = 'Wallet',
-): Promise<ProviderProps> => {
-  web3 = new Web3(web3Provider)
-  const account = await getAccountFrom(web3)
-  const network = await getNetworkIdFrom(web3)
-  const smartContractWallet = await isSmartContractWallet(web3, account)
+export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
+  const account = await getAccountFrom(web3Instance)
+  const network = await getNetworkIdFrom(web3Instance)
+  const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
 
   const available = account !== null
