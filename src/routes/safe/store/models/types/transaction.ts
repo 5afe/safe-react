@@ -48,6 +48,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
+  fee: string | null // It will be replace with the new TXs types.
   gasPrice: string
   gasToken: string
   isCancellationTx: boolean

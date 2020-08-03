@@ -10,6 +10,7 @@ import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
 import { styles } from './style'
 
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -29,7 +30,12 @@ import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction
 
 const useStyles = makeStyles(styles as any)
 
-const ExpandedTx = ({ cancelTx, tx }) => {
+type Props = {
+  cancelTx: Transaction
+  tx: Transaction
+}
+
+const ExpandedTx = ({ cancelTx, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector)
