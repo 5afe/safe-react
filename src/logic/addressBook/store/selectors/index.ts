@@ -1,48 +1,31 @@
+import { AppReduxState } from 'src/store'
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import {
-  ADDRESS_BOOK_REDUCER_ID,
-  AddressBookCollection,
-  AddressBookState,
-} from 'src/logic/addressBook/store/reducer/addressBook'
+import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { AddressBookMap } from 'src/logic/addressBook/store/reducer/types/addressBook.d'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { AppReduxState } from 'src/store'
 
-export const addressBookMapSelector = (state: AppReduxState): AddressBookState => state[ADDRESS_BOOK_REDUCER_ID]
-
-export const addressBookCollectionSelector = createSelector(addressBookMapSelector, (state) => state.get('addressBook'))
+export const addressBookMapSelector = (state: AppReduxState): AddressBookMap =>
+  state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
 
 export const getAddressBook = createSelector(
-  addressBookCollectionSelector,
+  addressBookMapSelector,
   safeParamAddressFromStateSelector,
-  (addressBook, safeAddress): AddressBookCollection => {
-    if (addressBook && safeAddress) {
-      return addressBook.get(safeAddress)
+  (addressBook, safeAddress) => {
+    let result = List([])
+    if (addressBook) {
+      result = addressBook.get(safeAddress)
     }
-
-    return List()
-  },
-)
-
-export const getAddressBookListSelector = createSelector(
-  addressBookCollectionSelector,
-  safeParamAddressFromStateSelector,
-  (addressBook, safeAddress): AddressBookCollection => {
-    if (addressBook && safeAddress) {
-      return List(addressBook.get(safeAddress))
-    }
-
-    return List()
+    return result
   },
 )
 
 export const getNameFromAddressBook = createSelector(
-  getAddressBookListSelector,
-  (_, address: string): string => address,
-  (addressBook, address: string): string => {
-    const adbkEntry = addressBook?.find((addressBookItem) => addressBookItem.address === address)
-
+  getAddressBook,
+  (_, address) => address,
+  (addressBook, address) => {
+    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address)
     if (adbkEntry) {
       return adbkEntry.name
     }
