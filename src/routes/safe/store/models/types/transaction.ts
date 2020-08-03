@@ -1,5 +1,6 @@
 import { List, Map, RecordOf } from 'immutable'
 import { Confirmation } from './confirmation'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { DataDecoded, DecodedParams, Transfer } from './transactions'
 
 export enum TransactionTypes {
@@ -91,7 +92,7 @@ export type TxArgs = {
   nonce: number
   operation: number
   refundReceiver: string
-  safeInstance: any
+  safeInstance: GnosisSafe
   safeTxGas: number
   sender?: string
   sigs: string

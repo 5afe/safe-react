@@ -11,10 +11,10 @@ import { styles } from './style'
 
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { AddressBookCollection } from 'src/logic/addressBook/store/reducer/addressBook'
+import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -46,21 +46,22 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const filterAddressBookWithContractAddresses = async (
-  addressBook: AddressBookCollection,
-): Promise<AddressBookCollection> => {
-  if (!addressBook) {
-    return List()
-  }
-
+  addressBook: List<AddressBookEntryRecord>,
+): Promise<List<AddressBookEntryRecord>> => {
   const abFlags = await Promise.all(
     addressBook.map(
-      async ({ address }: { address: string }): Promise<boolean> => {
+      async ({ address }: AddressBookEntryRecord): Promise<boolean> => {
         return (await mustBeEthereumContractAddress(address)) === undefined
       },
     ),
   )
 
   return addressBook.filter((_, index) => abFlags[index])
+}
+
+interface FilteredAddressBookEntry {
+  name: string
+  address: string
 }
 
 const AddressBookInput = ({
@@ -72,12 +73,12 @@ const AddressBookInput = ({
   setSelectedEntry,
 }: AddressBookProps) => {
   const classes = useStyles()
-  const addressBook = useSelector(getAddressBookListSelector)
+  const addressBook = useSelector(getAddressBook)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState<AddressBookCollection>(List())
+  const [adbkList, setADBKList] = useState<List<FilteredAddressBookEntry>>(List([]))
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
@@ -151,7 +152,7 @@ const AddressBookInput = ({
     <>
       <Autocomplete
         closeIcon={null}
-        disableOpenOnFocus
+        openOnFocus={false}
         filterOptions={(optionsArray, { inputValue }) =>
           optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
@@ -163,7 +164,7 @@ const AddressBookInput = ({
         freeSolo
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
-        onChange={(event, value) => {
+        onChange={(_, value: FilteredAddressBookEntry) => {
           let address = ''
           let name = ''
           if (value) {
@@ -225,7 +226,7 @@ const AddressBookInput = ({
         }}
         role="listbox"
         style={{ display: 'flex', flexGrow: 1 }}
-        value={{ address: inputAddValue }}
+        value={{ address: inputAddValue, name: '' }}
       />
     </>
   )

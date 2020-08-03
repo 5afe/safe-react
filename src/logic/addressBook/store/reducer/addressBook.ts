@@ -124,5 +124,7 @@ export default handleActions(
       })
     },
   },
-  Map(),
+  Map({
+    addressBook: Map({}),
+  }),
 )

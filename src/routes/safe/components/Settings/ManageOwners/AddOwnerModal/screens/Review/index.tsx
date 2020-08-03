@@ -40,9 +40,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
       const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
-      const txData = safeInstance.contract.methods
-        .addOwnerWithThreshold(values.ownerAddress, values.threshold)
-        .encodeABI()
+      const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
 
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
