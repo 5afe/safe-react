@@ -1,6 +1,7 @@
 import semverLessThan from 'semver/functions/lt'
 import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 import { getSafeLastVersion } from 'src/config'
 import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
@@ -21,10 +22,10 @@ export const safeNeedsUpdate = (currentVersion: string, latestVersion: string): 
   return latest ? semverLessThan(current, latest) : false
 }
 
-export const getCurrentSafeVersion = (gnosisSafeInstance: { VERSION: () => Promise<string> }): Promise<string> =>
-  gnosisSafeInstance.VERSION()
+export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<string> =>
+  gnosisSafeInstance.methods.VERSION().call()
 
-export const enabledFeatures = (version: string): Array<string> =>
+export const enabledFeatures = (version: string): string[] =>
   FEATURES.reduce((acc, feature) => {
     if (semverSatisfies(version, feature.validVersion)) {
       acc.push(feature.name)
@@ -39,7 +40,7 @@ interface SafeVersionInfo {
 }
 
 export const checkIfSafeNeedsUpdate = async (
-  gnosisSafeInstance: { VERSION: () => Promise<string> },
+  gnosisSafeInstance: GnosisSafe,
   lastSafeVersion: string,
 ): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {

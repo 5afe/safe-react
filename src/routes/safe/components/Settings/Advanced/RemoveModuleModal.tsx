@@ -56,7 +56,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
     try {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const [module, prevModule] = selectedModule
-      const txData = safeInstance.contract.methods.disableModule(prevModule, module).encodeABI()
+      const txData = safeInstance.methods.disableModule(prevModule, module).encodeABI()
 
       dispatch(
         createTransaction({
