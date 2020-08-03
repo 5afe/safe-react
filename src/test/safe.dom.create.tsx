@@ -131,9 +131,9 @@ describe('DOM > Feature > CREATE a Safe', () => {
     expect(address).not.toBe(undefined)
 
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
-    const storedOwners = await gnosisSafe.getOwners()
+    const storedOwners = await gnosisSafe.methods.getOwners().call()
     expect(storedOwners.length).toEqual(4)
-    const safeThreshold = await gnosisSafe.getThreshold()
+    const safeThreshold = await gnosisSafe.methods.getThreshold().call()
     expect(Number(safeThreshold)).toEqual(4)
   })
 })
