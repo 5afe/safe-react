@@ -6,7 +6,7 @@ import { CALL } from '.'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
