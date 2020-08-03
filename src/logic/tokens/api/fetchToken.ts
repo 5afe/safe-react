@@ -1,4 +1,4 @@
-import axios, { AxiosResponse } from 'axios'
+import axios from 'axios'
 
 import { getRelayUrl } from 'src/config/index'
 
@@ -11,16 +11,12 @@ type TokenData = {
   logoUri: string
 }
 
-interface TokenInfoResponseData extends AxiosResponse {
-  data: TokenData
-}
-
 const fetchToken = async (tokenAddress: string): Promise<TokenData | null> => {
   const apiUrl = getRelayUrl()
   const url = `${apiUrl}tokens/${tokenAddress}`
 
   try {
-    const result: TokenInfoResponseData = await axios.get(url)
+    const result = await axios.get<TokenData>(url)
     return result.data
   } catch (error) {
     console.error(`Fetching token data for address: ${tokenAddress} errored`, error)

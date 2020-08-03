@@ -1,8 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
 import OwnerComponent from './OwnerComponent'
-import { styles } from './style'
+
+export type ownersWithoutConfirmations = {
+  hasPendingAcceptActions: boolean
+  hasPendingRejectActions: boolean
+  owner: string
+}[]
 
 type OwnersListProps = {
   executor: string
@@ -10,7 +14,7 @@ type OwnersListProps = {
   onTxConfirm?: () => void
   onTxExecute?: () => void
   onTxReject?: () => void
-  ownersUnconfirmed: { hasPendingAcceptActions: boolean; hasPendingRejectActions: boolean; owner: string }[]
+  ownersUnconfirmed: ownersWithoutConfirmations
   ownersWhoConfirmed: string[]
   showConfirmBtn?: boolean
   showExecuteBtn?: boolean
@@ -20,19 +24,15 @@ type OwnersListProps = {
   userAddress: string
 }
 
-const useStyles = makeStyles(styles)
-
 const OwnersList = (props: OwnersListProps): React.ReactElement => {
-  const classes = useStyles()
   const { ownersUnconfirmed, ownersWhoConfirmed } = props
   return (
     <>
       {ownersWhoConfirmed.map((owner) => (
-        <OwnerComponent classes={classes} confirmed key={owner} owner={owner} {...props} />
+        <OwnerComponent confirmed key={owner} owner={owner} {...props} />
       ))}
       {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
         <OwnerComponent
-          classes={classes}
           key={owner}
           owner={owner}
           pendingAcceptAction={hasPendingAcceptActions}
