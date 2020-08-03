@@ -72,6 +72,7 @@ const fetchAllTransactions = async (
 }
 
 const etagsByPage = {}
+let totalTransactionsAmount = null
 export const loadAllTransactions = async (
   uriParams: ServiceUriParams,
 ): Promise<{
@@ -81,9 +82,10 @@ export const loadAllTransactions = async (
   const previousEtag = etagsByPage && etagsByPage[uriParams.offset]
   const { responseEtag, results, count } = await fetchAllTransactions(uriParams, previousEtag)
   etagsByPage[uriParams.offset] = responseEtag
+  totalTransactionsAmount = count || totalTransactionsAmount
 
   return {
     transactions: results,
-    totalTransactionsAmount: count,
+    totalTransactionsAmount,
   }
 }
