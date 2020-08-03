@@ -59,9 +59,9 @@ export const createSafe = (values, userAccount) => {
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
 
-  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddresses, confirmations, userAccount)
+  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations)
 
-  const promiEvent = deploymentTxMethod.send({ from: userAccount, value: 0 })
+  const promiEvent = deploymentTx.send({ from: userAccount, value: 0 })
 
   promiEvent
     .once('transactionHash', (txHash) => {
