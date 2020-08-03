@@ -35,6 +35,7 @@ const processTransaction = ({
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(null, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
@@ -213,8 +214,8 @@ const processTransaction = ({
 
       showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
 
-      const executeData = safeInstance.contract.methods.approveHash(txHash).encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.address, 0, executeData, from)
+      const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
+      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
       console.error(`Error executing the TX: ${errMsg}`)
     }
   }

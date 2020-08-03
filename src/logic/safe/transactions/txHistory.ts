@@ -1,10 +1,11 @@
 import axios from 'axios'
 
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { getTxServiceHost, getTxServiceUriFrom } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const calculateBodyFrom = async (
-  safeInstance,
+  safeInstance: GnosisSafe,
   to,
   valueInWei,
   data,
@@ -20,18 +21,9 @@ const calculateBodyFrom = async (
   origin,
   signature,
 ) => {
-  const contractTransactionHash = await safeInstance.getTransactionHash(
-    to,
-    valueInWei,
-    data,
-    operation,
-    safeTxGas,
-    baseGas,
-    gasPrice,
-    gasToken,
-    refundReceiver,
-    nonce,
-  )
+  const contractTransactionHash = await safeInstance.methods
+    .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
+    .call()
 
   return {
     to: checksumAddress(to),
@@ -52,7 +44,7 @@ const calculateBodyFrom = async (
   }
 }
 
-export const buildTxServiceUrl = (safeAddress) => {
+export const buildTxServiceUrl = (safeAddress: string): string => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
@@ -60,6 +52,11 @@ export const buildTxServiceUrl = (safeAddress) => {
 }
 
 const SUCCESS_STATUS = 201 // CREATED status
+
+interface SaveTxToHistoryArgs {
+  safeInstance: GnosisSafe
+  [key: string]: any
+}
 
 export const saveTxToHistory = async ({
   baseGas,
@@ -77,8 +74,8 @@ export const saveTxToHistory = async ({
   to,
   txHash,
   valueInWei,
-}: any) => {
-  const url = buildTxServiceUrl(safeInstance.address)
+}: SaveTxToHistoryArgs): Promise<void> => {
+  const url = buildTxServiceUrl(safeInstance.options.address)
   const body = await calculateBodyFrom(
     safeInstance,
     to,

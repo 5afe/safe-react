@@ -38,7 +38,7 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const ReviewCustomTx = ({ onClose, onPrev, tx }: Props) => {
+const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
