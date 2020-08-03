@@ -105,13 +105,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         selectFirstEnabledApp()
       }
 
-      // check if the current active app was disabled by the user
-      const currentApp = appList.find((app) => selectedAppId === app.id)
-      if (currentApp?.disabled) {
+      if (selectedApp?.disabled) {
         selectFirstEnabledApp()
       }
     }
-  }, [appList, initialAppSelected, selectedAppId])
+  }, [appList, initialAppSelected, selectedApp])
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
