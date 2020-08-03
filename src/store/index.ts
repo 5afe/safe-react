@@ -5,6 +5,7 @@ import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
 import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { AddressBookReducerMap } from 'src/logic/addressBook/store/reducer/types/addressBook.d'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -78,7 +79,7 @@ export type AppReduxState = CombinedState<{
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
   [CURRENCY_VALUES_KEY]: Map<string, CurrencyRateValueRecord>
   [COOKIES_REDUCER_ID]: Map<string, any>
-  [ADDRESS_BOOK_REDUCER_ID]: Map<string, any>
+  [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
   router: RouterState
 }>
