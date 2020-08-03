@@ -3,8 +3,10 @@ import { Map } from 'immutable'
 
 export type SafesMap = Map<string, SafeRecord>
 
+export type DefaultSafe = 'NOT_ASKED' | string | undefined
+
 export interface SafeReducerState {
-  defaultSafe: 'NOT_ASKED' | string | undefined
+  defaultSafe: DefaultSafe
   safes: SafesMap
   latestMasterContractVersion: string
 }
