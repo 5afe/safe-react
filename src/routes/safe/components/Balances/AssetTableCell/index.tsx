@@ -2,7 +2,7 @@ import * as React from 'react'
 
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { TokenSymbol } from '../../../../../components/TokenSymbol'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 
 type Props = {
   asset: {

@@ -16,7 +16,7 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import { lg, md } from 'src/theme/variables'
-import { Transaction } from '../../../../../store/models/types/transaction'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
