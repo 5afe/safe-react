@@ -6,13 +6,7 @@ import { LOAD_MORE_TRANSACTIONS } from '../actions/transactionsNew/pagination'
 export const TRANSACTIONS = 'allTransactions'
 
 export interface TransactionsState {
-  transactions: {
-    [safeAddress: string]: Transaction[]
-  }
-}
-
-const initialState: Readonly<TransactionsState> = {
-  transactions: {},
+  [safeAddress: string]: Transaction[]
 }
 
 export default handleActions(
@@ -28,16 +22,13 @@ export default handleActions(
       },
     ) => {
       const { safeAddress, transactions } = action.payload
-      const oldTxs = (state.transactions && state.transactions[safeAddress]) || []
+      const oldTxs = (state && state[safeAddress]) || []
 
       return {
         ...state,
-        transactions: {
-          ...state.transactions,
-          [safeAddress]: [...oldTxs, ...transactions],
-        },
+        [safeAddress]: [...oldTxs, ...transactions],
       }
     },
   },
-  initialState,
+  {},
 )

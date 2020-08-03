@@ -1,11 +1,12 @@
 import { TransactionsState, TRANSACTIONS } from '../reducer/allTransactions'
 import { createSelector } from 'reselect'
 import { safeParamAddressFromStateSelector } from './index'
+import { AppReduxState } from '../../../../store'
 
-export const getTransactionsStateSelector = (state: TransactionsState): TransactionsState => state[TRANSACTIONS]
+export const getTransactionsStateSelector = (state: AppReduxState): TransactionsState => state[TRANSACTIONS]
 
 export const allTransactionsSelector = createSelector(getTransactionsStateSelector, (transactionsState) => {
-  return transactionsState.transactions
+  return transactionsState
 })
 
 export const safeAllTransactionsSelector = createSelector(
