@@ -66,7 +66,7 @@ const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.Rea
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const ownerAddresses = await gnosisSafe.methods.getOwners().call()
-      const owners = getOwnersFrom(ownerNames, ownerAddresses.sort())
+      const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 
       await loadSafe(safeName, safeAddress, owners, addSafe)
 
