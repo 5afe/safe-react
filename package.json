@@ -40,7 +40,9 @@
     "start": "react-app-rewired start",
     "test": "NODE_ENV=test && react-app-rewired test --env=jsdom",
     "test:coverage": "yarn test --coverage --watchAll=false",
-    "coveralls": "cat ./coverage/lcov.info | coveralls"
+    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "storybook": "start-storybook -p 9009 -s public",
+    "build-storybook": "build-storybook -s public"
   },
   "husky": {
     "hooks": {
@@ -227,6 +229,11 @@
     "web3-utils": "^1.2.11"
   },
   "devDependencies": {
+    "@storybook/addon-actions": "^5.3.19",
+    "@storybook/addon-links": "^5.3.19",
+    "@storybook/addons": "^5.3.19",
+    "@storybook/preset-create-react-app": "^3.1.4",
+    "@storybook/react": "^5.3.19",
     "@testing-library/jest-dom": "5.11.2",
     "@testing-library/react": "10.4.7",
     "@testing-library/user-event": "12.0.17",
@@ -262,6 +269,7 @@
     "node-sass": "^4.14.1",
     "prettier": "2.0.5",
     "react-app-rewired": "^2.1.6",
+    "react-docgen-typescript-loader": "^3.7.2",
     "truffle": "5.1.36",
     "typechain": "^2.0.0",
     "typescript": "3.9.7",
