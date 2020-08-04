@@ -3,8 +3,12 @@ import { handleActions } from 'redux-actions'
 
 import { ADD_OR_UPDATE_CANCELLATION_TRANSACTIONS } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { REMOVE_CANCELLATION_TRANSACTION } from 'src/routes/safe/store/actions/transactions/removeCancellationTransaction'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 
 export const CANCELLATION_TRANSACTIONS_REDUCER_ID = 'cancellationTransactions'
+
+export type CancellationTransactions = Map<string, Transaction>
+export type CancellationTxState = Map<string, CancellationTransactions>
 
 export default handleActions(
   {

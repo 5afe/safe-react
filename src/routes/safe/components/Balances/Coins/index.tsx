@@ -25,6 +25,7 @@ import {
   BALANCE_TABLE_VALUE_ID,
   generateColumns,
   getBalanceData,
+  BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import { Skeleton } from '@material-ui/lab'
@@ -59,7 +60,7 @@ const Coins = (props: Props): React.ReactElement => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
-  const [filteredData, setFilteredData] = React.useState<BalanceDataRow>(List())
+  const [filteredData, setFilteredData] = React.useState<List<BalanceData>>(List())
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))

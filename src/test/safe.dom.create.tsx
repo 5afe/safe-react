@@ -31,7 +31,8 @@ afterAll(() => {
 })
 
 const renderOpenSafeForm = async (localStore) => {
-  const provider = await getProviderInfo(window.web3.currentProvider)
+  const web3 = getWeb3()
+  const provider = await getProviderInfo(web3)
   const walletRecord = makeProvider(provider)
   localStore.dispatch(addProvider(walletRecord))
 
@@ -130,9 +131,9 @@ describe('DOM > Feature > CREATE a Safe', () => {
     expect(address).not.toBe(undefined)
 
     const gnosisSafe = await getGnosisSafeInstanceAt(address)
-    const storedOwners = await gnosisSafe.getOwners()
+    const storedOwners = await gnosisSafe.methods.getOwners().call()
     expect(storedOwners.length).toEqual(4)
-    const safeThreshold = await gnosisSafe.getThreshold()
+    const safeThreshold = await gnosisSafe.methods.getThreshold().call()
     expect(Number(safeThreshold)).toEqual(4)
   })
 })
