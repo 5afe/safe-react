@@ -45,6 +45,8 @@ const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
+type AppsProps = {}
+
 const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
