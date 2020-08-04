@@ -48,7 +48,6 @@ const operations = {
 const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
-  const [initialAppSelected, setInitialAppSelected] = useState<boolean>(false)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
   const iframeRef = useRef<HTMLIFrameElement>()
@@ -80,23 +79,15 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
       const firstEnabledApp = appList.find((a) => !a.disabled)
       if (firstEnabledApp) {
         setSelectedAppId(firstEnabledApp.id)
-        setInitialAppSelected(true)
       }
     }
 
-    if (appList.length) {
-      // select the app for the first time once the list is loaded
-      if (!initialAppSelected) {
-        selectFirstEnabledApp()
-      }
-
-      // check if the current active app was disabled by the user
-      const currentApp = appList.find((app) => selectedAppId === app.id)
-      if (currentApp?.disabled) {
-        selectFirstEnabledApp()
-      }
+    const initialSelect = appList.length && !selectedAppId
+    const currentAppWasDisabled = selectedApp?.disabled
+    if (initialSelect || currentAppWasDisabled) {
+      selectFirstEnabledApp()
     }
-  }, [appList, initialAppSelected, selectedAppId])
+  }, [appList, selectedApp, selectedAppId])
 
   const sendMessageToIframe = useCallback(
     (messageId, data) => {
