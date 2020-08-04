@@ -13,3 +13,5 @@ export const makeAddressBookEntry = Record<AddressBookEntryProps>({
   name: '',
   isOwner: false,
 })
+
+export type AddressBookEntry = RecordOf<AddressBookEntryProps>

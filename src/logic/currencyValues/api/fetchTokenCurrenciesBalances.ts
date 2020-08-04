@@ -1,9 +1,9 @@
 import axios, { AxiosResponse } from 'axios'
 
 import { getTxServiceHost } from 'src/config'
-import { TokenProps } from '../../tokens/store/model/token'
+import { TokenProps } from 'src/logic/tokens/store/model/token'
 
-type BalanceEndpoint = {
+export type BalanceEndpoint = {
   balance: string
   balanceUsd: string
   tokenAddress?: string
