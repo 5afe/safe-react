@@ -48,29 +48,23 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
-const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const methodName = data?.method ? ` (${data.method})` : ''
+const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
+  <TxInfo>
+    <TxDetailsMethodName size="lg">
+      <strong>{data.method}</strong>
+    </TxDetailsMethodName>
 
-  return (
-    <>
-      <TxInfo>
-        <TxDetailsMethodName size="lg">
-          <strong>{data.method}</strong>
-        </TxDetailsMethodName>
-        {data?.parameters.map((param, index) => (
-          <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
-            <InlineText size="lg">
-              <strong>
-                {param.name}({param.type}):
-              </strong>
-            </InlineText>
-            <Value method={methodName} type={param.type} value={param.value} />
-          </TxDetailsMethodParam>
-        ))}
-      </TxInfo>
-    </>
-  )
-}
+    {data.parameters.map((param, index) => (
+      <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
+        <InlineText size="lg" strong>
+          {param.name}({param.type}):
+        </InlineText>
+
+        <Value method={data.method} type={param.type} value={param.value} />
+      </TxDetailsMethodParam>
+    ))}
+  </TxInfo>
+)
 
 const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
