@@ -62,7 +62,6 @@ const operations = {
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
-  const [initialAppSelected, setInitialAppSelected] = useState<boolean>(false)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
@@ -95,21 +94,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       const firstEnabledApp = appList.find((a) => !a.disabled)
       if (firstEnabledApp) {
         setSelectedAppId(firstEnabledApp.id)
-        setInitialAppSelected(true)
       }
     }
 
-    if (appList.length) {
-      // select the app for the first time once the list is loaded
-      if (!initialAppSelected) {
-        selectFirstEnabledApp()
-      }
-
-      if (selectedApp?.disabled) {
-        selectFirstEnabledApp()
-      }
+    const initialSelect = appList.length && !selectedAppId
+    const currentAppWasDisabled = selectedApp?.disabled
+    if (initialSelect || currentAppWasDisabled) {
+      selectFirstEnabledApp()
     }
-  }, [appList, initialAppSelected, selectedApp])
+  }, [appList, selectedApp, selectedAppId])
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
