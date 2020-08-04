@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
-import { AddressInfo, Text } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import NetworkLabel from '../NetworkLabel'
 import CircleDot from 'src/components/Header/components/CircleDot'
@@ -86,9 +86,9 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
         </Paragraph>
         <div className={classes.providerContainer}>
           {connected ? (
-            <AddressInfo
-              address={userAddress}
-              shortenAddress={4}
+            <EthHashInfo
+              hash={userAddress}
+              shortenHash={4}
               showIdenticon
               identiconSize="xs"
               textColor={addressColor}

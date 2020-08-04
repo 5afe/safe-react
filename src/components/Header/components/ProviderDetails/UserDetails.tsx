@@ -3,7 +3,7 @@ import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
 import { Identicon } from '@gnosis.pm/safe-react-components'
-import { AddressInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import CircleDot from 'src/components/Header/components/CircleDot'
 import Spacer from 'src/components/Spacer'
@@ -105,7 +105,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <AddressInfo address={userAddress} showCopyBtn showEtherscanBtn shortenAddress={4} network={network} />
+            <EthHashInfo hash={userAddress} showCopyBtn showEtherscanBtn shortenHash={4} network={network} />
           ) : (
             'Address not available'
           )}

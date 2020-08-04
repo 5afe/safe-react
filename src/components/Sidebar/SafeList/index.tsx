@@ -1,7 +1,7 @@
 import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
-import { AddressInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-components'
 import * as React from 'react'
 import styled from 'styled-components'
 
@@ -109,11 +109,11 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
               )}
 
               <AddressWrapper>
-                <AddressInfo
-                  address={safe.address}
+                <EthHashInfo
+                  hash={safe.address}
                   name={safe.name}
                   showIdenticon
-                  shortenAddress={4}
+                  shortenHash={4}
                   network={getNetwork()}
                 />
 

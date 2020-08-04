@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { AddressInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -67,9 +67,9 @@ const ExpandedTx = ({ cancelTx, tx }: Props): React.ReactElement => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <AddressInfo
-                    address={tx.executionTxHash}
-                    shortenAddress={4}
+                  <EthHashInfo
+                    hash={tx.executionTxHash}
+                    shortenHash={4}
                     showCopyBtn
                     showEtherscanBtn
                     network={getNetwork()}

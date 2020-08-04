@@ -1,6 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import { AddressInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getNetwork } from 'src/config'
 
 import { Transaction } from 'src/routes/safe/store/models/types/transaction'
@@ -46,7 +46,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement => {
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Creator:</Bold>
         {tx.creator ? (
-          <AddressInfo address={tx.creator} shortenAddress={4} showCopyBtn showEtherscanBtn network={getNetwork()} />
+          <EthHashInfo hash={tx.creator} shortenHash={4} showCopyBtn showEtherscanBtn network={getNetwork()} />
         ) : (
           'n/a'
         )}
@@ -54,13 +54,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement => {
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Factory:</Bold>
         {tx.factoryAddress ? (
-          <AddressInfo
-            address={tx.factoryAddress}
-            shortenAddress={4}
-            showCopyBtn
-            showEtherscanBtn
-            network={getNetwork()}
-          />
+          <EthHashInfo hash={tx.factoryAddress} shortenHash={4} showCopyBtn showEtherscanBtn network={getNetwork()} />
         ) : (
           'n/a'
         )}
@@ -68,7 +62,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement => {
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Mastercopy:</Bold>
         {tx.masterCopy ? (
-          <AddressInfo address={tx.masterCopy} shortenAddress={4} showCopyBtn showEtherscanBtn network={getNetwork()} />
+          <EthHashInfo hash={tx.masterCopy} shortenHash={4} showCopyBtn showEtherscanBtn network={getNetwork()} />
         ) : (
           'n/a'
         )}

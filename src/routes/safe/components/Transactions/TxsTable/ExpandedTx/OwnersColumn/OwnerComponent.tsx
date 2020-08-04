@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { AddressInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getNetwork } from 'src/config'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
@@ -152,10 +152,10 @@ const OwnerComponent = ({
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
-      <AddressInfo
-        address={owner}
+      <EthHashInfo
+        hash={owner}
         name={nameInAdbk}
-        shortenAddress={4}
+        shortenHash={4}
         showIdenticon
         showCopyBtn
         showEtherscanBtn
