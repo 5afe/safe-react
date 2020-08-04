@@ -56,7 +56,7 @@ export const onboard = Onboard({
   ],
 })
 
-export const onboardUser = async () => {
+export const onboardUser = async (): Promise<boolean> => {
   // before calling walletSelect you want to check if web3 has been instantiated
   // which indicates that a wallet has already been selected
   // and web3 has been instantiated with that provider
@@ -65,7 +65,7 @@ export const onboardUser = async () => {
   return walletSelected && onboard.walletCheck()
 }
 
-const ConnectButton = (props) => (
+const ConnectButton = (props): React.ReactElement => (
   <Button
     color="primary"
     minWidth={140}
