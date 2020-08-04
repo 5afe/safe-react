@@ -13,6 +13,8 @@ jobs:
         if: (github.event.comment.body == 'recheckcla' || github.event.comment.body == 'I have read the CLA Document and I hereby sign the CLA') || github.event_name == 'pull_request'
         # Alpha Release
         uses: cla-assistant/github-action@v1.4.2-alpha
+        # GitHub token, automatically provided to the action
+        # (No need to define this secret in the repo settings)
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
