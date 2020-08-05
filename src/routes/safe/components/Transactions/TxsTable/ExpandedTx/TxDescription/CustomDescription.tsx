@@ -50,8 +50,8 @@ const TxInfo = styled.div`
 
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
-    <TxDetailsMethodName size="lg">
-      <strong>{data.method}</strong>
+    <TxDetailsMethodName size="lg" strong>
+      {data.method}
     </TxDetailsMethodName>
 
     {data.parameters.map((param, index) => (
