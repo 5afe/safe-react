@@ -1,5 +1,5 @@
 import React from 'react'
-import { setImageToPlaceholder } from '../../routes/safe/components/Balances/utils'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Img from '../layout/Img'
 import { useToken } from 'src/routes/safe/container/hooks/useToken'
 
