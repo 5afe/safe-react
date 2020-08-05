@@ -16,7 +16,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 
-const Root = () => (
+const Root = (): React.ReactElement => (
   <ThemeProvider theme={styledTheme}>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
