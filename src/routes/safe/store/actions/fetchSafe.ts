@@ -109,9 +109,9 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   const localNonce = localSafe ? localSafe.nonce : undefined
 
   dispatch(
-    addSafeModules({
+    updateSafe({
       safeAddress,
-      modulesAddresses: buildModulesLinkedList(modules?.array, modules?.next),
+      modules: buildModulesLinkedList(modules?.array, modules?.next),
     }),
   )
 
