@@ -47,5 +47,5 @@ jobs:
       - run: |
           mkdir .yarncache
           yarn install --frozen-lockfile --cache-folder ./.yarncache
-          rm -rf .yarncache
+          rm -r .yarncache
           yarn cache clean
