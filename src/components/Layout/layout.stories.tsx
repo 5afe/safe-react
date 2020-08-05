@@ -3,11 +3,11 @@ import React from 'react'
 import Layout from './Layout'
 
 export default {
-  title: 'Data Display/Layout',
+  title: 'Layout',
   component: Layout,
   parameters: {
     componentSubtitle: 'It provides a custom layout used in Safe Multisig',
   },
 }
 
-export const SimpleLayout = (): React.ReactElement => <Layout />
+export const Base = (): React.ReactElement => <Layout />
