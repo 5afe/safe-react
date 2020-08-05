@@ -6,9 +6,11 @@ import React from 'react'
 
 import TxType from './TxType'
 
+import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { formatAmount, humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import { Transaction, TransactionStatus } from '../../../store/models/types/transaction'
+import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { CancellationTransactions } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { getTokenInfos } from '../../../../../logic/tokens/store/actions/fetchTokens'
 
 export const TX_TABLE_ID = 'id'
@@ -24,8 +26,17 @@ export const formatDate = (date: string): string => format(parseISO(date), 'MMM 
 
 const NOT_AVAILABLE = 'n/a'
 
-const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, formatted = false) => {
-  const nonFormattedValue = humanReadableTokenAmount(value, decimals)
+interface AmountData {
+  decimals?: number | string
+  symbol?: string
+  value: string
+}
+
+const getAmountWithSymbol = (
+  { decimals = 0, symbol = NOT_AVAILABLE, value }: AmountData,
+  formatted = false,
+): string => {
+  const nonFormattedValue = humanReadableTokenAmount(value, decimals as number)
   const finalValue = formatted ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
@@ -68,23 +79,21 @@ type IncomingTxTableData = {
   id?: number
   type: React.ReactElement
   date: string
-  dateOrder: number
+  dateOrder?: number
   amount: string
   status?: TransactionStatus
-  tx: Transaction
+  tx?: Transaction
 }
 
-const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => {
-  return {
-    [TX_TABLE_ID]: tx.blockNumber,
-    [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
-    [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
-    dateOrder: getTime(parseISO(tx.executionDate)),
-    [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
-    [TX_TABLE_STATUS_ID]: tx.status,
-    [TX_TABLE_RAW_TX_ID]: tx,
-  }
-}
+const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => ({
+  [TX_TABLE_ID]: tx.blockNumber,
+  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
+  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_RAW_TX_ID]: tx,
+})
 
 type TransactionTableData = {
   id?: number
@@ -114,14 +123,14 @@ const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): 
 
 export const getTxTableData = async (
   transactions: List<Transaction>,
-  cancelTxs: List<Transaction>,
+  cancelTxs: CancellationTransactions,
 ): Promise<List<IncomingTxTableData | TransactionTableData>> => {
   const txsData = transactions.map(async (tx) => {
     if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
     }
 
-    return getTransactionTableData(tx, cancelTxs.get(Number(`${tx.nonce}`)))
+    return getTransactionTableData(tx, cancelTxs.get(`${tx.nonce}`))
   })
 
   return List(await Promise.all(txsData))
@@ -135,6 +144,7 @@ type TxTableColumn = {
   order: boolean
   width?: number
   static?: boolean
+  align?: 'center' | 'inherit' | 'left' | 'right' | 'justify'
 }
 
 export const generateColumns = (): List<TxTableColumn> => {

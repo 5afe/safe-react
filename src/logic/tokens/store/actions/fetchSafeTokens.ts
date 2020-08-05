@@ -1,22 +1,65 @@
 import { List, Map } from 'immutable'
-import { batch } from 'react-redux'
-
-import fetchTokenCurrenciesBalances from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
-import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
-import { AVAILABLE_CURRENCIES, makeBalanceCurrency } from 'src/logic/currencyValues/store/model/currencyValues'
-import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import addTokens from 'src/logic/tokens/store/actions/saveTokens'
-import { makeToken } from 'src/logic/tokens/store/model/token'
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import updateSafe from 'src/routes/safe/store/actions/updateSafe'
-import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
-import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
-import { AppReduxState } from 'src/store'
-import { humanReadableTokenAmount } from '../../utils/formatAmount'
+import { batch } from 'react-redux'
+import { Dispatch } from 'redux'
 
-const noFunc = () => {}
-const updateSafeValue = (address) => (valueToUpdate) => updateSafe({ address, ...valueToUpdate })
+import fetchTokenCurrenciesBalances, {
+  BalanceEndpoint,
+} from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
+import {
+  AVAILABLE_CURRENCIES,
+  CurrencyRateValueRecord,
+  makeBalanceCurrency,
+} from 'src/logic/currencyValues/store/model/currencyValues'
+import addTokens from 'src/logic/tokens/store/actions/saveTokens'
+import { makeToken, Token } from 'src/logic/tokens/store/model/token'
+import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
+import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import { AppReduxState } from 'src/store'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { SafeRecordProps } from 'src/routes/safe/store/models/safe'
+import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
+import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
+
+const noFunc = (): void => {}
+
+const updateSafeValue = (address: string) => (valueToUpdate: Partial<SafeRecordProps>) =>
+  updateSafe({ address, ...valueToUpdate })
+
+interface ExtractedData {
+  balances: Map<string, string>
+  currencyList: List<CurrencyRateValueRecord>
+  ethBalance: string
+  tokens: List<Token>
+}
+
+const extractDataFromResult = (currentTokens: TokenState) => (
+  acc: ExtractedData,
+  { balance, balanceUsd, token, tokenAddress }: BalanceEndpoint,
+): ExtractedData => {
+  if (tokenAddress === null) {
+    acc.ethBalance = humanReadableValue(balance, 18)
+  } else {
+    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token.decimals)) })
+
+    if (currentTokens && !currentTokens.get(tokenAddress)) {
+      acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
+    }
+  }
+
+  acc.currencyList = acc.currencyList.push(
+    makeBalanceCurrency({
+      currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
+      tokenAddress,
+      balanceInBaseCurrency: balanceUsd,
+      balanceInSelectedCurrency: balanceUsd,
+    }),
+  )
+
+  return acc
+}
 
 const fetchSafeTokens = (safeAddress: string) => async (
   dispatch: Dispatch,
@@ -38,29 +81,8 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const blacklistedTokens = safe.get('blacklistedTokens')
     const currencyValues = state[CURRENCY_VALUES_KEY]
 
-    const { balances, currencyList, ethBalance, tokens } = result.data.reduce(
-      (acc, { balance, balanceUsd, token, tokenAddress }) => {
-        if (tokenAddress === null) {
-          acc.ethBalance = humanReadableTokenAmount(balance, 18)
-        } else {
-          acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableTokenAmount(balance, token.decimals) })
-
-          if (currentTokens && !currentTokens.get(tokenAddress)) {
-            acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
-          }
-        }
-
-        acc.currencyList = acc.currencyList.push(
-          makeBalanceCurrency({
-            currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
-            tokenAddress,
-            balanceInBaseCurrency: balanceUsd,
-            balanceInSelectedCurrency: balanceUsd,
-          }),
-        )
-
-        return acc
-      },
+    const { balances, currencyList, ethBalance, tokens } = result.data.reduce<ExtractedData>(
+      extractDataFromResult(currentTokens),
       {
         balances: Map(),
         currencyList: List(),
@@ -70,7 +92,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
     )
 
     // need to persist those already active tokens, despite its balances
-    const activeTokens = alreadyActiveTokens.toSet().union(
+    const activeTokens = alreadyActiveTokens.union(
       // active tokens by balance, excluding those already blacklisted and the `null` address
       balances.keySeq().toSet().subtract(blacklistedTokens),
     )
@@ -79,11 +101,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const updateActiveTokens = activeTokens.equals(alreadyActiveTokens) ? noFunc : update({ activeTokens })
     const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
     const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
-    const storedCurrencyBalances =
-      currencyValues && currencyValues.get(safeAddress)
-        ? currencyValues.get(safeAddress).get('currencyBalances')
-        : undefined
-
+    const storedCurrencyBalances = currencyValues?.get(safeAddress)?.get('currencyBalances')
     const updateCurrencies = currencyList.equals(storedCurrencyBalances)
       ? noFunc
       : setCurrencyBalances(safeAddress, currencyList)

@@ -44,17 +44,19 @@ export type BalanceCurrencyRecord = {
   balanceInSelectedCurrency: string
 }
 
-export type CurrencyRateValue = {
-  currencyRate?: number
-  selectedCurrency?: AVAILABLE_CURRENCIES
-  currencyBalances?: List<BalanceCurrencyRecord>
-}
-
-export type CurrencyRateValueRecord = RecordOf<CurrencyRateValue>
-
-export const makeBalanceCurrency = Record({
+export const makeBalanceCurrency = Record<BalanceCurrencyRecord>({
   currencyName: '',
   tokenAddress: '',
   balanceInBaseCurrency: '',
   balanceInSelectedCurrency: '',
 })
+
+export type CurrencyRateValueRecord = RecordOf<BalanceCurrencyRecord>
+
+export type BalanceCurrencyList = List<CurrencyRateValueRecord>
+
+export interface CurrencyRateValue {
+  currencyRate?: number
+  selectedCurrency?: AVAILABLE_CURRENCIES
+  currencyBalances?: BalanceCurrencyList
+}

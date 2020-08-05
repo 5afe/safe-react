@@ -10,13 +10,15 @@ import Bold from 'src/components/layout/Bold'
 import LinkWithRef from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-import { SAFE_METHODS_NAMES, SafeMethods } from 'src/logic/contracts/methodIds'
+
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import { lg, md } from 'src/theme/variables'
 import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+
+import { SAFE_METHODS_NAMES, SafeMethods } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'
@@ -307,9 +309,7 @@ const TxDescription = ({ tx }: TxDescriptionProps): React.ReactElement => {
           module={module}
         />
       )}
-      {!upgradeTx && customTx && (
-        <CustomDescription amount={amount} classes={classes} data={data} recipient={recipient} />
-      )}
+      {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} storedTx={tx} />}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (
         <TransferDescription amount={amount} recipient={recipient} />

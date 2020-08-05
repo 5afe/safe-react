@@ -12,7 +12,7 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 export type SafeAppTx = {
   to: string
@@ -108,7 +108,7 @@ const confirmTransactions = (
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
                     <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{humanReadableTokenAmount(tx.value.toString(), 18)} ETH</Bold>
+                    <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>
                 <div className="section">

@@ -38,6 +38,7 @@ import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { Transaction, TransactionStatus, TxArgs } from 'src/routes/safe/store/models/types/transaction'
 import { AnyAction } from 'redux'
+import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch } from './types'
 
@@ -136,7 +137,7 @@ const createTransaction = ({
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = Number(await getNewTxNonce(txNonce, lastTx, safeInstance))
+  const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
   const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
@@ -153,14 +154,13 @@ const createTransaction = ({
   let pendingExecutionKey
 
   let txHash
-  let tx
   const txArgs: TxArgs = {
     safeInstance,
     to,
     valueInWei,
     data: txData,
     operation,
-    nonce,
+    nonce: Number.parseInt(nonce),
     safeTxGas,
     baseGas: 0,
     gasPrice: '0',
@@ -189,9 +189,8 @@ const createTransaction = ({
       }
     }
 
-    tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
-
-    const sendParams: any = { from, value: 0 }
+    const tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
+    const sendParams: PayableTx = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
@@ -282,7 +281,7 @@ const createTransaction = ({
       ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
       : notificationsQueue.afterExecutionError.message
 
-    console.error(err)
+    console.error(`Error creating the TX: `, err)
     closeSnackbar(beforeExecutionKey)
 
     if (pendingExecutionKey) {
@@ -291,11 +290,11 @@ const createTransaction = ({
 
     showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
 
-    const executeDataUsedSignatures = safeInstance.contract.methods
+    const executeDataUsedSignatures = safeInstance.methods
       .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
-    console.error(`Error creating the TX: ${errMsg}`)
+    const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+    console.error(`Error creating the TX - an attempt to get the error message: ${errMsg}`)
   }
 
   return txHash

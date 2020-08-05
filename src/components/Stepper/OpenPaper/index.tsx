@@ -1,11 +1,11 @@
 import Paper from '@material-ui/core/Paper'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import Block from 'src/components/layout/Block'
 import { lg } from 'src/theme/variables'
 
-const styles = () => ({
+const useStyles = makeStyles({
   root: {
     margin: '10px',
     maxWidth: '770px',
@@ -16,11 +16,20 @@ const styles = () => ({
   },
 })
 
-const OpenPaper = ({ children, classes, controls, padding = true }) => (
-  <Paper className={classes.root} elevation={1}>
-    <Block className={padding ? classes.padding : ''}>{children}</Block>
-    {controls}
-  </Paper>
-)
+interface Props {
+  padding?: boolean
+  controls: React.ReactNode
+}
 
-export default withStyles(styles as any)(OpenPaper)
+const OpenPaper: React.FC<Props> = ({ children, controls, padding = true }) => {
+  const classes = useStyles()
+
+  return (
+    <Paper className={classes.root} elevation={1}>
+      <Block className={padding ? classes.padding : ''}>{children}</Block>
+      {controls}
+    </Paper>
+  )
+}
+
+export default OpenPaper

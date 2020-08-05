@@ -37,7 +37,7 @@ export const loadSafe = async (
   await addSafe(safeProps)
 }
 
-interface ILoad {
+interface LoadProps {
   addSafe: Dispatch<any>
   network: string
   provider?: string
@@ -50,7 +50,7 @@ export interface LoadFormValues {
   threshold: string
 }
 
-const Load: React.FC<ILoad> = ({ addSafe, network, provider, userAddress }) => {
+const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.ReactElement => {
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
     // TODO: review this check. It doesn't seems to be necessary at this point
@@ -65,8 +65,8 @@ const Load: React.FC<ILoad> = ({ addSafe, network, provider, userAddress }) => {
       const ownerNames = getNamesFrom(values)
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const ownerAddresses = await gnosisSafe.getOwners()
-      const owners = getOwnersFrom(ownerNames, ownerAddresses.sort())
+      const ownerAddresses = await gnosisSafe.methods.getOwners().call()
+      const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 
       await loadSafe(safeName, safeAddress, owners, addSafe)
 

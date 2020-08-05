@@ -27,7 +27,19 @@ const useStyles = makeStyles({
   },
 })
 
-const EtherscanBtn = ({ className = '', increaseZindex = false, type, value }) => {
+interface EtherscanBtnProps {
+  className?: string
+  increaseZindex?: boolean
+  type: 'tx' | 'address'
+  value: string
+}
+
+const EtherscanBtn = ({
+  className = '',
+  increaseZindex = false,
+  type,
+  value,
+}: EtherscanBtnProps): React.ReactElement => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
@@ -36,6 +48,7 @@ const EtherscanBtn = ({ className = '', increaseZindex = false, type, value }) =
       <a
         aria-label="Show details on Etherscan"
         className={cn(classes.container, className)}
+        onClick={(event) => event.stopPropagation()}
         href={getEtherScanLink(type, value)}
         rel="noopener noreferrer"
         target="_blank"
