@@ -71,21 +71,20 @@ const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: numbe
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
   return (
-    <>
-      <Collapse
-        collapseClassName={classes.collapse}
-        headerWrapperClassName={classes.collapseHeaderWrapper}
-        title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
-      >
-        <TxDetailsContent>
-          <TxInfo>
-            <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-            <OwnerAddressTableCell address={tx.to} showLinks />
-          </TxInfo>
-          {!!tx.data && <TxInfoDetails data={tx.data} />}
-        </TxDetailsContent>
-      </Collapse>
-    </>
+    <Collapse
+      collapseClassName={classes.collapse}
+      headerWrapperClassName={classes.collapseHeaderWrapper}
+      title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
+    >
+      <TxDetailsContent>
+        <TxInfo>
+          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+          <OwnerAddressTableCell address={tx.to} showLinks />
+        </TxInfo>
+
+        {!!tx.data && <TxInfoDetails data={tx.data} />}
+      </TxDetailsContent>
+    </Collapse>
   )
 }
 
@@ -139,10 +138,12 @@ const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.Reac
   return (
     <>
       <DividerLine withArrow={false} />
+
       <Block className={classes.txData} data-testid={TRANSACTION_DESC_ACTION_TEST_ID}>
         <Bold>Action</Bold>
         <TxInfoDetails data={dataDecoded} />
       </Block>
+
       <DividerLine withArrow={false} />
     </>
   )
@@ -169,7 +170,9 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           <EtherscanLink knownAddress={false} type="address" value={recipient} />
         )}
       </Block>
+
       {!!storedTx?.dataDecoded && <TxActionData dataDecoded={storedTx.dataDecoded} />}
+
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
         <TxData data={data} />
