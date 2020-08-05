@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Icon, IconText, Card, Text, Divider, Identicon, Button } from '@gnosis.pm/safe-react-components'
+import { IconText, Card, Divider } from '@gnosis.pm/safe-react-components'
 
 import NestedList from '../List'
+import WalletInfo from '../WalletInfo'
 
 const Grid = styled.div`
   height: 100%;
@@ -51,28 +52,6 @@ const Footer = styled.footer`
   margin: 24px 16px;
 `
 
-const WalletInfo = styled.div`
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-`
-
-const IdenticonContainer = styled.div`
-  margin: 8px;
-  display: flex;
-  span {
-    align-self: flex-end;
-  }
-`
-
-const IconContainer = styled.div`
-  margin: 8px;
-  span {
-    margin: 8px;
-  }
-`
-
 const StyledIconText = styled(IconText)`
   font-size: 0.68em;
   font-weight: 900;
@@ -92,25 +71,8 @@ const Layout = (): React.ReactElement => (
   <Grid>
     <Topbar>Gnosis Logo</Topbar>
     <Sidebar>
-      <WalletInfo>
-        <IdenticonContainer>
-          <Identicon address="thisIsAnExample" size="md" />
-          <Icon size="md" type="circleDropdown" />
-        </IdenticonContainer>
+      <WalletInfo address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B" safeName="SomeName" balance="$111,111" />
 
-        <Text size="xl">Safe Name</Text>
-        <Text size="sm">x058...DB78</Text>
-        <IconContainer>
-          <Icon size="sm" type="qrCode" />
-          <Icon size="sm" type="copy" />
-          <Icon size="sm" type="externalLink" />
-        </IconContainer>
-        <Text size="xl">$16.078,57</Text>
-        <Button size="md" iconType="transactionsInactive" color="primary" variant="contained">
-          New Transaction
-        </Button>
-        <Divider />
-      </WalletInfo>
       <NestedList />
       <HelpContainer>
         <Divider />
