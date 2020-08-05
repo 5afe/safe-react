@@ -11,7 +11,7 @@ import { formatAmount, humanReadableTokenAmount } from 'src/logic/tokens/utils/f
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
 import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 import { CancellationTransactions } from 'src/routes/safe/store/reducer/cancellationTransactions'
-import { getTokenInfos } from '../../../../../logic/tokens/store/actions/fetchTokens'
+import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
