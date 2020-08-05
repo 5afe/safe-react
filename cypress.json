@@ -1,0 +1,10 @@
+{
+    "baseUrl": "http://localhost:3000",
+    "video": false,
+    "viewportWidth": 1280,
+    "viewportHeight": 1024,
+    "numTestsKeptInMemory": 1,
+    "chromeWebSecurity": false,
+    "testFiles": "**/*.feature",
+    "projectId": "safe-react"
+}
