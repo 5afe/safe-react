@@ -4,8 +4,9 @@ import { Icon, IconText, Card, Text, Divider, Identicon, Button } from '@gnosis.
 
 import NestedList from '../List'
 
-const Container = styled.div`
+const Grid = styled.div`
   height: 100%;
+  overflow: auto;
   background-color: ${({ theme }) => theme.colors.background};
   display: grid;
   grid-template-columns: 200px 1fr;
@@ -13,15 +14,6 @@ const Container = styled.div`
   grid-template-areas:
     'topbar topbar'
     'sidebar body';
-
-  /* @media (max-width: 400px) {
-    grid-template-columns: 1fr;
-    grid-template-rows: 54px auto 1fr;
-    grid-template-areas:
-      'topbar'
-      'sidebar'
-      'body';
-  } */
 `
 
 const Topbar = styled.nav`
@@ -36,6 +28,8 @@ const Sidebar = styled.aside`
   background-color: ${({ theme }) => theme.colors.white};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
   grid-area: sidebar;
+  display: flex;
+  flex-direction: column;
 `
 
 const Body = styled.section`
@@ -64,10 +58,19 @@ const WalletInfo = styled.div`
   align-items: center;
 `
 
+const IdenticonContainer = styled.div`
+  margin: 8px;
+  display: flex;
+  span {
+    align-self: flex-end;
+  }
+`
+
 const IconContainer = styled.div`
-  justify-content: space-around;
-  align-items: center;
-  padding: 8px 0;
+  margin: 8px;
+  span {
+    margin: 8px;
+  }
 `
 
 const StyledIconText = styled(IconText)`
@@ -78,16 +81,22 @@ const StyledIconText = styled(IconText)`
   text-transform: uppercase;
   margin: 0 0 16px 0;
 `
+const HelpContainer = styled.div`
+  margin-top: auto;
+`
+const StyledIconTextHelp = styled(IconText)`
+  margin: 0 0 8px 16px;
+`
 
 const Layout = (): React.ReactElement => (
-  <Container>
+  <Grid>
     <Topbar>Gnosis Logo</Topbar>
     <Sidebar>
       <WalletInfo>
-        <IconContainer>
+        <IdenticonContainer>
           <Identicon address="thisIsAnExample" size="md" />
-        </IconContainer>
-        <Icon size="md" type="circleDropdown" />
+          <Icon size="md" type="circleDropdown" />
+        </IdenticonContainer>
 
         <Text size="xl">Safe Name</Text>
         <Text size="sm">x058...DB78</Text>
@@ -96,15 +105,17 @@ const Layout = (): React.ReactElement => (
           <Icon size="sm" type="copy" />
           <Icon size="sm" type="externalLink" />
         </IconContainer>
+        <Text size="xl">$16.078,57</Text>
         <Button size="md" iconType="transactionsInactive" color="primary" variant="contained">
           New Transaction
         </Button>
+        <Divider />
       </WalletInfo>
-      <Divider />
       <NestedList />
-      <Divider />
-      <Icon size="md" type="question" />
-      <Text size="sm">Help Center</Text>
+      <HelpContainer>
+        <Divider />
+        <StyledIconTextHelp iconSize="md" textSize="sm" iconType="question" text="Help Center" />
+      </HelpContainer>
     </Sidebar>
     <Body>
       <StyledIconText iconSize="sm" textSize="sm" color="primary" iconType="assets" text="Assets" />
@@ -113,7 +124,7 @@ const Layout = (): React.ReactElement => (
       </MainContent>
       <Footer>footer</Footer>
     </Body>
-  </Container>
+  </Grid>
 )
 
 export default Layout
