@@ -129,6 +129,7 @@ export default handleActions(
       })
     },
     [ADD_SAFE_MODULES]: (state: SafeReducerMap, action) => {
+      // This overwrites all the safe. Can cause concurrency issues
       const { modulesAddresses, safeAddress } = action.payload
       return state.setIn(['safes', safeAddress, 'modules'], modulesAddresses)
     },

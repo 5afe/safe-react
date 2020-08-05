@@ -15,7 +15,6 @@ import { makeOwner } from 'src/routes/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ModulePair, SafeOwner } from 'src/routes/safe/store/models/safe'
 import { Dispatch } from 'redux'
-import addSafeModules from './addSafeModules'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 
 const buildOwnersFrom = (
@@ -110,7 +109,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 
   dispatch(
     updateSafe({
-      safeAddress,
+      address: safeAddress,
       modules: buildModulesLinkedList(modules?.array, modules?.next),
     }),
   )
