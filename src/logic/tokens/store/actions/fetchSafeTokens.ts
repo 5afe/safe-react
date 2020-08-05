@@ -21,7 +21,13 @@ import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { SafeRecordProps } from 'src/routes/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import {
+  safeActiveTokensSelector,
+  safeBalancesSelector,
+  safeBlacklistedTokensSelector,
+  safeEthBalanceSelector,
+} from 'src/routes/safe/store/selectors'
+import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
 
 const noFunc = (): void => {}
 
@@ -75,11 +81,12 @@ const fetchSafeTokens = (safeAddress: string) => async (
     }
 
     const result = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
-    const currentEthBalance = safe.get('ethBalance')
-    const safeBalances = safe.get('balances')
-    const alreadyActiveTokens = safe.get('activeTokens')
-    const blacklistedTokens = safe.get('blacklistedTokens')
-    const currencyValues = state[CURRENCY_VALUES_KEY]
+
+    const currentEthBalance = safeEthBalanceSelector(state)
+    const safeBalances = safeBalancesSelector(state)
+    const alreadyActiveTokens = safeActiveTokensSelector(state)
+    const blacklistedTokens = safeBlacklistedTokensSelector(state)
+    const currencyValues = currencyValuesSelector(state)
 
     const { balances, currencyList, ethBalance, tokens } = result.data.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
