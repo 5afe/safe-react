@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
 
-import { DecodedMethods, decodeMethods } from 'src/logic/contracts/methodIds'
+import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -24,7 +24,7 @@ import {
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
@@ -35,6 +35,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
+import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -130,7 +131,7 @@ export const getRefundParams = async (
   return refundParams
 }
 
-export const getDecodedParams = (tx: TxServiceModel): DecodedMethods => {
+export const getDecodedParams = (tx: TxServiceModel): DecodedParams | null => {
   if (tx.dataDecoded) {
     return {
       [tx.dataDecoded.method]: tx.dataDecoded.parameters.reduce(
@@ -276,6 +277,7 @@ export const buildTx = async ({
     creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
+    dataDecoded: tx.dataDecoded,
     decimals: tokenDecimals,
     decodedParams,
     executionDate: tx.executionDate,
@@ -315,7 +317,7 @@ export type TxToMock = TxArgs & {
   value: string
 }
 
-export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promise<Transaction> => {
+export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
   const submissionDate = new Date().toISOString()
 
   const transactionStructure: TxServiceModel = {

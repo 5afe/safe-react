@@ -7,11 +7,11 @@ import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { store } from 'src/store'
-import { DataDecoded } from 'src/logic/contracts/methodIds'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
+import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 
 export type ConfirmationServiceModel = {
   confirmationType: string

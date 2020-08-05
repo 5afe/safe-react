@@ -106,7 +106,7 @@ Add additional notes about how to deploy this on a live system
 * [Truffle React Box](https://github.com/truffle-box/react-box) - The web framework used
 * [Ganache](https://github.com/trufflesuite/ganache-cli) - Fast Ethereum RPC client
 * [React](https://reactjs.org/) - A JS library for building user interfaces
-* [Material UI 1.X](https://material-ui-next.com/) - React components that implement Google's Material Design
+* [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
 * [Flow](https://flow.org/) - Static Type Checker
 

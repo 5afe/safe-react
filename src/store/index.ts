@@ -1,7 +1,7 @@
 import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
-import { applyMiddleware, combineReducers, compose, createStore, CombinedState } from 'redux'
+import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -15,7 +15,10 @@ import {
 } from 'src/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
 import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
-import currencyValues, { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import currencyValues, {
+  CURRENCY_VALUES_KEY,
+  CurrencyReducerMap,
+} from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
@@ -25,6 +28,7 @@ import notificationsMiddleware from 'src/logic/safe/store/middleware/notificatio
 import safeStorage from 'src/logic/safe/store/middleware/safeStorage'
 import cancellationTransactions, {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
+  CancellationTxState,
 } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
@@ -32,9 +36,8 @@ import incomingTransactions, {
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
+import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
-import { CurrencyRateValueRecord } from 'src/logic/currencyValues/store/model/currencyValues'
-import { SafeReducerMap } from '../logic/safe/store/reducer/types/safe'
 
 export const history = createHashHistory()
 
@@ -77,10 +80,10 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [TRANSACTIONS_REDUCER_ID]: Map<string, any>
-  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
-  [CURRENCY_VALUES_KEY]: Map<string, CurrencyRateValueRecord>
+  [CURRENCY_VALUES_KEY]: CurrencyReducerMap
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
@@ -90,4 +93,5 @@ export type AppReduxState = CombinedState<{
 
 export const store: any = createStore(reducers, finalCreateStore)
 
-export const aNewStore = (localState?: any) => createStore(reducers, localState, finalCreateStore)
+export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
+  createStore(reducers, localState, finalCreateStore)

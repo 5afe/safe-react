@@ -1,7 +1,7 @@
 import Tooltip from '@material-ui/core/Tooltip'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React, { ReactElement, useState } from 'react'
+import React, { useState } from 'react'
 
 import CopyIcon from './copy.svg'
 
@@ -27,13 +27,13 @@ const useStyles = makeStyles({
   },
 })
 
-type Props = {
+interface CopyBtnProps {
   className?: string
-  increaseZIndex?: boolean
   content: string
+  increaseZIndex?: boolean
 }
 
-const CopyBtn = ({ className = '', content, increaseZIndex = false }: Props): ReactElement => {
+const CopyBtn = ({ className = '', content, increaseZIndex = false }: CopyBtnProps): React.ReactElement => {
   const [clicked, setClicked] = useState(false)
   const classes = useStyles()
   const customClasses = increaseZIndex ? { popper: classes.increasedPopperZindex } : {}
@@ -57,7 +57,8 @@ const CopyBtn = ({ className = '', content, increaseZIndex = false }: Props): Re
         <Img
           alt="Copy to clipboard"
           height={20}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
             copyToClipboard(content)
             setClicked(true)
           }}

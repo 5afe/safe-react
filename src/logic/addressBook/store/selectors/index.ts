@@ -15,7 +15,7 @@ export const getAddressBook = createSelector(
   (addressBook, safeAddress) => {
     let result = List([])
     if (addressBook) {
-      result = addressBook.get(safeAddress)
+      result = addressBook.get(safeAddress, List())
     }
     return result
   },

@@ -84,7 +84,7 @@ const TxsTable = ({ classes }) => {
                   onClick={() => handleTxExpand(row.tx.safeTxHash)}
                   tabIndex={-1}
                 >
-                  {autoColumns.map((column: any) => (
+                  {autoColumns.map((column) => (
                     <TableCell
                       align={column.align}
                       className={cn(classes.cell, ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}

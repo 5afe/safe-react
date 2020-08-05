@@ -1,4 +1,4 @@
-import { SafeRecord } from 'src/logic/safe/store/models/safe'
+import { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { Map } from 'immutable'
 
 export type SafesMap = Map<string, SafeRecord>
