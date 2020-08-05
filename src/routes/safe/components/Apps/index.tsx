@@ -1,14 +1,15 @@
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 import ManageApps from './components/ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
+import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -20,22 +21,25 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { isSameHref } from 'src/utils/url'
 
-const Centered = styled.div`
+const centerCSS = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 `
 
 const LoadingContainer = styled.div`
   width: 100%;
   height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  ${centerCSS};
 `
 
-const CenteredMT = styled(Centered)`
+const StyledCard = styled(Card)`
+  margin-bottom: 24px;
+  ${centerCSS};
+`
+
+const CenteredMT = styled.div`
+  ${centerCSS};
   margin-top: 5px;
 `
 
@@ -45,9 +49,12 @@ const operations = {
   SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
 }
 
-type AppsProps = {}
+type AppsProps = {
+  closeModal: () => void
+  openModal: (modal: OpenModalArgs) => void
+}
 
-const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
+const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
@@ -60,6 +67,7 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
@@ -223,11 +231,9 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
           </LCL.Content>
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
-          <Centered>
-            <Title size="xs">No Apps Enabled</Title>
-          </Centered>
-        </Card>
+        <StyledCard>
+          <Title size="xs">No Apps Enabled</Title>
+        </StyledCard>
       )}
       <CenteredMT>
         <IconText
@@ -242,4 +248,4 @@ const Apps = ({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) => {
   )
 }
 
-export default withSnackbar(Apps)
+export default Apps

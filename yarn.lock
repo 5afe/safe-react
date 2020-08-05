@@ -1337,9 +1337,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#7bb55de":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#fix-generic-modal-types":
   version "0.2.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#7bb55de2d8a2b6f192466043dc643387fb42dbf6"
+  resolved "https://github.com/gnosis/safe-react-components.git#940c1eb506f8a2eaa75190168824417a754faab9"
   dependencies:
     classnames "^2.2.6"
     polished "3.6.5"

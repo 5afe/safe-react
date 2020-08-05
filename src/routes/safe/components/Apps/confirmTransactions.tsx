@@ -1,6 +1,6 @@
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
-import React, { ReactElement } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 
 import AddressInfo from 'src/components/AddressInfo'
@@ -13,19 +13,12 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 
 export type SafeAppTx = {
   to: string
   value: string | number
   data: string
-}
-
-// TODO: This should be exported by safe-rect-components
-type GenericModalProps = {
-  title: ReactElement
-  body: ReactElement
-  footer: ReactElement
-  onClose: () => void
 }
 
 const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
@@ -78,7 +71,7 @@ const confirmTransactions = (
   nameApp: string,
   iconApp: string,
   txs: SafeAppTx[],
-  openModal: (modalInfo: GenericModalProps) => void,
+  openModal: (modalInfo: OpenModalArgs) => void,
   closeModal: () => void,
   onConfirm: () => void,
 ): any => {
