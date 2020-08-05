@@ -66,7 +66,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   </TxInfo>
 )
 
-const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
+const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
@@ -85,6 +85,18 @@ const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: numbe
         {!!tx.data && <TxInfoDetails data={tx.data} />}
       </TxDetailsContent>
     </Collapse>
+  )
+}
+
+const MultiSendCustomData = ({ txDetails }: { txDetails: MultiSendDetails[] }): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+      {txDetails.map((tx, index) => (
+        <MultiSendCustomDataAction key={`${tx.to}-row-${index}`} tx={tx} order={index} />
+      ))}
+    </Block>
   )
 }
 
@@ -189,14 +201,10 @@ interface CustomDescriptionProps {
 }
 
 const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
-  const classes = useStyles()
+  const txDetails = (storedTx.multiSendTx && extractMultiSendDecodedData(storedTx).txDetails) ?? undefined
 
-  return storedTx.multiSendTx ? (
-    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-      {extractMultiSendDecodedData(storedTx).txDetails?.map((tx, index) => (
-        <MultiSendCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
-      ))}
-    </Block>
+  return txDetails ? (
+    <MultiSendCustomData txDetails={txDetails} />
   ) : (
     <GenericCustomData amount={amount} data={data} recipient={recipient} storedTx={storedTx} />
   )
