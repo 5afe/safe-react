@@ -3,7 +3,7 @@ import React from 'react'
 import WalletInfo from './index'
 
 export default {
-  title: 'NavBar/WalletInfo',
+  title: 'Layout/WalletInfo',
   component: WalletInfo,
 }
 

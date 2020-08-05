@@ -6,7 +6,6 @@ import {
   Icon,
   EthHashInfo,
   Text,
-  Divider,
   Identicon,
   Button,
   CopyToClipboardBtn,
@@ -65,7 +64,6 @@ const WalletInfo = ({ address, safeName, balance }: Props): React.ReactElement =
       <Button size="md" iconType="transactionsInactive" color="primary" variant="contained">
         New Transaction
       </Button>
-      <Divider />
     </Container>
   )
 }

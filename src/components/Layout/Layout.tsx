@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { IconText, Card, Divider } from '@gnosis.pm/safe-react-components'
+import { IconText, Card } from '@gnosis.pm/safe-react-components'
 
-import NestedList from '../List'
-import WalletInfo from '../WalletInfo'
+import Sidebar from './Sidebar'
 
 const Grid = styled.div`
   height: 100%;
@@ -23,14 +22,6 @@ const Topbar = styled.nav`
   border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
   z-index: 999;
   grid-area: topbar;
-`
-const Sidebar = styled.aside`
-  height: 100%;
-  background-color: ${({ theme }) => theme.colors.white};
-  border-right: 2px solid ${({ theme }) => theme.colors.separator};
-  grid-area: sidebar;
-  display: flex;
-  flex-direction: column;
 `
 
 const Body = styled.section`
@@ -60,25 +51,11 @@ const StyledIconText = styled(IconText)`
   text-transform: uppercase;
   margin: 0 0 16px 0;
 `
-const HelpContainer = styled.div`
-  margin-top: auto;
-`
-const StyledIconTextHelp = styled(IconText)`
-  margin: 0 0 8px 16px;
-`
 
 const Layout = (): React.ReactElement => (
   <Grid>
     <Topbar>Gnosis Logo</Topbar>
-    <Sidebar>
-      <WalletInfo address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B" safeName="SomeName" balance="$111,111" />
-
-      <NestedList />
-      <HelpContainer>
-        <Divider />
-        <StyledIconTextHelp iconSize="md" textSize="sm" iconType="question" text="Help Center" />
-      </HelpContainer>
-    </Sidebar>
+    <Sidebar />
     <Body>
       <StyledIconText iconSize="sm" textSize="sm" color="primary" iconType="assets" text="Assets" />
       <MainContent>

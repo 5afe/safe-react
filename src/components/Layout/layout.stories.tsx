@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Layout from './index'
+import Layout from './Layout'
 
 export default {
   title: 'Data Display/Layout',
