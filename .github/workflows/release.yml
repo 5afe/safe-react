@@ -49,14 +49,14 @@ jobs:
           yarn install --frozen-lockfile --cache-folder ./.yarncache
           rm -r .yarncache
           yarn cache clean
-       - name: Remove and cache clean (Windows Only)
-         if: startsWith(matrix.os, 'windows')
-         shell: powershell
-         run: |
+      - name: Remove and cache clean (Windows Only)
+        if: startsWith(matrix.os, 'windows')
+        shell: powershell
+        run: |
           rm -r -Force .yarncache
           yarn cache clean
-       - name: Remove and cache clean
-         if: "!startsWith(matrix.os, 'windows')"
-         run: |
+      - name: Remove and cache clean
+        if: "!startsWith(matrix.os, 'windows')"
+        run: |
           rm -rf .yarncache
           yarn cache clean
