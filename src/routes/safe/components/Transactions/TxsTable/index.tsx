@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
@@ -37,7 +37,7 @@ const TxsTable = ({ classes }) => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchTxTableData = async () => {
       const txTableData = await getTxTableData(transactions, cancellationTransactions)
       const filteredData = txTableData

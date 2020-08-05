@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTxData } from './utils'
@@ -288,7 +288,7 @@ const TxDescription = ({ tx }: TxDescriptionProps): React.ReactElement => {
   const classes = useStyles()
   const [amount, setAmount] = useState(null)
 
-  useEffect(() => {
+  useMemo(() => {
     const fetchTxAmount = async () => {
       const amount = await getTxAmount(tx, false)
       setAmount(amount)
