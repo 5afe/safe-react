@@ -18,7 +18,7 @@ import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-import { ownersWithoutConfirmations } from './OwnersList'
+import { ownersWithoutConfirmations } from './index'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
