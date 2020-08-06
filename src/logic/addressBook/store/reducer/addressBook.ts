@@ -8,7 +8,7 @@ import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUp
 import { LOAD_ADDRESS_BOOK } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { REMOVE_ENTRY } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressesListFromAdbk } from 'src/logic/addressBook/utils'
+import { getAddressesListFromSafeAddressBook } from 'src/logic/addressBook/utils'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
@@ -55,7 +55,7 @@ export default handleActions(
             const safeAddressBook = state.getIn(['addressBook', safeAddress])
 
             if (safeAddressBook) {
-              const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
+              const adbkAddressList = getAddressesListFromSafeAddressBook(safeAddressBook)
               const found = adbkAddressList.includes(entry.address)
               if (!found) {
                 const updatedSafeAdbkList = safeAddressBook.push(entry)
