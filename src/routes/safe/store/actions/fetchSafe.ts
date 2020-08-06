@@ -48,7 +48,7 @@ const buildModulesLinkedList = (modules: string[] | undefined, nextModule: strin
   return null
 }
 
-export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?: any) => {
+export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion?: any) => {
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
@@ -104,23 +104,15 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
-  const localThreshold = localSafe ? localSafe.threshold : undefined
-  const localNonce = localSafe ? localSafe.nonce : undefined
 
   dispatch(
     updateSafe({
       address: safeAddress,
       modules: buildModulesLinkedList(modules?.array, modules?.next),
+      nonce: Number(remoteNonce),
+      threshold: Number(remoteThreshold),
     }),
   )
-
-  if (localNonce !== Number(remoteNonce)) {
-    dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))
-  }
-
-  if (localThreshold !== Number(remoteThreshold)) {
-    dispatch(updateSafe({ address: safeAddress, threshold: Number(remoteThreshold) }))
-  }
 
   // If the remote owners does not contain a local address, we remove that local owner
   if (localOwners) {
@@ -148,7 +140,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAdd) => async (dispatch, getState) => {
+export default (safeAdd: string) => async (dispatch, getState) => {
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
