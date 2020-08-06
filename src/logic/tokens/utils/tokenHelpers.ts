@@ -1,12 +1,6 @@
 import logo from 'src/assets/icons/icon_etherTokens.svg'
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import {
-  getStandardTokenContract,
-  getTokenInfos,
-  getERC721TokenContract,
-} from 'src/logic/tokens/store/actions/fetchTokens'
+import { getStandardTokenContract, getERC721TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
@@ -71,44 +65,12 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
   return tokenSymbol
 }
 
-export const getERC20DecimalsAndSymbol = async (
-  tokenAddress: string,
-): Promise<{ decimals: number; symbol: string }> => {
-  const tokenInfo = { decimals: 18, symbol: 'UNKNOWN' }
-  try {
-    const storedTokenInfo = await getTokenInfos(tokenAddress)
-
-    if (storedTokenInfo === null) {
-      const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
-        abi: ALTERNATIVE_TOKEN_ABI,
-        address: tokenAddress,
-        methods: ['decimals', 'symbol'],
-      })
-      return { decimals: Number(tokenDecimals), symbol: tokenSymbol }
-    }
-    return { decimals: storedTokenInfo.decimals as number, symbol: storedTokenInfo.symbol }
-  } catch (err) {
-    console.error(`Failed to retrieve token info for ERC20 token ${tokenAddress}`)
-  }
-
-  return tokenInfo
-}
-
 export const isSendERC20Transaction = async (
   tx: TxServiceModel,
   txCode: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
-  let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
-
-  if (isSendTokenTx) {
-    const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
-
-    // some contracts may implement the same methods as in ERC20 standard
-    // we may falsely treat them as tokens, so in case we get any errors when getting token info
-    // we fallback to displaying custom transaction
-    isSendTokenTx = decimals !== null && symbol !== null
-  }
+  const isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
 
   return isSendTokenTx
 }

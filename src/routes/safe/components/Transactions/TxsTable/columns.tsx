@@ -11,7 +11,6 @@ import { formatAmount, humanReadableTokenAmount } from 'src/logic/tokens/utils/f
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
 import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 import { CancellationTransactions } from 'src/routes/safe/store/reducer/cancellationTransactions'
-import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -53,8 +52,7 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
 }
 
 export const getTxAmount = async (tx: Transaction, formatted = true): Promise<string> => {
-  const { decimals = 18, decodedParams, isTokenTransfer, recipient } = tx
-  let { symbol } = tx
+  const { decimals = 18, decodedParams, isTokenTransfer } = tx
   const { value } = (isTokenTransfer && !!decodedParams && !!decodedParams.transfer
     ? decodedParams.transfer
     : tx) as Transaction
@@ -67,12 +65,7 @@ export const getTxAmount = async (tx: Transaction, formatted = true): Promise<st
     return NOT_AVAILABLE
   }
 
-  if (!symbol) {
-    const token = await getTokenInfos(recipient)
-    symbol = token.symbol
-  }
-
-  return getAmountWithSymbol({ decimals, symbol, value }, formatted)
+  return getAmountWithSymbol({ decimals, value }, formatted)
 }
 
 type IncomingTxTableData = {
@@ -82,7 +75,7 @@ type IncomingTxTableData = {
   dateOrder?: number
   amount: string
   status?: TransactionStatus
-  tx?: Transaction
+  tx: Transaction
 }
 
 const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => ({

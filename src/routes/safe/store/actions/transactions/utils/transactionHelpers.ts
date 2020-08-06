@@ -2,12 +2,7 @@ import { List, Map } from 'immutable'
 
 import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import {
-  getERC20DecimalsAndSymbol,
-  getERC721Symbol,
-  isSendERC20Transaction,
-  isSendERC721Transaction,
-} from 'src/logic/tokens/utils/tokenHelpers'
+import { isSendERC20Transaction, isSendERC721Transaction } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/routes/safe/store/models/confirmation'
@@ -251,23 +246,8 @@ export const buildTx = async ({
   const isUpgradeTx = isUpgradeTransaction(tx)
   const isCustomTx = await isCustomTransaction(tx, txCode, safeAddress, knownTokens)
   const isCancellationTx = isCancelTransaction(tx, safeAddress)
-  const refundParams = await getRefundParams(tx, getERC20DecimalsAndSymbol)
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
-
-  let tokenDecimals = 18
-  let tokenSymbol = 'ETH'
-  try {
-    if (isSendERC20Tx) {
-      const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
-      tokenDecimals = decimals
-      tokenSymbol = symbol
-    } else if (isSendERC721Tx) {
-      tokenSymbol = await getERC721Symbol(tx.to)
-    }
-  } catch (err) {
-    console.log(`Failed to retrieve token data from ${tx.to}`)
-  }
 
   const txToStore = makeTransaction({
     baseGas: tx.baseGas,
@@ -278,7 +258,6 @@ export const buildTx = async ({
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
     dataDecoded: tx.dataDecoded,
-    decimals: tokenDecimals,
     decodedParams,
     executionDate: tx.executionDate,
     executionTxHash: tx.transactionHash,
@@ -296,12 +275,10 @@ export const buildTx = async ({
     operation: tx.operation,
     origin: tx.origin,
     recipient: tx.to,
-    refundParams,
     refundReceiver: tx.refundReceiver || ZERO_ADDRESS,
     safeTxGas: tx.safeTxGas,
     safeTxHash: tx.safeTxHash,
     submissionDate: tx.submissionDate,
-    symbol: tokenSymbol,
     upgradeTx: isUpgradeTx,
     value: tx.value.toString(),
   })
