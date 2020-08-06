@@ -2,8 +2,8 @@ import { ButtonLink, ManageListModal } from '@gnosis.pm/safe-react-components'
 import React, { useState } from 'react'
 
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-import AddAppForm from './AddAppForm'
-import { SafeApp } from './types'
+import AddAppForm from '../AddAppForm'
+import { SafeApp } from '../types'
 
 const FORM_ID = 'add-apps-form'
 

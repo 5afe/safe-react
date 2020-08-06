@@ -8,7 +8,7 @@ import SettingsTxIcon from './assets/settings.svg'
 
 import CustomIconText from 'src/components/CustomIconText'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,

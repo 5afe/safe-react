@@ -9,11 +9,13 @@ export interface SafeReducerState {
   latestMasterContractVersion: string
 }
 
-interface SafeReducerStateSerialized extends SafeReducerState {
+interface SafeReducerStateJSON {
+  defaultSafe: 'NOT_ASKED' | string | undefined
   safes: Record<string, SafeRecordProps>
+  latestMasterContractVersion: string
 }
 
 export interface SafeReducerMap extends Map<string, any> {
-  toJS(): SafeReducerStateSerialized
+  toJS(): SafeReducerStateJSON
   get<K extends keyof SafeReducerState>(key: K): SafeReducerState[K]
 }
