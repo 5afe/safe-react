@@ -7,19 +7,15 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 import { useEffect, useState } from 'react'
 
-interface OwnerAddressTableCellProps {
-  address: string
+type OwnerAddressTableCellProps = {
+  address?: string
   knownAddress?: boolean
   showLinks: boolean
   userName?: string
 }
 
-const OwnerAddressTableCell = ({
-  address,
-  knownAddress,
-  showLinks,
-  userName,
-}: OwnerAddressTableCellProps): React.ReactElement => {
+const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
+  const { address, knownAddress, showLinks, userName } = props
   const [cut, setCut] = useState(undefined)
   const { width } = useWindowDimensions()
 
@@ -38,7 +34,7 @@ const OwnerAddressTableCell = ({
       <Identicon address={address} diameter={32} />
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
-          {userName}
+          {!userName || userName === 'UNKNOWN' ? null : userName}
           <EtherScanLink knownAddress={knownAddress} type="address" value={address} cut={cut} />
         </div>
       ) : (
