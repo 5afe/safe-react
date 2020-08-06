@@ -8,8 +8,11 @@ import React from 'react'
 import TxType from './TxType'
 
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
+import { TableColumn } from 'src/components/Table/types'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
+import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { CancellationTransactions } from 'src/routes/safe/store/reducer/cancellationTransactions'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -20,11 +23,20 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-export const formatDate = (date) => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
 const NOT_AVAILABLE = 'n/a'
 
-const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, formatted = false) => {
+interface AmountData {
+  decimals?: number | string
+  symbol?: string
+  value: number | string
+}
+
+const getAmountWithSymbol = (
+  { decimals = 0, symbol = NOT_AVAILABLE, value }: AmountData,
+  formatted = false,
+): string => {
   const nonFormattedValue = new BigNumber(value).times(`1e-${decimals}`).toFixed()
   const finalValue = formatted ? formatAmount(nonFormattedValue).toString() : nonFormattedValue
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
@@ -32,7 +44,7 @@ const getAmountWithSymbol = ({ decimals = 0, symbol = NOT_AVAILABLE, value }, fo
   return `${txAmount} ${symbol}`
 }
 
-export const getIncomingTxAmount = (tx, formatted = true) => {
+export const getIncomingTxAmount = (tx: Transaction, formatted = true): string => {
   // simple workaround to avoid displaying unexpected values for incoming NFT transfer
   if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
     return `1 ${tx.symbol}`
@@ -41,9 +53,9 @@ export const getIncomingTxAmount = (tx, formatted = true) => {
   return getAmountWithSymbol(tx, formatted)
 }
 
-export const getTxAmount = (tx, formatted = true) => {
+export const getTxAmount = (tx: Transaction, formatted = true): string => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-  const { value } = isTokenTransfer && !!decodedParams && !!decodedParams.transfer ? decodedParams.transfer : tx
+  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
 
   if (tx.isCollectibleTransfer) {
     return `1 ${tx.symbol}`
@@ -56,8 +68,19 @@ export const getTxAmount = (tx, formatted = true) => {
   return getAmountWithSymbol({ decimals, symbol, value }, formatted)
 }
 
-const getIncomingTxTableData = (tx) => ({
-  [TX_TABLE_ID]: tx.blockNumber,
+interface TableData {
+  amount: string
+  cancelTx?: Transaction
+  date: string
+  dateOrder?: number
+  id: string
+  status: string
+  tx?: Transaction
+  type: any
+}
+
+const getIncomingTxTableData = (tx: Transaction): TableData => ({
+  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
   [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
@@ -66,11 +89,11 @@ const getIncomingTxTableData = (tx) => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = (tx, cancelTx) => {
+const getTransactionTableData = (tx: Transaction, cancelTx: Transaction): TableData => {
   const txDate = tx.submissionDate
 
   return {
-    [TX_TABLE_ID]: tx.blockNumber,
+    [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
     [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
@@ -81,7 +104,10 @@ const getTransactionTableData = (tx, cancelTx) => {
   }
 }
 
-export const getTxTableData = (transactions, cancelTxs) => {
+export const getTxTableData = (
+  transactions: List<Transaction>,
+  cancelTxs: CancellationTransactions,
+): List<TableData> => {
   return transactions.map((tx) => {
     if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
@@ -91,7 +117,7 @@ export const getTxTableData = (transactions, cancelTxs) => {
   })
 }
 
-export const generateColumns = () => {
+export const generateColumns = (): List<TableColumn> => {
   const nonceColumn = {
     id: TX_TABLE_ID,
     disablePadding: false,
