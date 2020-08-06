@@ -1337,9 +1337,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#e163ab6":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#45c746a":
   version "0.2.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#e163ab6375ad384a39411104b6486c18a4238f27"
+  resolved "https://github.com/gnosis/safe-react-components.git#45c746a12661b9c38e839e76022b6a0a92285db7"
   dependencies:
     classnames "^2.2.6"
     polished "3.6.5"
@@ -18784,7 +18784,6 @@ websocket@^1.0.31:
   dependencies:
     debug "^2.2.0"
     es5-ext "^0.10.50"
-    gulp "^4.0.2"
     nan "^2.14.0"
     typedarray-to-buffer "^3.1.5"
     yaeti "^0.0.6"
