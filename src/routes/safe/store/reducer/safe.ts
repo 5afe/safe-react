@@ -15,7 +15,6 @@ import { makeOwner } from 'src/routes/safe/store/models/owner'
 import makeSafe from 'src/routes/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from './types/safe'
-import { ADD_SAFE_MODULES } from 'src/routes/safe/store/actions/addSafeModules'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -127,11 +126,6 @@ export default handleActions(
         const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
         return prevSafe.merge({ owners: updatedOwners })
       })
-    },
-    [ADD_SAFE_MODULES]: (state: SafeReducerMap, action) => {
-      // This overwrites all the safe. Can cause concurrency issues
-      const { modulesAddresses, safeAddress } = action.payload
-      return state.setIn(['safes', safeAddress, 'modules'], modulesAddresses)
     },
     [SET_DEFAULT_SAFE]: (state: SafeReducerMap, action) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state: SafeReducerMap, action) =>
