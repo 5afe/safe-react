@@ -132,7 +132,7 @@ const AddressBookTable = ({ classes }) => {
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"
-            size={addressBook.size}
+            size={addressBook?.size || 0}
           >
             {(sortedData) =>
               sortedData.map((row, index) => {

@@ -4,11 +4,22 @@ import EtherScanLink from 'src/components/EtherscanLink'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { useWindowDimensions } from '../../../../container/hooks/useWindowDimensions'
+import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 import { useEffect, useState } from 'react'
 
-const OwnerAddressTableCell = (props) => {
-  const { address, knownAddress, showLinks, userName } = props
+interface OwnerAddressTableCellProps {
+  address: string
+  knownAddress?: boolean
+  showLinks: boolean
+  userName?: string
+}
+
+const OwnerAddressTableCell = ({
+  address,
+  knownAddress,
+  showLinks,
+  userName,
+}: OwnerAddressTableCellProps): React.ReactElement => {
   const [cut, setCut] = useState(undefined)
   const { width } = useWindowDimensions()
 

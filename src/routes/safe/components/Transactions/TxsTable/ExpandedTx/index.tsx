@@ -8,9 +8,11 @@ import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
 import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
+import { IncomingTx } from './IncomingTx'
+import { CreationTx } from './CreationTx'
+import { OutgoingTx } from './OutgoingTx'
 import { styles } from './style'
 
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
 import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -21,21 +23,17 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
 import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-
 import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { IncomingTx } from './IncomingTx'
-import { CreationTx } from './CreationTx'
-import { OutgoingTx } from './OutgoingTx'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles as any)
 
-type Props = {
+interface ExpandedTxProps {
   cancelTx: Transaction
   tx: Transaction
 }
 
-const ExpandedTx = ({ cancelTx, tx }: Props): React.ReactElement => {
+const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector)
