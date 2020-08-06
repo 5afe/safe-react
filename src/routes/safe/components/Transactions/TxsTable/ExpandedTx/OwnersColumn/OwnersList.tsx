@@ -1,64 +1,47 @@
-import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
 
 import OwnerComponent from './OwnerComponent'
-import { styles } from './style'
 
-const OwnersList = ({
-  classes,
-  executor,
-  isCancelTx,
-  onTxConfirm,
-  onTxExecute,
-  onTxReject,
-  ownersUnconfirmed,
-  ownersWhoConfirmed,
-  showConfirmBtn,
-  showExecuteBtn,
-  showExecuteRejectBtn,
-  showRejectBtn,
-  thresholdReached,
-  userAddress,
-}: any) => (
-  <>
-    {ownersWhoConfirmed.map((owner) => (
-      <OwnerComponent
-        classes={classes}
-        confirmed
-        executor={executor}
-        isCancelTx={isCancelTx}
-        key={owner}
-        onTxExecute={onTxExecute}
-        onTxReject={onTxReject}
-        owner={owner}
-        showExecuteBtn={showExecuteBtn}
-        showExecuteRejectBtn={showExecuteRejectBtn}
-        showRejectBtn={showRejectBtn}
-        thresholdReached={thresholdReached}
-        userAddress={userAddress}
-      />
-    ))}
-    {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
-      <OwnerComponent
-        classes={classes}
-        executor={executor}
-        isCancelTx={isCancelTx}
-        key={owner}
-        onTxConfirm={onTxConfirm}
-        onTxExecute={onTxExecute}
-        onTxReject={onTxReject}
-        owner={owner}
-        pendingAcceptAction={hasPendingAcceptActions}
-        pendingRejectAction={hasPendingRejectActions}
-        showConfirmBtn={showConfirmBtn}
-        showExecuteBtn={showExecuteBtn}
-        showExecuteRejectBtn={showExecuteRejectBtn}
-        showRejectBtn={showRejectBtn}
-        thresholdReached={thresholdReached}
-        userAddress={userAddress}
-      />
-    ))}
-  </>
-)
+export type ownersWithoutConfirmations = {
+  hasPendingAcceptActions: boolean
+  hasPendingRejectActions: boolean
+  owner: string
+}[]
 
-export default withStyles(styles as any)(OwnersList)
+type OwnersListProps = {
+  executor: string
+  isCancelTx?: boolean
+  onTxConfirm?: () => void
+  onTxExecute?: () => void
+  onTxReject?: () => void
+  ownersUnconfirmed: ownersWithoutConfirmations
+  ownersWhoConfirmed: string[]
+  showConfirmBtn?: boolean
+  showExecuteBtn?: boolean
+  showExecuteRejectBtn?: boolean
+  showRejectBtn?: boolean
+  thresholdReached: boolean
+  userAddress: string
+}
+
+const OwnersList = (props: OwnersListProps): React.ReactElement => {
+  const { ownersUnconfirmed, ownersWhoConfirmed } = props
+  return (
+    <>
+      {ownersWhoConfirmed.map((owner) => (
+        <OwnerComponent confirmed key={owner} owner={owner} {...props} />
+      ))}
+      {ownersUnconfirmed.map(({ hasPendingAcceptActions, hasPendingRejectActions, owner }) => (
+        <OwnerComponent
+          key={owner}
+          owner={owner}
+          pendingAcceptAction={hasPendingAcceptActions}
+          pendingRejectAction={hasPendingRejectActions}
+          {...props}
+        />
+      ))}
+    </>
+  )
+}
+
+export default OwnersList
