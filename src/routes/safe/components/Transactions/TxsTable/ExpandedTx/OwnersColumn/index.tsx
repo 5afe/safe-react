@@ -8,7 +8,6 @@ import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
 import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
 import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
-import { styles } from './style'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -20,8 +19,9 @@ import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store
 import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 import { List } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
+import { styles } from './style'
 
-export type ownersWithoutConfirmations = {
+export type OwnersWithoutConfirmations = {
   hasPendingAcceptActions: boolean
   hasPendingRejectActions: boolean
   owner: string
@@ -45,7 +45,7 @@ function getPendingOwnersConfirmations(
   owners: List<{ name: string; address: string }>,
   tx: Transaction,
   userAddress: string,
-): [ownersWithoutConfirmations, boolean] {
+): [OwnersWithoutConfirmations, boolean] {
   const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 

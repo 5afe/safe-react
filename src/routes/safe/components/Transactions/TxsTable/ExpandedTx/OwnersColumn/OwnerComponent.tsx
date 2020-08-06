@@ -18,7 +18,7 @@ import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
-import { ownersWithoutConfirmations } from './index'
+import { OwnersWithoutConfirmations } from './index'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -31,7 +31,7 @@ type OwnerComponentProps = {
   onTxConfirm?: () => void
   onTxExecute?: () => void
   onTxReject?: () => void
-  ownersUnconfirmed: ownersWithoutConfirmations
+  ownersUnconfirmed: OwnersWithoutConfirmations
   ownersWhoConfirmed: string[]
   showConfirmBtn?: boolean
   showExecuteBtn?: boolean

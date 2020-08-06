@@ -1,5 +1,5 @@
 import { boldFont, border, error, primary, secondary, secondaryText, sm, warning } from 'src/theme/variables'
-import { createStyles } from '@material-ui/core'
+import { createStyles } from '@material-ui/core/styles'
 
 export const styles = createStyles({
   ownersList: {
