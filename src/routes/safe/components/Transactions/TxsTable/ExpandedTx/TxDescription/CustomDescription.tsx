@@ -22,9 +22,12 @@ import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
+import DividerLine from 'src/components/DividerLine'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
+export const TRANSACTION_DESC_ACTION_TEST_ID = 'tx-description-action-data'
 
 const useStyles = makeStyles(styles)
 
@@ -45,42 +48,55 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
-const MultiSendCustomData = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
+const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
+  <TxInfo>
+    <TxDetailsMethodName size="lg" strong>
+      {data.method}
+    </TxDetailsMethodName>
+
+    {data.parameters.map((param, index) => (
+      <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
+        <InlineText size="lg" strong>
+          {param.name}({param.type}):
+        </InlineText>
+
+        <Value method={data.method} type={param.type} value={param.value} />
+      </TxDetailsMethodParam>
+    ))}
+  </TxInfo>
+)
+
+const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
 
   return (
-    <>
-      <Collapse
-        collapseClassName={classes.collapse}
-        headerWrapperClassName={classes.collapseHeaderWrapper}
-        title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
-      >
-        <TxDetailsContent>
-          <TxInfo>
-            <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-            <OwnerAddressTableCell address={tx.to} showLinks />
-          </TxInfo>
-          {tx.data && (
-            <TxInfo>
-              <TxDetailsMethodName size="lg">
-                <strong>{tx.data.method}</strong>
-              </TxDetailsMethodName>
-              {tx.data?.parameters.map((param, index) => (
-                <TxDetailsMethodParam key={`${tx.operation}_${tx.to}_${tx.data.method}_param-${index}`}>
-                  <InlineText size="lg">
-                    <strong>
-                      {param.name}({param.type}):
-                    </strong>
-                  </InlineText>
-                  <Value method={methodName} type={param.type} value={param.value} />
-                </TxDetailsMethodParam>
-              ))}
-            </TxInfo>
-          )}
-        </TxDetailsContent>
-      </Collapse>
-    </>
+    <Collapse
+      collapseClassName={classes.collapse}
+      headerWrapperClassName={classes.collapseHeaderWrapper}
+      title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
+    >
+      <TxDetailsContent>
+        <TxInfo>
+          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+          <OwnerAddressTableCell address={tx.to} showLinks />
+        </TxInfo>
+
+        {!!tx.data && <TxInfoDetails data={tx.data} />}
+      </TxDetailsContent>
+    </Collapse>
+  )
+}
+
+const MultiSendCustomData = ({ txDetails }: { txDetails: MultiSendDetails[] }): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+      {txDetails.map((tx, index) => (
+        <MultiSendCustomDataAction key={`${tx.to}-row-${index}`} tx={tx} order={index} />
+      ))}
+    </Block>
   )
 }
 
@@ -128,13 +144,31 @@ const TxData = ({ data }: { data: string }): React.ReactElement => {
   )
 }
 
+const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <>
+      <DividerLine withArrow={false} />
+
+      <Block className={classes.txData} data-testid={TRANSACTION_DESC_ACTION_TEST_ID}>
+        <Bold>Action</Bold>
+        <TxInfoDetails data={dataDecoded} />
+      </Block>
+
+      <DividerLine withArrow={false} />
+    </>
+  )
+}
+
 interface GenericCustomDataProps {
   amount?: string
   data: string
   recipient: string
+  storedTx: Transaction
 }
 
-const GenericCustomData = ({ amount = '0', data, recipient }: GenericCustomDataProps): React.ReactElement => {
+const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
 
@@ -148,6 +182,9 @@ const GenericCustomData = ({ amount = '0', data, recipient }: GenericCustomDataP
           <EtherscanLink knownAddress={false} type="address" value={recipient} />
         )}
       </Block>
+
+      {!!storedTx?.dataDecoded && <TxActionData dataDecoded={storedTx.dataDecoded} />}
+
       <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
         <Bold>Data (hex encoded):</Bold>
         <TxData data={data} />
@@ -164,16 +201,12 @@ interface CustomDescriptionProps {
 }
 
 const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
-  const classes = useStyles()
+  const txDetails = (storedTx.multiSendTx && extractMultiSendDecodedData(storedTx).txDetails) ?? undefined
 
-  return storedTx.multiSendTx ? (
-    <Block className={classes.multiSendTxData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-      {extractMultiSendDecodedData(storedTx).txDetails?.map((tx, index) => (
-        <MultiSendCustomData key={`${tx.to}-row-${index}`} tx={tx} order={index} />
-      ))}
-    </Block>
+  return txDetails ? (
+    <MultiSendCustomData txDetails={txDetails} />
   ) : (
-    <GenericCustomData amount={amount} data={data} recipient={recipient} />
+    <GenericCustomData amount={amount} data={data} recipient={recipient} storedTx={storedTx} />
   )
 }
 
