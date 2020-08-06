@@ -1,12 +1,7 @@
 import React from 'react'
 
 import OwnerComponent from './OwnerComponent'
-
-export type ownersWithoutConfirmations = {
-  hasPendingAcceptActions: boolean
-  hasPendingRejectActions: boolean
-  owner: string
-}[]
+import { ownersWithoutConfirmations } from './index'
 
 type OwnersListProps = {
   executor: string

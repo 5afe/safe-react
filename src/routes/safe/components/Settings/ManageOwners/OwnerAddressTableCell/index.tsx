@@ -8,7 +8,7 @@ import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDi
 import { useEffect, useState } from 'react'
 
 type OwnerAddressTableCellProps = {
-  address?: string
+  address: string
   knownAddress?: boolean
   showLinks: boolean
   userName?: string

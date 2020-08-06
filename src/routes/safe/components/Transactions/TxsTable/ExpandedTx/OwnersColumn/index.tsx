@@ -2,7 +2,7 @@ import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import OwnersList, { ownersWithoutConfirmations } from './OwnersList'
+import OwnersList from './OwnersList'
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
 import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
 import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
@@ -20,6 +20,12 @@ import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store
 import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
 import { List } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
+
+export type ownersWithoutConfirmations = {
+  hasPendingAcceptActions: boolean
+  hasPendingRejectActions: boolean
+  owner: string
+}[]
 
 function getOwnersConfirmations(tx: Transaction, userAddress: string): [string[], boolean] {
   const ownersWhoConfirmed: string[] = []
