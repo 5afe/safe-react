@@ -1,7 +1,11 @@
 import { List, Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
-import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import {
+  AddressBookEntryRecord,
+  AddressBookEntryProps,
+  makeAddressBookEntry,
+} from 'src/logic/addressBook/model/addressBook'
 import { ADD_ADDRESS_BOOK } from 'src/logic/addressBook/store/actions/addAddressBook'
 import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
@@ -14,14 +18,14 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-export type AddressBookCollection = List<AddressBookEntry>
+export type AddressBookCollection = List<AddressBookEntryRecord>
 export type AddressBookState = Map<string, Map<string, AddressBookCollection>>
 
-export const buildAddressBook = (storedAdbk) => {
-  let addressBookBuilt = Map([])
+export const buildAddressBook = (storedAdbk: AddressBookEntryProps[]): Map<string, AddressBookCollection> => {
+  let addressBookBuilt: Map<string, AddressBookCollection> = Map([])
   Object.entries(storedAdbk).forEach((adbkProps: any) => {
     const safeAddress = checksumAddress(adbkProps[0])
-    const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
+    const adbkRecords: AddressBookEntryRecord[] = adbkProps[1].map(makeAddressBookEntry)
     const adbkSafeEntries = List(adbkRecords)
     addressBookBuilt = addressBookBuilt.set(safeAddress, adbkSafeEntries)
   })
