@@ -317,13 +317,13 @@ export type TxToMock = TxArgs & {
   value: string
 }
 
-export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
+export const getMockTransactionServiceModel = (): TxServiceModel => {
   const submissionDate = new Date().toISOString()
 
-  const transactionStructure: TxServiceModel = {
+  return {
     blockNumber: null,
     confirmationsRequired: null,
-    dataDecoded: decodeMethods(tx.data),
+    dataDecoded: decodeMethods(''),
     ethGasPrice: null,
     executionDate: null,
     executor: null,
@@ -333,14 +333,25 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppRed
     isSuccessful: null,
     modified: submissionDate,
     origin: null,
-    safe: safeAddress,
+    safe: '',
     safeTxHash: null,
     signatures: null,
     submissionDate,
     transactionHash: null,
     confirmations: [],
-    ...tx,
+    baseGas: 0,
+    gasPrice: '',
+    gasToken: '',
+    operation: 0,
+    refundReceiver: '',
+    safeTxGas: 0,
+    to: '',
+    value: '',
   }
+}
+
+export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
+  const transactionStructure: TxServiceModel = { ...getMockTransactionServiceModel(), ...tx }
 
   const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
   const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
