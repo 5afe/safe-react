@@ -3,12 +3,13 @@ import * as React from 'react'
 import { connect } from 'react-redux'
 
 import actions from './actions'
+import selector from './selector'
+
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
 import UserDetails from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
-import selector from './selector'
 
 import { onboard } from 'src/components/ConnectButton'
 import { NOTIFICATIONS, showSnackbar } from 'src/logic/notifications'
@@ -47,6 +48,7 @@ class HeaderComponent extends React.PureComponent<any, any> {
     const { wallet } = onboard.getState()
     return wallet.type === 'sdk' && wallet.dashboard
   }
+
   onDisconnect = () => {
     const { closeSnackbar, enqueueSnackbar, removeProvider } = this.props
 
