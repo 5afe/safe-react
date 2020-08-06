@@ -3,7 +3,7 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 
 describe('Store actions utils > getNewTxNonce', () => {
-  it(`should return txNonce if it's a valid value`, async () => {
+  it(`Should return passed predicted transaction nonce if it's a valid value`, async () => {
     // Given
     const txNonce = '45'
     const lastTx = { nonce: 44 } as TxServiceModel
@@ -16,25 +16,26 @@ describe('Store actions utils > getNewTxNonce', () => {
     expect(nonce).toBe('45')
   })
 
-  it(`should return lastTx.nonce + 1 if txNonce is not valid`, async () => {
+  it(`Should return nonce of a last transaction + 1 if passed nonce is less than last transaction or invalid`, async () => {
     // Given
     const txNonce = ''
     const lastTx = { nonce: 44 } as TxServiceModel
     const safeInstance = {
-      nonce: () =>
-        Promise.resolve({
-          toString: () => Promise.resolve('45'),
+      methods: {
+        nonce: () => ({
+          call: () => Promise.resolve('45'),
         }),
+      },
     }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as GnosisSafe)
 
     // Then
     expect(nonce).toBe('45')
   })
 
-  it(`should retrieve contract's instance nonce value, if txNonce and lastTx are not valid`, async () => {
+  it(`Should retrieve contract's instance nonce value as a fallback, if txNonce and lastTx are not valid`, async () => {
     // Given
     const txNonce = ''
     const lastTx = null
@@ -47,7 +48,7 @@ describe('Store actions utils > getNewTxNonce', () => {
     }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as GnosisSafe)
 
     // Then
     expect(nonce).toBe('45')
@@ -60,10 +61,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const safeInstance = {
       methods: {
         getThreshold: () => ({
-          call: () =>
-            Promise.resolve({
-              toNumber: () => 1,
-            }),
+          call: () => Promise.resolve('1'),
         }),
       },
     }
@@ -71,7 +69,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const lastTx = { isExecuted: false } as TxServiceModel
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as GnosisSafe, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeFalsy()
@@ -82,10 +80,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const safeInstance = {
       methods: {
         getThreshold: () => ({
-          call: () =>
-            Promise.resolve({
-              toNumber: () => 2,
-            }),
+          call: () => Promise.resolve('2'),
         }),
       },
     }
@@ -93,7 +88,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const lastTx = { isExecuted: true } as TxServiceModel
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as GnosisSafe, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeFalsy()
@@ -104,7 +99,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const safeInstance = {
       methods: {
         getThreshold: () => ({
-          call: () => Promise.resolve(1),
+          call: () => Promise.resolve('1'),
         }),
       },
     }
@@ -112,7 +107,7 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
     const lastTx = { isExecuted: true } as TxServiceModel
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as GnosisSafe, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeTruthy()
