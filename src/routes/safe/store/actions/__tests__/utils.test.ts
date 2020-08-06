@@ -14,7 +14,7 @@ describe('Store actions utils > getNewTxNonce', () => {
     }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
 
     // Then
     expect(nonce).toBe('45')
@@ -23,9 +23,7 @@ describe('Store actions utils > getNewTxNonce', () => {
   it(`should return lastTx.nonce + 1 if txNonce is not valid`, async () => {
     // Given
     const txNonce = ''
-    const lastTx = {
-      nonce: 44,
-    }
+    const lastTx = { ...getMockTransactionServiceModel(), nonce: 44 }
     const safeInstance = {
       nonce: () =>
         Promise.resolve({
@@ -34,7 +32,7 @@ describe('Store actions utils > getNewTxNonce', () => {
     }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
 
     // Then
     expect(nonce).toBe('45')
@@ -53,7 +51,7 @@ describe('Store actions utils > getNewTxNonce', () => {
     }
 
     // When
-    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance)
+    const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
 
     // Then
     expect(nonce).toBe('45')
@@ -74,12 +72,10 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
       },
     }
     const nonce = '1'
-    const lastTx = {
-      isExecuted: false,
-    }
+    const lastTx = { ...getMockTransactionServiceModel(), isExecuted: false }
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeFalsy()
@@ -98,12 +94,10 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
       },
     }
     const nonce = '1'
-    const lastTx = {
-      isExecuted: true,
-    }
+    const lastTx = { ...getMockTransactionServiceModel(), isExecuted: true }
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeFalsy()
@@ -119,12 +113,10 @@ describe('Store actions utils > shouldExecuteTransaction', () => {
       },
     }
     const nonce = '1'
-    const lastTx = {
-      isExecuted: true,
-    }
+    const lastTx = { ...getMockTransactionServiceModel(), isExecuted: true }
 
     // When
-    const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const isExecution = await shouldExecuteTransaction(safeInstance as any, nonce, lastTx)
 
     // Then
     expect(isExecution).toBeTruthy()
