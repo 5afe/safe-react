@@ -85,6 +85,10 @@ const isSafeMethod = (methodId: string): boolean => {
 }
 
 export const decodeMethods = (data: string): DataDecoded | null => {
+  if(!data.length) {
+    return null
+  }
+
   const [methodId, params] = [data.slice(0, 10), data.slice(10)]
 
   if (isSafeMethod(methodId)) {
