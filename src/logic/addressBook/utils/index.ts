@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { AddressBookEntry, AddressBookEntryProps } from '../model/addressBook'
+import { AddressBookEntryRecord, AddressBookEntryProps } from '../model/addressBook'
 import { SafeOwner } from 'src/routes/safe/store/models/safe'
 import { AddressBookCollection } from '../store/reducer/addressBook'
 import { AddressBookMap } from '../store/reducer/types/addressBook'
@@ -20,7 +20,7 @@ export const saveAddressBook = async (addressBook: AddressBookMap): Promise<void
 }
 
 export const getAddressesListFromSafeAddressBook = (addressBook: AddressBookCollection): string[] =>
-  Array.from(addressBook).map((entry: AddressBookEntry) => entry.address)
+  Array.from(addressBook).map((entry: AddressBookEntryRecord) => entry.address)
 
 export const getNameFromSafeAddressBook = (addressBook: AddressBookCollection, userAddress: string): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)

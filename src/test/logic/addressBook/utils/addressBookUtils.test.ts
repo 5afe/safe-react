@@ -1,20 +1,24 @@
-import {Map, List} from 'immutable'
-import { getAddressesListFromSafeAddressBook, getNameFromSafeAddressBook } from '../../../../logic/addressBook/utils'
-import { AddressBookEntry, makeAddressBookEntry } from '../../../../logic/addressBook/model/addressBook'
+import { Map, List } from 'immutable'
+import {
+  getAddressBookFromStorage,
+  getAddressesListFromSafeAddressBook,
+  getNameFromSafeAddressBook,
+  getOwnersWithNameFromAddressBook, saveAddressBook,
+} from 'src/logic/addressBook/utils'
+import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
+import { AddressBookEntryRecord, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
-const getMockAddressBookEntry = (address: string, name: string = 'test', isOwner: boolean = false): AddressBookEntry => makeAddressBookEntry({
+const getMockAddressBookEntry = (address: string, name: string = 'test', isOwner: boolean = false): AddressBookEntryRecord => makeAddressBookEntry({
   address,
   name,
   isOwner
 })
 
 describe('getAddressesListFromAdbk', () => {
-  const safeAddress1 = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
   const entry1 = getMockAddressBookEntry('123456', 'test1')
   const entry2 = getMockAddressBookEntry('78910', 'test2')
   const entry3 = getMockAddressBookEntry('4781321', 'test3')
-  const addressBook = Map({ safeAddress1: [entry1, entry2], safeAddress2: [entry3]})
+
   it('Given a safeAddressBook, returns the list of addresses within the addressBook',  () => {
     // given
     const safeAddressBook = List([entry1, entry2, entry3])
@@ -42,5 +46,44 @@ describe('getNameFromSafeAddressBook', () => {
 
     // then
     expect(result).toBe(expectedResult)
+  })
+})
+
+describe('getOwnersWithNameFromAddressBook', () => {
+  const entry1 = getMockAddressBookEntry('123456', 'test1')
+  const entry2 = getMockAddressBookEntry('78910', 'test2')
+  const entry3 = getMockAddressBookEntry('4781321', 'test3')
+  it('Given a safeAddressBook and a list of owners, returns the list of owners with their names',  () => {
+    // given
+    const safeAddressBook = List([entry1, entry2, entry3])
+    const ownerList = List([ { address: entry1.address, name: ''}, { address: entry2.address, name: ''}])
+    const expectedResult =  List([ { address: entry1.address, name: entry1.name},  { address: entry2.address, name: entry2.name}])
+
+    // when
+    const result = getOwnersWithNameFromAddressBook(safeAddressBook, ownerList)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+})
+
+describe('saveAddressBook', () => {
+  const safeAddress1 = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
+  const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
+  const entry1 = getMockAddressBookEntry('123456', 'test1')
+  const entry2 = getMockAddressBookEntry('78910', 'test2')
+  const entry3 = getMockAddressBookEntry('4781321', 'test3')
+  it('Given an addressBook, saves it to the localStorage',  async () => {
+    // given
+    const addressBook = Map({[safeAddress1]: List([entry1, entry2]), [safeAddress2]: List([entry3])})
+
+    // when
+    // @ts-ignore
+    await saveAddressBook(addressBook)
+    const storedAdBk = await getAddressBookFromStorage()
+    let result = buildAddressBook(storedAdBk)
+
+    // then
+    expect(result).toStrictEqual(addressBook)
   })
 })
