@@ -231,7 +231,7 @@
     "@testing-library/react": "10.4.8",
     "@testing-library/user-event": "12.1.0",
     "@typechain/web3-v1": "^1.0.0",
-    "@types/history": "4.7.7",
+    "@types/history": "4.6.2",
     "@types/jest": "^26.0.9",
     "@types/lodash.memoize": "^4.1.6",
     "@types/node": "14.0.27",
