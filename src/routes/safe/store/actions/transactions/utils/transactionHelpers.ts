@@ -1,6 +1,5 @@
 import { List, Map } from 'immutable'
 
-import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -318,30 +317,6 @@ export type TxToMock = TxArgs & {
 }
 
 export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
-  const submissionDate = new Date().toISOString()
-
-  const transactionStructure: TxServiceModel = {
-    blockNumber: null,
-    confirmationsRequired: null,
-    dataDecoded: decodeMethods(tx.data),
-    ethGasPrice: null,
-    executionDate: null,
-    executor: null,
-    fee: null,
-    gasUsed: null,
-    isExecuted: false,
-    isSuccessful: null,
-    modified: submissionDate,
-    origin: null,
-    safe: safeAddress,
-    safeTxHash: null,
-    signatures: null,
-    submissionDate,
-    transactionHash: null,
-    confirmations: [],
-    ...tx,
-  }
-
   const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
   const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
@@ -353,7 +328,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppRed
     knownTokens,
     outgoingTxs,
     safe,
-    tx: transactionStructure,
+    tx: (tx as unknown) as TxServiceModel,
     txCode: EMPTY_DATA,
   })
 }

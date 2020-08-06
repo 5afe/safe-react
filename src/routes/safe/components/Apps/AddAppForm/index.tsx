@@ -6,7 +6,7 @@ import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import SubmitButtonStatus from './SubmitButtonStatus'
 
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
