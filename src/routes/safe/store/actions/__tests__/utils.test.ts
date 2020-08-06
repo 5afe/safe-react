@@ -6,12 +6,7 @@ describe('Store actions utils > getNewTxNonce', () => {
     // Given
     const txNonce = '45'
     const lastTx = { ...getMockTransactionServiceModel(), nonce: 44 }
-    const safeInstance = {
-      nonce: () =>
-        Promise.resolve({
-          toString: () => Promise.resolve('45'),
-        }),
-    }
+    const safeInstance = {}
 
     // When
     const nonce = await getNewTxNonce(txNonce, lastTx, safeInstance as any)
