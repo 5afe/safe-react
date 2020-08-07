@@ -1,12 +1,9 @@
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
-import { useSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
 import ManageApps from './components/ManageApps'
-import confirmTransactions from './confirmTransactions'
-import sendTransactions from './sendTransactions'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
@@ -14,12 +11,9 @@ import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import {
-  safeEthBalanceSelector,
-  safeNameSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { isSameHref } from 'src/utils/url'
+import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 
 const centerCSS = css`
   display: flex;
@@ -62,15 +56,13 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
   const iframeRef = useRef<HTMLIFrameElement>()
 
   const granted = useSelector(grantedSelector)
-  const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const dispatch = useDispatch()
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
+  const { sendMessageToIframe } = useIframeMessageHandler(selectedApp, openModal, closeModal, iframeRef)
 
   const onSelectApp = useCallback(
     (appId) => {
@@ -98,93 +90,6 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
       selectFirstEnabledApp()
     }
   }, [appList, selectedApp, selectedAppId])
-
-  const sendMessageToIframe = useCallback(
-    (messageId, data) => {
-      if (iframeRef.current && selectedApp) {
-        iframeRef.current.contentWindow.postMessage({ messageId, data }, selectedApp.url)
-      }
-    },
-    [selectedApp],
-  )
-
-  // handle messages from iframe
-  useEffect(() => {
-    const handleIframeMessage = (data) => {
-      if (!data || !data.messageId) {
-        console.error('ThirdPartyApp: A message was received without message id.')
-        return
-      }
-
-      switch (data.messageId) {
-        case operations.SEND_TRANSACTIONS: {
-          const onConfirm = async () => {
-            closeModal()
-
-            await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
-          }
-
-          confirmTransactions(
-            safeAddress,
-            safeName,
-            ethBalance,
-            selectedApp.name,
-            selectedApp.iconUrl,
-            data.data,
-            openModal,
-            closeModal,
-            onConfirm,
-          )
-          break
-        }
-
-        case operations.SAFE_APP_SDK_INITIALIZED: {
-          sendMessageToIframe(operations.ON_SAFE_INFO, {
-            safeAddress,
-            network,
-            ethBalance,
-          })
-          break
-        }
-
-        default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
-          break
-        }
-      }
-    }
-
-    const onIframeMessage = async ({ data, origin }) => {
-      if (origin === window.origin) {
-        return
-      }
-
-      if (!selectedApp.url.includes(origin)) {
-        console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
-        return
-      }
-
-      handleIframeMessage(data)
-    }
-
-    window.addEventListener('message', onIframeMessage)
-
-    return () => {
-      window.removeEventListener('message', onIframeMessage)
-    }
-  }, [
-    closeModal,
-    closeSnackbar,
-    dispatch,
-    enqueueSnackbar,
-    ethBalance,
-    network,
-    openModal,
-    safeAddress,
-    safeName,
-    selectedApp,
-    sendMessageToIframe,
-  ])
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current
