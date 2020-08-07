@@ -44,7 +44,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged --allow-empty && tsc"
+      "pre-commit": "lint-staged --allow-empty",
+      "pre-push": "tsc"
     }
   },
   "lint-staged": {
