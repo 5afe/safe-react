@@ -1,11 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import * as React from 'react'
-import { useDispatch } from 'react-redux'
+// import { useDispatch } from 'react-redux'
 
 import GnoButtonLink from 'src/components/layout/ButtonLink'
 import Link from 'src/components/layout/Link'
-import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
+// import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { screenSm, secondary, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
@@ -47,10 +47,10 @@ const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP
 const Footer = () => {
   const date = new Date()
   const classes = useStyles()
-  const dispatch = useDispatch()
+  //const dispatch = useDispatch()
 
   const openCookiesHandler = () => {
-    dispatch(openCookieBanner(true))
+    // dispatch(openCookieBanner(true))
   }
 
   return (

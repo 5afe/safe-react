@@ -1,6 +1,7 @@
 import React from 'react'
 
 import Layout from './Layout'
+import Sidebar from './Sidebar'
 
 export default {
   title: 'Layout',
@@ -10,4 +11,10 @@ export default {
   },
 }
 
-export const Base = (): React.ReactElement => <Layout />
+export const Base = (): React.ReactElement => {
+  const topbar = <div>Gnosis Logo</div>
+  const sidebar = <Sidebar />
+  const body = <div>This is some body</div>
+
+  return <Layout topbar={topbar} sidebar={sidebar} body={body} />
+}

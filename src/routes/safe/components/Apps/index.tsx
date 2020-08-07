@@ -418,7 +418,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
+        <Card>
           <Centered>
             <Title size="xs">No Apps Enabled</Title>
           </Centered>
