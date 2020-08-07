@@ -125,4 +125,7 @@ export const styles = createStyles({
     maxWidth: 'calc(100% - 30px)',
     overflow: 'hidden',
   },
+  amountInput: {
+    width: '100% !important',
+  },
 })
