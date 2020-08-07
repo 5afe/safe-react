@@ -13,7 +13,7 @@ export const makeTransaction = Record<TransactionProps>({
   blockNumber: 0,
   cancelled: false,
   confirmations: List([]),
-  created: false,
+  created: '',
   creator: '',
   creationTx: false,
   customTx: false,

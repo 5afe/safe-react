@@ -38,7 +38,7 @@ export type TransactionProps = {
   blockNumber?: number | null
   cancelled?: boolean
   confirmations: List<Confirmation>
-  created: boolean
+  created: string
   creator: string
   creationTx: boolean
   customTx: boolean
