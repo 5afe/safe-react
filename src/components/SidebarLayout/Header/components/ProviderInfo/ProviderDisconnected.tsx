@@ -1,7 +1,7 @@
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import CircleDot from 'src/components/Header/components/CircleDot'
+import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
 
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'

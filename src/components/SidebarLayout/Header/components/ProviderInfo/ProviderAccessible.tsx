@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import NetworkLabel from '../NetworkLabel'
-import CircleDot from 'src/components/Header/components/CircleDot'
+import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
 import Identicon from 'src/components/Identicon'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'

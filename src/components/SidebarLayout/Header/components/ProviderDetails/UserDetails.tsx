@@ -5,7 +5,7 @@ import * as React from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import CircleDot from 'src/components/Header/components/CircleDot'
+import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
 import Identicon from 'src/components/Identicon'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'

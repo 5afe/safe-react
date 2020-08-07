@@ -44,7 +44,7 @@ const useStyles = makeStyles({
 
 const appVersion = process.env.REACT_APP_APP_VERSION ? `v${process.env.REACT_APP_APP_VERSION} ` : 'Versions'
 
-const Footer = () => {
+const Footer = (): React.ReactElement => {
   const date = new Date()
   const classes = useStyles()
   //const dispatch = useDispatch()
