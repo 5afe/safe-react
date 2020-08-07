@@ -143,4 +143,4 @@ export default handleActions(
   }),
 )
 
-export * from './types/safe.d'
+export * from './types/safe'
