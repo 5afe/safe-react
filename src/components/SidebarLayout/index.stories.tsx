@@ -1,6 +1,6 @@
 import React from 'react'
 
-import Layout from './SidebarLayout'
+import Layout from '.'
 import Sidebar from './Sidebar'
 
 export default {

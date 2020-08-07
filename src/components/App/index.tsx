@@ -10,7 +10,6 @@ import InfoIcon from './assets/info.svg'
 import styles from './index.module.scss'
 
 import CookiesBanner from 'src/components/CookiesBanner'
-import Footer from 'src/components/SidebarLayout/Footer'
 import Header from 'src/components/SidebarLayout/Header'
 import Notifier from 'src/components/Notifier'
 import SidebarProvider from 'src/components/Sidebar'
@@ -20,6 +19,8 @@ import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
+import SidebarLayout from 'src/components/SidebarLayout'
+import Sidebar from 'src/components/SidebarLayout/Sidebar'
 
 const notificationStyles = {
   success: {
@@ -63,9 +64,7 @@ const PageFrame = ({ children, classes, currentNetwork }) => {
         <>
           <Notifier />
           <SidebarProvider>
-            <Header />
-            {children}
-            <Footer />
+            <SidebarLayout topbar={<Header />} sidebar={<Sidebar />} body={children} />
           </SidebarProvider>
         </>
       </SnackbarProvider>
