@@ -1,4 +1,5 @@
 import { Card, FixedIcon, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
+import { makeStyles, createStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
 import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -22,6 +23,8 @@ import {
   safeParamAddressFromStateSelector,
 } from 'src/routes/safe/store/selectors'
 import { isSameHref } from 'src/utils/url'
+
+const useStyles = makeStyles(createStyles({ card: { marginBottom: '24px' } }))
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -60,6 +63,7 @@ const operations = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
+  const classes = useStyles()
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
@@ -271,7 +275,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           <LCL.Content>{getContent()}</LCL.Content>
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
+        <Card className={classes.card}>
           <Centered>
             <Title size="xs">No Apps Enabled</Title>
           </Centered>
