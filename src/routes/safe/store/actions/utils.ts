@@ -18,7 +18,7 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel> =>
 
 export const getNewTxNonce = async (
   txNonce: string | null,
-  lastTx: TxServiceModel,
+  lastTx: TxServiceModel | null,
   safeInstance: GnosisSafe,
 ): Promise<string> => {
   if (!Number.isInteger(Number.parseInt(txNonce, 10))) {

@@ -6,6 +6,7 @@ import {
   ConfirmationServiceModel,
   TxServiceModel,
 } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
 
 const mockNonPayableTransactionObject = (callResult?: string): NonPayableTransactionObject<string | void | boolean | string[]> => {
   return {
@@ -87,25 +88,34 @@ export const getMockedSafeInstance = (safeProps: SafeMethodsProps): GnosisSafe =
 }
 
 type TransactionProps = {
-  baseGas?: number,
-  confirmations?: ConfirmationServiceModel[],
-  confirmationsRequired?: number,
-  ethGasPrice?: string,
-  executor?: string,
-  fee?: string,
-  gasPrice?: string,
-  gasToken?: string,
-  gasUsed?: number,
-  isExecuted?: boolean,
-  isSuccessful?: boolean,
-  modified?: string,
-  operation?: number,
-  refundReceiver?: string,
-  safe?: string,
-  safeTxGas?: number,
-  safeTxHash?: string,
-  signatures?: string,
-  to?: string,
+  baseGas?: number
+  blockNumber?: number | null
+  confirmations?: ConfirmationServiceModel[]
+  confirmationsRequired?: number
+  creationTx?: boolean | null
+  data?: string | null
+  dataDecoded?: DataDecoded
+  ethGasPrice?: string
+  executionDate?: string | null
+  executor?: string
+  fee?: string
+  gasPrice?: string
+  gasToken?: string
+  gasUsed?: number
+  isExecuted?: boolean
+  isSuccessful?: boolean
+  modified?: string
+  nonce?: number | null
+  operation?: number
+  origin?: string | null
+  refundReceiver?: string
+  safe?: string
+  safeTxGas?: number
+  safeTxHash?: string
+  signatures?: string
+  submissionDate?: string | null
+  to?: string
+  transactionHash?: string | null
   value?: string
 }
 
@@ -115,7 +125,10 @@ export const getMockedTxServiceModel = (txProps: TransactionProps): TxServiceMod
     baseGas: 0,
     confirmations: [],
     confirmationsRequired: 0,
+    creationTx: false,
+    data: null,
     ethGasPrice: '',
+    executionDate: '',
     executor: '',
     fee: '',
     gasPrice: '',
@@ -124,13 +137,17 @@ export const getMockedTxServiceModel = (txProps: TransactionProps): TxServiceMod
     isExecuted: false,
     isSuccessful: false,
     modified: '',
+    nonce: 0,
     operation: 0,
+    origin: '',
     refundReceiver: '',
     safe: '',
     safeTxGas: 0,
     safeTxHash: '',
     signatures: '',
+    submissionDate: '',
     to: '',
+    transactionHash: '',
     value: '',
     ...txProps
   }
