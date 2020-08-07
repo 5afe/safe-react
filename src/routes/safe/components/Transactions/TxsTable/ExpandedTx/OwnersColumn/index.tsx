@@ -1,4 +1,3 @@
-import { withStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -9,7 +8,6 @@ import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
 import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
 import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
-import { styles } from './style'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -18,10 +16,19 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { List } from 'immutable'
+import { makeStyles } from '@material-ui/core/styles'
+import { styles } from './style'
 
-function getOwnersConfirmations(tx, userAddress) {
-  const ownersWhoConfirmed = []
+export type OwnersWithoutConfirmations = {
+  hasPendingAcceptActions: boolean
+  hasPendingRejectActions: boolean
+  owner: string
+}[]
+
+function getOwnersConfirmations(tx: Transaction, userAddress: string): [string[], boolean] {
+  const ownersWhoConfirmed: string[] = []
   let currentUserAlreadyConfirmed = false
 
   tx.confirmations.forEach((conf) => {
@@ -34,7 +41,11 @@ function getOwnersConfirmations(tx, userAddress) {
   return [ownersWhoConfirmed, currentUserAlreadyConfirmed]
 }
 
-function getPendingOwnersConfirmations(owners, tx, userAddress) {
+function getPendingOwnersConfirmations(
+  owners: List<{ name: string; address: string }>,
+  tx: Transaction,
+  userAddress: string,
+): [OwnersWithoutConfirmations, boolean] {
   const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 
@@ -74,10 +85,23 @@ function getPendingOwnersConfirmations(owners, tx, userAddress) {
   return [ownersWithNoConfirmationsSorted, currentUserNotConfirmed]
 }
 
+const useStyles = makeStyles(styles)
+
+type ownersColumnProps = {
+  tx: Transaction
+  cancelTx: Transaction
+  thresholdReached: boolean
+  cancelThresholdReached: boolean
+  onTxConfirm: () => void
+  onTxExecute: () => void
+  onTxReject: () => void
+  canExecute: boolean
+  canExecuteCancel: boolean
+}
+
 const OwnersColumn = ({
   tx,
   cancelTx = makeTransaction({ isCancellationTx: true, status: TransactionStatus.AWAITING_YOUR_CONFIRMATION }),
-  classes,
   thresholdReached,
   cancelThresholdReached,
   onTxConfirm,
@@ -85,7 +109,8 @@ const OwnersColumn = ({
   onTxReject,
   canExecute,
   canExecuteCancel,
-}) => {
+}: ownersColumnProps): React.ReactElement => {
+  const classes = useStyles()
   let showOlderTxAnnotation
 
   if (tx.isExecuted || cancelTx.isExecuted) {
@@ -234,4 +259,4 @@ const OwnersColumn = ({
   )
 }
 
-export default withStyles(styles as any)(OwnersColumn)
+export default OwnersColumn
