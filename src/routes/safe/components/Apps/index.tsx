@@ -1,5 +1,6 @@
-import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import { FROM_SAFE_MESSAGES } from '@gnosis.pm/safe-apps-sdk'
+import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
@@ -39,9 +40,7 @@ const CenteredMT = styled.div`
 
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
-  SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
-  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
-}
+} as const
 
 type AppsProps = {
   closeModal: () => void

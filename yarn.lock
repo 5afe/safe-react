@@ -1325,6 +1325,11 @@
     "@ethersproject/rlp" "^5.0.0"
     "@ethersproject/signing-key" "^5.0.0"
 
+"@gnosis.pm/safe-apps-sdk@^0.3.0":
+  version "0.3.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-0.3.0.tgz#e1b7c2a5ce3ddf2a8a65b7f9b40f89b954cd2b04"
+  integrity sha512-rCYSyjmmZPclyHUJWtuW+4vh4mrSeqDIVD+AKjDsic6ITBubtqlAmftjqr0HJPik7OpUImNTkTeWMBRlSh3Vbg==
+
 "@gnosis.pm/safe-contracts@1.1.1-dev.2":
   version "1.1.1-dev.2"
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-contracts/-/safe-contracts-1.1.1-dev.2.tgz#4a5b9a9befe66d15df87d2216237d4ea4f64118f"

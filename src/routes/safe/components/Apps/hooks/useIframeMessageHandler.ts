@@ -1,4 +1,5 @@
 import { useSnackbar } from 'notistack'
+import { FromSafeMessages, FromMessageToPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
@@ -19,7 +20,14 @@ const operations = {
 } as const
 
 type ReturnType = {
-  sendMessageToIframe: (messageId: any, data: any) => void
+  sendMessageToIframe: <T extends keyof FromSafeMessages>(messageId: T, data: FromMessageToPayload[T]) => void
+}
+
+interface CustomMessageEvent extends MessageEvent {
+  data: {
+    messageId: keyof FromSafeMessages
+    data: FromMessageToPayload[keyof FromSafeMessages]
+  }
 }
 
 const useIframeMessageHandler = (
@@ -35,7 +43,7 @@ const useIframeMessageHandler = (
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
-    (messageId, data) => {
+    function <T extends keyof FromSafeMessages>(messageId: T, data: FromMessageToPayload[T]) {
       if (iframeRef?.current && selectedApp) {
         iframeRef.current.contentWindow.postMessage({ messageId, data }, selectedApp.url)
       }
@@ -44,12 +52,12 @@ const useIframeMessageHandler = (
   )
 
   useEffect(() => {
-    const handleIframeMessage = (data) => {
-      if (!data || !data.messageId) {
+    const handleIframeMessage = (msg: CustomMessageEvent) => {
+      if (!msg || !msg.messageId) {
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
-      switch (data.messageId) {
+      switch (msg.messageId) {
         case operations.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
@@ -74,15 +82,15 @@ const useIframeMessageHandler = (
         }
       }
     }
-    const onIframeMessage = async ({ data, origin }) => {
-      if (origin === window.origin) {
+    const onIframeMessage = async (message: CustomMessageEvent) => {
+      if (message.origin === window.origin) {
         return
       }
-      if (!selectedApp.url.includes(origin)) {
-        console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
+      if (!selectedApp.url.includes(message.origin)) {
+        console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
       }
-      handleIframeMessage(data)
+      handleIframeMessage(message)
     }
 
     window.addEventListener('message', onIframeMessage)
