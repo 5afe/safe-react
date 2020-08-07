@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { TableColumn } from 'src/components/Table/types'
+import { TableColumn } from 'src/components/Table/types.d'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'
