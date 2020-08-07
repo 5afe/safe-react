@@ -15,7 +15,7 @@ const StyledListItemText = styled(ListItemText)`
     font-weight: 600;
     line-height: 1.5;
     letter-spacing: 2px;
-    color: ${({ theme }) => theme.colors.secondaryLight};
+    color: ${({ theme }) => theme.colors.secondaryHover};
     text-transform: uppercase;
   }
 `

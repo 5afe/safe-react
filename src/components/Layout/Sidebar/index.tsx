@@ -13,6 +13,7 @@ const Container = styled.aside`
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
   display: flex;
   flex-direction: column;
+  box-sizing: border-box;
   grid-area: sidebar;
 
   div:last-of-type {
@@ -25,7 +26,7 @@ const StyledDivider = styled(Divider)`
 `
 
 const HelpContainer = styled.div`
-  margin-bottom: 16px;
+  margin-bottom: 8px;
 `
 
 const Sidebar = (): React.ReactElement => {

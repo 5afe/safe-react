@@ -34,8 +34,11 @@ const IdenticonContainer = styled.div`
 const IconContainer = styled.div`
   width: 100px;
   display: flex;
-  margin: 8px 0;
+  padding: 8px 0;
   justify-content: space-evenly;
+`
+const StyledText = styled(Text)`
+  margin: 8px 0 16px 0;
 `
 
 type Props = {
@@ -60,7 +63,7 @@ const WalletInfo = ({ address, safeName, balance }: Props): React.ReactElement =
         <CopyToClipboardBtn textToCopy={address} />
         <EtherscanButton value={address} network={getNetwork()} />
       </IconContainer>
-      <Text size="xl">{balance}</Text>
+      <StyledText size="xl">{balance}</StyledText>
       <Button size="md" iconType="transactionsInactive" color="primary" variant="contained">
         New Transaction
       </Button>
