@@ -35,8 +35,8 @@ const AddressBookTable = React.lazy(() => import('src/routes/safe/components/Add
 interface Props extends RouteComponentProps {
   sendFunds: Record<string, any>
   showReceive: boolean
-  onShow: (value: string) => void
-  onHide: (value: string) => void
+  onShow: (value: string) => () => void
+  onHide: (value: string) => () => void
   showSendFunds: (value: string) => void
   hideSendFunds: () => void
 }
