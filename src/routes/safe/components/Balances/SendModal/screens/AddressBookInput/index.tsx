@@ -1,6 +1,5 @@
 import MuiTextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
-import makeStyles from '@material-ui/core/styles/makeStyles'
+import { makeStyles } from '@material-ui/core/styles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
@@ -24,7 +23,8 @@ export interface AddressBookProps {
   setSelectedEntry: (
     entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
   ) => void
-  setIsValidAddress: (valid?: boolean) => void
+  setIsValidAddress?: (valid?: boolean) => void
+  label?: string
 }
 
 const useStyles = makeStyles(styles)
@@ -67,11 +67,12 @@ interface FilteredAddressBookEntry {
 const AddressBookInput = ({
   fieldMutator,
   isCustomTx,
+  label = 'Recipient',
   pristine,
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: AddressBookProps) => {
+}: AddressBookProps): React.ReactElement => {
   const classes = useStyles()
   const addressBook = useSelector(getAddressBook)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -90,7 +91,7 @@ const AddressBookInput = ({
     if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
-      setIsValidAddress(false)
+      setIsValidAddress?.(false)
       return
     }
     if (normalizedAddress) {
@@ -121,7 +122,7 @@ const AddressBookInput = ({
     setIsValidForm(isValidText === undefined)
     setValidationText(isValidText)
     fieldMutator(resolvedAddress)
-    setIsValidAddress(isValidText === undefined)
+    setIsValidAddress?.(isValidText === undefined)
   }
 
   useEffect(() => {
@@ -201,7 +202,7 @@ const AddressBookInput = ({
               },
               className: statusClasses,
             }}
-            label={!isValidForm ? validationText : 'Recipient'}
+            label={!isValidForm ? validationText : label}
             onChange={(event) => {
               setInputTouched(true)
               onAddressInputChanged(event.target.value)
@@ -232,4 +233,4 @@ const AddressBookInput = ({
   )
 }
 
-export default withStyles(styles as any)(AddressBookInput)
+export default AddressBookInput
