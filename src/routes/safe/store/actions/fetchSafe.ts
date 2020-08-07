@@ -48,7 +48,7 @@ const buildModulesLinkedList = (modules: string[] | undefined, nextModule: strin
   return null
 }
 
-export const buildSafe = async (safeAdd, safeName, latestMasterContractVersion?: any) => {
+export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion?: any) => {
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
@@ -140,7 +140,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 }
 
 // eslint-disable-next-line consistent-return
-export default (safeAdd) => async (dispatch, getState) => {
+export default (safeAdd: string) => async (dispatch, getState) => {
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
