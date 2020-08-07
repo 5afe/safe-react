@@ -1,5 +1,4 @@
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
-import { BigNumber } from 'bignumber.js'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -14,14 +13,13 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 export type SafeAppTx = {
   to: string
   value: string | number
   data: string
 }
-
-const humanReadableBalance = (balance, decimals) => new BigNumber(balance).times(`1e-${decimals}`).toFixed()
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -74,7 +72,7 @@ const confirmTransactions = (
   openModal: (modalInfo: OpenModalArgs) => void,
   closeModal: () => void,
   onConfirm: () => void,
-): any => {
+): void => {
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
@@ -103,7 +101,7 @@ const confirmTransactions = (
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
                     <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{humanReadableBalance(tx.value, 18)} ETH</Bold>
+                    <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>
                 <div className="section">

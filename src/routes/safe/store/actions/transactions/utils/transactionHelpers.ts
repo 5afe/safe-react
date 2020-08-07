@@ -1,6 +1,5 @@
 import { List, Map } from 'immutable'
 
-import { DecodedMethods, decodeMethods } from 'src/logic/contracts/methodIds'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -24,7 +23,7 @@ import {
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { safeSelector, safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
@@ -35,6 +34,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -130,7 +130,7 @@ export const getRefundParams = async (
   return refundParams
 }
 
-export const getDecodedParams = (tx: TxServiceModel): DecodedMethods => {
+export const getDecodedParams = (tx: TxServiceModel): DecodedParams | null => {
   if (tx.dataDecoded) {
     return {
       [tx.dataDecoded.method]: tx.dataDecoded.parameters.reduce(
@@ -276,6 +276,7 @@ export const buildTx = async ({
     creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
+    dataDecoded: tx.dataDecoded,
     decimals: tokenDecimals,
     decodedParams,
     executionDate: tx.executionDate,
@@ -315,31 +316,7 @@ export type TxToMock = TxArgs & {
   value: string
 }
 
-export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promise<Transaction> => {
-  const submissionDate = new Date().toISOString()
-
-  const transactionStructure: TxServiceModel = {
-    blockNumber: null,
-    confirmationsRequired: null,
-    dataDecoded: decodeMethods(tx.data),
-    ethGasPrice: null,
-    executionDate: null,
-    executor: null,
-    fee: null,
-    gasUsed: null,
-    isExecuted: false,
-    isSuccessful: null,
-    modified: submissionDate,
-    origin: null,
-    safe: safeAddress,
-    safeTxHash: null,
-    signatures: null,
-    submissionDate,
-    transactionHash: null,
-    confirmations: [],
-    ...tx,
-  }
-
+export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
   const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
   const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
   const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
@@ -351,7 +328,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state): Promi
     knownTokens,
     outgoingTxs,
     safe,
-    tx: transactionStructure,
+    tx: (tx as unknown) as TxServiceModel,
     txCode: EMPTY_DATA,
   })
 }

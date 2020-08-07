@@ -18,6 +18,7 @@ export const makeTransaction = Record<TransactionProps>({
   creationTx: false,
   customTx: false,
   data: null,
+  dataDecoded: null,
   decimals: 18,
   decodedParams: {},
   executionDate: '',
