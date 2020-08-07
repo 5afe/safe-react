@@ -4,7 +4,7 @@ import { List } from 'immutable'
 import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { TableColumn } from 'src/components/Table/types'
+import { TableColumn } from 'src/components/Table/types.d'
 import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Token } from 'src/logic/tokens/store/model/token'
 
