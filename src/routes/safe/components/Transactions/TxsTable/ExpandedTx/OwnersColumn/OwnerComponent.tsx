@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -18,31 +18,55 @@ import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { OwnersWithoutConfirmations } from './index'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
-const OwnerComponent = ({
-  classes,
-  confirmed,
-  executor,
-  isCancelTx,
-  onTxConfirm,
-  onTxExecute,
-  onTxReject,
-  owner,
-  pendingAcceptAction,
-  pendingRejectAction,
-  showConfirmBtn,
-  showExecuteBtn,
-  showExecuteRejectBtn,
-  showRejectBtn,
-  thresholdReached,
-  userAddress,
-}: any) => {
+type OwnerComponentProps = {
+  executor: string
+  isCancelTx?: boolean
+  onTxConfirm?: () => void
+  onTxExecute?: () => void
+  onTxReject?: () => void
+  ownersUnconfirmed: OwnersWithoutConfirmations
+  ownersWhoConfirmed: string[]
+  showConfirmBtn?: boolean
+  showExecuteBtn?: boolean
+  showExecuteRejectBtn?: boolean
+  showRejectBtn?: boolean
+  thresholdReached: boolean
+  userAddress: string
+  confirmed?: boolean
+  owner: string
+  pendingAcceptAction?: boolean
+  pendingRejectAction?: boolean
+}
+
+const useStyles = makeStyles(styles)
+
+const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
+  const {
+    owner,
+    pendingAcceptAction,
+    pendingRejectAction,
+    isCancelTx,
+    thresholdReached,
+    executor,
+    showConfirmBtn,
+    onTxConfirm,
+    onTxExecute,
+    showExecuteBtn,
+    showRejectBtn,
+    userAddress,
+    onTxReject,
+    showExecuteRejectBtn,
+    confirmed,
+  } = props
   const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
+  const classes = useStyles()
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
@@ -155,8 +179,8 @@ const OwnerComponent = ({
       </div>
       <Identicon address={owner} className={classes.icon} diameter={32} />
       <Block>
-        <Paragraph className={classes.name} noMargin>
-          {nameInAdbk}
+        <Paragraph className={nameInAdbk === 'UNKNOWN' ? null : classes.name} noMargin>
+          {!nameInAdbk || nameInAdbk === 'UNKNOWN' ? null : nameInAdbk}
         </Paragraph>
         <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
       </Block>
@@ -167,4 +191,4 @@ const OwnerComponent = ({
   )
 }
 
-export default withStyles(styles as any)(OwnerComponent)
+export default OwnerComponent
