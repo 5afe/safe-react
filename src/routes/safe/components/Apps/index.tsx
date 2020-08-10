@@ -55,6 +55,7 @@ const IframeWrapper = styled.div`
   position: relative;
   height: 100%;
   width: 100%;
+  overflow: hidden;
 `
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
