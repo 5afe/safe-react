@@ -45,7 +45,7 @@ const useStyles = makeStyles(styles as any)
 
 const Layout = (props: Props) => {
   const classes = useStyles()
-  const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const { showSendFunds, hideSendFunds, match, onHide, onShow, sendFunds, showReceive } = props
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -96,12 +96,14 @@ const Layout = (props: Props) => {
         <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
+
       <SendModal
         activeScreenType="chooseTxType"
         isOpen={sendFunds.isOpen}
         onClose={hideSendFunds}
         selectedToken={sendFunds.selectedToken}
       />
+
       <Modal
         description="Receive Tokens Form"
         handleClose={onHide('Receive')}

@@ -4,7 +4,10 @@ import { Card } from '@gnosis.pm/safe-react-components'
 
 import Footer from './Footer'
 
-const Grid = styled.div`
+type GridProps = {
+  showSidebar: boolean
+}
+const Grid = styled.div<GridProps>`
   height: 100%;
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background};
@@ -13,7 +16,7 @@ const Grid = styled.div`
   grid-template-rows: 54px 1fr;
   grid-template-areas:
     'topbar topbar'
-    'sidebar body';
+    ${({ showSidebar }) => (showSidebar ? `'sidebar body'` : `'body body'`)};
 `
 
 const TopbarWrapper = styled.nav`
@@ -68,9 +71,9 @@ type Props = {
 }
 
 const Layout = ({ topbar, sidebar, body }: Props): React.ReactElement => (
-  <Grid>
+  <Grid showSidebar={sidebar !== null}>
     <TopbarWrapper>{topbar}</TopbarWrapper>
-    <SidebarWrapper>{sidebar}</SidebarWrapper>
+    {sidebar ? <SidebarWrapper>{sidebar}</SidebarWrapper> : null}
     <BodyWrapper>
       <BodyCard>{body}</BodyCard>
       <FooterWrapper>

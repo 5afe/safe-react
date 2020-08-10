@@ -12,6 +12,8 @@ import {
   EtherscanButton,
 } from '@gnosis.pm/safe-react-components'
 
+export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
+
 const Container = styled.div`
   max-width: 200px;
   display: flex;
@@ -40,20 +42,34 @@ const IconContainer = styled.div`
 const StyledText = styled(Text)`
   margin: 8px 0 16px 0;
 `
+const UnStyledButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline-color: ${({ theme }) => theme.colors.separator};
+  display: flex;
+  align-items: center;
+`
 
 type Props = {
   address: string
   safeName: string
   balance: string
+  onToggleSafeList: () => void
 }
 
-const WalletInfo = ({ address, safeName, balance }: Props): React.ReactElement => {
+const WalletInfo = ({ address, safeName, balance, onToggleSafeList }: Props): React.ReactElement => {
   return (
     <Container>
       <IdenticonContainer>
         <div></div>
         <Identicon address={address} size="md" />
-        <Icon size="md" type="circleDropdown" />
+        <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <Icon size="md" type="circleDropdown" />
+        </UnStyledButton>
       </IdenticonContainer>
 
       <Text size="xl">{safeName}</Text>

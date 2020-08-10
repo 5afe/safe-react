@@ -20,9 +20,7 @@ const Root = (): React.ReactElement => (
   <ThemeProvider theme={styledTheme}>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>
-        </ConnectedRouter>
+        <ConnectedRouter history={history}>{<App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>}</ConnectedRouter>
       </MuiThemeProvider>
     </Provider>
   </ThemeProvider>

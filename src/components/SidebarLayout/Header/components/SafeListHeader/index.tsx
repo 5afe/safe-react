@@ -1,3 +1,5 @@
+// TODO: SHOULD BE REMOVED (NOT USED ANYMORE)
+
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'

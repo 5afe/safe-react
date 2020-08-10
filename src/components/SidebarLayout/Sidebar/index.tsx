@@ -12,11 +12,19 @@ const StyledDivider = styled(Divider)`
 const HelpContainer = styled.div`
   margin-bottom: 8px;
 `
+type Props = {
+  onToggleSafeList: () => void
+}
 
-const Sidebar = (): React.ReactElement => {
+const Sidebar = ({ onToggleSafeList }: Props): React.ReactElement => {
   return (
     <>
-      <WalletInfo address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B" safeName="SomeName" balance="$111,111" />
+      <WalletInfo
+        address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B"
+        safeName="SomeName"
+        balance="$111,111"
+        onToggleSafeList={onToggleSafeList}
+      />
 
       <StyledDivider />
       <NestedList />

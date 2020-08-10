@@ -7,4 +7,4 @@ export default {
   component: Sidebar,
 }
 
-export const Base = (): React.ReactElement => <Sidebar />
+export const Base = (): React.ReactElement => <Sidebar onToggleSafeList={() => console.log} />

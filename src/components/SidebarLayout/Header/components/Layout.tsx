@@ -6,14 +6,14 @@ import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
 
-import NetworkLabel from './NetworkLabel'
+//import NetworkLabel from './NetworkLabel'
+//import Divider from 'src/components/layout/Divider'
+//import SafeListHeader from './SafeListHeader'
 import Provider from './Provider'
-import SafeListHeader from './SafeListHeader'
 
 import Spacer from 'src/components/Spacer'
 import openHoc from 'src/components/hoc/OpenHoc'
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { border, headerHeight, md, screenSm, sm } from 'src/theme/variables'
@@ -64,10 +64,10 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
         <Img alt="Gnosis Team Safe" height={32} src={logo} testId="heading-gnosis-logo" />
       </Link>
     </Col>
+    {/* <Divider />
+     <SafeListHeader />
     <Divider />
-    <SafeListHeader />
-    <Divider />
-    <NetworkLabel />
+    <NetworkLabel />  */}
     <Spacer />
     <Provider
       info={providerInfo}
