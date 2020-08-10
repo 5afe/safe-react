@@ -10,6 +10,9 @@ describe('fetchTokenCurrenciesBalances', () => {
   beforeEach(async () => {
     store = aNewStore()
   })
+  afterAll(() => {
+    jest.unmock('axios')
+  })
 
   it('Given a safeAddress, calls the api and gets all the balances token for that address',  async () => {
     // given
