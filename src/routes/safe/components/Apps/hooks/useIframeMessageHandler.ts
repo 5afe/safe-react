@@ -1,5 +1,5 @@
 import { useSnackbar } from 'notistack'
-import { FromSafeMessages, FromMessageToPayload } from '@gnosis.pm/safe-apps-sdk'
+import { FromSafeMessages, FromMessageToPayload, ToSafeMessages, ToMessageToPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
@@ -25,8 +25,8 @@ type ReturnType = {
 
 interface CustomMessageEvent extends MessageEvent {
   data: {
-    messageId: keyof FromSafeMessages
-    data: FromMessageToPayload[keyof FromSafeMessages]
+    messageId: keyof ToSafeMessages
+    data: ToMessageToPayload[keyof ToSafeMessages]
   }
 }
 
@@ -53,15 +53,15 @@ const useIframeMessageHandler = (
 
   useEffect(() => {
     const handleIframeMessage = (msg: CustomMessageEvent) => {
-      if (!msg || !msg.messageId) {
+      if (!msg?.data.messageId) {
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
-      switch (msg.messageId) {
+      switch (msg.data.messageId) {
         case operations.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
-            await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
+            await sendTransactions(dispatch, safeAddress, msg.data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
           }
           confirmTransactions(
             safeAddress,
@@ -69,7 +69,7 @@ const useIframeMessageHandler = (
             ethBalance,
             selectedApp.name,
             selectedApp.iconUrl,
-            data.data,
+            msg.data.data,
             openModal,
             closeModal,
             onConfirm,
@@ -77,7 +77,7 @@ const useIframeMessageHandler = (
           break
         }
         default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
+          console.error(`ThirdPartyApp: A message was received with an unknown message id ${msg.data.messageId}.`)
           break
         }
       }

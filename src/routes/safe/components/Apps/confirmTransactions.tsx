@@ -1,4 +1,5 @@
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -14,12 +15,6 @@ import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-
-export type SafeAppTx = {
-  to: string
-  value: string | number
-  data: string
-}
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -49,7 +44,7 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
-const isTxValid = (t: SafeAppTx): boolean => {
+const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
     return false
   }
@@ -68,7 +63,7 @@ const confirmTransactions = (
   ethBalance: string,
   nameApp: string,
   iconApp: string,
-  txs: SafeAppTx[],
+  txs: Transaction[],
   openModal: (modalInfo: OpenModalArgs) => void,
   closeModal: () => void,
   onConfirm: () => void,
