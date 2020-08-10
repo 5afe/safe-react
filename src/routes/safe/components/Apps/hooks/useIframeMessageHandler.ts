@@ -1,5 +1,12 @@
 import { useSnackbar } from 'notistack'
-import { FromSafeMessages, FromMessageToPayload, ToSafeMessages, ToMessageToPayload } from '@gnosis.pm/safe-apps-sdk'
+import {
+  FromSafeMessages,
+  FromMessageToPayload,
+  ToSafeMessages,
+  ToMessageToPayload,
+  TO_SAFE_MESSAGES,
+  Networks,
+} from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
@@ -8,16 +15,11 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/routes/safe/store/selectors'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
 import sendTransactions from '../sendTransactions'
 import confirmTransactions from '../confirmTransactions'
-
-const operations = {
-  ON_SAFE_INFO: 'ON_SAFE_INFO',
-  SAFE_APP_SDK_INITIALIZED: 'SAFE_APP_SDK_INITIALIZED',
-  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
-} as const
 
 type ReturnType = {
   sendMessageToIframe: <T extends keyof FromSafeMessages>(messageId: T, data: FromMessageToPayload[T]) => void
@@ -40,6 +42,7 @@ const useIframeMessageHandler = (
   const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
+  const network = useSelector(networkSelector)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -58,7 +61,7 @@ const useIframeMessageHandler = (
         return
       }
       switch (msg.data.messageId) {
-        case operations.SEND_TRANSACTIONS: {
+        case TO_SAFE_MESSAGES.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
             await sendTransactions(dispatch, safeAddress, msg.data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
@@ -74,6 +77,16 @@ const useIframeMessageHandler = (
             closeModal,
             onConfirm,
           )
+          break
+        }
+
+        case TO_SAFE_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
+          // TODO: export this from safe-apps-sdk
+          sendMessageToIframe('ON_SAFE_INFO', {
+            safeAddress,
+            network: network as Networks,
+            ethBalance,
+          })
           break
         }
         default: {
@@ -97,7 +110,19 @@ const useIframeMessageHandler = (
     return () => {
       window.removeEventListener('message', onIframeMessage)
     }
-  }, [closeModal, closeSnackbar, dispatch, enqueueSnackbar, ethBalance, openModal, safeAddress, safeName, selectedApp])
+  }, [
+    closeModal,
+    closeSnackbar,
+    dispatch,
+    enqueueSnackbar,
+    ethBalance,
+    network,
+    openModal,
+    safeAddress,
+    safeName,
+    selectedApp,
+    sendMessageToIframe,
+  ])
 
   return {
     sendMessageToIframe,
