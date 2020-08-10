@@ -1,11 +1,11 @@
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import {
-  calculateTransactionStatus,
+  calculateTransactionStatus, calculateTransactionType,
   isCancelTransaction,
   isInnerTransaction, isPendingTransaction,
 } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { TransactionStatus, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 import makeSafe from 'src/routes/safe/store/models/safe'
 import { List, Record } from 'immutable'
 
@@ -396,13 +396,90 @@ describe('calculateTransactionStatus', () => {
 })
 
 describe('calculateTransactionType', () => {
-  it('',   () => {
+  it('If the tx is a token transfer transaction returns TOKEN',   () => {
     // given
+    const transaction = makeTransaction({ isTokenTransfer: true } )
 
     // when
+    const result = calculateTransactionType(transaction)
 
 
     // then
+    expect(result).toBe(TransactionTypes.TOKEN)
+
+  })
+  it('If the tx is a collectible transfer transaction returns COLLECTIBLE',   () => {
+    // given
+    const transaction = makeTransaction({ isCollectibleTransfer: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.COLLECTIBLE)
+
+  })
+  it('If the tx is a modifySettings transaction returns SETTINGS',   () => {
+    // given
+    const transaction = makeTransaction({ modifySettingsTx: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.SETTINGS)
+
+  })
+
+  it('If the tx is a cancellation transaction returns CANCELLATION',   () => {
+    // given
+    const transaction = makeTransaction({ isCancellationTx: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.CANCELLATION)
+
+  })
+
+  it('If the tx is a custom transaction returns CUSTOM',   () => {
+    // given
+    const transaction = makeTransaction({ customTx: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.CUSTOM)
+
+  })
+  it('If the tx is a creation transaction returns CUSTOM',   () => {
+    // given
+    const transaction = makeTransaction({ creationTx: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.CREATION)
+
+  })
+  it('If the tx is an upgrade transaction returns UPGRADE',   () => {
+    // given
+    const transaction = makeTransaction({ upgradeTx: true } )
+
+    // when
+    const result = calculateTransactionType(transaction)
+
+
+    // then
+    expect(result).toBe(TransactionTypes.UPGRADE)
 
   })
 })
