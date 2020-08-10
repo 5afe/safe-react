@@ -13,8 +13,7 @@ describe('TxsTable Columns > getTxTableData', () => {
     const txRow = txTableData.first()
 
     // Then
-  //  expect(txRow[TX_TABLE_RAW_CANCEL_TX_ID]).toEqual(mockedCancelTransaction)
-    expect(txRow[TX_TABLE_RAW_CANCEL_TX_ID]).toBeUndefined()
+    expect(txRow[TX_TABLE_RAW_CANCEL_TX_ID]).toEqual(mockedCancelTransaction)
   })
   it('should not include CancelTx object inside TxTableData', () => {
     // Given

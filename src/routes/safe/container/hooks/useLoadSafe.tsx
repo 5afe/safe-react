@@ -8,7 +8,7 @@ import fetchLatestMasterContractVersion from 'src/logic/safe/store/actions/fetch
 import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import fetchSafeCreationTx from 'src/logic/safe/store/actions/fetchSafeCreationTx'
-import { Dispatch } from 'src/logic/safe/store/actions/types'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 export const useLoadSafe = (safeAddress: string): void => {
   const dispatch = useDispatch<Dispatch>()

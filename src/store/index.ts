@@ -17,7 +17,7 @@ import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/coo
 import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
-  CurrencyReducerMap,
+  CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
@@ -83,7 +83,7 @@ export type AppReduxState = CombinedState<{
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
-  [CURRENCY_VALUES_KEY]: CurrencyReducerMap
+  [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>

@@ -8,7 +8,7 @@ import React from 'react'
 import TxType from './TxType'
 
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
-import { TableColumn } from 'src/components/Table/types'
+import { TableColumn } from 'src/components/Table/types.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
