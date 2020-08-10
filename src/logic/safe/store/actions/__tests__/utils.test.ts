@@ -1,4 +1,4 @@
-import { getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
+import { getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 

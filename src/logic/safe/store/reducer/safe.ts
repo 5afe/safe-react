@@ -14,7 +14,7 @@ import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import makeSafe from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeReducerMap } from './types/safe'
+import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -137,5 +137,3 @@ export default handleActions(
     latestMasterContractVersion: '',
   }),
 )
-
-export * from './types/safe'

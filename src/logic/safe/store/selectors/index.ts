@@ -14,7 +14,7 @@ import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
-import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
+import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
