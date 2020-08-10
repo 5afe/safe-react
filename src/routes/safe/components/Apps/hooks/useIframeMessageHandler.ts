@@ -1,11 +1,11 @@
 import { useSnackbar } from 'notistack'
 import {
-  FromSafeMessages,
-  FromMessageToPayload,
-  ToSafeMessages,
-  ToMessageToPayload,
-  TO_SAFE_MESSAGES,
-  Networks,
+  InterfaceMessages,
+  InterfaceMessageToPayload,
+  SDKMessages,
+  SDKMessageToPayload,
+  SDK_MESSAGES,
+  INTERFACE_MESSAGES,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
@@ -22,13 +22,13 @@ import sendTransactions from '../sendTransactions'
 import confirmTransactions from '../confirmTransactions'
 
 type ReturnType = {
-  sendMessageToIframe: <T extends keyof FromSafeMessages>(messageId: T, data: FromMessageToPayload[T]) => void
+  sendMessageToIframe: <T extends keyof InterfaceMessages>(messageId: T, data: InterfaceMessageToPayload[T]) => void
 }
 
 interface CustomMessageEvent extends MessageEvent {
   data: {
-    messageId: keyof ToSafeMessages
-    data: ToMessageToPayload[keyof ToSafeMessages]
+    messageId: keyof SDKMessages
+    data: SDKMessageToPayload[keyof SDKMessages]
   }
 }
 
@@ -46,7 +46,7 @@ const useIframeMessageHandler = (
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
-    function <T extends keyof FromSafeMessages>(messageId: T, data: FromMessageToPayload[T]) {
+    function <T extends keyof InterfaceMessages>(messageId: T, data: InterfaceMessageToPayload[T]) {
       if (iframeRef?.current && selectedApp) {
         iframeRef.current.contentWindow.postMessage({ messageId, data }, selectedApp.url)
       }
@@ -61,7 +61,7 @@ const useIframeMessageHandler = (
         return
       }
       switch (msg.data.messageId) {
-        case TO_SAFE_MESSAGES.SEND_TRANSACTIONS: {
+        case SDK_MESSAGES.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
             await sendTransactions(dispatch, safeAddress, msg.data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
@@ -80,11 +80,10 @@ const useIframeMessageHandler = (
           break
         }
 
-        case TO_SAFE_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
-          // TODO: export this from safe-apps-sdk
-          sendMessageToIframe('ON_SAFE_INFO', {
+        case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
+          sendMessageToIframe(INTERFACE_MESSAGES.ON_SAFE_INFO, {
             safeAddress,
-            network: network as Networks,
+            network: network,
             ethBalance,
           })
           break
