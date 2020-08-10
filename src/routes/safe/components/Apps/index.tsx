@@ -38,10 +38,6 @@ const CenteredMT = styled.div`
   margin-top: 5px;
 `
 
-const operations = {
-  ON_SAFE_INFO: 'ON_SAFE_INFO',
-} as const
-
 type AppsProps = {
   closeModal: () => void
   openModal: (modal: OpenModalArgs) => void
@@ -97,7 +93,8 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
     }
 
     setAppIsLoading(false)
-    sendMessageToIframe(operations.ON_SAFE_INFO, {
+    // TODO: export this from safe-apps-sdk
+    sendMessageToIframe('ON_SAFE_INFO', {
       safeAddress,
       network: network as Networks,
       ethBalance,
