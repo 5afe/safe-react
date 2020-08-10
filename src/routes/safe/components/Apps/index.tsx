@@ -13,7 +13,7 @@ import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { isSameHref } from 'src/utils/url'
+import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 
 const centerCSS = css`
@@ -92,7 +92,7 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current
-    if (!iframe || !selectedApp || !isSameHref(iframe.src, selectedApp.url)) {
+    if (!iframe || !selectedApp || !isSameURL(iframe.src, selectedApp.url)) {
       return
     }
 
