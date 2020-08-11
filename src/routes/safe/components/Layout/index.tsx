@@ -13,8 +13,7 @@ import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-
 import NoSafe from 'src/components/NoSafe'
 import Hairline from 'src/components/layout/Hairline'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-// import LayoutHeader from 'src/routes/safe/components/Layout/Header'
-// import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
+import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
@@ -81,8 +80,7 @@ const Layout = (props: RouteComponentProps) => {
 
   return (
     <>
-      {/* <LayoutHeader onShow={onShow} showSendFunds={showSendFunds} />
-      <TabsComponent /> */}
+      <TabsComponent />
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />

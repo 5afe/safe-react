@@ -10,6 +10,7 @@ export default {
 export const SimpleLayout = (): React.ReactElement => (
   <WalletInfo
     address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B"
+    granted={true}
     safeName="SomeName"
     balance="$111,111"
     onToggleSafeList={() => ({})}

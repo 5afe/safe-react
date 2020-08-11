@@ -24,12 +24,16 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
+import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { grantedSelector } from 'src/routes/safe/container/selector'
+
 import Receive from './ModalReceive'
 
 const notificationStyles = {
@@ -55,11 +59,19 @@ const App = ({ children, classes, currentNetwork }) => {
 
   const match = useRouteMatch({ path: SAFELIST_ADDRESS, strict: true })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
+  const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
+  const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
+  const currentCurrency = useSelector(currentCurrencySelector)
+  const granted = useSelector(grantedSelector)
+
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
-  const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
 
   const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
+  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
+
+  const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
 
   return (
     <div className={styles.frame}>
@@ -88,6 +100,10 @@ const App = ({ children, classes, currentNetwork }) => {
             sidebar={
               match ? (
                 <Sidebar
+                  safeAddress={safeAddress}
+                  safeName={safeName}
+                  balance={balance}
+                  granted={granted}
                   onToggleSafeList={toggleSidebar}
                   onReceiveClick={onShow('Receive')}
                   onNewTransactionClick={() => showSendFunds('')}
