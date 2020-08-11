@@ -15,6 +15,7 @@ import { Mutator } from 'final-form'
 import React from 'react'
 import { useField, useForm, useFormState } from 'react-final-form'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import GnoField from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -34,7 +35,6 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import styled from 'styled-components'
 
 import AssetAmount from './assets/asset-amount.svg'
 import Beneficiary from './assets/beneficiary.svg'
@@ -68,7 +68,6 @@ const SpendingLimitStep = styled.div`
   min-width: 120px;
   max-width: 164px;
 `
-
 //
 // TODO: refactor and split into components for better readability
 //
@@ -85,9 +84,13 @@ const KEYCODES = {
   TAB: 9,
   SHIFT: 16,
 }
+const BeneficiaryInput = styled.div`
+  grid-area: beneficiaryInput;
+`
+const BeneficiaryScan = styled.div`
+  grid-area: beneficiaryScan;
+`
 const SelectAddressRow = (): React.ReactElement => {
-  const classes = useStyles()
-
   const { initialValues } = useFormState()
   const { mutators } = useForm()
   React.useEffect(() => {
@@ -128,50 +131,44 @@ const SelectAddressRow = (): React.ReactElement => {
     closeQrModal()
   }
 
-  return (
-    <Row margin="md">
-      {!!selectedEntry?.address ? (
-        <Col xs={12}>
-          <div
-            role="button"
-            aria-pressed="false"
-            tabIndex={0}
-            onKeyDown={(e) => {
-              if (![KEYCODES.TAB, KEYCODES.SHIFT].includes(e.keyCode)) {
-                setSelectedEntry(null)
-              }
-            }}
-            onClick={() => {
-              setSelectedEntry(null)
-            }}
-          >
-            <EthHashInfo
-              hash={selectedEntry.address}
-              name={selectedEntry.name}
-              showCopyBtn
-              showEtherscanBtn
-              showIdenticon
-              textSize="lg"
-              network={getNetwork()}
-            />
-          </div>
-        </Col>
-      ) : (
-        <>
-          <Col xs={11}>
-            <AddressBookInput
-              fieldMutator={mutators?.setBeneficiary}
-              pristine={pristine}
-              setSelectedEntry={setSelectedEntry}
-              label="Beneficiary"
-            />
-          </Col>
-          <Col center="xs" className={classes} middle="xs" xs={1}>
-            <ScanQRWrapper handleScan={handleScan} />
-          </Col>
-        </>
-      )}
-    </Row>
+  return !!selectedEntry?.address ? (
+    <BeneficiaryInput
+      role="button"
+      aria-pressed="false"
+      tabIndex={0}
+      onKeyDown={(e) => {
+        if (![KEYCODES.TAB, KEYCODES.SHIFT].includes(e.keyCode)) {
+          setSelectedEntry(null)
+        }
+      }}
+      onClick={() => {
+        setSelectedEntry(null)
+      }}
+    >
+      <EthHashInfo
+        hash={selectedEntry.address}
+        name={selectedEntry.name}
+        showCopyBtn
+        showEtherscanBtn
+        showIdenticon
+        textSize="lg"
+        network={getNetwork()}
+      />
+    </BeneficiaryInput>
+  ) : (
+    <>
+      <BeneficiaryInput>
+        <AddressBookInput
+          fieldMutator={mutators?.setBeneficiary}
+          pristine={pristine}
+          setSelectedEntry={setSelectedEntry}
+          label="Beneficiary"
+        />
+      </BeneficiaryInput>
+      <BeneficiaryScan>
+        <ScanQRWrapper handleScan={handleScan} />
+      </BeneficiaryScan>
+    </>
   )
 }
 /**
@@ -181,21 +178,28 @@ const SelectAddressRow = (): React.ReactElement => {
 /**
  * token
  */
+const TokenInput = styled.div`
+  grid-area: tokenInput;
+`
 const TokenSelectRow = (): React.ReactElement => {
   const tokens = useSelector(extendedSafeTokensSelector)
 
   return (
-    <Row margin="md">
-      <Col>
-        <TokenSelectField tokens={tokens} />
-      </Col>
-    </Row>
+    <TokenInput>
+      <TokenSelectField tokens={tokens} />
+    </TokenInput>
   )
 }
 
 /**
  * amount
  */
+const AmountInput = styled.div`
+  grid-area: amountInput;
+`
+const GnoTextField = styled(TextField)`
+  margin: 0;
+`
 const AmountSetRow = (): React.ReactElement => {
   const classes = useStyles()
 
@@ -209,23 +213,19 @@ const AmountSetRow = (): React.ReactElement => {
   const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
   const validate = (touched || visited) && composeValidators(required, mustBeFloat, minValue(0, false))
 
-  console.log({ validate })
-
   return (
-    <Row margin="md">
-      <Col>
-        <Field
-          component={TextField}
-          label="Amount*"
-          name="amount"
-          type="text"
-          data-testid="amount-input"
-          endAdornment={selectedTokenRecord?.symbol}
-          className={classes.amountInput}
-          validate={validate}
-        />
-      </Col>
-    </Row>
+    <AmountInput>
+      <Field
+        component={GnoTextField}
+        label="Amount*"
+        name="amount"
+        type="text"
+        data-testid="amount-input"
+        endAdornment={selectedTokenRecord?.symbol}
+        className={classes.amountInput}
+        validate={validate}
+      />
+    </AmountInput>
   )
 }
 
@@ -293,6 +293,15 @@ const RESET_TIME_OPTIONS = [
   { label: '1 week', value: '7' },
   { label: '1 month', value: '30' },
 ]
+const ResetTimeLabel = styled.div`
+  grid-area: resetTimeLabel;
+`
+const ResetTimeToggle = styled.div`
+  grid-area: resetTimeToggle;
+`
+const ResetTimeOptions = styled.div`
+  grid-area: resetTimeOption;
+`
 const ResetTime = (): React.ReactElement => {
   const {
     input: { value: withResetTime },
@@ -300,28 +309,20 @@ const ResetTime = (): React.ReactElement => {
 
   return (
     <>
-      <Row margin="md">
-        <Col>
-          <Text size="xl">
-            Set a reset-time to have the allowance automatically refill after a defined time-period.
-          </Text>
-        </Col>
-      </Row>
-      <Row margin="md">
-        <Col>
-          <Switch label="Reset time" name="withResetTime" />
-        </Col>
-      </Row>
+      <ResetTimeLabel>
+        <Text size="xl">Set a reset-time to have the allowance automatically refill after a defined time-period.</Text>
+      </ResetTimeLabel>
+      <ResetTimeToggle>
+        <Switch label="Reset time" name="withResetTime" />
+      </ResetTimeToggle>
       {withResetTime && (
-        <Row margin="md">
-          <Col>
-            <SafeRadioButtons
-              groupName="resetTime"
-              initialValue={RESET_TIME_OPTIONS[0].value}
-              options={RESET_TIME_OPTIONS}
-            />
-          </Col>
-        </Row>
+        <ResetTimeOptions>
+          <SafeRadioButtons
+            groupName="resetTime"
+            initialValue={RESET_TIME_OPTIONS[0].value}
+            options={RESET_TIME_OPTIONS}
+          />
+        </ResetTimeOptions>
       )}
     </>
   )
@@ -356,6 +357,52 @@ interface NewSpendingLimitProps {
 /**
  * New Spending Limit Form - START
  */
+const TitleSection = styled.div`
+  display: flex;
+  justify-content: space-between;
+  padding: 16px 24px;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+`
+const StyledButton = styled.button`
+  background: none;
+  border: none;
+  padding: 5px;
+  width: 26px;
+  height: 26px;
+
+  span {
+    margin-right: 0;
+  }
+
+  :hover {
+    background: ${({ theme }) => theme.colors.separator};
+    border-radius: 16px;
+    cursor: pointer;
+  }
+`
+const FormContainer = styled.div`
+  padding: 24px;
+  align-items: center;
+  display: grid;
+  grid-template-columns: 4fr 1fr;
+  grid-template-rows: 6fr;
+  gap: 16px 8px;
+  grid-template-areas:
+    'beneficiaryInput beneficiaryScan'
+    'tokenInput .'
+    'amountInput .'
+    'resetTimeLabel resetTimeLabel'
+    'resetTimeToggle resetTimeToggle'
+    'resetTimeOption resetTimeOption';
+`
+const FooterSection = styled.div`
+  border-top: 2px solid ${({ theme }) => theme.colors.separator};
+  padding: 16px 24px;
+`
+const FooterWrapper = styled.div`
+  display: flex;
+  justify-content: space-around;
+`
 const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): React.ReactElement => (
   <>
     <TitleSection>
@@ -383,7 +430,7 @@ const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimi
 
           <FooterSection>
             <FooterWrapper>
-              <Button color="secondary" size="md" onClick={onCancel}>
+              <Button color="primary" size="md" onClick={onCancel}>
                 Cancel
               </Button>
 
@@ -428,6 +475,7 @@ const ReviewSpendingLimit = ({
   txToken,
   values,
 }: ReviewSpendingLimitProps): React.ReactElement => {
+  const classes = useStyles()
   const addressBook = useSelector(getAddressBook)
 
   return (
@@ -445,7 +493,7 @@ const ReviewSpendingLimit = ({
         </StyledButton>
       </TitleSection>
 
-      <FormContainer>
+      <Block className={classes.container}>
         <Col margin="lg">
           <Text size="lg" color="secondaryLight">
             Beneficiary
@@ -497,11 +545,11 @@ const ReviewSpendingLimit = ({
             </Row>
           )}
         </Col>
-      </FormContainer>
+      </Block>
 
       <FooterSection>
         <FooterWrapper>
-          <Button color="secondary" size="md" onClick={onBack}>
+          <Button color="primary" size="md" onClick={onBack}>
             Back
           </Button>
 
@@ -514,40 +562,6 @@ const ReviewSpendingLimit = ({
   )
 }
 // TODO: propose refactor in safe-react-components based on this requirements
-const TitleSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 24px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-`
-const StyledButton = styled.button`
-  background: none;
-  border: none;
-  padding: 5px;
-  width: 26px;
-  height: 26px;
-
-  span {
-    margin-right: 0;
-  }
-
-  :hover {
-    background: ${({ theme }) => theme.colors.separator};
-    border-radius: 16px;
-    cursor: pointer;
-  }
-`
-const FormContainer = styled.div`
-  padding: 24px;
-`
-const FooterSection = styled.div`
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
-  padding: 16px 24px;
-`
-const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-`
 const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> = {
   setBeneficiary: (args, state, utils) => {
     utils.changeValue(state, 'beneficiary', () => args[0])
