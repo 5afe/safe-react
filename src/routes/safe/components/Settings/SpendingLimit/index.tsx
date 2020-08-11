@@ -1,6 +1,16 @@
-import { Button, EthHashInfo, Icon, RadioButtons, Text, TextField, Title } from '@gnosis.pm/safe-react-components'
+import {
+  Button,
+  EthHashInfo,
+  Icon,
+  IconText,
+  RadioButtons,
+  Text,
+  TextField,
+  Title,
+} from '@gnosis.pm/safe-react-components'
 import { FormControlLabel, hexToRgb, Switch as SwitchMui } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
+import { Skeleton } from '@material-ui/lab'
 import { Mutator } from 'final-form'
 import React from 'react'
 import { useField, useForm, useFormState } from 'react-final-form'
@@ -10,6 +20,7 @@ import GnoField from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import { composeValidators, minValue, mustBeFloat, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
+import GnoButton from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
@@ -18,8 +29,10 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { getNetwork } from 'src/config'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { Token } from 'src/logic/tokens/store/model/token'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import styled from 'styled-components'
 
@@ -75,19 +88,29 @@ const KEYCODES = {
 const SelectAddressRow = (): React.ReactElement => {
   const classes = useStyles()
 
+  const { initialValues } = useFormState()
   const { mutators } = useForm()
+  React.useEffect(() => {
+    if (initialValues?.beneficiary) {
+      mutators?.setBeneficiary?.(initialValues.beneficiary)
+    }
+  }, [initialValues, mutators])
 
   const [selectedEntry, setSelectedEntry] = React.useState<{ address: string; name: string } | null>({
-    address: '',
+    address: initialValues?.beneficiary || '',
     name: '',
   })
 
-  const [pristine, setPristine] = React.useState<boolean>(true)
+  const [pristine, setPristine] = React.useState<boolean>(!initialValues?.beneficiary)
   React.useMemo(() => {
-    if (selectedEntry === null && pristine) {
-      setPristine(false)
+    if (selectedEntry === null) {
+      mutators?.setBeneficiary?.('')
+
+      if (pristine) {
+        setPristine(false)
+      }
     }
-  }, [selectedEntry, pristine])
+  }, [selectedEntry, mutators, pristine])
 
   const addressBook = useSelector(getAddressBook)
   const handleScan = (value, closeQrModal) => {
@@ -160,12 +183,6 @@ const SelectAddressRow = (): React.ReactElement => {
  */
 const TokenSelectRow = (): React.ReactElement => {
   const tokens = useSelector(extendedSafeTokensSelector)
-  // const {
-  //   input: { value: tokenAddress },
-  //   meta: { pristine, dirty },
-  // } = useField('token', { subscription: { value: true, pristine: true, dirty: true } })
-  // const {  } = useFormState()
-  // const setRed = dirty && !pristine && !tokenAddress
 
   return (
     <Row margin="md">
@@ -184,18 +201,22 @@ const AmountSetRow = (): React.ReactElement => {
 
   const {
     input: { value: tokenAddress },
-    meta: { pristine: tokenAddressPristine },
-  } = useField('token', { subscription: { value: true, pristine: true } })
+  } = useField('token', { subscription: { value: true } })
+  const {
+    meta: { touched, visited },
+  } = useField('amount', { subscription: { touched: true, visited: true } })
   const tokens = useSelector(extendedSafeTokensSelector)
   const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
-  const validate = !tokenAddressPristine && composeValidators(required, mustBeFloat, minValue(0, false))
+  const validate = (touched || visited) && composeValidators(required, mustBeFloat, minValue(0, false))
+
+  console.log({ validate })
 
   return (
     <Row margin="md">
       <Col>
         <Field
           component={TextField}
-          label="Amount"
+          label="Amount*"
           name="amount"
           type="text"
           data-testid="amount-input"
@@ -309,36 +330,189 @@ const ResetTime = (): React.ReactElement => {
  * resetTime - END
  */
 
-const canSubmit = ({ dirty, invalid, submitting, dirtyFieldsSinceLastSubmit, pristine, values }): boolean => {
+const YetAnotherButton = styled(GnoButton)`
+  &.Mui-disabled {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+    opacity: 0.5;
+  }
+`
+const canReview = ({ invalid, submitting, dirtyFieldsSinceLastSubmit, values }): boolean => {
   return !(
     submitting ||
     invalid ||
-    pristine ||
-    !dirty ||
+    !values.beneficiary ||
     (values.token && !values.amount) ||
+    // TODO: review the next validation, as resetTime has a default value, this check looks unnecessary
     (values.withResetTime && !values.resetTime) ||
     !dirtyFieldsSinceLastSubmit
   )
 }
-const SpendingLimitFormButtons = ({ onClose }: { onClose: () => void }): React.ReactElement => {
-  const formState = useFormState()
-
-  return (
-    <>
-      <Button color="secondary" size="md" onClick={onClose}>
-        Cancel
-      </Button>
-
-      <Button color="primary" size="md" variant="contained" type="submit" disabled={!canSubmit(formState)}>
-        Submit
-      </Button>
-    </>
-  )
+interface NewSpendingLimitProps {
+  initialValues?: Record<string, string>
+  onCancel: () => void
+  onReview: (values) => void
 }
-
 /**
  * New Spending Limit Form - START
  */
+const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): React.ReactElement => (
+  <>
+    <TitleSection>
+      <Title size="xs" withoutMargin>
+        New Spending Limit{' '}
+        <Text size="lg" color="secondaryLight">
+          1 of 2
+        </Text>
+      </Title>
+
+      <StyledButton onClick={onCancel}>
+        <Icon size="sm" type="cross" />
+      </StyledButton>
+    </TitleSection>
+
+    <GnoForm formMutators={formMutators} onSubmit={onReview} initialValues={initialValues}>
+      {(...args) => (
+        <>
+          <FormContainer>
+            <SelectAddressRow />
+            <TokenSelectRow />
+            <AmountSetRow />
+            <ResetTime />
+          </FormContainer>
+
+          <FooterSection>
+            <FooterWrapper>
+              <Button color="secondary" size="md" onClick={onCancel}>
+                Cancel
+              </Button>
+
+              <YetAnotherButton
+                color="primary"
+                size="medium"
+                variant="contained"
+                type="submit"
+                disabled={!canReview(args[2])}
+              >
+                Review
+              </YetAnotherButton>
+            </FooterWrapper>
+          </FooterSection>
+        </>
+      )}
+    </GnoForm>
+  </>
+)
+
+const StyledImage = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 8px 0 0;
+`
+const StyledImageName = styled.div`
+  display: flex;
+  align-items: center;
+`
+interface ReviewSpendingLimitProps {
+  onBack: () => void
+  onClose: () => void
+  onSubmit: () => void
+  txToken: Token | null
+  values: Record<string, string>
+}
+const ReviewSpendingLimit = ({
+  onBack,
+  onClose,
+  onSubmit,
+  txToken,
+  values,
+}: ReviewSpendingLimitProps): React.ReactElement => {
+  const addressBook = useSelector(getAddressBook)
+
+  return (
+    <>
+      <TitleSection>
+        <Title size="xs" withoutMargin>
+          New Spending Limit{' '}
+          <Text size="lg" color="secondaryLight">
+            2 of 2
+          </Text>
+        </Title>
+
+        <StyledButton onClick={onClose}>
+          <Icon size="sm" type="cross" />
+        </StyledButton>
+      </TitleSection>
+
+      <FormContainer>
+        <Col margin="lg">
+          <Text size="lg" color="secondaryLight">
+            Beneficiary
+          </Text>
+          <EthHashInfo
+            hash={values.beneficiary}
+            name={addressBook ? getNameFromAdbk(addressBook, values.beneficiary) : ''}
+            showCopyBtn
+            showEtherscanBtn
+            showIdenticon
+            textSize="lg"
+            network={getNetwork()}
+          />
+        </Col>
+        <Col margin="lg">
+          <Text size="lg" color="secondaryLight">
+            Amount
+          </Text>
+          {txToken !== null ? (
+            <StyledImageName>
+              <StyledImage alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri} />
+              <Text size="lg">
+                {values.amount} {txToken.symbol}
+              </Text>
+            </StyledImageName>
+          ) : (
+            <Skeleton animation="wave" variant="text" />
+          )}
+        </Col>
+        <Col margin="lg">
+          <Text size="lg" color="secondaryLight">
+            Reset Time
+          </Text>
+          {values.withResetTime ? (
+            <Row align="center" margin="md">
+              <IconText
+                iconSize="md"
+                iconType="fuelIndicator"
+                text={RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime).label}
+                textSize="lg"
+              />
+            </Row>
+          ) : (
+            <Row align="center" margin="md">
+              <Text size="lg">
+                {/* TODO: review message */}
+                One-time spending limit allowance
+              </Text>
+            </Row>
+          )}
+        </Col>
+      </FormContainer>
+
+      <FooterSection>
+        <FooterWrapper>
+          <Button color="secondary" size="md" onClick={onBack}>
+            Back
+          </Button>
+
+          <Button color="primary" size="md" variant="contained" onClick={onSubmit}>
+            Submit
+          </Button>
+        </FooterWrapper>
+      </FooterSection>
+    </>
+  )
+}
 // TODO: propose refactor in safe-react-components based on this requirements
 const TitleSection = styled.div`
   display: flex;
@@ -382,8 +556,20 @@ const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> =
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
 
-  const handleSubmit = (values) => {
-    console.log(values)
+  const [step, setStep] = React.useState<'create' | 'review'>('create')
+  const [values, setValues] = React.useState()
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const [txToken, setTxToken] = React.useState(null)
+  const handleReview = (values) => {
+    setValues(values)
+    if (values.token) {
+      setTxToken(tokens.find((token) => token.address === values.token))
+    }
+    setStep('review')
+  }
+  const handleSubmit = () => {
+    // TODO: here we do the magic. FINALLY!!!!
+    console.log({ values })
   }
 
   return (
@@ -394,38 +580,16 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
       description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
       paperClassName={classes.modal}
     >
-      <TitleSection>
-        <Title size="xs" withoutMargin>
-          New Spending Limit
-        </Title>
-
-        <StyledButton onClick={close}>
-          <Icon size="sm" type="cross" />
-        </StyledButton>
-      </TitleSection>
-
-      <GnoForm
-        formMutators={formMutators}
-        onSubmit={handleSubmit}
-        subscription={{ submitting: true, pristine: true, values: true }}
-      >
-        {() => (
-          <>
-            <FormContainer>
-              <SelectAddressRow />
-              <TokenSelectRow />
-              <AmountSetRow />
-              <ResetTime />
-            </FormContainer>
-
-            <FooterSection>
-              <FooterWrapper>
-                <SpendingLimitFormButtons onClose={close} />
-              </FooterWrapper>
-            </FooterSection>
-          </>
-        )}
-      </GnoForm>
+      {step === 'create' && <NewSpendingLimit initialValues={values} onCancel={close} onReview={handleReview} />}
+      {step === 'review' && (
+        <ReviewSpendingLimit
+          onBack={() => setStep('create')}
+          onClose={close}
+          onSubmit={handleSubmit}
+          txToken={txToken}
+          values={values}
+        />
+      )}
     </GnoModal>
   )
 }
