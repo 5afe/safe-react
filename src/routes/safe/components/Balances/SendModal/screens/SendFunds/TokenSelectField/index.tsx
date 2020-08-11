@@ -1,3 +1,4 @@
+import { Text } from '@gnosis.pm/safe-react-components'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
@@ -12,7 +13,6 @@ import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
 import Img from 'src/components/layout/Img'
-import Paragraph from 'src/components/layout/Paragraph'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -42,9 +42,9 @@ const SelectedToken = ({ tokenAddress, tokens }: SelectTokenProps): React.ReactE
           />
         </>
       ) : (
-        <Paragraph color="disabled" size="md" style={{ opacity: 0.5 }} weight="light">
+        <Text color="placeHolder" size="xl">
           Select an asset*
-        </Paragraph>
+        </Text>
       )}
     </MenuItem>
   )
