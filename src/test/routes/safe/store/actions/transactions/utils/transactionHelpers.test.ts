@@ -3,7 +3,7 @@ import {
   buildTx,
   calculateTransactionStatus,
   calculateTransactionType,
-  generateSafeTxHash,
+  generateSafeTxHash, getRefundParams,
   isCancelTransaction,
   isInnerTransaction,
   isPendingTransaction,
@@ -15,6 +15,7 @@ import { List, Map, Record } from 'immutable'
 import { makeToken, TokenProps } from 'src/logic/tokens/store/model/token'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -203,14 +204,101 @@ describe('isCustomTransaction', () => {
 })
 
 describe('getRefundParams', () => {
-  it('',   () => {
+  it('Given a transaction with the gasPrice == 0, returns null',   async () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice: '0'})
 
     // when
+    const result = await getRefundParams(transaction, getERC20DecimalsAndSymbol)
 
 
     // then
+    expect(result).toBe(null)
+  })
+  it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 100 and 18 decimals, returns 0.000000000000020000',   async () => {
+    // given
+    const gasPrice = '100'
+    const baseGas = 100
+    const safeTxGas = 100
+    const decimals = 18
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice, baseGas,safeTxGas})
+    const feeString = (Number(gasPrice) * (Number(baseGas) + Number(safeTxGas))).toString()
+      .padStart(decimals, '0')
+    const whole = feeString.slice(0, feeString.length - decimals) || '0'
+    const fraction = feeString.slice(feeString.length - decimals)
 
+    const resultExpected = {
+      fee: `${whole}.${fraction}`,
+      symbol: 'ETH',
+    }
+
+    const getTokenInfoMock = jest.fn().mockImplementation(() => {
+      return {
+        symbol: 'ETH',
+        decimals
+      }
+    })
+
+    // when
+    const result = await getRefundParams(transaction, getTokenInfoMock)
+
+    // then
+    expect(result).toStrictEqual(resultExpected)
+    expect(getTokenInfoMock).toBeCalled()
+  })
+  it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 100 and 1 decimal, returns 2000.0',   async () => {
+    // given
+    const gasPrice = '100'
+    const baseGas = 100
+    const safeTxGas = 100
+    const decimals = 1
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice, baseGas,safeTxGas})
+
+    const resultExpected = {
+      fee: `2000.0`,
+      symbol: 'ETH',
+    }
+
+    const getTokenInfoMock = jest.fn().mockImplementation(() => {
+      return {
+        symbol: 'ETH',
+        decimals
+      }
+    })
+
+    // when
+    const result = await getRefundParams(transaction, getTokenInfoMock)
+
+    // then
+    expect(result).toStrictEqual(resultExpected)
+    expect(getTokenInfoMock).toBeCalled()
+  })
+  it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 400 and 5 decimals, returns 0.50000',   async () => {
+    // given
+    const gasPrice = '100'
+    const baseGas = 100
+    const safeTxGas = 400
+    const decimals = 5
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice, baseGas,safeTxGas})
+
+    const resultExpected = {
+      fee: `0.50000`,
+      symbol: 'ETH',
+    }
+
+    const getTokenInfoMock = jest.fn().mockImplementation(() => {
+      return {
+        symbol: 'ETH',
+        decimals
+      }
+    })
+
+    // when
+    const result = await getRefundParams(transaction, getTokenInfoMock)
+
+    // then
+    expect(result).toStrictEqual(resultExpected)
+    expect(getTokenInfoMock).toBeCalled()
   })
 })
 
