@@ -1,13 +1,20 @@
-import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
+import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import {
-  calculateTransactionStatus, calculateTransactionType,
+  buildTx,
+  calculateTransactionStatus,
+  calculateTransactionType,
+  generateSafeTxHash,
   isCancelTransaction,
-  isInnerTransaction, isPendingTransaction,
+  isInnerTransaction,
+  isPendingTransaction,
 } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { TransactionStatus, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 import makeSafe from 'src/routes/safe/store/models/safe'
-import { List, Record } from 'immutable'
+import { List, Map, Record } from 'immutable'
+import { makeToken, TokenProps } from '../../../../../../../logic/tokens/store/model/token'
+import { EMPTY_DATA } from '../../../../../../../logic/wallets/ethTransactions'
+import { ZERO_ADDRESS } from '../../../../../../../logic/wallets/ethAddresses'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -485,15 +492,70 @@ describe('calculateTransactionType', () => {
 })
 
 
-describe('buildTx', async () => {
-  it('',   () => {
+describe('buildTx',  () => {
+  it('Sends transaction params an receives a transaction object',   async () => {
     // given
+    const cancelTx1 = makeTransaction()
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0'})
+    const userAddress = 'address1'
+    const cancellationTxs = List([cancelTx1])
+    const token =  makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
+    const knownTokens = Map<string, Record<TokenProps> & Readonly <TokenProps>>()
+    knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
+    const outgoingTxs = List([cancelTx1])
+    const safeInstance = makeSafe({ name: 'LOADED SAFE', address: safeAddress })
+    const expectedTx = makeTransaction({
+      baseGas: 0,
+      blockNumber: 0,
+      cancelled: false,
+      confirmations: List([]),
+      creationTx: false,
+      customTx: false,
+      data: EMPTY_DATA,
+      dataDecoded: null,
+      decimals: 18,
+      decodedParams: null,
+      executionDate: '',
+      executionTxHash: '',
+      executor: '',
+      gasPrice: '',
+      gasToken: ZERO_ADDRESS,
+      isCancellationTx: false,
+      isCollectibleTransfer: false,
+      isExecuted: false,
+      isSuccessful: false,
+      isTokenTransfer: false,
+      modifySettingsTx: false,
+      multiSendTx: false,
+      nonce: 0,
+      operation: 0,
+      origin: '',
+      recipient: safeAddress2,
+      refundParams: null,
+      refundReceiver: ZERO_ADDRESS,
+      safeTxGas: 0,
+      safeTxHash: '',
+      setupData: '',
+      status: TransactionStatus.FAILED,
+      submissionDate: '',
+      symbol: 'ETH',
+      upgradeTx: false,
+      value: '0',
+    })
 
     // when
+    const txResult = await buildTx({cancellationTxs, currentUser: userAddress, knownTokens, outgoingTxs, safe: safeInstance,   tx: transaction, txCode: null})
 
 
     // then
-
+    expect(txResult).toStrictEqual(expectedTx)
   })
 })
 
@@ -510,13 +572,34 @@ describe('updateStoredTransactionsStatus', () => {
 })
 
 describe('generateSafeTxHash', () => {
-  it('',   () => {
+  it('Given transactionArgs returns a safe transaction hash',   () => {
     // given
+    const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
+    const userAddress = 'address1'
+    const userAddress2 = 'address2'
+    const userAddress3 = 'address3'
+    const safeInstance = getMockedSafeInstance({ })
+    const txArgs = {
+      baseGas: 100,
+      data: null,
+      gasPrice: '1000',
+      gasToken: '',
+      nonce: 0,
+      operation: 0,
+      refundReceiver: userAddress,
+      safeInstance,
+      safeTxGas: 1000,
+      sender: userAddress2,
+      sigs: '',
+      to: userAddress3,
+      valueInWei: '5000'
+    }
 
     // when
-
+    const result = generateSafeTxHash(safeAddress,txArgs)
 
     // then
+    expect(result).toBe('0x21e6ebc992f959dd0a2a6ce6034c414043c598b7f446c274efb3527c30dec254')
 
   })
 })
