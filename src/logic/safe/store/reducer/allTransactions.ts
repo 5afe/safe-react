@@ -22,7 +22,7 @@ export default handleActions(
       },
     ) => {
       const { safeAddress, transactions } = action.payload
-      const oldTxs = (state && state[safeAddress]) || []
+      const oldTxs = state[safeAddress]
 
       return {
         ...state,
