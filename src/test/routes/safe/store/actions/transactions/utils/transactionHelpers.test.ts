@@ -1,13 +1,16 @@
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
-import {
+import * as transactionHelpers from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+const {
   buildTx,
   calculateTransactionStatus,
   calculateTransactionType,
   generateSafeTxHash, getRefundParams,
   isCancelTransaction,
-  isInnerTransaction,
   isPendingTransaction,
-} from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+} = transactionHelpers
+
+// We want to add jest mock to this function
+const isInnerTransaction = jest.fn(transactionHelpers.isInnerTransaction)
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { TransactionStatus, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 import makeSafe from 'src/routes/safe/store/models/safe'
@@ -86,7 +89,11 @@ describe('isInnerTransaction', () => {
 describe('isCancelTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
   const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
-  jest.mock('src/routes/safe/store/actions/transactions/utils/transactionHelpers')
+
+  // We reset mock calls to avoid dirty data from other tests and we ensure is clean
+  isInnerTransaction.mockClear()
+  expect(isInnerTransaction).toHaveBeenCalledTimes(0)
+
   afterAll(() => {
     jest.unmock('transactionHelpers')
   })
@@ -98,11 +105,11 @@ describe('isCancelTransaction', () => {
     const result = isCancelTransaction(transaction, safeAddress)
 
     // then
-    expect(result).toBe(true)
-/*    expect(isInnerTransactionSpy).toHaveBeenCalled()
-    expect(isEmptyDataSpy).toHaveBeenCalled()
-    expect(isInnerTransactionSpy).toBeCalledWith(transaction, safeAddress)
-    expect(isEmptyDataSpy).toBeCalledWith(transaction.data)*/
+    // expect(result).toBe(true)
+    expect(isInnerTransaction).toHaveBeenCalled()
+    // expect(isEmptyData).toHaveBeenCalled()
+    expect(isInnerTransaction).toBeCalledWith(transaction, safeAddress)
+    // expect(isEmptyData).toBeCalledWith(transaction.data)
   })
 })
 
