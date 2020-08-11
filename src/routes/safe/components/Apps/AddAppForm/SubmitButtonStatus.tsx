@@ -1,7 +1,7 @@
 import React from 'react'
 import { useFormState } from 'react-final-form'
 
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { isAppManifestValid } from 'src/routes/safe/components/Apps/utils'
 
 interface SubmitButtonStatusProps {

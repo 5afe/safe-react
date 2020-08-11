@@ -8,7 +8,7 @@ import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAsse
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
-import { Dispatch } from 'src/routes/safe/store/actions/types'
+import { Dispatch } from 'src/routes/safe/store/actions/types.d'
 
 export const useFetchTokens = (safeAddress: string): void => {
   const dispatch = useDispatch<Dispatch>()

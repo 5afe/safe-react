@@ -1,6 +1,7 @@
 import { boldFont, border, error, primary, secondary, secondaryText, sm, warning } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core/styles'
 
-export const styles = () => ({
+export const styles = createStyles({
   ownersList: {
     height: '192px',
     overflowY: 'scroll',
@@ -18,7 +19,7 @@ export const styles = () => ({
     position: 'absolute',
     top: '-27px',
     width: '2px',
-    zIndex: '12',
+    zIndex: 12,
   },
   verticalLinePending: {
     backgroundColor: secondaryText,
@@ -80,7 +81,7 @@ export const styles = () => ({
     justifyContent: 'center',
     marginRight: '18px',
     width: '20px',
-    zIndex: '13',
+    zIndex: 13,
 
     '& > img': {
       display: 'block',
@@ -88,7 +89,7 @@ export const styles = () => ({
   },
   button: {
     alignSelf: 'center',
-    flexGrow: '0',
+    flexGrow: 0,
     fontSize: '16px',
     justifyContent: 'center',
     paddingLeft: '14px',
