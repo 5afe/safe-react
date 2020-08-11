@@ -1,22 +1,28 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
 
-import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { FIXED } from 'src/components/Table/sorting'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { TableColumn } from 'src/components/Table/types'
+import { TableColumn } from 'src/components/Table/types.d'
+import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-// eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (token, currencySelected, currencyValues, currencyRate) => {
+const getTokenPriceInCurrency = (
+  token: Token,
+  currencySelected?: AVAILABLE_CURRENCIES,
+  currencyValues?: BalanceCurrencyList,
+  currencyRate?: number,
+): string => {
   if (!currencySelected) {
     return ''
   }
 
-  const currencyValue = currencyValues.find(({ tokenAddress }) => {
+  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
     if (token.address === ETH_ADDRESS && !tokenAddress) {
       return true
     }
@@ -24,34 +30,42 @@ const getTokenPriceInCurrency = (token, currencySelected, currencyValues, curren
     return token.address === tokenAddress
   })
 
-  if (!currencyValue) {
+  if (!currencyValue || !currencyRate) {
     return ''
   }
 
   const { balanceInBaseCurrency } = currencyValue
   const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
 
-  return `${balance} ${currencySelected}`
+  return `${formatAmountInUsFormat(balance)} ${currencySelected}`
 }
 
-// eslint-disable-next-line max-len
-export const getBalanceData = (activeTokens, currencySelected, currencyValues, currencyRate) => {
-  const rows = activeTokens.map((token) => ({
+export interface BalanceData {
+  asset: { name: string; logoUri: string; address: string; symbol: string }
+  balance: string
+  fixed: boolean
+  value: string
+}
+
+export const getBalanceData = (
+  activeTokens: List<Token>,
+  currencySelected?: AVAILABLE_CURRENCIES,
+  currencyValues?: BalanceCurrencyList,
+  currencyRate?: number,
+): List<BalanceData> =>
+  activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
       address: token.address,
       symbol: token.symbol,
     },
-    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
-    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
+    assetOrder: token.name,
+    [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance.toString())} ${token.symbol}`,
+    balanceOrder: Number(token.balance),
+    [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
-
-  return rows
-}
 
 export const generateColumns = (): List<TableColumn> => {
   const assetColumn: TableColumn = {
@@ -102,7 +116,3 @@ export const generateColumns = (): List<TableColumn> => {
 
   return List([assetColumn, balanceColumn, value, actions])
 }
-
-// eslint-disable-next-line max-len
-export const filterByZero = (data, hideZero) =>
-  data.filter((row) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

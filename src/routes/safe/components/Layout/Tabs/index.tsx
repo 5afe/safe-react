@@ -1,8 +1,8 @@
 import Tab from '@material-ui/core/Tab'
 import Tabs from '@material-ui/core/Tabs'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import { withRouter } from 'react-router-dom'
+import { useRouteMatch, useLocation, useHistory } from 'react-router-dom'
 
 import { styles } from './style'
 
@@ -18,13 +18,6 @@ import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIc
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
-
-interface Props {
-  classes: Record<string, any>
-  match: Record<string, any>
-  history: Record<string, any>
-  location: Record<string, any>
-}
 
 const BalancesLabel = (
   <>
@@ -54,12 +47,15 @@ const TransactionsLabel = (
   </>
 )
 
-const TabsComponent = (props: Props) => {
-  const { classes, location, match } = props
+const useStyles = makeStyles(styles)
 
-  const handleCallToRouter = (_, value) => {
-    const { history } = props
+const TabsComponent = (): React.ReactElement => {
+  const classes = useStyles()
+  const match = useRouteMatch()
+  const location = useLocation()
+  const history = useHistory()
 
+  const handleCallToRouter = (_: unknown, value: string) => {
     history.push(value)
   }
 
@@ -131,4 +127,4 @@ const TabsComponent = (props: Props) => {
     </Tabs>
   )
 }
-export default withStyles(styles as any)(withRouter(TabsComponent))
+export default TabsComponent

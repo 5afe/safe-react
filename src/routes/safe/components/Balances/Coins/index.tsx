@@ -2,9 +2,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
-//import CallMade from '@material-ui/icons/CallMade'
-//import CallReceived from '@material-ui/icons/CallReceived'
-//import classNames from 'classnames/bind'
 import { List } from 'immutable'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -28,12 +25,32 @@ import {
   BALANCE_TABLE_VALUE_ID,
   generateColumns,
   getBalanceData,
+  BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import { Skeleton } from '@material-ui/lab'
 
 const useStyles = makeStyles(styles as any)
 
-const Coins = (props) => {
+type Props = {
+  showReceiveFunds: () => void
+  showSendFunds: (tokenAddress: string) => void
+}
+
+export type BalanceDataRow = List<{
+  asset: {
+    name: string
+    address: string
+    logoUri: string
+  }
+  assetOrder: string
+  balance: string
+  balanceOrder: number
+  fixed: boolean
+  value: string
+}>
+
+const Coins = (props: Props): React.ReactElement => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
   const columns = generateColumns()
@@ -43,7 +60,7 @@ const Coins = (props) => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
-  const [filteredData, setFilteredData] = React.useState(List())
+  const [filteredData, setFilteredData] = React.useState<List<BalanceData>>(List())
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
@@ -64,7 +81,7 @@ const Coins = (props) => {
           sortedData.map((row, index) => (
             <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
               {autoColumns.map((column) => {
-                const { align, id, width }: any = column
+                const { align, id, width } = column
                 let cellItem
                 switch (id) {
                   case BALANCE_TABLE_ASSET_ID: {
@@ -76,7 +93,16 @@ const Coins = (props) => {
                     break
                   }
                   case BALANCE_TABLE_VALUE_ID: {
-                    cellItem = <div className={classes.currencyValueRow}>{row[id]}</div>
+                    // If there are no values for that row but we have balances, we display as '0.00 {CurrencySelected}'
+                    // In case we don't have balances, we display a skeleton
+                    const showCurrencyValueRow = row[id] || row[BALANCE_TABLE_BALANCE_ID]
+
+                    cellItem =
+                      showCurrencyValueRow && selectedCurrency ? (
+                        <div className={classes.currencyValueRow}>{row[id] ? row[id] : `0.00 ${selectedCurrency}`}</div>
+                      ) : (
+                        <Skeleton animation="wave" />
+                      )
                     break
                   }
                   default: {

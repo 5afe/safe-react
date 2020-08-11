@@ -1,14 +1,16 @@
-import { Card, FixedDialog, FixedIcon, IconText, Loader, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Card, FixedIcon, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { withSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import ManageApps from './ManageApps'
+import ManageApps from './components/ManageApps'
 import confirmTransactions from './confirmTransactions'
 import sendTransactions from './sendTransactions'
-import { getAppInfoFromUrl, staticAppsList } from './utils'
+import LegalDisclaimer from './components/LegalDisclaimer'
+import { useLegalConsent } from './hooks/useLegalConsent'
+import { useAppList } from './hooks/useAppList'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -19,12 +21,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/routes/safe/store/selectors'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { isSameHref } from 'src/utils/url'
-import { SafeApp, StoredSafeApp } from './types'
-
-const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
-const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -39,6 +36,14 @@ const Centered = styled.div`
   flex-direction: column;
 `
 
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
 const CenteredMT = styled(Centered)`
   margin-top: 5px;
 `
@@ -47,15 +52,7 @@ const IframeWrapper = styled.div`
   position: relative;
   height: 100%;
   width: 100%;
-`
-
-const IframeCoverLoading = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
+  overflow: hidden;
 `
 const operations = {
   ON_SAFE_INFO: 'ON_SAFE_INFO',
@@ -64,11 +61,10 @@ const operations = {
 }
 
 function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
-  const [appList, setAppList] = useState<Array<SafeApp>>([])
-  const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
-  const [selectedApp, setSelectedApp] = useState<string>()
-  const [loading, setLoading] = useState(true)
-  const [appIsLoading, setAppIsLoading] = useState(true)
+  const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
+
+  const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
+  const [selectedAppId, setSelectedAppId] = useState<string>()
   const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
 
   const history = useHistory()
@@ -78,8 +74,36 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const dispatch = useDispatch()
+  const { consentReceived, onConsentReceipt } = useLegalConsent()
 
-  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp), [appList, selectedApp])
+  const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
+
+  const onSelectApp = useCallback(
+    (appId) => {
+      if (selectedAppId === appId) {
+        return
+      }
+
+      setAppIsLoading(true)
+      setSelectedAppId(appId)
+    },
+    [selectedAppId],
+  )
+
+  useEffect(() => {
+    const selectFirstEnabledApp = () => {
+      const firstEnabledApp = appList.find((a) => !a.disabled)
+      if (firstEnabledApp) {
+        setSelectedAppId(firstEnabledApp.id)
+      }
+    }
+
+    const initialSelect = appList.length && !selectedAppId
+    const currentAppWasDisabled = selectedApp?.disabled
+    if (initialSelect || currentAppWasDisabled) {
+      selectFirstEnabledApp()
+    }
+  }, [appList, selectedApp, selectedAppId])
 
   const iframeRef = useCallback((node) => {
     if (node !== null) {
@@ -87,58 +111,15 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   }, [])
 
-  const onSelectApp = useCallback(
-    (appId) => {
-      const selectedApp = getSelectedApp()
-
-      if (selectedApp && selectedApp.id === appId) {
-        return
-      }
-
-      setAppIsLoading(true)
-      setSelectedApp(appId)
-    },
-    [getSelectedApp],
-  )
-
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
-
-  const onAcceptLegalDisclaimer = () => {
-    setLegalDisclaimerAccepted(true)
-    saveToStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY, true)
-  }
 
   const getContent = () => {
     if (!selectedApp) {
       return null
     }
 
-    if (!legalDisclaimerAccepted) {
-      return (
-        <FixedDialog
-          body={
-            <>
-              <Text size="md">
-                You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not
-                liable for any loss you may suffer in connection with interacting with the apps, which is at your own
-                risk. You must read our Terms, which contain more detailed provisions binding on you relating to the
-                apps.
-              </Text>
-              <br />
-              <Text size="md">
-                I have read and understood the{' '}
-                <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
-                  Terms
-                </a>{' '}
-                and this Disclaimer, and agree to be bound by them.
-              </Text>
-            </>
-          }
-          onCancel={redirectToBalance}
-          onConfirm={onAcceptLegalDisclaimer}
-          title="Disclaimer"
-        />
-      )
+    if (!consentReceived) {
+      return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
     }
 
     if (network === 'UNKNOWN' || !granted) {
@@ -150,85 +131,33 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       )
     }
 
-    const app = getSelectedApp()
-
     return (
       <IframeWrapper>
         {appIsLoading && (
-          <IframeCoverLoading>
+          <LoadingContainer>
             <Loader size="md" />
-          </IframeCoverLoading>
+          </LoadingContainer>
         )}
-        <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
+        <StyledIframe
+          frameBorder="0"
+          id={`iframe-${selectedApp.name}`}
+          ref={iframeRef}
+          src={selectedApp.url}
+          title={selectedApp.name}
+        />
       </IframeWrapper>
     )
   }
 
-  const onAppAdded = (app: SafeApp) => {
-    const newAppList = [
-      { url: app.url, disabled: false },
-      ...appList.map((a) => ({
-        url: a.url,
-        disabled: a.disabled,
-      })),
-    ]
-    saveToStorage(APPS_STORAGE_KEY, newAppList)
-
-    setAppList([...appList, { ...app, disabled: false }])
-  }
-
-  const selectFirstApp = useCallback(
-    (apps) => {
-      const firstEnabledApp = apps.find((a) => !a.disabled)
-      if (firstEnabledApp) {
-        onSelectApp(firstEnabledApp.id)
-      }
-    },
-    [onSelectApp],
-  )
-
-  const onAppToggle = async (appId, enabled) => {
-    // update in-memory list
-    const copyAppList = [...appList]
-
-    const app = copyAppList.find((a) => a.id === appId)
-    if (!app) {
-      return
-    }
-
-    app.disabled = !enabled
-    setAppList(copyAppList)
-
-    // update storage list
-    const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-    let storageApp = persistedAppList.find((a) => a.url === app.url)
-
-    if (!storageApp) {
-      storageApp = { url: app.url }
-      storageApp.disabled = !enabled
-      persistedAppList.push(storageApp)
-    } else {
-      storageApp.disabled = !enabled
-    }
-
-    saveToStorage(APPS_STORAGE_KEY, persistedAppList)
-
-    // select app
-    const selectedApp = getSelectedApp()
-    if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
-      setSelectedApp(undefined)
-      selectFirstApp(copyAppList)
-    }
-  }
-
-  const getEnabledApps = () => appList.filter((a) => !a.disabled)
+  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
 
   const sendMessageToIframe = useCallback(
     (messageId, data) => {
-      const app = getSelectedApp()
-      iframeEl?.contentWindow.postMessage({ messageId, data }, app.url)
+      if (iframeEl && selectedApp) {
+        iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+      }
     },
-    [getSelectedApp, iframeEl],
+    [iframeEl, selectedApp],
   )
 
   // handle messages from iframe
@@ -243,22 +172,16 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         case operations.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
-            await sendTransactions(
-              dispatch,
-              safeAddress,
-              data.data,
-              enqueueSnackbar,
-              closeSnackbar,
-              getSelectedApp().id,
-            )
+
+            await sendTransactions(dispatch, safeAddress, data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
           }
 
           confirmTransactions(
             safeAddress,
             safeName,
             ethBalance,
-            getSelectedApp().name,
-            getSelectedApp().iconUrl,
+            selectedApp.name,
+            selectedApp.iconUrl,
             data.data,
             openModal,
             closeModal,
@@ -288,8 +211,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
         return
       }
 
-      const app = getSelectedApp()
-      if (!app.url.includes(origin)) {
+      if (!selectedApp.url.includes(origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
         return
       }
@@ -304,65 +226,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     }
   })
 
-  // load legalDisclaimer
-  useEffect(() => {
-    const checkLegalDisclaimer = async () => {
-      const legalDisclaimer = await loadFromStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY)
-
-      if (legalDisclaimer) {
-        setLegalDisclaimerAccepted(true)
-      }
-    }
-
-    checkLegalDisclaimer()
-  }, [])
-
-  // Load apps list
-  useEffect(() => {
-    const loadApps = async () => {
-      // recover apps from storage:
-      // * third-party apps added by the user
-      // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
-
-      staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
-          list.push(staticApp)
-        }
-      })
-
-      const apps = []
-      // using the appURL to recover app info
-      for (let index = 0; index < list.length; index++) {
-        try {
-          const currentApp = list[index]
-
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
-          if (appInfo.error) {
-            throw Error(`There was a problem trying to load app ${currentApp.url}`)
-          }
-
-          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
-
-          apps.push(appInfo)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-
-      setAppList(apps)
-      setLoading(false)
-      selectFirstApp(apps)
-    }
-
-    if (!appList.length) {
-      loadApps()
-    }
-  }, [appList.length, selectFirstApp])
-
   // on iframe change
   useEffect(() => {
+    const sendMessageToIframe = (messageId, data) => {
+      iframeEl.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+    }
     const onIframeLoaded = () => {
       setAppIsLoading(false)
       sendMessageToIframe(operations.ON_SAFE_INFO, {
@@ -372,8 +240,7 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       })
     }
 
-    const app = getSelectedApp()
-    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, app.url)) {
+    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, selectedApp.url)) {
       return
     }
 
@@ -382,14 +249,14 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
     return () => {
       iframeEl.removeEventListener('load', onIframeLoaded)
     }
-  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp, sendMessageToIframe])
+  }, [ethBalance, iframeEl, network, safeAddress, selectedApp])
 
-  if (loading) {
-    return <Loader size="md" />
-  }
-
-  if (loading || !appList.length) {
-    return <Loader size="md" />
+  if (loadingAppList || !appList.length) {
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   return (
@@ -397,26 +264,12 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
       <Menu>
         <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
       </Menu>
-      {getEnabledApps().length ? (
+      {enabledApps.length ? (
         <LCL.Wrapper>
           <LCL.Menu>
-            <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
+            <LCL.List activeItem={selectedAppId} items={enabledApps} onItemClick={onSelectApp} />
           </LCL.Menu>
           <LCL.Content>{getContent()}</LCL.Content>
-          {/* <LCL.Footer>
-            {getSelectedApp() && getSelectedApp().providedBy && (
-              <>
-                <p>This App is provided by </p>
-                <ButtonLink
-                  onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-                  size="lg"
-                  testId="manage-tokens-btn"
-                >
-                  {selectedApp && getSelectedApp().providedBy.name}
-                </ButtonLink>
-              </>
-            )}
-          </LCL.Footer> */}
         </LCL.Wrapper>
       ) : (
         <Card style={{ marginBottom: '24px' }}>

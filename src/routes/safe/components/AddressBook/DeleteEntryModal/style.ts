@@ -29,6 +29,5 @@ export const styles = () => ({
   },
   smallerModalWindow: {
     height: 'auto',
-    position: 'static',
   },
 })

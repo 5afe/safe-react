@@ -1,4 +1,4 @@
-import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import { SafeRecord, SafeRecordProps } from 'src/routes/safe/store/models/safe'
 import { Map } from 'immutable'
 
 export type SafesMap = Map<string, SafeRecord>
@@ -9,11 +9,13 @@ export interface SafeReducerState {
   latestMasterContractVersion: string
 }
 
-interface SafeReducerStateSerialized extends SafeReducerState {
+interface SafeReducerStateJSON {
+  defaultSafe: 'NOT_ASKED' | string | undefined
   safes: Record<string, SafeRecordProps>
+  latestMasterContractVersion: string
 }
 
 export interface SafeReducerMap extends Map<string, any> {
-  toJS(): SafeReducerStateSerialized
+  toJS(): SafeReducerStateJSON
   get<K extends keyof SafeReducerState>(key: K): SafeReducerState[K]
 }

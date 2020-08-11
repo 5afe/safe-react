@@ -1,6 +1,7 @@
-import { screenSm, secondaryText, sm, smallFontSize, xs } from 'src/theme/variables'
+import { screenSm, secondaryText, sm, smallFontSize, xs, disabled, fontSizeHeadingSm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core/styles'
 
-export const styles = () => ({
+export const styles = createStyles({
   container: {
     alignItems: 'center',
     display: 'flex',
@@ -89,5 +90,9 @@ export const styles = () => ({
     overflowWrap: 'break-word',
     wordBreak: 'break-word',
     whiteSpace: 'normal',
+  },
+  totalBalance: {
+    color: disabled,
+    fontSize: fontSizeHeadingSm,
   },
 })

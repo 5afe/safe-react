@@ -8,7 +8,7 @@ import fetchLatestMasterContractVersion from 'src/routes/safe/store/actions/fetc
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import fetchSafeCreationTx from 'src/routes/safe/store/actions/fetchSafeCreationTx'
-import { Dispatch } from 'src/routes/safe/store/actions/types'
+import { Dispatch } from 'src/routes/safe/store/actions/types.d'
 
 export const useLoadSafe = (safeAddress: string): void => {
   const dispatch = useDispatch<Dispatch>()

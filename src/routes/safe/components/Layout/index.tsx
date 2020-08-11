@@ -2,7 +2,7 @@ import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Receive from '../Balances/Receive'
 
@@ -39,16 +39,14 @@ interface Props {
   onHide: (value: string) => void
   showSendFunds: (value: string) => void
   hideSendFunds: () => void
-  match: Record<string, any>
-  location: Record<string, any>
-  history: Record<string, any>
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const Layout = (props: Props) => {
+const Layout = (props: Props): React.ReactElement => {
   const classes = useStyles()
-  const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const { hideSendFunds, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const match = useRouteMatch()
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -120,4 +118,4 @@ const Layout = (props: Props) => {
   )
 }
 
-export default withRouter(Layout)
+export default Layout

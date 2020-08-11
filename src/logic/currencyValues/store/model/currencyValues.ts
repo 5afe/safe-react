@@ -1,57 +1,62 @@
-import { Record } from 'immutable'
+import { List, Record, RecordOf } from 'immutable'
 
 export enum AVAILABLE_CURRENCIES {
+  ETH = 'ETH',
   USD = 'USD',
   EUR = 'EUR',
-  CAD = 'CAD',
-  HKD = 'HKD',
-  ISK = 'ISK',
-  PHP = 'PHP',
-  DKK = 'DKK',
-  HUF = 'HUF',
-  CZK = 'CZK',
   AUD = 'AUD',
-  RON = 'RON',
-  SEK = 'SEK',
-  IDR = 'IDR',
-  INR = 'INR',
-  BRL = 'BRL',
-  RUB = 'RUB',
-  HRK = 'HRK',
-  JPY = 'JPY',
-  THB = 'THB',
-  CHF = 'CHF',
-  SGD = 'SGD',
-  PLN = 'PLN',
   BGN = 'BGN',
-  TRY = 'TRY',
+  BRL = 'BRL',
+  CAD = 'CAD',
+  CHF = 'CHF',
   CNY = 'CNY',
+  CZK = 'CZK',
+  DKK = 'DKK',
+  GBP = 'GBP',
+  HKD = 'HKD',
+  HRK = 'HRK',
+  HUF = 'HUF',
+  IDR = 'IDR',
+  ILS = 'ILS',
+  INR = 'INR',
+  ISK = 'ISK',
+  JPY = 'JPY',
+  KRW = 'KRW',
+  MXN = 'MXN',
+  MYR = 'MYR',
   NOK = 'NOK',
   NZD = 'NZD',
+  PHP = 'PHP',
+  PLN = 'PLN',
+  RON = 'RON',
+  RUB = 'RUB',
+  SEK = 'SEK',
+  SGD = 'SGD',
+  THB = 'THB',
+  TRY = 'TRY',
   ZAR = 'ZAR',
-  MXN = 'MXN',
-  ILS = 'ILS',
-  GBP = 'GBP',
-  KRW = 'KRW',
-  MYR = 'MYR',
 }
 
-type BalanceCurrencyRecord = {
+export type BalanceCurrencyRecord = {
   currencyName?: string
   tokenAddress?: string
   balanceInBaseCurrency: string
   balanceInSelectedCurrency: string
 }
 
-export type CurrencyRateValue = {
-  currencyRate?: number
-  selectedCurrency?: AVAILABLE_CURRENCIES
-  currencyBalances?: BalanceCurrencyRecord[]
-}
-
-export const makeBalanceCurrency = Record({
+export const makeBalanceCurrency = Record<BalanceCurrencyRecord>({
   currencyName: '',
   tokenAddress: '',
   balanceInBaseCurrency: '',
   balanceInSelectedCurrency: '',
 })
+
+export type CurrencyRateValueRecord = RecordOf<BalanceCurrencyRecord>
+
+export type BalanceCurrencyList = List<CurrencyRateValueRecord>
+
+export interface CurrencyRateValue {
+  currencyRate?: number
+  selectedCurrency?: AVAILABLE_CURRENCIES
+  currencyBalances?: BalanceCurrencyList
+}

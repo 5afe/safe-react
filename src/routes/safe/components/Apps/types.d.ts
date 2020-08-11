@@ -5,6 +5,7 @@ export type SafeApp = {
   iconUrl: string
   disabled?: boolean
   error: boolean
+  description: string
 }
 
 export type StoredSafeApp = {

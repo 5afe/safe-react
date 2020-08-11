@@ -29,7 +29,6 @@ const useStyles = makeStyles({
   },
   scalableStaticModalWindow: {
     height: 'auto',
-    position: 'static',
   },
   loaderStyle: {
     height: '500px',

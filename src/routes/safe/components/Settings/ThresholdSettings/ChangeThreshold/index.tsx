@@ -32,7 +32,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      const txData = safeInstance.contract.methods.changeThreshold('1').encodeABI()
+      const txData = safeInstance.methods.changeThreshold('1').encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
@@ -112,10 +112,10 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
             <Row align="center" className={classes.buttonRow}>
               <Button minWidth={140} onClick={onClose}>
-                BACK
+                Back
               </Button>
               <Button color="primary" minWidth={140} type="submit" variant="contained">
-                CHANGE
+                Change
               </Button>
             </Row>
           </>
