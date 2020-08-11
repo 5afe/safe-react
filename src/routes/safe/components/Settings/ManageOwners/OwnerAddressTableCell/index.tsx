@@ -4,7 +4,7 @@ import EtherScanLink from 'src/components/EtherscanLink'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { useWindowDimensions } from '../../../../container/hooks/useWindowDimensions'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 import { useEffect, useState } from 'react'
 
 const OwnerAddressTableCell = (props) => {

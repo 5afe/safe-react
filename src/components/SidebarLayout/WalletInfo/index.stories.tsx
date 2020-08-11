@@ -13,5 +13,7 @@ export const SimpleLayout = (): React.ReactElement => (
     safeName="SomeName"
     balance="$111,111"
     onToggleSafeList={() => ({})}
+    onReceiveClick={console.log}
+    onNewTransactionClick={console.log}
   />
 )

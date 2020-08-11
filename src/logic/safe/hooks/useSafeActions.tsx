@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 }
 
 type Response = {
-  onShow: (action: string) => void
+  onShow: (action: string) => () => void
   onHide: (action: string) => void
   showSendFunds: (token: string) => void
   hideSendFunds: () => void

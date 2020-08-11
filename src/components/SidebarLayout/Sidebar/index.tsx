@@ -14,9 +14,11 @@ const HelpContainer = styled.div`
 `
 type Props = {
   onToggleSafeList: () => void
+  onReceiveClick: () => void
+  onNewTransactionClick: () => void
 }
 
-const Sidebar = ({ onToggleSafeList }: Props): React.ReactElement => {
+const Sidebar = ({ onToggleSafeList, onReceiveClick, onNewTransactionClick }: Props): React.ReactElement => {
   return (
     <>
       <WalletInfo
@@ -24,6 +26,8 @@ const Sidebar = ({ onToggleSafeList }: Props): React.ReactElement => {
         safeName="SomeName"
         balance="$111,111"
         onToggleSafeList={onToggleSafeList}
+        onReceiveClick={onReceiveClick}
+        onNewTransactionClick={onNewTransactionClick}
       />
 
       <StyledDivider />

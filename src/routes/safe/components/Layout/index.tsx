@@ -1,20 +1,20 @@
 import { GenericModal } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
+//import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
 
-import Receive from '../Balances/Receive'
+//import Receive from '../Balances/Receive'
 
-import { styles } from './style'
+//import { styles } from './style'
 
-import Modal from 'src/components/Modal'
+// import Modal from 'src/components/Modal'
+// import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import NoSafe from 'src/components/NoSafe'
 import Hairline from 'src/components/layout/Hairline'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import LayoutHeader from 'src/routes/safe/components/Layout/Header'
-import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
+// import LayoutHeader from 'src/routes/safe/components/Layout/Header'
+// import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
@@ -32,20 +32,20 @@ const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
-interface Props extends RouteComponentProps {
-  sendFunds: Record<string, any>
-  showReceive: boolean
-  onShow: (value: string) => void
-  onHide: (value: string) => void
-  showSendFunds: (value: string) => void
-  hideSendFunds: () => void
-}
+// interface Props extends RouteComponentProps {
+//   sendFunds: Record<string, any>
+//   showReceive: boolean
+//   onShow: (value: string) => void
+//   onHide: (value: string) => void
+//   showSendFunds: (value: string) => void
+//   hideSendFunds: () => void
+// }
 
-const useStyles = makeStyles(styles as any)
+//const useStyles = makeStyles(styles as any)
 
-const Layout = (props: Props) => {
-  const classes = useStyles()
-  const { showSendFunds, hideSendFunds, match, onHide, onShow, sendFunds, showReceive } = props
+const Layout = (props: RouteComponentProps) => {
+  //const classes = useStyles()
+  const { match } = props
 
   const [modal, setModal] = useState({
     isOpen: false,
@@ -81,8 +81,8 @@ const Layout = (props: Props) => {
 
   return (
     <>
-      <LayoutHeader onShow={onShow} showSendFunds={showSendFunds} />
-      <TabsComponent />
+      {/* <LayoutHeader onShow={onShow} showSendFunds={showSendFunds} />
+      <TabsComponent /> */}
       <Hairline color={border} style={{ marginTop: '-2px' }} />
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
@@ -96,24 +96,6 @@ const Layout = (props: Props) => {
         <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
       </Switch>
-
-      <SendModal
-        activeScreenType="chooseTxType"
-        isOpen={sendFunds.isOpen}
-        onClose={hideSendFunds}
-        selectedToken={sendFunds.selectedToken}
-      />
-
-      <Modal
-        description="Receive Tokens Form"
-        handleClose={onHide('Receive')}
-        open={showReceive}
-        paperClassName={classes.receiveModal}
-        title="Receive Tokens"
-      >
-        <Receive onClose={onHide('Receive')} />
-      </Modal>
-
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
   )

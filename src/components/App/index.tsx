@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
-import { connect } from 'react-redux'
+import { connect, useSelector } from 'react-redux'
 import { useRouteMatch } from 'react-router-dom'
 
 import AlertIcon from './assets/alert.svg'
@@ -24,6 +24,13 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import Modal from 'src/components/Modal'
+import SendModal from 'src/routes/safe/components/Balances/SendModal'
+import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
+import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
+import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
+import Receive from './ModalReceive'
 
 const notificationStyles = {
   success: {
@@ -44,8 +51,15 @@ const desiredNetwork = getNetwork()
 
 const App = ({ children, classes, currentNetwork }) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
-  const match = useRouteMatch({ path: SAFELIST_ADDRESS, strict: true })
   const { toggleSidebar } = useContext(SidebarContext)
+
+  const match = useRouteMatch({ path: SAFELIST_ADDRESS, strict: true })
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  useLoadSafe(safeAddress)
+  useSafeScheduledUpdates(safeAddress)
+  const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
+
+  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
 
   return (
     <div className={styles.frame}>
@@ -71,9 +85,34 @@ const App = ({ children, classes, currentNetwork }) => {
 
           <SidebarLayout
             topbar={<Header />}
-            sidebar={match ? <Sidebar onToggleSafeList={toggleSidebar} /> : null}
+            sidebar={
+              match ? (
+                <Sidebar
+                  onToggleSafeList={toggleSidebar}
+                  onReceiveClick={onShow('Receive')}
+                  onNewTransactionClick={() => showSendFunds('')}
+                />
+              ) : null
+            }
             body={children}
           />
+
+          <SendModal
+            activeScreenType="chooseTxType"
+            isOpen={sendFunds.isOpen}
+            onClose={hideSendFunds}
+            selectedToken={sendFunds.selectedToken}
+          />
+
+          <Modal
+            description="Receive Tokens Form"
+            handleClose={onHide('Receive')}
+            open={safeActionsState.showReceive as boolean}
+            paperClassName={classes.receiveModal}
+            title="Receive Tokens"
+          >
+            <Receive onClose={onHide('Receive')} />
+          </Modal>
         </>
       </SnackbarProvider>
       <CookiesBanner />

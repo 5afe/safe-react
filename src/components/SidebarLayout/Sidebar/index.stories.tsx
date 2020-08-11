@@ -7,4 +7,6 @@ export default {
   component: Sidebar,
 }
 
-export const Base = (): React.ReactElement => <Sidebar onToggleSafeList={() => console.log} />
+export const Base = (): React.ReactElement => (
+  <Sidebar onReceiveClick={console.log} onNewTransactionClick={console.log} onToggleSafeList={() => console.log} />
+)

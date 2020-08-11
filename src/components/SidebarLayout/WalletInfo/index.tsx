@@ -59,9 +59,18 @@ type Props = {
   safeName: string
   balance: string
   onToggleSafeList: () => void
+  onReceiveClick: () => void
+  onNewTransactionClick: () => void
 }
 
-const WalletInfo = ({ address, safeName, balance, onToggleSafeList }: Props): React.ReactElement => {
+const WalletInfo = ({
+  address,
+  safeName,
+  balance,
+  onToggleSafeList,
+  onReceiveClick,
+  onNewTransactionClick,
+}: Props): React.ReactElement => {
   return (
     <Container>
       <IdenticonContainer>
@@ -75,12 +84,20 @@ const WalletInfo = ({ address, safeName, balance, onToggleSafeList }: Props): Re
       <Text size="xl">{safeName}</Text>
       <EthHashInfo hash={address} shortenHash={4} textSize="sm" />
       <IconContainer>
-        <Icon size="sm" type="qrCode" />
+        <UnStyledButton onClick={onReceiveClick}>
+          <Icon size="sm" type="qrCode" tooltip="receive" />
+        </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
         <EtherscanButton value={address} network={getNetwork()} />
       </IconContainer>
       <StyledText size="xl">{balance}</StyledText>
-      <Button size="md" iconType="transactionsInactive" color="primary" variant="contained">
+      <Button
+        size="md"
+        iconType="transactionsInactive"
+        color="primary"
+        variant="contained"
+        onClick={onNewTransactionClick}
+      >
         New Transaction
       </Button>
     </Container>

@@ -9,7 +9,7 @@ import { composeValidators, required } from 'src/components/forms/validator'
 import Field from 'src/components/forms/Field'
 import { isValid as isURLValid } from 'src/utils/url'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { useDebounce } from 'src/routes/safe/container/hooks/useDebounce'
+import { useDebounce } from 'src/logic/hooks/useDebounce'
 
 const validateUrl = (url: string): string | undefined => (isURLValid(url) ? undefined : 'Invalid URL')
 

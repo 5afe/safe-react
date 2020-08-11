@@ -13,7 +13,13 @@ export default {
 
 export const Base = (): React.ReactElement => {
   const topbar = <div>Gnosis Logo</div>
-  const sidebar = <Sidebar onToggleSafeList={() => console.log} />
+  const sidebar = (
+    <Sidebar
+      onToggleSafeList={() => console.log}
+      onReceiveClick={() => console.log}
+      onNewTransactionClick={() => console.log}
+    />
+  )
   const body = <div>This is some body</div>
 
   return <Layout topbar={topbar} sidebar={sidebar} body={body} />
