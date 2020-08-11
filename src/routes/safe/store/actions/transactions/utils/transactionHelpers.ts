@@ -98,7 +98,7 @@ export const isCustomTransaction = async (
 export const getRefundParams = async (
   tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
-): Promise<any> => {
+): Promise<{ fee: string; symbol: string } | null> => {
   const txGasPrice = Number(tx.gasPrice)
   let refundParams = null
 
