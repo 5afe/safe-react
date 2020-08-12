@@ -21,10 +21,11 @@ const InlineText = styled(Text)`
 const NestedWrapper = styled.div`
   text-indent: 24px;
 `
+type paramType = 'address' | 'tx'
 
 interface RenderValueProps {
   method: string
-  type: string
+  type: string | paramType
   value: string | string[]
 }
 
@@ -32,6 +33,8 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
   const classes = useStyles()
   const [cut, setCut] = React.useState(undefined)
   const { width } = useWindowDimensions()
+
+  const etherscanType: paramType = ['tx', 'address'].includes(type) ? (type as paramType) : 'address'
 
   React.useEffect(() => {
     if (width <= 900) {
@@ -47,13 +50,13 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <SafeEtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
+          <SafeEtherscanLink type={etherscanType} key={`${method}-value-${index}`} cut={cut} value={value} />
         ))}
       </NestedWrapper>
     )
   }
 
-  return <SafeEtherscanLink className={classes.address} cut={cut} value={value as string} />
+  return <SafeEtherscanLink type={etherscanType} className={classes.address} cut={cut} value={value as string} />
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
