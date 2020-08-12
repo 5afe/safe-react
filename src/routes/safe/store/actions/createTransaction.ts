@@ -95,7 +95,7 @@ export const storeTx = async (
   }
 }
 
-interface CreateTransaction extends WithSnackbarProps {
+interface CreateTransactionArgs extends WithSnackbarProps {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number
@@ -108,23 +108,24 @@ interface CreateTransaction extends WithSnackbarProps {
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
+type ConfirmEventHandler = (safeTxHash: string) => void
 
-const createTransaction = ({
-  safeAddress,
-  to,
-  valueInWei,
-  txData = EMPTY_DATA,
-  notifiedTransaction,
-  enqueueSnackbar,
-  closeSnackbar,
-  txNonce,
-  operation = CALL,
-  navigateToTransactionsTab = true,
-  origin = null,
-}: CreateTransaction): CreateTransactionAction => async (
-  dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<void> => {
+const createTransaction = (
+  {
+    safeAddress,
+    to,
+    valueInWei,
+    txData = EMPTY_DATA,
+    notifiedTransaction,
+    enqueueSnackbar,
+    closeSnackbar,
+    txNonce,
+    operation = CALL,
+    navigateToTransactionsTab = true,
+    origin = null,
+  }: CreateTransactionArgs,
+  onUserConfirm: ConfirmEventHandler,
+): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {
@@ -212,6 +213,7 @@ const createTransaction = ({
         try {
           txHash = hash
           closeSnackbar(beforeExecutionKey)
+          // onUserConfirm()
 
           pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
 
