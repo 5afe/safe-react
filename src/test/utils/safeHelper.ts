@@ -7,6 +7,8 @@ import {
   TxServiceModel,
 } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
+import { List, Map } from 'immutable'
+import { PendingActionValues } from 'src/routes/safe/store/models/types/transaction'
 
 const mockNonPayableTransactionObject = (callResult?: string): NonPayableTransactionObject<string | void | boolean | string[]> => {
   return {
@@ -108,6 +110,9 @@ type TransactionProps = {
   nonce?: number | null
   operation?: number
   origin?: string | null
+  ownersWithPendingActions?: Map<PendingActionValues, List<any>>,
+  recipient?: string,
+  refundParams?: string,
   refundReceiver?: string
   safe?: string
   safeTxGas?: number
@@ -140,6 +145,9 @@ export const getMockedTxServiceModel = (txProps: TransactionProps): TxServiceMod
     nonce: 0,
     operation: 0,
     origin: '',
+    ownersWithPendingActions: Map(),
+    recipient: '',
+    refundParams: '',
     refundReceiver: '',
     safe: '',
     safeTxGas: 0,
