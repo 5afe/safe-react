@@ -23,6 +23,9 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { isSameHref } from 'src/utils/url'
 
+const StyledCard = styled(Card)`
+  margin-bottom: 24px;
+`
 const StyledIframe = styled.iframe`
   padding: 15px;
   box-sizing: border-box;
@@ -272,11 +275,11 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           <LCL.Content>{getContent()}</LCL.Content>
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
+        <StyledCard>
           <Centered>
             <Title size="xs">No Apps Enabled</Title>
           </Centered>
-        </Card>
+        </StyledCard>
       )}
       <CenteredMT>
         <IconText
