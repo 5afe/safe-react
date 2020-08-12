@@ -12,7 +12,7 @@ import {
   SETTINGS_TAB_BTN_TEST_ID,
   APPS_TAB_BTN_TEST_ID,
   TRANSACTIONS_TAB_BTN_TEST_ID,
-} from 'src/routes/safe/components/Layout'
+} from 'src/routes/safe/container'
 import SettingsTab from 'src/routes/safe/components/Layout/Tabs/SettingsTab'
 import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIcon'
 import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
