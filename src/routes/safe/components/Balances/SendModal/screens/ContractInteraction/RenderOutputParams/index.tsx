@@ -1,26 +1,24 @@
 import React from 'react'
 import { useField } from 'react-final-form'
-import { withStyles } from '@material-ui/core/styles'
-
+import { makeStyles } from '@material-ui/core/styles'
 import TextField from 'src/components/forms/TextField'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
-const styles = () => ({
+const useStyles = makeStyles({
   output: {
-    '& > div': {
-      '& > textarea': {
-        letterSpacing: '-0.5px',
-        lineHeight: '20px',
-        height: '40px',
-        overflowY: 'auto',
-      },
+    '& > div > textarea': {
+      letterSpacing: '-0.5px',
+      lineHeight: '20px',
+      height: '40px',
+      overflowY: 'auto',
     },
   },
 })
 
-const RenderOutputParams = ({ classes }) => {
+const RenderOutputParams = () => {
+  const classes = useStyles()
   const {
     input: { value: method },
   }: any = useField('selectedMethod', { subscription: { value: true } })
@@ -62,4 +60,4 @@ const RenderOutputParams = ({ classes }) => {
   ) : null
 }
 
-export default withStyles(styles as any)(RenderOutputParams)
+export default RenderOutputParams
