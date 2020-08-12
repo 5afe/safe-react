@@ -1,12 +1,12 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
-import List from '@material-ui/core/List'
+import ListMui from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
-import { Icon, FixedIcon } from '@gnosis.pm/safe-react-components'
+import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
 const StyledListItemText = styled(ListItemText)`
   span {
@@ -37,92 +37,66 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-export default function NestedList() {
-  const classes = useStyles()
-  const [open, setOpen] = React.useState(true)
+export type ListSubItemType = {
+  label: string
+  icon?: React.ReactNode
+  onItemClick: () => void
+}
 
-  const handleClick = () => {
-    setOpen(!open)
+export type ListItemType = {
+  label: string
+  icon?: React.ReactNode
+  onItemClick: () => void
+  subItems?: ListSubItemType[]
+}
+
+type Props = {
+  items: ListItemType[]
+}
+
+const List = ({ items }: Props): React.ReactElement => {
+  const classes = useStyles()
+  const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
+
+  const onItemClick = (item: ListItemType | ListSubItemType) => {
+    if ((item as ListItemType).subItems) {
+      const cp = { ...groupCollapseStatus }
+      cp[item.label] = cp[item.label] ? false : true
+      setGroupCollapseStatus(cp)
+    }
+    item.onItemClick()
+  }
+
+  const getListItem = (item: ListItemType | ListSubItemType) => {
+    const onClick = () => onItemClick(item)
+    return (
+      <ListItem button key={item.label} onClick={onClick}>
+        {item.icon && <StyledListItemIcon>{item.icon}</StyledListItemIcon>}
+        <StyledListItemText primary={item.label} />
+        {(item as ListItemType).subItems &&
+          (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
+      </ListItem>
+    )
   }
 
   return (
-    <List component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      <ListItem button>
-        <StyledListItemIcon>
-          <Icon size="md" type="assets" />
-        </StyledListItemIcon>
-        <StyledListItemText primary="Assets" />
-      </ListItem>
-      <ListItem button>
-        <StyledListItemIcon>
-          <Icon size="md" type="transactionsInactive" />
-        </StyledListItemIcon>
-        <StyledListItemText primary="Transactions" />
-      </ListItem>
-      <ListItem button>
-        <StyledListItemIcon>
-          <Icon size="md" type="addressBook" />
-        </StyledListItemIcon>
-        <StyledListItemText primary="Address Book" />
-      </ListItem>
-      <ListItem button onClick={handleClick}>
-        <StyledListItemIcon>
-          <Icon size="md" type="apps" />
-        </StyledListItemIcon>
-        <StyledListItemText primary="Apps" />
-        {open ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="apps" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="App 1" />
-          </ListItem>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="apps" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="App 2" />
-          </ListItem>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="apps" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="App 3" />
-          </ListItem>
-        </List>
-      </Collapse>
-      <ListItem button onClick={handleClick}>
-        <StyledListItemIcon>
-          <Icon size="md" type="settings" />
-        </StyledListItemIcon>
-        <StyledListItemText primary="Settings" />
-        {open ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />}
-      </ListItem>
-      <Collapse in={open} timeout="auto" unmountOnExit>
-        <List component="div" disablePadding>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="settings" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="Setting 1" />
-          </ListItem>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="settings" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="Setting 2" />
-          </ListItem>
-          <ListItem button className={classes.nested}>
-            <StyledListItemIcon>
-              <Icon size="md" type="settings" />
-            </StyledListItemIcon>
-            <StyledListItemText primary="Setting 3" />
-          </ListItem>
-        </List>
-      </Collapse>
-    </List>
+    <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
+      {items.map((i) => {
+        return (
+          <div key={i.label}>
+            {getListItem(i)}
+            {i.subItems && (
+              <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
+                <ListMui component="div" disablePadding>
+                  {i.subItems.map(getListItem)}
+                </ListMui>
+              </Collapse>
+            )}
+          </div>
+        )
+      })}
+    </ListMui>
   )
 }
+
+export default List

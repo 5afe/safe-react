@@ -4,18 +4,12 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
 
-//import Receive from '../Balances/Receive'
-
 //import { styles } from './style'
 
-// import Modal from 'src/components/Modal'
-// import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import NoSafe from 'src/components/NoSafe'
-import Hairline from 'src/components/layout/Hairline'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
+// import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { border } from 'src/theme/variables'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
@@ -30,15 +24,6 @@ const Settings = React.lazy(() => import('../components/Settings'))
 const Balances = React.lazy(() => import('../components/Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
-
-// interface Props extends RouteComponentProps {
-//   sendFunds: Record<string, any>
-//   showReceive: boolean
-//   onShow: (value: string) => void
-//   onHide: (value: string) => void
-//   showSendFunds: (value: string) => void
-//   hideSendFunds: () => void
-// }
 
 //const useStyles = makeStyles(styles as any)
 
@@ -80,8 +65,7 @@ const Layout = (props: RouteComponentProps) => {
 
   return (
     <>
-      <TabsComponent />
-      <Hairline color={border} style={{ marginTop: '-2px' }} />
+      {/* <TabsComponent /> */}
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
