@@ -1,16 +1,5 @@
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
-import * as transactionHelpers from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
-const {
-  buildTx,
-  calculateTransactionStatus,
-  calculateTransactionType,
-  generateSafeTxHash, getRefundParams,
-  isCancelTransaction,
-  isPendingTransaction,
-} = transactionHelpers
 
-// We want to add jest mock to this function
-const isInnerTransaction = jest.fn(transactionHelpers.isInnerTransaction)
 import { makeTransaction } from 'src/routes/safe/store/models/transaction'
 import { TransactionStatus, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
 import makeSafe from 'src/routes/safe/store/models/safe'
@@ -18,6 +7,20 @@ import { List, Map, Record } from 'immutable'
 import { makeToken, TokenProps } from 'src/logic/tokens/store/model/token'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import {
+  buildTx,
+  calculateTransactionStatus,
+  calculateTransactionType,
+  generateSafeTxHash,
+  getRefundParams,
+  isCancelTransaction, isCustomTransaction,
+  isInnerTransaction,
+  isModifySettingsTransaction,
+  isMultiSendTransaction,
+  isOutgoingTransaction,
+  isPendingTransaction,
+  isUpgradeTransaction,
+} from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
 import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
@@ -88,28 +91,25 @@ describe('isInnerTransaction', () => {
 
 describe('isCancelTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
-
-  // We reset mock calls to avoid dirty data from other tests and we ensure is clean
-  isInnerTransaction.mockClear()
-  expect(isInnerTransaction).toHaveBeenCalledTimes(0)
-
-  afterAll(() => {
-    jest.unmock('transactionHelpers')
-  })
-  it('The given tx is an inner transaction and has empty data, should return true',   () => {
+  it("Given a inner transaction with empty data, returns true", () => {
     // given
-    const transaction = makeTransaction({ recipient: safeAddress2, value: '100'})
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
     // when
     const result = isCancelTransaction(transaction, safeAddress)
 
     // then
-    // expect(result).toBe(true)
-    expect(isInnerTransaction).toHaveBeenCalled()
-    // expect(isEmptyData).toHaveBeenCalled()
-    expect(isInnerTransaction).toBeCalledWith(transaction, safeAddress)
-    // expect(isEmptyData).toBeCalledWith(transaction.data)
+    expect(result).toBe(true)
+  })
+  it("Given a inner transaction without empty data, returns false", () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test'})
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
   })
 })
 
@@ -151,61 +151,257 @@ describe('isPendingTransaction', () => {
 })
 
 describe('isModifySettingsTransaction', () => {
-  it('',   () => {
+  const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
+  it('Given an inner transaction without empty data, returns true',   () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test' })
 
     // when
-
+    const result = isModifySettingsTransaction(transaction, safeAddress)
 
     // then
+    expect(result).toBe(true)
+  })
+  it('Given an inner transaction with empty data, returns false',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
+    // when
+    const result = isModifySettingsTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
   })
 })
 
 describe('isMultiSendTransaction', () => {
-  it('',   () => {
+  it('Given a transaction without value, the data has multisend substring, returns true',   () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
     // when
-
+    const result = isMultiSendTransaction(transaction)
 
     // then
+    expect(result).toBe(true)
+
+  })
+  it('Given a transaction without data, returns false',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
+
+    // when
+    const result = isMultiSendTransaction(transaction)
+
+    // then
+    expect(result).toBe(false)
+
+  })
+  it('Given a transaction without value, the data has not multisend substring, returns true',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'thisiswrongdata' })
+
+    // when
+    const result = isMultiSendTransaction(transaction)
+
+    // then
+    expect(result).toBe(false)
 
   })
 })
 
 describe('isUpgradeTransaction', () => {
-  it('',   () => {
+  it('The transaction data is empty, returns false',   () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
     // when
-
+    const result = isUpgradeTransaction(transaction)
 
     // then
+    expect(result).toBe(false)
+
+  })
+  it('The transaction data is multisend transaction but does not have upgradeTx data, returns false',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
+
+    // when
+    const result = isUpgradeTransaction(transaction)
+
+    // then
+    expect(result).toBe(false)
+
+  })
+  it('The transaction data is multisend transaction has upgradeTx data, returns true',   () => {
+    // given
+    const upgradeTxData = `0x8d80ff0a000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000f200dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247de7edef000000000000000000000000d5d82b6addc9027b22dca772aa68d5d74cdbdf4400dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024f08a032300000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000`
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: upgradeTxData })
+
+    // when
+    const result = isUpgradeTransaction(transaction)
+
+    // then
+    expect(result).toBe(true)
 
   })
 })
 
 describe('isOutgoingTransaction', () => {
-  it('',   () => {
+  it('The transaction has not a to address equal to the safe address and has no empty data, return true',   () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
 
     // when
-
+    const result = isOutgoingTransaction(transaction, safeAddress)
 
     // then
+    expect(result).toBe(true)
+
+  })
+  it('The transaction has an address equal to the safe address, return false',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test' })
+
+    // when
+    const result = isOutgoingTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+
+  })
+  it('The transaction has not a to address equal to the safe address but has empty data, return false',   () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
+
+    // when
+    const result = isOutgoingTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
 
   })
 })
 
+jest.mock('src/logic/tokens/utils/tokenHelpers')
 describe('isCustomTransaction', () => {
-  it('',   () => {
+  afterAll(() => {
+    jest.unmock('src/logic/tokens/utils/tokenHelpers')
+  })
+  it('Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction, returns true',   async () => {
     // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
+    const txCode = ''
+    const knownTokens = Map<string, Record<TokenProps> & Readonly <TokenProps>>()
+    const token =  makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
+    knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
+
+    const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
+
+    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
+    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
 
     // when
-
+    const result = await isCustomTransaction(transaction, txCode, safeAddress, knownTokens)
 
     // then
+    expect(result).toBe(true)
+    expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
+    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
+
+  })
+  it('Is outgoing transaction, is SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction, returns false',   async () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
+    const txCode = ''
+    const knownTokens = Map<string, Record<TokenProps> & Readonly <TokenProps>>()
+    const token =  makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
+    knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
+
+    const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
+
+    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => true)
+    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
+
+    // when
+    const result = await isCustomTransaction(transaction, txCode, safeAddress, knownTokens)
+
+    // then
+    expect(result).toBe(false)
+    expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
+    expect(txHelpers.isSendERC721Transaction).not.toHaveBeenCalled()
+
+  })
+  it('Is outgoing transaction, not SendERC20Transaction, isUpgradeTransaction and not isSendERC721Transaction, returns false',   async () => {
+    // given
+    const upgradeTxData = `0x8d80ff0a000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000f200dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247de7edef000000000000000000000000d5d82b6addc9027b22dca772aa68d5d74cdbdf4400dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024f08a032300000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000`
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: upgradeTxData })
+    const txCode = ''
+    const knownTokens = Map<string, Record<TokenProps> & Readonly <TokenProps>>()
+    const token =  makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
+    knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
+
+    const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
+
+    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => true)
+    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
+
+    // when
+    const result = await isCustomTransaction(transaction, txCode, safeAddress, knownTokens)
+
+    // then
+    expect(result).toBe(false)
+    expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
+
+  })
+  it('Is outgoing transaction, is SendERC20Transaction, not isUpgradeTransaction and isSendERC721Transaction, returns false',   async () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
+    const txCode = ''
+    const knownTokens = Map<string, Record<TokenProps> & Readonly <TokenProps>>()
+    const token =  makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
+    knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
+
+    const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
+
+    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
+    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => true)
+
+    // when
+    const result = await isCustomTransaction(transaction, txCode, safeAddress, knownTokens)
+
+    // then
+    expect(result).toBe(false)
+    expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
+    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
 
   })
 })
