@@ -202,6 +202,7 @@ const createTransaction = ({
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
       safeTxHash: generateSafeTxHash(safeAddress, txArgs),
+      submissionDate: new Date().toISOString(),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 

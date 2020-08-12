@@ -1,5 +1,6 @@
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { AbstractProvider } from 'web3-core/types'
 
 const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
 
@@ -16,26 +17,17 @@ export const ethSigner = async ({
   sender,
   to,
   valueInWei,
-}) => {
-  const web3: any = await getWeb3()
-  const txHash = await safeInstance.getTransactionHash(
-    to,
-    valueInWei,
-    data,
-    operation,
-    safeTxGas,
-    baseGas,
-    gasPrice,
-    gasToken,
-    refundReceiver,
-    nonce,
-    {
+}): Promise<string> => {
+  const web3 = await getWeb3()
+  const txHash = await safeInstance.methods
+    .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
+    .call({
       from: sender,
-    },
-  )
+    })
 
   return new Promise(function (resolve, reject) {
-    web3.currentProvider.sendAsync(
+    const provider = web3.currentProvider as AbstractProvider
+    provider.sendAsync(
       {
         jsonrpc: '2.0',
         method: 'eth_sign',
