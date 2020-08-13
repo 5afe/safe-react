@@ -8,7 +8,7 @@ import {
   safeTotalTransactionsAmountSelector,
 } from 'src/logic/safe/store/selectors/allTransactions'
 import { Transaction } from 'src/logic/safe/store/models/types/transactions'
-import { safeParamAddressFromStateSelector } from '../../../../logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
   offset: number
