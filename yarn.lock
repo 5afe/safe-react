@@ -1325,9 +1325,9 @@
     "@ethersproject/rlp" "^5.0.0"
     "@ethersproject/signing-key" "^5.0.0"
 
-"@gnosis.pm/safe-apps-sdk@https://github.com/gnosis/safe-apps-sdk.git#4697e02d8922faf5afe004ef7e2f68b9b66a9158":
+"@gnosis.pm/safe-apps-sdk@https://github.com/gnosis/safe-apps-sdk.git#9682014af55050fd39be3baf68c9e0fc9f3380a3":
   version "0.3.1"
-  resolved "https://github.com/gnosis/safe-apps-sdk.git#4697e02d8922faf5afe004ef7e2f68b9b66a9158"
+  resolved "https://github.com/gnosis/safe-apps-sdk.git#9682014af55050fd39be3baf68c9e0fc9f3380a3"
 
 "@gnosis.pm/safe-contracts@1.1.1-dev.2":
   version "1.1.1-dev.2"

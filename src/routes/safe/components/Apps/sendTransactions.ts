@@ -1,3 +1,5 @@
+import { Transaction } from '@gnosis.pm/safe-apps-sdk'
+import { Dispatch } from 'redux'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions/send'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
@@ -15,7 +17,14 @@ const multiSendAbi = [
   },
 ]
 
-const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnackbar, origin) => {
+const sendTransactions = (
+  dispatch: Dispatch,
+  safeAddress: string,
+  txs: Transaction[],
+  enqueueSnackbar,
+  closeSnackbar,
+  origin: string,
+) => {
   const web3 = getWeb3()
   const multiSend: any = new web3.eth.Contract(multiSendAbi as any, MULTI_SEND_ADDRESS)
 
@@ -34,18 +43,21 @@ const sendTransactions = (dispatch, safeAddress, txs, enqueueSnackbar, closeSnac
   const encodeMultiSendCallData = multiSend.methods.multiSend(`0x${joinedTxs}`).encodeABI()
 
   return dispatch(
-    createTransaction({
-      safeAddress,
-      to: MULTI_SEND_ADDRESS,
-      valueInWei: '0',
-      txData: encodeMultiSendCallData,
-      notifiedTransaction: 'STANDARD_TX',
-      enqueueSnackbar,
-      closeSnackbar,
-      operation: DELEGATE_CALL,
-      // navigateToTransactionsTab: false,
-      origin,
-    } as any),
+    createTransaction(
+      {
+        safeAddress,
+        to: MULTI_SEND_ADDRESS,
+        valueInWei: '0',
+        txData: encodeMultiSendCallData,
+        notifiedTransaction: 'STANDARD_TX',
+        enqueueSnackbar,
+        closeSnackbar,
+        operation: DELEGATE_CALL,
+        // navigateToTransactionsTab: false,
+        origin,
+      },
+      (safeTxHash: string) => console.log(safeTxHash),
+    ),
   )
 }
 export default sendTransactions

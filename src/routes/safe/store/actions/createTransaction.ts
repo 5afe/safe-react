@@ -124,7 +124,7 @@ const createTransaction = (
     navigateToTransactionsTab = true,
     origin = null,
   }: CreateTransactionArgs,
-  onUserConfirm: ConfirmEventHandler,
+  onUserConfirm?: ConfirmEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 

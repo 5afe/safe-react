@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { Networks, INTERFACE_MESSAGES } from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
@@ -93,10 +93,13 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
     }
 
     setAppIsLoading(false)
-    sendMessageToIframe(INTERFACE_MESSAGES.ON_SAFE_INFO, {
-      safeAddress,
-      network: network as Networks,
-      ethBalance,
+    sendMessageToIframe({
+      messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
+      data: {
+        safeAddress,
+        network,
+        ethBalance,
+      },
     })
   }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
 
