@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
-import NestedList from '../../List'
+import List, { ListItemType } from '../../List'
 import WalletInfo from '../WalletInfo'
 
 const StyledDivider = styled(Divider)`
@@ -13,6 +13,7 @@ const HelpContainer = styled.div`
   margin-bottom: 8px;
 `
 type Props = {
+  items: ListItemType[]
   safeAddress: string | null
   safeName: string | null
   balance: string | null
@@ -23,6 +24,7 @@ type Props = {
 }
 
 const Sidebar = ({
+  items,
   balance,
   safeAddress,
   safeName,
@@ -44,7 +46,7 @@ const Sidebar = ({
       />
 
       <StyledDivider />
-      <NestedList />
+      <List items={items} />
 
       <HelpContainer>
         <StyledDivider />
