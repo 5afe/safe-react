@@ -12,5 +12,11 @@ export const allTransactionsSelector = createSelector(getTransactionsStateSelect
 export const safeAllTransactionsSelector = createSelector(
   safeParamAddressFromStateSelector,
   allTransactionsSelector,
-  (safeAddress, transactions) => transactions[safeAddress],
+  (safeAddress, transactions) => transactions[safeAddress]?.transactions || [],
+)
+
+export const safeTotalTransactionsAmountSelector = createSelector(
+  safeParamAddressFromStateSelector,
+  allTransactionsSelector,
+  (safeAddress, transactions) => transactions[safeAddress]?.totalTransactionsCount || 0,
 )

@@ -7,6 +7,7 @@ export type LoadMoreTransactionsAction = {
   payload: {
     safeAddress: string
     transactions: Transaction[]
+    totalTransactionsAmount: number
   }
 }
 
