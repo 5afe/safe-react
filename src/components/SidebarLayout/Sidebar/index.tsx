@@ -45,8 +45,12 @@ const Sidebar = ({
         onNewTransactionClick={onNewTransactionClick}
       />
 
-      <StyledDivider />
-      <List items={items} />
+      {items.length ? (
+        <>
+          <StyledDivider />
+          <List items={items} />
+        </>
+      ) : null}
 
       <HelpContainer>
         <StyledDivider />

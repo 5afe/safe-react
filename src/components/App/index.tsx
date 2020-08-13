@@ -59,8 +59,10 @@ const App = ({ children, classes, currentNetwork }) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SidebarContext)
 
-  const matchWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const matchWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
+  const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
+
+  const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const matchSafeWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
     url: string
     params: Record<string, string>
   }
@@ -81,38 +83,44 @@ const App = ({ children, classes, currentNetwork }) => {
 
   const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
 
-  const items: ListItemType[] = [
-    {
-      label: 'Assets',
-      icon: <Icon size="md" type="assets" />,
-      selected: matchWithAction.params.safeAction === 'balances',
-      onItemClick: () => history.push(`${matchWithAddress.url}/balances`),
-    },
-    {
-      label: 'Transactions',
-      icon: <Icon size="md" type="transactionsInactive" />,
-      selected: matchWithAction.params.safeAction === 'transactions',
-      onItemClick: () => history.push(`${matchWithAddress.url}/transactions`),
-    },
-    {
-      label: 'AddressBook',
-      icon: <Icon size="md" type="addressBook" />,
-      selected: matchWithAction.params.safeAction === 'address-book',
-      onItemClick: () => history.push(`${matchWithAddress.url}/address-book`),
-    },
-    {
-      label: 'Apps',
-      icon: <Icon size="md" type="apps" />,
-      selected: matchWithAction.params.safeAction === 'apps',
-      onItemClick: () => history.push(`${matchWithAddress.url}/apps`),
-    },
-    {
-      label: 'Settings',
-      icon: <Icon size="md" type="settings" />,
-      selected: matchWithAction.params.safeAction === 'settings',
-      onItemClick: () => history.push(`${matchWithAddress.url}/settings`),
-    },
-  ]
+  const getSidebarItems = (): ListItemType[] => {
+    if (!matchSafe) {
+      return []
+    }
+
+    return [
+      {
+        label: 'ASSETS',
+        icon: <Icon size="md" type="assets" />,
+        selected: matchSafeWithAction.params.safeAction === 'balances',
+        onItemClick: () => history.push(`${matchSafeWithAddress.url}/balances`),
+      },
+      {
+        label: 'TRANSACTIONS',
+        icon: <Icon size="md" type="transactionsInactive" />,
+        selected: matchSafeWithAction.params.safeAction === 'transactions',
+        onItemClick: () => history.push(`${matchSafeWithAddress.url}/transactions`),
+      },
+      {
+        label: 'AddressBook',
+        icon: <Icon size="md" type="addressBook" />,
+        selected: matchSafeWithAction.params.safeAction === 'address-book',
+        onItemClick: () => history.push(`${matchSafeWithAddress.url}/address-book`),
+      },
+      {
+        label: 'Apps',
+        icon: <Icon size="md" type="apps" />,
+        selected: matchSafeWithAction.params.safeAction === 'apps',
+        onItemClick: () => history.push(`${matchSafeWithAddress.url}/apps`),
+      },
+      {
+        label: 'Settings',
+        icon: <Icon size="md" type="settings" />,
+        selected: matchSafeWithAction.params.safeAction === 'settings',
+        onItemClick: () => history.push(`${matchSafeWithAddress.url}/settings`),
+      },
+    ]
+  }
 
   return (
     <div className={styles.frame}>
@@ -139,18 +147,16 @@ const App = ({ children, classes, currentNetwork }) => {
           <SidebarLayout
             topbar={<Header />}
             sidebar={
-              matchWithAction ? (
-                <Sidebar
-                  items={items}
-                  safeAddress={safeAddress}
-                  safeName={safeName}
-                  balance={balance}
-                  granted={granted}
-                  onToggleSafeList={toggleSidebar}
-                  onReceiveClick={onShow('Receive')}
-                  onNewTransactionClick={() => showSendFunds('')}
-                />
-              ) : null
+              <Sidebar
+                items={getSidebarItems()}
+                safeAddress={safeAddress}
+                safeName={safeName}
+                balance={balance}
+                granted={granted}
+                onToggleSafeList={toggleSidebar}
+                onReceiveClick={onShow('Receive')}
+                onNewTransactionClick={() => showSendFunds('')}
+              />
             }
             body={children}
           />

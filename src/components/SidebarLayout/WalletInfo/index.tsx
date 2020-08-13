@@ -55,7 +55,7 @@ const UnStyledButton = styled.button`
 `
 
 type Props = {
-  address: string
+  address: string | null
   safeName: string
   granted: boolean
   balance: string | null
@@ -73,9 +73,25 @@ const WalletInfo = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  if (!address) {
+    return (
+      <Container>
+        <IdenticonContainer>
+          <div></div>
+          <div></div>
+          <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+            <Icon size="md" type="circleDropdown" />
+          </UnStyledButton>
+        </IdenticonContainer>
+        NO SAFE LOADED
+      </Container>
+    )
+  }
+
   return (
     <Container>
       {granted ? null : 'READ ONLY'}
+
       <IdenticonContainer>
         <div></div>
         <Identicon address={address} size="md" />

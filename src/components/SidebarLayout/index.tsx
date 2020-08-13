@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card } from '@gnosis.pm/safe-react-components'
 
 import Footer from './Footer'
 
@@ -19,7 +18,7 @@ const Grid = styled.div<GridProps>`
     ${({ showSidebar }) => (showSidebar ? `'sidebar body'` : `'body body'`)};
 `
 
-const TopbarWrapper = styled.nav`
+const GridTopbarWrapper = styled.nav`
   background-color: white;
   box-shadow: 0 2px 4px 0 rgba(212, 212, 211, 0.59);
   border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
@@ -27,7 +26,7 @@ const TopbarWrapper = styled.nav`
   grid-area: topbar;
 `
 
-const SidebarWrapper = styled.aside`
+const GridSidebarWrapper = styled.aside`
   width: 200px;
   padding: 8px;
   height: 100%;
@@ -43,7 +42,7 @@ const SidebarWrapper = styled.aside`
   }
 `
 
-const BodyWrapper = styled.section`
+const GridBodyWrapper = styled.section`
   margin: 24px 16px;
   grid-area: body;
   display: flex;
@@ -51,12 +50,7 @@ const BodyWrapper = styled.section`
   align-content: stretch;
 `
 
-export const BodyCard = styled(Card)`
-  /* 
-  height: 100%; 
-  flex-direction: column;
-  align-content: stretch;
-  */
+export const BodyWrapper = styled.div`
   flex: 1 100%;
 `
 
@@ -72,14 +66,14 @@ type Props = {
 
 const Layout = ({ topbar, sidebar, body }: Props): React.ReactElement => (
   <Grid showSidebar={sidebar !== null}>
-    <TopbarWrapper>{topbar}</TopbarWrapper>
-    {sidebar ? <SidebarWrapper>{sidebar}</SidebarWrapper> : null}
-    <BodyWrapper>
-      <BodyCard>{body}</BodyCard>
+    <GridTopbarWrapper>{topbar}</GridTopbarWrapper>
+    {sidebar ? <GridSidebarWrapper>{sidebar}</GridSidebarWrapper> : null}
+    <GridBodyWrapper>
+      <BodyWrapper>{body}</BodyWrapper>
       <FooterWrapper>
         <Footer />
       </FooterWrapper>
-    </BodyWrapper>
+    </GridBodyWrapper>
   </Grid>
 )
 
