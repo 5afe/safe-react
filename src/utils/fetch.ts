@@ -1,3 +1,4 @@
+// TODO Deprecated code, should be removed
 export const enhancedFetch = async (url, errMsg) => {
   const header = new Headers({
     'Access-Control-Allow-Origin': '*',

@@ -4,6 +4,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const getSubjectKeyFrom = (safeAddress) => `TXS-SUBJECTS-${safeAddress}`
 
+// TODO Deprecated code, should be removed
 export const storeSubject = async (safeAddress, nonce, subject) => {
   const key = getSubjectKeyFrom(safeAddress)
   const subjects = Map(await loadFromStorage(key)) || Map()

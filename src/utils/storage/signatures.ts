@@ -4,6 +4,7 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const getSignaturesKeyFrom = (safeAddress) => `TXS-SIGNATURES-${safeAddress}`
 
+// TODO Deprecated code, should be removed
 export const storeSignature = async (safeAddress, nonce, signature) => {
   const signaturesKey = getSignaturesKeyFrom(safeAddress)
   const subjects = Map(await loadFromStorage(signaturesKey)) || Map()
