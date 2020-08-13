@@ -54,12 +54,14 @@ const useStyles = makeStyles((theme: Theme) =>
 export type ListSubItemType = {
   label: string
   icon?: React.ReactNode
+  selected?: boolean
   onItemClick: () => void
 }
 
 export type ListItemType = {
   label: string
   icon?: React.ReactNode
+  selected?: boolean
   onItemClick: () => void
   subItems?: ListSubItemType[]
 }
@@ -84,7 +86,7 @@ const List = ({ items }: Props): React.ReactElement => {
   const getListItem = (item: ListItemType | ListSubItemType) => {
     const onClick = () => onItemClick(item)
     return (
-      <ListItem button key={item.label} onClick={onClick}>
+      <ListItem button key={item.label} onClick={onClick} selected={item.selected}>
         {item.icon && <StyledListItemIcon>{item.icon}</StyledListItemIcon>}
         <StyledListItemText primary={item.label} />
         {(item as ListItemType).subItems &&
