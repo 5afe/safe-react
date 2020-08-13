@@ -1,13 +1,12 @@
 import { push } from 'connected-react-router'
 import { List, Map } from 'immutable'
-import { WithSnackbarProps } from 'notistack'
 import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
+import { enhanceSnackbarForAction, getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
@@ -22,6 +21,8 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { addOrUpdateCancellationTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/routes/safe/store/actions/transactions/addOrUpdateTransactions'
 import { removeCancellationTransaction } from 'src/routes/safe/store/actions/transactions/removeCancellationTransaction'
@@ -95,7 +96,7 @@ export const storeTx = async (
   }
 }
 
-interface CreateTransactionArgs extends WithSnackbarProps {
+interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number
@@ -117,8 +118,6 @@ const createTransaction = (
     valueInWei,
     txData = EMPTY_DATA,
     notifiedTransaction,
-    enqueueSnackbar,
-    closeSnackbar,
     txNonce,
     operation = CALL,
     navigateToTransactionsTab = true,
@@ -180,10 +179,10 @@ const createTransaction = (
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
-        closeSnackbar(beforeExecutionKey)
+        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         await saveTxToHistory({ ...txArgs, signature, origin })
-        showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+        dispatch(enhanceSnackbarForAction(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -212,7 +211,7 @@ const createTransaction = (
       .once('transactionHash', async (hash) => {
         try {
           txHash = hash
-          closeSnackbar(beforeExecutionKey)
+          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
           // onUserConfirm()
 
           pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
@@ -235,13 +234,13 @@ const createTransaction = (
         }
       })
       .on('error', (error) => {
-        closeSnackbar(pendingExecutionKey)
+        dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
       })
       .then(async (receipt) => {
         if (pendingExecutionKey) {
-          closeSnackbar(pendingExecutionKey)
+          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         }
 
         showSnackbar(
@@ -285,10 +284,10 @@ const createTransaction = (
       : notificationsQueue.afterExecutionError.message
 
     console.error(`Error creating the TX: `, err)
-    closeSnackbar(beforeExecutionKey)
+    dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
     if (pendingExecutionKey) {
-      closeSnackbar(pendingExecutionKey)
+      dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
     showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)

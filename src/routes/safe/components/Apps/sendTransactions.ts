@@ -1,8 +1,8 @@
 import { Transaction } from '@gnosis.pm/safe-apps-sdk'
-import { Dispatch } from 'redux'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions/send'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import { Dispatch } from 'src/routes/safe/store/actions/types.d'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 
 const multiSendAbi = [
@@ -24,7 +24,7 @@ const sendTransactions = (
   enqueueSnackbar,
   closeSnackbar,
   origin: string,
-) => {
+): Promise<void> => {
   const web3 = getWeb3()
   const multiSend: any = new web3.eth.Contract(multiSendAbi as any, MULTI_SEND_ADDRESS)
 
