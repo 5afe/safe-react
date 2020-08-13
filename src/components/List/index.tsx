@@ -18,7 +18,21 @@ const StyledListItemText = styled(ListItemText)`
     color: ${({ theme }) => theme.colors.secondaryHover};
     text-transform: uppercase;
   }
+/*   > span {
+    text-transform: none;
+    font-weight: 400;
+    font-size: 0.85em;
+    letter-spacing: 0px;
+    color: ${({ theme }) => theme.colors.secondary};
+  }  */
 `
+/*  CSS Styles for selected item state
+
+const StyledListItem = styled(ListItemIcon)`
+  background-color: ${({ theme }) => theme.colors.background};
+  border-radius: 8px;
+  color: ${({ theme }) => theme.colors.primary};
+` */
 
 const StyledListItemIcon = styled(ListItemIcon)`
   min-width: 32px !important;
