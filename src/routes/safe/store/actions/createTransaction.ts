@@ -6,7 +6,7 @@ import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { enhanceSnackbarForAction, getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
+import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
