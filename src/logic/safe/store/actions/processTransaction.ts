@@ -108,6 +108,7 @@ const processTransaction = ({
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
+      submissionDate: new Date().toISOString(),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 
