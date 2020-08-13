@@ -4,6 +4,7 @@ import { getNetwork } from 'src/config'
 
 import {
   Icon,
+  FixedIcon,
   EthHashInfo,
   Text,
   Identicon,
@@ -38,6 +39,11 @@ const IconContainer = styled.div`
   display: flex;
   padding: 8px 0;
   justify-content: space-evenly;
+`
+const StyledButton = styled(Button)`
+  *:first-child {
+    margin: 0 4px 0 0;
+  }
 `
 const StyledText = styled(Text)`
   margin: 8px 0 16px 0;
@@ -94,15 +100,16 @@ const WalletInfo = ({
         <EtherscanButton value={address} network={getNetwork()} />
       </IconContainer>
       <StyledText size="xl">{balance}</StyledText>
-      <Button
+      <StyledButton
         size="md"
-        iconType="transactionsInactive"
+        // iconType="transactionsInactive"
         color="primary"
         variant="contained"
         onClick={onNewTransactionClick}
       >
+        <FixedIcon type="arrowSent" />
         New Transaction
-      </Button>
+      </StyledButton>
     </Container>
   )
 }
