@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.8.1",
+  "version": "2.9.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -44,7 +44,8 @@
   },
   "husky": {
     "hooks": {
-      "pre-commit": "lint-staged --allow-empty"
+      "pre-commit": "lint-staged --allow-empty",
+      "pre-push": "tsc"
     }
   },
   "lint-staged": {
@@ -161,6 +162,7 @@
     ]
   },
   "dependencies": {
+    "@gnosis.pm/safe-apps-sdk": "0.3.1",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#45c746a",
     "@gnosis.pm/util-contracts": "2.0.6",
@@ -172,7 +174,7 @@
     "async-sema": "^3.1.0",
     "axios": "0.19.2",
     "bignumber.js": "9.0.0",
-    "bnc-onboard": "1.10.3",
+    "bnc-onboard": "1.11.0",
     "classnames": "^2.2.6",
     "concurrently": "^5.2.0",
     "connected-react-router": "6.8.0",
@@ -228,21 +230,21 @@
   },
   "devDependencies": {
     "@testing-library/jest-dom": "5.11.2",
-    "@testing-library/react": "10.4.7",
-    "@testing-library/user-event": "12.0.17",
+    "@testing-library/react": "10.4.8",
+    "@testing-library/user-event": "12.1.0",
     "@typechain/web3-v1": "^1.0.0",
     "@types/history": "4.6.2",
-    "@types/jest": "^26.0.7",
+    "@types/jest": "^26.0.9",
     "@types/lodash.memoize": "^4.1.6",
     "@types/node": "14.0.27",
-    "@types/react": "^16.9.43",
+    "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.6",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
-    "@types/styled-components": "^5.1.1",
-    "@typescript-eslint/eslint-plugin": "3.7.1",
-    "@typescript-eslint/parser": "3.7.1",
-    "autoprefixer": "9.8.5",
+    "@types/styled-components": "^5.1.2",
+    "@typescript-eslint/eslint-plugin": "3.8.0",
+    "@typescript-eslint/parser": "3.8.0",
+    "autoprefixer": "9.8.6",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",

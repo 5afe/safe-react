@@ -2,11 +2,12 @@ import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Receive from '../Balances/Receive'
 
 import { styles } from './style'
+import { ModalState, OpenModalArgs } from './interfaces'
 
 import Modal from 'src/components/Modal'
 import NoSafe from 'src/components/NoSafe'
@@ -32,7 +33,7 @@ const Balances = React.lazy(() => import('../Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
-interface Props extends RouteComponentProps {
+interface Props {
   sendFunds: Record<string, any>
   showReceive: boolean
   onShow: (value: string) => () => void
@@ -41,15 +42,16 @@ interface Props extends RouteComponentProps {
   hideSendFunds: () => void
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const Layout = (props: Props) => {
+const Layout = (props: Props): React.ReactElement => {
   const classes = useStyles()
-  const { hideSendFunds, match, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const { hideSendFunds, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
+  const match = useRouteMatch()
 
-  const [modal, setModal] = useState({
+  const [modal, setModal] = useState<ModalState>({
     isOpen: false,
-    title: null,
+    title: '',
     body: null,
     footer: null,
     onClose: null,
@@ -61,14 +63,12 @@ const Layout = (props: Props) => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const openGenericModal = (modalConfig) => {
+  const openGenericModal = (modalConfig: OpenModalArgs): void => {
     setModal({ ...modalConfig, isOpen: true })
   }
 
-  const closeGenericModal = () => {
-    if (modal.onClose) {
-      modal.onClose()
-    }
+  const closeGenericModal = (): void => {
+    modal.onClose?.()
 
     setModal({
       isOpen: false,
@@ -117,4 +117,4 @@ const Layout = (props: Props) => {
   )
 }
 
-export default withRouter(Layout)
+export default Layout
