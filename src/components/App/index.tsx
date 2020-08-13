@@ -59,7 +59,11 @@ const App = ({ children, classes, currentNetwork }) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SidebarContext)
 
-  const match = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const matchWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const matchWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
+    url: string
+    params: Record<string, string>
+  }
   const history = useHistory()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -81,45 +85,32 @@ const App = ({ children, classes, currentNetwork }) => {
     {
       label: 'Assets',
       icon: <Icon size="md" type="assets" />,
-      onItemClick: () => history.push(`${match.url}/balances`),
+      selected: matchWithAction.params.safeAction === 'balances',
+      onItemClick: () => history.push(`${matchWithAddress.url}/balances`),
     },
     {
       label: 'Transactions',
       icon: <Icon size="md" type="transactionsInactive" />,
-      onItemClick: () => history.push(`${match.url}/transactions`),
+      selected: matchWithAction.params.safeAction === 'transactions',
+      onItemClick: () => history.push(`${matchWithAddress.url}/transactions`),
     },
     {
       label: 'AddressBook',
       icon: <Icon size="md" type="addressBook" />,
-      onItemClick: () => history.push(`${match.url}/address-book`),
+      selected: matchWithAction.params.safeAction === 'address-book',
+      onItemClick: () => history.push(`${matchWithAddress.url}/address-book`),
     },
     {
       label: 'Apps',
       icon: <Icon size="md" type="apps" />,
-      onItemClick: () => history.push(`${match.url}/apps`),
+      selected: matchWithAction.params.safeAction === 'apps',
+      onItemClick: () => history.push(`${matchWithAddress.url}/apps`),
     },
     {
       label: 'Settings',
       icon: <Icon size="md" type="settings" />,
-      onItemClick: () => history.push(`${match.url}/settings`),
-      // subItems: [
-      //   {
-      //     label: 'Safe Details',
-      //     onItemClick: () => console.log('Settings1'),
-      //   },
-      //   {
-      //     label: 'Owners',
-      //     onItemClick: () => console.log('Settings2'),
-      //   },
-      //   {
-      //     label: 'Policies',
-      //     onItemClick: () => console.log('Settings3'),
-      //   },
-      //   {
-      //     label: 'Advanced',
-      //     onItemClick: () => console.log('Settings4'),
-      //   },
-      // ],
+      selected: matchWithAction.params.safeAction === 'settings',
+      onItemClick: () => history.push(`${matchWithAddress.url}/settings`),
     },
   ]
 
@@ -148,7 +139,7 @@ const App = ({ children, classes, currentNetwork }) => {
           <SidebarLayout
             topbar={<Header />}
             sidebar={
-              match ? (
+              matchWithAction ? (
                 <Sidebar
                   items={items}
                   safeAddress={safeAddress}
