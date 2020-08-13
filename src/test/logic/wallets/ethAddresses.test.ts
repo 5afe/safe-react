@@ -1,4 +1,10 @@
-import { isUserAnOwner, sameAddress, shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import {
+  isUserAnOwner,
+  isUserAnOwnerOfAnySafe,
+  isValidEnsName,
+  sameAddress,
+  shortVersionOf,
+} from 'src/logic/wallets/ethAddresses'
 import makeSafe from 'src/routes/safe/store/models/safe'
 import { makeOwner } from 'src/routes/safe/store/models/owner'
 import { List } from 'immutable'
@@ -150,6 +156,124 @@ describe('isUserAnOwner', () => {
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress2)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+})
+
+describe('isUserAnOwnerOfAnySafe', () => {
+  it('Given a list of safes, one of them has an owner equal to the userAddress, returns true', () => {
+    // given
+    const userAddress = 'address1'
+    const userAddress2 = 'address2'
+    const owners1 = List([makeOwner({ address: userAddress })])
+    const owners2 = List([makeOwner({ address: userAddress2 })])
+    const safeInstance = makeSafe({ owners: owners1 })
+    const safeInstance2 = makeSafe({ owners: owners2 })
+    const safesList = List([safeInstance, safeInstance2])
+    const resultExpected = true
+
+    // when
+    const result = isUserAnOwnerOfAnySafe(safesList, userAddress)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a list of safes, none of them has an owner equal to the userAddress, returns false', () => {
+    // given
+    const userAddress = 'address1'
+    const userAddress2 = 'address2'
+    const userAddress3 = 'address3'
+    const owners1 = List([makeOwner({ address: userAddress3 })])
+    const owners2 = List([makeOwner({ address: userAddress2 })])
+    const safeInstance = makeSafe({ owners: owners1 })
+    const safeInstance2 = makeSafe({ owners: owners2 })
+    const safesList = List([safeInstance, safeInstance2])
+    const resultExpected = false
+
+    // when
+    const result = isUserAnOwnerOfAnySafe(safesList, userAddress)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+})
+
+describe('isValidEnsName', () => {
+  it('Given no ens name, returns false', () => {
+    // given
+    const ensName = null
+    const resultExpected = false
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
+    // given
+    const ensName = 'test'
+    const resultExpected = false
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
+    // given
+    const ensName = 'test.et12312'
+    const resultExpected = false
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name in the format [value].eth, returns true', () => {
+    // given
+    const ensName = 'test.eth'
+    const resultExpected = true
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name in the format [value].test, returns true', () => {
+    // given
+    const ensName = 'test.test'
+    const resultExpected = true
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name in the format [value].xyz, returns true', () => {
+    // given
+    const ensName = 'test.xyz'
+    const resultExpected = true
+
+    // when
+    const result = isValidEnsName(ensName)
+
+    // then
+    expect(result).toBe(resultExpected)
+  })
+  it('Given a ens name in the format [value].luxe, returns true', () => {
+    // given
+    const ensName = 'test.luxe'
+    const resultExpected = true
+
+    // when
+    const result = isValidEnsName(ensName)
 
     // then
     expect(result).toBe(resultExpected)
