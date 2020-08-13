@@ -7,6 +7,7 @@ const items: ListItemType[] = [
   {
     label: 'Assets',
     icon: <Icon size="md" type="assets" />,
+    selected: true,
     onItemClick: () => console.log('assets'),
   },
   {
