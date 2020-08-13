@@ -108,7 +108,9 @@ const WalletInfo = ({
         onClick={onNewTransactionClick}
       >
         <FixedIcon type="arrowSent" />
-        New Transaction
+        <Text size="lg" color="white">
+          New Transaction
+        </Text>
       </StyledButton>
     </Container>
   )
