@@ -43,7 +43,7 @@ const GridSidebarWrapper = styled.aside`
 `
 
 const GridBodyWrapper = styled.section`
-  margin: 24px 16px;
+  margin: 0 16px 0 16px;
   grid-area: body;
   display: flex;
   flex-direction: column;
@@ -55,7 +55,7 @@ export const BodyWrapper = styled.div`
 `
 
 export const FooterWrapper = styled.footer`
-  margin: 24px 16px;
+  margin: 0 16px;
 `
 
 type Props = {
