@@ -41,7 +41,7 @@ const styles = () => ({
     zIndex: 1301,
   },
   logo: {
-    flexBasis: '95px',
+    flexBasis: '114px',
     flexShrink: '0',
     flexGrow: '0',
     maxWidth: '55px',
@@ -61,7 +61,7 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
   <Row className={classes.summary}>
     <Col className={classes.logo} middle="xs" start="xs">
       <Link to="/">
-        <Img alt="Gnosis Team Safe" height={32} src={logo} testId="heading-gnosis-logo" />
+        <Img alt="Gnosis Team Safe" height={36} src={logo} testId="heading-gnosis-logo" />
       </Link>
     </Col>
     {/* <Divider />
