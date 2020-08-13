@@ -314,6 +314,7 @@ export type TxToMock = TxArgs & {
   confirmations: []
   safeTxHash: string
   value: string
+  submissionDate: string
 }
 
 export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {

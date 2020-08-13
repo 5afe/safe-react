@@ -1,4 +1,4 @@
-// 
+//
 import { getAccountsFrom, getNamesFrom, getThresholdFrom } from './safeDataExtractor'
 
 describe('Test JS', () => {

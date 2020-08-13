@@ -1,5 +1,6 @@
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk'
+import React from 'react'
 import styled from 'styled-components'
 
 import AddressInfo from 'src/components/AddressInfo'
@@ -12,21 +13,8 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-
-export type SafeAppTx = {
-  to: string
-  value: string | number
-  data: string
-}
-
-// TODO: This should be exported by safe-rect-components
-type GenericModalProps = {
-  title: ReactElement
-  body: ReactElement
-  footer: ReactElement
-  onClose: () => void
-}
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -56,7 +44,7 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
-const isTxValid = (t: SafeAppTx): boolean => {
+const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
     return false
   }
@@ -75,11 +63,11 @@ const confirmTransactions = (
   ethBalance: string,
   nameApp: string,
   iconApp: string,
-  txs: SafeAppTx[],
-  openModal: (modalInfo: GenericModalProps) => void,
+  txs: Transaction[],
+  openModal: (modalInfo: OpenModalArgs) => void,
   closeModal: () => void,
   onConfirm: () => void,
-): any => {
+): void => {
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
