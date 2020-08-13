@@ -34,7 +34,7 @@ import { Token } from 'src/logic/tokens/store/model/token'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 
 import AssetAmount from './assets/asset-amount.svg'
 import Beneficiary from './assets/beneficiary.svg'
@@ -613,6 +613,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
 
 const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
+  const granted = useSelector(grantedSelector)
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
 
   const openNewSpendingLimitModal = () => {
@@ -674,6 +675,7 @@ const SpendingLimit = (): React.ReactElement => {
           <Button
             className={classes.actionButton}
             color="primary"
+            disabled={!granted}
             size="md"
             data-testid="new-spending-limit-button"
             onClick={openNewSpendingLimitModal}
