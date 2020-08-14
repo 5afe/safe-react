@@ -9,7 +9,7 @@ import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-
 import NoSafe from 'src/components/NoSafe'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 // import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
