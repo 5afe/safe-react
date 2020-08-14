@@ -39,7 +39,7 @@ export type TransactionProps = {
   blockNumber?: number | null
   cancelled?: boolean
   confirmations: List<Confirmation>
-  created: boolean
+  created: string
   creator: string
   creationTx: boolean
   customTx: boolean
@@ -51,7 +51,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
-  fee?: string
+  fee?: string // It will be replace with the new TXs types.
   gasPrice: string
   gasToken: string
   isCancellationTx: boolean

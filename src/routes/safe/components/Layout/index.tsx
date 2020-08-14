@@ -7,6 +7,7 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 import Receive from '../Balances/Receive'
 
 import { styles } from './style'
+import { ModalState, OpenModalArgs } from './interfaces'
 
 import Modal from 'src/components/Modal'
 import NoSafe from 'src/components/NoSafe'
@@ -44,9 +45,9 @@ const Layout = (props: Props): React.ReactElement => {
   const { hideSendFunds, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
   const match = useRouteMatch()
 
-  const [modal, setModal] = useState({
+  const [modal, setModal] = useState<ModalState>({
     isOpen: false,
-    title: null,
+    title: '',
     body: null,
     footer: null,
     onClose: null,
@@ -58,14 +59,12 @@ const Layout = (props: Props): React.ReactElement => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const openGenericModal = (modalConfig) => {
+  const openGenericModal = (modalConfig: OpenModalArgs): void => {
     setModal({ ...modalConfig, isOpen: true })
   }
 
-  const closeGenericModal = () => {
-    if (modal.onClose) {
-      modal.onClose()
-    }
+  const closeGenericModal = (): void => {
+    modal.onClose?.()
 
     setModal({
       isOpen: false,
