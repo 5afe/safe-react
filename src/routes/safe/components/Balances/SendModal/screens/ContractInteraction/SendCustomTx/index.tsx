@@ -30,7 +30,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
 export interface CreatedTx {

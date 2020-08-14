@@ -1,7 +1,6 @@
 import { fireEvent } from '@testing-library/react'
 import { sleep } from 'src/utils/timer'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
-import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout'
 import { TRANSACTION_ROW_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable'
 import {
   TRANSACTIONS_DESC_SEND_TEST_ID,
@@ -10,6 +9,7 @@ import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,
   TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID,
 } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/SettingsDescription'
+import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout/Tabs'
 
 export const getLastTransaction = async (SafeDom) => {
   // Travel to transactions

@@ -21,7 +21,7 @@ import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notification
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import UpdateSafeModal from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import Link from 'src/components/layout/Link'
 import {
   latestMasterContractVersionSelector,
@@ -29,7 +29,7 @@ import {
   safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
