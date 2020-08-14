@@ -27,7 +27,7 @@ const useStyles = makeStyles(styles)
 
 type Props = {
   isOpen: boolean
-  isClose: () => void
+  onClose: () => void
   tx: Transaction
 }
 

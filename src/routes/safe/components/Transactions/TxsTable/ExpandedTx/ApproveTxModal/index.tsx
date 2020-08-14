@@ -55,7 +55,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 
 type Props = {
   canExecute: boolean
-  isCancelTx: boolean
+  isCancelTx?: boolean
   isOpen: boolean
   onClose: () => void
   thresholdReached: boolean
@@ -64,7 +64,7 @@ type Props = {
 
 const ApproveTxModal = ({
   canExecute,
-  isCancelTx,
+  isCancelTx = false,
   isOpen,
   onClose,
   thresholdReached,
