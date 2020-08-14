@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -37,7 +36,7 @@ export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 const useStyles = makeStyles(styles)
 
-const SafeDetails = (props) => {
+const SafeDetails = (): React.ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
@@ -57,7 +56,7 @@ const SafeDetails = (props) => {
     dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded))
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
   }
 
   const handleUpdateSafe = () => {
@@ -74,7 +73,7 @@ const SafeDetails = (props) => {
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
                   <Link
-                    className={cn(classes.item, classes.link)}
+                    className={classes.link}
                     color="black"
                     target="_blank"
                     to="https://github.com/gnosis/safe-contracts/releases"

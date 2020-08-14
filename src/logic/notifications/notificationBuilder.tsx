@@ -40,7 +40,7 @@ const waitingTransactionNotificationsQueue = {
   afterExecutionError: null,
 }
 
-const getConfirmationTxNotificationsQueue = (origin) => {
+const getConfirmationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
@@ -53,7 +53,7 @@ const getConfirmationTxNotificationsQueue = (origin) => {
   }
 }
 
-const getCancellationTxNotificationsQueue = (origin) => {
+const getCancellationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),

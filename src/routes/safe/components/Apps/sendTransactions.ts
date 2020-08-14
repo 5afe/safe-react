@@ -21,8 +21,6 @@ const sendTransactions = (
   dispatch: Dispatch,
   safeAddress: string,
   txs: Transaction[],
-  enqueueSnackbar,
-  closeSnackbar,
   origin: string,
 ): Promise<void> => {
   const web3 = getWeb3()
@@ -50,8 +48,6 @@ const sendTransactions = (
         valueInWei: '0',
         txData: encodeMultiSendCallData,
         notifiedTransaction: 'STANDARD_TX',
-        enqueueSnackbar,
-        closeSnackbar,
         operation: DELEGATE_CALL,
         // navigateToTransactionsTab: false,
         origin,

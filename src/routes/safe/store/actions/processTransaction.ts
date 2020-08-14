@@ -2,12 +2,14 @@ import { fromJS } from 'immutable'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
+import { getNotificationsFromTxType } from 'src/logic/notifications'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import {
@@ -22,15 +24,10 @@ import { makeConfirmation } from '../models/confirmation'
 import { storeTx } from './createTransaction'
 import { TransactionStatus } from '../models/types/transaction'
 
-const processTransaction = ({
-  approveAndExecute,
-  closeSnackbar,
-  enqueueSnackbar,
-  notifiedTransaction,
-  safeAddress,
-  tx,
-  userAddress,
-}) => async (dispatch, getState) => {
+const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddress, tx, userAddress }) => async (
+  dispatch,
+  getState,
+) => {
   const state = getState()
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
@@ -51,7 +48,7 @@ const processTransaction = ({
   }
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
-  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
+  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
   let pendingExecutionKey
 
   let txHash
@@ -85,10 +82,10 @@ const processTransaction = ({
       const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
-        closeSnackbar(beforeExecutionKey)
+        dispatch(closeSnackbarAction(beforeExecutionKey))
 
         await saveTxToHistory({ ...txArgs, signature })
-        showSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -114,11 +111,11 @@ const processTransaction = ({
 
     await transaction
       .send(sendParams)
-      .once('transactionHash', async (hash) => {
+      .once('transactionHash', async (hash: string) => {
         txHash = hash
-        closeSnackbar(beforeExecutionKey)
+        dispatch(closeSnackbarAction(beforeExecutionKey))
 
-        pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
+        pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 
         try {
           await Promise.all([
@@ -135,27 +132,27 @@ const processTransaction = ({
           ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          closeSnackbar(pendingExecutionKey)
+          dispatch(closeSnackbarAction(pendingExecutionKey))
           await storeTx(tx, safeAddress, dispatch, state)
           console.error(e)
         }
       })
       .on('error', (error) => {
-        closeSnackbar(pendingExecutionKey)
+        dispatch(closeSnackbarAction(pendingExecutionKey))
         storeTx(tx, safeAddress, dispatch, state)
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
         if (pendingExecutionKey) {
-          closeSnackbar(pendingExecutionKey)
+          dispatch(closeSnackbarAction(pendingExecutionKey))
         }
 
-        showSnackbar(
-          isExecution
-            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          enqueueSnackbar,
-          closeSnackbar,
+        dispatch(
+          enqueueSnackbar(
+            isExecution
+              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          ),
         )
 
         const toStoreTx = isExecution
@@ -207,13 +204,13 @@ const processTransaction = ({
     console.error(err)
 
     if (txHash !== undefined) {
-      closeSnackbar(beforeExecutionKey)
+      dispatch(closeSnackbarAction(beforeExecutionKey))
 
       if (pendingExecutionKey) {
-        closeSnackbar(pendingExecutionKey)
+        dispatch(closeSnackbarAction(pendingExecutionKey))
       }
 
-      showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
+      dispatch(enqueueSnackbar(errorMsg))
 
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
       const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)

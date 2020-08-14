@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import cn from 'classnames'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
@@ -48,8 +47,6 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
 
   const removeSelectedModule = async (): Promise<void> => {
@@ -65,8 +62,6 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
           valueInWei: '0',
           txData,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-          enqueueSnackbar,
-          closeSnackbar,
         }),
       )
     } catch (e) {

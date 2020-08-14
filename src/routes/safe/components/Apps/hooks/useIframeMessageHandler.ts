@@ -79,7 +79,7 @@ const useIframeMessageHandler = (
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
             closeModal()
-            await sendTransactions(dispatch, safeAddress, msg.data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
+            await sendTransactions(dispatch, safeAddress, msg.data.data, selectedApp.id)
           }
           confirmTransactions(
             safeAddress,

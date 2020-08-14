@@ -6,7 +6,7 @@ import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
@@ -111,20 +111,18 @@ interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 
-const createTransaction = (
-  {
-    safeAddress,
-    to,
-    valueInWei,
-    txData = EMPTY_DATA,
-    notifiedTransaction,
-    txNonce,
-    operation = CALL,
-    navigateToTransactionsTab = true,
-    origin = null,
-  }: CreateTransactionArgs,
-  onUserConfirm?: ConfirmEventHandler,
-): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+const createTransaction = ({
+  safeAddress,
+  to,
+  valueInWei,
+  txData = EMPTY_DATA,
+  notifiedTransaction,
+  txNonce,
+  operation = CALL,
+  navigateToTransactionsTab = true,
+  origin = null,
+}: CreateTransactionArgs): // onUserConfirm?: ConfirmEventHandler,
+CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {
@@ -149,7 +147,7 @@ const createTransaction = (
   )}000000000000000000000000000000000000000000000000000000000000000001`
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
-  const beforeExecutionKey = showSnackbar(notificationsQueue.beforeExecution, enqueueSnackbar, closeSnackbar)
+  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
   let pendingExecutionKey
 
@@ -182,7 +180,7 @@ const createTransaction = (
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         await saveTxToHistory({ ...txArgs, signature, origin })
-        dispatch(enhanceSnackbarForAction(notificationsQueue.afterExecution.moreConfirmationsNeeded))
+        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -214,7 +212,7 @@ const createTransaction = (
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
           // onUserConfirm()
 
-          pendingExecutionKey = showSnackbar(notificationsQueue.pendingExecution, enqueueSnackbar, closeSnackbar)
+          pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash, origin }),
@@ -243,12 +241,12 @@ const createTransaction = (
           dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         }
 
-        showSnackbar(
-          isExecution
-            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          enqueueSnackbar,
-          closeSnackbar,
+        dispatch(
+          enqueueSnackbar(
+            isExecution
+              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+          ),
         )
 
         const toStoreTx = isExecution
@@ -290,7 +288,7 @@ const createTransaction = (
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
-    showSnackbar(errorMsg, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(errorMsg))
 
     const executeDataUsedSignatures = safeInstance.methods
       .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
