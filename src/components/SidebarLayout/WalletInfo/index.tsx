@@ -45,6 +45,13 @@ const StyledButton = styled(Button)`
     margin: 0 4px 0 0;
   }
 `
+const StyledLabel = styled.div`
+  background-color: ${({ theme }) => theme.colors.icon};
+  margin: 8px 0 0 0 !important;
+  padding: 4px 8px;
+  border-radius: 4px;
+  letter-spacing: 1px;
+`
 const StyledText = styled(Text)`
   margin: 8px 0 16px 0;
 `
@@ -84,7 +91,9 @@ const WalletInfo = ({
       <Container>
         <IdenticonContainer>
           <div></div>
-          <div></div>
+          <div>
+            <FixedIcon type="notConnected" />
+          </div>
           <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <Icon size="md" type="circleDropdown" />
           </UnStyledButton>
@@ -96,8 +105,6 @@ const WalletInfo = ({
 
   return (
     <Container>
-      {granted ? null : 'READ ONLY'}
-
       <IdenticonContainer>
         <div></div>
         <Identicon address={address} size="md" />
@@ -115,6 +122,11 @@ const WalletInfo = ({
         <CopyToClipboardBtn textToCopy={address} />
         <EtherscanButton value={address} network={getNetwork()} />
       </IconContainer>
+      <StyledLabel>
+        <Text size="sm" color="white">
+          {granted ? null : 'READ ONLY'}
+        </Text>
+      </StyledLabel>
       <StyledText size="xl">{balance}</StyledText>
       <StyledButton
         size="md"

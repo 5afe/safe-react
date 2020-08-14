@@ -46,6 +46,7 @@ const styles = () => ({
     flexGrow: '0',
     maxWidth: '55px',
     padding: sm,
+    marginTop: '4px',
     [`@media (min-width: ${screenSm}px)`]: {
       maxWidth: 'none',
       paddingLeft: md,
