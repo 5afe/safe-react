@@ -107,7 +107,7 @@ const WalletInfo = ({
     <Container>
       <IdenticonContainer>
         <div></div>
-        <Identicon address={address} size="md" />
+        <Identicon address={address} size="lg" />
         <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
           <Icon size="md" type="circleDropdown" />
         </UnStyledButton>

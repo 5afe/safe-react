@@ -9,35 +9,44 @@ import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
 const StyledListItem = styled(ListItem)`
   &.MuiButtonBase-root.MuiListItem-root {
-    background-color: red;
+    margin: 4px 0;
+  }
+
+  &.MuiListItem-button:hover {
+    border-radius: 8px;
   }
 
   &.MuiListItem-root.Mui-selected {
-    background-color: ${({ theme }) => theme.colors.secondary};
+    background-color: ${({ theme }) => theme.colors.background};
+    border-radius: 8px;
+    color: ${({ theme }) => theme.colors.primary};
     span {
       color: ${({ theme }) => theme.colors.primary};
+    }
+    .icon-color {
+      fill: ${({ theme }) => theme.colors.primary};
     }
   }
 `
 
 const StyledListSubItem = styled(ListItem)`
   &.MuiButtonBase-root.MuiListItem-root {
-    background-color: green;
+    color: ${({ theme }) => theme.colors.text};
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
-    background-color: blue;
+    color: ${({ theme }) => theme.colors.primary};
   }
 `
 
 const StyledListItemText = styled(ListItemText)`
   span {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
-    font-size: 0.68em;
+    font-size: 0.76em;
     font-weight: 600;
     line-height: 1.5;
-    letter-spacing: 2px;
-    color: ${({ theme }) => theme.colors.secondaryHover};
+    letter-spacing: 1px;
+    color: ${({ theme }) => theme.colors.placeHolder};
     text-transform: uppercase;
   }
 `

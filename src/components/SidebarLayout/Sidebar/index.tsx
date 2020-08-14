@@ -54,7 +54,7 @@ const Sidebar = ({
 
       <HelpContainer>
         <StyledDivider />
-        <IconText iconSize="md" textSize="sm" iconType="question" text="Help Center" />
+        <IconText iconSize="md" textSize="sm" iconType="question" text="HELP CENTER" />
       </HelpContainer>
     </>
   )
