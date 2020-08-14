@@ -48,7 +48,25 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
+type SendFundsProps = {
+  initialValues: {
+    amount?: string
+    recipientAddress?: string
+    token?: string
+  }
+  onClose: () => void
+  onNext: (txInfo: unknown) => void
+  recipientAddress: string
+  selectedToken: string
+}
+
+const SendFunds = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = '',
+}: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(getAddressBook)
