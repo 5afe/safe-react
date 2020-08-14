@@ -35,8 +35,8 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
-import { Icon } from '@gnosis.pm/safe-react-components'
 import { ListItemType } from '../List'
+import ListIcon from '../List/ListIcon'
 
 const notificationStyles = {
   success: {
@@ -91,31 +91,31 @@ const App = ({ children, classes, currentNetwork }) => {
     return [
       {
         label: 'ASSETS',
-        icon: <Icon size="md" type="assets" />,
+        icon: <ListIcon type="assets" />,
         selected: matchSafeWithAction.params.safeAction === 'balances',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/balances`),
       },
       {
         label: 'TRANSACTIONS',
-        icon: <Icon size="md" type="transactionsInactive" />,
+        icon: <ListIcon type="transactionsInactive" />,
         selected: matchSafeWithAction.params.safeAction === 'transactions',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/transactions`),
       },
       {
         label: 'AddressBook',
-        icon: <Icon size="md" type="addressBook" />,
+        icon: <ListIcon type="addressBook" />,
         selected: matchSafeWithAction.params.safeAction === 'address-book',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/address-book`),
       },
       {
         label: 'Apps',
-        icon: <Icon size="md" type="apps" />,
+        icon: <ListIcon type="apps" />,
         selected: matchSafeWithAction.params.safeAction === 'apps',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/apps`),
       },
       {
         label: 'Settings',
-        icon: <Icon size="md" type="settings" />,
+        icon: <ListIcon type="settings" />,
         selected: matchSafeWithAction.params.safeAction === 'settings',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/settings`),
       },
