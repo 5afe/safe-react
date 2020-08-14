@@ -27,10 +27,16 @@ const useStyles = makeStyles({
   },
 })
 
-const CopyBtn = ({ className = '', content, increaseZindex = false }) => {
+interface CopyBtnProps {
+  className?: string
+  content: string
+  increaseZIndex?: boolean
+}
+
+const CopyBtn = ({ className = '', content, increaseZIndex = false }: CopyBtnProps): React.ReactElement => {
   const [clicked, setClicked] = useState(false)
   const classes = useStyles()
-  const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
+  const customClasses = increaseZIndex ? { popper: classes.increasedPopperZindex } : {}
 
   return (
     <Tooltip
@@ -51,7 +57,8 @@ const CopyBtn = ({ className = '', content, increaseZindex = false }) => {
         <Img
           alt="Copy to clipboard"
           height={20}
-          onClick={() => {
+          onClick={(event) => {
+            event.stopPropagation()
             copyToClipboard(content)
             setClicked(true)
           }}

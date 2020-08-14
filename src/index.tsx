@@ -5,8 +5,8 @@ import ReactDOM from 'react-dom'
 import Root from 'src/components/Root'
 import loadCurrentSessionFromStorage from 'src/logic/currentSession/store/actions/loadCurrentSessionFromStorage'
 import loadActiveTokens from 'src/logic/tokens/store/actions/loadActiveTokens'
-import loadDefaultSafe from 'src/routes/safe/store/actions/loadDefaultSafe'
-import loadSafesFromStorage from 'src/routes/safe/store/actions/loadSafesFromStorage'
+import loadDefaultSafe from 'src/logic/safe/store/actions/loadDefaultSafe'
+import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { store } from 'src/store'
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })

@@ -15,7 +15,7 @@ interface AddressBookReducerStateSerialized extends AddressBookReducerState {
 
 export interface AddressBookMap extends Map<string> {
   toJS(): AddressBookMapSerialized
-  get(key: string): List<AddressBookEntryRecord>
+  get(key: string, notSetValue: unknown): List<AddressBookEntryRecord>
 }
 
 export interface AddressBookReducerMap extends Map<string, any> {

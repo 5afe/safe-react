@@ -13,7 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 
 const useStyles = makeStyles(styles)
 

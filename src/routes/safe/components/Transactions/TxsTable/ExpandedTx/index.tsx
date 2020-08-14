@@ -2,14 +2,18 @@ import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
 import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
+import { IncomingTx } from './IncomingTx'
+import { CreationTx } from './CreationTx'
+import { OutgoingTx } from './OutgoingTx'
 import { styles } from './style'
 
-import EtherScanLink from 'src/components/EtherscanLink'
+import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -17,18 +21,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
-import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-
-import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { IncomingTx } from './IncomingTx'
-import { CreationTx } from './CreationTx'
-import { OutgoingTx } from './OutgoingTx'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
+import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import IncomingTxDescription from './IncomingTxDescription'
 
 const useStyles = makeStyles(styles as any)
 
-const ExpandedTx = ({ cancelTx, tx }) => {
+interface ExpandedTxProps {
+  cancelTx: Transaction
+  tx: Transaction
+}
+
+const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector)
@@ -57,10 +62,20 @@ const ExpandedTx = ({ cancelTx, tx }) => {
         <Row>
           <Col layout="column" xs={6}>
             <Block className={cn(classes.txDataContainer, (isIncomingTx || isCreationTx) && classes.incomingTxBlock)}>
-              <Block align="left" className={classes.txData}>
+              <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
-                {tx.executionTxHash ? <EtherScanLink cut={8} type="tx" value={tx.executionTxHash} /> : 'n/a'}
-              </Block>
+                {tx.executionTxHash ? (
+                  <EthHashInfo
+                    hash={tx.executionTxHash}
+                    shortenHash={4}
+                    showCopyBtn
+                    showEtherscanBtn
+                    network={getNetwork()}
+                  />
+                ) : (
+                  'n/a'
+                )}
+              </div>
               {!isIncomingTx && !isCreationTx && (
                 <Paragraph noMargin>
                   <Bold>Nonce: </Bold>

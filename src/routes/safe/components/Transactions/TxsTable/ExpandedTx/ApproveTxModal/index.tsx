@@ -21,9 +21,9 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import processTransaction from 'src/routes/safe/store/actions/processTransaction'
+import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'

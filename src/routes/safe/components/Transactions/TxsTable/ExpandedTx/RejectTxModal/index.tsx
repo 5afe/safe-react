@@ -19,9 +19,9 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
