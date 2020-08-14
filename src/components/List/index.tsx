@@ -8,9 +8,11 @@ import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
 const StyledListItem = styled(ListItem)`
-  background-color: red;
+  &.MuiButtonBase-root.MuiListItem-root {
+    background-color: red;
+  }
 
-  &.MuiListItem-root.Mui-selected.Mui-selected {
+  &.MuiListItem-root.Mui-selected {
     background-color: ${({ theme }) => theme.colors.secondary};
     span {
       color: ${({ theme }) => theme.colors.primary};
@@ -19,9 +21,11 @@ const StyledListItem = styled(ListItem)`
 `
 
 const StyledListSubItem = styled(ListItem)`
-  background-color: green;
+  &.MuiButtonBase-root.MuiListItem-root {
+    background-color: green;
+  }
 
-  &.MuiListItem-root.Mui-selected.Mui-selected {
+  &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
     background-color: blue;
   }
 `
@@ -98,7 +102,7 @@ const List = ({ items }: Props): React.ReactElement => {
     return res !== undefined
   }
 
-  const getListItem = (item: ListItemType | ListSubItemType, isSubItem?: boolean) => {
+  const getListItem = (item: ListItemType | ListSubItemType, isSubItem = true) => {
     const onClick = () => onItemClick(item)
 
     const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
