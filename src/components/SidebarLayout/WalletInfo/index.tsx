@@ -122,11 +122,15 @@ const WalletInfo = ({
         <CopyToClipboardBtn textToCopy={address} />
         <EtherscanButton value={address} network={getNetwork()} />
       </IconContainer>
-      <StyledLabel>
-        <Text size="sm" color="white">
-          {granted ? null : 'READ ONLY'}
-        </Text>
-      </StyledLabel>
+
+      {granted ? null : (
+        <StyledLabel>
+          <Text size="sm" color="white">
+            READ ONLY
+          </Text>
+        </StyledLabel>
+      )}
+
       <StyledText size="xl">{balance}</StyledText>
       <StyledButton
         size="md"
