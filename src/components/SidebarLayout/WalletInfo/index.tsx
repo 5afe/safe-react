@@ -135,7 +135,7 @@ const WalletInfo = ({
         variant="contained"
         onClick={onNewTransactionClick}
       >
-        <FixedIcon type="arrowSent" />
+        <FixedIcon type="arrowSentWhite" />
         <Text size="lg" color="white">
           New Transaction
         </Text>

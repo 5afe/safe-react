@@ -1,12 +1,34 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ListMui from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
-import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
+
+const StyledListItem = styled(ListItem)`
+  &.MuiButtonBase-root.MuiListItem-root {
+    background-color: red;
+  }
+
+  &.MuiListItem-root.Mui-selected {
+    background-color: ${({ theme }) => theme.colors.secondary};
+    span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+  }
+`
+
+const StyledListSubItem = styled(ListItem)`
+  &.MuiButtonBase-root.MuiListItem-root {
+    background-color: green;
+  }
+
+  &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
+    background-color: blue;
+  }
+`
 
 const StyledListItemText = styled(ListItemText)`
   span {
@@ -18,24 +40,16 @@ const StyledListItemText = styled(ListItemText)`
     color: ${({ theme }) => theme.colors.secondaryHover};
     text-transform: uppercase;
   }
-/*   > span {
+`
+
+const StyledListSubItemText = styled(ListItemText)`
+  span {
     text-transform: none;
     font-weight: 400;
     font-size: 0.85em;
     letter-spacing: 0px;
     color: ${({ theme }) => theme.colors.secondary};
-  }  */
-`
-/*  CSS Styles for selected item state
-
-const StyledListItem = styled(ListItemIcon)`
-  background-color: ${({ theme }) => theme.colors.background};
-  border-radius: 8px;
-  color: ${({ theme }) => theme.colors.primary};
-` */
-
-const StyledListItemIcon = styled(ListItemIcon)`
-  min-width: 32px !important;
+  }
 `
 
 const useStyles = makeStyles((theme: Theme) =>
@@ -83,28 +97,56 @@ const List = ({ items }: Props): React.ReactElement => {
     item.onItemClick()
   }
 
-  const getListItem = (item: ListItemType | ListSubItemType) => {
+  const isSubItemSelected = (item: ListItemType): boolean => {
+    const res = item.subItems?.find((subItem) => subItem.selected)
+    return res !== undefined
+  }
+
+  const getListItem = (item: ListItemType | ListSubItemType, isSubItem = true) => {
     const onClick = () => onItemClick(item)
+
+    const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
+    const ListItemTextAux = isSubItem ? StyledListSubItemText : StyledListItemText
+
     return (
-      <ListItem button key={item.label} onClick={onClick} selected={item.selected}>
-        {item.icon && <StyledListItemIcon>{item.icon}</StyledListItemIcon>}
-        <StyledListItemText primary={item.label} />
+      <ListItemAux
+        button
+        key={item.label}
+        onClick={onClick}
+        selected={item.selected || isSubItemSelected(item as ListItemType)}
+      >
+        {item.icon && item.icon}
+
+        <ListItemTextAux primary={item.label} />
+
         {(item as ListItemType).subItems &&
           (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
-      </ListItem>
+      </ListItemAux>
     )
   }
+
+  useEffect(() => {
+    if (Object.keys(groupCollapseStatus).length) {
+      return
+    }
+
+    items.forEach((i) => {
+      if (isSubItemSelected(i)) {
+        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [i.label]: true } })
+      }
+    })
+  }, [groupCollapseStatus, items])
 
   return (
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
       {items.map((i) => {
         return (
           <div key={i.label}>
-            {getListItem(i)}
+            {getListItem(i, false)}
             {i.subItems && (
               <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
                 <ListMui component="div" disablePadding>
-                  {i.subItems.map(getListItem)}
+                  {i.subItems.map((subItem) => getListItem(subItem))}
                 </ListMui>
               </Collapse>
             )}
