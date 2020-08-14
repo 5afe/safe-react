@@ -154,10 +154,12 @@ describe('getERC20DecimalsAndSymbol', () => {
   })
 })
 
-jest.mock('src/logic/tokens/store/actions/fetchTokens')
 describe('isERC721Contract', () => {
   afterAll(() => {
     jest.unmock('src/logic/tokens/store/actions/fetchTokens')
+  })
+  beforeEach(() => {
+    jest.mock('src/logic/tokens/store/actions/fetchTokens')
   })
   it('Given an random non-erc721 contract address, returns false', async () => {
     // given

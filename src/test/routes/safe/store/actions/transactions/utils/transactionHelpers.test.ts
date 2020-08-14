@@ -317,7 +317,7 @@ describe('isCustomTransaction', () => {
     expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
 
   })
-  it('Is outgoing transaction, is SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction, returns false',   async () => {
+  it('Is outgoing transaction, is not SendERC20Transaction, is not isUpgradeTransaction and not isSendERC721Transaction, returns true',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
@@ -334,16 +334,16 @@ describe('isCustomTransaction', () => {
 
     const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
 
-    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => true)
+    txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
     txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
 
     // when
     const result = await isCustomTransaction(transaction, txCode, safeAddress, knownTokens)
 
     // then
-    expect(result).toBe(false)
+    expect(result).toBe(true)
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
-    expect(txHelpers.isSendERC721Transaction).not.toHaveBeenCalled()
+    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
 
   })
   it('Is outgoing transaction, not SendERC20Transaction, isUpgradeTransaction and not isSendERC721Transaction, returns false',   async () => {
@@ -375,7 +375,7 @@ describe('isCustomTransaction', () => {
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
 
   })
-  it('Is outgoing transaction, is SendERC20Transaction, not isUpgradeTransaction and isSendERC721Transaction, returns false',   async () => {
+  it('Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and isSendERC721Transaction, returns false',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
