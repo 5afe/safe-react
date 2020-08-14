@@ -5,7 +5,7 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 
-import Loader from '../Loader'
+import Loader from 'src/components/Loader'
 import App from 'src/components/App'
 
 import AppRoutes from 'src/routes'

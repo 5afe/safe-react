@@ -1,12 +1,24 @@
 import React from 'react'
 import { useField } from 'react-final-form'
-
+import { makeStyles } from '@material-ui/core/styles'
 import TextField from 'src/components/forms/TextField'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
+const useStyles = makeStyles({
+  output: {
+    '& > div > textarea': {
+      letterSpacing: '-0.5px',
+      lineHeight: '20px',
+      height: '40px',
+      overflowY: 'auto',
+    },
+  },
+})
+
 const RenderOutputParams = () => {
+  const classes = useStyles()
   const {
     input: { value: method },
   }: any = useField('selectedMethod', { subscription: { value: true } })
@@ -31,7 +43,10 @@ const RenderOutputParams = () => {
           <Row key={key} margin="sm">
             <Col>
               <TextField
+                className={classes.output}
+                multiline
                 disabled
+                rowsMax={3}
                 input={{ name: key, value, placeholder, type: 'text' }}
                 meta={{ valid: true }}
                 testId={key}

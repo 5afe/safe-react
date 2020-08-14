@@ -39,7 +39,7 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
-import { addressBookQueryParamsSelector, safesListSelector } from 'src/routes/safe/store/selectors'
+import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const AddressBookTable = ({ classes }) => {
@@ -132,7 +132,7 @@ const AddressBookTable = ({ classes }) => {
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"
-            size={addressBook.size}
+            size={addressBook?.size || 0}
           >
             {(sortedData) =>
               sortedData.map((row, index) => {

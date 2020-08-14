@@ -1,12 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
+import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import NetworkLabel from '../NetworkLabel'
 import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
-import Identicon from 'src/components/Identicon'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 
@@ -69,10 +68,7 @@ interface ProviderInfoProps {
 
 const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
-  const cutAddress = connected ? shortVersionOf(userAddress, 4) : 'Connection Error'
-  const color = connected ? 'primary' : 'warning'
-  const identiconAddress = userAddress || 'random'
-
+  const addressColor = connected ? 'text' : 'warning'
   return (
     <>
       {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
@@ -89,10 +85,25 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
           {provider}
         </Paragraph>
         <div className={classes.providerContainer}>
-          {connected && <Identicon address={identiconAddress} className={classes.identicon} diameter={10} />}
-          <Paragraph className={classes.address} color={color} noMargin size="xs">
+          {connected ? (
+            <EthHashInfo
+              hash={userAddress}
+              shortenHash={4}
+              showIdenticon
+              identiconSize="xs"
+              textColor={addressColor}
+              textSize="sm"
+              network={network}
+            />
+          ) : (
+            <Text size="md" color={addressColor}>
+              Connection Error
+            </Text>
+          )}
+
+          {/* <Paragraph className={classes.address} color={color} noMargin size="xs">
             {cutAddress}
-          </Paragraph>
+          </Paragraph> */}
         </div>
       </Col>
       <Col className={classes.networkLabel} layout="column" start="sm">

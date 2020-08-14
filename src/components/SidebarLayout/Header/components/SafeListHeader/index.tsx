@@ -10,7 +10,7 @@ import { connect } from 'react-redux'
 import { SidebarContext } from 'src/components/Sidebar'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { safesCountSelector } from 'src/routes/safe/store/selectors'
+import { safesCountSelector } from 'src/logic/safe/store/selectors'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 import { AppReduxState } from 'src/store'
 

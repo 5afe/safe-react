@@ -12,11 +12,11 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
+import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage } from 'src/utils/storage'
 import { Dispatch } from 'redux'
-import { SafeOwner } from '../../safe/store/models/safe'
+import { SafeOwner } from '../../../logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
@@ -66,7 +66,7 @@ const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.Rea
 
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const ownerAddresses = await gnosisSafe.methods.getOwners().call()
-      const owners = getOwnersFrom(ownerNames, ownerAddresses.sort())
+      const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 
       await loadSafe(safeName, safeAddress, owners, addSafe)
 

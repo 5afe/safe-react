@@ -4,10 +4,9 @@ import { List } from 'immutable'
 import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { TableColumn } from 'src/components/Table/types'
-import { AVAILABLE_CURRENCIES, BalanceCurrencyRecord } from 'src/logic/currencyValues/store/model/currencyValues'
+import { TableColumn } from 'src/components/Table/types.d'
+import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Token } from 'src/logic/tokens/store/model/token'
-import { BalanceDataRow } from './Coins'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -15,15 +14,15 @@ export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const getTokenPriceInCurrency = (
   token: Token,
-  currencySelected: AVAILABLE_CURRENCIES,
-  currencyValues: List<BalanceCurrencyRecord>,
-  currencyRate: number | null,
+  currencySelected?: AVAILABLE_CURRENCIES,
+  currencyValues?: BalanceCurrencyList,
+  currencyRate?: number,
 ): string => {
   if (!currencySelected) {
     return ''
   }
 
-  const currencyValue = currencyValues.find(({ tokenAddress }) => {
+  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
     if (token.address === ETH_ADDRESS && !tokenAddress) {
       return true
     }
@@ -31,7 +30,7 @@ const getTokenPriceInCurrency = (
     return token.address === tokenAddress
   })
 
-  if (!currencyValue) {
+  if (!currencyValue || !currencyRate) {
     return ''
   }
 
@@ -41,13 +40,20 @@ const getTokenPriceInCurrency = (
   return `${formatAmountInUsFormat(balance)} ${currencySelected}`
 }
 
+export interface BalanceData {
+  asset: { name: string; logoUri: string; address: string; symbol: string }
+  balance: string
+  fixed: boolean
+  value: string
+}
+
 export const getBalanceData = (
   activeTokens: List<Token>,
-  currencySelected: AVAILABLE_CURRENCIES,
-  currencyValues: List<BalanceCurrencyRecord>,
-  currencyRate: number,
-): BalanceDataRow => {
-  return activeTokens.map((token) => ({
+  currencySelected?: AVAILABLE_CURRENCIES,
+  currencyValues?: BalanceCurrencyList,
+  currencyRate?: number,
+): List<BalanceData> =>
+  activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
@@ -60,7 +66,6 @@ export const getBalanceData = (
     [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
-}
 
 export const generateColumns = (): List<TableColumn> => {
   const assetColumn: TableColumn = {

@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 
-import { isPendingTransaction } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+import { isPendingTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export const getAwaitingTransactions = (allTransactions = List([]), cancellationTxs, userAccount: string) => {
   return allTransactions.filter((tx) => {

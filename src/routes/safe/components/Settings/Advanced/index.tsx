@@ -9,7 +9,7 @@ import { styles } from './style'
 import ModulesTable from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
-import { safeModulesSelector, safeNonceSelector } from 'src/routes/safe/store/selectors'
+import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
 
 const useStyles = makeStyles(styles)
 
