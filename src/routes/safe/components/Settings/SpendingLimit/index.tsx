@@ -1,3 +1,6 @@
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import { useSnackbar } from 'notistack'
+import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import {
   Button,
   EthHashInfo,
@@ -14,7 +17,13 @@ import { Skeleton } from '@material-ui/lab'
 import { Mutator } from 'final-form'
 import React from 'react'
 import { useField, useForm, useFormState } from 'react-final-form'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
+import { safeModulesSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import styled from 'styled-components'
 
 import GnoField from 'src/components/forms/Field'
@@ -567,6 +576,32 @@ const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> =
     utils.changeValue(state, 'beneficiary', () => args[0])
   },
 }
+
+const requestModuleData = (safeAddress: string): Promise<any[]> => {
+  const batch = new web3ReadOnly.BatchRequest()
+
+  const requests = [
+    {
+      abi: GnosisSafeSol.abi,
+      address: safeAddress,
+      methods: [{ method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] }],
+    },
+    {
+      abi: SpendingLimitModule.abi,
+      address: SPENDING_LIMIT_MODULE_ADDRESS,
+      methods: [{ method: 'getDelegates', args: [safeAddress, 0, 100] }],
+    },
+  ]
+
+  const whenRequestsValues = requests.map(generateBatchRequests)
+
+  batch.execute()
+
+  return Promise.all(whenRequestsValues)
+}
+
+const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
+
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
 
@@ -581,11 +616,82 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
     }
     setStep('review')
   }
-  const handleSubmit = () => {
-    // TODO: here we do the magic. FINALLY!!!!
-    console.log({ values })
-  }
 
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const modules = useSelector(safeModulesSelector)
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
+
+  const handleSubmit = async (values: Record<string, string>) => {
+    // TODO: here we do the magic. FINALLY!!!!
+    const [enabledModules, delegates] = await requestModuleData(safeAddress)
+    const isSpendingLimitEnabled =
+      enabledModules[0]?.array?.some(
+        (module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase(),
+      ) ?? false
+    const transactions = []
+
+    // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
+    if (!isSpendingLimitEnabled) {
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+      transactions.push({
+        to: safeAddress,
+        value: 0,
+        data: safeInstance.methods.enableModule(SPENDING_LIMIT_MODULE_ADDRESS).encodeABI(),
+      })
+    }
+
+    // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
+    //                                  ^ - shall we rely on this or query the list of delegates once again?
+    const isDelegateAlreadyAdded =
+      delegates[0].results.some((delegate) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
+
+    // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
+    if (!isDelegateAlreadyAdded) {
+      const web3 = getWeb3()
+      const spendingLimit = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
+      transactions.push({
+        to: SPENDING_LIMIT_MODULE_ADDRESS,
+        value: 0,
+        data: spendingLimit.methods.addDelegate(values?.beneficiary).encodeABI(),
+      })
+    } else {
+      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
+      // if tokens were delegated to the _beneficiary_, prevent "setting a 'new' allowance", and inform the user about the current allowance and opt in for replacement (??)
+      // TODO: we must do this check before building the tx
+    }
+
+    // prepare the setAllowance tx
+    const web3 = getWeb3()
+    const spendingLimit = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
+    const startTime = currentMinutes() - 30
+    transactions.push({
+      to: SPENDING_LIMIT_MODULE_ADDRESS,
+      value: 0,
+      data: spendingLimit.methods
+        .setAllowance(
+          values.beneficiary,
+          values.token,
+          values.amount,
+          values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+          startTime,
+        )
+        .encodeABI(),
+    })
+
+    console.log({ modules, enabledModules, delegates, values })
+
+    await sendTransactions(
+      dispatch,
+      safeAddress,
+      transactions,
+      enqueueSnackbar,
+      closeSnackbar,
+      JSON.stringify({ name: 'Spending Limit', message: 'New Allowance' }),
+    )
+      .then(close)
+      .catch(console.error)
+  }
   return (
     <GnoModal
       handleClose={close}
@@ -599,7 +705,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
         <ReviewSpendingLimit
           onBack={() => setStep('create')}
           onClose={close}
-          onSubmit={handleSubmit}
+          onSubmit={() => handleSubmit(values)}
           txToken={txToken}
           values={values}
         />
