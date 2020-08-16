@@ -717,10 +717,57 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
  * New Spending Limit Form - END
  */
 
+const SpendingLimitSteps = (): React.ReactElement => (
+  <Steps>
+    <SpendingLimitStep>
+      <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
+      <Text size="lg" color="placeHolder" strong center>
+        Select Beneficiary
+      </Text>
+      <Text size="lg" color="placeHolder" center>
+        Choose an account that will benefit from this allowance.
+      </Text>
+      <Text size="lg" color="placeHolder" center>
+        The beneficiary does not have to be an owner of this Safe
+      </Text>
+    </SpendingLimitStep>
+    <StepsLine />
+    <SpendingLimitStep>
+      <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
+      <Text size="lg" color="placeHolder" strong center>
+        Select asset and amount
+      </Text>
+      <Text size="lg" color="placeHolder" center>
+        You can set a spending limit for any asset stored in your Safe
+      </Text>
+    </SpendingLimitStep>
+    <StepsLine />
+    <SpendingLimitStep>
+      <Img alt="Select time" title="Time" height={96} src={Time} />
+      <Text size="lg" color="placeHolder" strong center>
+        Select time
+      </Text>
+      <Text size="lg" color="placeHolder" center>
+        You can choose to set a one-time spending limit or to have it automatically refill after a defined time-period
+      </Text>
+    </SpendingLimitStep>
+  </Steps>
+)
 const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
+
+  // TODO: Refactor `delegates` for better performance. This is just to verify allowance works
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [delegates, setDelegates] = React.useState({ results: [], next: '' })
+  React.useEffect(() => {
+    const doRequestData = async () => {
+      const [, delegates] = await requestModuleData(safeAddress)
+      setDelegates(delegates[0])
+    }
+    doRequestData()
+  }, [safeAddress])
 
   const openNewSpendingLimitModal = () => {
     setShowNewSpendingLimitModal(true)
@@ -740,41 +787,11 @@ const SpendingLimit = (): React.ReactElement => {
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
           signatures.
         </InfoText>
-        <Steps>
-          <SpendingLimitStep>
-            <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
-            <Text size="lg" color="placeHolder" strong center>
-              Select Beneficiary
-            </Text>
-            <Text size="lg" color="placeHolder" center>
-              Choose an account that will benefit from this allowance.
-            </Text>
-            <Text size="lg" color="placeHolder" center>
-              The beneficiary does not have to be an owner of this Safe
-            </Text>
-          </SpendingLimitStep>
-          <StepsLine />
-          <SpendingLimitStep>
-            <Img alt="Select asset and amount" title="Asset and Amount" height={96} src={AssetAmount} />
-            <Text size="lg" color="placeHolder" strong center>
-              Select asset and amount
-            </Text>
-            <Text size="lg" color="placeHolder" center>
-              You can set a spending limit for any asset stored in your Safe
-            </Text>
-          </SpendingLimitStep>
-          <StepsLine />
-          <SpendingLimitStep>
-            <Img alt="Select time" title="Time" height={96} src={Time} />
-            <Text size="lg" color="placeHolder" strong center>
-              Select time
-            </Text>
-            <Text size="lg" color="placeHolder" center>
-              You can choose to set a one-time spending limit or to have it automatically refill after a defined
-              time-period
-            </Text>
-          </SpendingLimitStep>
-        </Steps>
+        {delegates?.results?.length ? (
+          delegates.results.map((delegate) => <div key={delegate}>{delegate}</div>)
+        ) : (
+          <SpendingLimitSteps />
+        )}
       </Block>
       <Row align="end" className={classes.buttonRow} grow>
         <Col end="xs">
