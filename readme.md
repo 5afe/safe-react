@@ -1,6 +1,6 @@
 # Gnosis Safe Multisig
 
-The most trusted platform to store digital assets on Ethereum
+The most trusted platform to store digital assets on Ethereum 
 
 ## Getting Started
 
