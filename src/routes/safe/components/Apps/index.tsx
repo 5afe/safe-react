@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { INTERFACE_MESSAGES } from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES, Transaction, RequestId } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
@@ -7,14 +7,18 @@ import styled, { css } from 'styled-components'
 import ManageApps from './components/ManageApps'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
-import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import {
+  safeEthBalanceSelector,
+  safeParamAddressFromStateSelector,
+  safeNameSelector,
+} from 'src/routes/safe/store/selectors'
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
+import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 
 const centerCSS = css`
   display: flex;
@@ -38,26 +42,55 @@ const CenteredMT = styled.div`
   margin-top: 5px;
 `
 
-type AppsProps = {
-  closeModal: () => void
-  openModal: (modal: OpenModalArgs) => void
+type ConfirmTransactionModalState = {
+  isOpen: boolean
+  txs: Transaction[]
+  requestId: RequestId | undefined
 }
 
-const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
+const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
+  isOpen: false,
+  txs: [],
+  requestId: undefined,
+}
+
+const Apps = (): React.ReactElement => {
   const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
+  const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
+    INITIAL_CONFIRM_TX_MODAL_STATE,
+  )
   const iframeRef = useRef<HTMLIFrameElement>()
 
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
 
+  const openConfirmationModal = useCallback(
+    (txs: Transaction[], requestId: RequestId) =>
+      setConfirmTransactionModal({
+        isOpen: true,
+        txs,
+        requestId,
+      }),
+    [setConfirmTransactionModal],
+  )
+  const closeConfirmationModal = useCallback(() => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE), [
+    setConfirmTransactionModal,
+  ])
+
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
   const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
-  const { sendMessageToIframe } = useIframeMessageHandler(selectedApp, openModal, closeModal, iframeRef)
+  const { sendMessageToIframe } = useIframeMessageHandler(
+    selectedApp,
+    openConfirmationModal,
+    closeConfirmationModal,
+    iframeRef,
+  )
 
   const onSelectApp = useCallback(
     (appId) => {
@@ -147,6 +180,18 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
           textSize="sm"
         />
       </CenteredMT>
+      <ConfirmTransactionModal
+        isOpen={confirmTransactionModal.isOpen}
+        app={selectedApp}
+        safeAddress={safeAddress}
+        ethBalance={ethBalance}
+        safeName={safeName}
+        txs={confirmTransactionModal.txs}
+        onCancel={closeConfirmationModal}
+        onClose={closeConfirmationModal}
+        requestId={confirmTransactionModal.requestId}
+        onConfirm={() => {}}
+      />
     </>
   )
 }

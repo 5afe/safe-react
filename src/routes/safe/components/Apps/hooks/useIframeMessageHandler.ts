@@ -7,10 +7,10 @@ import {
   SDK_MESSAGES,
   INTERFACE_MESSAGES,
   RequestId,
+  Transaction,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
@@ -18,9 +18,6 @@ import {
 } from 'src/routes/safe/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-
-import sendTransactions from '../sendTransactions'
-import confirmTransactions from '../confirmTransactions'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -45,7 +42,7 @@ interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessage
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openModal: (modal: OpenModalArgs) => void,
+  openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement>,
 ): ReturnType => {
@@ -79,21 +76,7 @@ const useIframeMessageHandler = (
       const { requestId } = msg
       switch (msg.data.messageId) {
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          const onConfirm = async () => {
-            closeModal()
-            await sendTransactions(dispatch, safeAddress, msg.data.data, selectedApp.id)
-          }
-          confirmTransactions(
-            safeAddress,
-            safeName,
-            ethBalance,
-            selectedApp.name,
-            selectedApp.iconUrl,
-            msg.data.data,
-            openModal,
-            closeModal,
-            onConfirm,
-          )
+          openConfirmationModal(msg.data.data, requestId)
           break
         }
 
@@ -138,7 +121,7 @@ const useIframeMessageHandler = (
     enqueueSnackbar,
     ethBalance,
     network,
-    openModal,
+    openConfirmationModal,
     safeAddress,
     safeName,
     selectedApp,

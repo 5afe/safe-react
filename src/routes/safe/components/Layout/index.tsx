@@ -1,12 +1,11 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Receive from '../Balances/Receive'
 
 import { styles } from './style'
-import { ModalState, OpenModalArgs } from './interfaces'
 
 import Modal from 'src/components/Modal'
 import NoSafe from 'src/components/NoSafe'
