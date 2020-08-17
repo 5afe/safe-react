@@ -111,18 +111,20 @@ interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 
-const createTransaction = ({
-  safeAddress,
-  to,
-  valueInWei,
-  txData = EMPTY_DATA,
-  notifiedTransaction,
-  txNonce,
-  operation = CALL,
-  navigateToTransactionsTab = true,
-  origin = null,
-}: CreateTransactionArgs): // onUserConfirm?: ConfirmEventHandler,
-CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+const createTransaction = (
+  {
+    safeAddress,
+    to,
+    valueInWei,
+    txData = EMPTY_DATA,
+    notifiedTransaction,
+    txNonce,
+    operation = CALL,
+    navigateToTransactionsTab = true,
+    origin = null,
+  }: CreateTransactionArgs,
+  onUserConfirm?: ConfirmEventHandler,
+): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {
@@ -207,10 +209,10 @@ CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxSt
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
+        onUserConfirm('0x000')
         try {
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-          // onUserConfirm()
 
           pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 

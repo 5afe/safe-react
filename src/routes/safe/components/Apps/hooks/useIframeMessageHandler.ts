@@ -32,6 +32,7 @@ type ReturnType = {
 }
 
 interface CustomMessageEvent extends MessageEvent {
+  requestId: RequestId
   data: {
     messageId: SDKMessageIds
     data: SDKMessageToPayload[SDKMessageIds]
@@ -75,6 +76,7 @@ const useIframeMessageHandler = (
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
+      const { requestId } = msg
       switch (msg.data.messageId) {
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
           const onConfirm = async () => {
