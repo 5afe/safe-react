@@ -1,6 +1,4 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { useSnackbar } from 'notistack'
-import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import {
   Button,
   EthHashInfo,
@@ -14,17 +12,12 @@ import {
 import { FormControlLabel, hexToRgb, Switch as SwitchMui } from '@material-ui/core'
 import { makeStyles } from '@material-ui/core/styles'
 import { Skeleton } from '@material-ui/lab'
+import { BigNumber } from 'bignumber.js'
 import { Mutator } from 'final-form'
+import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useField, useForm, useFormState } from 'react-final-form'
 import { useDispatch, useSelector } from 'react-redux'
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
-import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
-import { safeModulesSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import styled from 'styled-components'
 
 import GnoField from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -39,11 +32,19 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { getNetwork } from 'src/config'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import { safeModulesSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import SpendingLimitModule from 'src/utils/AllowanceModule.json'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import styled from 'styled-components'
 
 import AssetAmount from './assets/asset-amount.svg'
 import Beneficiary from './assets/beneficiary.svg'
@@ -565,7 +566,7 @@ const ReviewSpendingLimit = ({
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">
-                Previous Amount:{' '}
+                Previous Reset Time:{' '}
                 {RESET_TIME_OPTIONS.find(
                   ({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString(),
                 )?.label ?? 'One-time spending limit allowance'}
@@ -680,6 +681,10 @@ const requestAllowancesByDelegatesAndTokens = async (
   )
 }
 
+const fromTokenUnit = (amount: string, decimals: string | number): string =>
+  new BigNumber(amount).times(`1e-${decimals}`).toFixed()
+const toTokenUnit = (amount: string, decimals: string | number): string =>
+  new BigNumber(amount).times(`1e${decimals}`).toFixed()
 const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
 
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
@@ -697,11 +702,10 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
   const [existentSpendingLimit, setExistentSpendingLimit] = React.useState()
 
   const handleReview = async (values) => {
-    setValues(values)
+    const selectedToken = tokens.find((token) => token.address === values.token)
 
-    if (values.token) {
-      setTxToken(tokens.find((token) => token.address === values.token))
-    }
+    setValues(values)
+    setTxToken(selectedToken)
 
     const checkExistence = async () => {
       const [, delegates] = await requestModuleData(safeAddress)
@@ -717,7 +721,12 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
 
       // let the user know that is about to replace an existent allowance
       if (currentDelegate !== undefined) {
-        setExistentSpendingLimit(currentDelegate)
+        setExistentSpendingLimit({
+          ...currentDelegate,
+          amount: fromTokenUnit(currentDelegate.amount, selectedToken.decimals),
+        })
+      } else {
+        setExistentSpendingLimit(undefined)
       }
     }
 
@@ -770,7 +779,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
         .setAllowance(
           values.beneficiary,
           values.token,
-          values.amount,
+          toTokenUnit(values.amount, txToken.decimals),
           values.withResetTime ? +values.resetTime * 60 * 24 : 0,
           startTime,
         )
