@@ -1,5 +1,5 @@
 import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
-import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1

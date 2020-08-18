@@ -3,9 +3,9 @@ import { batch, useDispatch } from 'react-redux'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import fetchEtherBalance from 'src/routes/safe/store/actions/fetchEtherBalance'
-import { checkAndUpdateSafe } from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
+import fetchEtherBalance from 'src/logic/safe/store/actions/fetchEtherBalance'
+import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
+import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
 export const useSafeScheduledUpdates = (safeAddress: string): void => {
