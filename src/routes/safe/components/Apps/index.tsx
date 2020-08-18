@@ -92,6 +92,10 @@ const Apps = (): React.ReactElement => {
     iframeRef,
   )
 
+  const onUserTxConfirm = (safeTxHash: string) => {
+    sendMessageToIframe({}, confirmTransactionModal.requestId)
+  }
+
   const onSelectApp = useCallback(
     (appId) => {
       if (selectedAppId === appId) {
@@ -189,8 +193,7 @@ const Apps = (): React.ReactElement => {
         txs={confirmTransactionModal.txs}
         onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
-        requestId={confirmTransactionModal.requestId}
-        onConfirm={() => {}}
+        onUserConfirm={onUserTxConfirm}
       />
     </>
   )

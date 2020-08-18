@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
-import { Transaction, RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
 
 import AddressInfo from 'src/components/AddressInfo'
@@ -15,6 +15,11 @@ import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { useDispatch } from 'react-redux'
+import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -64,9 +69,8 @@ type OwnProps = {
   safeAddress: string
   safeName: string
   ethBalance: string
-  requestId: RequestId
   onCancel: () => void
-  onConfirm: () => void
+  onUserConfirm: (safeTxHash: string) => void
   onClose: () => void
 }
 
@@ -77,13 +81,32 @@ const ConfirmTransactionModal = ({
   safeAddress,
   ethBalance,
   safeName,
-  requestId,
   onCancel,
-  onConfirm,
+  onUserConfirm,
   onClose,
 }: OwnProps): React.ReactElement => {
+  const dispatch = useDispatch()
   if (!isOpen) {
     return null
+  }
+
+  const confirmTransactions = () => {
+    const txData = encodeMultiSendCall(txs)
+
+    dispatch(
+      createTransaction(
+        {
+          safeAddress,
+          to: MULTI_SEND_ADDRESS,
+          valueInWei: '0',
+          txData,
+          operation: DELEGATE_CALL,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          origin: app.name,
+        },
+        onUserConfirm,
+      ),
+    )
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
@@ -135,7 +158,7 @@ const ConfirmTransactionModal = ({
         <ModalFooterConfirmation
           cancelText="Cancel"
           handleCancel={onCancel}
-          handleOk={onConfirm}
+          handleOk={confirmTransactions}
           okDisabled={areTxsMalformed}
           okText="Submit"
         />
