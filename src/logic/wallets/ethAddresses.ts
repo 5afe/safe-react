@@ -1,5 +1,5 @@
 import { List } from 'immutable'
-import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import { SafeRecord } from 'src/logic/safe/store/models/safe'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const sameAddress = (firstAddress: string, secondAddress: string): boolean => {

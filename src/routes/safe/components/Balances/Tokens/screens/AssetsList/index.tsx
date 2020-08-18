@@ -18,13 +18,13 @@ import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import AssetRow from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
-import updateActiveAssets from 'src/routes/safe/store/actions/updateActiveAssets'
-import updateBlacklistedAssets from 'src/routes/safe/store/actions/updateBlacklistedAssets'
+import updateActiveAssets from 'src/logic/safe/store/actions/updateActiveAssets'
+import updateBlacklistedAssets from 'src/logic/safe/store/actions/updateBlacklistedAssets'
 import {
   safeActiveAssetsListSelector,
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 const useStyles = makeStyles(styles as any)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'

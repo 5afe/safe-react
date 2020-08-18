@@ -12,7 +12,7 @@ import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 

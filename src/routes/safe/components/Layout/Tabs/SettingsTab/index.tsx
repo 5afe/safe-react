@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { SettingsIcon } from 'src/routes/safe/components/assets/SettingsIcon'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeNeedsUpdateSelector } from 'src/routes/safe/store/selectors'
+import { safeNeedsUpdateSelector } from 'src/logic/safe/store/selectors'
 
 const SettingsTab = () => {
   const needsUpdate = useSelector(safeNeedsUpdateSelector)

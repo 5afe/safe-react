@@ -5,9 +5,9 @@ import { EthHashInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-compo
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { SafeRecord } from 'src/routes/safe/store/models/safe'
+import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
-import { SetDefaultSafe } from 'src/routes/safe/store/actions/setDefaultSafe'
+import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { getNetwork } from 'src/config'
 import DefaultBadge from './DefaultBadge'
 import Hairline from 'src/components/layout/Hairline'
