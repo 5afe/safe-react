@@ -476,6 +476,7 @@ interface ReviewSpendingLimitProps {
   onSubmit: () => void
   txToken: Token | null
   values: Record<string, string>
+  existentSpendingLimit?: Record<string, string>
 }
 const ReviewSpendingLimit = ({
   onBack,
@@ -483,6 +484,7 @@ const ReviewSpendingLimit = ({
   onSubmit,
   txToken,
   values,
+  existentSpendingLimit,
 }: ReviewSpendingLimitProps): React.ReactElement => {
   const classes = useStyles()
   const addressBook = useSelector(getAddressBook)
@@ -522,12 +524,19 @@ const ReviewSpendingLimit = ({
             Amount
           </Text>
           {txToken !== null ? (
-            <StyledImageName>
-              <StyledImage alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri} />
-              <Text size="lg">
-                {values.amount} {txToken.symbol}
-              </Text>
-            </StyledImageName>
+            <>
+              <StyledImageName>
+                <StyledImage alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri} />
+                <Text size="lg">
+                  {values.amount} {txToken.symbol}
+                </Text>
+              </StyledImageName>
+              {existentSpendingLimit && (
+                <Text size="lg" color="error">
+                  Previous Amount: {existentSpendingLimit.amount}
+                </Text>
+              )}
+            </>
           ) : (
             <Skeleton animation="wave" variant="text" />
           )}
@@ -553,7 +562,23 @@ const ReviewSpendingLimit = ({
               </Text>
             </Row>
           )}
+          {existentSpendingLimit && (
+            <Row align="center" margin="md">
+              <Text size="lg" color="error">
+                Previous Amount:{' '}
+                {RESET_TIME_OPTIONS.find(
+                  ({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString(),
+                )?.label ?? 'One-time spending limit allowance'}
+              </Text>
+            </Row>
+          )}
         </Col>
+
+        {existentSpendingLimit && (
+          <Text size="xl" color="error" center strong>
+            You are about to replace an existent spending limit
+          </Text>
+        )}
       </Block>
 
       <FooterSection>
@@ -585,11 +610,13 @@ const requestModuleData = (safeAddress: string): Promise<any[]> => {
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: [{ method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] }],
+      batch,
     },
     {
       abi: SpendingLimitModule.abi,
       address: SPENDING_LIMIT_MODULE_ADDRESS,
       methods: [{ method: 'getDelegates', args: [safeAddress, 0, 100] }],
+      batch,
     },
   ]
 
@@ -597,7 +624,60 @@ const requestModuleData = (safeAddress: string): Promise<any[]> => {
 
   batch.execute()
 
-  return Promise.all(whenRequestsValues)
+  return Promise.all(whenRequestsValues).then(([modules, delegates]) => [modules[0], delegates[0]])
+}
+
+const requestTokensByDelegate = async (safeAddress: string, delegates: string[]): Promise<any[]> => {
+  const batch = new web3ReadOnly.BatchRequest()
+
+  const whenRequestValues = delegates.map((delegateAddress: string) =>
+    generateBatchRequests({
+      abi: SpendingLimitModule.abi,
+      address: SPENDING_LIMIT_MODULE_ADDRESS,
+      methods: [{ method: 'getTokens', args: [safeAddress, delegateAddress] }],
+      batch,
+      context: delegateAddress,
+    }),
+  )
+
+  batch.execute()
+
+  return Promise.all(whenRequestValues)
+}
+
+const requestAllowancesByDelegatesAndTokens = async (
+  safeAddress: string,
+  tokensByDelegate: [string, string[]][],
+): Promise<any[]> => {
+  const batch = new web3ReadOnly.BatchRequest()
+
+  let whenRequestValues = []
+
+  tokensByDelegate.map(([delegate, tokens]) => {
+    whenRequestValues = tokens.map((token) =>
+      generateBatchRequests({
+        abi: SpendingLimitModule.abi,
+        address: SPENDING_LIMIT_MODULE_ADDRESS,
+        methods: [{ method: 'getTokenAllowance', args: [safeAddress, delegate, token] }],
+        batch,
+        context: { delegate, token },
+      }),
+    )
+  })
+
+  batch.execute()
+
+  return Promise.all(whenRequestValues).then((allowances) =>
+    allowances.map(([{ delegate, token }, [amount, spent, resetTimeMin, lastResetMin, nonce]]) => ({
+      delegate,
+      token,
+      amount,
+      spent,
+      resetTimeMin,
+      lastResetMin,
+      nonce,
+    })),
+  )
 }
 
 const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
@@ -605,30 +685,52 @@ const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
 
-  const [step, setStep] = React.useState<'create' | 'review'>('create')
-  const [values, setValues] = React.useState()
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const [txToken, setTxToken] = React.useState(null)
-  const handleReview = (values) => {
-    setValues(values)
-    if (values.token) {
-      setTxToken(tokens.find((token) => token.address === values.token))
-    }
-    setStep('review')
-  }
-
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const modules = useSelector(safeModulesSelector)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
 
+  const [step, setStep] = React.useState<'create' | 'review'>('create')
+  const [values, setValues] = React.useState()
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const [txToken, setTxToken] = React.useState(null)
+  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState()
+
+  const handleReview = async (values) => {
+    setValues(values)
+
+    if (values.token) {
+      setTxToken(tokens.find((token) => token.address === values.token))
+    }
+
+    const checkExistence = async () => {
+      const [, delegates] = await requestModuleData(safeAddress)
+      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+      const allowances = await requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+
+      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
+      const currentDelegate = allowances.find(
+        ({ delegate, token }) =>
+          delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
+          token.toLowerCase() === values.token.toLowerCase(),
+      )
+
+      // let the user know that is about to replace an existent allowance
+      if (currentDelegate !== undefined) {
+        setExistentSpendingLimit(currentDelegate)
+      }
+    }
+
+    await checkExistence()
+    setStep('review')
+  }
+
   const handleSubmit = async (values: Record<string, string>) => {
     // TODO: here we do the magic. FINALLY!!!!
     const [enabledModules, delegates] = await requestModuleData(safeAddress)
     const isSpendingLimitEnabled =
-      enabledModules[0]?.array?.some(
-        (module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase(),
-      ) ?? false
+      enabledModules?.array?.some((module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase()) ??
+      false
     const transactions = []
 
     // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
@@ -644,7 +746,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
     // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
     //                                  ^ - shall we rely on this or query the list of delegates once again?
     const isDelegateAlreadyAdded =
-      delegates[0].results.some((delegate) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
+      delegates.results.some((delegate) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
 
     // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
     if (!isDelegateAlreadyAdded) {
@@ -655,10 +757,6 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
         value: 0,
         data: spendingLimit.methods.addDelegate(values?.beneficiary).encodeABI(),
       })
-    } else {
-      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
-      // if tokens were delegated to the _beneficiary_, prevent "setting a 'new' allowance", and inform the user about the current allowance and opt in for replacement (??)
-      // TODO: we must do this check before building the tx
     }
 
     // prepare the setAllowance tx
@@ -708,6 +806,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
           onSubmit={() => handleSubmit(values)}
           txToken={txToken}
           values={values}
+          existentSpendingLimit={existentSpendingLimit}
         />
       )}
     </GnoModal>
@@ -764,7 +863,7 @@ const SpendingLimit = (): React.ReactElement => {
   React.useEffect(() => {
     const doRequestData = async () => {
       const [, delegates] = await requestModuleData(safeAddress)
-      setDelegates(delegates[0])
+      setDelegates(delegates)
     }
     doRequestData()
   }, [safeAddress])
