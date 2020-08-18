@@ -98,7 +98,6 @@ const WalletInfo = ({
             <Icon size="md" type="circleDropdown" />
           </UnStyledButton>
         </IdenticonContainer>
-        NO SAFE LOADED
       </Container>
     )
   }
