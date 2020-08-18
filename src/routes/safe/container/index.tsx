@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import Page from 'src/components/layout/Page'
 
 import Layout from 'src/routes/safe/components/Layout'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useLoadSafe } from './hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from './hooks/useSafeScheduledUpdates'
 
