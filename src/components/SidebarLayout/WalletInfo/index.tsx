@@ -117,7 +117,7 @@ const WalletInfo = ({
       <EthHashInfo hash={address} shortenHash={4} textSize="sm" />
       <IconContainer>
         <UnStyledButton onClick={onReceiveClick}>
-          <Icon size="sm" type="qrCode" tooltip="receive" />
+          <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
         <EtherscanButton value={address} network={getNetwork()} />
