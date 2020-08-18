@@ -14,7 +14,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
 

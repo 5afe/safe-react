@@ -11,10 +11,10 @@ import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import addSafeOwner from 'src/routes/safe/store/actions/addSafeOwner'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const styles = () => ({

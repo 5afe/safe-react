@@ -26,7 +26,7 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/routes/safe/store/selectors'
+import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/logic/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 

@@ -14,12 +14,13 @@ import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { List } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './style'
+import { makeTransaction } from 'src/logic/safe/store/models/transaction'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
 
 export type OwnersWithoutConfirmations = {
   hasPendingAcceptActions: boolean

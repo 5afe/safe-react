@@ -16,7 +16,7 @@ import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setS
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from '../Balances/utils'
 import Img from 'src/components/layout/Img/index'
