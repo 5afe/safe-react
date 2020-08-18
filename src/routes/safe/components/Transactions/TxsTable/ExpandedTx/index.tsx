@@ -21,10 +21,10 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import IncomingTxDescription from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/IncomingTxDescription'
-import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import { safeNonceSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { Transaction, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
+import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import IncomingTxDescription from './IncomingTxDescription'
 
 const useStyles = makeStyles(styles as any)
 

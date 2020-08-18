@@ -16,7 +16,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/custom.svg'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { lg, md, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
