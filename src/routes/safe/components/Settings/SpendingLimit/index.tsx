@@ -125,6 +125,7 @@ const requestAllowancesByDelegatesAndTokens = async (
         context: { delegate, token },
       }),
     )
+    return
   })
 
   batch.execute()
