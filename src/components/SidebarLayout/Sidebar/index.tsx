@@ -2,8 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Divider, ButtonLink } from '@gnosis.pm/safe-react-components'
 
-import List, { ListItemType } from '../../List'
-import WalletInfo from '../WalletInfo'
+import List, { ListItemType } from 'src/components/List'
+import WalletInfo from 'src/components/SidebarLayout/WalletInfo'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;

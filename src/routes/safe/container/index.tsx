@@ -1,14 +1,10 @@
-import { GenericModal } from '@gnosis.pm/safe-react-components'
-//import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, withRouter, RouteComponentProps } from 'react-router-dom'
-
-//import { styles } from './style'
+import { GenericModal } from '@gnosis.pm/safe-react-components'
 
 import NoSafe from 'src/components/NoSafe'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-// import TabsComponent from 'src/routes/safe/components/Layout/Tabs'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
@@ -26,10 +22,7 @@ const Balances = React.lazy(() => import('../components/Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
-//const useStyles = makeStyles(styles as any)
-
 const Layout = (props: RouteComponentProps) => {
-  //const classes = useStyles()
   const { match } = props
 
   const [modal, setModal] = useState({
@@ -66,7 +59,6 @@ const Layout = (props: RouteComponentProps) => {
 
   return (
     <>
-      {/* <TabsComponent /> */}
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
