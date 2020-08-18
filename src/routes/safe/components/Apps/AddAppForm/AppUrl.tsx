@@ -3,21 +3,21 @@ import createDecorator from 'final-form-calculate'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
 
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { getAppInfoFromUrl, getIpfsLinkFromEns, uniqueApp } from 'src/routes/safe/components/Apps/utils'
 import { composeValidators, required } from 'src/components/forms/validator'
 import Field from 'src/components/forms/Field'
-import { isValid as isURLValid } from 'src/utils/url'
+import { isValidURL } from 'src/utils/url'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 import { useDebounce } from 'src/routes/safe/container/hooks/useDebounce'
 
-const validateUrl = (url: string): string | undefined => (isURLValid(url) ? undefined : 'Invalid URL')
+const validateUrl = (url: string): string | undefined => (isValidURL(url) ? undefined : 'Invalid URL')
 
 export const appUrlResolver = createDecorator({
   field: 'appUrl',
   updates: {
     appUrl: async (appUrl: string): Promise<string | undefined> => {
-      const ensContent = !isURLValid(appUrl) && isValidEnsName(appUrl) && (await getIpfsLinkFromEns(appUrl))
+      const ensContent = !isValidURL(appUrl) && isValidEnsName(appUrl) && (await getIpfsLinkFromEns(appUrl))
 
       if (ensContent) {
         return ensContent
@@ -40,7 +40,7 @@ export const AppInfoUpdater = ({ onAppInfo }: { onAppInfo: (appInfo: SafeApp) =>
       onAppInfo({ ...appInfo })
     }
 
-    if (isURLValid(debouncedValue)) {
+    if (isValidURL(debouncedValue)) {
       updateAppInfo()
     }
   }, [debouncedValue, onAppInfo])

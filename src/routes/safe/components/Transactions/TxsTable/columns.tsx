@@ -7,10 +7,11 @@ import React from 'react'
 import TxType from './TxType'
 
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
+import { TableColumn } from 'src/components/Table/types.d'
 import { formatAmount, humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
-import { INCOMING_TX_TYPES } from 'src/routes/safe/store/models/incomingTransaction'
-import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
-import { CancellationTransactions } from 'src/routes/safe/store/reducer/cancellationTransactions'
+import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
+import { Transaction, TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -68,7 +69,7 @@ export const getTxAmount = async (tx: Transaction, formatted = true): Promise<st
   return getAmountWithSymbol({ decimals, value }, formatted)
 }
 
-type IncomingTxTableData = {
+type TableData = {
   id?: number
   type: React.ReactElement
   date: string
@@ -76,9 +77,10 @@ type IncomingTxTableData = {
   amount: string
   status?: TransactionStatus
   tx: Transaction
+  cancelTx?: Transaction
 }
 
-const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => ({
+const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_ID]: tx.blockNumber,
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
@@ -88,18 +90,7 @@ const getIncomingTxTableData = (tx: Transaction): IncomingTxTableData => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-type TransactionTableData = {
-  id?: number
-  type: React.ReactElement
-  date: string
-  dateOrder?: number
-  amount: string
-  status?: TransactionStatus
-  tx: Transaction
-  cancelTx: Transaction
-}
-
-const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): Promise<TransactionTableData> => {
+const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): Promise<TableData> => {
   const txDate = tx.submissionDate
 
   return {
@@ -117,7 +108,7 @@ const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): 
 export const getTxTableData = async (
   transactions: List<Transaction>,
   cancelTxs: CancellationTransactions,
-): Promise<List<IncomingTxTableData | TransactionTableData>> => {
+): Promise<List<TableData>> => {
   const txsData = transactions.map(async (tx) => {
     if (INCOMING_TX_TYPES[tx.type] !== undefined) {
       return getIncomingTxTableData(tx)
@@ -129,18 +120,7 @@ export const getTxTableData = async (
   return List(await Promise.all(txsData))
 }
 
-type TxTableColumn = {
-  id: string
-  disablePadding: boolean
-  label: string
-  custom: boolean
-  order: boolean
-  width?: number
-  static?: boolean
-  align?: 'center' | 'inherit' | 'left' | 'right' | 'justify'
-}
-
-export const generateColumns = (): List<TxTableColumn> => {
+export const generateColumns = (): List<TableColumn> => {
   const nonceColumn = {
     id: TX_TABLE_ID,
     disablePadding: false,

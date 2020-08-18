@@ -1,5 +1,5 @@
-import { List, Map } from 'immutable'
 import { backOff } from 'exponential-backoff'
+import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 import { Dispatch } from 'redux'
 
@@ -15,18 +15,18 @@ import {
 import addTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { SafeRecordProps } from 'src/routes/safe/store/models/safe'
-import { SAFE_REDUCER_ID } from 'src/routes/safe/store/reducer/safe'
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import {
   safeActiveTokensSelector,
   safeBalancesSelector,
   safeBlacklistedTokensSelector,
   safeEthBalanceSelector,
-} from 'src/routes/safe/store/selectors'
+  safeSelector,
+} from 'src/logic/safe/store/selectors'
+import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
 
 const noFunc = (): void => {}
@@ -73,8 +73,8 @@ const fetchSafeTokens = (safeAddress: string) => async (
 ): Promise<void> => {
   try {
     const state = getState()
-    const safe = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
-    const currentTokens = state[TOKEN_REDUCER_ID]
+    const safe = safeSelector(state)
+    const currentTokens = tokensSelector(state)
 
     if (!safe) {
       return

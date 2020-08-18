@@ -7,8 +7,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 import { useEffect, useState } from 'react'
 
-type OwnerAddressTableCellProps = {
-  address?: string
+interface OwnerAddressTableCellProps {
+  address: string
   knownAddress?: boolean
   showLinks: boolean
   userName?: string

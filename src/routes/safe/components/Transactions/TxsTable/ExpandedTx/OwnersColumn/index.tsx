@@ -2,24 +2,31 @@ import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import OwnersList, { ownersWithoutConfirmations } from './OwnersList'
+import OwnersList from './OwnersList'
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
 import CheckLargeFilledRedCircle from './assets/check-large-filled-red.svg'
 import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
 import ConfirmLargeGreyCircle from './assets/confirm-large-grey.svg'
 import ConfirmLargeRedCircle from './assets/confirm-large-red.svg'
-import { styles } from './style'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { Transaction, TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { List } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
+import { styles } from './style'
+import { makeTransaction } from 'src/logic/safe/store/models/transaction'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+
+export type OwnersWithoutConfirmations = {
+  hasPendingAcceptActions: boolean
+  hasPendingRejectActions: boolean
+  owner: string
+}[]
 
 function getOwnersConfirmations(tx: Transaction, userAddress: string): [string[], boolean] {
   const ownersWhoConfirmed: string[] = []
@@ -39,7 +46,7 @@ function getPendingOwnersConfirmations(
   owners: List<{ name: string; address: string }>,
   tx: Transaction,
   userAddress: string,
-): [ownersWithoutConfirmations, boolean] {
+): [OwnersWithoutConfirmations, boolean] {
   const ownersWithNoConfirmations = []
   let currentUserNotConfirmed = true
 

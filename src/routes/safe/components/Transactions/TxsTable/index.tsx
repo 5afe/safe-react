@@ -19,8 +19,8 @@ import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { extendedTransactionsSelector } from 'src/routes/safe/store/selectors/transactions'
+import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
+import { extendedTransactionsSelector } from 'src/logic/safe/store/selectors/transactions'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 

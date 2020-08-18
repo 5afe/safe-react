@@ -20,6 +20,10 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`, disabled: false },
   // Aave
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`, disabled: false },
+  //Balancer Exchange
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`, disabled: false },
+  //Balancer Pool
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmSiUgsYQE6y4ADZQtKuVCwszvUeeHnaRc7kmQMZRiF4ZH`, disabled: false },
   // Compound
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   // Idle
@@ -30,6 +34,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
   // Synthetix
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
+  // OpenZeppelin
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQovvfYYMUXjZfNbysQDUEXR8nr55iJRwcYgJQGJR7KEA`, disabled: false },
   // TX-Builder
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
 ]
