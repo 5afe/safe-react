@@ -115,7 +115,7 @@ const requestAllowancesByDelegatesAndTokens = async (
 
   let whenRequestValues = []
 
-  tokensByDelegate.map(([delegate, tokens]): void => {
+  for (const [delegate, tokens] of tokensByDelegate) {
     whenRequestValues = tokens.map((token) =>
       generateBatchRequests({
         abi: SpendingLimitModule.abi,
@@ -125,8 +125,7 @@ const requestAllowancesByDelegatesAndTokens = async (
         context: { delegate, token },
       }),
     )
-    return
-  })
+  }
 
   batch.execute()
 
