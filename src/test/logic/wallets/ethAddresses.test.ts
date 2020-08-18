@@ -5,8 +5,8 @@ import {
   sameAddress,
   shortVersionOf,
 } from 'src/logic/wallets/ethAddresses'
-import makeSafe from 'src/routes/safe/store/models/safe'
-import { makeOwner } from 'src/routes/safe/store/models/owner'
+import makeSafe from 'src/logic/safe/store/models/safe'
+import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { List } from 'immutable'
 
 describe('sameAddress', () => {

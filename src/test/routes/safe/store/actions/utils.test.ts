@@ -1,4 +1,4 @@
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/routes/safe/store/actions/utils'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import axios from 'axios'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'

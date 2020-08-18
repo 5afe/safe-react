@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { AddressBookEntryRecord, AddressBookEntryProps } from '../model/addressBook'
-import { SafeOwner } from 'src/routes/safe/store/models/safe'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { AddressBookCollection } from '../store/reducer/addressBook'
 import { AddressBookMap } from '../store/reducer/types/addressBook'
 

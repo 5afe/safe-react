@@ -1,8 +1,8 @@
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
-import { TransactionStatus, TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
-import makeSafe from 'src/routes/safe/store/models/safe'
+import { makeTransaction } from 'src/logic/safe/store/models/transaction'
+import { TransactionStatus, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import makeSafe from 'src/logic/safe/store/models/safe'
 import { List, Map, Record } from 'immutable'
 import { makeToken, TokenProps } from 'src/logic/tokens/store/model/token'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -20,7 +20,7 @@ import {
   isOutgoingTransaction,
   isPendingTransaction,
   isUpgradeTransaction,
-} from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
+} from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'

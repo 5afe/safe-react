@@ -1,10 +1,10 @@
 import { Set, Map } from 'immutable'
 import { aNewStore } from 'src/store'
-import updateActiveTokens from 'src/routes/safe/store/actions/updateActiveTokens'
+import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
-import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeToken } from '../logic/tokens/store/model/token'
-import { SAFE_REDUCER_ID } from '../routes/safe/store/reducer/safe'
+import { SAFE_REDUCER_ID } from '../logic/safe/store/reducer/safe'
 
 describe('Feature > Balances', () => {
   let store

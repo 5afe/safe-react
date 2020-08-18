@@ -5,10 +5,10 @@ import { ContractOptions, ContractSendMethod, DeployOptions, EventData, PastEven
 import {
   ConfirmationServiceModel,
   TxServiceModel,
-} from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+} from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions'
 import { List, Map } from 'immutable'
-import { PendingActionValues } from 'src/routes/safe/store/models/types/transaction'
+import { PendingActionValues } from 'src/logic/safe/store/models/types/transaction'
 
 const mockNonPayableTransactionObject = (callResult?: string): NonPayableTransactionObject<string | void | boolean | string[]> => {
   return {
