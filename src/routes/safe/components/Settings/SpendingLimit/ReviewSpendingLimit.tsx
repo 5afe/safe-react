@@ -15,7 +15,8 @@ import {
   FooterWrapper,
   StyledButton,
   TitleSection,
-} from 'src/routes/safe/components/Settings/SpendingLimit/index'
+  SpendingLimit,
+} from 'src/routes/safe/components/Settings/SpendingLimit'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/ResetTime'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import styled from 'styled-components'
@@ -38,7 +39,7 @@ interface ReviewSpendingLimitProps {
   onSubmit: () => void
   txToken: Token | null
   values: Record<string, string>
-  existentSpendingLimit?: Record<string, string>
+  existentSpendingLimit?: SpendingLimit
 }
 
 const ReviewSpendingLimit = ({

@@ -1,7 +1,21 @@
 import { Button, Text, Title } from '@gnosis.pm/safe-react-components'
+import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import { Button, EthHashInfo, Text, Title } from '@gnosis.pm/safe-react-components'
+import TableContainer from '@material-ui/core/TableContainer'
+import { BigNumber } from 'bignumber.js'
+import cn from 'classnames'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { TableCell, TableRow } from 'src/components/layout/Table'
+import Table from 'src/components/Table'
+import { getNetwork } from 'src/config'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -26,9 +40,17 @@ import {
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import styled from 'styled-components'
 
+import {
+  generateColumns,
+  getSpendingLimitData,
+  SPENDING_LIMIT_TABLE_BENEFICIARY_ID,
+  SPENDING_LIMIT_TABLE_RESET_TIME_ID,
+  SPENDING_LIMIT_TABLE_SPENT_ID,
+  SpendingLimitTable,
+} from './dataFetcher'
 import { useStyles } from './style'
+import SpendingLimitSteps from './SpendingLimitSteps'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -69,6 +91,16 @@ export const FooterWrapper = styled.div`
   justify-content: space-around;
 `
 
+export interface SpendingLimit {
+  delegate: string
+  token: string
+  amount: string
+  spent: string
+  resetTimeMin: string
+  lastResetMin: string
+  nonce: string
+}
+
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
 
@@ -80,7 +112,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
   const [values, setValues] = React.useState()
   const tokens = useSelector(extendedSafeTokensSelector)
   const [txToken, setTxToken] = React.useState(null)
-  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState()
+  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit>()
 
   const handleReview = async (values) => {
     const selectedToken = tokens.find((token) => token.address === values.token)
@@ -200,21 +232,61 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
   )
 }
 
+const StyledImage = styled.img`
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  margin: 0 8px 0 0;
+`
+
+const StyledImageName = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const TableActionButton = styled(Button)`
+  background-color: transparent;
+  padding: 0;
+
+  &:hover {
+    background-color: transparent;
+  }
+`
+
 const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const addressBook = useSelector(getAddressBook)
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
 
   // TODO: Refactor `delegates` for better performance. This is just to verify allowance works
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const [delegates, setDelegates] = React.useState({ results: [], next: '' })
+  const [spendingLimits, setSpendingLimits] = React.useState<SpendingLimit[]>()
+  const [spendingLimitData, setSpendingLimitData] = React.useState<SpendingLimitTable[] | undefined>()
   React.useEffect(() => {
     const doRequestData = async () => {
       const [, delegates] = await requestModuleData(safeAddress)
-      setDelegates(delegates)
+      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+      const allowances = await requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+      setSpendingLimits(allowances)
+      setSpendingLimitData(getSpendingLimitData(allowances))
     }
     doRequestData()
-  }, [safeAddress])
+  }, [safeAddress, tokens])
+
+  const [cut, setCut] = React.useState(undefined)
+  const { width } = useWindowDimensions()
+  React.useEffect(() => {
+    if (width <= 1024) {
+      setCut(4)
+    } else {
+      setCut(8)
+    }
+  }, [width])
+
+  const columns = generateColumns()
+  const autoColumns = columns.filter(({ custom }) => !custom)
 
   const openNewSpendingLimitModal = () => {
     setShowNewSpendingLimitModal(true)
@@ -222,6 +294,19 @@ const SpendingLimit = (): React.ReactElement => {
 
   const closeNewSpendingLimitModal = () => {
     setShowNewSpendingLimitModal(false)
+  }
+
+  const humanReadableSpent = (spent: string, amount: string, tokenAddress: string): React.ReactElement => {
+    const token = tokens.find((token) => token.address === tokenAddress)
+    const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
+    const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
+
+    return (
+      <StyledImageName>
+        {width > 1024 && <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />}
+        <Text size="lg">{`${formattedSpent} of ${formattedAmount} ${token.symbol}`}</Text>
+      </StyledImageName>
+    )
   }
 
   return (
@@ -234,8 +319,73 @@ const SpendingLimit = (): React.ReactElement => {
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
           signatures.
         </InfoText>
-        {delegates?.results?.length ? (
-          delegates.results.map((delegate) => <div key={delegate}>{delegate}</div>)
+        {spendingLimits?.length && spendingLimitData?.length ? (
+          <TableContainer style={{ minHeight: '400px' }}>
+            <Table
+              columns={columns}
+              data={spendingLimitData}
+              defaultFixed
+              defaultOrderBy={SPENDING_LIMIT_TABLE_BENEFICIARY_ID}
+              defaultRowsPerPage={5}
+              label="Spending Limits"
+              noBorder
+              size={spendingLimitData.length}
+            >
+              {(sortedData) =>
+                sortedData.map((row, index) => (
+                  <TableRow
+                    className={cn(classes.hide, index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom)}
+                    data-testid="spending-limit-table-row"
+                    key={index}
+                    tabIndex={-1}
+                  >
+                    {autoColumns.map((column, index) => {
+                      const columnId = column.id
+                      const rowElement = row[columnId]
+
+                      return (
+                        <TableCell align={column.align} component="td" key={`${columnId}-${index}`}>
+                          {columnId === SPENDING_LIMIT_TABLE_BENEFICIARY_ID && (
+                            <EthHashInfo
+                              hash={rowElement}
+                              name={addressBook ? getNameFromAdbk(addressBook, rowElement) : ''}
+                              showCopyBtn
+                              showEtherscanBtn
+                              showIdenticon
+                              textSize="lg"
+                              shortenHash={cut}
+                              network={getNetwork()}
+                            />
+                          )}
+
+                          {columnId === SPENDING_LIMIT_TABLE_SPENT_ID &&
+                            humanReadableSpent(rowElement.spent, rowElement.amount, rowElement.tokenAddress)}
+
+                          {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && <Text size="lg">{rowElement}</Text>}
+                        </TableCell>
+                      )
+                    })}
+                    <TableCell component="td">
+                      <Row align="end" className={classes.actions}>
+                        {granted && (
+                          <TableActionButton
+                            size="md"
+                            iconType="delete"
+                            color="error"
+                            variant="outlined"
+                            onClick={() => console.log({ row })}
+                            data-testid="remove-action"
+                          >
+                            {null}
+                          </TableActionButton>
+                        )}
+                      </Row>
+                    </TableCell>
+                  </TableRow>
+                ))
+              }
+            </Table>
+          </TableContainer>
         ) : (
           <SpendingLimitSteps />
         )}

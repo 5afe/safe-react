@@ -30,7 +30,6 @@ export const useStyles = makeStyles(
     actions: {
       justifyContent: 'flex-end',
       visibility: 'hidden',
-      minWidth: '100px',
     },
     noBorderBottom: {
       '& > td': {
