@@ -1,4 +1,4 @@
-import { TextField } from '@gnosis.pm/safe-react-components'
+import { TextField as SRCTextField } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
@@ -18,7 +18,7 @@ const AmountInput = styled.div`
   grid-area: amountInput;
 `
 
-const GnoTextField = styled(TextField)`
+const TextField = styled(SRCTextField)`
   margin: 0;
 `
 
@@ -41,7 +41,7 @@ export const Amount = (): React.ReactElement => {
   return (
     <AmountInput>
       <Field
-        component={GnoTextField}
+        component={TextField}
         label="Amount*"
         name="amount"
         type="text"
