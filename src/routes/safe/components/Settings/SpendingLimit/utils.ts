@@ -68,18 +68,20 @@ export const requestAllowancesByDelegatesAndTokens = async (
 ): Promise<any[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
-  let whenRequestValues = []
+  const whenRequestValues = []
 
   for (const [delegate, tokens] of tokensByDelegate) {
-    whenRequestValues = tokens.map((token) =>
-      generateBatchRequests({
-        abi: SpendingLimitModule.abi,
-        address: SPENDING_LIMIT_MODULE_ADDRESS,
-        methods: [{ method: 'getTokenAllowance', args: [safeAddress, delegate, token] }],
-        batch,
-        context: { delegate, token },
-      }),
-    )
+    for (const token of tokens) {
+      whenRequestValues.push(
+        generateBatchRequests({
+          abi: SpendingLimitModule.abi,
+          address: SPENDING_LIMIT_MODULE_ADDRESS,
+          methods: [{ method: 'getTokenAllowance', args: [safeAddress, delegate, token] }],
+          batch,
+          context: { delegate, token },
+        }),
+      )
+    }
   }
 
   batch.execute()
