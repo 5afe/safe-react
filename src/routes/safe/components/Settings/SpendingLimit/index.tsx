@@ -1,12 +1,11 @@
-import { Button, Text, Title } from '@gnosis.pm/safe-react-components'
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { Button, EthHashInfo, Text, Title } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
-import { BigNumber } from 'bignumber.js'
 import cn from 'classnames'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
 import { getNetwork } from 'src/config'
@@ -15,7 +14,6 @@ import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
-import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -24,11 +22,14 @@ import GnoModal from 'src/components/Modal'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-
 import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
-import NewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/NewSpendingLimit'
-import ReviewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/ReviewSpendingLimit'
-import SpendingLimitSteps from 'src/routes/safe/components/Settings/SpendingLimit/SpendingLimitSteps'
+import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import SpendingLimitModule from 'src/utils/AllowanceModule.json'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+
+import NewSpendingLimit from './NewSpendingLimit'
+import ReviewSpendingLimit from './ReviewSpendingLimit'
+import SpendingLimitSteps from './SpendingLimitSteps'
 import {
   currentMinutes,
   fromTokenUnit,
@@ -36,11 +37,8 @@ import {
   requestModuleData,
   requestTokensByDelegate,
   toTokenUnit,
-} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import SpendingLimitModule from 'src/utils/AllowanceModule.json'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-
+  SpendingLimitRow,
+} from './utils'
 import {
   generateColumns,
   getSpendingLimitData,
@@ -50,7 +48,6 @@ import {
   SpendingLimitTable,
 } from './dataFetcher'
 import { useStyles } from './style'
-import SpendingLimitSteps from './SpendingLimitSteps'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -91,16 +88,6 @@ export const FooterWrapper = styled.div`
   justify-content: space-around;
 `
 
-export interface SpendingLimit {
-  delegate: string
-  token: string
-  amount: string
-  spent: string
-  resetTimeMin: string
-  lastResetMin: string
-  nonce: string
-}
-
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
 
@@ -112,7 +99,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
   const [values, setValues] = React.useState()
   const tokens = useSelector(extendedSafeTokensSelector)
   const [txToken, setTxToken] = React.useState(null)
-  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit>()
+  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimitRow>()
 
   const handleReview = async (values) => {
     const selectedToken = tokens.find((token) => token.address === values.token)
@@ -262,7 +249,7 @@ const SpendingLimit = (): React.ReactElement => {
 
   // TODO: Refactor `delegates` for better performance. This is just to verify allowance works
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const [spendingLimits, setSpendingLimits] = React.useState<SpendingLimit[]>()
+  const [spendingLimits, setSpendingLimits] = React.useState<SpendingLimitRow[]>()
   const [spendingLimitData, setSpendingLimitData] = React.useState<SpendingLimitTable[] | undefined>()
   React.useEffect(() => {
     const doRequestData = async () => {

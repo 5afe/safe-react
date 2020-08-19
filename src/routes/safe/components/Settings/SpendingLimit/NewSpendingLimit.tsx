@@ -1,19 +1,16 @@
 import { Button, Icon, Text, Title } from '@gnosis.pm/safe-react-components'
 import { Mutator } from 'final-form'
 import React from 'react'
+import styled from 'styled-components'
+
 import GnoForm from 'src/components/forms/GnoForm'
 import GnoButton from 'src/components/layout/Button'
-import { Amount } from 'src/routes/safe/components/Settings/SpendingLimit/Amount'
-import BeneficiarySelect from 'src/routes/safe/components/Settings/SpendingLimit/BeneficiarySelect'
-import {
-  TitleSection,
-  StyledButton,
-  FooterSection,
-  FooterWrapper,
-} from 'src/routes/safe/components/Settings/SpendingLimit/index'
-import ResetTime from 'src/routes/safe/components/Settings/SpendingLimit/ResetTime'
-import TokenSelect from 'src/routes/safe/components/Settings/SpendingLimit/TokenSelect'
-import styled from 'styled-components'
+
+import { Amount } from './Amount'
+import BeneficiarySelect from './BeneficiarySelect'
+import { TitleSection, StyledButton, FooterSection, FooterWrapper } from '.'
+import ResetTime from './ResetTime'
+import TokenSelect from './TokenSelect'
 
 const FormContainer = styled.div`
   padding: 24px;

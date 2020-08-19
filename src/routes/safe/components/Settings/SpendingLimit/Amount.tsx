@@ -2,11 +2,12 @@ import { TextField as SRCTextField } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import { useField } from 'react-final-form'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import GnoField from 'src/components/forms/Field'
 import { composeValidators, minValue, mustBeFloat, required } from 'src/components/forms/validator'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import styled from 'styled-components'
+
 import { useStyles } from './style'
 
 export const Field = styled(GnoField)`

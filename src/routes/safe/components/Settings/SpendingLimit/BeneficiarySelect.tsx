@@ -9,7 +9,8 @@ import { getNetwork } from 'src/config'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { KEYCODES } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+
+import { KEYCODES } from './utils'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;

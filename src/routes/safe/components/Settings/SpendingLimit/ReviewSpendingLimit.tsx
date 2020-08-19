@@ -2,6 +2,8 @@ import { Button, EthHashInfo, Icon, IconText, Text, Title } from '@gnosis.pm/saf
 import { Skeleton } from '@material-ui/lab'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -10,16 +12,11 @@ import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import {
-  FooterSection,
-  FooterWrapper,
-  StyledButton,
-  TitleSection,
-  SpendingLimit,
-} from 'src/routes/safe/components/Settings/SpendingLimit'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/ResetTime'
-import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import styled from 'styled-components'
+
+import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
+import { RESET_TIME_OPTIONS } from './ResetTime'
+import { useStyles } from './style'
+import { SpendingLimitRow } from './utils'
 
 const StyledImage = styled.img`
   width: 32px;
@@ -39,7 +36,7 @@ interface ReviewSpendingLimitProps {
   onSubmit: () => void
   txToken: Token | null
   values: Record<string, string>
-  existentSpendingLimit?: SpendingLimit
+  existentSpendingLimit?: SpendingLimitRow
 }
 
 const ReviewSpendingLimit = ({

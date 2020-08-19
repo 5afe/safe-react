@@ -3,9 +3,9 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Img from 'src/components/layout/Img'
-import AssetAmount from 'src/routes/safe/components/Settings/SpendingLimit/assets/asset-amount.svg'
-import Beneficiary from 'src/routes/safe/components/Settings/SpendingLimit/assets/beneficiary.svg'
-import Time from 'src/routes/safe/components/Settings/SpendingLimit/assets/time.svg'
+import AssetAmount from './assets/asset-amount.svg'
+import Beneficiary from './assets/beneficiary.svg'
+import Time from './assets/time.svg'
 
 const StepWrapper = styled.div`
   display: flex;

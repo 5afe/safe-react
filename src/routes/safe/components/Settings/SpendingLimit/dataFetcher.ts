@@ -1,7 +1,9 @@
 import { formatRelative } from 'date-fns'
 import { List } from 'immutable'
+
 import { TableColumn } from 'src/components/Table/types.d'
-import { SpendingLimit } from '.'
+
+import { SpendingLimitRow } from './utils'
 
 export const SPENDING_LIMIT_TABLE_BENEFICIARY_ID = 'beneficiary'
 export const SPENDING_LIMIT_TABLE_SPENT_ID = 'spent'
@@ -21,7 +23,7 @@ const relativeTime = (baseTimeMin: string, resetTimeMin: string): string => {
   return formatRelative(nextResetTimeMilliseconds, Date.now())
 }
 
-export const getSpendingLimitData = (spendingLimits: SpendingLimit[] | null): SpendingLimitTable[] | undefined => {
+export const getSpendingLimitData = (spendingLimits: SpendingLimitRow[] | null): SpendingLimitTable[] | undefined => {
   return spendingLimits?.map((spendingLimit) => ({
     [SPENDING_LIMIT_TABLE_BENEFICIARY_ID]: spendingLimit.delegate,
     [SPENDING_LIMIT_TABLE_SPENT_ID]: {

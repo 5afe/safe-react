@@ -1,5 +1,6 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
+
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -62,10 +63,20 @@ export const requestTokensByDelegate = async (safeAddress: string, delegates: st
   return Promise.all(whenRequestValues)
 }
 
+export type SpendingLimitRow = {
+  delegate: string
+  token: string
+  amount: string
+  spent: string
+  resetTimeMin: string
+  lastResetMin: string
+  nonce: string
+}
+
 export const requestAllowancesByDelegatesAndTokens = async (
   safeAddress: string,
   tokensByDelegate: [string, string[]][],
-): Promise<any[]> => {
+): Promise<SpendingLimitRow[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
   let whenRequestValues = []
