@@ -56,13 +56,14 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle, onAppRemoved }: Props): 
       {isOpen && (
         <ManageListModal
           addButtonLabel="Add custom app"
+          showDeleteButton
           defaultIconUrl={appsIconSvg}
           formBody={Form}
           isSubmitFormDisabled={isSubmitDisabled}
           itemList={getItemList()}
           onClose={closeModal}
           onItemToggle={onItemToggle}
-          onItemRemoved={onAppRemoved}
+          onItemDeleted={onAppRemoved}
           onSubmitForm={onSubmitForm}
         />
       )}

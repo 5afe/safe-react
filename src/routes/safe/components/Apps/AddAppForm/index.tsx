@@ -44,6 +44,7 @@ const APP_INFO: SafeApp = {
   url: '',
   name: '',
   iconUrl: appsIconSvg,
+  isDeletable: true,
   error: false,
   description: '',
 }

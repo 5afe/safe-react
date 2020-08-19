@@ -7,7 +7,7 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 export type onAppToggleHandler = (appId: string, enabled: boolean) => Promise<void>
 export type onAppAddedHandler = (app: SafeApp) => void
-export type onAppRemovedHandler = (app: SafeApp) => void
+export type onAppRemovedHandler = (appId: string) => void
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -42,12 +42,13 @@ const useAppList = (): UseAppListReturnType => {
         try {
           const currentApp = list[index]
 
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
+          const appInfo: SafeApp = await getAppInfoFromUrl(currentApp.url)
           if (appInfo.error) {
             throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
 
           appInfo.disabled = Boolean(currentApp.disabled)
+          appInfo.isDeletable = !staticAppsList.some((staticApp) => staticApp.url === currentApp.url)
 
           apps.push(appInfo)
         } catch (error) {
@@ -99,16 +100,11 @@ const useAppList = (): UseAppListReturnType => {
   )
 
   const onAppRemoved: onAppRemovedHandler = useCallback(
-    (app) => {
-      const isStaticApp = staticAppsList.some((a) => a.url === app.url)
-      if (isStaticApp) {
-        return
-      }
-
+    (appId) => {
       // update in-memory list
       const appListCopy = [...appList]
 
-      const appIndex = appListCopy.findIndex((a) => a.url === app.url)
+      const appIndex = appListCopy.findIndex((a) => a.id === appId)
 
       appListCopy.splice(appIndex, 1)
 
