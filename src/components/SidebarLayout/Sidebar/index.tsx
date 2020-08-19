@@ -17,7 +17,7 @@ const StyledButtonLink = styled(ButtonLink)`
   height: 40px;
   width: 176px;
   padding: 0 0 0 16px;
-  margin: 16px 0;
+  margin: 12px 0;
   text-decoration: none;
 
   &:hover {
