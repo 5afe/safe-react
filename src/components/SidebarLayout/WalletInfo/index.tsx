@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { getNetwork } from 'src/config'
-
 import {
   Icon,
   FixedIcon,
@@ -12,6 +10,9 @@ import {
   CopyToClipboardBtn,
   EtherscanButton,
 } from '@gnosis.pm/safe-react-components'
+
+import { getNetwork } from 'src/config'
+import FlexSpacer from 'src/components/FlexSpacer'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -97,7 +98,7 @@ const WalletInfo = ({
     return (
       <Container>
         <IdenticonContainer>
-          <div></div>
+          <FlexSpacer />
           <div>
             <FixedIcon type="notConnected" />
           </div>
@@ -112,7 +113,7 @@ const WalletInfo = ({
   return (
     <Container>
       <IdenticonContainer>
-        <div></div>
+        <FlexSpacer />
         <Identicon address={address} size="lg" />
         <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
           <Icon size="md" type="circleDropdown" />

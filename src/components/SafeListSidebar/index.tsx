@@ -22,7 +22,7 @@ import { AppReduxState } from 'src/store'
 
 const { useEffect, useMemo, useState } = React
 
-export const SidebarContext = React.createContext({
+export const SafeListSidebarContext = React.createContext({
   isOpen: false,
   toggleSidebar: () => {},
 })
@@ -35,7 +35,7 @@ const filterBy = (filter, safes) =>
       safe.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeAction }) => {
+const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeAction }) => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const classes = useSidebarStyles()
@@ -74,7 +74,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
   const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
 
   return (
-    <SidebarContext.Provider value={{ isOpen, toggleSidebar }}>
+    <SafeListSidebarContext.Provider value={{ isOpen, toggleSidebar }}>
       <Drawer
         classes={{ paper: classes.sidebarPaper }}
         className={classes.sidebar}
@@ -119,7 +119,7 @@ const Sidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeActi
         />
       </Drawer>
       {children}
-    </SidebarContext.Provider>
+    </SafeListSidebarContext.Provider>
   )
 }
 
@@ -130,4 +130,4 @@ export default connect(
     currentSafe: safeParamAddressFromStateSelector(state),
   }),
   { setDefaultSafeAction: setDefaultSafe },
-)(Sidebar)
+)(SafeListSidebar)
