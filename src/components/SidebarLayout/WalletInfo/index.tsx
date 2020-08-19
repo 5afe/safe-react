@@ -45,6 +45,13 @@ const StyledButton = styled(Button)`
     margin: 0 4px 0 0;
   }
 `
+const StyledEthHashInfo = styled(EthHashInfo)`
+  p {
+    color: ${({ theme }) => theme.colors.placeHolder};
+    font-size: 14px;
+  }
+`
+
 const StyledLabel = styled.div`
   background-color: ${({ theme }) => theme.colors.icon};
   margin: 8px 0 0 0 !important;
@@ -113,7 +120,7 @@ const WalletInfo = ({
       </IdenticonContainer>
 
       <Text size="xl">{safeName}</Text>
-      <EthHashInfo hash={address} shortenHash={4} textSize="sm" />
+      <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
       <IconContainer>
         <UnStyledButton onClick={onReceiveClick}>
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
