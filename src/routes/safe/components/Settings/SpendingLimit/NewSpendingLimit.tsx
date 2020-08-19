@@ -39,7 +39,6 @@ const YetAnotherButton = styled(GnoButton)`
   }
 `
 
-// TODO: propose refactor in safe-react-components based on this requirements
 const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> = {
   setBeneficiary: (args, state, utils) => {
     utils.changeValue(state, 'beneficiary', () => args[0])
@@ -95,6 +94,7 @@ const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimi
                 Cancel
               </Button>
 
+              {/* TODO: replace this with safe-react-components button. This is used as "submit" SRC Button does not triggers submission up until the 2nd click */}
               <YetAnotherButton
                 color="primary"
                 size="medium"
