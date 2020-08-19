@@ -6,8 +6,6 @@ import ScanQRModal from 'src/components/ScanQRModal'
 
 const useStyles = makeStyles({
   qrCodeBtn: {
-    cursor: 'pointer',
-    border: 'none',
     padding: '0 !important',
     minWidth: '40px',
   },
