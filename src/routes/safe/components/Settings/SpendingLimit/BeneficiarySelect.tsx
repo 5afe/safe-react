@@ -65,19 +65,23 @@ const BeneficiarySelect = (): React.ReactElement => {
     closeQrModal()
   }
 
+  const handleOnKeyDown = (e: React.KeyboardEvent<HTMLElement>): void => {
+    if (![KEYCODES.TAB, KEYCODES.SHIFT].includes(e.keyCode)) {
+      setSelectedEntry(null)
+    }
+  }
+
+  const handleOnClick = () => {
+    setSelectedEntry(null)
+  }
+
   return selectedEntry !== null && selectedEntry.address ? (
     <BeneficiaryInput
       role="button"
       aria-pressed="false"
       tabIndex={0}
-      onKeyDown={(e) => {
-        if (![KEYCODES.TAB, KEYCODES.SHIFT].includes(e.keyCode)) {
-          setSelectedEntry(null)
-        }
-      }}
-      onClick={() => {
-        setSelectedEntry(null)
-      }}
+      onKeyDown={handleOnKeyDown}
+      onClick={handleOnClick}
     >
       <EthHashInfo
         hash={selectedEntry.address}
