@@ -5,7 +5,7 @@ import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
 import '@testing-library/jest-dom/extend-expect'
 import { TOGGLE_SIDEBAR_BTN_TESTID } from 'src/components/SidebarLayout/WalletInfo'
-import { SIDEBAR_SAFELIST_ROW_TESTID } from 'src/components/Sidebar/SafeList'
+import { SIDEBAR_SAFELIST_ROW_TESTID } from 'src/components/SafeListSidebar/SafeList'
 import { sleep } from 'src/utils/timer'
 
 describe('DOM > Feature > Sidebar', () => {

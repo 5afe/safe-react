@@ -13,10 +13,9 @@ import styles from './index.module.scss'
 import SidebarLayout from 'src/components/SidebarLayout'
 import Header from 'src/components/SidebarLayout/Header'
 import Sidebar from 'src/components/SidebarLayout/Sidebar'
-import { SidebarContext } from 'src/components/Sidebar'
+import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
-import SidebarProvider from 'src/components/Sidebar'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
 import { getNetwork } from 'src/config'
@@ -57,7 +56,7 @@ const desiredNetwork = getNetwork()
 
 const App = ({ children, classes, currentNetwork }) => {
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
-  const { toggleSidebar } = useContext(SidebarContext)
+  const { toggleSidebar } = useContext(SafeListSidebarContext)
 
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
 
@@ -194,9 +193,9 @@ const WrapperApp = withStyles(notificationStyles)(
 )
 
 const WrapperAppWithSidebar: React.FC = ({ children }) => (
-  <SidebarProvider>
+  <SafeListSidebarProvider>
     <WrapperApp>{children}</WrapperApp>
-  </SidebarProvider>
+  </SafeListSidebarProvider>
 )
 
 export default WrapperAppWithSidebar
