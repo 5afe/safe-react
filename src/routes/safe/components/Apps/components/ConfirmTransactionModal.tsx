@@ -90,10 +90,10 @@ const ConfirmTransactionModal = ({
     return null
   }
 
-  const confirmTransactions = () => {
+  const confirmTransactions = async () => {
     const txData = encodeMultiSendCall(txs)
 
-    dispatch(
+    await dispatch(
       createTransaction(
         {
           safeAddress,
@@ -103,10 +103,12 @@ const ConfirmTransactionModal = ({
           operation: DELEGATE_CALL,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
+          navigateToTransactionsTab: false,
         },
         onUserConfirm,
       ),
     )
+    onClose()
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
