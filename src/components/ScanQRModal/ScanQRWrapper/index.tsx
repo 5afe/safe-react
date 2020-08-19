@@ -1,4 +1,4 @@
-import { Icon } from '@gnosis.pm/safe-react-components'
+import { Button, Icon } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
@@ -8,7 +8,8 @@ const useStyles = makeStyles({
   qrCodeBtn: {
     cursor: 'pointer',
     border: 'none',
-    backgroundColor: 'transparent',
+    padding: '0 !important',
+    minWidth: '40px',
   },
 })
 
@@ -34,9 +35,16 @@ export const ScanQRWrapper = ({ handleScan }: ScanQRWrapperProps): React.ReactEl
 
   return (
     <>
-      <button onClick={openQrModal} className={classes.qrCodeBtn} title="Scan QR" data-testid="qr-icon" type="button">
+      <Button
+        size="md"
+        color="secondary"
+        title="Scan QR"
+        type="button"
+        onClick={openQrModal}
+        className={classes.qrCodeBtn}
+      >
         <Icon type="qrCode" size="sm" />
-      </button>
+      </Button>
       {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={onScanFinished} />}
     </>
   )
