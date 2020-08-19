@@ -11,6 +11,8 @@ const SpendingLimitRadioButtons = styled(RadioButtons)`
     color: ${({ theme }) => theme.colors.primary};
   }
 `
+
+// TODO: add `name` and `value` to SRC Switch, as they're required for a better RFF integration
 const StyledSwitch = styled(({ ...rest }) => <SwitchMui {...rest} />)`
   && {
     .MuiIconButton-label,
