@@ -9,11 +9,7 @@ import { getNetwork } from 'src/config'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-
-const KEYCODES = {
-  TAB: 9,
-  SHIFT: 16,
-}
+import { KEYCODES } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;

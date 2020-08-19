@@ -1,27 +1,32 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { Button, Text, Title } from '@gnosis.pm/safe-react-components'
-import { BigNumber } from 'bignumber.js'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import GnoModal from 'src/components/Modal'
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
 import NewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/NewSpendingLimit'
 import ReviewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/ReviewSpendingLimit'
 import SpendingLimitSteps from 'src/routes/safe/components/Settings/SpendingLimit/SpendingLimitSteps'
+import {
+  currentMinutes,
+  fromTokenUnit,
+  requestAllowancesByDelegatesAndTokens,
+  requestModuleData,
+  requestTokensByDelegate,
+  toTokenUnit,
+} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import styled from 'styled-components'
 
 import { useStyles } from './style'
 
@@ -63,90 +68,6 @@ export const FooterWrapper = styled.div`
   display: flex;
   justify-content: space-around;
 `
-
-const requestModuleData = (safeAddress: string): Promise<any[]> => {
-  const batch = new web3ReadOnly.BatchRequest()
-
-  const requests = [
-    {
-      abi: GnosisSafeSol.abi,
-      address: safeAddress,
-      methods: [{ method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] }],
-      batch,
-    },
-    {
-      abi: SpendingLimitModule.abi,
-      address: SPENDING_LIMIT_MODULE_ADDRESS,
-      methods: [{ method: 'getDelegates', args: [safeAddress, 0, 100] }],
-      batch,
-    },
-  ]
-
-  const whenRequestsValues = requests.map(generateBatchRequests)
-
-  batch.execute()
-
-  return Promise.all(whenRequestsValues).then(([modules, delegates]) => [modules[0], delegates[0]])
-}
-
-const requestTokensByDelegate = async (safeAddress: string, delegates: string[]): Promise<any[]> => {
-  const batch = new web3ReadOnly.BatchRequest()
-
-  const whenRequestValues = delegates.map((delegateAddress: string) =>
-    generateBatchRequests({
-      abi: SpendingLimitModule.abi,
-      address: SPENDING_LIMIT_MODULE_ADDRESS,
-      methods: [{ method: 'getTokens', args: [safeAddress, delegateAddress] }],
-      batch,
-      context: delegateAddress,
-    }),
-  )
-
-  batch.execute()
-
-  return Promise.all(whenRequestValues)
-}
-
-const requestAllowancesByDelegatesAndTokens = async (
-  safeAddress: string,
-  tokensByDelegate: [string, string[]][],
-): Promise<any[]> => {
-  const batch = new web3ReadOnly.BatchRequest()
-
-  let whenRequestValues = []
-
-  for (const [delegate, tokens] of tokensByDelegate) {
-    whenRequestValues = tokens.map((token) =>
-      generateBatchRequests({
-        abi: SpendingLimitModule.abi,
-        address: SPENDING_LIMIT_MODULE_ADDRESS,
-        methods: [{ method: 'getTokenAllowance', args: [safeAddress, delegate, token] }],
-        batch,
-        context: { delegate, token },
-      }),
-    )
-  }
-
-  batch.execute()
-
-  return Promise.all(whenRequestValues).then((allowances) =>
-    allowances.map(([{ delegate, token }, [amount, spent, resetTimeMin, lastResetMin, nonce]]) => ({
-      delegate,
-      token,
-      amount,
-      spent,
-      resetTimeMin,
-      lastResetMin,
-      nonce,
-    })),
-  )
-}
-
-const fromTokenUnit = (amount: string, decimals: string | number): string =>
-  new BigNumber(amount).times(`1e-${decimals}`).toFixed()
-const toTokenUnit = (amount: string, decimals: string | number): string =>
-  new BigNumber(amount).times(`1e${decimals}`).toFixed()
-const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
 
 const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
   const classes = useStyles()
@@ -278,6 +199,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
     </GnoModal>
   )
 }
+
 const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
