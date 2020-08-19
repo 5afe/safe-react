@@ -93,7 +93,10 @@ const Apps = (): React.ReactElement => {
   )
 
   const onUserTxConfirm = (safeTxHash: string) => {
-    sendMessageToIframe({}, confirmTransactionModal.requestId)
+    sendMessageToIframe(
+      { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
+      confirmTransactionModal.requestId,
+    )
   }
 
   const onSelectApp = useCallback(

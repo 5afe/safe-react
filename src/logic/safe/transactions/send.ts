@@ -1,12 +1,13 @@
 import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
 export const TX_TYPE_EXECUTION = 'execution'
 export const TX_TYPE_CONFIRMATION = 'confirmation'
 
-export const getApprovalTransaction = async ({
+export const getTransactionHash = async ({
   baseGas,
   data,
   gasPrice,
@@ -19,13 +20,20 @@ export const getApprovalTransaction = async ({
   sender,
   to,
   valueInWei,
-}: TxArgs): Promise<NonPayableTransactionObject<void>> => {
+}: TxArgs): Promise<string> => {
   const txHash = await safeInstance.methods
     .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
     .call({
       from: sender,
     })
 
+  return txHash
+}
+
+export const getApprovalTransaction = async (
+  safeInstance: GnosisSafe,
+  txHash: string,
+): Promise<NonPayableTransactionObject<void>> => {
   try {
     return safeInstance.methods.approveHash(txHash)
   } catch (err) {

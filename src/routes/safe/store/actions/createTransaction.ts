@@ -125,6 +125,7 @@ const createTransaction = (
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+  console.log(origin)
   const state = getState()
 
   if (navigateToTransactionsTab) {
@@ -189,7 +190,10 @@ const createTransaction = (
       }
     }
 
-    const tx = isExecution ? await getExecutionTransaction(txArgs) : await getApprovalTransaction(txArgs)
+    const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
+    const tx = isExecution
+      ? await getExecutionTransaction(txArgs)
+      : await getApprovalTransaction(safeInstance, safeTxHash)
     const sendParams: PayableTx = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache
@@ -201,7 +205,7 @@ const createTransaction = (
       ...txArgs,
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
-      safeTxHash: generateSafeTxHash(safeAddress, txArgs),
+      safeTxHash,
       submissionDate: new Date().toISOString(),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
@@ -209,7 +213,7 @@ const createTransaction = (
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
-        onUserConfirm('0x000')
+        onUserConfirm(safeTxHash)
         try {
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))

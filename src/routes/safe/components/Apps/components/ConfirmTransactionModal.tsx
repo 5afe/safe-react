@@ -102,7 +102,7 @@ const ConfirmTransactionModal = ({
           txData,
           operation: DELEGATE_CALL,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          origin: app.name,
+          origin: app.id,
         },
         onUserConfirm,
       ),
