@@ -56,7 +56,7 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
     )
   }
 
-  return <SafeEtherscanLink type={etherscanType} className={classes.address} cut={cut} value={value as string} />
+  return <SafeEtherscanLink type={linkType} className={classes.address} cut={cut} value={value as string} />
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
