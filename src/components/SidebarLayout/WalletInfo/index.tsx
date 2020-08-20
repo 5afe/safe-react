@@ -59,6 +59,9 @@ const StyledLabel = styled.div`
   padding: 4px 8px;
   border-radius: 4px;
   letter-spacing: 1px;
+  p {
+    line-height: 18px;
+  }
 `
 const StyledText = styled(Text)`
   margin: 8px 0 16px 0;
