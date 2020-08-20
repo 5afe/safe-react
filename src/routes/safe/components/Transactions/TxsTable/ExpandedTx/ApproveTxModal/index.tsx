@@ -22,8 +22,8 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles)
 

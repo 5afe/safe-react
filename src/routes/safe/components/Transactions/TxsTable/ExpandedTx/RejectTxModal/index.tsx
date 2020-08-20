@@ -20,8 +20,8 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles)
 
