@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,7 +17,6 @@ import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -28,15 +27,26 @@ import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: {
+    recipientAddress: string
+    token: string
+    amount: string
+  }
+}
+
+const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -98,7 +108,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         enqueueSnackbar,
         closeSnackbar,
-      } as any),
+      }),
     )
     onClose()
   }
@@ -155,7 +165,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.logoUri} />
+          <TokenSymbol height={28} tokenAddress={txToken.address} />
           <Paragraph className={classes.amount} noMargin size="md" data-testid={`amount-${txToken.symbol}-review-step`}>
             {tx.amount} {txToken.symbol}
           </Paragraph>
@@ -188,4 +198,4 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   )
 }
 
-export default withSnackbar(ReviewTx)
+export default ReviewTx
