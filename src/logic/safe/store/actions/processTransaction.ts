@@ -10,8 +10,8 @@ import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
+import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
+import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import {
   isCancelTransaction,
   mockTransaction,

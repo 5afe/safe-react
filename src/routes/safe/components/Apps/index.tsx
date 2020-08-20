@@ -15,7 +15,7 @@ import {
   safeEthBalanceSelector,
   safeParamAddressFromStateSelector,
   safeNameSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'

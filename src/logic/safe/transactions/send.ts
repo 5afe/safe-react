@@ -1,5 +1,5 @@
 import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
-import { TxArgs } from 'src/routes/safe/store/models/types/transaction'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe'
 
 export const CALL = 0

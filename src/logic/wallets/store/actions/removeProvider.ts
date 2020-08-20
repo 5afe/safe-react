@@ -1,4 +1,4 @@
-import { Dispatch } from 'src/routes/safe/store/actions/types.d'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { createAction } from 'redux-actions'
 
 import { onboard } from 'src/components/ConnectButton'
