@@ -18,7 +18,7 @@ import AddCustomToken from 'src/routes/safe/components/Balances/Tokens/screens/A
 import AssetsList from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList'
 import TokenList from 'src/routes/safe/components/Balances/Tokens/screens/TokenList'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import { safeBlacklistedTokensSelector } from 'src/routes/safe/store/selectors'
+import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
 
 export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
 

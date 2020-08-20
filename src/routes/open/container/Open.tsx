@@ -22,7 +22,7 @@ import {
   getThresholdFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
+import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 

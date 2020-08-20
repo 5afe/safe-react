@@ -15,9 +15,9 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Row from 'src/components/layout/Row'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
-import setDefaultSafe from 'src/routes/safe/store/actions/setDefaultSafe'
+import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 
-import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
 
 const { useEffect, useMemo, useState } = React

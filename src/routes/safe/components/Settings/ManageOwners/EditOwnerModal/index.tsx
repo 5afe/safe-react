@@ -21,7 +21,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import editSafeOwner from 'src/routes/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
 import { sm } from 'src/theme/variables'
@@ -41,7 +41,7 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
 
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
     dispatch(updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG)))
+    dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
 
     onClose()
   }

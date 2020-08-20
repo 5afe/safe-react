@@ -3,12 +3,12 @@ import React from 'react'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { getNetwork } from 'src/config'
 
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { formatDate } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import Block from 'src/components/layout/Block'
-import { TransactionTypes } from 'src/routes/safe/store/models/types/transaction'
+import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 
 const useStyles = makeStyles({
   address: {

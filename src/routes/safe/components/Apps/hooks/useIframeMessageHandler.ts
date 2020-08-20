@@ -15,7 +15,7 @@ import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
