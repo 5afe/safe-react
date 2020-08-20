@@ -16,19 +16,18 @@ import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 
 type Props = {
   onClose: () => void
@@ -136,7 +135,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+          <TokenSymbol height={28} tokenAddress={ETH_ADDRESS} />
           <Paragraph className={classes.value} noMargin size="md">
             {tx.value || 0}
             {' ETH'}

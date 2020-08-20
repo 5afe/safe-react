@@ -11,10 +11,10 @@ import ModalTitle from 'src/components/ModalTitle'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
-import Img from 'src/components/layout/Img'
-import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -95,7 +95,7 @@ const confirmTransactions = (
                 <div className="section">
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
-                    <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
+                    <TokenSymbol height={40} tokenAddress={ETH_ADDRESS} />
                     <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>

@@ -8,21 +8,20 @@ import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 
 const useStyles = makeStyles(styles)
 
@@ -85,7 +84,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         enqueueSnackbar,
         closeSnackbar,
-      } as any),
+      }),
     )
 
     onClose()
@@ -111,7 +110,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
         </Row>
         <Row align="center" margin="md">
           <Col xs={1}>
-            <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+            <TokenSymbol height={28} tokenAddress={ETH_ADDRESS} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
