@@ -80,7 +80,7 @@ const TxsTable = ({ classes }) => {
               <React.Fragment key={index}>
                 <TableRow
                   className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
-                  data-testid={TRANSACTION_ROW_TEST_ID}
+                  data-testid={`${TRANSACTION_ROW_TEST_ID}-${index}`}
                   onClick={() => handleTxExpand(row.tx.safeTxHash)}
                   tabIndex={-1}
                 >
