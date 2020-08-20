@@ -286,7 +286,8 @@ const SpendingLimit = (): React.ReactElement => {
   }
 
   const humanReadableSpent = (spent: string, amount: string, tokenAddress: string): React.ReactElement => {
-    const token = tokens.find((token) => token.address === tokenAddress)
+    const safeTokenAddress = tokenAddress === ZERO_ADDRESS ? ETH_ADDRESS : tokenAddress
+    const token = tokens.find((token) => token.address === safeTokenAddress)
     const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
     const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
 
@@ -309,7 +310,7 @@ const SpendingLimit = (): React.ReactElement => {
           signatures.
         </InfoText>
         {spendingLimits?.length && spendingLimitData?.length ? (
-          <TableContainer style={{ minHeight: '400px' }}>
+          <TableContainer style={{ minHeight: '420px' }}>
             <Table
               columns={columns}
               data={spendingLimitData}
