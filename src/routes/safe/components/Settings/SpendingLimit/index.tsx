@@ -9,6 +9,8 @@ import Row from 'src/components/layout/Row'
 import GnoModal from 'src/components/Modal'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
@@ -158,7 +160,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
       data: spendingLimit.methods
         .setAllowance(
           values.beneficiary,
-          values.token,
+          values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token,
           toTokenUnit(values.amount, txToken.decimals),
           values.withResetTime ? +values.resetTime * 60 * 24 : 0,
           values.withResetTime ? startTime : 0,
