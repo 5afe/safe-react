@@ -90,6 +90,11 @@ const ConfirmTransactionModal = ({
     return null
   }
 
+  const handleUserConfirmation = (safeTxHash: string): void => {
+    onUserConfirm(safeTxHash)
+    onClose()
+  }
+
   const confirmTransactions = async () => {
     const txData = encodeMultiSendCall(txs)
 
@@ -105,7 +110,7 @@ const ConfirmTransactionModal = ({
           origin: app.id,
           navigateToTransactionsTab: false,
         },
-        onUserConfirm,
+        handleUserConfirmation,
       ),
     )
     onClose()
