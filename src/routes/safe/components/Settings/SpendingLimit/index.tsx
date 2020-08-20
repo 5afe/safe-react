@@ -161,7 +161,7 @@ const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boole
           values.token,
           toTokenUnit(values.amount, txToken.decimals),
           values.withResetTime ? +values.resetTime * 60 * 24 : 0,
-          startTime,
+          values.withResetTime ? startTime : 0,
         )
         .encodeABI(),
     })
