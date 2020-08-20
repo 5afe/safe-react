@@ -3,21 +3,34 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Switch from '@material-ui/core/Switch'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { memo } from 'react'
 
 import { styles } from './style'
 
-import Img from 'src/components/layout/Img'
-
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+
+import { TokenSymbol } from 'src/components/TokenSymbol'
+import { Token } from 'src/logic/tokens/store/model/token'
+import { List } from 'immutable'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
-// eslint-disable-next-line react/display-name
-const TokenRow = memo(({ classes, data, index, style }: any) => {
+const useStyles = makeStyles(styles)
+
+type Props = {
+  data: {
+    tokens: List<Token>
+    activeTokensAddresses: Set<string>
+    onSwitch: (asset: Token) => () => void
+  }
+  style: unknown
+  index: number
+  isScrolling?: boolean
+}
+const TokenRow = memo(({ data, index, style }: Props) => {
   const { activeTokensAddresses, onSwitch, tokens } = data
+  const classes = useStyles()
   const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
 
@@ -25,7 +38,7 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>
         <ListItemIcon className={classes.tokenIcon}>
-          <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
+          <TokenSymbol height={28} tokenAddress={token.address} />
         </ListItemIcon>
         <ListItemText primary={token.symbol} secondary={token.name} />
         {token.address !== ETH_ADDRESS && (
@@ -42,4 +55,6 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
   )
 })
 
-export default withStyles(styles as any)(TokenRow)
+TokenRow.displayName = 'TokenRow'
+
+export default TokenRow
