@@ -5,10 +5,11 @@ import { useToken } from 'src/logic/tokens/hooks/useToken'
 
 type Props = {
   tokenAddress: string
+  height?: number
 }
 
-export const TokenSymbol = ({ tokenAddress }: Props): React.ReactElement => {
+export const TokenSymbol = ({ tokenAddress, height = 26 }: Props): React.ReactElement => {
   const token = useToken(tokenAddress)
   if (!token) return null
-  return <Img alt={token.name} height={26} onError={setImageToPlaceholder} src={token.logoUri} />
+  return <Img alt={token.name} height={height} onError={setImageToPlaceholder} src={token.logoUri} />
 }
