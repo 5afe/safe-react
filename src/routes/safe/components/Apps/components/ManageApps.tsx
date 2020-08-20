@@ -4,15 +4,14 @@ import React, { useState } from 'react'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import AddAppForm from '../AddAppForm'
 import { SafeApp } from '../types'
-import { onAppAddedHandler, onAppToggleHandler, onAppRemovedHandler } from '../hooks/useAppList'
 
 const FORM_ID = 'add-apps-form'
 
 type Props = {
   appList: Array<SafeApp>
-  onAppAdded: onAppAddedHandler
-  onAppToggle: onAppToggleHandler
-  onAppRemoved: onAppRemovedHandler
+  onAppAdded: (app: SafeApp) => void
+  onAppToggle: (appId: string, enabled: boolean) => void
+  onAppRemoved: (appId: string) => void
 }
 
 const ManageApps = ({ appList, onAppAdded, onAppToggle, onAppRemoved }: Props): React.ReactElement => {

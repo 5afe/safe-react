@@ -44,7 +44,6 @@ const APP_INFO: SafeApp = {
   url: '',
   name: '',
   iconUrl: appsIconSvg,
-  isDeletable: true,
   error: false,
   description: '',
 }
@@ -72,6 +71,7 @@ const AddApp = ({ appList, closeModal, formId, onAppAdded, setIsSubmitDisabled }
           <StyledText size="xl">Add custom app</StyledText>
 
           <AppUrl appList={appList} />
+          {/* Fetch app from url and return a SafeApp */}
           <AppInfoUpdater onAppInfo={setAppInfo} />
 
           <AppInfo>

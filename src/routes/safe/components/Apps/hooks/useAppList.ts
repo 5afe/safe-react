@@ -28,11 +28,14 @@ const useAppList = (): UseAppListReturnType => {
       // * third-party apps added by the user
       // * disabled status for both static and third-party apps
       const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
+      const list: (StoredSafeApp & { isDeletable?: boolean })[] = [...persistedAppList]
 
       staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
+        const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
+        if (!app) {
           list.push(staticApp)
+        } else {
+          app.isDeletable = false
         }
       })
 
@@ -48,7 +51,7 @@ const useAppList = (): UseAppListReturnType => {
           }
 
           appInfo.disabled = Boolean(currentApp.disabled)
-          appInfo.isDeletable = !staticAppsList.some((staticApp) => staticApp.url === currentApp.url)
+          appInfo.isDeletable = currentApp.isDeletable === undefined ? true : currentApp.isDeletable
 
           apps.push(appInfo)
         } catch (error) {
@@ -72,8 +75,8 @@ const useAppList = (): UseAppListReturnType => {
       if (!app) {
         return
       }
-
       app.disabled = !enabled
+
       setAppList(appListCopy)
 
       // update storage list
@@ -94,23 +97,19 @@ const useAppList = (): UseAppListReturnType => {
       ]
       saveToStorage(APPS_STORAGE_KEY, newAppList)
 
-      setAppList([...appList, { ...app, disabled: false }])
+      setAppList([...appList, { ...app, isDeletable: true }])
     },
     [appList],
   )
 
   const onAppRemoved: onAppRemovedHandler = useCallback(
     (appId) => {
-      // update in-memory list
-      const appListCopy = [...appList]
-
-      const appIndex = appListCopy.findIndex((a) => a.id === appId)
-
-      appListCopy.splice(appIndex, 1)
-
-      saveToStorage(APPS_STORAGE_KEY, appListCopy)
+      const appListCopy = appList.filter((a) => a.id !== appId)
 
       setAppList(appListCopy)
+
+      const listToPersist: StoredSafeApp[] = appListCopy.map(({ url, disabled }) => ({ url, disabled }))
+      saveToStorage(APPS_STORAGE_KEY, listToPersist)
     },
     [appList],
   )
