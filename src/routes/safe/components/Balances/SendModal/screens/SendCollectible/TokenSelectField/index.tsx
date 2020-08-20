@@ -9,11 +9,11 @@ import { selectStyles, selectedTokenStyles } from './style'
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
+import { TokenSymbol } from 'src/components/TokenSymbol'
+import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
@@ -27,7 +27,7 @@ const SelectedToken = ({ assetAddress, assets }) => {
       {asset && asset.numberOfTokens ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+            <TokenSymbol tokenAddress={asset.address} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -46,7 +46,12 @@ const SelectedToken = ({ assetAddress, assets }) => {
 
 const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
-const TokenSelectField = ({ assets, initialValue }) => {
+type TokenSelectFieldProps = {
+  assets: Record<string, NFTAsset>
+  initialValue: string
+}
+
+const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): React.ReactElement => {
   const classes = useTokenSelectFieldStyles()
   const assetsAddresses = Object.keys(assets)
 
@@ -66,11 +71,11 @@ const TokenSelectField = ({ assets, initialValue }) => {
         return (
           <MenuItem key={asset.slug} value={assetAddress}>
             <ListItemIcon className={classes.tokenImage}>
-              <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+              <TokenSymbol tokenAddress={asset.address} height={28} />
             </ListItemIcon>
             <ListItemText
               primary={asset.name}
-              secondary={`Count: ${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+              secondary={`Count: ${formatAmount(asset.numberOfTokens.toString())} ${asset.symbol}`}
             />
           </MenuItem>
         )

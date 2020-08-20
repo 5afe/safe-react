@@ -147,12 +147,15 @@ export const safeActiveAssetsSelector = createSelector(
   },
 )
 
-export const safeActiveAssetsListSelector = createSelector(safeActiveAssetsSelector, (safeList) => {
-  if (!safeList) {
-    return Set([])
-  }
-  return Set(safeList)
-})
+export const safeActiveAssetsListSelector = createSelector(
+  safeActiveAssetsSelector,
+  (safeList): Set<string> => {
+    if (!safeList) {
+      return Set([])
+    }
+    return Set(safeList)
+  },
+)
 
 export const safeBlacklistedTokensSelector = createSelector(
   safeSelector,

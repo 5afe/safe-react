@@ -47,7 +47,7 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 type SendFundsProps = {
   onClose: () => void

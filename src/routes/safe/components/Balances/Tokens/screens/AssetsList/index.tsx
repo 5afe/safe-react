@@ -25,11 +25,13 @@ import {
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-const useStyles = makeStyles(styles as any)
+import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
+
+const useStyles = makeStyles(styles)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 
-const filterBy = (filter, nfts) =>
+const filterBy = (filter: string, nfts: NFTAsset[]): NFTAsset[] =>
   nfts.filter(
     (asset) =>
       !filter ||
@@ -38,7 +40,11 @@ const filterBy = (filter, nfts) =>
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props) => {
+type Props = {
+  setActiveScreen: (string) => void
+}
+
+const AssetsList = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -72,7 +78,7 @@ const AssetsList = (props) => {
     return index
   }
 
-  const onSwitch = (asset) => () => {
+  const onSwitch = (asset: NFTAsset) => () => {
     const { address } = asset
     const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
       ? activeAssetsAddresses.remove(address)
@@ -88,7 +94,7 @@ const AssetsList = (props) => {
     }
   }
 
-  const createItemData = (assetsList) => {
+  const createItemData = (assetsList: NFTAsset[]) => {
     return {
       assets: assetsList,
       activeAssetsAddresses,
@@ -139,7 +145,7 @@ const AssetsList = (props) => {
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}
-            itemCount={nftAssetsFilteredList.size}
+            itemCount={nftAssetsFilteredList.length}
             itemData={itemData}
             itemKey={getItemKey}
             itemSize={51}

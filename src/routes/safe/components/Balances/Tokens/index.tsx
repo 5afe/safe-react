@@ -1,11 +1,10 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
 import React, { useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import actions from './actions'
 import { styles } from './style'
 
 import Hairline from 'src/components/layout/Hairline'
@@ -19,25 +18,42 @@ import AssetsList from 'src/routes/safe/components/Balances/Tokens/screens/Asset
 import TokenList from 'src/routes/safe/components/Balances/Tokens/screens/TokenList'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
+import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
+import updateBlacklistedTokens from 'src/logic/safe/store/actions/updateBlacklistedTokens'
+import { Token } from 'src/types/contracts/Token'
+import { List } from 'immutable'
+import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
 
 export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
 
-const Tokens = (props) => {
-  const {
-    activateTokenForAllSafes,
-    addToken,
-    classes,
-    fetchTokens,
-    modalScreen,
-    onClose,
-    safeAddress,
-    updateActiveTokens,
-    updateBlacklistedTokens,
-  } = props
+type Props = {
+  modalScreen: string
+  onClose: () => void
+  safeAddress: string
+}
+
+const useStyles = makeStyles(styles)
+
+const Tokens = (props: Props): React.ReactElement => {
+  const classes = useStyles()
+  const { modalScreen, onClose, safeAddress } = props
   const tokens = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
   const [activeScreen, setActiveScreen] = useState(modalScreen)
+  const dispatch = useDispatch()
+
+  const activateTokenForAllSafesHandler = (tokenAddress: string) => {
+    dispatch(activateTokenForAllSafes(tokenAddress))
+  }
+
+  const updateBlackListTokensHandler = (safeAddress: string, blacklistenTokens: Set<string>) => {
+    dispatch(updateBlacklistedTokens(safeAddress, blacklistenTokens))
+  }
+
+  const updateActiveTokensHandler = (safeAddress: string, activeTokens: List<Token>) => {
+    dispatch(updateActiveTokens(safeAddress, activeTokens))
+  }
 
   return (
     <>
@@ -54,26 +70,23 @@ const Tokens = (props) => {
         <TokenList
           activeTokens={activeTokens}
           blacklistedTokens={blacklistedTokens}
-          fetchTokens={fetchTokens}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
           tokens={tokens}
-          updateActiveTokens={updateActiveTokens}
-          updateBlacklistedTokens={updateBlacklistedTokens}
+          updateActiveTokens={updateActiveTokensHandler}
+          updateBlacklistedTokens={updateBlackListTokensHandler}
         />
       )}
       {activeScreen === 'assetsList' && <AssetsList setActiveScreen={setActiveScreen} />}
       {activeScreen === 'addCustomToken' && (
         <AddCustomToken
-          activateTokenForAllSafes={activateTokenForAllSafes}
+          activateTokenForAllSafes={activateTokenForAllSafesHandler}
           activeTokens={activeTokens}
-          addToken={addToken}
           onClose={onClose}
           parentList={'tokenList'}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
           tokens={tokens}
-          updateActiveTokens={updateActiveTokens}
         />
       )}
       {activeScreen === 'addCustomAsset' && (
@@ -83,6 +96,4 @@ const Tokens = (props) => {
   )
 }
 
-const TokenComponent = withStyles(styles as any)(Tokens)
-
-export default connect(undefined, actions)(TokenComponent)
+export default Tokens
