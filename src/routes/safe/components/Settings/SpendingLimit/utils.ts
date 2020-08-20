@@ -73,6 +73,16 @@ export type SpendingLimitRow = {
   nonce: string
 }
 
+/**
+ * TODO: This is helpfully a temp function that attempts to filter out "deleted" allowances
+ * As there's no way to remove an Allowance with the current code, it's "deleted" by setting its `amount` to 0
+ * along with `resetTimeMin` to 0 as well
+ * @param {SpendingLimitRow} allowance
+ * @returns boolean
+ */
+const discardZeroAllowance = ({ amount, resetTimeMin }: SpendingLimitRow): boolean =>
+  !(amount === '0' && resetTimeMin === '0')
+
 export const requestAllowancesByDelegatesAndTokens = async (
   safeAddress: string,
   tokensByDelegate: [string, string[]][],
@@ -98,14 +108,16 @@ export const requestAllowancesByDelegatesAndTokens = async (
   batch.execute()
 
   return Promise.all(whenRequestValues).then((allowances) =>
-    allowances.map(([{ delegate, token }, [amount, spent, resetTimeMin, lastResetMin, nonce]]) => ({
-      delegate,
-      token,
-      amount,
-      spent,
-      resetTimeMin,
-      lastResetMin,
-      nonce,
-    })),
+    allowances
+      .map(([{ delegate, token }, [amount, spent, resetTimeMin, lastResetMin, nonce]]) => ({
+        delegate,
+        token,
+        amount,
+        spent,
+        resetTimeMin,
+        lastResetMin,
+        nonce,
+      }))
+      .filter(discardZeroAllowance),
   )
 }

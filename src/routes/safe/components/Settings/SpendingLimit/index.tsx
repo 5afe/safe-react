@@ -14,6 +14,7 @@ import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -31,6 +32,7 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import NewSpendingLimit from './NewSpendingLimit'
 import ReviewSpendingLimit from './ReviewSpendingLimit'
+import RemoveSpendingLimitModal from './RemoveSpendingLimitModal'
 import SpendingLimitSteps from './SpendingLimitSteps'
 import {
   currentMinutes,
@@ -242,12 +244,49 @@ const TableActionButton = styled(Button)`
   }
 `
 
+type SpentInfo = {
+  token: Token
+  spent: string
+  amount: string
+}
+
+interface HumanReadableSpentProps {
+  spent: string
+  amount: string
+  tokenAddress: string
+}
+
+const HumanReadableSpent = ({ spent, amount, tokenAddress }: HumanReadableSpentProps): React.ReactElement => {
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const { width } = useWindowDimensions()
+  const [spentInfo, setSpentInfo] = React.useState<SpentInfo>()
+
+  React.useEffect(() => {
+    if (tokens) {
+      const safeTokenAddress = tokenAddress === ZERO_ADDRESS ? ETH_ADDRESS : tokenAddress
+      const token = tokens.find((token) => token.address === safeTokenAddress)
+      const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
+      const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
+
+      setSpentInfo({ token, spent: formattedSpent, amount: formattedAmount })
+    }
+  }, [amount, spent, tokenAddress, tokens])
+
+  return spentInfo ? (
+    <StyledImageName>
+      {width > 1024 && (
+        <StyledImage alt={spentInfo.token.name} onError={setImageToPlaceholder} src={spentInfo.token.logoUri} />
+      )}
+      <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${spentInfo.token.symbol}`}</Text>
+    </StyledImageName>
+  ) : null
+}
+
 const SpendingLimit = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(getAddressBook)
-  const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
 
   // TODO: Refactor `delegates` for better performance. This is just to verify allowance works
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -277,26 +316,26 @@ const SpendingLimit = (): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
+  const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
   const openNewSpendingLimitModal = () => {
     setShowNewSpendingLimitModal(true)
   }
-
   const closeNewSpendingLimitModal = () => {
     setShowNewSpendingLimitModal(false)
   }
 
-  const humanReadableSpent = (spent: string, amount: string, tokenAddress: string): React.ReactElement => {
-    const safeTokenAddress = tokenAddress === ZERO_ADDRESS ? ETH_ADDRESS : tokenAddress
-    const token = tokens.find((token) => token.address === safeTokenAddress)
-    const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
-    const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
-
-    return (
-      <StyledImageName>
-        {width > 1024 && <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />}
-        <Text size="lg">{`${formattedSpent} of ${formattedAmount} ${token.symbol}`}</Text>
-      </StyledImageName>
-    )
+  const [showRemoveSpendingLimitModal, setShowRemoveSpendingLimitModal] = React.useState(false)
+  const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>(null)
+  const openRemoveSpendingLimitModal = (row: SpendingLimitTable) => {
+    setSelectedRow(row)
+    setShowRemoveSpendingLimitModal(true)
+  }
+  const closeRemoveSpendingLimitModal = () => {
+    setShowRemoveSpendingLimitModal(false)
+    setSelectedRow(null)
+  }
+  const handleDeleteSpendingLimit = (row: SpendingLimitTable): void => {
+    openRemoveSpendingLimitModal(row)
   }
 
   return (
@@ -348,10 +387,10 @@ const SpendingLimit = (): React.ReactElement => {
                             />
                           )}
 
-                          {columnId === SPENDING_LIMIT_TABLE_SPENT_ID &&
-                            humanReadableSpent(rowElement.spent, rowElement.amount, rowElement.tokenAddress)}
-
-                          {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && <Text size="lg">{rowElement}</Text>}
+                          {columnId === SPENDING_LIMIT_TABLE_SPENT_ID && <HumanReadableSpent {...rowElement} />}
+                          {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && (
+                            <Text size="lg">{rowElement.relativeTime}</Text>
+                          )}
                         </TableCell>
                       )
                     })}
@@ -363,7 +402,7 @@ const SpendingLimit = (): React.ReactElement => {
                             iconType="delete"
                             color="error"
                             variant="outlined"
-                            onClick={() => console.log({ row })}
+                            onClick={() => handleDeleteSpendingLimit(row)}
                             data-testid="remove-action"
                           >
                             {null}
@@ -396,6 +435,9 @@ const SpendingLimit = (): React.ReactElement => {
         </Col>
       </Row>
       {showNewSpendingLimitModal && <NewSpendingLimitModal close={closeNewSpendingLimitModal} open={true} />}
+      {showRemoveSpendingLimitModal && (
+        <RemoveSpendingLimitModal onClose={closeRemoveSpendingLimitModal} spendingLimit={selectedRow} open={true} />
+      )}
     </>
   )
 }
