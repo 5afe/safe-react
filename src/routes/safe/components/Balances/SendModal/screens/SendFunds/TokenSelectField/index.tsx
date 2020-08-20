@@ -3,18 +3,14 @@ import ListItemText from '@material-ui/core/ListItemText'
 import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
 import React from 'react'
-
 import { selectStyles, selectedTokenStyles } from './style'
-
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
-import Img from 'src/components/layout/Img'
+
 import Paragraph from 'src/components/layout/Paragraph'
-
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-
+import { TokenSymbol } from 'src/components/TokenSymbol'
 const SelectedToken = ({ classes, tokenAddress, tokens }) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
 
@@ -23,7 +19,7 @@ const SelectedToken = ({ classes, tokenAddress, tokens }) => {
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
+            <TokenSymbol tokenAddress={token.address} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -55,7 +51,7 @@ const TokenSelectField = ({ classes, initialValue, isValid, tokens }) => (
     {tokens.map((token) => (
       <MenuItem key={token.address} value={token.address}>
         <ListItemIcon>
-          <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
+          <TokenSymbol tokenAddress={token.address} />
         </ListItemIcon>
         <ListItemText
           primary={token.name}
