@@ -28,6 +28,7 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
 import { sm } from 'src/theme/variables'
+import { Token } from 'src/types/contracts/Token'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -43,7 +44,23 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }) => {
+type SendCollectibleTypes = {
+  initialValues: {
+    recipientAddress: string
+  }
+  onClose: () => void
+  onNext: (txInfo: unknown) => void
+  recipientAddress: string
+  selectedToken?: Token
+}
+
+const SendCollectible = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken,
+}: SendCollectibleTypes): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)

@@ -1,5 +1,5 @@
 import Card from '@material-ui/core/Card'
-import { makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
@@ -10,79 +10,82 @@ import { activeNftAssetsListSelector, nftTokensSelector } from 'src/logic/collec
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
+import { NFTToken } from 'src/logic/collectibles/sources/OpenSea'
 
-const useStyles = makeStyles({
-  cardInner: {
-    boxSizing: 'border-box',
-    maxWidth: '100%',
-    padding: '52px 54px',
-  },
-  cardOuter: {
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-  },
-  gridRow: {
-    boxSizing: 'border-box',
-    columnGap: '30px',
-    display: 'grid',
-    gridTemplateColumns: '1fr',
-    marginBottom: '45px',
-    maxWidth: '100%',
-    rowGap: '45px',
-
-    '&:last-child': {
-      marginBottom: '0',
+const useStyles = makeStyles(
+  createStyles({
+    cardInner: {
+      boxSizing: 'border-box',
+      maxWidth: '100%',
+      padding: '52px 54px',
     },
-
-    [`@media (min-width: ${screenXs}px)`]: {
-      gridTemplateColumns: '1fr 1fr',
+    cardOuter: {
+      boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     },
+    gridRow: {
+      boxSizing: 'border-box',
+      columnGap: '30px',
+      display: 'grid',
+      gridTemplateColumns: '1fr',
+      marginBottom: '45px',
+      maxWidth: '100%',
+      rowGap: '45px',
 
-    [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      '&:last-child': {
+        marginBottom: '0',
+      },
+
+      [`@media (min-width: ${screenXs}px)`]: {
+        gridTemplateColumns: '1fr 1fr',
+      },
+
+      [`@media (min-width: ${screenSm}px)`]: {
+        gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      },
     },
-  },
-  title: {
-    alignItems: 'center',
-    display: 'flex',
-    margin: '0 0 18px',
-  },
-  titleImg: {
-    backgroundPosition: '50% 50%',
-    backgroundRepeat: 'no-repeat',
-    backgroundSize: 'contain',
-    borderRadius: '50%',
-    height: '45px',
-    margin: '0 10px 0 0',
-    width: '45px',
-  },
-  titleText: {
-    color: fontColor,
-    fontSize: '18px',
-    fontWeight: 'normal',
-    lineHeight: '1.2',
-    margin: '0',
-  },
-  titleFiller: {
-    backgroundColor: '#e8e7e6',
-    flexGrow: '1',
-    height: '2px',
-    marginLeft: '40px',
-  },
-  noData: {
-    fontSize: lg,
-    textAlign: 'center',
-  },
-} as any)
+    title: {
+      alignItems: 'center',
+      display: 'flex',
+      margin: '0 0 18px',
+    },
+    titleImg: {
+      backgroundPosition: '50% 50%',
+      backgroundRepeat: 'no-repeat',
+      backgroundSize: 'contain',
+      borderRadius: '50%',
+      height: '45px',
+      margin: '0 10px 0 0',
+      width: '45px',
+    },
+    titleText: {
+      color: fontColor,
+      fontSize: '18px',
+      fontWeight: 'normal',
+      lineHeight: '1.2',
+      margin: '0',
+    },
+    titleFiller: {
+      backgroundColor: '#e8e7e6',
+      flexGrow: 1,
+      height: '2px',
+      marginLeft: '40px',
+    },
+    noData: {
+      fontSize: lg,
+      textAlign: 'center',
+    },
+  }),
+)
 
-const Collectibles = () => {
+const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
-  const [selectedToken, setSelectedToken] = React.useState({})
+  const [selectedToken, setSelectedToken] = React.useState(null)
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
   const { address, ethBalance, name } = useSelector(safeSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
 
-  const handleItemSend = (nftToken) => {
+  const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)
     setSendNFTsModalOpen(true)
   }

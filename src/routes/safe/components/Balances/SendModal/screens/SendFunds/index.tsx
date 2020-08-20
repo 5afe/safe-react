@@ -33,6 +33,7 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
+import { Token } from 'src/types/contracts/Token'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -48,7 +49,23 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
+type SendFundsProps = {
+  onClose: () => void
+  onNext: (txInfo) => void
+  recipientAddress: string
+  selectedToken: Token
+  initialValues: {
+    recipientAddress: string
+  }
+}
+
+const SendFunds = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken,
+}: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(getAddressBook)
