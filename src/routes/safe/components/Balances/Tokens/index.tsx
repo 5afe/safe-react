@@ -20,9 +20,9 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
 import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
 import updateBlacklistedTokens from 'src/logic/safe/store/actions/updateBlacklistedTokens'
-import { Token } from 'src/types/contracts/Token'
 import { List } from 'immutable'
 import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-modal-btn'
 
@@ -37,7 +37,7 @@ const useStyles = makeStyles(styles)
 const Tokens = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { modalScreen, onClose, safeAddress } = props
-  const tokens = useSelector(orderedTokenListSelector)
+  const tokens: List<Token> = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
   const [activeScreen, setActiveScreen] = useState(modalScreen)

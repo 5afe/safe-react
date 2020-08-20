@@ -3,7 +3,7 @@ import MuiList from '@material-ui/core/List'
 import { withStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
-import { Set } from 'immutable'
+import { List, Set } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
 import * as React from 'react'
 import { FixedSizeList } from 'react-window'
@@ -17,10 +17,11 @@ import Button from 'src/components/layout/Button'
 import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const ADD_CUSTOM_TOKEN_BUTTON_TEST_ID = 'add-custom-token-btn'
 
-const filterBy = (filter, tokens) =>
+const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
   tokens.filter(
     (token) =>
       !filter ||
@@ -34,8 +35,6 @@ const filterBy = (filter, tokens) =>
 // And selectors don't recalculate
 
 class Tokens extends React.Component<any> {
-  renderCount = 0
-
   state = {
     filter: '',
     activeTokensAddresses: Set([]),
