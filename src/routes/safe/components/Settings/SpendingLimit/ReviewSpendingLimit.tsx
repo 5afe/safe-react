@@ -126,7 +126,7 @@ const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendin
   }
 
   const resetTimeLabel = values.withResetTime
-    ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime).label
+    ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime)?.label
     : ''
 
   const previousResetTime = (previousSpendingLimit: SpendingLimit) =>
