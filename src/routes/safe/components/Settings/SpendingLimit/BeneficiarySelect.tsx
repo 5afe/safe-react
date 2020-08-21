@@ -43,12 +43,7 @@ const BeneficiarySelect = (): React.ReactElement => {
   const addressBook = useSelector(getAddressBook)
 
   const handleScan = (value, closeQrModal) => {
-    let scannedAddress = value
-
-    if (scannedAddress.startsWith('ethereum:')) {
-      scannedAddress = scannedAddress.replace('ethereum:', '')
-    }
-
+    const scannedAddress = value.startsWith('ethereum:') ? value.replace('ethereum:', '') : value
     const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
 
     mutators?.setBeneficiary?.(scannedAddress)
