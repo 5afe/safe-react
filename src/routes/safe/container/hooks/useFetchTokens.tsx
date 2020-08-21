@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { batch, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
-import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import fetchCollectibles from 'src/logic/collectibles/api/fetchCollectibles'
 import { fetchCurrencyValues } from 'src/logic/currencyValues/store/actions/fetchCurrencyValues'
 import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAssetsByBalance'
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'

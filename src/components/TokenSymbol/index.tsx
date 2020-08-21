@@ -11,5 +11,6 @@ type Props = {
 export const TokenSymbol = ({ tokenAddress, height = 26 }: Props): React.ReactElement => {
   const token = useToken(tokenAddress)
   if (!token) return null
-  return <Img alt={token.name} height={height} onError={setImageToPlaceholder} src={token.logoUri} />
+  const imgUrl = 'image' in token ? token.image : token.logoUri
+  return <Img alt={token.name} height={height} onError={setImageToPlaceholder} src={imgUrl} />
 }

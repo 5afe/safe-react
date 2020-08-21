@@ -137,13 +137,18 @@ class OpenSea {
    * @returns {Promise<Collectibles>}
    */
   async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): Promise<Collectibles> {
-    // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
-    // eslint-disable-next-line no-underscore-dangle
     const assetsResponse = await this._fetch(url)
     const assetsResponseJson = await assetsResponse.json()
     return OpenSea.extractCollectiblesInfo(assetsResponseJson)
+  }
+
+  async fetchCollectibleByAddress(assetAddress: string, network: string): Promise<NFTAsset> {
+    const metadataSourceUrl = this._endpointsUrls[network]
+    const url = `${metadataSourceUrl}/asset/${assetAddress}`
+    const assetResponse = await this._fetch(url)
+    return await assetResponse.json()
   }
 }
 

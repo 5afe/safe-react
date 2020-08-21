@@ -26,7 +26,7 @@ import { addToken } from 'src/logic/tokens/store/actions/addToken'
 import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
 import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
 
-import { List } from 'immutable'
+import { List, RecordOf } from 'immutable'
 import { Token, TokenProps } from 'src/logic/tokens/store/model/token'
 import { orderedTokenListSelector } from 'src/logic/tokens/store/selectors'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
@@ -66,7 +66,7 @@ export const AddCustomToken = (props: Props): React.ReactElement => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const tokens: List<Token> = useSelector(orderedTokenListSelector)
   const classes = useStyles()
-  const selectedToken = useToken(formValues.address, true)
+  const selectedToken = useToken(formValues.address, true) as RecordOf<TokenProps>
 
   const handleSubmit = (values) => {
     const address = checksumAddress(values.address)
