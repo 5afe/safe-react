@@ -1,11 +1,10 @@
-import { Button, Icon, Title } from '@gnosis.pm/safe-react-components'
+import { Button } from '@gnosis.pm/safe-react-components'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
-import Modal from 'src/components/Modal'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -17,10 +16,10 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
-import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
 import { SpendingLimitTable } from './dataFetcher'
 import { AddressInfo, TokenInfo, ResetTimeInfo } from './InfoDisplay'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import { RESET_TIME_OPTIONS } from './FormFields/ResetTime'
+import Modal from './Modal'
 import { useStyles } from './style'
 import { fromTokenUnit } from './utils'
 
@@ -88,21 +87,12 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
 
   return (
     <Modal
-      description="Remove the selected Spending Limit"
       handleClose={onClose}
-      paperClassName={classes.modal}
-      title="Remove Spending Limit"
       open={open}
+      title="Remove Spending Limit"
+      description="Remove the selected Spending Limit"
     >
-      <TitleSection>
-        <Title size="xs" withoutMargin>
-          Remove Spending Limit
-        </Title>
-
-        <StyledButton onClick={onClose}>
-          <Icon size="sm" type="cross" />
-        </StyledButton>
-      </TitleSection>
+      <Modal.TopBar title="Remove Spending Limit" onClose={onClose} />
 
       <Block className={classes.container}>
         <Col margin="lg">
@@ -122,16 +112,14 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
         </Col>
       </Block>
 
-      <FooterSection>
-        <FooterWrapper>
-          <Button size="md" color="secondary" onClick={onClose}>
-            Cancel
-          </Button>
-          <Button color="error" size="md" variant="contained" onClick={removeSelectedSpendingLimit}>
-            Remove
-          </Button>
-        </FooterWrapper>
-      </FooterSection>
+      <Modal.Footer>
+        <Button size="md" color="secondary" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button color="error" size="md" variant="contained" onClick={removeSelectedSpendingLimit}>
+          Remove
+        </Button>
+      </Modal.Footer>
     </Modal>
   )
 }
