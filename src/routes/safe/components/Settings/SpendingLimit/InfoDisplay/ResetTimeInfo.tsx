@@ -19,10 +19,7 @@ const ResetTimeInfo = ({ title, label }: ResetTimeInfoProps): React.ReactElement
         </Row>
       ) : (
         <Row align="center" margin="md">
-          <Text size="lg">
-            {/* TODO: review message */}
-            One-time spending limit allowance
-          </Text>
+          <Text size="lg">One-time spending limit</Text>
         </Row>
       )}
     </DataDisplay>

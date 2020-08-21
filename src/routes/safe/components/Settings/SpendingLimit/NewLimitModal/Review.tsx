@@ -135,7 +135,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
 
   const previousResetTime = (previousSpendingLimit: SpendingLimit) =>
     RESET_TIME_OPTIONS.find(({ value }) => value === (+previousSpendingLimit.resetTimeMin / 60 / 24).toString())
-      ?.label ?? 'One-time spending limit allowance'
+      ?.label ?? 'One-time spending limit'
 
   return (
     <>
