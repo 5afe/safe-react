@@ -15,6 +15,7 @@ type Step = typeof CREATE | typeof REVIEW
 type SpendingLimitModalReducerState = {
   step: Step
   values: Record<string, string> | null
+  tokens: Token[]
   txToken: Token | null
 }
 
@@ -31,7 +32,9 @@ const newSpendingLimitReducer = (state: SpendingLimitModalReducerState, action) 
 
     case REVIEW: {
       return {
+        ...state,
         ...newState,
+        txToken: state.tokens.find((token) => token.address === newState.values.token) ?? null,
         step: REVIEW,
       }
     }
@@ -39,9 +42,12 @@ const newSpendingLimitReducer = (state: SpendingLimitModalReducerState, action) 
 }
 
 const useSpendingLimit = (initialStep: Step) => {
+  const tokens = useSelector(extendedSafeTokensSelector)
+
   const [state, dispatch] = React.useReducer(newSpendingLimitReducer, {
     step: initialStep,
     values: null,
+    tokens: tokens ?? [],
     txToken: null,
   })
 
@@ -59,14 +65,10 @@ interface SpendingLimitModalProps {
 const NewLimitModal = ({ close, open }: SpendingLimitModalProps): React.ReactElement => {
   const classes = useStyles()
 
-  const tokens = useSelector(extendedSafeTokensSelector)
   const [{ step, txToken, values }, { create, review }] = useSpendingLimit(CREATE)
 
   const handleReview = async (values) => {
-    review({
-      values,
-      txToken: tokens.find((token) => token.address === values.token),
-    })
+    review({ values })
   }
 
   return (
