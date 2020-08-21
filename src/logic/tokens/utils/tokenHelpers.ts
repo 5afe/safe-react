@@ -70,9 +70,7 @@ export const isSendERC20Transaction = async (
   txCode: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
-  const isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
-
-  return isSendTokenTx
+  return !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
 }
 
 export const isERC721Contract = async (contractAddress: string): Promise<boolean> => {
@@ -80,8 +78,8 @@ export const isERC721Contract = async (contractAddress: string): Promise<boolean
   let isERC721 = false
 
   try {
-    isERC721 = true
     await ERC721Token.at(contractAddress)
+    isERC721 = true
   } catch (error) {
     console.warn('Asset not found')
   }
