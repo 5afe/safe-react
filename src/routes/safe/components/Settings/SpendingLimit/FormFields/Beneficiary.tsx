@@ -10,7 +10,7 @@ import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 
-import { KEYCODES } from './utils'
+import { KEYCODES } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
@@ -20,7 +20,7 @@ const BeneficiaryScan = styled.div`
   grid-area: beneficiaryScan;
 `
 
-const BeneficiarySelect = (): React.ReactElement => {
+const Beneficiary = (): React.ReactElement => {
   const { initialValues } = useFormState()
   const { mutators } = useForm()
 
@@ -102,4 +102,4 @@ const BeneficiarySelect = (): React.ReactElement => {
   )
 }
 
-export default BeneficiarySelect
+export default Beneficiary

@@ -28,7 +28,7 @@ const StepsLine = styled.div`
   margin: 46px 0;
 `
 
-const SpendingLimitSteps = (): React.ReactElement => (
+const NewLimitSteps = (): React.ReactElement => (
   <StepWrapper>
     <Step>
       <Img alt="Select Beneficiary" title="Beneficiary" height={96} src={Beneficiary} />
@@ -76,4 +76,4 @@ const SpendingLimitSteps = (): React.ReactElement => (
   </StepWrapper>
 )
 
-export default SpendingLimitSteps
+export default NewLimitSteps

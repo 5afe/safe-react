@@ -4,7 +4,7 @@ import React from 'react'
 import { useField } from 'react-final-form'
 import styled from 'styled-components'
 
-import { Field } from './Amount'
+import { Field } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/Amount'
 
 // TODO: propose refactor in safe-react-components based on this requirements
 const SpendingLimitRadioButtons = styled(RadioButtons)`

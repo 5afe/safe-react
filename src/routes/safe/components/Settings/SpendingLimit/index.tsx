@@ -11,8 +11,8 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 
 import { getSpendingLimitData, SpendingLimitTable } from './dataFetcher'
 import LimitsTable from './LimitsTable'
-import SpendingLimitModal from './SpendingLimitModal'
-import SpendingLimitSteps from './SpendingLimitSteps'
+import NewLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
+import NewLimitSteps from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitSteps'
 import { useStyles } from './style'
 import { requestAllowancesByDelegatesAndTokens, requestModuleData, requestTokensByDelegate } from './utils'
 
@@ -91,7 +91,7 @@ const SpendingLimitSettings = (): React.ReactElement => {
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
           signatures.
         </InfoText>
-        {spendingLimitData?.length ? <LimitsTable data={spendingLimitData} /> : <SpendingLimitSteps />}
+        {spendingLimitData?.length ? <LimitsTable data={spendingLimitData} /> : <NewLimitSteps />}
       </Block>
 
       {granted && (
@@ -110,7 +110,7 @@ const SpendingLimitSettings = (): React.ReactElement => {
               </Button>
             </Col>
           </Row>
-          {showNewSpendingLimitModal && <SpendingLimitModal close={closeNewSpendingLimitModal} open={true} />}
+          {showNewSpendingLimitModal && <NewLimitModal close={closeNewSpendingLimitModal} open={true} />}
         </>
       )}
     </>

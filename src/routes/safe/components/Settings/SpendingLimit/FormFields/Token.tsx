@@ -8,7 +8,7 @@ const TokenInput = styled.div`
   grid-area: tokenInput;
 `
 
-const TokenSelect = (): React.ReactElement => {
+const Token = (): React.ReactElement => {
   const tokens = useSelector(extendedSafeTokensSelector)
 
   return (
@@ -18,4 +18,4 @@ const TokenSelect = (): React.ReactElement => {
   )
 }
 
-export default TokenSelect
+export default Token

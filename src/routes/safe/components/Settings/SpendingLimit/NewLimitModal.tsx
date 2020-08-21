@@ -2,8 +2,8 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import GnoModal from 'src/components/Modal'
 import { Token } from 'src/logic/tokens/store/model/token'
-import NewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/NewSpendingLimit'
-import ReviewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/ReviewSpendingLimit'
+import NewLimit from 'src/routes/safe/components/Settings/SpendingLimit/NewLimit'
+import NewLimitReview from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitReview'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 
@@ -56,7 +56,7 @@ interface SpendingLimitModalProps {
   open: boolean
 }
 
-const SpendingLimitModal = ({ close, open }: SpendingLimitModalProps): React.ReactElement => {
+const NewLimitModal = ({ close, open }: SpendingLimitModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const tokens = useSelector(extendedSafeTokensSelector)
@@ -77,10 +77,10 @@ const SpendingLimitModal = ({ close, open }: SpendingLimitModalProps): React.Rea
       description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
       paperClassName={classes.modal}
     >
-      {step === CREATE && <NewSpendingLimit initialValues={values} onCancel={close} onReview={handleReview} />}
-      {step === REVIEW && <ReviewSpendingLimit onBack={create} onClose={close} txToken={txToken} values={values} />}
+      {step === CREATE && <NewLimit initialValues={values} onCancel={close} onReview={handleReview} />}
+      {step === REVIEW && <NewLimitReview onBack={create} onClose={close} txToken={txToken} values={values} />}
     </GnoModal>
   )
 }
 
-export default SpendingLimitModal
+export default NewLimitModal

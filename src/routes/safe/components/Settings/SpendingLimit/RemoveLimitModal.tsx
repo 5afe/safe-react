@@ -18,12 +18,10 @@ import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
-import AddressInfo from './AddressInfo'
 import { SpendingLimitTable } from './dataFetcher'
-import { RESET_TIME_OPTIONS } from './ResetTime'
-import ResetTimeInfo from './ResetTimeInfo'
+import { AddressInfo, TokenInfo, ResetTimeInfo } from './InfoDisplay'
+import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { useStyles } from './style'
-import TokenInfo from './TokenInfo'
 import { fromTokenUnit } from './utils'
 
 interface RemoveSpendingLimitModalProps {
@@ -32,11 +30,7 @@ interface RemoveSpendingLimitModalProps {
   open: boolean
 }
 
-const RemoveSpendingLimitModal = ({
-  onClose,
-  spendingLimit,
-  open,
-}: RemoveSpendingLimitModalProps): React.ReactElement => {
+const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const tokens = useSelector(extendedSafeTokensSelector)
@@ -142,4 +136,4 @@ const RemoveSpendingLimitModal = ({
   )
 }
 
-export default RemoveSpendingLimitModal
+export default RemoveLimitModal

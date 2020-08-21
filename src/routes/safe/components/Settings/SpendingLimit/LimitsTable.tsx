@@ -26,7 +26,7 @@ import {
   SPENDING_LIMIT_TABLE_SPENT_ID,
   SpendingLimitTable,
 } from './dataFetcher'
-import RemoveSpendingLimitModal from './RemoveSpendingLimitModal'
+import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
 import { useStyles } from './style'
 import { fromTokenUnit } from './utils'
 
@@ -191,7 +191,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
         </Table>
       </TableContainer>
       {showRemoveSpendingLimitModal && (
-        <RemoveSpendingLimitModal onClose={closeRemoveSpendingLimitModal} spendingLimit={selectedRow} open={true} />
+        <RemoveLimitModal onClose={closeRemoveSpendingLimitModal} spendingLimit={selectedRow} open={true} />
       )}
     </>
   )

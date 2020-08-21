@@ -16,11 +16,9 @@ import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
-import AddressInfo from './AddressInfo'
-import { RESET_TIME_OPTIONS } from './ResetTime'
-import ResetTimeInfo from './ResetTimeInfo'
+import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
+import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { useStyles } from './style'
-import TokenInfo from './TokenInfo'
 import { currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
 
 interface ReviewSpendingLimitProps {
@@ -31,7 +29,7 @@ interface ReviewSpendingLimitProps {
   existentSpendingLimit?: SpendingLimitRow
 }
 
-const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
+const NewLimitReview = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
   const classes = useStyles()
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -199,4 +197,4 @@ const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendin
   )
 }
 
-export default ReviewSpendingLimit
+export default NewLimitReview

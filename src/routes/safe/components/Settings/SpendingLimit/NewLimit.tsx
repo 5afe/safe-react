@@ -6,11 +6,8 @@ import styled from 'styled-components'
 import GnoForm from 'src/components/forms/GnoForm'
 import GnoButton from 'src/components/layout/Button'
 
-import { Amount } from './Amount'
-import BeneficiarySelect from './BeneficiarySelect'
 import { TitleSection, StyledButton, FooterSection, FooterWrapper } from '.'
-import ResetTime from './ResetTime'
-import TokenSelect from './TokenSelect'
+import { Amount, Beneficiary, ResetTime, Token } from './FormFields'
 
 const FormContainer = styled.div`
   padding: 24px;
@@ -60,7 +57,7 @@ const canReview = ({ invalid, submitting, dirtyFieldsSinceLastSubmit, values }):
   )
 }
 
-const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): React.ReactElement => (
+const NewLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): React.ReactElement => (
   <>
     <TitleSection>
       <Title size="xs" withoutMargin>
@@ -79,8 +76,8 @@ const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimi
       {(...args) => (
         <>
           <FormContainer>
-            <BeneficiarySelect />
-            <TokenSelect />
+            <Beneficiary />
+            <Token />
             <Amount />
             <ResetTime />
           </FormContainer>
@@ -109,4 +106,4 @@ const NewSpendingLimit = ({ initialValues, onCancel, onReview }: NewSpendingLimi
   </>
 )
 
-export default NewSpendingLimit
+export default NewLimit
