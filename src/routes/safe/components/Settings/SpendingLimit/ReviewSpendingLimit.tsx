@@ -1,15 +1,11 @@
-import { Button, EthHashInfo, Icon, IconText, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Text, Title } from '@gnosis.pm/safe-react-components'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getNetwork } from 'src/config'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { getGnosisSafeInstanceAt, getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
@@ -17,25 +13,15 @@ import { Token } from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
+import AddressInfo from './AddressInfo'
 import { RESET_TIME_OPTIONS } from './ResetTime'
+import ResetTimeInfo from './ResetTimeInfo'
 import { useStyles } from './style'
+import TokenInfo from './TokenInfo'
 import { currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
-
-const StyledImage = styled.img`
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  margin: 0 8px 0 0;
-`
-
-const StyledImageName = styled.div`
-  display: flex;
-  align-items: center;
-`
 
 interface ReviewSpendingLimitProps {
   onBack: () => void
@@ -43,84 +29,6 @@ interface ReviewSpendingLimitProps {
   txToken: Token | null
   values: Record<string, string>
   existentSpendingLimit?: SpendingLimitRow
-}
-
-interface GenericInfoProps {
-  title?: string
-  children: React.ReactNode
-}
-const GenericInfo = ({ title, children }: GenericInfoProps): React.ReactElement => (
-  <>
-    {title && (
-      <Text size="lg" color="secondaryLight">
-        {title}
-      </Text>
-    )}
-    {children}
-  </>
-)
-
-interface AddressInfoProps {
-  address: string
-  title?: string
-}
-const AddressInfo = ({ address, title }: AddressInfoProps): React.ReactElement => {
-  const addressBook = useSelector(getAddressBook)
-
-  return (
-    <GenericInfo title={title}>
-      <EthHashInfo
-        hash={address}
-        name={addressBook ? getNameFromAdbk(addressBook, address) : ''}
-        showCopyBtn
-        showEtherscanBtn
-        showIdenticon
-        textSize="lg"
-        network={getNetwork()}
-      />
-    </GenericInfo>
-  )
-}
-
-interface TokenInfoProps {
-  amount: string
-  title?: string
-  token: Token
-}
-const TokenInfo = ({ amount, title, token }: TokenInfoProps): React.ReactElement => {
-  return (
-    <GenericInfo title={title}>
-      <StyledImageName>
-        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />
-        <Text size="lg">
-          {amount} {token.symbol}
-        </Text>
-      </StyledImageName>
-    </GenericInfo>
-  )
-}
-
-interface ResetTimeInfoProps {
-  title?: string
-  label?: string
-}
-const ResetTimeInfo = ({ title, label }: ResetTimeInfoProps): React.ReactElement => {
-  return (
-    <GenericInfo title={title}>
-      {label ? (
-        <Row align="center" margin="md">
-          <IconText iconSize="md" iconType="fuelIndicator" text={label} textSize="lg" />
-        </Row>
-      ) : (
-        <Row align="center" margin="md">
-          <Text size="lg">
-            {/* TODO: review message */}
-            One-time spending limit allowance
-          </Text>
-        </Row>
-      )}
-    </GenericInfo>
-  )
 }
 
 const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
@@ -221,6 +129,10 @@ const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendin
     ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime).label
     : ''
 
+  const previousResetTime = (previousSpendingLimit: SpendingLimit) =>
+    RESET_TIME_OPTIONS.find(({ value }) => value === (+previousSpendingLimit.resetTimeMin / 60 / 24).toString())
+      ?.label ?? 'One-time spending limit allowance'
+
   return (
     <>
       <TitleSection>
@@ -253,10 +165,7 @@ const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendin
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">
-                Previous Reset Time:{' '}
-                {RESET_TIME_OPTIONS.find(
-                  ({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString(),
-                )?.label ?? 'One-time spending limit allowance'}
+                Previous Reset Time: {previousResetTime(existentSpendingLimit)}
               </Text>
             </Row>
           )}
