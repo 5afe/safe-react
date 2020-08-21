@@ -6,15 +6,14 @@ import styled from 'styled-components'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
+import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
-import { getSpendingLimitData, SpendingLimitTable } from './dataFetcher'
+import { getSpendingLimitData } from './dataFetcher'
 import LimitsTable from './LimitsTable'
 import NewLimitModal from './NewLimitModal'
 import NewLimitSteps from './NewLimitSteps'
 import { useStyles } from './style'
-import { requestAllowancesByDelegatesAndTokens, requestModuleData, requestTokensByDelegate } from './utils'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
@@ -23,20 +22,8 @@ const InfoText = styled(Text)`
 const SpendingLimitSettings = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
-  const tokens = useSelector(extendedSafeTokensSelector)
-
-  // TODO: Refactor `delegates` for better performance. This is just to verify allowance works
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const [spendingLimitData, setSpendingLimitData] = React.useState<SpendingLimitTable[]>()
-  React.useEffect(() => {
-    const doRequestData = async () => {
-      const [, delegates] = await requestModuleData(safeAddress)
-      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-      const allowances = await requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
-      setSpendingLimitData(getSpendingLimitData(allowances))
-    }
-    doRequestData()
-  }, [safeAddress, tokens])
+  const allowances = useSelector(safeSpendingLimitsSelector)
+  const spendingLimitData = getSpendingLimitData(allowances)
 
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
   const openNewSpendingLimitModal = () => {
@@ -48,7 +35,7 @@ const SpendingLimitSettings = (): React.ReactElement => {
 
   return (
     <>
-      <Block className={classes.container}>
+      <Block className={classes.container} grow>
         <Title size="xs" withoutMargin>
           Spending Limit
         </Title>
