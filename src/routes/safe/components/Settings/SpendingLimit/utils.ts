@@ -15,10 +15,29 @@ export const KEYCODES = {
 export const fromTokenUnit = (amount: string, decimals: string | number): string =>
   new BigNumber(amount).times(`1e-${decimals}`).toFixed()
 
-export const toTokenUnit = (amount: string, decimals: string | number): string =>
-  new BigNumber(amount).times(`1e${decimals}`).toFixed()
+export const toTokenUnit = (amount: string, decimals: string | number): string => {
+  const amountBN = new BigNumber(amount).times(`1e${decimals}`)
+  const [, amountDecimalPlaces] = amount.split('.')
 
-export const currentMinutes = () => Math.floor(Date.now() / (1000 * 60))
+  if (amountDecimalPlaces?.length >= +decimals) {
+    return amountBN.toFixed(0, BigNumber.ROUND_DOWN)
+  }
+
+  return amountBN.toFixed()
+}
+
+export const adjustAmountToToken = (amount: string, decimals: string | number): string => {
+  const amountBN = new BigNumber(amount)
+  const [, amountDecimalPlaces] = amount.split('.')
+
+  if (amountDecimalPlaces?.length >= 18) {
+    return amountBN.toFixed(+decimals, BigNumber.ROUND_DOWN)
+  }
+
+  return amountBN.toFixed()
+}
+
+export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
 export const requestModuleData = (safeAddress: string): Promise<any[]> => {
   const batch = new web3ReadOnly.BatchRequest()

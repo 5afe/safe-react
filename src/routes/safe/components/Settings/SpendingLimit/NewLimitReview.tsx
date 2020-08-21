@@ -19,7 +19,7 @@ import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { useStyles } from './style'
-import { currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
+import { adjustAmountToToken, currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
 
 interface ReviewSpendingLimitProps {
   onBack: () => void
@@ -151,7 +151,7 @@ const NewLimitReview = ({ onBack, onClose, txToken, values }: ReviewSpendingLimi
           <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
         <Col margin="lg">
-          <TokenInfo amount={values.amount} title="Amount" token={txToken} />
+          <TokenInfo amount={adjustAmountToToken(values.amount, txToken.decimals)} title="Amount" token={txToken} />
           {existentSpendingLimit && (
             <Text size="lg" color="error">
               Previous Amount: {existentSpendingLimit.amount}
