@@ -6,6 +6,7 @@ import { toNative } from 'src/logic/wallets/tokens'
 //import TokenRDN from '../../../build/contracts/TokenRDN'
 //import Token6Decimals from '../../../build/contracts/Token6Decimals.json'
 
+// TODO - Deprecated file, should be removed
 export const sendEtherTo = async (address, eth, fromAccountIndex = 0) => {
   const web3 = getWeb3()
   const accounts = await web3.eth.getAccounts()
