@@ -1,7 +1,7 @@
 import { Button, EthHashInfo, Icon, IconText, Text, Title } from '@gnosis.pm/safe-react-components'
-import { Skeleton } from '@material-ui/lab'
+import { useSnackbar } from 'notistack'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
@@ -10,13 +10,20 @@ import Row from 'src/components/layout/Row'
 import { getNetwork } from 'src/config'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { getGnosisSafeInstanceAt, getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import { SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
 import { RESET_TIME_OPTIONS } from './ResetTime'
 import { useStyles } from './style'
-import { SpendingLimitRow } from './utils'
+import { currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
 
 const StyledImage = styled.img`
   width: 32px;
@@ -33,22 +40,186 @@ const StyledImageName = styled.div`
 interface ReviewSpendingLimitProps {
   onBack: () => void
   onClose: () => void
-  onSubmit: () => void
   txToken: Token | null
   values: Record<string, string>
   existentSpendingLimit?: SpendingLimitRow
 }
 
-const ReviewSpendingLimit = ({
-  onBack,
-  onClose,
-  onSubmit,
-  txToken,
-  values,
-  existentSpendingLimit,
-}: ReviewSpendingLimitProps): React.ReactElement => {
-  const classes = useStyles()
+interface GenericInfoProps {
+  title?: string
+  children: React.ReactNode
+}
+const GenericInfo = ({ title, children }: GenericInfoProps): React.ReactElement => (
+  <>
+    {title && (
+      <Text size="lg" color="secondaryLight">
+        {title}
+      </Text>
+    )}
+    {children}
+  </>
+)
+
+interface AddressInfoProps {
+  address: string
+  title?: string
+}
+const AddressInfo = ({ address, title }: AddressInfoProps): React.ReactElement => {
   const addressBook = useSelector(getAddressBook)
+
+  return (
+    <GenericInfo title={title}>
+      <EthHashInfo
+        hash={address}
+        name={addressBook ? getNameFromAdbk(addressBook, address) : ''}
+        showCopyBtn
+        showEtherscanBtn
+        showIdenticon
+        textSize="lg"
+        network={getNetwork()}
+      />
+    </GenericInfo>
+  )
+}
+
+interface TokenInfoProps {
+  amount: string
+  title?: string
+  token: Token
+}
+const TokenInfo = ({ amount, title, token }: TokenInfoProps): React.ReactElement => {
+  return (
+    <GenericInfo title={title}>
+      <StyledImageName>
+        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />
+        <Text size="lg">
+          {amount} {token.symbol}
+        </Text>
+      </StyledImageName>
+    </GenericInfo>
+  )
+}
+
+interface ResetTimeInfoProps {
+  title?: string
+  label?: string
+}
+const ResetTimeInfo = ({ title, label }: ResetTimeInfoProps): React.ReactElement => {
+  return (
+    <GenericInfo title={title}>
+      {label ? (
+        <Row align="center" margin="md">
+          <IconText iconSize="md" iconType="fuelIndicator" text={label} textSize="lg" />
+        </Row>
+      ) : (
+        <Row align="center" margin="md">
+          <Text size="lg">
+            {/* TODO: review message */}
+            One-time spending limit allowance
+          </Text>
+        </Row>
+      )}
+    </GenericInfo>
+  )
+}
+
+const ReviewSpendingLimit = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
+  const classes = useStyles()
+
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+  const dispatch = useDispatch()
+
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+
+  // undefined: before setting a value
+  // null: if no previous value
+  // SpendingLimit: if previous value exists
+  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit>()
+  React.useEffect(() => {
+    const checkExistence = async () => {
+      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
+      const currentDelegate = spendingLimits.find(
+        ({ delegate, token }) =>
+          delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
+          token.toLowerCase() === values.token.toLowerCase(),
+      )
+
+      // let the user know that is about to replace an existent allowance
+      if (currentDelegate !== undefined) {
+        setExistentSpendingLimit({
+          ...currentDelegate,
+          amount: fromTokenUnit(currentDelegate.amount, txToken.decimals),
+        })
+      } else {
+        setExistentSpendingLimit(null)
+      }
+    }
+
+    checkExistence()
+  }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
+
+  const handleSubmit = async () => {
+    const spendingLimitContract = getSpendingLimitContract()
+    const isSpendingLimitEnabled = spendingLimits !== null
+
+    const transactions = []
+
+    // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
+    if (!isSpendingLimitEnabled) {
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+      transactions.push({
+        to: safeAddress,
+        value: 0,
+        data: safeInstance.methods.enableModule(SPENDING_LIMIT_MODULE_ADDRESS).encodeABI(),
+      })
+    }
+
+    // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
+    //                                  ^ - shall we rely on this or query the list of delegates once again?
+    const isDelegateAlreadyAdded =
+      spendingLimits.some(({ delegate }) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
+
+    // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
+    if (!isDelegateAlreadyAdded && values?.beneficiary) {
+      transactions.push({
+        to: SPENDING_LIMIT_MODULE_ADDRESS,
+        value: 0,
+        data: spendingLimitContract.methods.addDelegate(values?.beneficiary).encodeABI(),
+      })
+    }
+
+    // prepare the setAllowance tx
+    const startTime = currentMinutes() - 30
+    transactions.push({
+      to: SPENDING_LIMIT_MODULE_ADDRESS,
+      value: 0,
+      data: spendingLimitContract.methods
+        .setAllowance(
+          values.beneficiary,
+          values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token,
+          toTokenUnit(values.amount, txToken.decimals),
+          values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+          values.withResetTime ? startTime : 0,
+        )
+        .encodeABI(),
+    })
+
+    await sendTransactions(
+      dispatch,
+      safeAddress,
+      transactions,
+      enqueueSnackbar,
+      closeSnackbar,
+      JSON.stringify({ name: 'Spending Limit', message: 'New Allowance' }),
+    )
+      .then(onClose)
+      .catch(console.error)
+  }
+
+  const resetTimeLabel = values.withResetTime
+    ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime).label
+    : ''
 
   return (
     <>
@@ -67,62 +238,18 @@ const ReviewSpendingLimit = ({
 
       <Block className={classes.container}>
         <Col margin="lg">
-          <Text size="lg" color="secondaryLight">
-            Beneficiary
-          </Text>
-          <EthHashInfo
-            hash={values.beneficiary}
-            name={addressBook ? getNameFromAdbk(addressBook, values.beneficiary) : ''}
-            showCopyBtn
-            showEtherscanBtn
-            showIdenticon
-            textSize="lg"
-            network={getNetwork()}
-          />
+          <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
         <Col margin="lg">
-          <Text size="lg" color="secondaryLight">
-            Amount
-          </Text>
-          {txToken !== null ? (
-            <>
-              <StyledImageName>
-                <StyledImage alt={txToken.name} onError={setImageToPlaceholder} src={txToken.logoUri} />
-                <Text size="lg">
-                  {values.amount} {txToken.symbol}
-                </Text>
-              </StyledImageName>
-              {existentSpendingLimit && (
-                <Text size="lg" color="error">
-                  Previous Amount: {existentSpendingLimit.amount}
-                </Text>
-              )}
-            </>
-          ) : (
-            <Skeleton animation="wave" variant="text" />
+          <TokenInfo amount={values.amount} title="Amount" token={txToken} />
+          {existentSpendingLimit && (
+            <Text size="lg" color="error">
+              Previous Amount: {existentSpendingLimit.amount}
+            </Text>
           )}
         </Col>
         <Col margin="lg">
-          <Text size="lg" color="secondaryLight">
-            Reset Time
-          </Text>
-          {values.withResetTime ? (
-            <Row align="center" margin="md">
-              <IconText
-                iconSize="md"
-                iconType="fuelIndicator"
-                text={RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime).label}
-                textSize="lg"
-              />
-            </Row>
-          ) : (
-            <Row align="center" margin="md">
-              <Text size="lg">
-                {/* TODO: review message */}
-                One-time spending limit allowance
-              </Text>
-            </Row>
-          )}
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">
@@ -148,7 +275,13 @@ const ReviewSpendingLimit = ({
             Back
           </Button>
 
-          <Button color="primary" size="md" variant="contained" onClick={onSubmit}>
+          <Button
+            color="primary"
+            size="md"
+            variant="contained"
+            onClick={handleSubmit}
+            disabled={existentSpendingLimit === undefined}
+          >
             Submit
           </Button>
         </FooterWrapper>
