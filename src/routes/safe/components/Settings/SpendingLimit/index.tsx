@@ -1,33 +1,15 @@
 import { Button, Text, Title } from '@gnosis.pm/safe-react-components'
-import { useSnackbar } from 'notistack'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import GnoModal from 'src/components/Modal'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-
-import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
-import NewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/NewSpendingLimit'
-import ReviewSpendingLimit from 'src/routes/safe/components/Settings/SpendingLimit/ReviewSpendingLimit'
-import SpendingLimitSteps from 'src/routes/safe/components/Settings/SpendingLimit/SpendingLimitSteps'
-import {
-  currentMinutes,
-  fromTokenUnit,
-  requestAllowancesByDelegatesAndTokens,
-  requestModuleData,
-  requestTokensByDelegate,
-  toTokenUnit,
-} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import SpendingLimitModule from 'src/utils/AllowanceModule.json'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import SpendingLimitModal from './SpendingLimitModal'
+import SpendingLimitSteps from './SpendingLimitSteps'
+import { requestModuleData } from './utils'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 import styled from 'styled-components'
 
 import { useStyles } from './style'
@@ -71,138 +53,7 @@ export const FooterWrapper = styled.div`
   justify-content: space-around;
 `
 
-const NewSpendingLimitModal = ({ close, open }: { close: () => void; open: boolean }): React.ReactElement => {
-  const classes = useStyles()
-
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const dispatch = useDispatch()
-
-  const [step, setStep] = React.useState<'create' | 'review'>('create')
-  const [values, setValues] = React.useState()
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const [txToken, setTxToken] = React.useState(null)
-  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState()
-
-  const handleReview = async (values) => {
-    const selectedToken = tokens.find((token) => token.address === values.token)
-
-    setValues(values)
-    setTxToken(selectedToken)
-
-    const checkExistence = async () => {
-      const [, delegates] = await requestModuleData(safeAddress)
-      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-      const allowances = await requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
-
-      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
-      const currentDelegate = allowances.find(
-        ({ delegate, token }) =>
-          delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
-          token.toLowerCase() === values.token.toLowerCase(),
-      )
-
-      // let the user know that is about to replace an existent allowance
-      if (currentDelegate !== undefined) {
-        setExistentSpendingLimit({
-          ...currentDelegate,
-          amount: fromTokenUnit(currentDelegate.amount, selectedToken.decimals),
-        })
-      } else {
-        setExistentSpendingLimit(undefined)
-      }
-    }
-
-    await checkExistence()
-    setStep('review')
-  }
-
-  const handleSubmit = async (values: Record<string, string>) => {
-    const [enabledModules, delegates] = await requestModuleData(safeAddress)
-    const isSpendingLimitEnabled =
-      enabledModules?.array?.some((module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase()) ??
-      false
-    const transactions = []
-
-    // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
-    if (!isSpendingLimitEnabled) {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      transactions.push({
-        to: safeAddress,
-        value: 0,
-        data: safeInstance.methods.enableModule(SPENDING_LIMIT_MODULE_ADDRESS).encodeABI(),
-      })
-    }
-
-    // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
-    //                                  ^ - shall we rely on this or query the list of delegates once again?
-    const isDelegateAlreadyAdded =
-      delegates.results.some((delegate) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
-
-    // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
-    if (!isDelegateAlreadyAdded) {
-      const web3 = getWeb3()
-      const spendingLimit = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
-      transactions.push({
-        to: SPENDING_LIMIT_MODULE_ADDRESS,
-        value: 0,
-        data: spendingLimit.methods.addDelegate(values?.beneficiary).encodeABI(),
-      })
-    }
-
-    // prepare the setAllowance tx
-    const web3 = getWeb3()
-    const spendingLimit = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
-    const startTime = currentMinutes() - 30
-    transactions.push({
-      to: SPENDING_LIMIT_MODULE_ADDRESS,
-      value: 0,
-      data: spendingLimit.methods
-        .setAllowance(
-          values.beneficiary,
-          values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token,
-          toTokenUnit(values.amount, txToken.decimals),
-          values.withResetTime ? +values.resetTime * 60 * 24 : 0,
-          values.withResetTime ? startTime : 0,
-        )
-        .encodeABI(),
-    })
-
-    await sendTransactions(
-      dispatch,
-      safeAddress,
-      transactions,
-      enqueueSnackbar,
-      closeSnackbar,
-      JSON.stringify({ name: 'Spending Limit', message: 'New Allowance' }),
-    )
-      .then(close)
-      .catch(console.error)
-  }
-  return (
-    <GnoModal
-      handleClose={close}
-      open={open}
-      title="New Spending Limit"
-      description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
-      paperClassName={classes.modal}
-    >
-      {step === 'create' && <NewSpendingLimit initialValues={values} onCancel={close} onReview={handleReview} />}
-      {step === 'review' && (
-        <ReviewSpendingLimit
-          onBack={() => setStep('create')}
-          onClose={close}
-          onSubmit={() => handleSubmit(values)}
-          txToken={txToken}
-          values={values}
-          existentSpendingLimit={existentSpendingLimit}
-        />
-      )}
-    </GnoModal>
-  )
-}
-
-const SpendingLimit = (): React.ReactElement => {
+const SpendingLimitSettings = (): React.ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = React.useState(false)
@@ -242,24 +93,28 @@ const SpendingLimit = (): React.ReactElement => {
           <SpendingLimitSteps />
         )}
       </Block>
-      <Row align="end" className={classes.buttonRow} grow>
-        <Col end="xs">
-          <Button
-            className={classes.actionButton}
-            color="primary"
-            disabled={!granted}
-            size="md"
-            data-testid="new-spending-limit-button"
-            onClick={openNewSpendingLimitModal}
-            variant="contained"
-          >
-            New spending limit
-          </Button>
-        </Col>
-      </Row>
-      {showNewSpendingLimitModal && <NewSpendingLimitModal close={closeNewSpendingLimitModal} open={true} />}
+
+      {granted && (
+        <>
+          <Row align="end" className={classes.buttonRow} grow>
+            <Col end="xs">
+              <Button
+                className={classes.actionButton}
+                color="primary"
+                size="md"
+                data-testid="new-spending-limit-button"
+                onClick={openNewSpendingLimitModal}
+                variant="contained"
+              >
+                New spending limit
+              </Button>
+            </Col>
+          </Row>
+          {showNewSpendingLimitModal && <SpendingLimitModal close={closeNewSpendingLimitModal} open={true} />}
+        </>
+      )}
     </>
   )
 }
 
-export default SpendingLimit
+export default SpendingLimitSettings

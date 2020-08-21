@@ -1,9 +1,11 @@
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { AbiItem } from 'web3-utils'
 import contract from 'truffle-contract'
 import Web3 from 'web3'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
+import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { ensureOnce } from 'src/utils/singleton'
 import memoize from 'lodash.memoize'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
@@ -37,7 +39,13 @@ const createProxyFactoryContract = (web3: Web3, networkId: number): GnosisSafePr
   return proxyFactory
 }
 
+const createSpendingLimitContract = () => {
+  const web3 = getWeb3()
+  return new web3.eth.Contract(SpendingLimitModule.abi as AbiItem[], SPENDING_LIMIT_MODULE_ADDRESS)
+}
+
 export const getGnosisSafeContract = memoize(createGnosisSafeContract)
+export const getSpendingLimitContract = memoize(createSpendingLimitContract)
 const getCreateProxyFactoryContract = memoize(createProxyFactoryContract)
 
 const instantiateMasterCopies = async () => {
