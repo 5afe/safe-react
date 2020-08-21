@@ -16,14 +16,15 @@ const getTokenInfoFromBlockchain = (tokenAddress: string): string[] =>
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const useToken = (tokenAddress: string): Token | null => {
+export const useToken = (tokenAddress: string, isCustomToken = false): Token | null => {
   const [token, setToken] = useState<Token | null>(null)
   const tokens = useSelector(tokensSelector)
   const dispatch = useDispatch()
 
   useEffect(() => {
     const fetchTokenInfo = async () => {
-      const remoteToken = await fetchToken(tokenAddress)
+      // Custom token won't be on the backend, we dont try to fetch if in order to improve the performance
+      const remoteToken = !isCustomToken ? await fetchToken(tokenAddress) : null
       if (remoteToken) {
         const { address, decimals, symbol, logoUri, name } = remoteToken
 
@@ -53,7 +54,9 @@ export const useToken = (tokenAddress: string): Token | null => {
           logoUri: '',
         }
         setToken(makeToken(tokenProps))
-        dispatch(addToken(tokenProps))
+        if (!isCustomToken) {
+          dispatch(addToken(tokenProps))
+        }
       }
     }
 
@@ -79,7 +82,7 @@ export const useToken = (tokenAddress: string): Token | null => {
         fetchTokenInfo()
       }
     }
-  }, [dispatch, tokenAddress, tokens])
+  }, [dispatch, isCustomToken, tokenAddress, tokens])
 
   return token
 }
