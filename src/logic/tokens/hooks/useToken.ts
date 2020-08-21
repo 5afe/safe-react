@@ -5,13 +5,11 @@ import { fetchToken } from 'src/logic/tokens/api'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { ETH_ADDRESS, getERC721Symbol, isERC721Contract } from '../utils/tokenHelpers'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import etherLogo from 'src/assets/icons/icon_etherTokens.svg'
-import { addToken } from '../store/actions/addToken'
+import { addToken } from 'src/logic/tokens/store/actions/addToken'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
-import { fetchCollectible } from 'src/logic/collectibles/api/fetchCollectible'
-import { addNftAsset } from 'src/logic/collectibles/store/actions/addCollectible'
 
 const getTokenInfoFromBlockchain = (tokenAddress: string): string[] =>
   generateBatchRequests({
@@ -67,49 +65,6 @@ export const useToken = (tokenAddress: string, isCustomToken = false): Token | N
       }
     }
 
-    const fetchAssetInfo = async () => {
-      // Custom token won't be on the backend, we dont try to fetch if in order to improve the performance
-      const remoteAsset = !isCustomToken ? await fetchCollectible(tokenAddress) : null
-      if (remoteAsset) {
-        const assetsProps = {
-          ...remoteAsset,
-        }
-
-        setToken(assetsProps)
-        if (!isCustomToken) {
-          dispatch(addNftAsset(assetsProps))
-        }
-      } else {
-        const symbol = await getERC721Symbol(tokenAddress)
-
-        const assetsProps = {
-          address: tokenAddress,
-          symbol,
-          assetContract: null,
-          collection: null,
-          description: '',
-          image: '',
-          name: '',
-          numberOfTokens: 0,
-          slug: '',
-        }
-
-        setToken(assetsProps)
-        if (!isCustomToken) {
-          dispatch(addNftAsset(assetsProps))
-        }
-      }
-    }
-
-    const fetchAssetOrTokenInfo = async () => {
-      const isERC721 = await isERC721Contract(tokenAddress)
-      if (isERC721) {
-        fetchAssetInfo()
-      } else {
-        fetchTokenInfo()
-      }
-    }
-
     if (tokenAddress === ETH_ADDRESS) {
       setToken(
         makeToken({
@@ -125,15 +80,16 @@ export const useToken = (tokenAddress: string, isCustomToken = false): Token | N
 
     if (tokenAddress) {
       const localToken = tokens.get(tokenAddress)
-      const localAsset = assets.find((asset) => asset.address === tokenAddress)
-
       if (localToken) {
         setToken(localToken)
-      } else if (localAsset) {
-        setToken(localAsset)
-      } else {
-        fetchAssetOrTokenInfo()
+        return
       }
+      const localAsset = assets.find((asset) => asset.address === tokenAddress)
+      if (localAsset) {
+        setToken(localAsset)
+        return
+      }
+      fetchTokenInfo()
     }
   }, [dispatch, isCustomToken, tokenAddress, tokens, assets])
 
