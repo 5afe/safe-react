@@ -1,4 +1,4 @@
-import { Button, EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import React from 'react'
@@ -8,9 +8,6 @@ import styled from 'styled-components'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
-import { getNetwork } from 'src/config'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
@@ -26,7 +23,8 @@ import {
   SPENDING_LIMIT_TABLE_SPENT_ID,
   SpendingLimitTable,
 } from './dataFetcher'
-import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
+import { AddressInfo } from './InfoDisplay'
+import RemoveLimitModal from './RemoveLimitModal'
 import { useStyles } from './style'
 import { fromTokenUnit } from './utils'
 
@@ -86,20 +84,9 @@ const HumanReadableSpent = ({ spent, amount, tokenAddress }: HumanReadableSpentP
   ) : null
 }
 
-interface SpendingLimitTableProps {
-  data?: SpendingLimitTable[]
-}
+const useWidthState = (width: number): number | null => {
+  const [cut, setCut] = React.useState(null)
 
-const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
-  const classes = useStyles()
-  const granted = useSelector(grantedSelector)
-  const addressBook = useSelector(getAddressBook)
-
-  const columns = generateColumns()
-  const autoColumns = columns.filter(({ custom }) => !custom)
-
-  const [cut, setCut] = React.useState(undefined)
-  const { width } = useWindowDimensions()
   React.useEffect(() => {
     if (width <= 1024) {
       setCut(4)
@@ -108,19 +95,24 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
     }
   }, [width])
 
-  const [showRemoveSpendingLimitModal, setShowRemoveSpendingLimitModal] = React.useState(false)
+  return cut
+}
+
+interface SpendingLimitTableProps {
+  data?: SpendingLimitTable[]
+}
+
+const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
+  const classes = useStyles()
+  const granted = useSelector(grantedSelector)
+
+  const columns = generateColumns()
+  const autoColumns = columns.filter(({ custom }) => !custom)
+
+  const { width } = useWindowDimensions()
+  const cut = useWidthState(width)
+
   const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>(null)
-  const openRemoveSpendingLimitModal = (row: SpendingLimitTable) => {
-    setSelectedRow(row)
-    setShowRemoveSpendingLimitModal(true)
-  }
-  const closeRemoveSpendingLimitModal = () => {
-    setShowRemoveSpendingLimitModal(false)
-    setSelectedRow(null)
-  }
-  const handleDeleteSpendingLimit = (row: SpendingLimitTable): void => {
-    openRemoveSpendingLimitModal(row)
-  }
 
   return (
     <>
@@ -150,18 +142,8 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
                   return (
                     <TableCell align={column.align} component="td" key={`${columnId}-${index}`}>
                       {columnId === SPENDING_LIMIT_TABLE_BENEFICIARY_ID && (
-                        <EthHashInfo
-                          hash={rowElement}
-                          name={addressBook ? getNameFromAdbk(addressBook, rowElement) : ''}
-                          showCopyBtn
-                          showEtherscanBtn
-                          showIdenticon
-                          textSize="lg"
-                          shortenHash={cut}
-                          network={getNetwork()}
-                        />
+                        <AddressInfo address={rowElement} cut={cut} />
                       )}
-
                       {columnId === SPENDING_LIMIT_TABLE_SPENT_ID && <HumanReadableSpent {...rowElement} />}
                       {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && (
                         <Text size="lg">{rowElement.relativeTime}</Text>
@@ -177,7 +159,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
                         iconType="delete"
                         color="error"
                         variant="outlined"
-                        onClick={() => handleDeleteSpendingLimit(row)}
+                        onClick={() => setSelectedRow(row)}
                         data-testid="remove-action"
                       >
                         {null}
@@ -190,8 +172,8 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
           }
         </Table>
       </TableContainer>
-      {showRemoveSpendingLimitModal && (
-        <RemoveLimitModal onClose={closeRemoveSpendingLimitModal} spendingLimit={selectedRow} open={true} />
+      {selectedRow !== null && (
+        <RemoveLimitModal onClose={() => setSelectedRow(null)} spendingLimit={selectedRow} open={true} />
       )}
     </>
   )

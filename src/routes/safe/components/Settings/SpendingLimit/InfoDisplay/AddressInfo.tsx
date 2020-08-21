@@ -10,10 +10,11 @@ import DataDisplay from './DataDisplay'
 
 interface AddressInfoProps {
   address: string
+  cut?: number
   title?: string
 }
 
-const AddressInfo = ({ address, title }: AddressInfoProps): React.ReactElement => {
+const AddressInfo = ({ address, cut, title }: AddressInfoProps): React.ReactElement => {
   const addressBook = useSelector(getAddressBook)
 
   return (
@@ -26,6 +27,7 @@ const AddressInfo = ({ address, title }: AddressInfoProps): React.ReactElement =
         showIdenticon
         textSize="lg"
         network={getNetwork()}
+        shortenHash={cut}
       />
     </DataDisplay>
   )
