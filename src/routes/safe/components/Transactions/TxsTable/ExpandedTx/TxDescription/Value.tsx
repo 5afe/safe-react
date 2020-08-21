@@ -47,13 +47,13 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <SafeEtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
+          <SafeEtherscanLink type="address" key={`${method}-value-${index}`} cut={cut} value={value} />
         ))}
       </NestedWrapper>
     )
   }
 
-  return <SafeEtherscanLink className={classes.address} cut={cut} value={value as string} />
+  return <SafeEtherscanLink type="address" className={classes.address} cut={cut} value={value as string} />
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
