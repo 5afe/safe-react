@@ -11,48 +11,13 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 
 import { getSpendingLimitData, SpendingLimitTable } from './dataFetcher'
 import LimitsTable from './LimitsTable'
-import NewLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal'
-import NewLimitSteps from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitSteps'
+import NewLimitModal from './NewLimitModal'
+import NewLimitSteps from './NewLimitSteps'
 import { useStyles } from './style'
 import { requestAllowancesByDelegatesAndTokens, requestModuleData, requestTokensByDelegate } from './utils'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
-`
-
-export const TitleSection = styled.div`
-  display: flex;
-  justify-content: space-between;
-  padding: 16px 24px;
-  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-`
-
-export const StyledButton = styled.button`
-  background: none;
-  border: none;
-  padding: 5px;
-  width: 26px;
-  height: 26px;
-
-  span {
-    margin-right: 0;
-  }
-
-  :hover {
-    background: ${({ theme }) => theme.colors.separator};
-    border-radius: 16px;
-    cursor: pointer;
-  }
-`
-
-export const FooterSection = styled.div`
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
-  padding: 16px 24px;
-`
-
-export const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
 `
 
 const SpendingLimitSettings = (): React.ReactElement => {

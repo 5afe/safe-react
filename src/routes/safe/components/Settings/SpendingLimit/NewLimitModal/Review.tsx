@@ -1,4 +1,4 @@
-import { Button, Icon, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -15,11 +15,17 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
-import { FooterSection, FooterWrapper, StyledButton, TitleSection } from '.'
-import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
-import { useStyles } from './style'
-import { adjustAmountToToken, currentMinutes, fromTokenUnit, SpendingLimitRow, toTokenUnit } from './utils'
+import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
+import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
+import {
+  adjustAmountToToken,
+  currentMinutes,
+  fromTokenUnit,
+  SpendingLimitRow,
+  toTokenUnit,
+} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 interface ReviewSpendingLimitProps {
   onBack: () => void
@@ -29,7 +35,7 @@ interface ReviewSpendingLimitProps {
   existentSpendingLimit?: SpendingLimitRow
 }
 
-const NewLimitReview = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
+const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
   const classes = useStyles()
 
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
@@ -133,18 +139,7 @@ const NewLimitReview = ({ onBack, onClose, txToken, values }: ReviewSpendingLimi
 
   return (
     <>
-      <TitleSection>
-        <Title size="xs" withoutMargin>
-          New Spending Limit{' '}
-          <Text size="lg" color="secondaryLight">
-            2 of 2
-          </Text>
-        </Title>
-
-        <StyledButton onClick={onClose}>
-          <Icon size="sm" type="cross" />
-        </StyledButton>
-      </TitleSection>
+      <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
 
       <Block className={classes.container}>
         <Col margin="lg">
@@ -176,25 +171,23 @@ const NewLimitReview = ({ onBack, onClose, txToken, values }: ReviewSpendingLimi
         )}
       </Block>
 
-      <FooterSection>
-        <FooterWrapper>
-          <Button color="primary" size="md" onClick={onBack}>
-            Back
-          </Button>
+      <Modal.Footer>
+        <Button color="primary" size="md" onClick={onBack}>
+          Back
+        </Button>
 
-          <Button
-            color="primary"
-            size="md"
-            variant="contained"
-            onClick={handleSubmit}
-            disabled={existentSpendingLimit === undefined}
-          >
-            Submit
-          </Button>
-        </FooterWrapper>
-      </FooterSection>
+        <Button
+          color="primary"
+          size="md"
+          variant="contained"
+          onClick={handleSubmit}
+          disabled={existentSpendingLimit === undefined}
+        >
+          Submit
+        </Button>
+      </Modal.Footer>
     </>
   )
 }
 
-export default NewLimitReview
+export default Review
