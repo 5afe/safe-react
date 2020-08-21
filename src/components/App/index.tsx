@@ -1,4 +1,4 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { withStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { connect, useSelector } from 'react-redux'
@@ -22,7 +22,7 @@ import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
@@ -60,7 +60,7 @@ const App = ({ children, classes, currentNetwork }) => {
 
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
 
-  const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const matchSafeWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
     url: string
     params: Record<string, string>
@@ -82,40 +82,43 @@ const App = ({ children, classes, currentNetwork }) => {
 
   const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
 
-  const getSidebarItems = (): ListItemType[] => {
-    if (!matchSafe) {
-      return []
+  useEffect(() => {
+    if (matchSafe?.isExact) {
+      history.push(WELCOME_ADDRESS)
+      return
     }
+  }, [matchSafe, history])
 
+  const getSidebarItems = (): ListItemType[] => {
     return [
       {
         label: 'ASSETS',
         icon: <ListIcon type="assets" />,
-        selected: matchSafeWithAction.params.safeAction === 'balances',
+        selected: matchSafeWithAction?.params.safeAction === 'balances',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/balances`),
       },
       {
         label: 'TRANSACTIONS',
         icon: <ListIcon type="transactionsInactive" />,
-        selected: matchSafeWithAction.params.safeAction === 'transactions',
+        selected: matchSafeWithAction?.params.safeAction === 'transactions',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/transactions`),
       },
       {
         label: 'AddressBook',
         icon: <ListIcon type="addressBook" />,
-        selected: matchSafeWithAction.params.safeAction === 'address-book',
+        selected: matchSafeWithAction?.params.safeAction === 'address-book',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/address-book`),
       },
       {
         label: 'Apps',
         icon: <ListIcon type="apps" />,
-        selected: matchSafeWithAction.params.safeAction === 'apps',
+        selected: matchSafeWithAction?.params.safeAction === 'apps',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/apps`),
       },
       {
         label: 'Settings',
         icon: <ListIcon type="settings" />,
-        selected: matchSafeWithAction.params.safeAction === 'settings',
+        selected: matchSafeWithAction?.params.safeAction === 'settings',
         onItemClick: () => history.push(`${matchSafeWithAddress.url}/settings`),
       },
     ]
@@ -147,7 +150,7 @@ const App = ({ children, classes, currentNetwork }) => {
             topbar={<Header />}
             sidebar={
               <Sidebar
-                items={getSidebarItems()}
+                items={matchSafe !== null ? getSidebarItems() : []}
                 safeAddress={safeAddress}
                 safeName={safeName}
                 balance={balance}

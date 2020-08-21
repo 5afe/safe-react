@@ -36,11 +36,11 @@ export const useSafeScheduledUpdates = (safeAddress: string): void => {
 
     if (safeAddress) {
       fetchSafeData(safeAddress)
+    }
 
-      return () => {
-        mounted = false
-        clearTimeout(timer.current)
-      }
+    return () => {
+      mounted = false
+      clearTimeout(timer.current)
     }
   }, [dispatch, safeAddress])
 }
