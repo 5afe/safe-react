@@ -18,7 +18,6 @@ import AssetsList from 'src/routes/safe/components/Balances/Tokens/screens/Asset
 import TokenList from 'src/routes/safe/components/Balances/Tokens/screens/TokenList'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
-import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
 import updateBlacklistedTokens from 'src/logic/safe/store/actions/updateBlacklistedTokens'
 import { List } from 'immutable'
 import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
@@ -42,10 +41,6 @@ const Tokens = (props: Props): React.ReactElement => {
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
   const [activeScreen, setActiveScreen] = useState(modalScreen)
   const dispatch = useDispatch()
-
-  const activateTokenForAllSafesHandler = (tokenAddress: string) => {
-    dispatch(activateTokenForAllSafes(tokenAddress))
-  }
 
   const updateBlackListTokensHandler = (safeAddress: string, blacklistenTokens: Set<string>) => {
     dispatch(updateBlacklistedTokens(safeAddress, blacklistenTokens))
@@ -80,13 +75,10 @@ const Tokens = (props: Props): React.ReactElement => {
       {activeScreen === 'assetsList' && <AssetsList setActiveScreen={setActiveScreen} />}
       {activeScreen === 'addCustomToken' && (
         <AddCustomToken
-          activateTokenForAllSafes={activateTokenForAllSafesHandler}
-          activeTokens={activeTokens}
           onClose={onClose}
           parentList={'tokenList'}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
-          tokens={tokens}
         />
       )}
       {activeScreen === 'addCustomAsset' && (
