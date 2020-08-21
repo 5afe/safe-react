@@ -74,7 +74,7 @@ export type SpendingLimitRow = {
 }
 
 /**
- * TODO: This is helpfully a temp function that attempts to filter out "deleted" allowances
+ * TODO: This is hopefully a temp function that attempts to filter out "deleted" allowances
  * As there's no way to remove an Allowance with the current code, it's "deleted" by setting its `amount` to 0
  * along with `resetTimeMin` to 0 as well
  * @param {SpendingLimitRow} allowance
