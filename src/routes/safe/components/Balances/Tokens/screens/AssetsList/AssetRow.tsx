@@ -11,9 +11,8 @@ import { styles } from './style'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
-import Img from 'src/components/layout/Img'
 
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { TokenSymbol } from 'src/components/TokenSymbol'
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
 type Props = {
@@ -35,14 +34,14 @@ const AssetRow = memo(
     const classes = useStyles()
     const { activeAssetsAddresses, assets, onSwitch } = data
     const asset = assets[index]
-    const { address, name, symbol, image } = asset
+    const { address, name, symbol } = asset
     const isActive = activeAssetsAddresses.has(asset.address)
 
     return (
       <div style={style}>
         <ListItem>
           <ListItemIcon className={classes.tokenIcon}>
-            <Img alt={name} height={28} onError={setImageToPlaceholder} src={image} />
+            <TokenSymbol height={28} tokenAddress={asset.address} />
           </ListItemIcon>
           <ListItemText primary={symbol} secondary={name} />
           {address !== ETH_ADDRESS && (
