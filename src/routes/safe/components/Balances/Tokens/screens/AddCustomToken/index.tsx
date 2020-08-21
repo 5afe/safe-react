@@ -1,9 +1,8 @@
-import { withStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { useEffect, useState } from 'react'
 import { FormSpy } from 'react-final-form'
 
 import { styles } from './style'
-import { getSymbolAndDecimalsFromContract } from './utils'
 import { addressIsTokenContract, doesntExistInTokenList } from './validators'
 
 import Field from 'src/components/forms/Field'
@@ -22,9 +21,16 @@ import Row from 'src/components/layout/Row'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Checkbox } from '@gnosis.pm/safe-react-components'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { addToken } from 'src/logic/tokens/store/actions/addToken'
 import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
+import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
+
+import { List } from 'immutable'
+import { Token, TokenProps } from 'src/logic/tokens/store/model/token'
+import { orderedTokenListSelector } from 'src/logic/tokens/store/selectors'
+import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
 
 export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
 export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
@@ -33,24 +39,34 @@ export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
 
 const INITIAL_FORM_STATE = {
   address: '',
-  decimals: '',
+  name: '',
   symbol: '',
-  logoUri: '',
+  decimals: null,
+  logoUri: null,
+  balance: 0,
 }
 
-const AddCustomToken = (props) => {
-  const {
-    activateTokenForAllSafes,
-    activeTokens,
-    classes,
-    onClose,
-    parentList,
-    safeAddress,
-    setActiveScreen,
-    tokens,
-  } = props
-  const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
+const useStyles = makeStyles(styles)
+
+type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> & Pick<T, TRequired>
+
+type TokenPropsForm = OptionalExceptFor<TokenProps, 'address'>
+
+type Props = {
+  onClose: () => void
+  parentList: string
+  safeAddress: string
+  setActiveScreen: (string) => void
+}
+
+export const AddCustomToken = (props: Props): React.ReactElement => {
+  const { onClose, parentList, safeAddress, setActiveScreen } = props
+  const [formValues, setFormValues] = useState<TokenPropsForm>(INITIAL_FORM_STATE)
   const dispatch = useDispatch()
+  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const tokens: List<Token> = useSelector(orderedTokenListSelector)
+  const classes = useStyles()
+  const selectedToken = useToken(formValues.address, true)
 
   const handleSubmit = (values) => {
     const address = checksumAddress(values.address)
@@ -60,10 +76,10 @@ const AddCustomToken = (props) => {
       symbol: values.symbol,
       name: values.symbol,
     }
-
     dispatch(addToken(token))
+
     if (values.showForAllSafes) {
-      activateTokenForAllSafes(token.address)
+      dispatch(activateTokenForAllSafes(token.address))
     } else {
       const activeTokensAddresses = activeTokens.map(({ address }) => address)
       dispatch(updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address)))
@@ -72,19 +88,21 @@ const AddCustomToken = (props) => {
     onClose()
   }
 
-  const populateFormValuesFromAddress = async (tokenAddress) => {
-    const tokenData = await getSymbolAndDecimalsFromContract(tokenAddress)
+  useEffect(() => {
+    if (!selectedToken) return
+    const { address, symbol, decimals, name } = selectedToken
+    setFormValues({
+      address,
+      symbol,
+      decimals,
+      name,
+    })
+  }, [selectedToken])
 
-    if (tokenData.length) {
-      const [symbol, decimals] = tokenData
-
-      setFormValues({
-        address: tokenAddress,
-        symbol,
-        decimals,
-        name: symbol,
-      } as any)
-    }
+  const populateFormValuesFromAddress = (tokenAddress: string) => {
+    setFormValues({
+      address: tokenAddress,
+    })
   }
 
   const formSpyOnChangeHandler = async (state) => {
@@ -100,7 +118,7 @@ const AddCustomToken = (props) => {
     }
 
     if (!errors.address && !validating && dirty) {
-      await populateFormValuesFromAddress(values.address)
+      populateFormValuesFromAddress(values.address)
     }
   }
 
@@ -205,6 +223,4 @@ const AddCustomToken = (props) => {
   )
 }
 
-const AddCustomTokenComponent = withStyles(styles as any)(AddCustomToken)
-
-export default AddCustomTokenComponent
+export default AddCustomToken
