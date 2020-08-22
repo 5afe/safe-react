@@ -8,13 +8,6 @@ import styled from 'styled-components'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
-import { Token } from 'src/logic/tokens/store/model/token'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
-import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 
 import {
   generateColumns,
@@ -22,22 +15,15 @@ import {
   SPENDING_LIMIT_TABLE_RESET_TIME_ID,
   SPENDING_LIMIT_TABLE_SPENT_ID,
   SpendingLimitTable,
-} from './dataFetcher'
-import { AddressInfo } from './InfoDisplay'
-import RemoveLimitModal from './RemoveLimitModal'
-import { useStyles } from './style'
-import { fromTokenUnit } from './utils'
+} from 'src/routes/safe/components/Settings/SpendingLimit/dataFetcher'
+import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
+import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
+import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
-const StyledImage = styled.img`
-  width: 32px;
-  height: 32px;
-  object-fit: contain;
-  margin: 0 8px 0 0;
-`
-const StyledImageName = styled.div`
-  display: flex;
-  align-items: center;
-`
+import SpentVsAmount from './SpentVsAmount'
+
 const TableActionButton = styled(Button)`
   background-color: transparent;
   padding: 0;
@@ -46,43 +32,6 @@ const TableActionButton = styled(Button)`
     background-color: transparent;
   }
 `
-type SpentInfo = {
-  token: Token
-  spent: string
-  amount: string
-}
-
-interface HumanReadableSpentProps {
-  spent: string
-  amount: string
-  tokenAddress: string
-}
-
-const HumanReadableSpent = ({ spent, amount, tokenAddress }: HumanReadableSpentProps): React.ReactElement => {
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const { width } = useWindowDimensions()
-  const [spentInfo, setSpentInfo] = React.useState<SpentInfo>()
-
-  React.useEffect(() => {
-    if (tokens) {
-      const safeTokenAddress = tokenAddress === ZERO_ADDRESS ? ETH_ADDRESS : tokenAddress
-      const token = tokens.find((token) => token.address === safeTokenAddress)
-      const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
-      const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
-
-      setSpentInfo({ token, spent: formattedSpent, amount: formattedAmount })
-    }
-  }, [amount, spent, tokenAddress, tokens])
-
-  return spentInfo ? (
-    <StyledImageName>
-      {width > 1024 && (
-        <StyledImage alt={spentInfo.token.name} onError={setImageToPlaceholder} src={spentInfo.token.logoUri} />
-      )}
-      <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${spentInfo.token.symbol}`}</Text>
-    </StyledImageName>
-  ) : null
-}
 
 const useWidthState = (width: number): number | null => {
   const [cut, setCut] = React.useState(null)
@@ -144,7 +93,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
                       {columnId === SPENDING_LIMIT_TABLE_BENEFICIARY_ID && (
                         <AddressInfo address={rowElement} cut={cut} />
                       )}
-                      {columnId === SPENDING_LIMIT_TABLE_SPENT_ID && <HumanReadableSpent {...rowElement} />}
+                      {columnId === SPENDING_LIMIT_TABLE_SPENT_ID && <SpentVsAmount {...rowElement} />}
                       {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && (
                         <Text size="lg">{rowElement.relativeTime}</Text>
                       )}
