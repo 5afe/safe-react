@@ -33,20 +33,6 @@ const TableActionButton = styled(Button)`
   }
 `
 
-const useWidthState = (width: number): number | null => {
-  const [cut, setCut] = React.useState(null)
-
-  React.useEffect(() => {
-    if (width <= 1024) {
-      setCut(4)
-    } else {
-      setCut(8)
-    }
-  }, [width])
-
-  return cut
-}
-
 interface SpendingLimitTableProps {
   data?: SpendingLimitTable[]
 }
@@ -59,7 +45,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
   const autoColumns = columns.filter(({ custom }) => !custom)
 
   const { width } = useWindowDimensions()
-  const cut = useWidthState(width)
+  const cut = React.useMemo(() => (width <= 1024 ? 4 : 8), [width])
 
   const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>(null)
 

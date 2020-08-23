@@ -8,11 +8,10 @@ import Col from 'src/components/layout/Col'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { Token } from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
 import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
@@ -32,16 +31,7 @@ interface RemoveSpendingLimitModalProps {
 const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): React.ReactElement => {
   const classes = useStyles()
 
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const [tokenInfo, setTokenInfo] = React.useState<Token>()
-  React.useEffect(() => {
-    if (tokens) {
-      const tokenAddress =
-        spendingLimit.spent.tokenAddress === ZERO_ADDRESS ? ETH_ADDRESS : spendingLimit.spent.tokenAddress
-      const foundToken = tokens.find((token) => token.address === tokenAddress)
-      setTokenInfo(foundToken)
-    }
-  }, [spendingLimit.spent.tokenAddress, tokens])
+  const tokenInfo = useToken(spendingLimit.spent.tokenAddress)
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()

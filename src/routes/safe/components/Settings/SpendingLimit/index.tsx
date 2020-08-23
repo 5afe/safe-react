@@ -35,7 +35,7 @@ const SpendingLimitSettings = (): React.ReactElement => {
 
   return (
     <>
-      <Block className={classes.container} grow>
+      <Block className={classes.container} grow="grow">
         <Title size="xs" withoutMargin>
           Spending Limit
         </Title>
