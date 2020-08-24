@@ -143,12 +143,9 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     [values.resetTime, values.withResetTime],
   )
 
-  const previousResetTime = React.useMemo(
-    () =>
-      RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
-        ?.label ?? 'One-time spending limit',
-    [existentSpendingLimit.resetTimeMin],
-  )
+  const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
+    RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
+      ?.label ?? 'One-time spending limit'
 
   return (
     <>
@@ -171,7 +168,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           {existentSpendingLimit && (
             <Row align="center" margin="md">
               <Text size="lg" color="error">
-                Previous Reset Time: {previousResetTime}
+                Previous Reset Time: {previousResetTime(existentSpendingLimit)}
               </Text>
             </Row>
           )}
