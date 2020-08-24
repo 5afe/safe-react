@@ -42,6 +42,7 @@ const InlineText = styled(Text)`
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
+  overflow-wrap: break-word;
 `
 
 const TxInfo = styled.div`
