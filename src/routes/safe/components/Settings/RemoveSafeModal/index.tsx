@@ -92,7 +92,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
             onClose()
             // using native redirect in order to avoid problems in several components
             // trying to access references of the removed safe.
-            window.location.href = '/'
+            window.location.href = '/app/'
           }}
           type="submit"
           variant="contained"

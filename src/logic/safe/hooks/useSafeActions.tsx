@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 
 const INITIAL_STATE = {
   sendFunds: {
@@ -9,7 +9,7 @@ const INITIAL_STATE = {
 }
 
 type Response = {
-  onShow: (action: string) => () => void
+  onShow: (action: string) => void
   onHide: (action: string) => void
   showSendFunds: (token: string) => void
   hideSendFunds: () => void
@@ -19,39 +19,51 @@ type Response = {
 const useSafeActions = (): Response => {
   const [safeActionsState, setSafeActionsState] = useState(INITIAL_STATE)
 
-  const onShow = (action) => () => {
-    setSafeActionsState((prevState) => ({
-      ...prevState,
-      [`show${action}`]: true,
-    }))
-  }
+  const onShow = useMemo(
+    () => (action) => {
+      setSafeActionsState((prevState) => ({
+        ...prevState,
+        [`show${action}`]: true,
+      }))
+    },
+    [],
+  )
 
-  const onHide = (action) => () => {
-    setSafeActionsState((prevState) => ({
-      ...prevState,
-      [`show${action}`]: false,
-    }))
-  }
+  const onHide = useMemo(
+    () => (action) => {
+      setSafeActionsState((prevState) => ({
+        ...prevState,
+        [`show${action}`]: false,
+      }))
+    },
+    [],
+  )
 
-  const showSendFunds = (token) => {
-    setSafeActionsState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: true,
-        selectedToken: token,
-      },
-    }))
-  }
+  const showSendFunds = useMemo(
+    () => (token) => {
+      setSafeActionsState((prevState) => ({
+        ...prevState,
+        sendFunds: {
+          isOpen: true,
+          selectedToken: token,
+        },
+      }))
+    },
+    [],
+  )
 
-  const hideSendFunds = () => {
-    setSafeActionsState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: false,
-        selectedToken: undefined,
-      },
-    }))
-  }
+  const hideSendFunds = useMemo(
+    () => () => {
+      setSafeActionsState((prevState) => ({
+        ...prevState,
+        sendFunds: {
+          isOpen: false,
+          selectedToken: undefined,
+        },
+      }))
+    },
+    [],
+  )
 
   return { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds }
 }

@@ -17,28 +17,28 @@ const items: ListItemType[] = [
   {
     label: 'Assets',
     icon: <Icon size="md" type="assets" />,
-    onItemClick: () => console.log('assets'),
+    href: '#',
   },
   {
     label: 'Settings',
     icon: <Icon size="md" type="settings" />,
-    onItemClick: () => console.log('Settings'),
+    href: '#',
     subItems: [
       {
         label: 'Safe Details',
-        onItemClick: () => console.log('Settings1'),
+        href: '#',
       },
       {
         label: 'Owners',
-        onItemClick: () => console.log('Settings2'),
+        href: '#',
       },
       {
         label: 'Policies',
-        onItemClick: () => console.log('Settings3'),
+        href: '#',
       },
       {
         label: 'Advanced',
-        onItemClick: () => console.log('Settings4'),
+        href: '#',
       },
     ],
   },

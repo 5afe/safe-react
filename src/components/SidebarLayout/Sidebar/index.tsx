@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Divider, ButtonLink } from '@gnosis.pm/safe-react-components'
+import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
 import List, { ListItemType } from 'src/components/List'
 import WalletInfo from 'src/components/SidebarLayout/WalletInfo'
@@ -13,7 +13,7 @@ const HelpContainer = styled.div`
   height: 58px;
 `
 
-const StyledButtonLink = styled(ButtonLink)`
+const StyledButtonLink = styled.a`
   height: 40px;
   width: 176px;
   padding: 0 0 0 16px;
@@ -78,12 +78,8 @@ const Sidebar = ({
 
       <HelpContainer>
         <StyledDivider />
-        <StyledButtonLink
-          onClick={() => window.open('https://help.gnosis-safe.io/en/')}
-          color="placeHolder"
-          iconType="question"
-        >
-          HELP CENTER
+        <StyledButtonLink href="https://help.gnosis-safe.io/en/" target="_blank">
+          <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
         </StyledButtonLink>
       </HelpContainer>
     </>

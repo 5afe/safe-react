@@ -1,14 +1,14 @@
-import React, { useContext, useEffect } from 'react'
-import { withStyles } from '@material-ui/core/styles'
+import React, { useContext, useEffect, useMemo } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 import { useRouteMatch, useHistory } from 'react-router-dom'
+import styled from 'styled-components'
 
 import AlertIcon from './assets/alert.svg'
 import CheckIcon from './assets/check.svg'
 import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
-import styles from './index.module.scss'
 
 import SidebarLayout from 'src/components/SidebarLayout'
 import Header from 'src/components/SidebarLayout/Header'
@@ -21,7 +21,6 @@ import Img from 'src/components/layout/Img'
 import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { AppReduxState } from 'src/store'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import Modal from 'src/components/Modal'
@@ -52,9 +51,21 @@ const notificationStyles = {
   },
 }
 
+const Frame = styled.div`
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 auto;
+  max-width: 100%;
+`
+
 const desiredNetwork = getNetwork()
 
-const App = ({ children, classes, currentNetwork }) => {
+const useStyles = makeStyles(notificationStyles)
+
+const App: React.FC = ({ children }) => {
+  const classes = useStyles()
+
+  const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
 
@@ -89,43 +100,50 @@ const App = ({ children, classes, currentNetwork }) => {
     }
   }, [matchSafe, history])
 
-  const getSidebarItems = (): ListItemType[] => {
+  const sidebarItems = useMemo((): ListItemType[] => {
+    if (!matchSafeWithAddress) {
+      return []
+    }
+
     return [
       {
         label: 'ASSETS',
         icon: <ListIcon type="assets" />,
         selected: matchSafeWithAction?.params.safeAction === 'balances',
-        onItemClick: () => history.push(`${matchSafeWithAddress.url}/balances`),
+        href: `${matchSafeWithAddress.url}/balances`,
       },
       {
         label: 'TRANSACTIONS',
         icon: <ListIcon type="transactionsInactive" />,
         selected: matchSafeWithAction?.params.safeAction === 'transactions',
-        onItemClick: () => history.push(`${matchSafeWithAddress.url}/transactions`),
+        href: `${matchSafeWithAddress.url}/transactions`,
       },
       {
         label: 'AddressBook',
         icon: <ListIcon type="addressBook" />,
         selected: matchSafeWithAction?.params.safeAction === 'address-book',
-        onItemClick: () => history.push(`${matchSafeWithAddress.url}/address-book`),
+        href: `${matchSafeWithAddress.url}/address-book`,
       },
       {
         label: 'Apps',
         icon: <ListIcon type="apps" />,
         selected: matchSafeWithAction?.params.safeAction === 'apps',
-        onItemClick: () => history.push(`${matchSafeWithAddress.url}/apps`),
+        href: `${matchSafeWithAddress.url}/apps`,
       },
       {
         label: 'Settings',
         icon: <ListIcon type="settings" />,
         selected: matchSafeWithAction?.params.safeAction === 'settings',
-        onItemClick: () => history.push(`${matchSafeWithAddress.url}/settings`),
+        href: `${matchSafeWithAddress.url}/settings`,
       },
     ]
-  }
+  }, [matchSafeWithAction, matchSafeWithAddress])
+
+  const onReceiveShow = () => onShow('Receive')
+  const onReceiveHide = () => onHide('Receive')
 
   return (
-    <div className={styles.frame}>
+    <Frame>
       <Backdrop isOpen={isWrongNetwork} />
       <SnackbarProvider
         anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
@@ -150,13 +168,13 @@ const App = ({ children, classes, currentNetwork }) => {
             topbar={<Header />}
             sidebar={
               <Sidebar
-                items={matchSafe !== null ? getSidebarItems() : []}
+                items={matchSafe !== null ? sidebarItems : []}
                 safeAddress={safeAddress}
                 safeName={safeName}
                 balance={balance}
                 granted={granted}
                 onToggleSafeList={toggleSidebar}
-                onReceiveClick={onShow('Receive')}
+                onReceiveClick={onReceiveShow}
                 onNewTransactionClick={() => showSendFunds('')}
               />
             }
@@ -172,32 +190,22 @@ const App = ({ children, classes, currentNetwork }) => {
 
           <Modal
             description="Receive Tokens Form"
-            handleClose={onHide('Receive')}
+            handleClose={onReceiveHide}
             open={safeActionsState.showReceive as boolean}
-            paperClassName={classes.receiveModal}
             title="Receive Tokens"
           >
-            <Receive onClose={onHide('Receive')} />
+            <Receive onClose={onReceiveHide} />
           </Modal>
         </>
       </SnackbarProvider>
       <CookiesBanner />
-    </div>
+    </Frame>
   )
 }
 
-const WrapperApp = withStyles(notificationStyles)(
-  connect(
-    (state: AppReduxState) => ({
-      currentNetwork: networkSelector(state),
-    }),
-    null,
-  )(App),
-)
-
 const WrapperAppWithSidebar: React.FC = ({ children }) => (
   <SafeListSidebarProvider>
-    <WrapperApp>{children}</WrapperApp>
+    <App>{children}</App>
   </SafeListSidebarProvider>
 )
 

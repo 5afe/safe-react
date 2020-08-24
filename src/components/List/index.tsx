@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { Link } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 import ListMui from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
@@ -7,7 +8,7 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
-const StyledListItem = styled(ListItem)`
+const StyledListItem = styled<any>(ListItem)`
   &.MuiButtonBase-root.MuiListItem-root {
     margin: 4px 0;
   }
@@ -29,7 +30,7 @@ const StyledListItem = styled(ListItem)`
   }
 `
 
-const StyledListSubItem = styled(ListItem)`
+const StyledListSubItem = styled<any>(ListItem)`
   &.MuiButtonBase-root.MuiListItem-root {
     color: ${({ theme }) => theme.colors.text};
   }
@@ -76,16 +77,16 @@ const useStyles = makeStyles((theme: Theme) =>
 
 export type ListSubItemType = {
   label: string
+  href: string
   icon?: React.ReactNode
   selected?: boolean
-  onItemClick: () => void
 }
 
 export type ListItemType = {
   label: string
+  href: string
   icon?: React.ReactNode
   selected?: boolean
-  onItemClick: () => void
   subItems?: ListSubItemType[]
 }
 
@@ -103,7 +104,6 @@ const List = ({ items }: Props): React.ReactElement => {
       cp[item.label] = cp[item.label] ? false : true
       setGroupCollapseStatus(cp)
     }
-    item.onItemClick()
   }
 
   const isSubItemSelected = (item: ListItemType): boolean => {
@@ -120,6 +120,8 @@ const List = ({ items }: Props): React.ReactElement => {
     return (
       <ListItemAux
         button
+        component={Link}
+        to={item.href}
         key={item.label}
         onClick={onClick}
         selected={item.selected || isSubItemSelected(item as ListItemType)}
