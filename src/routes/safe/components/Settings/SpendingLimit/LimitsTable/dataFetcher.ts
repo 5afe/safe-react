@@ -3,7 +3,7 @@ import { List } from 'immutable'
 
 import { TableColumn } from 'src/components/Table/types.d'
 
-import { SpendingLimitRow } from './utils'
+import { SpendingLimitRow } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 export const SPENDING_LIMIT_TABLE_BENEFICIARY_ID = 'beneficiary'
 export const SPENDING_LIMIT_TABLE_SPENT_ID = 'spent'

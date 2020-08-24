@@ -8,6 +8,11 @@ import styled from 'styled-components'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
+import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
+import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
+import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import {
   generateColumns,
@@ -15,13 +20,7 @@ import {
   SPENDING_LIMIT_TABLE_RESET_TIME_ID,
   SPENDING_LIMIT_TABLE_SPENT_ID,
   SpendingLimitTable,
-} from 'src/routes/safe/components/Settings/SpendingLimit/dataFetcher'
-import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
-import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
-import { grantedSelector } from 'src/routes/safe/container/selector'
-
+} from './dataFetcher'
 import SpentVsAmount from './SpentVsAmount'
 
 const TableActionButton = styled(Button)`
