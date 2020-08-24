@@ -1,10 +1,10 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
 
+import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
-import SpendingLimitModule from 'src/utils/AllowanceModule.json'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 export const KEYCODES = {
