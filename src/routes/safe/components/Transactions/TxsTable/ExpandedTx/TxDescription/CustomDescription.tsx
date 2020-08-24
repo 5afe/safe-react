@@ -59,7 +59,6 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
         <InlineText size="lg" strong>
           {param.name}({param.type}):
         </InlineText>
-
         <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}
