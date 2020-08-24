@@ -16,14 +16,14 @@ describe('Feature > Balances', () => {
   it('Updates token balances', async () => {
     // given
     const tokensAmount = '100'
-    const token =  makeToken({
-        address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
-        name: 'OmiseGo',
-        symbol: 'OMG',
-        decimals: 18,
-        logoUri:
-          'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
-      })
+    const token = makeToken({
+      address: '0x00Df91984582e6e96288307E9c2f20b38C8FeCE9',
+      name: 'OmiseGo',
+      symbol: 'OMG',
+      decimals: 18,
+      logoUri:
+        'https://github.com/TrustWallet/tokens/blob/master/images/0x6810e776880c02933d47db1b9fc05908e5386b96.png?raw=true',
+    })
     const balances = Map({
       [token.address]: tokensAmount,
     })
