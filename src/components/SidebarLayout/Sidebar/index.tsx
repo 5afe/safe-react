@@ -13,7 +13,7 @@ const HelpContainer = styled.div`
   height: 58px;
 `
 
-const StyledButtonLink = styled.a`
+const HelpCenterLink = styled.a`
   height: 40px;
   width: 176px;
   padding: 0 0 0 16px;
@@ -78,9 +78,9 @@ const Sidebar = ({
 
       <HelpContainer>
         <StyledDivider />
-        <StyledButtonLink href="https://help.gnosis-safe.io/en/" target="_blank">
+        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank">
           <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
-        </StyledButtonLink>
+        </HelpCenterLink>
       </HelpContainer>
     </>
   )
