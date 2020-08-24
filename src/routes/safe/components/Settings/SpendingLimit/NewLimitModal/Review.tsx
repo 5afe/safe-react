@@ -61,7 +61,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
       const currentDelegate = spendingLimits.find(
         ({ delegate, token }) =>
           delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
-          token.toLowerCase() === values.token.toLowerCase(),
+          token.toLowerCase() === (values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token.toLowerCase()),
       )
 
       // let the user know that is about to replace an existent allowance
