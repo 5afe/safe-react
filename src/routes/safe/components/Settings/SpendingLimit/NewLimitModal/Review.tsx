@@ -58,7 +58,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
   React.useEffect(() => {
     const checkExistence = async () => {
       // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
-      const currentDelegate = spendingLimits.find(
+      const currentDelegate = spendingLimits?.find(
         ({ delegate, token }) =>
           delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
           token.toLowerCase() === (values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token.toLowerCase()),
@@ -97,7 +97,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
     //                                  ^ - shall we rely on this or query the list of delegates once again?
     const isDelegateAlreadyAdded =
-      spendingLimits.some(({ delegate }) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
+      spendingLimits?.some(({ delegate }) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
 
     // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
     if (!isDelegateAlreadyAdded && values?.beneficiary) {
