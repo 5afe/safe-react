@@ -344,7 +344,7 @@ export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRe
     dispatch(
       addOrUpdateTransactions({
         safeAddress,
-        transactions: transactions.withMutations((list) =>
+        transactions: transactions.withMutations((list: any[]) =>
           list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
         ),
       }),

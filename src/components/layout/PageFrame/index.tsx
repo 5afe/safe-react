@@ -1,7 +1,7 @@
-import { withStyles } from '@material-ui/core/styles'
+import { withStyles, createStyles, makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
-import * as React from 'react'
-import { connect } from 'react-redux'
+import React from 'react'
+import { connect, useSelector } from 'react-redux'
 
 import AlertIcon from './assets/alert.svg'
 import CheckIcon from './assets/check.svg'
@@ -21,24 +21,28 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { AppReduxState } from 'src/store'
 
-const notificationStyles = {
-  success: {
-    background: '#fff',
-  },
-  error: {
-    background: '#ffe6ea',
-  },
-  warning: {
-    background: '#fff3e2',
-  },
-  info: {
-    background: '#fff',
-  },
-}
+const useNotificationStyles = makeStyles(
+  createStyles({
+    success: {
+      background: '#fff',
+    },
+    error: {
+      background: '#ffe6ea',
+    },
+    warning: {
+      background: '#fff3e2',
+    },
+    info: {
+      background: '#fff',
+    },
+  }),
+)
 
 const desiredNetwork = getNetwork()
 
-const PageFrame = ({ children, classes, currentNetwork }) => {
+const PageFrame: React.FC = ({ children }) => {
+  const classes = useNotificationStyles()
+  const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
 
   return (
@@ -74,11 +78,4 @@ const PageFrame = ({ children, classes, currentNetwork }) => {
   )
 }
 
-export default withStyles(notificationStyles)(
-  connect(
-    (state: AppReduxState) => ({
-      currentNetwork: networkSelector(state),
-    }),
-    null,
-  )(PageFrame),
-)
+export default PageFrame

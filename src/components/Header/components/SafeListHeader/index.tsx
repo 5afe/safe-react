@@ -2,15 +2,14 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import ExpandLessIcon from '@material-ui/icons/ExpandLess'
 import ExpandMoreIcon from '@material-ui/icons/ExpandMore'
-import * as React from 'react'
-import { connect } from 'react-redux'
+import React, { useContext } from 'react'
+import { useSelector } from 'react-redux'
 
 import { SidebarContext } from 'src/components/Sidebar'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { safesCountSelector } from 'src/logic/safe/store/selectors'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
-import { AppReduxState } from 'src/store'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -36,10 +35,9 @@ const useStyles = makeStyles({
   },
 })
 
-const { useContext } = React
-
-const SafeListHeader = ({ safesCount }) => {
+const SafeListHeader = (): React.ReactElement => {
   const classes = useStyles()
+  const safesCount = useSelector(safesCountSelector)
   const { isOpen, toggleSidebar } = useContext(SidebarContext)
 
   return (
@@ -60,4 +58,4 @@ const SafeListHeader = ({ safesCount }) => {
   )
 }
 
-export default connect((state: AppReduxState) => ({ safesCount: safesCountSelector(state) }), null)(SafeListHeader)
+export default SafeListHeader
