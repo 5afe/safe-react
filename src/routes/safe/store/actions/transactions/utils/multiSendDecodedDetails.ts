@@ -19,7 +19,8 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 export type MultiSendDetails = {
   operation: keyof typeof Operation
   to: string
-  data: DataDecoded | null
+  decodedData: DataDecoded | null
+  data: string | null
   value: number
 }
 
@@ -48,7 +49,8 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
         operation: decodedValue.operation,
         to: decodedValue.to,
         value: decodedValue.value,
-        data: decodedValue?.decodedData ?? null,
+        decodedData: decodedValue?.decodedData ?? null,
+        data: decodedValue?.data ?? null,
       }
     })
   }
