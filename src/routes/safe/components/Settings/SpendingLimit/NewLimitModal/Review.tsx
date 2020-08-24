@@ -110,7 +110,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
 
     // prepare the setAllowance tx
     const startTime = currentMinutes() - 30
-    transactions.push({
+    const setAllowanceTx = {
       to: SPENDING_LIMIT_MODULE_ADDRESS,
       value: 0,
       data: spendingLimitContract.methods
@@ -122,20 +122,37 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           values.withResetTime ? startTime : 0,
         )
         .encodeABI(),
-    })
+    }
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: MULTI_SEND_ADDRESS,
-        valueInWei: '0',
-        txData: getEncodedMultiSendCallData(transactions, getWeb3()),
-        notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-        operation: DELEGATE_CALL,
-      }),
-    )
+    // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
+    if (transactions.length === 0) {
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: SPENDING_LIMIT_MODULE_ADDRESS,
+          valueInWei: '0',
+          txData: setAllowanceTx.data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
+          enqueueSnackbar,
+          closeSnackbar,
+        }),
+      )
+    } else {
+      transactions.push(setAllowanceTx)
+
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: MULTI_SEND_ADDRESS,
+          valueInWei: '0',
+          txData: getEncodedMultiSendCallData(transactions, getWeb3()),
+          notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
+          enqueueSnackbar,
+          closeSnackbar,
+          operation: DELEGATE_CALL,
+        }),
+      )
+    }
   }
 
   const resetTimeLabel = React.useMemo(
