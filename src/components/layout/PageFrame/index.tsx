@@ -1,7 +1,7 @@
-import { withStyles, createStyles, makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import React from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 import AlertIcon from './assets/alert.svg'
 import CheckIcon from './assets/check.svg'
@@ -19,7 +19,6 @@ import Img from 'src/components/layout/Img'
 import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { AppReduxState } from 'src/store'
 
 const useNotificationStyles = makeStyles(
   createStyles({
