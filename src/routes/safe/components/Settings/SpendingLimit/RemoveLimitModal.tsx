@@ -59,7 +59,7 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
           to: SPENDING_LIMIT_MODULE_ADDRESS,
           valueInWei: '0',
           txData,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
           enqueueSnackbar,
           closeSnackbar,
         }),

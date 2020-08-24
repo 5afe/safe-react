@@ -99,6 +99,28 @@ const settingsChangeTxNotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.SETTINGS_CHANGE_FAILED_MSG,
 }
 
+const newSpendingLimitTxNotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_NEW_SPENDING_LIMIT_MSG,
+  pendingExecution: NOTIFICATIONS.NEW_SPENDING_LIMIT_PENDING_MSG,
+  afterRejection: NOTIFICATIONS.NEW_SPENDING_LIMIT_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.NEW_SPENDING_LIMIT_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
+  afterExecutionError: NOTIFICATIONS.NEW_SPENDING_LIMIT_FAILED_MSG,
+}
+
+const removeSpendingLimitTxNotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_REMOVE_SPENDING_LIMIT_MSG,
+  pendingExecution: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_PENDING_MSG,
+  afterRejection: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
+  afterExecutionError: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_FAILED_MSG,
+}
+
 const defaultNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
   pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
@@ -164,6 +186,14 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
     }
     case TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX: {
       notificationsQueue = settingsChangeTxNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX: {
+      notificationsQueue = newSpendingLimitTxNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX: {
+      notificationsQueue = removeSpendingLimitTxNotificationsQueue
       break
     }
     case TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX: {

@@ -6,13 +6,20 @@ import { useDispatch, useSelector } from 'react-redux'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt, getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import {
+  getGnosisSafeInstanceAt,
+  getSpendingLimitContract,
+  MULTI_SEND_ADDRESS,
+} from 'src/logic/contracts/safeContracts'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { getEncodedMultiSendCallData } from 'src/logic/safe/utils/upgradeSafe'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import sendTransactions from 'src/routes/safe/components/Apps/sendTransactions'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
@@ -117,16 +124,18 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
         .encodeABI(),
     })
 
-    await sendTransactions(
-      dispatch,
-      safeAddress,
-      transactions,
-      enqueueSnackbar,
-      closeSnackbar,
-      JSON.stringify({ name: 'Spending Limit', message: 'New Allowance' }),
+    dispatch(
+      createTransaction({
+        safeAddress,
+        to: MULTI_SEND_ADDRESS,
+        valueInWei: '0',
+        txData: getEncodedMultiSendCallData(transactions, getWeb3()),
+        notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
+        enqueueSnackbar,
+        closeSnackbar,
+        operation: DELEGATE_CALL,
+      }),
     )
-      .then(onClose)
-      .catch(console.error)
   }
 
   const resetTimeLabel = React.useMemo(

@@ -147,6 +147,56 @@ export const NOTIFICATIONS = {
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 
+  // Spending Limit
+  SIGN_NEW_SPENDING_LIMIT_MSG: {
+    message: 'Please sign the new Spending Limit tx',
+    options: { variant: INFO, persist: true },
+  },
+  NEW_SPENDING_LIMIT_PENDING_MSG: {
+    message: 'New Spending Limit tx pending',
+    options: { variant: INFO, persist: true },
+  },
+  NEW_SPENDING_LIMIT_REJECTED_MSG: {
+    message: 'New Spending Limit tx rejected',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_EXECUTED_MSG: {
+    message: 'New Spending Limit tx successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'New Spending Limit tx successfully created. More confirmations needed to execute',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_FAILED_MSG: {
+    message: 'New Spending Limit tx failed',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  SIGN_REMOVE_SPENDING_LIMIT_MSG: {
+    message: 'Please sign the remove Spending Limit tx',
+    options: { variant: INFO, persist: true },
+  },
+  REMOVE_SPENDING_LIMIT_PENDING_MSG: {
+    message: 'Remove Spending Limit tx pending',
+    options: { variant: INFO, persist: true },
+  },
+  REMOVE_SPENDING_LIMIT_REJECTED_MSG: {
+    message: 'Remove Spending Limit tx rejected',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_EXECUTED_MSG: {
+    message: 'Remove Spending Limit tx successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'Remove Spending Limit tx successfully created. More confirmations needed to execute',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_FAILED_MSG: {
+    message: 'Remove Spending Limit tx failed',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+
   // Network
   RINKEBY_VERSION_MSG: {
     message: "Rinkeby Version: Don't send Mainnet assets to this Safe",
