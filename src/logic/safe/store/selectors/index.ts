@@ -36,7 +36,7 @@ const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELL
 
 const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
-export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
+export const safeParamAddressFromStateSelector = (state: AppReduxState): string | undefined => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
     path: `${SAFELIST_ADDRESS}/:safeAddress`,
   })
@@ -45,7 +45,7 @@ export const safeParamAddressFromStateSelector = (state: AppReduxState): string 
     return checksumAddress(match.params.safeAddress)
   }
 
-  return null
+  return undefined
 }
 
 export const safeParamAddressSelector = (
