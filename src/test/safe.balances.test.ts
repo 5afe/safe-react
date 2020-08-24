@@ -3,8 +3,8 @@ import { aNewStore } from 'src/store'
 import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
 import '@testing-library/jest-dom/extend-expect'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import { makeToken } from '../logic/tokens/store/model/token'
-import { SAFE_REDUCER_ID } from '../logic/safe/store/reducer/safe'
+import { makeToken } from 'src/logic/tokens/store/model/token'
+import { safesMapSelector } from 'src/logic/safe/store/selectors'
 
 describe('Feature > Balances', () => {
   let store
@@ -27,31 +27,33 @@ describe('Feature > Balances', () => {
     const balances = Map({
       [token.address]: tokensAmount,
     })
-    const resultExpected = '100'
+    const expectedResult = '100'
 
     // when
     store.dispatch(updateActiveTokens(safeAddress, Set([token.address])))
     store.dispatch(updateSafe({ address: safeAddress, balances }))
 
-    const balanceResult = store.getState()[SAFE_REDUCER_ID].get('safes').get(safeAddress).get('balances').get(token.address)
-    const activeTokens = store.getState()[SAFE_REDUCER_ID].get('safes').get(safeAddress).get('activeTokens')
+    const safe = safesMapSelector(store.getState()).get(safeAddress)
+    const balanceResult = safe.get('balances').get(token.address)
+    const activeTokens = safe.get('activeTokens')
     const tokenIsActive = activeTokens.has(token.address)
 
     // then
-    expect(balanceResult).toBe(resultExpected)
+    expect(balanceResult).toBe(expectedResult)
     expect(tokenIsActive).toBe(true)
   })
 
   it('Updates ether balance', async () => {
     // given
     const etherAmount = '1'
-    const resultExpected = '1'
+    const expectedResult = '1'
 
     // when
     store.dispatch(updateSafe({ address: safeAddress, ethBalance: etherAmount }))
-    const balanceResult = store.getState()[SAFE_REDUCER_ID].get('safes').get(safeAddress).get('ethBalance')
+    const safe = safesMapSelector(store.getState()).get(safeAddress)
+    const balanceResult = safe.get('ethBalance')
 
     // then
-    expect(balanceResult).toBe(resultExpected)
+    expect(balanceResult).toBe(expectedResult)
   })
 })
