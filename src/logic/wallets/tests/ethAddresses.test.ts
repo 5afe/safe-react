@@ -60,37 +60,37 @@ describe('shortVersionOf', () => {
     // given
     const safeAddress = null
     const cut = 5
-    const resultExpected = 'Unknown'
+    const expectedResult = 'Unknown'
 
     // when
     const result = shortVersionOf(safeAddress, cut)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given 0x344B941b1aAE2e4Be73987212FC4741687Bf0503 and a cut = 5, returns 0x344...f0503', () => {
     // given
     const safeAddress = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
     const cut = 5
-    const resultExpected = `0x344...f0503`
+    const expectedResult = `0x344...f0503`
 
     // when
     const result = shortVersionOf(safeAddress, cut)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a cut value bigger than the address length, returns the same address', () => {
     // given
     const safeAddress = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
     const cut = safeAddress.length
-    const resultExpected = safeAddress
+    const expectedResult = safeAddress
 
     // when
     const result = shortVersionOf(safeAddress, cut)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
 })
 
@@ -99,52 +99,52 @@ describe('isUserAnOwner', () => {
     // given
     const userAddress = 'address1'
     const safeInstance = null
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given no userAccount, returns false ', () => {
     // given
     const userAddress = null
     const owners = List([makeOwner({ address: userAddress })])
     const safeInstance = makeSafe({ owners })
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a safe without owners, returns false ', () => {
     // given
     const userAddress = 'address1'
     const owners = null
     const safeInstance = makeSafe({ owners })
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a safe with 1 owner, and an userAddress equals to that owner, returns true ', () => {
     // given
     const userAddress = 'address1'
     const owners = List([makeOwner({ address: userAddress })])
     const safeInstance = makeSafe({ owners })
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a safe with 1 owner, and an userAddress different to that owner, returns true ', () => {
     // given
@@ -152,13 +152,13 @@ describe('isUserAnOwner', () => {
     const userAddress2 = 'address2'
     const owners = List([makeOwner({ address: userAddress })])
     const safeInstance = makeSafe({ owners })
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isUserAnOwner(safeInstance, userAddress2)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
 })
 
@@ -172,13 +172,13 @@ describe('isUserAnOwnerOfAnySafe', () => {
     const safeInstance = makeSafe({ owners: owners1 })
     const safeInstance2 = makeSafe({ owners: owners2 })
     const safesList = List([safeInstance, safeInstance2])
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isUserAnOwnerOfAnySafe(safesList, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a list of safes, none of them has an owner equal to the userAddress, returns false', () => {
     // given
@@ -190,13 +190,13 @@ describe('isUserAnOwnerOfAnySafe', () => {
     const safeInstance = makeSafe({ owners: owners1 })
     const safeInstance2 = makeSafe({ owners: owners2 })
     const safesList = List([safeInstance, safeInstance2])
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isUserAnOwnerOfAnySafe(safesList, userAddress)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
 })
 
@@ -204,78 +204,78 @@ describe('isValidEnsName', () => {
   it('Given no ens name, returns false', () => {
     // given
     const ensName = null
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
     // given
     const ensName = 'test'
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
     // given
     const ensName = 'test.et12312'
-    const resultExpected = false
+    const expectedResult = false
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name in the format [value].eth, returns true', () => {
     // given
     const ensName = 'test.eth'
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name in the format [value].test, returns true', () => {
     // given
     const ensName = 'test.test'
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name in the format [value].xyz, returns true', () => {
     // given
     const ensName = 'test.xyz'
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a ens name in the format [value].luxe, returns true', () => {
     // given
     const ensName = 'test.luxe'
-    const resultExpected = true
+    const expectedResult = true
 
     // when
     const result = isValidEnsName(ensName)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
 })

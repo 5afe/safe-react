@@ -63,19 +63,19 @@ describe('getNewTxNonce', () => {
     // given
     const safeInstance = getMockedSafeInstance({})
     const lastTx = getMockedTxServiceModel({ nonce: 1 })
-    const resultExpected = '2'
+    const expectedResult = '2'
 
     // when
     const result = await getNewTxNonce(null, lastTx, safeInstance)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
   it('Given a safe with the last nonce 0 and no lastTransaction, should call safeInstance nonce method and return 0',  async () => {
     // given
     const safeNonce = '0'
     const safeInstance = getMockedSafeInstance({ nonce: safeNonce})
-    const resultExpected = '0'
+    const expectedResult = '0'
     const mockFnCall = jest.fn().mockImplementation(() => safeNonce)
     const mockFnNonce = jest.fn().mockImplementation(() => ({call: mockFnCall}))
 
@@ -85,7 +85,7 @@ describe('getNewTxNonce', () => {
     const result = await getNewTxNonce(null, null, safeInstance)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
     expect(mockFnNonce).toHaveBeenCalled()
     expect(mockFnCall).toHaveBeenCalled()
     mockFnNonce.mockRestore();
@@ -94,14 +94,14 @@ describe('getNewTxNonce', () => {
   it('Given a Safe and a last transaction, should return the lastTransactionNonce + 1',  async () => {
     // given
     const safeInstance = getMockedSafeInstance({ })
-    const resultExpected = '11'
+    const expectedResult = '11'
     const lastTx = getMockedTxServiceModel({ nonce: 10 })
 
     // when
     const result = await getNewTxNonce(null, lastTx, safeInstance)
 
     // then
-    expect(result).toBe(resultExpected)
+    expect(result).toBe(expectedResult)
   })
 })
 

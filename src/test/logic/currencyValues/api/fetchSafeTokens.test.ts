@@ -16,7 +16,7 @@ describe('fetchTokenCurrenciesBalances', () => {
 
   it('Given a safeAddress, calls the api and gets all the balances token for that address',  async () => {
     // given
-    const resultExpected = [{
+    const expectedResult = [{
       balance: "849890000000000000",
       balanceUsd: "337.2449",
       token: null,
@@ -32,13 +32,13 @@ describe('fetchTokenCurrenciesBalances', () => {
     const apiUrl = getTxServiceHost()
 
     // @ts-ignore
-    axios.get.mockImplementationOnce(() => Promise.resolve(resultExpected))
+    axios.get.mockImplementationOnce(() => Promise.resolve(expectedResult))
 
     // when
     const result = await fetchTokenCurrenciesBalances(safeAddress)
 
     // then
-    expect(result).toStrictEqual(resultExpected)
+    expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
     expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/`, {"params": {"limit": 3000}})
   })

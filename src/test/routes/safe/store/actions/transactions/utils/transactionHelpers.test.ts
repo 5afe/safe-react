@@ -430,7 +430,7 @@ describe('getRefundParams', () => {
     const whole = feeString.slice(0, feeString.length - decimals) || '0'
     const fraction = feeString.slice(feeString.length - decimals)
 
-    const resultExpected = {
+    const expectedResult = {
       fee: `${whole}.${fraction}`,
       symbol: 'ETH',
     }
@@ -446,7 +446,7 @@ describe('getRefundParams', () => {
     const result = await getRefundParams(transaction, getTokenInfoMock)
 
     // then
-    expect(result).toStrictEqual(resultExpected)
+    expect(result).toStrictEqual(expectedResult)
     expect(getTokenInfoMock).toBeCalled()
   })
   it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 100 and 1 decimal, returns 2000.0',   async () => {
@@ -457,7 +457,7 @@ describe('getRefundParams', () => {
     const decimals = 1
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice, baseGas,safeTxGas})
 
-    const resultExpected = {
+    const expectedResult = {
       fee: `2000.0`,
       symbol: 'ETH',
     }
@@ -473,7 +473,7 @@ describe('getRefundParams', () => {
     const result = await getRefundParams(transaction, getTokenInfoMock)
 
     // then
-    expect(result).toStrictEqual(resultExpected)
+    expect(result).toStrictEqual(expectedResult)
     expect(getTokenInfoMock).toBeCalled()
   })
   it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 400 and 5 decimals, returns 0.50000',   async () => {
@@ -484,7 +484,7 @@ describe('getRefundParams', () => {
     const decimals = 5
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice, baseGas,safeTxGas})
 
-    const resultExpected = {
+    const expectedResult = {
       fee: `0.50000`,
       symbol: 'ETH',
     }
@@ -500,7 +500,7 @@ describe('getRefundParams', () => {
     const result = await getRefundParams(transaction, getTokenInfoMock)
 
     // then
-    expect(result).toStrictEqual(resultExpected)
+    expect(result).toStrictEqual(expectedResult)
     expect(getTokenInfoMock).toBeCalled()
   })
 })
