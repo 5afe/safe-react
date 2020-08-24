@@ -14,16 +14,17 @@ const HelpContainer = styled.div`
 `
 
 const HelpCenterLink = styled.a`
-  height: 40px;
-  width: 176px;
-  padding: 0 0 0 16px;
-  margin: 12px 0;
+  height: 30px;
+  width: 166px;
+  padding: 10px 0 0 16px;
+  margin: 10px 0px;
   text-decoration: none;
+  display: block;
 
   &:hover {
     border-radius: 8px;
     background-color: ${({ theme }) => theme.colors.background};
-    box-sizing: border-box;
+    box-sizing: content-box;
   }
   p {
     font-family: ${({ theme }) => theme.fonts.fontFamily};
@@ -33,7 +34,7 @@ const HelpCenterLink = styled.a`
     letter-spacing: 1px;
     color: ${({ theme }) => theme.colors.placeHolder};
     text-transform: uppercase;
-    padding: 0 0 0 8px;
+    padding: 0 0 0 4px;
   }
 `
 type Props = {
@@ -78,7 +79,7 @@ const Sidebar = ({
 
       <HelpContainer>
         <StyledDivider />
-        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank">
+        <HelpCenterLink href="https://help.gnosis-safe.io/en/" target="_blank" title="Help Center of Gnosis Safe">
           <IconText text="HELP CENTER" iconSize="md" textSize="md" color="placeHolder" iconType="question" />
         </HelpCenterLink>
       </HelpContainer>
