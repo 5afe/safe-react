@@ -14,7 +14,7 @@ interface AddressInfoProps {
   title?: string
 }
 
-const AddressInfo = ({ address, cut, title }: AddressInfoProps): React.ReactElement => {
+const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): React.ReactElement => {
   const addressBook = useSelector(getAddressBook)
 
   return (

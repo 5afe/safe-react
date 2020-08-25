@@ -11,7 +11,6 @@ import Table from 'src/components/Table'
 import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import {
@@ -43,9 +42,6 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const { width } = useWindowDimensions()
-  const cut = React.useMemo(() => (width <= 1024 ? 4 : 8), [width])
-
   const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>(null)
 
   return (
@@ -75,9 +71,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
 
                   return (
                     <TableCell align={column.align} component="td" key={`${columnId}-${index}`}>
-                      {columnId === SPENDING_LIMIT_TABLE_BENEFICIARY_ID && (
-                        <AddressInfo address={rowElement} cut={cut} />
-                      )}
+                      {columnId === SPENDING_LIMIT_TABLE_BENEFICIARY_ID && <AddressInfo address={rowElement} />}
                       {columnId === SPENDING_LIMIT_TABLE_SPENT_ID && <SpentVsAmount {...rowElement} />}
                       {columnId === SPENDING_LIMIT_TABLE_RESET_TIME_ID && (
                         <Text size="lg">{rowElement.relativeTime}</Text>
