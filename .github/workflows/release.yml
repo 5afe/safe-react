@@ -44,20 +44,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12
-      - run: |
-          mkdir .yarncache
-          yarn install --frozen-lockfile --cache-folder ./.yarncache
-      - name: Remove and cache clean (Windows Only)
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          rm -Recurse -Force .yarncache
-          yarn cache clean
-      - name: Remove and cache clean
-        if: "!startsWith(matrix.os, 'windows')"
-        run: |
-          rm -rf .yarncache
-          yarn cache clean
+      - run: yarn install --frozen-lockfile --network-concurrency 1
       - name: Build/Release Desktop App
         env:
           # macOS notarization API key
