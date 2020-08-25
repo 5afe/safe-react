@@ -44,7 +44,7 @@ type AppsProps = {
 }
 
 const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
-  const { appList, loadingAppList, onAppToggle, onAppAdded } = useAppList()
+  const { appList, loadingAppList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
@@ -111,7 +111,7 @@ const Apps = ({ closeModal, openModal }: AppsProps): React.ReactElement => {
   return (
     <>
       <Menu>
-        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
+        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
       </Menu>
       {enabledApps.length ? (
         <LCL.Wrapper>
