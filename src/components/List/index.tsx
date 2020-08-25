@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
+
 import ListMui from '@material-ui/core/List'
-import ListItem from '@material-ui/core/ListItem'
+import ListItem, { ListItemProps } from '@material-ui/core/ListItem'
 import ListItemText from '@material-ui/core/ListItemText'
 import Collapse from '@material-ui/core/Collapse'
 import { FixedIcon } from '@gnosis.pm/safe-react-components'
 
-const StyledListItem = styled<any>(ListItem)`
+const StyledListItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
     margin: 4px 0;
   }
@@ -30,7 +31,7 @@ const StyledListItem = styled<any>(ListItem)`
   }
 `
 
-const StyledListSubItem = styled<any>(ListItem)`
+const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
     color: ${({ theme }) => theme.colors.text};
   }
@@ -75,19 +76,12 @@ const useStyles = makeStyles((theme: Theme) =>
   }),
 )
 
-export type ListSubItemType = {
-  label: string
-  href: string
-  icon?: React.ReactNode
-  selected?: boolean
-}
-
 export type ListItemType = {
   label: string
   href: string
   icon?: React.ReactNode
   selected?: boolean
-  subItems?: ListSubItemType[]
+  subItems?: ListItemType[]
 }
 
 type Props = {
@@ -98,8 +92,8 @@ const List = ({ items }: Props): React.ReactElement => {
   const classes = useStyles()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
-  const onItemClick = (item: ListItemType | ListSubItemType) => {
-    if ((item as ListItemType).subItems) {
+  const onItemClick = (item: ListItemType) => {
+    if (item.subItems) {
       const cp = { ...groupCollapseStatus }
       cp[item.label] = cp[item.label] ? false : true
       setGroupCollapseStatus(cp)
@@ -111,7 +105,7 @@ const List = ({ items }: Props): React.ReactElement => {
     return res !== undefined
   }
 
-  const getListItem = (item: ListItemType | ListSubItemType, isSubItem = true) => {
+  const getListItem = (item: ListItemType, isSubItem = true) => {
     const onClick = () => onItemClick(item)
 
     const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
@@ -124,13 +118,13 @@ const List = ({ items }: Props): React.ReactElement => {
         to={item.href}
         key={item.label}
         onClick={onClick}
-        selected={item.selected || isSubItemSelected(item as ListItemType)}
+        selected={item.selected || isSubItemSelected(item)}
       >
         {item.icon && item.icon}
 
         <ListItemTextAux primary={item.label} />
 
-        {(item as ListItemType).subItems &&
+        {item.subItems &&
           (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
       </ListItemAux>
     )
@@ -150,20 +144,18 @@ const List = ({ items }: Props): React.ReactElement => {
 
   return (
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      {items.map((i) => {
-        return (
-          <div key={i.label}>
-            {getListItem(i, false)}
-            {i.subItems && (
-              <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
-                <ListMui component="div" disablePadding>
-                  {i.subItems.map((subItem) => getListItem(subItem))}
-                </ListMui>
-              </Collapse>
-            )}
-          </div>
-        )
-      })}
+      {items.map((i) => (
+        <div key={i.label}>
+          {getListItem(i, false)}
+          {i.subItems && (
+            <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
+              <ListMui component="div" disablePadding>
+                {i.subItems.map((subItem) => getListItem(subItem))}
+              </ListMui>
+            </Collapse>
+          )}
+        </div>
+      ))}
     </ListMui>
   )
 }
