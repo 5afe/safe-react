@@ -1,11 +1,8 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import Layout from '../components/Layout'
+import Layout from 'src/routes/load/components/Layout'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
-
-import actions from './actions'
-import selector from './selector'
 
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -15,16 +12,17 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage } from 'src/utils/storage'
-import { Dispatch } from 'redux'
-import { SafeOwner } from '../../../logic/safe/store/models/safe'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { addSafe } from 'src/logic/safe/store/actions/addSafe'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
   owners: List<SafeOwner>,
-  addSafe: Dispatch<any>,
+  addSafe: (safe: SafeRecordProps) => void,
 ): Promise<void> => {
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
@@ -37,20 +35,21 @@ export const loadSafe = async (
   await addSafe(safeProps)
 }
 
-interface LoadProps {
-  addSafe: Dispatch<any>
-  network: string
-  provider?: string
-  userAddress: string
-}
-
 export interface LoadFormValues {
   name: string
   address: string
   threshold: string
 }
 
-const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.ReactElement => {
+const Load = (): React.ReactElement => {
+  const dispatch = useDispatch()
+  const provider = useSelector(providerNameSelector)
+  const network = useSelector(networkSelector)
+  const userAddress = useSelector(userAccountSelector)
+
+  const addSafeHandler = (safe: SafeRecordProps) => {
+    dispatch(addSafe(safe))
+  }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
     // TODO: review this check. It doesn't seems to be necessary at this point
@@ -68,7 +67,7 @@ const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.Rea
       const ownerAddresses = await gnosisSafe.methods.getOwners().call()
       const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 
-      await loadSafe(safeName, safeAddress, owners, addSafe)
+      await loadSafe(safeName, safeAddress, owners, addSafeHandler)
 
       const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
       history.push(url)
@@ -79,9 +78,9 @@ const Load = ({ addSafe, network, provider, userAddress }: LoadProps): React.Rea
 
   return (
     <Page>
-      <Layout network={network} onLoadSafeSubmit={onLoadSafeSubmit} provider={provider} userAddress={userAddress} />
+      <Layout onLoadSafeSubmit={onLoadSafeSubmit} network={network} userAddress={userAddress} provider={provider} />
     </Page>
   )
 }
 
-export default connect(selector, actions)(Load)
+export default Load

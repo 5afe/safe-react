@@ -5,7 +5,10 @@ import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 
 import { safesListSelector } from 'src/logic/safe/store/selectors'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
+
+import { Action, Dispatch } from 'redux'
+import { AppReduxState } from 'src/store'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
@@ -19,7 +22,7 @@ export const addSafe = createAction(ADD_SAFE, (safe) => ({
   safe,
 }))
 
-const saveSafe = (safe: any) => (dispatch, getState) => {
+const saveSafe = (safe: SafeRecordProps) => (dispatch: Dispatch, getState: () => AppReduxState): Action | void => {
   const state = getState()
   const safeList = safesListSelector(state)
 
