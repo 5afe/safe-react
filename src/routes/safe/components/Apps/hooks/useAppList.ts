@@ -5,9 +5,9 @@ import { SafeApp, StoredSafeApp } from '../types'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
-export type onAppToggleHandler = (appId: string, enabled: boolean) => Promise<void>
-export type onAppAddedHandler = (app: SafeApp) => void
-export type onAppRemovedHandler = (appId: string) => void
+type onAppToggleHandler = (appId: string, enabled: boolean) => Promise<void>
+type onAppAddedHandler = (app: SafeApp) => void
+type onAppRemovedHandler = (appId: string) => void
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -33,7 +33,7 @@ const useAppList = (): UseAppListReturnType => {
       staticAppsList.forEach((staticApp) => {
         const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
         if (!app) {
-          list.push(staticApp)
+          list.push({ ...staticApp, isDeletable: false })
         } else {
           app.isDeletable = false
         }
@@ -51,7 +51,7 @@ const useAppList = (): UseAppListReturnType => {
           }
 
           appInfo.disabled = Boolean(currentApp.disabled)
-          appInfo.isDeletable = currentApp.isDeletable === undefined ? true : currentApp.isDeletable
+          appInfo.isDeletable = Boolean(currentApp.isDeletable) === undefined ? true : currentApp.isDeletable
 
           apps.push(appInfo)
         } catch (error) {
