@@ -12,14 +12,14 @@ import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-import makeSafe from 'src/logic/safe/store/models/safe'
+import makeSafe, { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
 
-export const buildSafe = (storedSafe) => {
+export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
   const names = storedSafe.owners.map((owner) => owner.name)
   const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
@@ -29,7 +29,7 @@ export const buildSafe = (storedSafe) => {
   const blacklistedAssets = Set(storedSafe.blacklistedAssets)
   const balances = Map(storedSafe.balances)
 
-  const safe = {
+  return {
     ...storedSafe,
     owners,
     balances,
@@ -38,8 +38,6 @@ export const buildSafe = (storedSafe) => {
     activeAssets,
     blacklistedAssets,
   }
-
-  return safe
 }
 
 export default handleActions(

@@ -5,10 +5,11 @@ import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 
 import { safesListSelector } from 'src/logic/safe/store/selectors'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const ADD_SAFE = 'ADD_SAFE'
 
-export const buildOwnersFrom = (names, addresses) => {
+export const buildOwnersFrom = (names: string[], addresses: string[]): List<SafeOwner> => {
   const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
 
   return List(owners)
