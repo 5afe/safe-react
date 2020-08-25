@@ -23,7 +23,7 @@ const useStyles = makeStyles({
   },
 })
 
-const DefaultBadge = () => {
+const DefaultBadge = (): React.ReactElement => {
   const classes = useStyles()
 
   return (
