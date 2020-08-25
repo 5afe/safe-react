@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useMemo } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { SnackbarProvider } from 'notistack'
 import { useSelector } from 'react-redux'
@@ -33,8 +33,7 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
-import { ListItemType } from '../List'
-import ListIcon from '../List/ListIcon'
+import { useSidebarItems } from '../SidebarLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
   success: {
@@ -64,33 +63,23 @@ const useStyles = makeStyles(notificationStyles)
 
 const App: React.FC = ({ children }) => {
   const classes = useStyles()
-
   const currentNetwork = useSelector(networkSelector)
   const isWrongNetwork = currentNetwork !== ETHEREUM_NETWORK.UNKNOWN && currentNetwork !== desiredNetwork
   const { toggleSidebar } = useContext(SafeListSidebarContext)
-
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
-
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const matchSafeWithAction = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction` }) as {
-    url: string
-    params: Record<string, string>
-  }
   const history = useHistory()
-
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
-
+  const sidebarItems = useSidebarItems()
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
   const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
-
   const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
 
   useEffect(() => {
@@ -99,45 +88,6 @@ const App: React.FC = ({ children }) => {
       return
     }
   }, [matchSafe, history])
-
-  const sidebarItems = useMemo((): ListItemType[] => {
-    if (!matchSafeWithAddress) {
-      return []
-    }
-
-    return [
-      {
-        label: 'ASSETS',
-        icon: <ListIcon type="assets" />,
-        selected: matchSafeWithAction?.params.safeAction === 'balances',
-        href: `${matchSafeWithAddress.url}/balances`,
-      },
-      {
-        label: 'TRANSACTIONS',
-        icon: <ListIcon type="transactionsInactive" />,
-        selected: matchSafeWithAction?.params.safeAction === 'transactions',
-        href: `${matchSafeWithAddress.url}/transactions`,
-      },
-      {
-        label: 'AddressBook',
-        icon: <ListIcon type="addressBook" />,
-        selected: matchSafeWithAction?.params.safeAction === 'address-book',
-        href: `${matchSafeWithAddress.url}/address-book`,
-      },
-      {
-        label: 'Apps',
-        icon: <ListIcon type="apps" />,
-        selected: matchSafeWithAction?.params.safeAction === 'apps',
-        href: `${matchSafeWithAddress.url}/apps`,
-      },
-      {
-        label: 'Settings',
-        icon: <ListIcon type="settings" />,
-        selected: matchSafeWithAction?.params.safeAction === 'settings',
-        href: `${matchSafeWithAddress.url}/settings`,
-      },
-    ]
-  }, [matchSafeWithAction, matchSafeWithAddress])
 
   const onReceiveShow = () => onShow('Receive')
   const onReceiveHide = () => onHide('Receive')
@@ -168,7 +118,7 @@ const App: React.FC = ({ children }) => {
             topbar={<Header />}
             sidebar={
               <Sidebar
-                items={matchSafe !== null ? sidebarItems : []}
+                items={sidebarItems}
                 safeAddress={safeAddress}
                 safeName={safeName}
                 balance={balance}
