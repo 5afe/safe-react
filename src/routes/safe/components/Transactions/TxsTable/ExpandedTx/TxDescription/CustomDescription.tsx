@@ -1,7 +1,11 @@
 import { IconText, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import NewSpendingLimitDetails from 'src/routes/safe/components/Settings/SpendingLimit/txsDetails/NewSpendingLimitDetails'
+import Col from 'src/components/layout/Col'
+import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
+import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -68,19 +72,46 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   </TxInfo>
 )
 
-const NewSpendingLimit = ({ data }: { data: DataDecoded }): React.ReactElement => {
+const SpendingLimitDetailsContainer = styled.div`
+  padding-left: 24px;
+`
+
+interface NewSpendingLimitDetailsProps {
+  data: DataDecoded
+}
+
+const NewSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
   const [beneficiary, tokenAddress, amount, resetTimeMin] = React.useMemo(
     () => data.parameters.map(({ value }) => value),
     [data.parameters],
   )
 
+  const resetTimeLabel = React.useMemo(
+    () => RESET_TIME_OPTIONS.find(({ value }) => +value === +resetTimeMin / 24 / 60)?.label ?? '',
+    [resetTimeMin],
+  )
+
+  const tokenInfo = useToken(tokenAddress)
+
   return (
-    <TxDetailsContent>
+    <>
       <TxInfo>
         <Bold>New Spending Limit:</Bold>
       </TxInfo>
-      <NewSpendingLimitDetails {...{ beneficiary, tokenAddress, amount, resetTimeMin }} />
-    </TxDetailsContent>
+      <SpendingLimitDetailsContainer>
+        <Col margin="lg">
+          <AddressInfo title="Beneficiary" address={beneficiary} />
+        </Col>
+        <Col margin="lg">
+          {tokenInfo && (
+            <TokenInfo amount={fromTokenUnit(amount, tokenInfo.decimals)} title="Amount" token={tokenInfo} />
+          )}
+        </Col>
+        <Col margin="lg">
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+        </Col>
+      </SpendingLimitDetailsContainer>
+    </>
   )
 }
 
@@ -97,7 +128,9 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
     >
       {isNewSpendingLimit ? (
-        <NewSpendingLimit data={data} />
+        <TxDetailsContent>
+          <NewSpendingLimitDetails data={data} />
+        </TxDetailsContent>
       ) : (
         <TxDetailsContent>
           <TxInfo>
@@ -213,7 +246,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
   return isNewSpendingLimit ? (
-    <NewSpendingLimit data={txData} />
+    <NewSpendingLimitDetails data={txData} />
   ) : (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
