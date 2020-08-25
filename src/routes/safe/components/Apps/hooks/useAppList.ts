@@ -28,7 +28,10 @@ const useAppList = (): UseAppListReturnType => {
       // * third-party apps added by the user
       // * disabled status for both static and third-party apps
       const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list: (StoredSafeApp & { isDeletable?: boolean })[] = [...persistedAppList]
+      const list: (StoredSafeApp & { isDeletable?: boolean })[] = persistedAppList.map((a) => ({
+        ...a,
+        isDeletable: true,
+      }))
 
       staticAppsList.forEach((staticApp) => {
         const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
@@ -39,7 +42,7 @@ const useAppList = (): UseAppListReturnType => {
         }
       })
 
-      const apps = []
+      let apps = []
       // using the appURL to recover app info
       for (let index = 0; index < list.length; index++) {
         try {
@@ -58,6 +61,7 @@ const useAppList = (): UseAppListReturnType => {
           console.error(error)
         }
       }
+      apps = apps.sort((a, b) => a.name.localeCompare(b.name))
 
       setAppList(apps)
       setLoadingAppList(false)
