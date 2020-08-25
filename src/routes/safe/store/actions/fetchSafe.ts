@@ -15,7 +15,6 @@ import { makeOwner } from 'src/routes/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ModulePair, SafeOwner } from 'src/routes/safe/store/models/safe'
 import { Dispatch } from 'redux'
-import addSafeModules from './addSafeModules'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 
 const buildOwnersFrom = (
@@ -105,23 +104,15 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
-  const localThreshold = localSafe ? localSafe.threshold : undefined
-  const localNonce = localSafe ? localSafe.nonce : undefined
 
   dispatch(
-    addSafeModules({
-      safeAddress,
-      modulesAddresses: buildModulesLinkedList(modules?.array, modules?.next),
+    updateSafe({
+      address: safeAddress,
+      modules: buildModulesLinkedList(modules?.array, modules?.next),
+      nonce: Number(remoteNonce),
+      threshold: Number(remoteThreshold),
     }),
   )
-
-  if (localNonce !== Number(remoteNonce)) {
-    dispatch(updateSafe({ address: safeAddress, nonce: Number(remoteNonce) }))
-  }
-
-  if (localThreshold !== Number(remoteThreshold)) {
-    dispatch(updateSafe({ address: safeAddress, threshold: Number(remoteThreshold) }))
-  }
 
   // If the remote owners does not contain a local address, we remove that local owner
   if (localOwners) {
