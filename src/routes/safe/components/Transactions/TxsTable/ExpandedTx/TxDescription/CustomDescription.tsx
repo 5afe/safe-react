@@ -27,7 +27,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
+import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
 
