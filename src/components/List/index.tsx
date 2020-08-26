@@ -114,6 +114,10 @@ const List = ({ items }: Props): React.ReactElement => {
     return (
       <ListItemAux
         button
+        // For some reason when wrapping a MUI component with styled() component prop gets lost in types
+        // But this prop is totally valid
+        // eslint-disable-next-line
+        // @ts-ignore
         component={Link}
         to={item.href}
         key={item.label}
