@@ -14,6 +14,7 @@ export enum TransactionTypes {
   UPGRADE = 'upgrade',
   TOKEN = 'token',
   COLLECTIBLE = 'collectible',
+  MODULE = 'module',
 }
 export type TransactionTypeValues = typeof TransactionTypes[keyof typeof TransactionTypes]
 

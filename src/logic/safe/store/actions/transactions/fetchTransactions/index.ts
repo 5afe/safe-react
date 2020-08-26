@@ -6,10 +6,12 @@ import { backOff } from 'exponential-backoff'
 import { addIncomingTransactions } from '../../addIncomingTransactions'
 
 import { loadIncomingTransactions } from './loadIncomingTransactions'
+import { loadModuleTransactions } from './loadModuleTransactions'
 import { loadOutgoingTransactions } from './loadOutgoingTransactions'
 
 import { addOrUpdateCancellationTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
+import { addModuleTransactions } from 'src/logic/safe/store/actions/addModuleTransactions'
 import { AppReduxState } from 'src/store'
 
 const noFunc = () => {}
@@ -42,6 +44,12 @@ export default (safeAddress: string): ThunkAction<Promise<void>, AppReduxState, 
 
     if (incomingTransactions.get(safeAddress).size) {
       dispatch(addIncomingTransactions(incomingTransactions))
+    }
+
+    const moduleTransactions = await loadModuleTransactions(safeAddress)
+
+    if (moduleTransactions) {
+      dispatch(addModuleTransactions({ modules: moduleTransactions, safeAddress }))
     }
   } catch (error) {
     console.log('Error fetching transactions:', error)

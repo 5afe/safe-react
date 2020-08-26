@@ -32,6 +32,7 @@ const typeToLabel = {
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
   upgrade: 'Contract Upgrade',
+  module: 'Module transaction',
 }
 
 interface TxTypeProps {

@@ -2,17 +2,25 @@ import axios from 'axios'
 
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'
 import { buildIncomingTxServiceUrl } from 'src/logic/safe/transactions/incomingTxHistory'
+import { buildModuleTxServiceUrl } from 'src/logic/safe/transactions/moduleTxHistory'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { IncomingTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadIncomingTransactions'
 import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { ModuleTxServiceModel } from './loadModuleTransactions'
 
 const getServiceUrl = (txType: string, safeAddress: string): string => {
   return {
     [TransactionTypes.INCOMING]: buildIncomingTxServiceUrl,
     [TransactionTypes.OUTGOING]: buildTxServiceUrl,
+    [TransactionTypes.MODULE]: buildModuleTxServiceUrl,
   }[txType](safeAddress)
 }
 
+async function fetchTransactions(
+  txType: TransactionTypes.MODULE,
+  safeAddress: string,
+  eTag: string | null,
+): Promise<{ eTag: string | null; results: ModuleTxServiceModel[] }>
 async function fetchTransactions(
   txType: TransactionTypes.INCOMING,
   safeAddress: string,
@@ -24,10 +32,10 @@ async function fetchTransactions(
   eTag: string | null,
 ): Promise<{ eTag: string | null; results: TxServiceModel[] }>
 async function fetchTransactions(
-  txType: TransactionTypes.INCOMING | TransactionTypes.OUTGOING,
+  txType: TransactionTypes.MODULE | TransactionTypes.INCOMING | TransactionTypes.OUTGOING,
   safeAddress: string,
   eTag: string | null,
-): Promise<{ eTag: string; results: TxServiceModel[] | IncomingTxServiceModel[] }> {
+): Promise<{ eTag: string; results: ModuleTxServiceModel[] | TxServiceModel[] | IncomingTxServiceModel[] }> {
   try {
     const url = getServiceUrl(txType, safeAddress)
     const response = await axios.get(url, eTag ? { headers: { 'If-None-Match': eTag } } : undefined)

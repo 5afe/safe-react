@@ -38,6 +38,10 @@ import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/redu
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
+import moduleTransactions, {
+  MODULE_TRANSACTIONS_REDUCER_ID,
+  ModuleTransactionsState,
+} from 'src/logic/safe/store/reducer/moduleTransactions'
 
 export const history = createHashHistory()
 
@@ -65,6 +69,7 @@ const reducers = combineReducers({
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
   [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
+  [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
@@ -82,6 +87,7 @@ export type AppReduxState = CombinedState<{
   [TRANSACTIONS_REDUCER_ID]: Map<string, any>
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
