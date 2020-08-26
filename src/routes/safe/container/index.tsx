@@ -40,10 +40,6 @@ const Container = (): React.ReactElement => {
     return <NoSafe provider={provider} text="Safe not found" />
   }
 
-  const openGenericModal = (modalConfig) => {
-    setModal({ ...modalConfig, isOpen: true })
-  }
-
   const closeGenericModal = () => {
     if (modal.onClose) {
       modal.onClose()
