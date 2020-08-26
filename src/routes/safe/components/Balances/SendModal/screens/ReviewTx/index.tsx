@@ -98,18 +98,6 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
 
     if (isSpendingLimit) {
       const spendingLimit = getSpendingLimitContract()
-      const transferHash = await spendingLimit.methods
-        .generateTransferHash(
-          safeAddress,
-          txToken.address === ETH_ADDRESS ? ZERO_ADDRESS : txToken.address,
-          tx.recipientAddress,
-          toTokenUnit(tx.amount, txToken.decimals),
-          ZERO_ADDRESS,
-          0,
-          tx.tokenSpendingLimit.nonce,
-        )
-        .call()
-      const signature = await web3.eth.sign(transferHash, tx.tokenSpendingLimit.delegate)
       await spendingLimit.methods
         .executeAllowanceTransfer(
           safeAddress,
@@ -119,7 +107,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           ZERO_ADDRESS,
           0,
           tx.tokenSpendingLimit.delegate,
-          signature,
+          EMPTY_DATA,
         )
         .send({ from: tx.tokenSpendingLimit.delegate })
         .then(console.log)
