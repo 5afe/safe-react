@@ -1,6 +1,6 @@
-import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
-import { Transaction } from '@gnosis.pm/safe-apps-sdk'
 import React from 'react'
+import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
 
 import AddressInfo from 'src/components/AddressInfo'
@@ -13,8 +13,26 @@ import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { useDispatch } from 'react-redux'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
+
+const isTxValid = (t: Transaction): boolean => {
+  if (!['string', 'number'].includes(typeof t.value)) {
+    return false
+  }
+
+  if (typeof t.value === 'string' && !/^(0x)?[0-9a-f]+$/i.test(t.value)) {
+    return false
+  }
+
+  const isAddressValid = mustBeEthereumAddress(t.to) === undefined
+  return isAddressValid && t.data && typeof t.data === 'string'
+}
 
 const Wrapper = styled.div`
   margin-bottom: 15px;
@@ -44,33 +62,61 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
-const isTxValid = (t: Transaction): boolean => {
-  if (!['string', 'number'].includes(typeof t.value)) {
-    return false
-  }
-
-  if (typeof t.value === 'string' && !/^(0x)?[0-9a-f]+$/i.test(t.value)) {
-    return false
-  }
-
-  const isAddressValid = mustBeEthereumAddress(t.to) === undefined
-  return isAddressValid && t.data && typeof t.data === 'string'
+type OwnProps = {
+  isOpen: boolean
+  app: SafeApp
+  txs: Transaction[]
+  safeAddress: string
+  safeName: string
+  ethBalance: string
+  onCancel: () => void
+  onUserConfirm: (safeTxHash: string) => void
+  onClose: () => void
 }
 
-const confirmTransactions = (
-  safeAddress: string,
-  safeName: string,
-  ethBalance: string,
-  nameApp: string,
-  iconApp: string,
-  txs: Transaction[],
-  openModal: (modalInfo: OpenModalArgs) => void,
-  closeModal: () => void,
-  onConfirm: () => void,
-): void => {
-  const areTxsMalformed = txs.some((t) => !isTxValid(t))
+const ConfirmTransactionModal = ({
+  isOpen,
+  app,
+  txs,
+  safeAddress,
+  ethBalance,
+  safeName,
+  onCancel,
+  onUserConfirm,
+  onClose,
+}: OwnProps): React.ReactElement => {
+  const dispatch = useDispatch()
+  if (!isOpen) {
+    return null
+  }
 
-  const title = <ModalTitle iconUrl={iconApp} title={nameApp} />
+  const handleUserConfirmation = (safeTxHash: string): void => {
+    onUserConfirm(safeTxHash)
+    onClose()
+  }
+
+  const confirmTransactions = async () => {
+    const txData = encodeMultiSendCall(txs)
+
+    await dispatch(
+      createTransaction(
+        {
+          safeAddress,
+          to: MULTI_SEND_ADDRESS,
+          valueInWei: '0',
+          txData,
+          operation: DELEGATE_CALL,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          origin: app.id,
+          navigateToTransactionsTab: false,
+        },
+        handleUserConfirmation,
+      ),
+    )
+    onClose()
+  }
+
+  const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
   const body = areTxsMalformed ? (
     <>
@@ -111,22 +157,22 @@ const confirmTransactions = (
     </>
   )
 
-  const footer = (
-    <ModalFooterConfirmation
-      cancelText="Cancel"
-      handleCancel={closeModal}
-      handleOk={onConfirm}
-      okDisabled={areTxsMalformed}
-      okText="Submit"
+  return (
+    <GenericModal
+      title={<ModalTitle title={app.name} iconUrl={app.iconUrl} />}
+      body={body}
+      footer={
+        <ModalFooterConfirmation
+          cancelText="Cancel"
+          handleCancel={onCancel}
+          handleOk={confirmTransactions}
+          okDisabled={areTxsMalformed}
+          okText="Submit"
+        />
+      }
+      onClose={onClose}
     />
   )
-
-  openModal({
-    title,
-    body,
-    footer,
-    onClose: closeModal,
-  })
 }
 
-export default confirmTransactions
+export default ConfirmTransactionModal
