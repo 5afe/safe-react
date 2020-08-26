@@ -1,7 +1,7 @@
 import Modal from '@material-ui/core/Modal'
 import { makeStyles, createStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import * as React from 'react'
+import React from 'react'
 
 import { sm } from 'src/theme/variables'
 
