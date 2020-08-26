@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 
+import Header from './Header'
 import Footer from './Footer'
 
 type GridProps = {
@@ -58,18 +59,16 @@ export const FooterWrapper = styled.footer`
   margin: 0 16px;
 `
 
-type Props = {
-  topbar: React.ReactNode
-  sidebar: React.ReactNode
-  body: React.ReactNode
-}
+type Props = { sidebar: React.ReactNode }
 
-const Layout = ({ topbar, sidebar, body }: Props): React.ReactElement => (
+const Layout: React.FC<Props> = ({ sidebar, children }): React.ReactElement => (
   <Grid showSidebar={sidebar !== null}>
-    <GridTopbarWrapper>{topbar}</GridTopbarWrapper>
+    <GridTopbarWrapper>
+      <Header />
+    </GridTopbarWrapper>
     {sidebar ? <GridSidebarWrapper>{sidebar}</GridSidebarWrapper> : null}
     <GridBodyWrapper>
-      <BodyWrapper>{body}</BodyWrapper>
+      <BodyWrapper>{children}</BodyWrapper>
       <FooterWrapper>
         <Footer />
       </FooterWrapper>

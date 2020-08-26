@@ -1,8 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
+import { useSidebarItems } from './useSidebarItems'
 
-import List, { ListItemType } from 'src/components/List'
+import List from 'src/components/List'
 import WalletInfo from 'src/components/AppLayout/WalletInfo'
 
 const StyledDivider = styled(Divider)`
@@ -38,7 +39,6 @@ const HelpCenterLink = styled.a`
   }
 `
 type Props = {
-  items: ListItemType[]
   safeAddress: string | null
   safeName: string | null
   balance: string | null
@@ -49,7 +49,6 @@ type Props = {
 }
 
 const Sidebar = ({
-  items,
   balance,
   safeAddress,
   safeName,
@@ -58,6 +57,8 @@ const Sidebar = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const items = useSidebarItems()
+
   return (
     <>
       <WalletInfo

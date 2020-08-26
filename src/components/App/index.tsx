@@ -11,7 +11,6 @@ import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
 
 import AppLayout from 'src/components/AppLayout'
-import Header from 'src/components/AppLayout/Header'
 import Sidebar from 'src/components/AppLayout/Sidebar'
 import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
@@ -33,7 +32,6 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
-import { useSidebarItems } from '../AppLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
   success: {
@@ -74,7 +72,7 @@ const App: React.FC = ({ children }) => {
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
-  const sidebarItems = useSidebarItems()
+
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
@@ -115,10 +113,8 @@ const App: React.FC = ({ children }) => {
           <Notifier />
 
           <AppLayout
-            topbar={<Header />}
             sidebar={
               <Sidebar
-                items={sidebarItems}
                 safeAddress={safeAddress}
                 safeName={safeName}
                 balance={balance}
@@ -128,8 +124,9 @@ const App: React.FC = ({ children }) => {
                 onNewTransactionClick={() => showSendFunds('')}
               />
             }
-            body={children}
-          />
+          >
+            {children}
+          </AppLayout>
 
           <SendModal
             activeScreenType="chooseTxType"
