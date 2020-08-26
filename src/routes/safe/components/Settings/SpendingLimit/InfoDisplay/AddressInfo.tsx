@@ -3,8 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { getNetwork } from 'src/config'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 
 import DataDisplay from './DataDisplay'
 
@@ -15,13 +14,13 @@ interface AddressInfoProps {
 }
 
 const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): React.ReactElement => {
-  const addressBook = useSelector(getAddressBook)
+  const name = useSelector((state) => getNameFromAddressBook(state, address))
 
   return (
     <DataDisplay title={title}>
       <EthHashInfo
         hash={address}
-        name={addressBook ? getNameFromAdbk(addressBook, address) : ''}
+        name={name !== 'UNKNOWN' && name}
         showCopyBtn
         showEtherscanBtn
         showIdenticon
