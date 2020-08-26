@@ -14,7 +14,7 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/compon
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -46,11 +46,11 @@ const textFieldInputStyle = makeStyles(() => ({
 }))
 
 const filterAddressBookWithContractAddresses = async (
-  addressBook: List<AddressBookEntryRecord>,
-): Promise<List<AddressBookEntryRecord>> => {
+  addressBook: List<AddressBookEntry>,
+): Promise<List<AddressBookEntry>> => {
   const abFlags = await Promise.all(
     addressBook.map(
-      async ({ address }: AddressBookEntryRecord): Promise<boolean> => {
+      async ({ address }: AddressBookEntry): Promise<boolean> => {
         return (await mustBeEthereumContractAddress(address)) === undefined
       },
     ),

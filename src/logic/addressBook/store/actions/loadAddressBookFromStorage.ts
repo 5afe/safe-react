@@ -4,8 +4,10 @@ import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddress
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
 import { safesListSelector } from 'src/logic/safe/store/selectors'
+import { Dispatch } from 'redux'
+import { AppReduxState } from 'src/store'
 
-const loadAddressBookFromStorage = () => async (dispatch, getState) => {
+const loadAddressBookFromStorage = () => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   try {
     const state = getState()
     let storedAdBk = await getAddressBookFromStorage()

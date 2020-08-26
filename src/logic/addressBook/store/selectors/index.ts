@@ -2,12 +2,10 @@ import { AppReduxState } from 'src/store'
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
-import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
-import { AddressBookMap } from 'src/logic/addressBook/store/reducer/types/addressBook.d'
+import { ADDRESS_BOOK_REDUCER_ID, AddressBookState } from 'src/logic/addressBook/store/reducer/addressBook'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
-export const addressBookMapSelector = (state: AppReduxState): AddressBookMap =>
-  state[ADDRESS_BOOK_REDUCER_ID].get('addressBook')
+export const addressBookMapSelector = (state: AppReduxState): AddressBookState => state[ADDRESS_BOOK_REDUCER_ID]
 
 export const getAddressBook = createSelector(
   addressBookMapSelector,
