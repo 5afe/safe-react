@@ -3,7 +3,7 @@ import * as React from 'react'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import NetworkLabel from '../NetworkLabel'
-import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
+import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'

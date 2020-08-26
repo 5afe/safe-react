@@ -2,7 +2,7 @@ import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import ConnectButton from 'src/components/ConnectButton'
-import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
+import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'

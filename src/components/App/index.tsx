@@ -10,9 +10,9 @@ import CheckIcon from './assets/check.svg'
 import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
 
-import SidebarLayout from 'src/components/SidebarLayout'
-import Header from 'src/components/SidebarLayout/Header'
-import Sidebar from 'src/components/SidebarLayout/Sidebar'
+import AppLayout from 'src/components/AppLayout'
+import Header from 'src/components/AppLayout/Header'
+import Sidebar from 'src/components/AppLayout/Sidebar'
 import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
@@ -33,7 +33,7 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
-import { useSidebarItems } from '../SidebarLayout/Sidebar/useSidebarItems'
+import { useSidebarItems } from '../AppLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
   success: {
@@ -114,7 +114,7 @@ const App: React.FC = ({ children }) => {
         <>
           <Notifier />
 
-          <SidebarLayout
+          <AppLayout
             topbar={<Header />}
             sidebar={
               <Sidebar

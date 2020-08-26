@@ -4,7 +4,7 @@ import classNames from 'classnames'
 import * as React from 'react'
 import { EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
 
-import CircleDot from 'src/components/SidebarLayout/Header/components/CircleDot'
+import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'

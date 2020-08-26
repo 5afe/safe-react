@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Divider, IconText } from '@gnosis.pm/safe-react-components'
 
 import List, { ListItemType } from 'src/components/List'
-import WalletInfo from 'src/components/SidebarLayout/WalletInfo'
+import WalletInfo from 'src/components/AppLayout/WalletInfo'
 
 const StyledDivider = styled(Divider)`
   margin: 16px -8px 0;
