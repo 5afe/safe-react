@@ -71,11 +71,7 @@ const Container = (): React.ReactElement => {
           path={`${matchSafeWithAddress.path}/transactions`}
           render={() => wrapInSuspense(<TxsTable />, null)}
         />
-        <Route
-          exact
-          path={`${matchSafeWithAddress.path}/apps`}
-          render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
-        />
+        <Route exact path={`${matchSafeWithAddress.path}/apps`} render={() => wrapInSuspense(<Apps />, null)} />
         <Route exact path={`${matchSafeWithAddress.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
         <Route
           exact
