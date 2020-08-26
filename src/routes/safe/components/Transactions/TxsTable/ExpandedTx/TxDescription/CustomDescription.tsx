@@ -21,7 +21,7 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 
@@ -59,7 +59,6 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
         <InlineText size="lg" strong>
           {param.name}({param.type}):
         </InlineText>
-
         <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}

@@ -1,6 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
-import { withSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,11 +15,12 @@ import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import UpdateSafeModal from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import updateSafe from 'src/routes/safe/store/actions/updateSafe'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import Link from 'src/components/layout/Link'
 import {
   latestMasterContractVersionSelector,
@@ -29,15 +28,15 @@ import {
   safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const SafeDetails = (props) => {
+const SafeDetails = (): React.ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
@@ -45,7 +44,6 @@ const SafeDetails = (props) => {
   const safeName = useSelector(safeNameSelector)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
-  const { closeSnackbar, enqueueSnackbar } = props
 
   const [isModalOpen, setModalOpen] = React.useState(false)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -58,7 +56,7 @@ const SafeDetails = (props) => {
     dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
   }
 
   const handleUpdateSafe = () => {
@@ -75,7 +73,7 @@ const SafeDetails = (props) => {
               <Row align="end" grow>
                 <Paragraph className={classes.versionNumber}>
                   <Link
-                    className={cn(classes.item, classes.link)}
+                    className={classes.link}
                     color="black"
                     target="_blank"
                     to="https://github.com/gnosis/safe-contracts/releases"
@@ -145,4 +143,4 @@ const SafeDetails = (props) => {
   )
 }
 
-export default withSnackbar(SafeDetails)
+export default SafeDetails

@@ -2,11 +2,10 @@ import { withStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
+import { Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import CircleDot from 'src/components/Header/components/CircleDot'
-import Identicon from 'src/components/Identicon'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -14,7 +13,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
 
@@ -93,8 +91,6 @@ const styles = () => ({
 
 const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
   const status = connected ? 'Connected' : 'Connection error'
-  const address = userAddress ? shortVersionOf(userAddress, 4) : 'Address not available'
-  const identiconAddress = userAddress || 'random'
   const color = connected ? 'primary' : 'warning'
 
   return (
@@ -102,20 +98,16 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
-            <Identicon address={identiconAddress} diameter={60} />
+            <Identicon address={userAddress || 'random'} size="lg" />
           ) : (
             <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
         <Block className={classes.user} justify="center">
-          <Paragraph className={classes.address} noMargin size="sm">
-            {address}
-          </Paragraph>
-          {userAddress && (
-            <>
-              <CopyBtn content={userAddress} increaseZindex />
-              <EtherscanBtn increaseZindex type="address" value={userAddress} />
-            </>
+          {userAddress ? (
+            <EthHashInfo hash={userAddress} showCopyBtn showEtherscanBtn shortenHash={4} network={network} />
+          ) : (
+            'Address not available'
           )}
         </Block>
       </Block>

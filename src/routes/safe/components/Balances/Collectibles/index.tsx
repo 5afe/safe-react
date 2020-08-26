@@ -8,7 +8,7 @@ import Item from './components/Item'
 import Paragraph from 'src/components/layout/Paragraph'
 import { activeNftAssetsListSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 
 const useStyles = makeStyles({

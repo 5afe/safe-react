@@ -5,8 +5,8 @@ import {
   Parameter,
   Transfer,
   TransferType,
-} from 'src/routes/safe/store/models/types/transactions.d'
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+} from 'src/logic/safe/store/models/types/transactions.d'
+
 import {
   extractERC20TransferDetails,
   extractERC721TransferDetails,
@@ -14,6 +14,7 @@ import {
   extractUnknownTransferDetails,
 } from './transferDetails'
 import { isMultiSendParameter } from './newTransactionHelpers'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 export type MultiSendDetails = {
   operation: keyof typeof Operation

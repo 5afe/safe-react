@@ -11,6 +11,10 @@ const Wrapper = styled.div``
 const Item = styled.div`
   border-bottom: solid 2px rgb(232, 231, 230);
 
+  &:last-child {
+    border-bottom: none;
+  }
+
   .container {
     display: flex;
     align-items: flex-end;
