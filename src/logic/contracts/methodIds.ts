@@ -180,8 +180,8 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transfer',
         parameters: [
-          { name: 'to', type: '', value: decodeParameters[0] },
-          { name: 'value', type: '', value: decodeParameters[1] },
+          { name: 'to', type: 'address', value: decodeParameters[0] },
+          { name: 'value', type: 'uint', value: decodeParameters[1] },
         ],
       }
     }
@@ -192,9 +192,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodeParameters[0] },
-          { name: 'to', type: '', value: decodeParameters[1] },
-          { name: 'value', type: '', value: decodeParameters[2] },
+          { name: 'from', type: 'address', value: decodeParameters[0] },
+          { name: 'to', type: 'address', value: decodeParameters[1] },
+          { name: 'value', type: 'uint', value: decodeParameters[2] },
         ],
       }
     }
@@ -205,9 +205,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'safeTransferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodedParameters[0] },
-          { name: 'to', type: '', value: decodedParameters[1] },
-          { name: 'value', type: '', value: decodedParameters[2] },
+          { name: 'from', type: 'address', value: decodedParameters[0] },
+          { name: 'to', type: 'address', value: decodedParameters[1] },
+          { name: 'value', type: 'uint', value: decodedParameters[2] },
         ],
       }
     }
