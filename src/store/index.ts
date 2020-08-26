@@ -24,18 +24,20 @@ import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
 import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
-import notificationsMiddleware from 'src/routes/safe/store/middleware/notificationsMiddleware'
-import safeStorage from 'src/routes/safe/store/middleware/safeStorage'
+import notificationsMiddleware from 'src/logic/safe/store/middleware/notificationsMiddleware'
+import safeStorage from 'src/logic/safe/store/middleware/safeStorage'
 import cancellationTransactions, {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
   CancellationTxState,
-} from 'src/routes/safe/store/reducer/cancellationTransactions'
+} from 'src/logic/safe/store/reducer/cancellationTransactions'
 import incomingTransactions, {
   INCOMING_TRANSACTIONS_REDUCER_ID,
-} from 'src/routes/safe/store/reducer/incomingTransactions'
-import safe, { SAFE_REDUCER_ID, SafeReducerMap } from 'src/routes/safe/store/reducer/safe'
-import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/transactions'
+} from 'src/logic/safe/store/reducer/incomingTransactions'
+import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
+import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
+import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
+import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
 
 export const history = createHashHistory()
 
@@ -68,6 +70,7 @@ const reducers = combineReducers({
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
+  [TRANSACTIONS]: allTransactions,
 })
 
 export type AppReduxState = CombinedState<{
@@ -84,6 +87,7 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
   [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
+  [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>
 

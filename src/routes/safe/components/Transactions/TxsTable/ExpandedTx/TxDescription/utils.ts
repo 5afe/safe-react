@@ -1,4 +1,4 @@
-import { Transaction } from 'src/routes/safe/store/models/types/transaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
 
 const getSafeVersion = (data) => {

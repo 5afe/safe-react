@@ -10,14 +10,14 @@ import ThresholdForm from './screens/ThresholdForm'
 import Modal from 'src/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import removeSafeOwner from 'src/routes/safe/store/actions/removeSafeOwner'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 const styles = () => ({
   biggerModalWindow: {

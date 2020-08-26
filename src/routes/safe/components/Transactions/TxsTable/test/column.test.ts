@@ -1,5 +1,5 @@
 import { List, Map } from 'immutable'
-import { makeTransaction } from 'src/routes/safe/store/models/transaction'
+import { makeTransaction } from 'src/logic/safe/store/models/transaction'
 import { getTxTableData, TX_TABLE_RAW_CANCEL_TX_ID } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 describe('TxsTable Columns > getTxTableData', () => {
