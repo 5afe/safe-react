@@ -4,9 +4,9 @@ export enum TxConstants {
 }
 
 export enum Operation {
-  CALL = 'CALL',
-  DELEGATE_CALL = 'DELEGATE_CALL',
-  CREATE = 'CREATE',
+  CALL = 0,
+  DELEGATE_CALL = 1,
+  CREATE = 2,
 }
 
 // types comes from: https://github.com/gnosis/safe-client-gateway/blob/752e76b6d1d475791dbd7917b174bb41d2d9d8be/src/utils.rs
