@@ -35,7 +35,7 @@ export enum SettingsChangeMethods {
 // note: this extends SAFE_METHODS_NAMES in /logic/contracts/methodIds.ts, we need to figure out which one we are going to use
 export type DataDecodedMethod = TransferMethods | SettingsChangeMethods | string
 
-export interface DecodedValue {
+export interface ValueDecoded {
   operation: Operation
   to: string
   value: number
@@ -50,7 +50,7 @@ export interface SingleTransactionMethodParameter {
 }
 
 export interface MultiSendMethodParameter extends SingleTransactionMethodParameter {
-  decodedValue: DecodedValue[]
+  valueDecoded: ValueDecoded[]
 }
 
 export type Parameter = MultiSendMethodParameter | SingleTransactionMethodParameter

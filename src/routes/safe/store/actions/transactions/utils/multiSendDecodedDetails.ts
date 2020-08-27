@@ -43,12 +43,12 @@ export const extractTransferDetails = (transfer: Transfer): TransferDetails => {
 
 export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[] | undefined => {
   if (isMultiSendParameter(parameter)) {
-    return parameter.decodedValue.map((decodedValue) => {
+    return parameter.valueDecoded.map((valueDecoded) => {
       return {
-        operation: decodedValue.operation,
-        to: decodedValue.to,
-        value: decodedValue.value,
-        data: decodedValue?.dataDecoded ?? null,
+        operation: valueDecoded.operation,
+        to: valueDecoded.to,
+        value: valueDecoded.value,
+        data: valueDecoded?.dataDecoded ?? null,
       }
     })
   }
