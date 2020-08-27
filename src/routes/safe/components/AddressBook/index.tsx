@@ -1,10 +1,8 @@
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { withStyles } from '@material-ui/core/styles'
-// import CallMade from '@material-ui/icons/CallMade'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-// import classNames from 'classnames/bind'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -41,14 +39,19 @@ import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bi
 import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
-const AddressBookTable = ({ classes }) => {
+const useStyles = makeStyles(styles)
+
+const AddressBookTable = (): React.ReactElement => {
+  const classes = useStyles()
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const dispatch = useDispatch()
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(getAddressBook)
+  const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
@@ -145,7 +148,7 @@ const AddressBookTable = ({ classes }) => {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column: any) => (
+                    {autoColumns.map((column) => (
                       <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                         {column.id === AB_ADDRESS_ID ? (
                           <OwnerAddressTableCell address={row[column.id]} showLinks />
@@ -181,23 +184,21 @@ const AddressBookTable = ({ classes }) => {
                           src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
                           testId={REMOVE_ENTRY_BUTTON}
                         />
-                        <Button
-                          className={classes.send}
-                          color="primary"
-                          onClick={() => {
-                            setSelectedEntry({ entry: row })
-                            setSendFundsModalOpen(true)
-                          }}
-                          size="small"
-                          testId={SEND_ENTRY_BUTTON}
-                          variant="contained"
-                        >
-                          {/* <CallMade
-                            alt="Send Transaction"
-                            className={classNames(classes.leftIcon, classes.iconSmall)}
-                          /> */}
-                          Send
-                        </Button>
+                        {granted ? (
+                          <Button
+                            className={classes.send}
+                            color="primary"
+                            onClick={() => {
+                              setSelectedEntry({ entry: row })
+                              setSendFundsModalOpen(true)
+                            }}
+                            size="small"
+                            testId={SEND_ENTRY_BUTTON}
+                            variant="contained"
+                          >
+                            Send
+                          </Button>
+                        ) : null}
                       </Row>
                     </TableCell>
                   </TableRow>
@@ -230,4 +231,4 @@ const AddressBookTable = ({ classes }) => {
   )
 }
 
-export default withStyles(styles as any)(AddressBookTable)
+export default AddressBookTable
