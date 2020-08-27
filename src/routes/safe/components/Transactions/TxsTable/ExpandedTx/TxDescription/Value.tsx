@@ -9,7 +9,7 @@ import {
   isAddress,
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 import SafeEtherscanLink from 'src/components/EtherscanLink'
 
 const useStyles = makeStyles(styles)

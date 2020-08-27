@@ -29,6 +29,7 @@ const Wrapper = styled.div`
 const Title = styled(Heading)`
   grid-column: 1/3;
   grid-row: 1;
+  margin: 7px 0 0 0 !important;
 `
 
 const Nav = styled.div`
