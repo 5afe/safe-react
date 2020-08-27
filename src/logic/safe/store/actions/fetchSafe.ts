@@ -18,12 +18,10 @@ import { Action, Dispatch } from 'redux'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
 
-const buildOwnersFrom = (
-  safeOwners,
-  localSafe, // eslint-disable-next-line
-) =>
-  safeOwners.map((ownerAddress) => {
+const buildOwnersFrom = (safeOwners: string[], localSafe: SafeRecordProps): List<SafeOwner> => {
+  const ownersList = safeOwners.map((ownerAddress) => {
     const convertedAdd = checksumAddress(ownerAddress)
+
     if (!localSafe) {
       return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
@@ -38,6 +36,9 @@ const buildOwnersFrom = (
       address: convertedAdd,
     })
   })
+
+  return List(ownersList)
+}
 
 const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
   if (modules?.length) {
@@ -69,7 +70,7 @@ export const buildSafe = async (
 
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
-  const owners = List<SafeOwner>(buildOwnersFrom(remoteOwners, localSafe))
+  const owners = buildOwnersFrom(remoteOwners, localSafe)
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
@@ -108,7 +109,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
-    } as any),
+    }),
     getLocalSafe(safeAddress),
   ])
 

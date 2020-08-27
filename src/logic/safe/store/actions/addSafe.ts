@@ -9,9 +9,13 @@ import { SafeRecordProps } from '../models/safe'
 import { Dispatch } from 'redux'
 import { AppReduxState } from 'src/store'
 
+import { Dispatch } from 'redux'
+import { AppReduxState } from 'src/store'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+
 export const ADD_SAFE = 'ADD_SAFE'
 
-export const buildOwnersFrom = (names, addresses) => {
+export const buildOwnersFrom = (names: string[], addresses: string[]): List<SafeOwner> => {
   const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
 
   return List(owners)
