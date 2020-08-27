@@ -1,15 +1,16 @@
 import { useSnackbar } from 'notistack'
 import {
-  InterfaceMessages,
+  InterfaceMessageIds,
   InterfaceMessageToPayload,
-  SDKMessages,
+  SDKMessageIds,
   SDKMessageToPayload,
   SDK_MESSAGES,
   INTERFACE_MESSAGES,
+  RequestId,
+  Transaction,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { OpenModalArgs } from 'src/routes/safe/components/Layout/interfaces'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
@@ -18,23 +19,30 @@ import {
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
-import sendTransactions from '../sendTransactions'
-import confirmTransactions from '../confirmTransactions'
+type InterfaceMessageProps<T extends InterfaceMessageIds> = {
+  messageId: T
+  data: InterfaceMessageToPayload[T]
+}
 
 type ReturnType = {
-  sendMessageToIframe: <T extends keyof InterfaceMessages>(messageId: T, data: InterfaceMessageToPayload[T]) => void
+  sendMessageToIframe: <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) => void
 }
 
 interface CustomMessageEvent extends MessageEvent {
   data: {
-    messageId: keyof SDKMessages
-    data: SDKMessageToPayload[keyof SDKMessages]
+    requestId: RequestId
+    messageId: SDKMessageIds
+    data: SDKMessageToPayload[SDKMessageIds]
   }
+}
+
+interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessageIds> {
+  requestId: number | string
 }
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openModal: (modal: OpenModalArgs) => void,
+  openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement>,
 ): ReturnType => {
@@ -46,9 +54,14 @@ const useIframeMessageHandler = (
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
-    function <T extends keyof InterfaceMessages>(messageId: T, data: InterfaceMessageToPayload[T]) {
+    function <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) {
+      const requestWithMessage = {
+        ...message,
+        requestId: requestId || Math.trunc(window.performance.now()),
+      }
+
       if (iframeRef?.current && selectedApp) {
-        iframeRef.current.contentWindow.postMessage({ messageId, data }, selectedApp.url)
+        iframeRef.current.contentWindow.postMessage(requestWithMessage, selectedApp.url)
       }
     },
     [iframeRef, selectedApp],
@@ -60,32 +73,25 @@ const useIframeMessageHandler = (
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
+      const { requestId } = msg.data
+
       switch (msg.data.messageId) {
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          const onConfirm = async () => {
-            closeModal()
-            await sendTransactions(dispatch, safeAddress, msg.data.data, enqueueSnackbar, closeSnackbar, selectedApp.id)
-          }
-          confirmTransactions(
-            safeAddress,
-            safeName,
-            ethBalance,
-            selectedApp.name,
-            selectedApp.iconUrl,
-            msg.data.data,
-            openModal,
-            closeModal,
-            onConfirm,
-          )
+          openConfirmationModal(msg.data.data, requestId)
           break
         }
 
         case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
-          sendMessageToIframe(INTERFACE_MESSAGES.ON_SAFE_INFO, {
-            safeAddress,
-            network: network,
-            ethBalance,
-          })
+          const message = {
+            messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
+            data: {
+              safeAddress,
+              network: network,
+              ethBalance,
+            },
+          }
+
+          sendMessageToIframe(message)
           break
         }
         default: {
@@ -116,7 +122,7 @@ const useIframeMessageHandler = (
     enqueueSnackbar,
     ethBalance,
     network,
-    openModal,
+    openConfirmationModal,
     safeAddress,
     safeName,
     selectedApp,

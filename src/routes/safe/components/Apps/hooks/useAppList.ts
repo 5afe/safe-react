@@ -7,12 +7,14 @@ const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 type onAppToggleHandler = (appId: string, enabled: boolean) => Promise<void>
 type onAppAddedHandler = (app: SafeApp) => void
+type onAppRemovedHandler = (appId: string) => void
 
 type UseAppListReturnType = {
   appList: SafeApp[]
   loadingAppList: boolean
   onAppToggle: onAppToggleHandler
   onAppAdded: onAppAddedHandler
+  onAppRemoved: onAppRemovedHandler
 }
 
 const useAppList = (): UseAppListReturnType => {
@@ -26,32 +28,40 @@ const useAppList = (): UseAppListReturnType => {
       // * third-party apps added by the user
       // * disabled status for both static and third-party apps
       const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
+      const list: (StoredSafeApp & { isDeletable?: boolean })[] = persistedAppList.map((a) => ({
+        ...a,
+        isDeletable: true,
+      }))
 
       staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
-          list.push(staticApp)
+        const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
+        if (!app) {
+          list.push({ ...staticApp, isDeletable: false })
+        } else {
+          app.isDeletable = false
         }
       })
 
-      const apps = []
+      let apps = []
       // using the appURL to recover app info
       for (let index = 0; index < list.length; index++) {
         try {
           const currentApp = list[index]
 
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
+          const appInfo: SafeApp = await getAppInfoFromUrl(currentApp.url)
           if (appInfo.error) {
             throw Error(`There was a problem trying to load app ${currentApp.url}`)
           }
 
-          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
+          appInfo.disabled = Boolean(currentApp.disabled)
+          appInfo.isDeletable = Boolean(currentApp.isDeletable) === undefined ? true : currentApp.isDeletable
 
           apps.push(appInfo)
         } catch (error) {
           console.error(error)
         }
       }
+      apps = apps.sort((a, b) => a.name.localeCompare(b.name))
 
       setAppList(apps)
       setLoadingAppList(false)
@@ -69,8 +79,8 @@ const useAppList = (): UseAppListReturnType => {
       if (!app) {
         return
       }
-
       app.disabled = !enabled
+
       setAppList(appListCopy)
 
       // update storage list
@@ -91,7 +101,19 @@ const useAppList = (): UseAppListReturnType => {
       ]
       saveToStorage(APPS_STORAGE_KEY, newAppList)
 
-      setAppList([...appList, { ...app, disabled: false }])
+      setAppList([...appList, { ...app, isDeletable: true }])
+    },
+    [appList],
+  )
+
+  const onAppRemoved: onAppRemovedHandler = useCallback(
+    (appId) => {
+      const appListCopy = appList.filter((a) => a.id !== appId)
+
+      setAppList(appListCopy)
+
+      const listToPersist: StoredSafeApp[] = appListCopy.map(({ url, disabled }) => ({ url, disabled }))
+      saveToStorage(APPS_STORAGE_KEY, listToPersist)
     },
     [appList],
   )
@@ -101,6 +123,7 @@ const useAppList = (): UseAppListReturnType => {
     loadingAppList,
     onAppToggle,
     onAppAdded,
+    onAppRemoved,
   }
 }
 
