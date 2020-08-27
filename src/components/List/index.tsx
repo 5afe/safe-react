@@ -60,6 +60,7 @@ const StyledListSubItemText = styled(ListItemText)`
     font-size: 0.85em;
     letter-spacing: 0px;
     color: ${({ theme }) => theme.colors.secondary};
+    font-family: ${({ theme }) => theme.fonts.fontFamily};
   }
 `
 

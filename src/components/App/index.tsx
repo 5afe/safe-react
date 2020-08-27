@@ -11,7 +11,6 @@ import ErrorIcon from './assets/error.svg'
 import InfoIcon from './assets/info.svg'
 
 import AppLayout from 'src/components/AppLayout'
-import Sidebar from 'src/components/AppLayout/Sidebar'
 import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
@@ -72,6 +71,7 @@ const App: React.FC = ({ children }) => {
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
+  const sidebarItems = useSidebarItems()
 
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
@@ -113,17 +113,14 @@ const App: React.FC = ({ children }) => {
           <Notifier />
 
           <AppLayout
-            sidebar={
-              <Sidebar
-                safeAddress={safeAddress}
-                safeName={safeName}
-                balance={balance}
-                granted={granted}
-                onToggleSafeList={toggleSidebar}
-                onReceiveClick={onReceiveShow}
-                onNewTransactionClick={() => showSendFunds('')}
-              />
-            }
+            sidebarItems={sidebarItems}
+            safeAddress={safeAddress}
+            safeName={safeName}
+            balance={balance}
+            granted={granted}
+            onToggleSafeList={toggleSidebar}
+            onReceiveClick={onReceiveShow}
+            onNewTransactionClick={() => showSendFunds('')}
           >
             {children}
           </AppLayout>

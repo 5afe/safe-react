@@ -1,11 +1,11 @@
 import React from 'react'
+import { MemoryRouter } from 'react-router-dom'
 import { addDecorator } from '@storybook/react'
 import { ThemeProvider, createGlobalStyle } from 'styled-components'
 import { theme } from '@gnosis.pm/safe-react-components'
 
-import averta from 'src/assets/fonts/Averta-normal.woff2';
-import avertaBold from 'src/assets/fonts/Averta-ExtraBold.woff2';
-
+import averta from 'src/assets/fonts/Averta-normal.woff2'
+import avertaBold from 'src/assets/fonts/Averta-ExtraBold.woff2'
 
 const GlobalStyles = createGlobalStyle`
    @font-face {
@@ -18,7 +18,9 @@ const GlobalStyles = createGlobalStyle`
 
 addDecorator((storyFn) => (
   <ThemeProvider theme={theme}>
-    <GlobalStyles />
-    {storyFn()}
+    <MemoryRouter>
+      <GlobalStyles />
+      {storyFn()}
+    </MemoryRouter>
   </ThemeProvider>
 ))

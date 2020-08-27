@@ -1,13 +1,12 @@
 import React from 'react'
 import styled from 'styled-components'
+import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
 import Footer from './Footer'
+import Sidebar from './Sidebar'
 
-type GridProps = {
-  showSidebar: boolean
-}
-const Grid = styled.div<GridProps>`
+const Grid = styled.div`
   height: 100%;
   overflow: auto;
   background-color: ${({ theme }) => theme.colors.background};
@@ -16,7 +15,7 @@ const Grid = styled.div<GridProps>`
   grid-template-rows: 54px 1fr;
   grid-template-areas:
     'topbar topbar'
-    ${({ showSidebar }) => (showSidebar ? `'sidebar body'` : `'body body'`)};
+    'sidebar body';
 `
 
 const GridTopbarWrapper = styled.nav`
@@ -59,14 +58,44 @@ export const FooterWrapper = styled.footer`
   margin: 0 16px;
 `
 
-type Props = { sidebar: React.ReactNode }
+type Props = {
+  sidebarItems: ListItemType[]
+  safeAddress: string | null
+  safeName: string | null
+  balance: string | null
+  granted: boolean
+  onToggleSafeList: () => void
+  onReceiveClick: () => void
+  onNewTransactionClick: () => void
+}
 
-const Layout: React.FC<Props> = ({ sidebar, children }): React.ReactElement => (
-  <Grid showSidebar={sidebar !== null}>
+const Layout: React.FC<Props> = ({
+  balance,
+  safeAddress,
+  safeName,
+  granted,
+  onToggleSafeList,
+  onReceiveClick,
+  onNewTransactionClick,
+  children,
+  sidebarItems,
+}): React.ReactElement => (
+  <Grid>
     <GridTopbarWrapper>
       <Header />
     </GridTopbarWrapper>
-    {sidebar ? <GridSidebarWrapper>{sidebar}</GridSidebarWrapper> : null}
+    <GridSidebarWrapper>
+      <Sidebar
+        items={sidebarItems}
+        safeAddress={safeAddress}
+        safeName={safeName}
+        balance={balance}
+        granted={granted}
+        onToggleSafeList={onToggleSafeList}
+        onReceiveClick={onReceiveClick}
+        onNewTransactionClick={onNewTransactionClick}
+      />
+    </GridSidebarWrapper>
     <GridBodyWrapper>
       <BodyWrapper>{children}</BodyWrapper>
       <FooterWrapper>

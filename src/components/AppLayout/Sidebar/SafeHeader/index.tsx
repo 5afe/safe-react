@@ -88,7 +88,7 @@ type Props = {
   onNewTransactionClick: () => void
 }
 
-const WalletInfo = ({
+const SafeHeader = ({
   address,
   safeName,
   balance,
@@ -152,4 +152,4 @@ const WalletInfo = ({
   )
 }
 
-export default WalletInfo
+export default SafeHeader

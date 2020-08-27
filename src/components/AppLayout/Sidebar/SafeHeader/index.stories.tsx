@@ -11,7 +11,7 @@ export const SimpleLayout = (): React.ReactElement => (
   <WalletInfo
     address="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B"
     granted={true}
-    safeName="SomeName"
+    safeName="My Wallet"
     balance="$111,111"
     onToggleSafeList={() => ({})}
     onReceiveClick={console.log}
