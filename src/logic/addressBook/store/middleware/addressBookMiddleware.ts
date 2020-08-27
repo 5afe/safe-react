@@ -17,7 +17,7 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
     const state = store.getState()
     const { dispatch } = store
     const addressBook = addressBookMapSelector(state)
-    if (addressBook) {
+    if (addressBook.size) {
       await saveAddressBook(addressBook)
     }
 
