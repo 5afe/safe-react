@@ -14,12 +14,12 @@ import SafeEtherscanLink from 'src/components/EtherscanLink'
 
 const useStyles = makeStyles(styles)
 
-const InlineText = styled(Text)`
-  display: inline-flex;
-`
-
 const NestedWrapper = styled.div`
   text-indent: 24px;
+`
+
+const StyledText = styled(Text)`
+  white-space: normal;
 `
 
 interface RenderValueProps {
@@ -61,15 +61,15 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <Text key={`${method}-value-${index}`} size="lg">
+          <StyledText key={`${method}-value-${index}`} size="lg">
             {value}
-          </Text>
+          </StyledText>
         ))}
       </NestedWrapper>
     )
   }
 
-  return <InlineText size="lg">{value as string}</InlineText>
+  return <StyledText size="lg">{value as string}</StyledText>
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
