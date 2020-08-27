@@ -4,7 +4,7 @@ import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
 import '@testing-library/jest-dom/extend-expect'
-import { TOGGLE_SIDEBAR_BTN_TESTID } from 'src/components/AppLayout/WalletInfo'
+import { TOGGLE_SIDEBAR_BTN_TESTID } from 'src/components/AppLayout/Sidebar/SafeHeader'
 import { SIDEBAR_SAFELIST_ROW_TESTID } from 'src/components/SafeListSidebar/SafeList'
 import { sleep } from 'src/utils/timer'
 

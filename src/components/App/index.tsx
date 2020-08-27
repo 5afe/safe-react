@@ -31,6 +31,7 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
+import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
   success: {
