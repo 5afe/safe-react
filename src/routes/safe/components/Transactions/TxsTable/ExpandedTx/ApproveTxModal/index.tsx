@@ -1,9 +1,8 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -24,6 +23,9 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+
+const useStyles = makeStyles(styles)
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -51,19 +53,26 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   return modalInfo
 }
 
+type Props = {
+  canExecute: boolean
+  isCancelTx?: boolean
+  isOpen: boolean
+  onClose: () => void
+  thresholdReached: boolean
+  tx: Transaction
+}
+
 const ApproveTxModal = ({
   canExecute,
-  classes,
-  closeSnackbar,
-  enqueueSnackbar,
-  isCancelTx,
+  isCancelTx = false,
   isOpen,
   onClose,
   thresholdReached,
   tx,
-}: any) => {
+}: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
+  const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
@@ -109,8 +118,6 @@ const ApproveTxModal = ({
         tx,
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
-        enqueueSnackbar,
-        closeSnackbar,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
       }),
     )
@@ -181,4 +188,4 @@ const ApproveTxModal = ({
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(ApproveTxModal))
+export default ApproveTxModal

@@ -1,13 +1,11 @@
-import { GenericModal } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Receive from '../Balances/Receive'
 
 import { styles } from './style'
-import { ModalState, OpenModalArgs } from './interfaces'
 
 import Modal from 'src/components/Modal'
 import NoSafe from 'src/components/NoSafe'
@@ -45,34 +43,10 @@ const Layout = (props: Props): React.ReactElement => {
   const { hideSendFunds, onHide, onShow, sendFunds, showReceive, showSendFunds } = props
   const match = useRouteMatch()
 
-  const [modal, setModal] = useState<ModalState>({
-    isOpen: false,
-    title: '',
-    body: null,
-    footer: null,
-    onClose: null,
-  })
-
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
   if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
-  }
-
-  const openGenericModal = (modalConfig: OpenModalArgs): void => {
-    setModal({ ...modalConfig, isOpen: true })
-  }
-
-  const closeGenericModal = (): void => {
-    modal.onClose?.()
-
-    setModal({
-      isOpen: false,
-      title: null,
-      body: null,
-      footer: null,
-      onClose: null,
-    })
   }
 
   return (
@@ -83,15 +57,10 @@ const Layout = (props: Props): React.ReactElement => {
       <Switch>
         <Route exact path={`${match.path}/balances/:assetType?`} render={() => wrapInSuspense(<Balances />, null)} />
         <Route exact path={`${match.path}/transactions`} render={() => wrapInSuspense(<TxsTable />, null)} />
+        <Route exact path={`${match.path}/apps`} render={() => wrapInSuspense(<Apps />, null)} />
         {process.env.REACT_APP_NEW_TX_TAB === 'enabled' && (
           <Route exact path={`${match.path}/all-transactions`} render={() => wrapInSuspense(<Transactions />, null)} />
         )}
-
-        <Route
-          exact
-          path={`${match.path}/apps`}
-          render={() => wrapInSuspense(<Apps closeModal={closeGenericModal} openModal={openGenericModal} />, null)}
-        />
         <Route exact path={`${match.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
         <Route exact path={`${match.path}/address-book`} render={() => wrapInSuspense(<AddressBookTable />, null)} />
         <Redirect to={`${match.path}/balances`} />
@@ -111,8 +80,6 @@ const Layout = (props: Props): React.ReactElement => {
       >
         <Receive onClose={onHide('Receive')} />
       </Modal>
-
-      {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
   )
 }

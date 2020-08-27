@@ -4,6 +4,7 @@ export type SafeApp = {
   name: string
   iconUrl: string
   disabled?: boolean
+  isDeletable?: boolean
   error: boolean
   description: string
 }
