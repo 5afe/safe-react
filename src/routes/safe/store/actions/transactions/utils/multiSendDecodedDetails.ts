@@ -23,7 +23,7 @@ export type MultiSendDetails = {
   value: number
 }
 
-export type MultiSendDecodedData = {
+export type MultiSendDataDecoded = {
   txDetails?: MultiSendDetails[]
   transfersDetails?: TransferDetails[]
 }
@@ -48,13 +48,13 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
         operation: decodedValue.operation,
         to: decodedValue.to,
         value: decodedValue.value,
-        data: decodedValue?.decodedData ?? null,
+        data: decodedValue?.dataDecoded ?? null,
       }
     })
   }
 }
 
-export const extractMultiSendDecodedData = (tx: Transaction): MultiSendDecodedData => {
+export const extractMultiSendDataDecoded = (tx: Transaction): MultiSendDataDecoded => {
   const transfersDetails = tx.transfers?.map(extractTransferDetails)
   const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 

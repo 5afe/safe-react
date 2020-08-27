@@ -40,7 +40,7 @@ export interface DecodedValue {
   to: string
   value: number
   data: string
-  decodedData: DataDecoded
+  dataDecoded: DataDecoded
 }
 
 export interface SingleTransactionMethodParameter {
