@@ -17,7 +17,7 @@ import { isMultiSendParameter } from './newTransactionHelpers'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 export type MultiSendDetails = {
-  operation: keyof typeof Operation
+  operation: Operation
   to: string
   data: DataDecoded | null
   value: number
