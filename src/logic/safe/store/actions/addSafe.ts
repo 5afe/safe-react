@@ -5,9 +5,6 @@ import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 
 import { safesListSelector } from 'src/logic/safe/store/selectors'
-import { SafeRecordProps } from '../models/safe'
-import { Dispatch } from 'redux'
-import { AppReduxState } from 'src/store'
 
 import { Dispatch } from 'redux'
 import { AppReduxState } from 'src/store'
