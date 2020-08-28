@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -39,8 +38,7 @@ type Props = {
   tx: TransactionReviewType
 }
 
-const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
+const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -82,8 +80,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
         valueInWei: txValue,
         txData,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
       }),
     )
 

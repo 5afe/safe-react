@@ -32,6 +32,7 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ModalReceive'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
+import { Token } from 'src/types/contracts/Token'
 
 const notificationStyles = {
   success: {
@@ -77,7 +78,7 @@ const App: React.FC = ({ children }) => {
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
-  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
+  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: Token }
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
   const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
 
