@@ -9,7 +9,7 @@ export interface AbiItemExtended extends AbiItem {
 }
 
 export const getMethodSignature = ({ inputs, name }: AbiItem): string => {
-  const params = inputs.map((x) => x.type).join(',')
+  const params = inputs?.map((x) => x.type).join(',')
   return `${name}(${params})`
 }
 
@@ -35,6 +35,10 @@ export const isAllowedMethod = ({ name, type }: AbiItem): boolean => {
 }
 
 export const getMethodAction = ({ stateMutability }: AbiItem): 'read' | 'write' => {
+  if (!stateMutability) {
+    return 'write'
+  }
+
   return ['view', 'pure'].includes(stateMutability) ? 'read' : 'write'
 }
 
@@ -52,5 +56,5 @@ export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
 }
 
 export const isPayable = (method: AbiItem | AbiItemExtended): boolean => {
-  return method.payable
+  return !!method?.payable
 }
