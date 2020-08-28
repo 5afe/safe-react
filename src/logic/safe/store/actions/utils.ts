@@ -17,17 +17,18 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel> =>
 }
 
 export const getNewTxNonce = async (
-  txNonce: string | null,
+  txNonce: string | undefined,
   lastTx: TxServiceModel,
   safeInstance: GnosisSafe,
 ): Promise<string> => {
-  if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
+  if (typeof txNonce === 'string' && !Number.isInteger(Number.parseInt(txNonce, 10))) {
     return lastTx === null
       ? // use current's safe nonce as fallback
         (await safeInstance.methods.nonce().call()).toString()
       : `${lastTx.nonce + 1}`
   }
-  return txNonce
+
+  return txNonce as string
 }
 
 export const shouldExecuteTransaction = async (

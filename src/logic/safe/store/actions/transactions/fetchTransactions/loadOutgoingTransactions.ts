@@ -40,7 +40,7 @@ export type TxServiceModel = {
   isExecuted: boolean
   isSuccessful: boolean
   modified: string
-  nonce?: number | null
+  nonce: number
   operation: number
   origin?: string | null
   refundReceiver: string
