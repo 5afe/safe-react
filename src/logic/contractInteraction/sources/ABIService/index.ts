@@ -52,7 +52,13 @@ export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
         ...method,
       }),
     )
-    .sort(({ name: a }, { name: b }) => (a.toLowerCase() > b.toLowerCase() ? 1 : -1))
+    .sort(({ name: a }, { name: b }) => {
+      if (!a || !b) {
+        return -1
+      }
+
+      return a.toLowerCase() > b.toLowerCase() ? 1 : -1
+    })
 }
 
 export const isPayable = (method: AbiItem | AbiItemExtended): boolean => {
