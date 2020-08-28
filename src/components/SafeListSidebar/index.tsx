@@ -1,7 +1,7 @@
+import React, { useEffect, useMemo, useState } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import SearchBar from 'material-ui-search-bar'
-import * as React from 'react'
 import { connect } from 'react-redux'
 
 import SafeList from './SafeList'
@@ -16,11 +16,10 @@ import Link from 'src/components/layout/Link'
 import Row from 'src/components/layout/Row'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
-
-const { useEffect, useMemo, useState } = React
 
 export const SafeListSidebarContext = React.createContext({
   isOpen: false,
@@ -39,12 +38,7 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const classes = useSidebarStyles()
-
-  useEffect(() => {
-    setTimeout(() => {
-      setFilter('')
-    }, 300)
-  }, [isOpen])
+  const { trackPageEvent } = useAnalytics()
 
   const searchClasses = {
     input: classes.searchInput,
@@ -54,6 +48,9 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
   }
 
   const toggleSidebar = () => {
+    if (!isOpen) {
+      trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'SafeListSidebar' })
+    }
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }
 
@@ -72,6 +69,12 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
   }
 
   const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
+
+  useEffect(() => {
+    setTimeout(() => {
+      setFilter('')
+    }, 300)
+  }, [isOpen])
 
   return (
     <SafeListSidebarContext.Provider value={{ isOpen, toggleSidebar }}>
