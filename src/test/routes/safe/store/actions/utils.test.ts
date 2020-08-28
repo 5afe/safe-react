@@ -30,7 +30,7 @@ describe('shouldExecuteTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given a safe with a threshold === 1 and the last transaction is not the creation, the last transaction is already executed, return true ',  async () => {
+  it('Given a safe with a threshold === 1 and the last transaction is not the first transaction, the last transaction is already executed, return true ',  async () => {
     // given
     const nonce = '10'
     const threshold = '1'
@@ -43,7 +43,7 @@ describe('shouldExecuteTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given a safe with a threshold === 1 and the last transaction is not the creation, the last transaction is not already executed, return false ',  async () => {
+  it('Given a safe with a threshold === 1 and the last transaction is not first transaction, the last transaction is not already executed, return false ',  async () => {
     // given
     const nonce = '10'
     const threshold = '1'
