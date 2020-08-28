@@ -186,7 +186,7 @@ const baseSafe = makeSafe()
 
 export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
   safe: SafeRecord,
-): SafeRecordProps[K] | null => (safe ? safe.get(field, baseSafe.get(field)) : null)
+): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 

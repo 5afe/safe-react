@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Receive from 'src/components/App/ModalReceive'
+import Receive from 'src/components/App/ReceiveModal'
 import Tokens from './Tokens'
 import { styles } from './style'
 
