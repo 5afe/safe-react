@@ -1,7 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -22,32 +21,34 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getNotificationsFromTxType, showSnackbar } from 'src/logic/notifications'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 
-const EditOwnerComponent = ({
-  classes,
-  closeSnackbar,
-  enqueueSnackbar,
-  isOpen,
-  onClose,
-  ownerAddress,
-  selectedOwnerName,
-}) => {
+const useStyles = makeStyles(styles)
+
+type OwnProps = {
+  isOpen: true
+  onClose: () => void
+  ownerAddress: string
+  selectedOwnerName: string
+}
+
+const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
+  const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const handleSubmit = (values) => {
     const { ownerName } = values
+
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
     dispatch(updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.OWNER_NAME_CHANGE_TX)
-    showSnackbar(notification.afterExecution.noMoreConfirmationsNeeded, enqueueSnackbar, closeSnackbar)
+    dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
 
     onClose()
   }
@@ -75,7 +76,6 @@ const EditOwnerComponent = ({
             <Block className={classes.container}>
               <Row margin="md">
                 <Field
-                  className={classes.addressInput}
                   component={TextField}
                   initialValue={selectedOwnerName}
                   name="ownerName"
@@ -87,7 +87,7 @@ const EditOwnerComponent = ({
                 />
               </Row>
               <Row>
-                <Block className={classes.user} justify="center">
+                <Block justify="center">
                   <Identicon address={ownerAddress} diameter={32} />
                   <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
                     {ownerAddress}
@@ -120,4 +120,4 @@ const EditOwnerComponent = ({
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(EditOwnerComponent))
+export default EditOwnerComponent
