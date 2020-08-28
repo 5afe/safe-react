@@ -1,5 +1,5 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { List } from 'immutable'
+import { List, Set, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
@@ -13,16 +13,15 @@ import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { ModulePair, SafeOwner } from 'src/logic/safe/store/models/safe'
-import { Dispatch } from 'redux'
+import { ModulePair, SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { Action, Dispatch } from 'redux'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { AppReduxState } from 'src/store'
 
-const buildOwnersFrom = (
-  safeOwners,
-  localSafe, // eslint-disable-next-line
-) =>
-  safeOwners.map((ownerAddress) => {
+const buildOwnersFrom = (safeOwners: string[], localSafe: SafeRecordProps): List<SafeOwner> => {
+  const ownersList = safeOwners.map((ownerAddress) => {
     const convertedAdd = checksumAddress(ownerAddress)
+
     if (!localSafe) {
       return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
     }
@@ -38,6 +37,9 @@ const buildOwnersFrom = (
     })
   })
 
+  return List(ownersList)
+}
+
 const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
   if (modules?.length) {
     return modules.map((moduleAddress, index, modules) => {
@@ -48,7 +50,11 @@ const buildModulesLinkedList = (modules: string[] | undefined, nextModule: strin
   return null
 }
 
-export const buildSafe = async (safeAdd: string, safeName: string, latestMasterContractVersion?: any) => {
+export const buildSafe = async (
+  safeAdd: string,
+  safeName: string,
+  latestMasterContractVersion?: string,
+): Promise<SafeRecordProps> => {
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
@@ -57,18 +63,18 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
-    } as any),
+    }),
     getLocalSafe(safeAddress),
     getBalanceInEtherOf(safeAddress),
   ])
 
   const threshold = Number(thresholdStr)
   const nonce = Number(nonceStr)
-  const owners = List<SafeOwner>(buildOwnersFrom(remoteOwners, localSafe))
+  const owners = buildOwnersFrom(remoteOwners, localSafe)
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
 
-  const safe = {
+  return {
     address: safeAddress,
     name: safeName,
     threshold,
@@ -78,9 +84,14 @@ export const buildSafe = async (safeAdd: string, safeName: string, latestMasterC
     currentVersion,
     needsUpdate,
     featuresEnabled,
+    balances: Map(),
+    latestIncomingTxBlock: null,
+    activeAssets: Set(),
+    activeTokens: Set(),
+    blacklistedAssets: Set(),
+    blacklistedTokens: Set(),
+    modules: null,
   }
-
-  return safe
 }
 
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
@@ -98,7 +109,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
-    } as any),
+    }),
     getLocalSafe(safeAddress),
   ])
 
@@ -139,8 +150,10 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   }
 }
 
-// eslint-disable-next-line consistent-return
-export default (safeAdd: string) => async (dispatch, getState) => {
+export default (safeAdd: string) => async (
+  dispatch: Dispatch<any>,
+  getState: () => AppReduxState,
+): Promise<Action | void> => {
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
