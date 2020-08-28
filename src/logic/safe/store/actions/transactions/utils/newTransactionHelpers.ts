@@ -21,5 +21,5 @@ export const isEthereumTx = (tx: Transaction): tx is EthereumTransaction => {
 }
 
 export const isMultiSendParameter = (parameter: Parameter): parameter is MultiSendMethodParameter => {
-  return !!(parameter as MultiSendMethodParameter)?.decodedValue
+  return !!(parameter as MultiSendMethodParameter)?.valueDecoded
 }

@@ -11,9 +11,10 @@ type Props = {
   appList: Array<SafeApp>
   onAppAdded: (app: SafeApp) => void
   onAppToggle: (appId: string, enabled: boolean) => void
+  onAppRemoved: (appId: string) => void
 }
 
-const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props): React.ReactElement => {
+const ManageApps = ({ appList, onAppAdded, onAppToggle, onAppRemoved }: Props): React.ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
 
@@ -54,12 +55,14 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle }: Props): React.ReactEle
       {isOpen && (
         <ManageListModal
           addButtonLabel="Add custom app"
+          showDeleteButton
           defaultIconUrl={appsIconSvg}
           formBody={Form}
           isSubmitFormDisabled={isSubmitDisabled}
           itemList={getItemList()}
           onClose={closeModal}
           onItemToggle={onItemToggle}
+          onItemDeleted={onAppRemoved}
           onSubmitForm={onSubmitForm}
         />
       )}

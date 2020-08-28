@@ -13,7 +13,7 @@ import Value from './Value'
 
 import Block from 'src/components/layout/Block'
 import {
-  extractMultiSendDecodedData,
+  extractMultiSendDataDecoded,
   MultiSendDetails,
 } from 'src/logic/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
@@ -42,9 +42,7 @@ const TxDetailsMethodName = styled(Text)`
 `
 const TxDetailsMethodParam = styled.div`
   text-indent: 8px;
-`
-const InlineText = styled(Text)`
-  display: inline-flex;
+  display: flex;
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
@@ -63,9 +61,9 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 
     {data.parameters.map((param, index) => (
       <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
-        <InlineText size="lg" strong>
+        <Text size="lg" strong>
           {param.name}({param.type}):
-        </InlineText>
+        </Text>
         <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}
@@ -117,8 +115,8 @@ const ModifySpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): Rea
 
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
-  const methodName = tx.decodedData?.method ? ` (${tx.decodedData.method})` : ''
-  const data = tx.decodedData ?? decodeMethods(tx.data)
+  const methodName = tx.dataDecoded?.method ? ` (${tx.dataDecoded.method})` : ''
+  const data = tx.dataDecoded ?? decodeMethods(tx.data)
   const isNewSpendingLimit = isSetAllowanceMethod(tx.data || '')
 
   return (
@@ -276,7 +274,7 @@ interface CustomDescriptionProps {
 }
 
 const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
-  const txDetails = (storedTx.multiSendTx && extractMultiSendDecodedData(storedTx).txDetails) ?? undefined
+  const txDetails = (storedTx.multiSendTx && extractMultiSendDataDecoded(storedTx).txDetails) ?? undefined
 
   return txDetails ? (
     <MultiSendCustomData txDetails={txDetails} />

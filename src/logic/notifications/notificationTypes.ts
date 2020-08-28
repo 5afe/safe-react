@@ -1,3 +1,5 @@
+import { OptionsObject } from 'notistack'
+
 import { getNetwork } from 'src/config'
 import { capitalize } from 'src/utils/css'
 
@@ -9,7 +11,62 @@ export const INFO = 'info'
 const shortDuration = 5000
 const longDuration = 10000
 
-export const NOTIFICATIONS = {
+export type NotificationId = keyof typeof NOTIFICATION_IDS
+
+export type Notification = {
+  message: string
+  options: OptionsObject
+  key?: number | string
+}
+
+const NOTIFICATION_IDS = {
+  CONNECT_WALLET_MSG: 'CONNECT_WALLET_MSG',
+  CONNECT_WALLET_READ_MODE_MSG: 'CONNECT_WALLET_READ_MODE_MSG',
+  WALLET_CONNECTED_MSG: 'WALLET_CONNECTED_MSG',
+  WALLET_DISCONNECTED_MSG: 'WALLET_DISCONNECTED_MSG',
+  UNLOCK_WALLET_MSG: 'UNLOCK_WALLET_MSG',
+  CONNECT_WALLET_ERROR_MSG: 'CONNECT_WALLET_ERROR_MSG',
+  SIGN_TX_MSG: 'SIGN_TX_MSG',
+  TX_PENDING_MSG: 'TX_PENDING_MSG',
+  TX_REJECTED_MSG: 'TX_REJECTED_MSG',
+  TX_EXECUTED_MSG: 'TX_EXECUTED_MSG',
+  TX_CANCELLATION_EXECUTED_MSG: 'TX_CANCELLATION_EXECUTED_MSG',
+  TX_FAILED_MSG: 'TX_FAILED_MSG',
+  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: 'TX_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  TX_WAITING_MSG: 'TX_WAITING_MSG',
+  TX_INCOMING_MSG: 'TX_INCOMING_MSG',
+  TX_CONFIRMATION_PENDING_MSG: 'TX_CONFIRMATION_PENDING_MSG',
+  TX_CONFIRMATION_EXECUTED_MSG: 'TX_CONFIRMATION_EXECUTED_MSG',
+  TX_CONFIRMATION_FAILED_MSG: 'TX_CONFIRMATION_FAILED_MSG',
+  SAFE_NAME_CHANGED_MSG: 'SAFE_NAME_CHANGED_MSG',
+  OWNER_NAME_CHANGE_EXECUTED_MSG: 'OWNER_NAME_CHANGE_EXECUTED_MSG',
+  SIGN_SETTINGS_CHANGE_MSG: 'SIGN_SETTINGS_CHANGE_MSG',
+  SETTINGS_CHANGE_PENDING_MSG: 'SETTINGS_CHANGE_PENDING_MSG',
+  SETTINGS_CHANGE_REJECTED_MSG: 'SETTINGS_CHANGE_REJECTED_MSG',
+  SETTINGS_CHANGE_EXECUTED_MSG: 'SETTINGS_CHANGE_EXECUTED_MSG',
+  SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: 'SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  SETTINGS_CHANGE_FAILED_MSG: 'SETTINGS_CHANGE_FAILED_MSG',
+  SIGN_NEW_SPENDING_LIMIT_MSG: 'SIGN_NEW_SPENDING_LIMIT_MSG',
+  NEW_SPENDING_LIMIT_PENDING_MSG: 'NEW_SPENDING_LIMIT_PENDING_MSG',
+  NEW_SPENDING_LIMIT_REJECTED_MSG: 'NEW_SPENDING_LIMIT_REJECTED_MSG',
+  NEW_SPENDING_LIMIT_EXECUTED_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MSG',
+  NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  NEW_SPENDING_LIMIT_FAILED_MSG: 'NEW_SPENDING_LIMIT_FAILED_MSG',
+  SIGN_REMOVE_SPENDING_LIMIT_MSG: 'SIGN_REMOVE_SPENDING_LIMIT_MSG',
+  REMOVE_SPENDING_LIMIT_PENDING_MSG: 'REMOVE_SPENDING_LIMIT_PENDING_MSG',
+  REMOVE_SPENDING_LIMIT_REJECTED_MSG: 'REMOVE_SPENDING_LIMIT_REJECTED_MSG',
+  REMOVE_SPENDING_LIMIT_EXECUTED_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MSG',
+  REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  REMOVE_SPENDING_LIMIT_FAILED_MSG: 'REMOVE_SPENDING_LIMIT_FAILED_MSG',
+  RINKEBY_VERSION_MSG: 'RINKEBY_VERSION_MSG',
+  WRONG_NETWORK_MSG: 'WRONG_NETWORK_MSG',
+  ADDRESS_BOOK_NEW_ENTRY_SUCCESS: 'ADDRESS_BOOK_NEW_ENTRY_SUCCESS',
+  ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: 'ADDRESS_BOOK_EDIT_ENTRY_SUCCESS',
+  ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: 'ADDRESS_BOOK_DELETE_ENTRY_SUCCESS',
+  SAFE_NEW_VERSION_AVAILABLE: 'SAFE_NEW_VERSION_AVAILABLE',
+}
+
+export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   // Wallet Connection
   CONNECT_WALLET_MSG: {
     message: 'Please connect wallet to continue',
@@ -149,51 +206,51 @@ export const NOTIFICATIONS = {
 
   // Spending Limit
   SIGN_NEW_SPENDING_LIMIT_MSG: {
-    message: 'Please sign the new Spending Limit tx',
+    message: 'Please sign the new Spending Limit',
     options: { variant: INFO, persist: true },
   },
   NEW_SPENDING_LIMIT_PENDING_MSG: {
-    message: 'New Spending Limit tx pending',
+    message: 'New Spending Limit pending',
     options: { variant: INFO, persist: true },
   },
   NEW_SPENDING_LIMIT_REJECTED_MSG: {
-    message: 'New Spending Limit tx rejected',
+    message: 'New Spending Limit rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_EXECUTED_MSG: {
-    message: 'New Spending Limit tx successfully executed',
+    message: 'New Spending Limit successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
-    message: 'New Spending Limit tx successfully created. More confirmations needed to execute',
+    message: 'New Spending Limit successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_FAILED_MSG: {
-    message: 'New Spending Limit tx failed',
+    message: 'New Spending Limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   SIGN_REMOVE_SPENDING_LIMIT_MSG: {
-    message: 'Please sign the remove Spending Limit tx',
+    message: 'Please sign the remove Spending Limit',
     options: { variant: INFO, persist: true },
   },
   REMOVE_SPENDING_LIMIT_PENDING_MSG: {
-    message: 'Remove Spending Limit tx pending',
+    message: 'Remove Spending Limit pending',
     options: { variant: INFO, persist: true },
   },
   REMOVE_SPENDING_LIMIT_REJECTED_MSG: {
-    message: 'Remove Spending Limit tx rejected',
+    message: 'Remove Spending Limit rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG: {
-    message: 'Remove Spending Limit tx successfully executed',
+    message: 'Remove Spending Limit successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
-    message: 'Remove Spending Limit tx successfully created. More confirmations needed to execute',
+    message: 'Remove Spending Limit successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_FAILED_MSG: {
-    message: 'Remove Spending Limit tx failed',
+    message: 'Remove Spending Limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 

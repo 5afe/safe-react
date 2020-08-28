@@ -1,7 +1,7 @@
 const os = require('os');
 const { dialog } = require('electron');
 const log = require('electron-log');
-const settings = require('electron-settings').default;
+const settings = require('electron-settings');
 
 const { autoUpdater } = require("electron-updater");
 

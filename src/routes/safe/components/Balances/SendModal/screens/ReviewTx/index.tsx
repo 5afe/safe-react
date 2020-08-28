@@ -98,7 +98,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
 
     if (isSpendingLimit) {
       const spendingLimit = getSpendingLimitContract()
-      await spendingLimit.methods
+      spendingLimit.methods
         .executeAllowanceTransfer(
           safeAddress,
           txToken.address === ETH_ADDRESS ? ZERO_ADDRESS : txToken.address,
@@ -110,7 +110,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           EMPTY_DATA,
         )
         .send({ from: tx.tokenSpendingLimit.delegate })
-        .then(console.log)
+        .on('transactionHash', () => onClose())
         .catch(console.error)
     } else {
       dispatch(
@@ -124,8 +124,8 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           closeSnackbar,
         } as any),
       )
+      onClose()
     }
-    onClose()
   }
 
   return (
