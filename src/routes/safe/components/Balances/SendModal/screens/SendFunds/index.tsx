@@ -116,10 +116,10 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           const formState = args[2]
           const mutators = args[3]
           const { token: tokenAddress, txType } = formState.values
-          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
+          const selectedTokenRecord = tokens?.find((token) => token.address === tokenAddress)
           tokenSpendingLimit =
             selectedTokenRecord &&
-            spendingLimits.find(
+            spendingLimits?.find(
               ({ delegate, token }) =>
                 delegate.toLowerCase() === currentUser.toLowerCase() &&
                 (token === ZERO_ADDRESS ? ETH_ADDRESS : token.toLowerCase()) ===
