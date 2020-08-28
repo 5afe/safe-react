@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -29,6 +29,7 @@ import {
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -44,6 +45,7 @@ const SafeDetails = (): React.ReactElement => {
   const safeName = useSelector(safeNameSelector)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
+  const { trackPageEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = React.useState(false)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -62,6 +64,10 @@ const SafeDetails = (): React.ReactElement => {
   const handleUpdateSafe = () => {
     setModalOpen(true)
   }
+
+  useEffect(() => {
+    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Settings', label: 'Details' })
+  }, [trackPageEvent])
 
   return (
     <>

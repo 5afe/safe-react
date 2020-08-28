@@ -41,6 +41,7 @@ import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bi
 import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const AddressBookTable = ({ classes }) => {
   const columns = generateColumns()
@@ -53,6 +54,11 @@ const AddressBookTable = ({ classes }) => {
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const { trackPageEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'AddressBook' })
+  }, [trackPageEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

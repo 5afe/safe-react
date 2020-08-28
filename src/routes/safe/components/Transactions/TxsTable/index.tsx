@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
@@ -21,6 +21,7 @@ import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { extendedTransactionsSelector } from 'src/logic/safe/store/selectors/transactions'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -28,6 +29,11 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
+  const { trackPageEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Transactions' })
+  }, [trackPageEvent])
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
