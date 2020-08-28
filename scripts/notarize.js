@@ -1,16 +1,16 @@
 const fs = require("fs");
 const path = require("path");
 const { notarize } = require("electron-notarize");
-const envConfig = require('dotenv').config();
+const envConfig = require('dotenv').config({path:path.join(__dirname, '../.env')});
 
 Object.entries(envConfig.parsed || {}).forEach(([key, value]) => {
   process.env[key] = value;
 });
 
-module.exports = async function (params) {
-  console.log(process.env);
 
-  // Only notarize the app on Mac OS only.
+module.exports = async function (params) {
+
+    // Only notarize the app on Mac OS only.
   if (process.platform !== "darwin") {
     return;
   }

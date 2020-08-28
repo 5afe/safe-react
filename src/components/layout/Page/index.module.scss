@@ -1,0 +1,22 @@
+@import "src/theme/variables.scss";
+
+.page {
+  display: flex;
+  flex: 1 0 auto;
+  flex-direction: column;
+  padding: 96px 200px 0px 200px;
+}
+
+@media only screen and (max-width: #{$screenLg}px) {
+  .page {
+    padding: 72px $lg 0px $lg;
+  }
+}
+
+.center {
+  align-self: center;
+}
+
+.overflow {
+  overflow-x: scroll;
+}

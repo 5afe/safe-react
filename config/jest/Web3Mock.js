@@ -1,4 +1,3 @@
-// @flow
 import Web3 from 'web3'
 
 const window = global.window || {}

@@ -1,0 +1,119 @@
+@import "src/theme/variables.scss";
+
+.paragraph {
+  text-overflow: ellipsis;
+  overflow-x: inherit;
+  line-height: 1.38;
+}
+
+.soft {
+  color: #888888;
+}
+
+.medium {
+  color: #686868;
+}
+
+.dark {
+  color: black;
+}
+
+.fancy {
+  color: $fancy;
+}
+
+.warning {
+  color: $warning;
+}
+
+.primary {
+  color: $fontColor;
+}
+
+.secondary {
+  color: $secondary;
+}
+
+.disabled {
+  color: $disabled;
+}
+
+.error {
+  color: $error;
+}
+
+.white {
+  color: white;
+}
+
+.capitalize {
+  text-transform: capitalize;
+}
+
+.lowercase {
+  text-transform: lowercase;
+}
+
+.uppercase {
+  text-transform: uppercase;
+}
+
+.noMargin {
+  margin: 0;
+}
+
+.center {
+  text-align: center;
+}
+
+.left {
+  text-align: left;
+}
+
+.right {
+  text-align: right;
+}
+
+.xs {
+  font-size: $extraSmallFontSize;
+}
+
+.sm {
+  font-size: $smallFontSize;
+}
+
+.md {
+  font-size: $mediumFontSize;
+}
+
+.lg {
+  font-size: $largeFontSize;
+}
+
+.xl {
+  font-size: $extraLargeFontSize;
+}
+
+.xxl {
+  font-size: $xxlFontSize;
+}
+
+.light {
+  font-weight: $lightFont;
+}
+
+.regular {
+  font-weight: $regularFont;
+}
+
+.bolder {
+  font-weight: $bolderFont;
+}
+
+.bold {
+  font-weight: $boldFont;
+}
+
+.dot {
+  display: list-item;
+}

@@ -1,14 +1,12 @@
 const electron = require("electron");
-const  express = require('express');
+const express = require('express');
 const open = require('open');
 const log = require('electron-log');
 const fs = require('fs');
-const dialog = electron.dialog;
 const Menu = electron.Menu;
 const https = require('https');
 const autoUpdater = require('./auto-updater');
 
-const url = require('url');
 const app = electron.app;
 const session = electron.session;
 const BrowserWindow = electron.BrowserWindow;
@@ -26,7 +24,7 @@ const PORT = 5000;
 
 const createServer = () => {
   const app = express();
-  const staticRoute = path.join(__dirname, '../build_webpack');
+  const staticRoute = path.join(__dirname, '../build');
   app.use(express.static(staticRoute));
   https.createServer(options, app).listen(PORT);
 }
@@ -46,18 +44,16 @@ function getOpenedWindow(url,options) {
 
   options.webPreferences.affinity = 'main-window';
 
-  if(url.includes('about:blank')){
-    /*
+  if(url.includes('trezor')){
     session.defaultSession.webRequest.onBeforeSendHeaders(filter, (details, callback) => {
-      details.requestHeaders['Origin'] = 'https://electron.trezor.io';
+      details.requestHeaders['Origin'] = 'https://connect.trezor.io';
       callback({cancel: false, requestHeaders: details.requestHeaders});
     });
-    */
   }
 
-  if(url.includes('wallet.portis') || url.includes('about:blank') || url.includes('app.tor.us')){
+  if(url.includes('wallet.portis') || url.includes('trezor') || url.includes('app.tor.us')){
     const win = new BrowserWindow({
-      width:300,
+      width:350,
       height:700,
       x: width - 1300,
       parent:mainWindow,
@@ -66,7 +62,10 @@ function getOpenedWindow(url,options) {
       fullscreen: false,
       show: false,
     });
-
+    win.webContents.on('new-window', function(event, url){
+      if(url.includes('trezor') && url.includes('bridge'))
+        open(url);
+    });
     win.once('ready-to-show', () => win.show());
 
     if(!options.webPreferences){

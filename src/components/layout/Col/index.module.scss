@@ -1,0 +1,221 @@
+@import 'src/theme/variables.scss';
+
+.col {
+  flex: 1 1 auto;
+  display: inherit;
+}
+
+.inherit {
+  display: inherit;
+}
+
+.block {
+  display: block;
+}
+
+.column {
+  display: flex;
+  flex-direction: column;
+}
+
+.overflow {
+  overflow: hidden;
+}
+
+.marginSm {
+  margin-bottom: $sm;
+}
+
+.marginMd {
+  margin-bottom: $md;
+}
+
+.marginLg {
+  margin-bottom: $xl;
+}
+
+.marginXl {
+  margin-bottom: $xl;
+}
+
+@mixin col($size) {
+  .#{$size}1 {
+    flex-basis: 8.333%;
+    max-width: 8.333%;
+  }
+
+  .#{$size}2 {
+    flex-basis: 16.667%;
+    max-width: 16.667%;
+  }
+
+  .#{$size}3 {
+    flex-basis: 25%;
+    max-width: 25%;
+  }
+
+  .#{$size}4 {
+    flex-basis: 33.333%;
+    max-width: 33.333%;
+  }
+
+  .#{$size}5 {
+    flex-basis: 41.667%;
+    max-width: 41.667%;
+  }
+
+  .#{$size}6 {
+    flex-basis: 50%;
+    max-width: 50%;
+  }
+
+  .#{$size}7 {
+    flex-basis: 58.333%;
+    max-width: 58.333%;
+  }
+
+  .#{$size}8 {
+    flex-basis: 66.667%;
+    max-width: 66.667%;
+  }
+
+  .#{$size}9 {
+    flex-basis: 75%;
+    max-width: 75%;
+  }
+
+  .#{$size}10 {
+    flex-basis: 83.333%;
+    max-width: 83.333%;
+  }
+
+  .#{$size}11 {
+    flex-basis: 91.667%;
+    max-width: 91.667%;
+  }
+
+  .#{$size}12 {
+    flex-basis: 100%;
+    max-width: 100%;
+  }
+
+  .#{$size}Offset1 {
+    margin-left: 8.333%;
+  }
+
+  .#{$size}Offset2 {
+    margin-left: 16.667%;
+  }
+
+  .#{$size}Offset3 {
+    margin-left: 25%;
+  }
+
+  .#{$size}Offset4 {
+    margin-left: 33.333%;
+  }
+
+  .#{$size}Offset5 {
+    margin-left: 41.667%;
+  }
+
+  .#{$size}Offset6 {
+    margin-left: 50%;
+  }
+
+  .#{$size}Offset7 {
+    margin-left: 58.333%;
+  }
+
+  .#{$size}Offset8 {
+    margin-left: 66.667%;
+  }
+
+  .#{$size}Offset9 {
+    margin-left: 75%;
+  }
+
+  .#{$size}Offset10 {
+    margin-left: 83.333%;
+  }
+
+  .#{$size}Offset11 {
+    margin-left: 91.667%;
+  }
+}
+
+@mixin autoWidth($size) {
+  .#{$size} {
+    -ms-flex-positive: 1;
+    flex-grow: 1;
+    -ms-flex-preferred-size: 0;
+    flex-basis: 0;
+    max-width: 100%;
+  }
+}
+
+@mixin row($size) {
+  .start#{$size} {
+    justify-content: flex-start;
+    text-align: start;
+  }
+  .center#{$size} {
+    justify-content: center;
+    text-align: center;
+  }
+  .end#{$size} {
+    justify-content: flex-end;
+    text-align: end;
+  }
+  .top#{$size} {
+    align-items: flex-start;
+  }
+  .middle#{$size} {
+    align-items: center;
+  }
+  .bottom#{$size} {
+    align-items: flex-end;
+  }
+  .around#{$size} {
+    justify-content: space-around;
+  }
+  .between#{$size} {
+    justify-content: space-between;
+  }
+}
+
+@media only screen and (min-width: #{$screenXs}px) {
+  @include col(xs);
+  @include autoWidth(xs);
+}
+
+@media only screen and (min-width: #{$screenSm}px) {
+  @include col(sm);
+  @include autoWidth(sm);
+}
+
+@media only screen and (min-width: #{$screenMd}px) {
+  @include col(md);
+  @include autoWidth(md);
+}
+
+@media only screen and (min-width: #{$screenLg}px) {
+  @include col(lg);
+  @include autoWidth(lg);
+}
+
+@media only screen and (min-width: #{$screenXs}px) {
+  @include row(Xs);
+}
+
+@media only screen and (min-width: #{$screenSm}px) {
+  @include row(Sm);
+}
+
+@media only screen and (min-width: #{$screenMd}px) {
+  @include row(Md);
+}
+
+@media only screen and (min-width: #{$screenLg}px) {
+  @include row(Lg);
+}

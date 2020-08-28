@@ -5,7 +5,7 @@ services:
   - docker
 language: node_js
 node_js:
-  - "10"
+  - '10'
 os:
   - linux
 env:
@@ -13,18 +13,20 @@ env:
     - DOCKER_COMPOSE_VERSION=1.22.0
 matrix:
   include:
-  - env:
-    - REACT_APP_NETWORK='mainnet'
-    - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
-    - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
-    if: (branch = master AND NOT type = pull_request) OR tag IS present
-  - env:
-    - REACT_APP_NETWORK='rinkeby'
-    - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+    - env:
+        - REACT_APP_NETWORK='mainnet'
+        - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
+      if: (branch = master AND NOT type = pull_request) OR tag IS present
+    - env:
+        - REACT_APP_NETWORK='rinkeby'
+        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+cache:
+  yarn: true
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
-  - sudo apt-get -y install python-pip python-dev
+  - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev
   - pip install awscli --upgrade --user
   # Install truffle
   - yarn global add truffle
@@ -39,41 +41,41 @@ after_success:
 
 deploy:
   # Development environment
-- provider: s3
-  bucket: $DEV_BUCKET_NAME
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  skip_cleanup: true
-  local_dir: build_webpack
-  upload-dir: app
-  region: $AWS_DEFAULT_REGION
-  on:
-    branch: development
+  - provider: s3
+    bucket: $DEV_BUCKET_NAME
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    skip_cleanup: true
+    local_dir: build
+    upload-dir: app
+    region: $AWS_DEFAULT_REGION
+    on:
+      branch: development
 
-  # Staging environment
-- provider: s3
-  bucket: $STAGING_BUCKET_NAME
-  access_key_id: $AWS_ACCESS_KEY_ID
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  skip_cleanup: true
-  local_dir: build_webpack
-  upload-dir: current/app
-  region: $AWS_DEFAULT_REGION
-  on:
-    branch: master
+    # Staging environment
+  - provider: s3
+    bucket: $STAGING_BUCKET_NAME
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    skip_cleanup: true
+    local_dir: build
+    upload-dir: current/app
+    region: $AWS_DEFAULT_REGION
+    on:
+      branch: master
 
-  # Prepare production deployment
-- provider: s3
-  bucket: $STAGING_BUCKET_NAME
-  secret_access_key: $AWS_SECRET_ACCESS_KEY
-  access_key_id: $AWS_ACCESS_KEY_ID
-  skip_cleanup: true
-  local_dir: build_webpack
-  upload-dir: releases/$TRAVIS_TAG
-  region: $AWS_DEFAULT_REGION
-  on:
-    tags: true
-- provider: script
-  script: ./config/travis/prepare_production_deployment.sh
-  on:
-    tags: true
+    # Prepare production deployment
+  - provider: s3
+    bucket: $STAGING_BUCKET_NAME
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    access_key_id: $AWS_ACCESS_KEY_ID
+    skip_cleanup: true
+    local_dir: build
+    upload-dir: releases/$TRAVIS_TAG
+    region: $AWS_DEFAULT_REGION
+    on:
+      tags: true
+  - provider: script
+    script: ./config/travis/prepare_production_deployment.sh
+    on:
+      tags: true

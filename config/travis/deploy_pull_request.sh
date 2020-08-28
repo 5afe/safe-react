@@ -15,7 +15,7 @@ function deploy_pull_request {
   REVIEW_FEATURE_FOLDER="$REPO_NAME_ALPHANUMERIC/$PULL_REQUEST_NAME"
 
   # Deploy safe-team project
-  aws s3 sync build_webpack s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
+  aws s3 sync build s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
 }
 
 function publish_pull_request_urls_in_github {

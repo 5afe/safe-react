@@ -1,0 +1,43 @@
+@import "src/theme/variables.scss";
+
+.row {
+  display: flex;
+  flex: 0 1 auto;
+  flex-direction: row;
+  flex-wrap: wrap;
+}
+.grow {
+  flex: 1 1 auto;
+}
+
+.marginXs {
+  margin-bottom: $xs;
+}
+
+.marginSm {
+  margin-bottom: $sm;
+}
+
+.marginMd {
+  margin-bottom: $md;
+}
+
+.marginLg {
+  margin-bottom: $lg;
+}
+
+.marginXl {
+  margin-bottom: $xl;
+}
+
+.alignStart {
+  align-items: flex-start;
+}
+
+.alignEnd {
+  align-items: flex-end;
+}
+
+.alignCenter {
+  align-items: center;
+}
