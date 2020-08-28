@@ -15,7 +15,7 @@ import Block from 'src/components/layout/Block'
 import {
   extractMultiSendDecodedData,
   MultiSendDetails,
-} from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
+} from 'src/logic/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import EtherscanLink from 'src/components/EtherscanLink'
