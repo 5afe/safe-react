@@ -36,9 +36,7 @@ const TxDetailsMethodName = styled(Text)`
 `
 const TxDetailsMethodParam = styled.div`
   text-indent: 8px;
-`
-const InlineText = styled(Text)`
-  display: inline-flex;
+  display: flex;
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
@@ -56,9 +54,9 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 
     {data.parameters.map((param, index) => (
       <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
-        <InlineText size="lg" strong>
+        <Text size="lg" strong>
           {param.name}({param.type}):
-        </InlineText>
+        </Text>
         <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}

@@ -3,7 +3,7 @@ import TestUtils from 'react-dom/test-utils'
 import { Provider } from 'react-redux'
 import { render } from '@testing-library/react'
 import { ConnectedRouter } from 'connected-react-router'
-import PageFrame from 'src/components/layout/PageFrame'
+import App from 'src/components/App'
 import ListItemText from 'src/components/List/ListItemText/index'
 // import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
 import { sleep } from 'src/utils/timer'
@@ -87,9 +87,9 @@ const renderApp = (store) => ({
   ...render(
     <Provider store={store}>
       <ConnectedRouter history={history}>
-        <PageFrame>
+        <App>
             {wrapInSuspense(<AppRoutes />, <div />)}
-        </PageFrame>
+        </App>
       </ConnectedRouter>
     </Provider>,
   ),

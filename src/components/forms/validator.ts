@@ -59,7 +59,7 @@ export const ok = (): undefined => undefined
 
 export const mustBeEthereumAddress = memoize(
   (address: string): ValidatorReturnType => {
-    const startsWith0x = address.startsWith('0x')
+    const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
 
     return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
