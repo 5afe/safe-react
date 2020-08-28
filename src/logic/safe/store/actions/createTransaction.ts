@@ -121,7 +121,7 @@ const createTransaction = (
     txNonce,
     operation = CALL,
     navigateToTransactionsTab = true,
-    origin = null,
+    origin = '',
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
@@ -212,7 +212,8 @@ const createTransaction = (
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
-        onUserConfirm(safeTxHash)
+        onUserConfirm?.(safeTxHash)
+
         try {
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
