@@ -1,20 +1,28 @@
 import { List, Map, Set } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
+import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import {
+  SafeModuleTransaction,
+  TransactionStatus,
+  TransactionTypes,
+} from 'src/logic/safe/store/models/types/transaction'
 import {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
   CancellationTransactions,
 } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/incomingTransactions'
+import { MODULE_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/moduleTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
-import { AppReduxState } from 'src/store'
-
-import { checksumAddress } from 'src/utils/checksumAddress'
-import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
+import { tokenListSelector } from 'src/logic/tokens/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from 'src/routes/routes'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { AppReduxState } from 'src/store'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -35,6 +43,8 @@ const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCE
 const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
 
 const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
+
+const moduleTransactionsSelector = (state: AppReduxState) => state[MODULE_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
@@ -111,6 +121,41 @@ export const safeIncomingTransactionsSelector = createSelector(
     }
 
     return incomingTransactions.get(address, List([]))
+  },
+)
+
+export const safeModuleTransactionsSelector = createSelector(
+  tokenListSelector,
+  moduleTransactionsSelector,
+  safeParamAddressFromStateSelector,
+  (tokens, moduleTransactions, safeAddress): SafeModuleTransaction[] => {
+    // no module tx for the current safe so far
+    if (!moduleTransactions || !safeAddress || !moduleTransactions[safeAddress]) {
+      return []
+    }
+
+    return moduleTransactions[safeAddress]?.map((moduleTx) => {
+      // if not spendingLimit module tx, then it's an generic module tx
+      const type = sameAddress(moduleTx.module, SPENDING_LIMIT_MODULE_ADDRESS)
+        ? TransactionTypes.SPENDING_LIMIT
+        : TransactionTypes.MODULE
+
+      // TODO: this is strictly attached to Spending Limit Module.
+      //  This has to be moved nearest the module info rendering.
+      // add token info to the model, so data can be properly displayed in the UI
+      let tokenInfo
+      if (type === TransactionTypes.SPENDING_LIMIT) {
+        tokenInfo = tokens.find(({ address }) => sameAddress(address, moduleTx.to))
+      }
+
+      return {
+        ...moduleTx,
+        safeTxHash: moduleTx.transactionHash,
+        status: TransactionStatus.SUCCESS,
+        tokenInfo,
+        type,
+      }
+    })
   },
 )
 
