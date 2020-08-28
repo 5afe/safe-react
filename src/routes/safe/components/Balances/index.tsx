@@ -9,7 +9,7 @@ import { styles } from './style'
 import Modal from 'src/components/Modal'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
+// import Divider from 'src/components/layout/Divider'
 
 import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -19,7 +19,8 @@ import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
-import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
+// import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
+import { Route, Switch, Redirect } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -87,9 +88,9 @@ const Balances = (props) => {
   }
 
   const {
-    assetDivider,
-    assetTab,
-    assetTabActive,
+    // assetDivider,
+    // assetTab,
+    // assetTabActive,
     assetTabs,
     controls,
     manageTokensButton,
@@ -102,7 +103,7 @@ const Balances = (props) => {
     <>
       <Row align="center" className={controls}>
         <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          <NavLink
+          {/* <NavLink
             to={`${SAFELIST_ADDRESS}/${address}/balances`}
             activeClassName={assetTabActive}
             className={assetTab}
@@ -110,8 +111,8 @@ const Balances = (props) => {
             exact
           >
             Coins
-          </NavLink>
-          {erc721Enabled ? (
+          </NavLink> */}
+          {/* {erc721Enabled ? (
             <>
               <Divider className={assetDivider} />
               <NavLink
@@ -124,7 +125,7 @@ const Balances = (props) => {
                 Collectibles
               </NavLink>
             </>
-          ) : null}
+          ) : null} */}
         </Col>
         <Switch>
           <Route

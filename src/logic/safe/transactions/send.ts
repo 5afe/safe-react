@@ -1,4 +1,4 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import GnosisSafeSol from '../../../rsk-abis/GnosisSafe.json'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
@@ -22,7 +22,7 @@ export const getApprovalTransaction = async ({
   valueInWei,
 }) => {
   const txHash = await safeInstance.getTransactionHash(
-    to,
+    to.toLowerCase(),
     valueInWei,
     data,
     operation,
@@ -33,7 +33,7 @@ export const getApprovalTransaction = async ({
     refundReceiver,
     nonce,
     {
-      from: sender,
+      from: sender.toLowerCase(),
     },
   )
 
@@ -67,7 +67,7 @@ export const getExecutionTransaction = async ({
     const contract: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeInstance.address)
 
     return contract.methods.execTransaction(
-      to,
+      to.toLowerCase(),
       valueInWei,
       data,
       operation,

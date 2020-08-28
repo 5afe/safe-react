@@ -27,8 +27,8 @@ const handleProviderNotification = (provider, dispatch) => {
     dispatch(enqueueSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG))
     return
   }
-  if (ETHEREUM_NETWORK.RINKEBY === getNetwork()) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.RINKEBY_VERSION_MSG)))
+  if (ETHEREUM_NETWORK.TESTNET === getNetwork()) {
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
   }
 
   if (available) {

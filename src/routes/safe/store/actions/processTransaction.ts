@@ -7,6 +7,7 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import fetchSafe from 'src/routes/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/routes/safe/store/actions/transactions/fetchTransactions'
@@ -70,6 +71,11 @@ const processTransaction = ({
     sigs,
   }
 
+  const web3 = getWeb3()
+  txArgs.safeInstance.address = web3.utils.toChecksumAddress(txArgs.safeInstance.address)
+  txArgs.to = web3.utils.toChecksumAddress(tx.recipient)
+  txArgs.sender = web3.utils.toChecksumAddress(from)
+
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
     // theoretically EIP712 should also work for 1.0.0 contracts
@@ -98,7 +104,7 @@ const processTransaction = ({
 
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
-      sendParams.gas = '7000000'
+      sendParams.gas = '6000000'
     }
 
     const txToMock = {
@@ -135,6 +141,24 @@ const processTransaction = ({
           await storeTx(tx, safeAddress, dispatch, state)
           console.error(e)
         }
+
+        const web3 = getWeb3()
+        let receipt = null
+        let tries = 0
+        do {
+          await sleep(5000);
+          receipt = await web3.eth.getTransactionReceipt(hash);
+          if (receipt === null) {
+            tries++
+          }
+        } while (receipt === null && tries < 100)
+
+        if (receipt === null) {
+          return
+        }
+
+        manageSnackbar(pendingExecutionKey, closeSnackbar, isExecution, notificationsQueue, enqueueSnackbar)
+        manageStore(receipt, isExecution, mockedTx, tx, from, safeAddress, dispatch, state)
       })
       .on('error', (error) => {
         closeSnackbar(pendingExecutionKey)
@@ -142,54 +166,8 @@ const processTransaction = ({
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
-        if (pendingExecutionKey) {
-          closeSnackbar(pendingExecutionKey)
-        }
-
-        showSnackbar(
-          isExecution
-            ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-            : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          enqueueSnackbar,
-          closeSnackbar,
-        )
-
-        const toStoreTx = isExecution
-          ? mockedTx.withMutations((record) => {
-              record
-                .set('executionTxHash', receipt.transactionHash)
-                .set('blockNumber', receipt.blockNumber)
-                .set('executionDate', record.submissionDate)
-                .set('executor', from)
-                .set('isExecuted', true)
-                .set('isSuccessful', receipt.status)
-                .set(
-                  'status',
-                  receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
-                )
-                .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
-            })
-          : mockedTx.set('status', 'awaiting_confirmations')
-
-        await storeTx(
-          toStoreTx.withMutations((record) => {
-            record
-              .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
-              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
-                previous.pop(from),
-              )
-          }),
-          safeAddress,
-          dispatch,
-          state,
-        )
-
-        dispatch(fetchTransactions(safeAddress))
-
-        if (isExecution) {
-          dispatch(fetchSafe(safeAddress))
-        }
-
+        manageSnackbar(pendingExecutionKey, closeSnackbar, isExecution, notificationsQueue, enqueueSnackbar)
+        manageStore(receipt, isExecution, mockedTx, tx, from, safeAddress, dispatch, state)
         return receipt.transactionHash
       })
   } catch (err) {
@@ -211,6 +189,62 @@ const processTransaction = ({
   }
 
   return txHash
+}
+
+function manageSnackbar(pendingExecutionKey, closeSnackbar, isExecution, notificationsQueue, enqueueSnackbar) {
+  if (pendingExecutionKey) {
+    closeSnackbar(pendingExecutionKey)
+  }
+
+  showSnackbar(
+    isExecution
+      ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
+      : notificationsQueue.afterExecution.moreConfirmationsNeeded,
+    enqueueSnackbar,
+    closeSnackbar,
+  )
+}
+
+async function manageStore(receipt, isExecution, mockedTx, tx, from, safeAddress, dispatch, state) {
+  const toStoreTx = isExecution
+    ? mockedTx.withMutations((record) => {
+        record
+          .set('executionTxHash', receipt.transactionHash)
+          .set('blockNumber', receipt.blockNumber)
+          .set('executionDate', record.submissionDate)
+          .set('executor', from)
+          .set('isExecuted', true)
+          .set('isSuccessful', receipt.status)
+          .set(
+            'status',
+            receipt.status ? (isCancelTransaction(record, safeAddress) ? 'cancelled' : 'success') : 'failed',
+          )
+          .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
+      })
+    : mockedTx.set('status', 'awaiting_confirmations')
+
+  await storeTx(
+    toStoreTx.withMutations((record) => {
+      record
+        .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
+        .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+          previous.pop(from),
+        )
+    }),
+    safeAddress,
+    dispatch,
+    state,
+  )
+
+  dispatch(fetchTransactions(safeAddress))
+
+  if (isExecution) {
+    dispatch(fetchSafe(safeAddress))
+  }
+}
+
+function sleep(millis) {
+  return new Promise(resolve => setTimeout(resolve, millis))
 }
 
 export default processTransaction

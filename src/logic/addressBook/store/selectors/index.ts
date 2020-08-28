@@ -34,7 +34,7 @@ export const getNameFromAddressBook = createSelector(
   getAddressBookListSelector,
   (_, address) => address,
   (addressBook, address) => {
-    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address)
+    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address.toLowerCase())
     if (adbkEntry) {
       return adbkEntry.name
     }

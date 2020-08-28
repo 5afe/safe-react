@@ -51,9 +51,14 @@ export const formMutators = {
 
 export const createTxObject = (method, contractAddress, values) => {
   const web3 = getWeb3()
-  const contract: any = new web3.eth.Contract([method], contractAddress)
+  const contract: any = new web3.eth.Contract([method], web3.utils.toChecksumAddress(contractAddress))
   const { inputs, name } = method
-  const args = inputs.map(({ type }, index) => values[`methodInput-${name}_${index}_${type}`])
+  const args = inputs.map(({ type }, index) => {
+      if (type === 'address') {
+        return values[`methodInput-${name}_${index}_${type}`].toLowerCase()
+      }
+      return values[`methodInput-${name}_${index}_${type}`]
+  })
 
   return contract.methods[name](...args)
 }
@@ -62,6 +67,9 @@ export const getValueFromTxInputs = (key: string, type: string, tx: TransactionR
   let value = tx[key]
   if (type === 'bool') {
     value = tx[key] ? String(tx[key]) : 'false'
+  }
+  if (type === 'address') {
+    value = value.toLowerCase()
   }
   return value
 }

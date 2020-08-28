@@ -105,7 +105,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState()
-  const [createdSafeAddress, setCreatedSafeAddress] = useState()
+  const [createdSafeAddress, setCreatedSafeAddress] = useState<string | undefined>()
 
   const [error, setError] = useState(false)
   const [intervalStarted, setIntervalStarted] = useState(false)
@@ -231,12 +231,26 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
           onError(error)
         }
       }
+
+      if (safeCreationTxHash !== null && safeCreationTxHash !== undefined && stepIndex === 4) {
+        const web3 = getWeb3()
+        const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
+        if (receipt !== null && receipt.logs) {
+          let safeAddress = "0x" + receipt.logs[0].data.substring(26,66)
+          const code = await web3.eth.getCode(safeAddress)
+          if (code !== EMPTY_DATA) {
+            setCreatedSafeAddress(safeAddress)
+            setStepIndex(5)
+          }
+        }
+      }
+
     }, 3000)
 
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error])
+  }, [safeCreationTxHash, creationTxHash, submittedPromise, intervalStarted, stepIndex, error])
 
   useEffect(() => {
     let interval

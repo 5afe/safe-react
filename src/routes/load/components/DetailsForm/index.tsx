@@ -61,9 +61,7 @@ export const safeFieldsValidation = async (values) => {
   // ganache returns plain address
   // rinkeby returns 0x0000000000000+{40 address charachers}
   // address comes last so we just get last 40 charachers (1byte = 2hex chars)
-  const checksummedProxyAddress = web3.utils.toChecksumAddress(
-    `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
-  )
+  const checksummedProxyAddress = `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`.toLowerCase()
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
   const sameMasterCopy =
@@ -140,7 +138,7 @@ const Details = ({ classes, errors, form }) => {
             privacy policy
           </a>
           . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+          RSK blockchain. These funds cannot be accessed by Gnosis at any point.
         </Paragraph>
       </Block>
     </>

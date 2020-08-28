@@ -175,7 +175,7 @@ export const calculateTransactionStatus = (
   } else if (!tx.confirmations.size || !!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
-    const userConfirmed = tx.confirmations.filter((conf) => conf.owner === currentUser).size === 1
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.toLowerCase() === currentUser).size === 1
     const userIsSafeOwner = owners.filter((owner) => owner.address === currentUser).size === 1
     txStatus =
       !userConfirmed && userIsSafeOwner

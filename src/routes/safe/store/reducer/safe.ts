@@ -86,7 +86,7 @@ export default handleActions(
 
       return state.updateIn([SAFE_REDUCER_ID, safeAddress], (prevSafe) =>
         prevSafe.merge({
-          owners: prevSafe.owners.push(makeOwner({ address: ownerAddress, name: ownerName })),
+          owners: prevSafe.owners.push(makeOwner({ address: ownerAddress.toLowerCase(), name: ownerName })),
         }),
       )
     },
@@ -106,7 +106,7 @@ export default handleActions(
         prevSafe.merge({
           owners: prevSafe.owners
             .filter((o) => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
-            .push(makeOwner({ address: ownerAddress, name: ownerName })),
+            .push(makeOwner({ address: ownerAddress.toLowerCase(), name: ownerName })),
         }),
       )
     },

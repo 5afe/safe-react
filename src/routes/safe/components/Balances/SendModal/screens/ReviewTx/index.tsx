@@ -62,7 +62,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         const decimals = await tokenInstance.decimals()
         const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
+        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress.toLowerCase(), txAmount).encodeABI()
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)

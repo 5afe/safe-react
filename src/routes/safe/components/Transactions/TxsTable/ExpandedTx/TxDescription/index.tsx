@@ -44,14 +44,14 @@ export const styles = () => ({
 })
 
 const TransferDescription = ({ amount = '', recipient }) => {
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient.toLowerCase()))
   return (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
       {recipientName ? (
-        <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
+        <OwnerAddressTableCell address={recipient.toLowerCase()} knownAddress showLinks userName={recipientName} />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={recipient} />
+        <EtherscanLink knownAddress={false} type="address" value={recipient.toLowerCase()} />
       )}
     </Block>
   )
@@ -73,15 +73,15 @@ const RemovedOwner = ({ removedOwner }) => {
 }
 
 const AddedOwner = ({ addedOwner }) => {
-  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
+  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner.toLowerCase()))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>
       <Bold>Add owner:</Bold>
       {ownerChangedName ? (
-        <OwnerAddressTableCell address={addedOwner} knownAddress showLinks userName={ownerChangedName} />
+        <OwnerAddressTableCell address={addedOwner.toLowerCase()} knownAddress showLinks userName={ownerChangedName} />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={addedOwner} />
+        <EtherscanLink knownAddress={false} type="address" value={addedOwner.toLowerCase()} />
       )}
     </Block>
   )

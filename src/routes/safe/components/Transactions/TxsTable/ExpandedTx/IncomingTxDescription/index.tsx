@@ -26,9 +26,9 @@ const TransferDescription = ({ from, txFromName, value = '' }) => (
     <Bold>Received {value} from:</Bold>
     <br />
     {txFromName ? (
-      <OwnerAddressTableCell address={from} knownAddress showLinks userName={txFromName} />
+      <OwnerAddressTableCell address={from.toLowerCase()} knownAddress showLinks userName={txFromName} />
     ) : (
-      <EtherscanLink knownAddress={false} type="address" value={from} />
+      <EtherscanLink knownAddress={false} type="address" value={from.toLowerCase()} />
     )}
   </Block>
 )
@@ -38,7 +38,7 @@ const IncomingTxDescription = ({ tx }) => {
   const txFromName = useSelector((state) => getNameFromAddressBook(state, tx.from))
   return (
     <Block className={classes.txDataContainer}>
-      <TransferDescription from={tx.from} txFromName={txFromName} value={getIncomingTxAmount(tx, false)} />
+      <TransferDescription from={tx.from.toLowerCase()} txFromName={txFromName} value={getIncomingTxAmount(tx, false)} />
     </Block>
   )
 }

@@ -79,7 +79,7 @@ class HeaderComponent extends React.PureComponent<any, any> {
         onDisconnect={this.onDisconnect}
         openDashboard={this.getOpenDashboard()}
         provider={provider}
-        userAddress={userAddress}
+        userAddress={userAddress.toLowerCase()}
       />
     )
   }

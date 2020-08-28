@@ -156,6 +156,7 @@
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.39",
     "@openzeppelin/contracts": "3.0.1",
+    "@rsksmart/rns": "^1.8.2",
     "async-sema": "^3.1.0",
     "axios": "0.19.2",
     "bignumber.js": "9.0.0",
@@ -172,6 +173,8 @@
     "express": "^4.17.1",
     "final-form": "4.20.0",
     "final-form-calculate": "^1.3.1",
+    "flow-type": "^1.0.1",
+    "ganache-cli": "^6.9.1",
     "history": "4.10.1",
     "immortal-db": "^1.0.2",
     "immutable": "^4.0.0-rc.9",
@@ -199,6 +202,7 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
+    "rskjs-util": "^1.0.3",
     "semver": "7.3.2",
     "styled-components": "^5.0.1",
     "truffle-contract": "4.0.31",
@@ -234,7 +238,7 @@
     "node-sass": "^4.14.1",
     "prettier": "2.0.5",
     "react-app-rewired": "^2.1.6",
-    "truffle": "5.1.28",
+    "truffle": "^5.1.28",
     "typescript": "3.9.3",
     "wait-on": "5.0.0"
   }

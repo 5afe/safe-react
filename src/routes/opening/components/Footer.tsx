@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
+import { getExplorerLink } from 'src/logic/wallets/getWeb3'
 import { connected } from 'src/theme/variables'
 
 const EtherScanLink = styled.a`
@@ -20,7 +20,7 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
       Follow the progress on{' '}
       <EtherScanLink
         aria-label="Show details on Explorer"
-        href={getEtherScanLink('tx', safeCreationTxHash)}
+        href={getExplorerLink('tx', safeCreationTxHash)}
         rel="noopener noreferrer"
         target="_blank"
       >
