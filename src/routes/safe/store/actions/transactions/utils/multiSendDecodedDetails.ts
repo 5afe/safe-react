@@ -19,8 +19,8 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 export type MultiSendDetails = {
   operation: Operation
   to: string
-  decodedData: DataDecoded | null
   data: string | null
+  dataDecoded: DataDecoded | null
   value: number
 }
 

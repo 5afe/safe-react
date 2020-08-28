@@ -115,8 +115,8 @@ const NewSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.
 
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
-  const methodName = tx.decodedData?.method ? ` (${tx.decodedData.method})` : ''
-  const data = tx.decodedData ?? decodeMethods(tx.data)
+  const methodName = tx.dataDecoded?.method ? ` (${tx.dataDecoded.method})` : ''
+  const data = tx.dataDecoded ?? decodeMethods(tx.data)
   const isNewSpendingLimit = isSetAllowanceMethod(tx.data || '')
 
   return (
