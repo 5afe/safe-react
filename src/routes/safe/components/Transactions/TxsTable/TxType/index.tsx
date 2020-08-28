@@ -20,6 +20,8 @@ const typeToIcon = {
   creation: SettingsTxIcon,
   cancellation: SettingsTxIcon,
   upgrade: SettingsTxIcon,
+  module: SettingsTxIcon,
+  spendingLimit: SettingsTxIcon,
 }
 
 const typeToLabel = {
@@ -33,6 +35,7 @@ const typeToLabel = {
   cancellation: 'Cancellation transaction',
   upgrade: 'Contract Upgrade',
   module: 'Module transaction',
+  spendingLimit: 'Spending Limit',
 }
 
 interface TxTypeProps {

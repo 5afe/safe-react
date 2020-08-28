@@ -26,7 +26,7 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
@@ -80,7 +80,7 @@ interface NewSpendingLimitDetailsProps {
   data: DataDecoded
 }
 
-const NewSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
+const ModifySpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
   const [beneficiary, tokenAddress, amount, resetTimeMin] = React.useMemo(
     () => data.parameters.map(({ value }) => value),
     [data.parameters],
@@ -96,7 +96,7 @@ const NewSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.
   return (
     <>
       <TxInfo>
-        <Bold>New Spending Limit:</Bold>
+        <Bold>Modify Spending Limit:</Bold>
       </TxInfo>
       <SpendingLimitDetailsContainer>
         <Col margin="lg">
@@ -129,7 +129,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
     >
       {isNewSpendingLimit ? (
         <TxDetailsContent>
-          <NewSpendingLimitDetails data={data} />
+          <ModifySpendingLimitDetails data={data} />
         </TxDetailsContent>
       ) : (
         <TxDetailsContent>
@@ -201,7 +201,7 @@ const TxData = ({ data }: { data: string }): React.ReactElement => {
   )
 }
 
-const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.ReactElement => {
+export const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -237,16 +237,22 @@ interface GenericCustomDataProps {
   amount?: string
   data: string
   recipient: string
-  storedTx: Transaction
+  storedTx: Transaction | SafeModuleTransaction
 }
 
-const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
+export const GenericCustomData = ({
+  amount = '0',
+  data,
+  recipient,
+  storedTx,
+}: GenericCustomDataProps): React.ReactElement => {
+  debugger
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
   return isNewSpendingLimit ? (
-    <NewSpendingLimitDetails data={txData} />
+    <ModifySpendingLimitDetails data={txData} />
   ) : (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>

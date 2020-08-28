@@ -3,6 +3,12 @@ import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import {
+  getModuleAmount,
+  TableData,
+  TX_TABLE_RAW_CANCEL_TX_ID,
+  TX_TABLE_RAW_TX_ID,
+} from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -23,10 +29,44 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
+import TransferDescription from './TxDescription/TransferDescription'
 
 const useStyles = makeStyles(styles as any)
+
+const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <Block className={classes.expandedTxBlock}>
+      <Row>
+        <Col layout="column" xs={6}>
+          <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+            <div style={{ display: 'flex' }}>
+              <Bold className={classes.txHash}>Hash:</Bold>
+              {tx.executionTxHash ? (
+                <EthHashInfo
+                  hash={tx.executionTxHash}
+                  shortenHash={4}
+                  showCopyBtn
+                  showEtherscanBtn
+                  network={getNetwork()}
+                />
+              ) : (
+                'n/a'
+              )}
+            </div>
+          </Block>
+          <Hairline />
+          <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+            <TransferDescription amount={getModuleAmount(tx)} recipient={tx.dataDecoded.parameters[0].value} />
+          </Block>
+        </Col>
+      </Row>
+    </Block>
+  )
+}
 
 interface ExpandedTxProps {
   cancelTx: Transaction
@@ -136,4 +176,14 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   )
 }
 
-export default ExpandedTx
+const ExpandedTxRow = ({ row }: { row: TableData }): React.ReactElement => {
+  const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(row.tx.type)
+
+  if (isModuleTx) {
+    return <ExpandedModuleTx tx={row[TX_TABLE_RAW_TX_ID] as SafeModuleTransaction} />
+  }
+
+  return <ExpandedTx cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID] as Transaction} />
+}
+
+export default ExpandedTxRow

@@ -4,11 +4,11 @@ import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { TRANSACTION_ROW_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable'
 import {
   TRANSACTIONS_DESC_SEND_TEST_ID,
-} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription'
+} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTxRow/TxDescription'
 import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,
   TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID,
-} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/SettingsDescription'
+} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTxRow/TxDescription/SettingsDescription'
 import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/components/Layout/Tabs'
 
 export const getLastTransaction = async (SafeDom) => {
