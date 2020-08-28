@@ -23,7 +23,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   //Balancer Exchange
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`, disabled: false },
   //Balancer Pool
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmSiUgsYQE6y4ADZQtKuVCwszvUeeHnaRc7kmQMZRiF4ZH`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaTucdZYLKTqaewwJduVMM8qfCDhyaEqjd8tBNae26K1J`, disabled: false },
   // Compound
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   // Idle

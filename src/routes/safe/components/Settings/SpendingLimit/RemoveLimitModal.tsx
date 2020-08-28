@@ -1,5 +1,4 @@
 import { Button } from '@gnosis.pm/safe-react-components'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -34,7 +33,6 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
   const tokenInfo = useToken(spendingLimit.spent.tokenAddress)
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
 
   const removeSelectedSpendingLimit = async (): Promise<void> => {
@@ -60,8 +58,6 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
           valueInWei: '0',
           txData,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
-          enqueueSnackbar,
-          closeSnackbar,
         }),
       )
     } catch (e) {

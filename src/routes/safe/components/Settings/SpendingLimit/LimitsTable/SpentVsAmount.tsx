@@ -7,7 +7,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
 import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 
 const StyledImage = styled.img`
   width: 32px;

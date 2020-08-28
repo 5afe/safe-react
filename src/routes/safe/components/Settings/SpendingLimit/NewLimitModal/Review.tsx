@@ -1,5 +1,4 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import { useSnackbar } from 'notistack'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -45,7 +44,6 @@ interface ReviewSpendingLimitProps {
 const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
   const classes = useStyles()
 
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const dispatch = useDispatch()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -133,8 +131,6 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           valueInWei: '0',
           txData: setAllowanceTx.data,
           notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-          enqueueSnackbar,
-          closeSnackbar,
         }),
       )
     } else {
@@ -147,8 +143,6 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           valueInWei: '0',
           txData: getEncodedMultiSendCallData(transactions, getWeb3()),
           notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-          enqueueSnackbar,
-          closeSnackbar,
           operation: DELEGATE_CALL,
         }),
       )
