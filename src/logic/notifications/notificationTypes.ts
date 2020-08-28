@@ -148,8 +148,8 @@ export const NOTIFICATIONS = {
   },
 
   // Network
-  RINKEBY_VERSION_MSG: {
-    message: "Rinkeby Version: Don't send Mainnet assets to this Safe",
+  TESTNET_VERSION_MSG: {
+    message: "Testnet Version: Don't send Mainnet assets to this Safe",
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {

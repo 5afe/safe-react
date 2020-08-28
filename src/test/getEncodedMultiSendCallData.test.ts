@@ -1,6 +1,6 @@
 // 
 import Web3 from 'web3'
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import GnosisSafeSol from 'rsk-abis/GnosisSafe.json'
 import {
   DEFAULT_FALLBACK_HANDLER_ADDRESS,
   getEncodedMultiSendCallData,

@@ -5,6 +5,10 @@ import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType
 import { SafeApp } from './types'
 
 const removeLastTrailingSlash = (url) => {
+  if (url === null || url === undefined) {
+    return url;
+  }
+
   if (url.substr(-1) === '/') {
     return url.substr(0, url.length - 1)
   }

@@ -9,7 +9,7 @@ import { safesListSelector } from 'src/routes/safe/store/selectors'
 export const ADD_SAFE = 'ADD_SAFE'
 
 export const buildOwnersFrom = (names, addresses) => {
-  const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
+  const owners = names.map((name, index) => makeOwner({ name, address: addresses[index].toLowerCase() }))
 
   return List(owners)
 }

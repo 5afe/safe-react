@@ -19,7 +19,7 @@ export const getNamesFrom = (values) => {
 }
 
 export const getOwnersFrom = (names, addresses) => {
-  const owners = names.map((name, index) => makeOwner({ name, address: addresses[index] }))
+  const owners = names.map((name, index) => makeOwner({ name, address: addresses[index].toLowerCase() }))
 
   return List(owners)
 }

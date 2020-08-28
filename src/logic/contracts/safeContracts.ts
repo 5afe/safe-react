@@ -1,6 +1,6 @@
 import contract from 'truffle-contract'
-import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import ProxyFactorySol from '../../rsk-abis/GnosisSafeProxyFactory.json'
+import GnosisSafeSol from '../../rsk-abis/GnosisSafe.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import { ensureOnce } from 'src/utils/singleton'
 import { simpleMemoize } from 'src/components/forms/validator'
@@ -10,10 +10,10 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
-export const MULTI_SEND_ADDRESS = '0xB522a9f781924eD250A11C54105E51840B138AdD'
-export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
-export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
-export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A'
+export const MULTI_SEND_ADDRESS = '0xb8e79ef5765fa8eeca73ca85b451d82971a207fc'
+export const SAFE_MASTER_COPY_ADDRESS = '0xe502b44b0f3981f883e03dfa1dff119753178b40'
+export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0x8099f45d56dde725f94a49149cd0a263741c3a5c' // No hace falta cambiarlo una vez deployado
+export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xe502b44b0f3981f883e03dfa1dff119753178b40'
 
 
 let proxyFactoryMaster
@@ -58,7 +58,7 @@ const createMasterCopies = async () => {
   proxyFactoryMaster = await ProxyFactory.new({ from: userAccount, gas: '5000000' })
 
   const GnosisSafe = getGnosisSafeContract(web3)
-  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '7000000' })
+  safeMaster = await GnosisSafe.new({ from: userAccount, gas: '6000000' })
 }
 
 export const initContracts = process.env.NODE_ENV === 'test' ? ensureOnce(createMasterCopies) : instantiateMasterCopies

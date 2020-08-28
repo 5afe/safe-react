@@ -87,7 +87,7 @@ export const getRefundParams = async (
   let refundParams = null
 
   if (tx.gasPrice > 0) {
-    let refundSymbol = 'ETH'
+    let refundSymbol = 'RBTC'
     let refundDecimals = 18
 
     if (tx.gasToken !== ZERO_ADDRESS) {
@@ -175,7 +175,7 @@ export const calculateTransactionStatus = (
   } else if (!tx.confirmations.size || !!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
-    const userConfirmed = tx.confirmations.filter((conf) => conf.owner === currentUser).size === 1
+    const userConfirmed = tx.confirmations.filter((conf) => conf.owner.toLowerCase() === currentUser).size === 1
     const userIsSafeOwner = owners.filter((owner) => owner.address === currentUser).size === 1
     txStatus =
       !userConfirmed && userIsSafeOwner
@@ -233,7 +233,7 @@ export const buildTx = async ({
   const refundParams = await getRefundParams(tx, getERC20DecimalsAndSymbol)
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
-  const { decimals = 18, symbol = 'ETH' } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
+  const { decimals = 18, symbol = 'RBTC' } = isSendERC20Tx ? await getERC20DecimalsAndSymbol(tx.to) : {}
 
   const txToStore: Transaction = makeTransaction({
     baseGas: tx.baseGas,

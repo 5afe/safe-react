@@ -172,7 +172,7 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
       <Row align="center" className={classes.info}>
         <Paragraph color="primary" noMargin size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately {gasCosts} ETH. The exact amount will be determined by your
+          wallet. The creation will cost approximately {gasCosts} RBTC. The exact amount will be determined by your
           wallet.
         </Paragraph>
       </Row>

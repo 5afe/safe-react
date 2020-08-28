@@ -11,7 +11,7 @@ import { styles } from './style'
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
-import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
+import { getAddressFromRNS } from 'src/logic/wallets/getWeb3'
 
 const textFieldLabelStyle = makeStyles(() => ({
   root: {
@@ -38,7 +38,7 @@ const filterAddressBookWithContractAddresses = async (addressBook) => {
   return addressBook.filter((adbkEntry, index) => abFlags[index])
 }
 
-const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+const isValidRnsName = (name) => /^([\w-]+\.)+(rsk)$/.test(name)
 
 const AddressBookInput = ({
   classes,
@@ -69,8 +69,8 @@ const AddressBookInput = ({
       return
     }
     if (addressValue) {
-      if (isValidEnsName(addressValue)) {
-        resolvedAddress = await getAddressFromENS(addressValue)
+      if (isValidRnsName(addressValue)) {
+        resolvedAddress = await getAddressFromRNS(addressValue)
         setInputAddValue(resolvedAddress)
       }
       isValidText = mustBeEthereumAddress(resolvedAddress)

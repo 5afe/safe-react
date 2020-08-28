@@ -58,18 +58,17 @@ export const createSafe = (values, userAccount) => {
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
+  const ownerAddressesLowerCase = ownerAddresses.map(function(address){ return address.toLowerCase() })
 
-  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddresses, confirmations, userAccount)
+  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddressesLowerCase, confirmations, userAccount)
 
   const promiEvent = deploymentTxMethod.send({ from: userAccount, value: 0 })
-
   promiEvent
-    .once('transactionHash', (txHash) => {
+    .once('transactionHash', function(txHash) {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
     })
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
-
       const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
       const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
       // returning info for testing purposes, in app is fully async
@@ -134,7 +133,6 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
 
   const onSafeCreated = async (safeAddress) => {
     const pendingCreation = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
-
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
     const ownerAddresses = getAccountsFrom(pendingCreation)

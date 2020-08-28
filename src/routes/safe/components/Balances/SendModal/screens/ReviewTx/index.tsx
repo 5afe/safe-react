@@ -62,7 +62,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         const decimals = await tokenInstance.decimals()
         const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
+        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress.toLowerCase(), txAmount).encodeABI()
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
@@ -157,7 +157,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) RBTC in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

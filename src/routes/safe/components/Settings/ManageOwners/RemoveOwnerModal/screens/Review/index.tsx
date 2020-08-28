@@ -167,7 +167,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
           <br />
-          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+          {`Make sure you have ${gasCosts} (fee price) RBTC in this wallet to fund this confirmation.`}
         </Paragraph>
       </Block>
       <Hairline />

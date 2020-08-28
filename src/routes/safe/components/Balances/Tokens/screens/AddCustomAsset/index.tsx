@@ -23,7 +23,7 @@ import {
   addressIsAssetContract,
   doesntExistInAssetsList,
 } from 'src/routes/safe/components/Balances/Tokens/screens/AddCustomAsset/validators'
-import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
+import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/rsk_token_placeholder.svg'
 import { Checkbox } from '@gnosis.pm/safe-react-components'
 
 export const ADD_CUSTOM_ASSET_ADDRESS_INPUT_TEST_ID = 'add-custom-asset-address-input'

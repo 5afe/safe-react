@@ -34,7 +34,7 @@ const calculateBodyFrom = async (
   )
 
   return {
-    to: checksumAddress(to),
+    to: to,
     value: valueInWei,
     data,
     operation,
@@ -46,7 +46,7 @@ const calculateBodyFrom = async (
     refundReceiver,
     contractTransactionHash,
     transactionHash,
-    sender: checksumAddress(sender),
+    sender: sender,
     origin,
     signature,
   }

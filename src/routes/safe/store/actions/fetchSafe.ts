@@ -1,4 +1,4 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import GnosisSafeSol from '../../../../rsk-abis/GnosisSafe.json'
 import { List } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'

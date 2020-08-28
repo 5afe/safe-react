@@ -2,7 +2,7 @@ import { DELEGATE_CALL } from 'src/logic/safe/transactions/send'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 
-const multiSendAddress = '0xB522a9f781924eD250A11C54105E51840B138AdD'
+const multiSendAddress = '0xb8e79ef5765fa8eeca73ca85b451d82971a207fc'
 const multiSendAbi = [
   {
     type: 'function',

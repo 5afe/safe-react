@@ -9,7 +9,7 @@ export const getAwaitingTransactions = (allTransactions = List([]), cancellation
     // The transaction is not executed and is not cancelled, nor pending, so it's still waiting confirmations
     if (!tx.executionTxHash && !tx.cancelled && !isPendingTransaction(tx, cancelTx)) {
       // Then we check if the waiting confirmations are not from the current user, otherwise, filters this transaction
-      const transactionWaitingUser = tx.confirmations.filter(({ owner }) => owner !== userAccount)
+      const transactionWaitingUser = tx.confirmations.filter(({ owner }) => owner.toLowerCase() !== userAccount.toLowerCase())
       return transactionWaitingUser.size > 0
     }
 

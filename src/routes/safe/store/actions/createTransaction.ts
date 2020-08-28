@@ -34,6 +34,7 @@ import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
 import { safeTransactionsSelector } from 'src/routes/safe/store/selectors'
 import { TransactionStatus } from 'src/routes/safe/store/models/types/transaction'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const removeTxFromStore = (tx, safeAddress, dispatch, state) => {
   if (tx.isCancellationTx) {
@@ -136,6 +137,11 @@ const createTransaction = ({
     sigs,
   }
 
+  const web3 = getWeb3()
+  txArgs.safeInstance.address = web3.utils.toChecksumAddress(txArgs.safeInstance.address)
+  txArgs.to = web3.utils.toChecksumAddress(to)
+  txArgs.sender = web3.utils.toChecksumAddress(from)
+
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
     // theoretically EIP712 should also work for 1.0.0 contracts
@@ -161,7 +167,7 @@ const createTransaction = ({
 
     // if not set owner management tests will fail on ganache
     if (process.env.NODE_ENV === 'test') {
-      sendParams.gas = '7000000'
+      sendParams.gas = '6000000'
     }
 
     const txToMock = {
@@ -255,7 +261,7 @@ const createTransaction = ({
     showSnackbar(notificationsQueue.afterExecutionError, enqueueSnackbar, closeSnackbar)
 
     const executeDataUsedSignatures = safeInstance.contract.methods
-      .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+      .execTransaction(to.toLowerCase(), valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
       .encodeABI()
     const errMsg = await getErrorMessage(safeInstance.address, 0, executeDataUsedSignatures, from)
     console.error(`Error creating the TX: ${errMsg}`)

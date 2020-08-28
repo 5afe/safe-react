@@ -1,5 +1,5 @@
 import { ensureOnce } from 'src/utils/singleton'
-import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import {
   RELAY_API_URL,
   SIGNATURES_VIA_METAMASK,
@@ -37,11 +37,11 @@ const configuration = () => {
 
 export const getNetwork = () =>
   process.env.REACT_APP_NETWORK === 'mainnet'
-    ? ETHEREUM_NETWORK.MAINNET
-    : ETHEREUM_NETWORK.RINKEBY
+    ? ETHEREUM_NETWORK.RSK
+    : ETHEREUM_NETWORK.TESTNET
 
 export const getNetworkId = () =>
-  process.env.REACT_APP_NETWORK === 'mainnet' ? 1 : 4
+  process.env.REACT_APP_NETWORK === 'mainnet' ? 30 : 31
 
 const getConfig = ensureOnce(configuration)
 
@@ -68,9 +68,9 @@ export const signaturesViaMetamask = () => {
 }
 
 export const getGoogleAnalyticsTrackingID = () =>
-  getNetwork() === ETHEREUM_NETWORK.MAINNET
-    ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET
-    : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY
+  getNetwork() === ETHEREUM_NETWORK.RSK
+    ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RSK
+    : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_TESTNET
 
 export const getIntercomId = () =>
   process.env.REACT_APP_ENV === 'production'
@@ -83,7 +83,7 @@ export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSIO
 
 export const buildSafeCreationTxUrl = (safeAddress) => {
   const host = getTxServiceHost()
-  const address = getWeb3().utils.toChecksumAddress(safeAddress)
+  const address = safeAddress.toLowerCase()
   const base = getSafeCreationTxUri(address)
 
   return `${host}${base}`

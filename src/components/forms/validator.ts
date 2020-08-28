@@ -1,5 +1,8 @@
+import { getNetworkId } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+
+const rskUtils = require("rskjs-util")
 
 export const simpleMemoize = (fn) => {
   let lastArg
@@ -70,16 +73,20 @@ export const ok = () => undefined
 
 export const mustBeEthereumAddress = simpleMemoize((address: string) => {
   const startsWith0x = address.startsWith('0x')
-  const isAddress = getWeb3().utils.isAddress(address)
+  const networkId = getNetworkId()
+  const isAddress = address === address.toLowerCase() || rskUtils.isValidChecksumAddress(address, networkId)
 
-  return startsWith0x && isAddress ? undefined : 'Address should be a valid Ethereum address or ENS name'
+  return startsWith0x && isAddress ? undefined : 'Address should be a valid RSK address or RNS name'
 })
 
 export const mustBeEthereumContractAddress = simpleMemoize(async (address: string) => {
-  const contractCode = await getWeb3().eth.getCode(address)
+  const contractCode = await getWeb3().eth.getCode(getWeb3().utils.toChecksumAddress(address))
+
+  if (contractCode === '0x00')
+    return undefined
 
   return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === ''
-    ? 'Address should be a valid Ethereum contract address or ENS name'
+    ? 'Address should be a valid RSK contract address or RNS name'
     : undefined
 })
 
@@ -97,7 +104,7 @@ export const uniqueAddress = (addresses: string[]) =>
 export const composeValidators = (...validators) => (value) =>
   validators.reduce((error, validator) => error || validator(value), undefined)
 
-export const inLimit = (limit, base, baseText, symbol = 'ETH') => (value) => {
+export const inLimit = (limit, base, baseText, symbol = 'RBTC') => (value) => {
   const amount = Number(value)
   const max = limit - base
   if (amount <= max) {

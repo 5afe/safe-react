@@ -46,7 +46,7 @@ const EthValue = ({ onSetMax }) => {
             component={TextField}
             disabled={disabled}
             inputAdornment={{
-              endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+              endAdornment: <InputAdornment position="end">RBTC</InputAdornment>,
               disabled,
             }}
             name="value"

@@ -2,7 +2,6 @@ import { List, Map, Set } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/routes/safe/store/reducer/cancellationTransactions'
@@ -36,8 +35,7 @@ export const safeParamAddressFromStateSelector = (state): string | null => {
   const match = matchPath(state.router.location.pathname, { path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
   if (match) {
-    const web3 = getWeb3()
-    return web3.utils.toChecksumAddress(match.params.safeAddress)
+    return match.params.safeAddress.toLowerCase()
   }
 
   return null

@@ -13,7 +13,7 @@ import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
-import { loadIntercom } from 'src/utils/intercom'
+// import { loadIntercom } from 'src/utils/intercom'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -194,10 +194,10 @@ const CookiesBanner = () => {
   )
 
   if (showAnalytics) {
-    loadIntercom()
+    // loadIntercom()
     loadGoogleAnalytics()
   }
-  if (isDesktop) loadIntercom()
+  // if (isDesktop) loadIntercom()
 
   return showBanner && !isDesktop ? cookieBannerContent : null
 }

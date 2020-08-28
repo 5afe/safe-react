@@ -4,9 +4,9 @@ import { OnChange } from 'react-final-form-listeners'
 
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
-import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
+import { getAddressFromRNS } from 'src/logic/wallets/getWeb3'
 
-const isValidEnsName = (name) => /^([\w-]+\.)+(eth|test|xyz|luxe)$/.test(name)
+const isValidRnsName = (name) => /^([\w-]+\.)+(rsk)$/.test(name)
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -39,12 +39,12 @@ const AddressInput = ({
     />
     <OnChange name={name}>
       {async (value) => {
-        if (isValidEnsName(value)) {
+        if (isValidRnsName(value)) {
           try {
-            const resolverAddr = await getAddressFromENS(value)
+            const resolverAddr = await getAddressFromRNS(value)
             fieldMutator(resolverAddr)
           } catch (err) {
-            console.error('Failed to resolve address for ENS name: ', err)
+            console.error('Failed to resolve address for RNS name: ', err)
           }
         }
       }}

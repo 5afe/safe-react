@@ -39,15 +39,15 @@ export const CreationTx = ({ tx }) => {
       </Paragraph>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Creator:</Bold>
-        {tx.creator ? <EtherscanLink cut={8} type="address" value={tx.creator} /> : 'n/a'}
+        {tx.creator ? <EtherscanLink cut={8} type="address" value={tx.creator.toLowerCase()} /> : 'n/a'}
       </Block>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Factory:</Bold>
-        {tx.factoryAddress ? <EtherscanLink cut={8} type="address" value={tx.factoryAddress} /> : 'n/a'}
+        {tx.factoryAddress ? <EtherscanLink cut={8} type="address" value={tx.factoryAddress.toLowerCase()} /> : 'n/a'}
       </Block>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Mastercopy:</Bold>
-        {tx.masterCopy ? <EtherscanLink cut={8} type="address" value={tx.masterCopy} /> : 'n/a'}
+        {tx.masterCopy ? <EtherscanLink cut={8} type="address" value={tx.masterCopy.toLowerCase()} /> : 'n/a'}
       </Block>
     </>
   ) : null

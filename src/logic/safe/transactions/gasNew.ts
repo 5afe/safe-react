@@ -1,4 +1,4 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
+import GnosisSafeSol from '../../../rsk-abis/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
 
 import { CALL } from '.'
@@ -47,7 +47,7 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
             )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
         .execTransaction(
-          to,
+          to.toLowerCase(),
           tx ? tx.value : 0,
           data,
           CALL,

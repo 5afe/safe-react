@@ -1,4 +1,4 @@
-import logo from 'src/assets/icons/icon_etherTokens.svg'
+import logo from 'src/assets/icons/smart_bitcoin.svg'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getStandardTokenContract, getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
@@ -13,8 +13,8 @@ export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 export const getEthAsToken = (balance: string): Token => {
   return makeToken({
     address: ETH_ADDRESS,
-    name: 'Ether',
-    symbol: 'ETH',
+    name: 'Smart Bitcoin',
+    symbol: 'RBTC',
     decimals: 18,
     logoUri: logo,
     balance,

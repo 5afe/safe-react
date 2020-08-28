@@ -18,7 +18,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
-import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
+import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/rsk_token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Checkbox } from '@gnosis.pm/safe-react-components'
 

@@ -1,6 +1,3 @@
-import axios from 'axios'
-import { BigNumber } from 'bignumber.js'
-
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 // const MAINNET_NETWORK = 1
@@ -27,25 +24,13 @@ export const checkReceiptStatus = async (hash) => {
 }
 
 export const calculateGasPrice = async () => {
-  /*
-  const web3 = getWeb3()
-  const { network } = web3.version
-  const isMainnet = MAINNET_NETWORK === network
-
-  const url = isMainnet
-    ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
-    : 'https://safe-relay.dev.gnosisdev.com/'
-  */
-
   if (process.env.NODE_ENV === 'test') {
-    return '20000000000'
+    return '59240000'
   }
 
-  const url = 'https://ethgasstation.info/json/ethgasAPI.json'
-  // const errMsg = 'Error querying gas station'
-  const { data } = await axios.get(url)
-
-  return new BigNumber(data.average).multipliedBy(1e8).toString()
+  const web3 = getWeb3()
+  const gasPrice = await web3.eth.getGasPrice();
+  return gasPrice;
 }
 
 export const calculateGasOf = async (data, from, to) => {

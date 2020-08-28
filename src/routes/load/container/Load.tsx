@@ -10,7 +10,6 @@ import selector from './selector'
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
@@ -33,11 +32,10 @@ class Load extends React.Component<any> {
   onLoadSafeSubmit = async (values) => {
     try {
       const { addSafe } = this.props
-      const web3 = getWeb3()
       const safeName = values[FIELD_LOAD_NAME]
       let safeAddress = values[FIELD_LOAD_ADDRESS]
       if (safeAddress) {
-        safeAddress = web3.utils.toChecksumAddress(safeAddress)
+        safeAddress = safeAddress.toLowerCase()
       }
       const ownerNames = getNamesFrom(values)
 

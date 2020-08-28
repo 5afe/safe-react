@@ -4,6 +4,7 @@ import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
 import { getNetwork } from 'src/config/index'
+import RNS from '@rsksmart/rns'
 
 export const ETHEREUM_NETWORK = {
   MAINNET: 'MAINNET',
@@ -13,6 +14,8 @@ export const ETHEREUM_NETWORK = {
   GOERLI: 'GOERLI',
   KOVAN: 'KOVAN',
   UNKNOWN: 'UNKNOWN',
+  RSK: 'RSK_MAINNET',
+  TESTNET: 'RSK_TESTNET'
 }
 
 export const WALLET_PROVIDER = {
@@ -44,26 +47,29 @@ export const ETHEREUM_NETWORK_IDS = {
   5: ETHEREUM_NETWORK.GOERLI,
   // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
+  // RSK
+  30: ETHEREUM_NETWORK.RSK,
+  31: ETHEREUM_NETWORK.TESTNET
 }
 
-export const getEtherScanLink = (type, value) => {
+export const getExplorerLink = (type, value) => {
   const network = getNetwork()
-  return `https://${
-    network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`
-  }etherscan.io/${type}/${value}`
+  return `https://explorer.${
+    network.toLowerCase() === 'rsk_mainnet' ? '' : 'testnet.'
+  }rsk.co/${type}/${value}`
 }
 
-export const getInfuraUrl = () => {
+export const getNodeUrl = () => {
   const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
-
-  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
+  return `https://public-node.${isMainnet ? '' : 'testnet.'}rsk.co`
 }
+
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
 export const web3ReadOnly =
   process.env.NODE_ENV !== 'test'
-    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
+    ? new Web3(new Web3.providers.HttpProvider(getNodeUrl()))
     : new Web3((window as any).web3.currentProvider)
 
 let web3 = web3ReadOnly
@@ -80,7 +86,7 @@ export const getAccountFrom = async (web3Provider) => {
     return accounts[(window as any).testAccountIndex]
   }
 
-  return accounts && accounts.length > 0 ? accounts[0] : null
+  return accounts && accounts.length > 0 ? accounts[0].toLowerCase() : null
 }
 
 export const getNetworkIdFrom = (web3Provider) => web3Provider.eth.net.getId()
@@ -115,7 +121,8 @@ export const getProviderInfo = async (web3Provider, providerName = 'Wallet') => 
   }
 }
 
-export const getAddressFromENS = (name: string) => web3.eth.ens.getAddress(name)
+let rns = new RNS(web3)
+export const getAddressFromRNS = (name: string) => rns.addr(name)
 
 export const getContentFromENS = (name: string) => web3.eth.ens.getContenthash(name)
 
