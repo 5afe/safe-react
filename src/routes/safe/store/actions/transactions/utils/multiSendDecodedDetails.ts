@@ -17,13 +17,13 @@ import { isMultiSendParameter } from './newTransactionHelpers'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 export type MultiSendDetails = {
-  operation: keyof typeof Operation
+  operation: Operation
   to: string
   data: DataDecoded | null
   value: number
 }
 
-export type MultiSendDecodedData = {
+export type MultiSendDataDecoded = {
   txDetails?: MultiSendDetails[]
   transfersDetails?: TransferDetails[]
 }
@@ -43,18 +43,18 @@ export const extractTransferDetails = (transfer: Transfer): TransferDetails => {
 
 export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[] | undefined => {
   if (isMultiSendParameter(parameter)) {
-    return parameter.decodedValue.map((decodedValue) => {
+    return parameter.valueDecoded.map((valueDecoded) => {
       return {
-        operation: decodedValue.operation,
-        to: decodedValue.to,
-        value: decodedValue.value,
-        data: decodedValue?.decodedData ?? null,
+        operation: valueDecoded.operation,
+        to: valueDecoded.to,
+        value: valueDecoded.value,
+        data: valueDecoded?.dataDecoded ?? null,
       }
     })
   }
 }
 
-export const extractMultiSendDecodedData = (tx: Transaction): MultiSendDecodedData => {
+export const extractMultiSendDataDecoded = (tx: Transaction): MultiSendDataDecoded => {
   const transfersDetails = tx.transfers?.map(extractTransferDetails)
   const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
