@@ -6,7 +6,7 @@ import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 
 import Loader from 'src/components/Loader'
-import PageFrame from 'src/components/layout/PageFrame'
+import App from 'src/components/App'
 
 import AppRoutes from 'src/routes'
 import { history, store } from 'src/store'
@@ -20,9 +20,7 @@ const Root = (): React.ReactElement => (
   <ThemeProvider theme={styledTheme}>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <PageFrame>{wrapInSuspense(<AppRoutes />, <Loader />)}</PageFrame>
-        </ConnectedRouter>
+        <ConnectedRouter history={history}>{<App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>}</ConnectedRouter>
       </MuiThemeProvider>
     </Provider>
   </ThemeProvider>

@@ -8,7 +8,7 @@ import Value from './Value'
 
 import Block from 'src/components/layout/Block'
 import {
-  extractMultiSendDecodedData,
+  extractMultiSendDataDecoded,
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
@@ -198,7 +198,7 @@ interface CustomDescriptionProps {
 }
 
 const CustomDescription = ({ amount, data, recipient, storedTx }: CustomDescriptionProps): React.ReactElement => {
-  const txDetails = (storedTx.multiSendTx && extractMultiSendDecodedData(storedTx).txDetails) ?? undefined
+  const txDetails = (storedTx.multiSendTx && extractMultiSendDataDecoded(storedTx).txDetails) ?? undefined
 
   return txDetails ? (
     <MultiSendCustomData txDetails={txDetails} />
