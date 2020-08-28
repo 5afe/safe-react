@@ -16,14 +16,15 @@ export default handleActions(
   {
     [ADD_MODULE_TRANSACTIONS]: (state: ModuleTransactionsState, action: AddModuleTransactionsAction) => {
       const { modules, safeAddress } = action.payload
-      const oldState = state[safeAddress]
+      const oldModuleTxs = state[safeAddress] ?? []
+      const oldModuleTxsHashes = oldModuleTxs.map(({ transactionHash }) => transactionHash)
+      // filtering in this level happens, because backend is returning the whole list of txs
+      // so, to avoid re-storing all the txs, those already stored are filtered out
+      const newModuleTxs = modules.filter((moduleTx) => !oldModuleTxsHashes.includes(moduleTx.transactionHash))
 
       return {
         ...state,
-        [safeAddress]: {
-          ...oldState,
-          ...modules,
-        },
+        [safeAddress]: [...oldModuleTxs, ...newModuleTxs],
       }
     },
   },
