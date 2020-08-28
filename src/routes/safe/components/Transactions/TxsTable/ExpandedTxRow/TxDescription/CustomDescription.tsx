@@ -246,7 +246,6 @@ export const GenericCustomData = ({
   recipient,
   storedTx,
 }: GenericCustomDataProps): React.ReactElement => {
-  debugger
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')

@@ -112,10 +112,15 @@ const getIncomingTxTableData = (tx: Transaction): TableData => ({
 
 const getTransactionTableData = (tx: Transaction, cancelTx: Transaction): TableData => {
   const txDate = tx.submissionDate
+  // given that setAllowance will always be part of
+  // a spendingLimit related tx (as of now, until removeDelegate is implemented)
+  // we can use this method to identify an SpendingLimit tx
+  const setAllowanceHash = 'beaeb388'
+  const txType = tx.data?.includes(setAllowanceHash) ? TransactionTypes.SPENDING_LIMIT : tx.type
 
   return {
     [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
-    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
+    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),

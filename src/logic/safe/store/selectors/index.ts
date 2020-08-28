@@ -151,6 +151,7 @@ export const safeModuleTransactionsSelector = createSelector(
       return {
         ...moduleTx,
         safeTxHash: moduleTx.transactionHash,
+        executionTxHash: moduleTx.transactionHash,
         status: TransactionStatus.SUCCESS,
         tokenInfo,
         type,

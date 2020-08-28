@@ -77,4 +77,5 @@ const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
 
   return loading ? <Loader size="sm" /> : <CustomIconText iconUrl={appInfo!.iconUrl} text={appInfo!.name} />
 }
+
 export default TxType
