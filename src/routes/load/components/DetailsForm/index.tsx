@@ -49,14 +49,14 @@ export const safeFieldsValidation = async (values) => {
     return errors
   }
 
-  const isValidProxy = await validateProxy(safeAddress)
+  const isValidProxy = await validateProxy(safeAddress.toLowerCase())
   if (!isValidProxy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_INSTANCE_ERROR
     return errors
   }
 
   // check mastercopy
-  const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress, 0)
+  const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress.toLowerCase(), 0)
   // https://www.reddit.com/r/ethereum/comments/6l3da1/how_long_are_ethereum_addresses/
   // ganache returns plain address
   // rinkeby returns 0x0000000000000+{40 address charachers}
@@ -65,7 +65,7 @@ export const safeFieldsValidation = async (values) => {
   const safeMaster = await getSafeMasterContract()
   const masterCopy = safeMaster.address
   const sameMasterCopy =
-    checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
+    checksummedProxyAddress === masterCopy.toLowerCase() || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
   if (!sameMasterCopy) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
   }
