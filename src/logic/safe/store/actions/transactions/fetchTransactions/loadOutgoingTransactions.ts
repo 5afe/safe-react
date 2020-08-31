@@ -78,7 +78,7 @@ export type BatchProcessTxsProps = OutgoingTxs & {
  */
 const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxServiceModel[]): OutgoingTxs => {
   return outgoingTxs.reduce(
-    (acc, transaction) => {
+    (acc: { cancellationTxs: Record<number, TxServiceModel>; outgoingTxs: TxServiceModel[] }, transaction) => {
       if (
         isCancelTransaction(transaction, safeAddress) &&
         outgoingTxs.find((tx) => tx.nonce === transaction.nonce && !isCancelTransaction(tx, safeAddress))
@@ -182,7 +182,7 @@ const batchProcessOutgoingTransactions = async ({
   return { cancel, outgoing }
 }
 
-let previousETag = null
+let previousETag: string | null = null
 export const loadOutgoingTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
   const defaultResponse = {
     cancel: Map(),
