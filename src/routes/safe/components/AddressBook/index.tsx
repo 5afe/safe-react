@@ -22,8 +22,8 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
-import { isUserOwnerOnAnySafe } from 'src/logic/wallets/ethAddresses'
+import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { isUserAnOwnerOfAnySafe } from 'src/logic/wallets/ethAddresses'
 import CreateEditEntryModal from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
@@ -39,8 +39,9 @@ import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwn
 import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
 import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
-import { addressBookQueryParamsSelector, safesListSelector } from 'src/routes/safe/store/selectors'
+import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const AddressBookTable = ({ classes }) => {
   const columns = generateColumns()
@@ -48,11 +49,16 @@ const AddressBookTable = ({ classes }) => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-  const addressBook = useSelector(getAddressBookListSelector)
+  const addressBook = useSelector(getAddressBook)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
+  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -132,11 +138,11 @@ const AddressBookTable = ({ classes }) => {
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"
-            size={addressBook.size}
+            size={addressBook?.size || 0}
           >
             {(sortedData) =>
               sortedData.map((row, index) => {
-                const userOwner = isUserOwnerOnAnySafe(safesList, row.address)
+                const userOwner = isUserAnOwnerOfAnySafe(safesList, row.address)
                 const hideBorderBottom = index >= 3 && index === sortedData.size - 1 && classes.noBorderBottom
                 return (
                   <TableRow

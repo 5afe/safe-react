@@ -9,14 +9,16 @@ import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
 
 export const ETHEREUM_NETWORK = {
-  MAINNET: 'MAINNET',
-  MORDEN: 'MORDEN',
-  ROPSTEN: 'ROPSTEN',
-  RINKEBY: 'RINKEBY',
-  GOERLI: 'GOERLI',
-  KOVAN: 'KOVAN',
-  UNKNOWN: 'UNKNOWN',
+  MAINNET: 'MAINNET' as const,
+  MORDEN: 'MORDEN' as const,
+  ROPSTEN: 'ROPSTEN' as const,
+  RINKEBY: 'RINKEBY' as const,
+  GOERLI: 'GOERLI' as const,
+  KOVAN: 'KOVAN' as const,
+  UNKNOWN: 'UNKNOWN' as const,
 }
+
+export type EthereumNetworks = typeof ETHEREUM_NETWORK[keyof typeof ETHEREUM_NETWORK]
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -26,26 +28,22 @@ export const WALLET_PROVIDER = {
   PORTIS: 'PORTIS',
   FORTMATIC: 'FORTMATIC',
   SQUARELINK: 'SQUARELINK',
+  UNILOGIN: 'UNILOGIN',
   WALLETCONNECT: 'WALLETCONNECT',
   OPERA: 'OPERA',
   DAPPER: 'DAPPER',
+  WALLETLINK: 'WALLETLINK',
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
   TREZOR: 'TREZOR',
 }
 
 export const ETHEREUM_NETWORK_IDS = {
-  // $FlowFixMe
   1: ETHEREUM_NETWORK.MAINNET,
-  // $FlowFixMe
   2: ETHEREUM_NETWORK.MORDEN,
-  // $FlowFixMe
   3: ETHEREUM_NETWORK.ROPSTEN,
-  // $FlowFixMe
   4: ETHEREUM_NETWORK.RINKEBY,
-  // $FlowFixMe
   5: ETHEREUM_NETWORK.GOERLI,
-  // $FlowFixMe
   42: ETHEREUM_NETWORK.KOVAN,
 }
 
@@ -97,14 +95,10 @@ const isSmartContractWallet = async (web3Provider: Web3, account: string): Promi
   return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
-export const getProviderInfo = async (
-  web3Provider: string | Provider,
-  providerName = 'Wallet',
-): Promise<ProviderProps> => {
-  web3 = new Web3(web3Provider)
-  const account = await getAccountFrom(web3)
-  const network = await getNetworkIdFrom(web3)
-  const smartContractWallet = await isSmartContractWallet(web3, account)
+export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
+  const account = await getAccountFrom(web3Instance)
+  const network = await getNetworkIdFrom(web3Instance)
+  const smartContractWallet = await isSmartContractWallet(web3Instance, account)
   const hardwareWallet = isHardwareWallet(providerName)
 
   const available = account !== null

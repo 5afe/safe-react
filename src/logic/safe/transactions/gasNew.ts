@@ -1,15 +1,18 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
+import { AbiItem } from 'web3-utils'
 
 import { CALL } from '.'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
-const estimateDataGasCosts = (data) => {
+const estimateDataGasCosts = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
     if (currentValue === EMPTY_DATA) {
       return accumulator + 0
@@ -25,33 +28,37 @@ const estimateDataGasCosts = (data) => {
   return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
-export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApprovingOwner?: any) => {
+export const estimateTxGasCosts = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
+): Promise<number> => {
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-    const safeInstance: any = new web3.eth.Contract(GnosisSafeSol.abi as any, safeAddress)
+    const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
-
-    const isExecution = (tx && tx.confirmations.size === threshold) || !!preApprovingOwner || threshold === '1'
+    const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
 
     let txData
     if (isExecution) {
       // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-      const signatures =
-        tx && tx.confirmations
-          ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-          : `0x000000000000000000000000${from.replace(
-              '0x',
-              '',
-            )}000000000000000000000000000000000000000000000000000000000000000001`
+      const signatures = tx?.confirmations
+        ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+        : `0x000000000000000000000000${from.replace(
+            '0x',
+            '',
+          )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
         .execTransaction(
           to,
-          tx ? tx.value : 0,
+          tx?.value || 0,
           data,
           CALL,
-          tx ? tx.safeTxGas : 0,
+          tx?.safeTxGas || 0,
           0,
           0,
           ZERO_ADDRESS,
@@ -61,7 +68,7 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
         .encodeABI()
     } else {
       const txHash = await safeInstance.methods
-        .getTransactionHash(to, tx ? tx.value : 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+        .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
         .call({
           from,
         })
@@ -80,16 +87,23 @@ export const estimateTxGasCosts = async (safeAddress, to, data, tx?: any, preApp
   }
 }
 
-export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei, operation) => {
+export const estimateSafeTxGas = async (
+  safe: GnosisSafe | undefined,
+  safeAddress: string,
+  data: string,
+  to: string,
+  valueInWei: string,
+  operation: number,
+): Promise<number> => {
   try {
     let safeInstance = safe
     if (!safeInstance) {
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
-    const web3: any = await getWeb3()
-    const estimateData = safeInstance.contract.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse: any = await web3.eth.call({
+    const web3 = await getWeb3()
+    const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
+    const estimateResponse = await web3.eth.call({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
@@ -98,17 +112,20 @@ export const estimateSafeTxGas = async (safe, safeAddress, data, to, valueInWei,
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
-
     const additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     const batch = new web3.BatchRequest()
     const estimationRequests = additionalGasBatches.map(
       (additionalGas) =>
         new Promise((resolve) => {
+          // there are no type definitions for .request, so for now ts-ignore is there
+          // Issue link: https://github.com/ethereum/web3.js/issues/3144
+          // eslint-disable-next-line
+          // @ts-ignore
           const request = web3.eth.call.request(
             {
-              to: safe.address,
-              from: safe.address,
+              to: safeAddress,
+              from: safeAddress,
               data: estimateData,
               gasPrice: 0,
               gasLimit: txGasEstimation + dataGasEstimation + additionalGas,

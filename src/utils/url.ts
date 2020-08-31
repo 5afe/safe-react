@@ -1,4 +1,4 @@
-export const isValid = (url, protocolsAllowed = ['https:', 'http:']) => {
+export const isValidURL = (url: string, protocolsAllowed = ['https:', 'http:']): boolean => {
   try {
     const urlInfo = new URL(url)
     return protocolsAllowed.includes(urlInfo.protocol)
@@ -7,7 +7,7 @@ export const isValid = (url, protocolsAllowed = ['https:', 'http:']) => {
   }
 }
 
-export const isSameHref = (url1, url2) => {
+export const isSameURL = (url1: string, url2: string): boolean => {
   try {
     const a = new URL(url1)
     const b = new URL(url2)

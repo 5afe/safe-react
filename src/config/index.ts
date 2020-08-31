@@ -59,6 +59,9 @@ export const getTxServiceUriFrom = (safeAddress) =>
 export const getIncomingTxServiceUriTo = (safeAddress) =>
   `safes/${safeAddress}/incoming-transfers/`
 
+export const getAllTransactionsUriFrom = (safeAddress: string): string =>
+  `safes/${safeAddress}/all-transactions/`
+
 export const getSafeCreationTxUri = (safeAddress) => `safes/${safeAddress}/creation/`
 
 export const getRelayUrl = () => getConfig()[RELAY_API_URL]
@@ -86,6 +89,8 @@ export const getIntercomId = () =>
     : 'plssl1fl'
 
 export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
+
+export const getExchangeRatesUrlFallback = () => 'https://api.coinbase.com/v2/exchange-rates'
 
 export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
 

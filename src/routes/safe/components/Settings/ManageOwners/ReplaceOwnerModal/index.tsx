@@ -10,16 +10,15 @@ import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import replaceSafeOwner from 'src/routes/safe/store/actions/replaceSafeOwner'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const styles = () => ({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
@@ -34,20 +33,18 @@ export const sendReplaceOwner = async (
   dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const safeOwners = await gnosisSafe.getOwners()
+  const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
   )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.contract.methods
-    .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
-    .encodeABI()
+  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,

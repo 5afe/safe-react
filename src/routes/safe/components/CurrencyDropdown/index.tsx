@@ -16,10 +16,13 @@ import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setS
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
+import { setImageToPlaceholder } from '../Balances/utils'
+import Img from 'src/components/layout/Img/index'
+import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
 
-const CurrencyDropdown = () => {
+const CurrencyDropdown = (): React.ReactElement => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
@@ -96,14 +99,23 @@ const CurrencyDropdown = () => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  <div
-                    className={classNames(
-                      classes.localFlag,
-                      'currency-flag',
-                      'currency-flag-lg',
-                      `currency-flag-${currencyName.toLowerCase()}`,
-                    )}
-                  />
+                  {currencyName === AVAILABLE_CURRENCIES.ETH ? (
+                    <Img
+                      alt="ether"
+                      onError={setImageToPlaceholder}
+                      src={etherIcon}
+                      className={classNames(classes.etherFlag)}
+                    />
+                  ) : (
+                    <div
+                      className={classNames(
+                        classes.localFlag,
+                        'currency-flag',
+                        'currency-flag-lg',
+                        `currency-flag-${currencyName.toLowerCase()}`,
+                      )}
+                    />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={currencyName} />
                 {currencyName === selectedCurrency ? (

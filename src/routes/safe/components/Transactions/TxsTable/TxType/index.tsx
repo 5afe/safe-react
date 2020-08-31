@@ -8,6 +8,7 @@ import SettingsTxIcon from './assets/settings.svg'
 
 import CustomIconText from 'src/components/CustomIconText'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -33,20 +34,28 @@ const typeToLabel = {
   upgrade: 'Contract Upgrade',
 }
 
-const TxType = ({ origin, txType }: any) => {
+interface TxTypeProps {
+  origin?: string
+  txType: keyof typeof typeToLabel
+}
+
+const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
   const [loading, setLoading] = useState(true)
-  const [appInfo, setAppInfo] = useState<any>()
+  const [appInfo, setAppInfo] = useState<SafeApp>()
   const [forceCustom, setForceCustom] = useState(false)
 
   useEffect(() => {
     const getAppInfo = async () => {
       const parsedOrigin = getAppInfoFromOrigin(origin)
+
       if (!parsedOrigin) {
         setForceCustom(true)
         setLoading(false)
         return
       }
+
       const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
+
       setAppInfo(appInfo)
       setLoading(false)
     }

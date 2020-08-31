@@ -10,20 +10,19 @@ import ThresholdForm from './screens/ThresholdForm'
 import Modal from 'src/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import removeSafeOwner from 'src/routes/safe/store/actions/removeSafeOwner'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 const styles = () => ({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
@@ -40,20 +39,18 @@ export const sendRemoveOwner = async (
   dispatch,
 ) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const safeOwners = await gnosisSafe.getOwners()
+  const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
   )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.contract.methods
-    .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
-    .encodeABI()
+  const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddressToRemove, values.threshold).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,

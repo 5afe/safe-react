@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
@@ -19,8 +19,9 @@ import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
-import { safeCancellationTransactionsSelector } from 'src/routes/safe/store/selectors'
-import { extendedTransactionsSelector } from 'src/routes/safe/store/selectors/transactions'
+import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
+import { extendedTransactionsSelector } from 'src/logic/safe/store/selectors/transactions'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -28,6 +29,11 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
+  }, [trackEvent])
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
@@ -84,7 +90,7 @@ const TxsTable = ({ classes }) => {
                   onClick={() => handleTxExpand(row.tx.safeTxHash)}
                   tabIndex={-1}
                 >
-                  {autoColumns.map((column: any) => (
+                  {autoColumns.map((column) => (
                     <TableCell
                       align={column.align}
                       className={cn(classes.cell, ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}

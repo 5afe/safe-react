@@ -20,11 +20,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import {
-  safeNameSelector,
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -40,9 +36,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
       const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
-      const txData = safeInstance.contract.methods
-        .addOwnerWithThreshold(values.ownerAddress, values.threshold)
-        .encodeABI()
+      const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
 
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')

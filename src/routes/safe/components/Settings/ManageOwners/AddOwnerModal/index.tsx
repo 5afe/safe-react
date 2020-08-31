@@ -11,30 +11,29 @@ import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import addSafeOwner from 'src/routes/safe/store/actions/addSafeOwner'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const styles = () => ({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
 
 export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackbar, closeSnackbar, dispatch) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const txData = gnosisSafe.contract.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
+  const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
       safeAddress,
       to: safeAddress,
-      valueInWei: 0,
+      valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       enqueueSnackbar,

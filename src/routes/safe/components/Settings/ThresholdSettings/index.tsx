@@ -1,6 +1,6 @@
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ChangeThreshold from './ChangeThreshold'
@@ -16,12 +16,13 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
   const [isModalOpen, setModalOpen] = useState(false)
@@ -37,13 +38,13 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
 
   const onChangeThreshold = async (newThreshold) => {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
+    const txData = safeInstance.methods.changeThreshold(newThreshold).encodeABI()
 
     dispatch(
       createTransaction({
         safeAddress,
         to: safeAddress,
-        valueInWei: 0,
+        valueInWei: '0',
         txData,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
         enqueueSnackbar,
@@ -51,6 +52,12 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
       } as any),
     )
   }
+
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+  }, [trackEvent])
 
   return (
     <>

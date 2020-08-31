@@ -25,7 +25,7 @@ import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -42,10 +42,10 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const safeOwners = await gnosisSafe.getOwners()
+      const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.contract.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
+      const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)

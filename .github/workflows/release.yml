@@ -3,9 +3,8 @@ name: Build/Release Desktop app
 # this will help you specify where to run
 on:
   push:
-    branches-ignore:
-      # Temporary disable action
-      - '**'
+    branches:
+      - master
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
@@ -15,6 +14,7 @@ env:
   REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL }}
   REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
+  REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 jobs:
   release:
     runs-on: ${{ matrix.os }}
@@ -43,9 +43,8 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v1
         with:
-          node-version: 10.16
-      - run: yarn install --network-concurrency 1
-
+          node-version: 12
+      - run: yarn install --frozen-lockfile --network-concurrency 1
       - name: Build/Release Desktop App
         env:
           # macOS notarization API key
@@ -70,23 +69,22 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: 'Upload Artifacts OSX'
-        if: contains(github.ref, 'development') && startsWith(matrix.os, 'macos')
+        if: contains(github.ref, 'master') && startsWith(matrix.os, 'macos')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop OSX
           path: ./dist/Safe[ ]Multisig*.dmg
 
       - name: 'Upload Artifacts Linux'
-        if: contains(github.ref, 'development') && startsWith(matrix.os, 'ubuntu')
+        if: contains(github.ref, 'master') && startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Linux
           path: ./dist/Safe[ ]Multisig*.AppImage
 
       - name: 'Upload Artifacts Windows'
-        if: contains(github.ref, 'development') && startsWith(matrix.os, 'windows')
+        if: contains(github.ref, 'master') && startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Windows
           path: ./dist/Safe[ ]Multisig*.exe
-

@@ -20,11 +20,7 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import {
-  safeNameSelector,
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -41,10 +37,10 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const safeOwners = await gnosisSafe.getOwners()
+      const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.contract.methods.removeOwner(prevAddress, ownerAddress, values.threshold).encodeABI()
+      const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, values.threshold).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)

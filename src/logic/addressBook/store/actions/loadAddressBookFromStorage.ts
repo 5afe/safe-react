@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
-import { safesListSelector } from 'src/routes/safe/store/selectors'
+import { safesListSelector } from 'src/logic/safe/store/selectors'
 
 const loadAddressBookFromStorage = () => async (dispatch, getState) => {
   try {

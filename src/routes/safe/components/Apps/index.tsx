@@ -1,417 +1,192 @@
-import { Card, FixedDialog, FixedIcon, IconText, Loader, Menu, Text, Title } from '@gnosis.pm/safe-react-components'
-import { withSnackbar } from 'notistack'
-import React, { useCallback, useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
-import styled from 'styled-components'
+import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
+import { INTERFACE_MESSAGES, Transaction, RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
+import { useSelector } from 'react-redux'
+import styled, { css } from 'styled-components'
 
-import ManageApps from './ManageApps'
-import confirmTransactions from './confirmTransactions'
-import sendTransactions from './sendTransactions'
-import { getAppInfoFromUrl, staticAppsList } from './utils'
+import ManageApps from './components/ManageApps'
+import AppFrame from './components/AppFrame'
+import { useAppList } from './hooks/useAppList'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   safeEthBalanceSelector,
-  safeNameSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { isSameHref } from 'src/utils/url'
-import { SafeApp, StoredSafeApp } from './types'
+  safeNameSelector,
+} from 'src/logic/safe/store/selectors'
+import { isSameURL } from 'src/utils/url'
+import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
+import ConfirmTransactionModal from './components/ConfirmTransactionModal'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
-const APPS_LEGAL_DISCLAIMER_STORAGE_KEY = 'APPS_LEGAL_DISCLAIMER_STORAGE_KEY'
-
-const StyledIframe = styled.iframe`
-  padding: 15px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-`
-const Centered = styled.div`
+const centerCSS = css`
   display: flex;
   align-items: center;
   justify-content: center;
-  flex-direction: column;
 `
 
-const CenteredMT = styled(Centered)`
+const LoadingContainer = styled.div`
+  width: 100%;
+  height: 100%;
+  ${centerCSS};
+`
+
+const StyledCard = styled(Card)`
+  margin-bottom: 24px;
+  ${centerCSS};
+`
+
+const CenteredMT = styled.div`
+  ${centerCSS};
   margin-top: 5px;
 `
 
-const IframeWrapper = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-`
-
-const IframeCoverLoading = styled.div`
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  background: white;
-`
-const operations = {
-  SEND_TRANSACTIONS: 'SEND_TRANSACTIONS',
-  ON_SAFE_INFO: 'ON_SAFE_INFO',
+type ConfirmTransactionModalState = {
+  isOpen: boolean
+  txs: Transaction[]
+  requestId: RequestId | undefined
 }
 
-function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
-  const [appList, setAppList] = useState<Array<SafeApp>>([])
-  const [legalDisclaimerAccepted, setLegalDisclaimerAccepted] = useState(false)
-  const [selectedApp, setSelectedApp] = useState<string>()
-  const [loading, setLoading] = useState(true)
-  const [appIsLoading, setAppIsLoading] = useState(true)
-  const [iframeEl, setIframeEl] = useState<HTMLIFrameElement | null>(null)
+const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
+  isOpen: false,
+  txs: [],
+  requestId: undefined,
+}
 
-  const history = useHistory()
+const Apps = (): React.ReactElement => {
+  const { appList, loadingAppList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
+
+  const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
+  const [selectedAppId, setSelectedAppId] = useState<string>()
+  const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
+    INITIAL_CONFIRM_TX_MODAL_STATE,
+  )
+  const iframeRef = useRef<HTMLIFrameElement>()
+
+  const { trackEvent } = useAnalytics()
   const granted = useSelector(grantedSelector)
-  const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
   const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const dispatch = useDispatch()
 
-  const getSelectedApp = useCallback(() => appList.find((e) => e.id === selectedApp), [appList, selectedApp])
+  const openConfirmationModal = useCallback(
+    (txs: Transaction[], requestId: RequestId) =>
+      setConfirmTransactionModal({
+        isOpen: true,
+        txs,
+        requestId,
+      }),
+    [setConfirmTransactionModal],
+  )
+  const closeConfirmationModal = useCallback(() => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE), [
+    setConfirmTransactionModal,
+  ])
 
-  const iframeRef = useCallback((node) => {
-    if (node !== null) {
-      setIframeEl(node)
-    }
-  }, [])
+  const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
+  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
+  const { sendMessageToIframe } = useIframeMessageHandler(
+    selectedApp,
+    openConfirmationModal,
+    closeConfirmationModal,
+    iframeRef,
+  )
+
+  const onUserTxConfirm = (safeTxHash: string) => {
+    sendMessageToIframe(
+      { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
+      confirmTransactionModal.requestId,
+    )
+  }
 
   const onSelectApp = useCallback(
     (appId) => {
-      const selectedApp = getSelectedApp()
-
-      if (selectedApp && selectedApp.id === appId) {
+      if (selectedAppId === appId) {
         return
       }
 
       setAppIsLoading(true)
-      setSelectedApp(appId)
+      setSelectedAppId(appId)
     },
-    [getSelectedApp],
+    [selectedAppId],
   )
 
-  const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
-
-  const onAcceptLegalDisclaimer = () => {
-    setLegalDisclaimerAccepted(true)
-    saveToStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY, true)
-  }
-
-  const getContent = () => {
-    if (!selectedApp) {
-      return null
-    }
-
-    if (!legalDisclaimerAccepted) {
-      return (
-        <FixedDialog
-          body={
-            <>
-              <Text size="md">
-                You are now accessing third-party apps, which we do not own, control, maintain or audit. We are not
-                liable for any loss you may suffer in connection with interacting with the apps, which is at your own
-                risk. You must read our Terms, which contain more detailed provisions binding on you relating to the
-                apps.
-              </Text>
-              <br />
-              <Text size="md">
-                I have read and understood the{' '}
-                <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
-                  Terms
-                </a>{' '}
-                and this Disclaimer, and agree to be bound by them.
-              </Text>
-            </>
-          }
-          onCancel={redirectToBalance}
-          onConfirm={onAcceptLegalDisclaimer}
-          title="Disclaimer"
-        />
-      )
-    }
-
-    if (network === 'UNKNOWN' || !granted) {
-      return (
-        <Centered style={{ height: '476px' }}>
-          <FixedIcon type="notOwner" />
-          <Title size="xs">To use apps, you must be an owner of this Safe</Title>
-        </Centered>
-      )
-    }
-
-    const app = getSelectedApp()
-
-    return (
-      <IframeWrapper>
-        {appIsLoading && (
-          <IframeCoverLoading>
-            <Loader size="md" />
-          </IframeCoverLoading>
-        )}
-        <StyledIframe frameBorder="0" id={`iframe-${app.name}`} ref={iframeRef} src={app.url} title={app.name} />
-      </IframeWrapper>
-    )
-  }
-
-  const onAppAdded = (app: SafeApp) => {
-    const newAppList = [
-      { url: app.url, disabled: false },
-      ...appList.map((a) => ({
-        url: a.url,
-        disabled: a.disabled,
-      })),
-    ]
-    saveToStorage(APPS_STORAGE_KEY, newAppList)
-
-    setAppList([...appList, { ...app, disabled: false }])
-  }
-
-  const selectFirstApp = useCallback(
-    (apps) => {
-      const firstEnabledApp = apps.find((a) => !a.disabled)
+  // Auto Select app first App
+  useEffect(() => {
+    const selectFirstEnabledApp = () => {
+      const firstEnabledApp = appList.find((a) => !a.disabled)
       if (firstEnabledApp) {
-        onSelectApp(firstEnabledApp.id)
+        setSelectedAppId(firstEnabledApp.id)
       }
-    },
-    [onSelectApp],
-  )
+    }
 
-  const onAppToggle = async (appId, enabled) => {
-    // update in-memory list
-    const copyAppList = [...appList]
+    const initialSelect = appList.length && !selectedAppId
+    const currentAppWasDisabled = selectedApp?.disabled
+    if (initialSelect || currentAppWasDisabled) {
+      selectFirstEnabledApp()
+    }
+  }, [appList, selectedApp, selectedAppId, trackEvent])
 
-    const app = copyAppList.find((a) => a.id === appId)
-    if (!app) {
+  // track GA
+  useEffect(() => {
+    if (selectedApp) {
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: selectedApp.name })
+    }
+  }, [selectedApp, trackEvent])
+
+  const handleIframeLoad = useCallback(() => {
+    const iframe = iframeRef.current
+    if (!iframe || !selectedApp || !isSameURL(iframe.src, selectedApp.url)) {
       return
     }
 
-    app.disabled = !enabled
-    setAppList(copyAppList)
-
-    // update storage list
-    const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-    let storageApp = persistedAppList.find((a) => a.url === app.url)
-
-    if (!storageApp) {
-      storageApp = { url: app.url }
-      storageApp.disabled = !enabled
-      persistedAppList.push(storageApp)
-    } else {
-      storageApp.disabled = !enabled
-    }
-
-    saveToStorage(APPS_STORAGE_KEY, persistedAppList)
-
-    // select app
-    const selectedApp = getSelectedApp()
-    if (!selectedApp || (selectedApp && selectedApp.id === appId)) {
-      setSelectedApp(undefined)
-      selectFirstApp(copyAppList)
-    }
-  }
-
-  const getEnabledApps = () => appList.filter((a) => !a.disabled)
-
-  // handle messages from iframe
-  useEffect(() => {
-    const handleIframeMessage = (data) => {
-      if (!data || !data.messageId) {
-        console.error('ThirdPartyApp: A message was received without message id.')
-        return
-      }
-
-      switch (data.messageId) {
-        case operations.SEND_TRANSACTIONS: {
-          const onConfirm = async () => {
-            closeModal()
-
-            await sendTransactions(
-              dispatch,
-              safeAddress,
-              data.data,
-              enqueueSnackbar,
-              closeSnackbar,
-              getSelectedApp().id,
-            )
-          }
-
-          confirmTransactions(
-            safeAddress,
-            safeName,
-            ethBalance,
-            getSelectedApp().name,
-            getSelectedApp().iconUrl,
-            data.data,
-            openModal,
-            closeModal,
-            onConfirm,
-          )
-
-          break
-        }
-
-        default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${data.messageId}.`)
-          break
-        }
-      }
-    }
-
-    const onIframeMessage = async ({ data, origin }) => {
-      if (origin === window.origin) {
-        return
-      }
-
-      const app = getSelectedApp()
-      if (!app.url.includes(origin)) {
-        console.error(`ThirdPartyApp: A message was received from an unknown origin ${origin}`)
-        return
-      }
-
-      handleIframeMessage(data)
-    }
-
-    window.addEventListener('message', onIframeMessage)
-
-    return () => {
-      window.removeEventListener('message', onIframeMessage)
-    }
-  })
-
-  // load legalDisclaimer
-  useEffect(() => {
-    const checkLegalDisclaimer = async () => {
-      const legalDisclaimer = await loadFromStorage(APPS_LEGAL_DISCLAIMER_STORAGE_KEY)
-
-      if (legalDisclaimer) {
-        setLegalDisclaimerAccepted(true)
-      }
-    }
-
-    checkLegalDisclaimer()
-  }, [])
-
-  // Load apps list
-  useEffect(() => {
-    const loadApps = async () => {
-      // recover apps from storage:
-      // * third-party apps added by the user
-      // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list = [...persistedAppList]
-
-      staticAppsList.forEach((staticApp) => {
-        if (!list.some((persistedApp) => persistedApp.url === staticApp.url)) {
-          list.push(staticApp)
-        }
-      })
-
-      const apps = []
-      // using the appURL to recover app info
-      for (let index = 0; index < list.length; index++) {
-        try {
-          const currentApp = list[index]
-
-          const appInfo: any = await getAppInfoFromUrl(currentApp.url)
-          if (appInfo.error) {
-            throw Error(`There was a problem trying to load app ${currentApp.url}`)
-          }
-
-          appInfo.disabled = currentApp.disabled === undefined ? false : currentApp.disabled
-
-          apps.push(appInfo)
-        } catch (error) {
-          console.error(error)
-        }
-      }
-
-      setAppList(apps)
-      setLoading(false)
-      selectFirstApp(apps)
-    }
-
-    if (!appList.length) {
-      loadApps()
-    }
-  }, [appList.length, selectFirstApp])
-
-  // on iframe change
-  useEffect(() => {
-    const sendMessageToIframe = (messageId, data) => {
-      const app = getSelectedApp()
-      iframeEl.contentWindow.postMessage({ messageId, data }, app.url)
-    }
-    const onIframeLoaded = () => {
-      setAppIsLoading(false)
-      sendMessageToIframe(operations.ON_SAFE_INFO, {
+    setAppIsLoading(false)
+    sendMessageToIframe({
+      messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
+      data: {
         safeAddress,
         network,
         ethBalance,
-      })
-    }
+      },
+    })
+  }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
 
-    const app = getSelectedApp()
-    if (!iframeEl || !selectedApp || !isSameHref(iframeEl.src, app.url)) {
-      return
-    }
-
-    iframeEl.addEventListener('load', onIframeLoaded)
-
-    return () => {
-      iframeEl.removeEventListener('load', onIframeLoaded)
-    }
-  }, [ethBalance, getSelectedApp, iframeEl, network, safeAddress, selectedApp])
-
-  if (loading) {
-    return <Loader size="md" />
-  }
-
-  if (loading || !appList.length) {
-    return <Loader size="md" />
+  if (loadingAppList || !appList.length) {
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   return (
     <>
       <Menu>
-        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} />
+        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
       </Menu>
-      {getEnabledApps().length ? (
+      {enabledApps.length ? (
         <LCL.Wrapper>
           <LCL.Menu>
-            <LCL.List activeItem={selectedApp} items={getEnabledApps()} onItemClick={onSelectApp} />
+            <LCL.List activeItem={selectedAppId} items={enabledApps} onItemClick={onSelectApp} />
           </LCL.Menu>
-          <LCL.Content>{getContent()}</LCL.Content>
-          {/* <LCL.Footer>
-            {getSelectedApp() && getSelectedApp().providedBy && (
-              <>
-                <p>This App is provided by </p>
-                <ButtonLink
-                  onClick={() => window.open(getSelectedApp().providedBy.url, '_blank')}
-                  size="lg"
-                  testId="manage-tokens-btn"
-                >
-                  {selectedApp && getSelectedApp().providedBy.name}
-                </ButtonLink>
-              </>
-            )}
-          </LCL.Footer> */}
+          <LCL.Content>
+            <AppFrame
+              ref={iframeRef}
+              granted={granted}
+              selectedApp={selectedApp}
+              safeAddress={safeAddress}
+              network={network}
+              appIsLoading={appIsLoading}
+              onIframeLoad={handleIframeLoad}
+            />
+          </LCL.Content>
         </LCL.Wrapper>
       ) : (
-        <Card style={{ marginBottom: '24px' }}>
-          <Centered>
-            <Title size="xs">No Apps Enabled</Title>
-          </Centered>
-        </Card>
+        <StyledCard>
+          <Title size="xs">No Apps Enabled</Title>
+        </StyledCard>
       )}
       <CenteredMT>
         <IconText
@@ -422,8 +197,19 @@ function Apps({ closeModal, closeSnackbar, enqueueSnackbar, openModal }) {
           textSize="sm"
         />
       </CenteredMT>
+      <ConfirmTransactionModal
+        isOpen={confirmTransactionModal.isOpen}
+        app={selectedApp}
+        safeAddress={safeAddress}
+        ethBalance={ethBalance}
+        safeName={safeName}
+        txs={confirmTransactionModal.txs}
+        onCancel={closeConfirmationModal}
+        onClose={closeConfirmationModal}
+        onUserConfirm={onUserTxConfirm}
+      />
     </>
   )
 }
 
-export default withSnackbar(Apps)
+export default Apps

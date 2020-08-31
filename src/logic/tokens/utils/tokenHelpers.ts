@@ -8,14 +8,14 @@ import {
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { isEmptyData } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
-import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { Map } from 'immutable'
 
 export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
-export const getEthAsToken = (balance: string): Token => {
+export const getEthAsToken = (balance: string | number): Token => {
   return makeToken({
     address: ETH_ADDRESS,
     name: 'Ether',
