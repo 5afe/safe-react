@@ -11,13 +11,13 @@ export const FEATURES = [
   { name: 'ERC1155', validVersion: '>=1.1.1' },
 ]
 
-export const safeNeedsUpdate = (currentVersion: string, latestVersion: string): boolean => {
+export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string): boolean => {
   if (!currentVersion || !latestVersion) {
     return false
   }
 
-  const current = semverValid(currentVersion)
-  const latest = semverValid(latestVersion)
+  const current = semverValid(currentVersion) as string
+  const latest = semverValid(latestVersion) as string
 
   return latest ? semverLessThan(current, latest) : false
 }
