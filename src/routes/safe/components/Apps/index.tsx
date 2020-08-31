@@ -65,7 +65,7 @@ const Apps = (): React.ReactElement => {
   )
   const iframeRef = useRef<HTMLIFrameElement>()
 
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
@@ -127,14 +127,14 @@ const Apps = (): React.ReactElement => {
     if (initialSelect || currentAppWasDisabled) {
       selectFirstEnabledApp()
     }
-  }, [appList, selectedApp, selectedAppId, trackPageEvent])
+  }, [appList, selectedApp, selectedAppId, trackEvent])
 
   // track GA
   useEffect(() => {
     if (selectedApp) {
-      trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Apps', label: selectedApp.name })
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: selectedApp.name })
     }
-  }, [selectedApp, trackPageEvent])
+  }, [selectedApp, trackEvent])
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current

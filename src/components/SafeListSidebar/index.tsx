@@ -38,7 +38,7 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const classes = useSidebarStyles()
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   const searchClasses = {
     input: classes.searchInput,
@@ -49,7 +49,7 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
 
   const toggleSidebar = () => {
     if (!isOpen) {
-      trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'SafeListSidebar' })
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Safe List Sidebar' })
     }
     setIsOpen((prevIsOpen) => !prevIsOpen)
   }

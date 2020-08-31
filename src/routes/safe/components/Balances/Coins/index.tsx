@@ -62,11 +62,11 @@ const Coins = (props: Props): React.ReactElement => {
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
   const [filteredData, setFilteredData] = React.useState<List<BalanceData>>(List())
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Coins' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
+  }, [trackEvent])
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))

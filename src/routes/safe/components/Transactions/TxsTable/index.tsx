@@ -29,11 +29,11 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Transactions' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
+  }, [trackEvent])
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))

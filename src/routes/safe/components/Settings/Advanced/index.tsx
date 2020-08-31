@@ -43,11 +43,11 @@ const Advanced = (): React.ReactElement => {
   const nonce = useSelector(safeNonceSelector)
   const modules = useSelector(safeModulesSelector)
   const moduleData = getModuleData(modules) ?? null
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Settings', label: 'Advanced' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Advanced' })
+  }, [trackEvent])
 
   return (
     <>

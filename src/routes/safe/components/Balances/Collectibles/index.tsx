@@ -82,11 +82,11 @@ const Collectibles = (): React.ReactElement => {
   const { address, ethBalance, name } = useSelector(safeSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Collectibles' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
+  }, [trackEvent])
 
   const handleItemSend = (nftToken) => {
     setSelectedToken(nftToken)

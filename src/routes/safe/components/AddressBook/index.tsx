@@ -54,11 +54,11 @@ const AddressBookTable = ({ classes }) => {
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'AddressBook' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
+  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

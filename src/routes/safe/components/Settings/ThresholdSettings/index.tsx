@@ -53,11 +53,11 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
     )
   }
 
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Settings', label: 'Owners' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+  }, [trackEvent])
 
   return (
     <>

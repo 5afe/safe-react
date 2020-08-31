@@ -5,7 +5,7 @@ import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie } from 'src/logic/cookies/utils'
 
-export const SAFE_NAVIGATION_EVENT = 'SafeNavigation'
+export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
 let analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
@@ -26,7 +26,7 @@ export const loadGoogleAnalytics = (): void => {
 
 type UseAnalyticsResponse = {
   trackPage: (path: string) => void
-  trackPageEvent: (event: EventArgs) => void
+  trackEvent: (event: EventArgs) => void
 }
 
 export const useAnalytics = (): UseAnalyticsResponse => {
@@ -53,7 +53,7 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     [analyticsAllowed],
   )
 
-  const trackPageEvent = useCallback(
+  const trackEvent = useCallback(
     (event: EventArgs) => {
       if (!analyticsAllowed || !analyticsLoaded) {
         return
@@ -63,5 +63,5 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     [analyticsAllowed],
   )
 
-  return { trackPage, trackPageEvent }
+  return { trackPage, trackEvent }
 }

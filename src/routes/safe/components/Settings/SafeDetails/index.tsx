@@ -45,7 +45,7 @@ const SafeDetails = (): React.ReactElement => {
   const safeName = useSelector(safeNameSelector)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = React.useState(false)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -66,8 +66,8 @@ const SafeDetails = (): React.ReactElement => {
   }
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Settings', label: 'Details' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Details' })
+  }, [trackEvent])
 
   return (
     <>

@@ -48,7 +48,7 @@ type Props = {
 }
 
 const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactElement => {
-  const { trackPageEvent } = useAnalytics()
+  const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
   const [selectedOwnerAddress, setSelectedOwnerAddress] = useState()
@@ -79,8 +79,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
   }
 
   useEffect(() => {
-    trackPageEvent({ action: SAFE_NAVIGATION_EVENT, category: 'Settings', label: 'Owners' })
-  }, [trackPageEvent])
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+  }, [trackEvent])
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
