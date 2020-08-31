@@ -109,7 +109,7 @@ const cleanByteCodeMetadata = (bytecode) => {
 export const validateProxy = async (safeAddress) => {
   // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
   const web3 = getWeb3()
-  const code = await web3.eth.getCode(safeAddress)
+  const code = await web3.eth.getCode(safeAddress.toLowerCase())
   const codeWithoutMetadata = cleanByteCodeMetadata(code)
   const supportedProxies = [SafeProxy]
   for (let i = 0; i < supportedProxies.length; i += 1) {
