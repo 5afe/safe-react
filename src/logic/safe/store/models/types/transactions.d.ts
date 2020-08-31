@@ -4,9 +4,9 @@ export enum TxConstants {
 }
 
 export enum Operation {
-  CALL = 'CALL',
-  DELEGATE_CALL = 'DELEGATE_CALL',
-  CREATE = 'CREATE',
+  CALL,
+  DELEGATE_CALL,
+  CREATE,
 }
 
 // types comes from: https://github.com/gnosis/safe-client-gateway/blob/752e76b6d1d475791dbd7917b174bb41d2d9d8be/src/utils.rs
@@ -35,12 +35,12 @@ export enum SettingsChangeMethods {
 // note: this extends SAFE_METHODS_NAMES in /logic/contracts/methodIds.ts, we need to figure out which one we are going to use
 export type DataDecodedMethod = TransferMethods | SettingsChangeMethods | string
 
-export interface DecodedValue {
+export interface ValueDecoded {
   operation: Operation
   to: string
   value: number
   data: string
-  decodedData: DataDecoded
+  dataDecoded: DataDecoded
 }
 
 export interface SingleTransactionMethodParameter {
@@ -50,7 +50,7 @@ export interface SingleTransactionMethodParameter {
 }
 
 export interface MultiSendMethodParameter extends SingleTransactionMethodParameter {
-  decodedValue: DecodedValue[]
+  valueDecoded: ValueDecoded[]
 }
 
 export type Parameter = MultiSendMethodParameter | SingleTransactionMethodParameter
