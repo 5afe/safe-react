@@ -75,7 +75,7 @@ const useStyles = makeStyles({
   },
 } as any)
 
-const Collectibles = () => {
+const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = React.useState({})
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)

@@ -8,7 +8,7 @@ import { loadFromCookie } from 'src/logic/cookies/utils'
 export const SAFE_NAVIGATION_EVENT = 'SafeNavigation'
 
 let analyticsLoaded = false
-export const loadGoogleAnalytics = () => {
+export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {
     return
   }
@@ -24,7 +24,12 @@ export const loadGoogleAnalytics = () => {
   }
 }
 
-export const useAnalytics = () => {
+type UseAnalyticsResponse = {
+  trackPage: (path: string) => void
+  trackPageEvent: (event: EventArgs) => void
+}
+
+export const useAnalytics = (): UseAnalyticsResponse => {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
 
   useEffect(() => {
@@ -39,14 +44,10 @@ export const useAnalytics = () => {
   }, [])
 
   const trackPage = useCallback(
-    (page, options = {}) => {
+    (page) => {
       if (!analyticsAllowed || !analyticsLoaded) {
         return
       }
-      GoogleAnalytics.set({
-        page,
-        ...options,
-      })
       GoogleAnalytics.pageview(page)
     },
     [analyticsAllowed],
