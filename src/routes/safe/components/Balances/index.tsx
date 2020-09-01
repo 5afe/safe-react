@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Receive from './Receive'
+import Receive from 'src/components/App/ModalReceive'
 import Tokens from './Tokens'
 import { styles } from './style'
 
@@ -15,10 +15,10 @@ import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import CurrencyDropdown from 'src/routes/safe/components/CurrencyDropdown'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { useFetchTokens } from '../../container/hooks/useFetchTokens'
+import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
 import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))

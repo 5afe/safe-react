@@ -9,17 +9,17 @@ import {
   isAddress,
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { useWindowDimensions } from 'src/routes/safe/container/hooks/useWindowDimensions'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 import SafeEtherscanLink from 'src/components/EtherscanLink'
 
 const useStyles = makeStyles(styles)
 
-const InlineText = styled(Text)`
-  display: inline-flex;
-`
-
 const NestedWrapper = styled.div`
   text-indent: 24px;
+`
+
+const StyledText = styled(Text)`
+  white-space: normal;
 `
 
 interface RenderValueProps {
@@ -47,13 +47,13 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <SafeEtherscanLink key={`${method}-value-${index}`} cut={cut} value={value} />
+          <SafeEtherscanLink type="address" key={`${method}-value-${index}`} cut={cut} value={value} />
         ))}
       </NestedWrapper>
     )
   }
 
-  return <SafeEtherscanLink className={classes.address} cut={cut} value={value as string} />
+  return <SafeEtherscanLink type="address" className={classes.address} cut={cut} value={value as string} />
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
@@ -61,15 +61,15 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
     return (
       <NestedWrapper>
         {(value as string[]).map((value, index) => (
-          <Text key={`${method}-value-${index}`} size="lg">
+          <StyledText key={`${method}-value-${index}`} size="lg">
             {value}
-          </Text>
+          </StyledText>
         ))}
       </NestedWrapper>
     )
   }
 
-  return <InlineText size="lg">{value as string}</InlineText>
+  return <StyledText size="lg">{value as string}</StyledText>
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {

@@ -2,14 +2,14 @@ import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import * as React from 'react'
 
-import { NOTIFICATIONS } from './notificationTypes'
+import { Notification, NOTIFICATIONS } from './notificationTypes'
 
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getAppInfoFromOrigin } from 'src/routes/safe/components/Apps/utils'
 import { store } from 'src/store'
 
-const setNotificationOrigin = (notification, origin) => {
+const setNotificationOrigin = (notification: Notification, origin: string): Notification => {
   if (!origin) {
     return notification
   }
@@ -18,18 +18,18 @@ const setNotificationOrigin = (notification, origin) => {
   return { ...notification, message: `${appInfo.name}: ${notification.message}` }
 }
 
-const getStandardTxNotificationsQueue = (origin) => {
-  return {
-    beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
-    afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
-    afterExecution: {
-      noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
-      moreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG, origin),
-    },
-    afterExecutionError: setNotificationOrigin(NOTIFICATIONS.TX_FAILED_MSG, origin),
-  }
-}
+const getStandardTxNotificationsQueue = (
+  origin: string,
+): Record<string, Record<string, Notification> | Notification> => ({
+  beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
+  pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
+  afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
+  afterExecution: {
+    noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
+    moreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG, origin),
+  },
+  afterExecutionError: setNotificationOrigin(NOTIFICATIONS.TX_FAILED_MSG, origin),
+})
 
 const waitingTransactionNotificationsQueue = {
   beforeExecution: null,
@@ -40,7 +40,7 @@ const waitingTransactionNotificationsQueue = {
   afterExecutionError: null,
 }
 
-const getConfirmationTxNotificationsQueue = (origin) => {
+const getConfirmationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
@@ -53,7 +53,7 @@ const getConfirmationTxNotificationsQueue = (origin) => {
   }
 }
 
-const getCancellationTxNotificationsQueue = (origin) => {
+const getCancellationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
     pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
@@ -199,9 +199,13 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
   return notificationsQueue
 }
 
-export const enhanceSnackbarForAction: any = (notification, key, onClick) => ({
+export const enhanceSnackbarForAction = (
+  notification: Notification,
+  key?: number | string,
+  onClick?: () => void,
+): Notification => ({
   ...notification,
-  key,
+  key: key || notification.key,
   options: {
     ...notification.options,
     onClick,
@@ -213,14 +217,3 @@ export const enhanceSnackbarForAction: any = (notification, key, onClick) => ({
     ),
   },
 })
-
-export const showSnackbar: any = (notification, enqueueSnackbar, closeSnackbar) =>
-  enqueueSnackbar(notification.message, {
-    ...notification.options,
-    // eslint-disable-next-line react/display-name
-    action: (key) => (
-      <IconButton onClick={() => closeSnackbar(key)}>
-        <IconClose />
-      </IconButton>
-    ),
-  })

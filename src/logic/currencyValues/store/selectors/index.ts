@@ -5,7 +5,7 @@ import {
   CurrencyReducerMap,
   CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
 import { CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
 import { BigNumber } from 'bignumber.js'

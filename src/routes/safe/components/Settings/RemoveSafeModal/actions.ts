@@ -1,4 +1,4 @@
-import removeSafe from 'src/routes/safe/store/actions/removeSafe'
+import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 
 export default {
   removeSafe,

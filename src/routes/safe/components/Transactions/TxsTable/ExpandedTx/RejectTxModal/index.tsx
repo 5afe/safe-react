@@ -1,7 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -19,14 +18,25 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
-const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, tx }) => {
+const useStyles = makeStyles(styles)
+
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  tx: Transaction
+}
+
+const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const classes = useStyles()
+
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
@@ -55,8 +65,6 @@ const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClos
         to: safeAddress,
         valueInWei: '0',
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
-        enqueueSnackbar,
-        closeSnackbar,
         txNonce: tx.nonce,
         origin: tx.origin,
       }),
@@ -111,4 +119,4 @@ const RejectTxModal = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClos
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(RejectTxModal))
+export default RejectTxModal

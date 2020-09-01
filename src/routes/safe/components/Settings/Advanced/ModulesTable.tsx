@@ -11,7 +11,7 @@ import RemoveModuleModal from './RemoveModuleModal'
 import { styles } from './style'
 
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ModulePair } from 'src/routes/safe/store/models/safe'
+import { ModulePair } from 'src/logic/safe/store/models/safe'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'

@@ -18,10 +18,8 @@ import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import removeSafe from 'src/routes/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { history } from 'src/store'
+import removeSafe from 'src/logic/safe/store/actions/removeSafe'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
 
 const openIconStyle = {
@@ -92,7 +90,9 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
           onClick={() => {
             dispatch(removeSafe(safeAddress))
             onClose()
-            history.push(SAFELIST_ADDRESS)
+            // using native redirect in order to avoid problems in several components
+            // trying to access references of the removed safe.
+            window.location.href = '/app/'
           }}
           type="submit"
           variant="contained"

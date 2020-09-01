@@ -5,8 +5,8 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { ThemeProvider } from 'styled-components'
 
-import Loader from '../Loader'
-import PageFrame from '../layout/PageFrame'
+import Loader from 'src/components/Loader'
+import App from 'src/components/App'
 
 import AppRoutes from 'src/routes'
 import { history, store } from 'src/store'
@@ -16,13 +16,11 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import './index.module.scss'
 import './OnboardCustom.module.scss'
 
-const Root = () => (
+const Root = (): React.ReactElement => (
   <ThemeProvider theme={styledTheme}>
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
-        <ConnectedRouter history={history}>
-          <PageFrame>{wrapInSuspense(<AppRoutes />, <Loader />)}</PageFrame>
-        </ConnectedRouter>
+        <ConnectedRouter history={history}>{<App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>}</ConnectedRouter>
       </MuiThemeProvider>
     </Provider>
   </ThemeProvider>
