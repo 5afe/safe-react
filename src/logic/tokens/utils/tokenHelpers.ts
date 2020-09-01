@@ -41,12 +41,12 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
 }
 
 export const isTokenTransfer = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
+  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
 }
 
 export const isSendERC721Transaction = (
   tx: TxServiceModel,
-  txCode: string,
+  txCode: string | null,
   knownTokens: Map<string, Token>,
 ): boolean => {
   // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
@@ -96,7 +96,7 @@ export const getERC20DecimalsAndSymbol = async (
 
 export const isSendERC20Transaction = async (
   tx: TxServiceModel,
-  txCode: string,
+  txCode: string | null,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
   let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)

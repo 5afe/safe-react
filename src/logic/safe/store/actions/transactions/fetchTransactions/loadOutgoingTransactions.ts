@@ -27,8 +27,7 @@ export type TxServiceModel = {
   blockNumber?: number | null
   confirmations: ConfirmationServiceModel[]
   confirmationsRequired: number
-  creationTx?: boolean | null
-  data?: string | null
+  data: string | null
   dataDecoded?: DataDecoded
   ethGasPrice: string
   executionDate?: string | null
@@ -42,13 +41,13 @@ export type TxServiceModel = {
   modified: string
   nonce: number
   operation: number
-  origin?: string | null
+  origin: string | null
   refundReceiver: string
   safe: string
   safeTxGas: number
   safeTxHash: string
   signatures: string
-  submissionDate?: string | null
+  submissionDate: string | null
   to: string
   transactionHash?: string | null
   value: string

@@ -84,7 +84,7 @@ export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress: string): 
 
 export const isCustomTransaction = async (
   tx: TxServiceModel,
-  txCode: string,
+  txCode: string | null,
   safeAddress: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
@@ -274,7 +274,6 @@ export const buildTx = async ({
     blockNumber: tx.blockNumber,
     cancelled: isTxCancelled,
     confirmations,
-    creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
     dataDecoded: tx.dataDecoded,
@@ -326,7 +325,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppRed
 
   return buildTx({
     cancellationTxs,
-    currentUser: null,
+    currentUser: undefined,
     knownTokens,
     outgoingTxs,
     safe,
