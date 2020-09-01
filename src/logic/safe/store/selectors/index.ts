@@ -149,11 +149,11 @@ export const safeActiveAssetsSelector = createSelector(
 
 export const safeActiveAssetsListSelector = createSelector(
   safeActiveAssetsSelector,
-  (safeList): Set<string> => {
-    if (!safeList) {
+  (assetsList): Set<string> => {
+    if (!assetsList) {
       return Set([])
     }
-    return Set(safeList)
+    return Set(assetsList)
   },
 )
 
