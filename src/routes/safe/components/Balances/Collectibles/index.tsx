@@ -1,6 +1,6 @@
 import Card from '@material-ui/core/Card'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import Item from './components/Item'
@@ -11,6 +11,7 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { NFTToken } from 'src/logic/collectibles/sources/OpenSea'
+import { SAFE_NAVIGATION_EVENT, useAnalytics } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(
   createStyles({
@@ -84,6 +85,11 @@ const Collectibles = (): React.ReactElement => {
   const { address, ethBalance, name } = useSelector(safeSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
+  }, [trackEvent])
 
   const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)

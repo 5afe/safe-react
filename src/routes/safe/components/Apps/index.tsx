@@ -19,6 +19,7 @@ import {
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const centerCSS = css`
   display: flex;
@@ -64,6 +65,7 @@ const Apps = (): React.ReactElement => {
   )
   const iframeRef = useRef<HTMLIFrameElement>()
 
+  const { trackEvent } = useAnalytics()
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
@@ -111,6 +113,7 @@ const Apps = (): React.ReactElement => {
     [selectedAppId],
   )
 
+  // Auto Select app first App
   useEffect(() => {
     const selectFirstEnabledApp = () => {
       const firstEnabledApp = appList.find((a) => !a.disabled)
@@ -124,7 +127,14 @@ const Apps = (): React.ReactElement => {
     if (initialSelect || currentAppWasDisabled) {
       selectFirstEnabledApp()
     }
-  }, [appList, selectedApp, selectedAppId])
+  }, [appList, selectedApp, selectedAppId, trackEvent])
+
+  // track GA
+  useEffect(() => {
+    if (selectedApp) {
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: selectedApp.name })
+    }
+  }, [selectedApp, trackEvent])
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current
