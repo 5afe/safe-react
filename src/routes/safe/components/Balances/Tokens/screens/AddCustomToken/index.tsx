@@ -37,15 +37,6 @@ export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-
 export const ADD_CUSTOM_TOKEN_DECIMALS_INPUT_TEST_ID = 'add-custom-token-decimals-input'
 export const ADD_CUSTOM_TOKEN_FORM = 'add-custom-token-form'
 
-const INITIAL_FORM_STATE = {
-  address: '',
-  name: '',
-  symbol: '',
-  decimals: null,
-  logoUri: null,
-  balance: 0,
-}
-
 const useStyles = makeStyles(styles)
 
 type OptionalExceptFor<T, TRequired extends keyof T> = Partial<T> & Pick<T, TRequired>
@@ -57,6 +48,15 @@ type Props = {
   parentList: string
   safeAddress: string
   setActiveScreen: (string) => void
+}
+
+const INITIAL_FORM_STATE: TokenPropsForm = {
+  address: '',
+  name: '',
+  symbol: '',
+  decimals: null,
+  logoUri: null,
+  balance: 0,
 }
 
 export const AddCustomToken = (props: Props): React.ReactElement => {
