@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Advanced from './Advanced'
-import SpendingLimit from './SpendingLimit'
+import SpendingLimitSettings from './SpendingLimit'
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
@@ -122,7 +122,7 @@ const Settings: React.FC = () => {
               <IconText
                 iconSize="sm"
                 textSize="xl"
-                iconType="allowances"
+                iconType="fuelIndicator"
                 text="Spending Limit"
                 color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
               />
@@ -145,7 +145,7 @@ const Settings: React.FC = () => {
             {menuOptionIndex === 1 && <SafeDetails />}
             {menuOptionIndex === 2 && <ManageOwners addressBook={addressBook} granted={granted} owners={owners} />}
             {menuOptionIndex === 3 && <ThresholdSettings />}
-            {menuOptionIndex === 4 && <SpendingLimit />}
+            {menuOptionIndex === 4 && <SpendingLimitSettings />}
             {menuOptionIndex === 5 && <Advanced />}
           </Block>
         </Col>

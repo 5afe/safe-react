@@ -7,6 +7,16 @@ export type SafeOwner = {
 
 export type ModulePair = [string, string]
 
+export type SpendingLimit = {
+  delegate: string
+  token: string
+  amount: string
+  spent: string
+  resetTimeMin: string
+  lastResetMin: string
+  nonce: string
+}
+
 export type SafeRecordProps = {
   name: string
   address: string
@@ -14,6 +24,7 @@ export type SafeRecordProps = {
   ethBalance: string
   owners: List<SafeOwner>
   modules: ModulePair[] | null
+  spendingLimits: SpendingLimit[] | null
   activeTokens: Set<string>
   activeAssets: Set<string>
   blacklistedTokens: Set<string>
@@ -34,6 +45,7 @@ const makeSafe = Record<SafeRecordProps>({
   ethBalance: '0',
   owners: List([]),
   modules: [],
+  spendingLimits: [],
   activeTokens: Set(),
   activeAssets: Set(),
   blacklistedTokens: Set(),

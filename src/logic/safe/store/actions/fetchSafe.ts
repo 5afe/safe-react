@@ -11,12 +11,17 @@ import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
+import {
+  requestAllowancesByDelegatesAndTokens,
+  requestTokensByDelegate,
+} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { ModulePair, SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { Action, Dispatch } from 'redux'
-import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getSpendingLimitContract, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -84,6 +89,7 @@ export const buildSafe = async (
     currentVersion,
     needsUpdate,
     featuresEnabled,
+    spendingLimits: null,
     balances: Map(),
     latestIncomingTxBlock: null,
     activeAssets: Set(),
@@ -94,8 +100,22 @@ export const buildSafe = async (
   }
 }
 
+const getSpendingLimits = async (modules, safeAddress: string): Promise<SpendingLimit[] | null> => {
+  const isSpendingLimitEnabled =
+    modules?.array?.some((module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase()) ?? false
+
+  if (isSpendingLimitEnabled) {
+    const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
+    const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+    return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+  }
+
+  return null
+}
+
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
   const safeAddress = checksumAddress(safeAdd)
+
   // Check if the owner's safe did change and update them
   const safeParams = [
     'getThreshold',
@@ -104,14 +124,20 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
     { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
   ]
+
+  const safeInfo = generateBatchRequests({
+    abi: GnosisSafeSol.abi,
+    address: safeAddress,
+    methods: safeParams,
+  })
+
   const [[remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
-    generateBatchRequests({
-      abi: GnosisSafeSol.abi,
-      address: safeAddress,
-      methods: safeParams,
-    }),
+    safeInfo,
     getLocalSafe(safeAddress),
   ])
+
+  // request SpendingLimit info
+  const spendingLimits = await getSpendingLimits(modules, safeAddress)
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
@@ -120,6 +146,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     updateSafe({
       address: safeAddress,
       modules: buildModulesLinkedList(modules?.array, modules?.next),
+      spendingLimits,
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),
     }),
