@@ -42,8 +42,8 @@ const Tokens = (props: Props): React.ReactElement => {
   const [activeScreen, setActiveScreen] = useState(modalScreen)
   const dispatch = useDispatch()
 
-  const updateBlackListTokensHandler = (safeAddress: string, blacklistenTokens: Set<string>) => {
-    dispatch(updateBlacklistedTokens(safeAddress, blacklistenTokens))
+  const updateBlackListTokensHandler = (safeAddress: string, blacklistedTokens: Set<string>) => {
+    dispatch(updateBlacklistedTokens(safeAddress, blacklistedTokens))
   }
 
   const updateActiveTokensHandler = (safeAddress: string, activeTokens: List<Token>) => {
