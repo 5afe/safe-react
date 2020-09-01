@@ -37,7 +37,8 @@ const getAmountWithSymbol = (
   formatted = false,
 ): string => {
   const humanReadableAmount = humanReadableTokenAmount(value, +decimals)
-  const finalValue = formatted ? formatAmount(humanReadableAmount).toString() : humanReadableAmount
+  const finalValue = formatted ? formatAmount(humanReadableAmount) : humanReadableAmount
+
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
   return `${txAmount} ${symbol}`
