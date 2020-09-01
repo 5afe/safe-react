@@ -1,6 +1,6 @@
 import React from 'react'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import Img from '../layout/Img'
+import Img from 'src/components/layout/Img'
 import { useToken } from 'src/logic/tokens/hooks/useToken'
 
 type Props = {
