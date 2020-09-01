@@ -164,7 +164,7 @@ const batchProcessOutgoingTransactions = async ({
   // outgoing transactions
   const outgoingTxsWithData = outgoingTxs.length ? await batchRequestContractCode(outgoingTxs) : []
 
-  const outgoing = []
+  const outgoing: Transaction[] = []
   for (const [tx, txCode] of outgoingTxsWithData) {
     outgoing.push(
       await buildTx({

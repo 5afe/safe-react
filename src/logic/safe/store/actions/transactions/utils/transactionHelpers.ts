@@ -19,6 +19,7 @@ import {
   TransactionTypes,
   TransactionTypeValues,
   TxArgs,
+  RefundParams,
 } from 'src/logic/safe/store/models/types/transaction'
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
@@ -65,15 +66,15 @@ export const isModifySettingsTransaction = (tx: TxServiceModel, safeAddress: str
 }
 
 export const isMultiSendTransaction = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data.substring(0, 10) === '0x8d80ff0a' && Number(tx.value) === 0
+  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0x8d80ff0a' && Number(tx.value) === 0
 }
 
 export const isUpgradeTransaction = (tx: TxServiceModel): boolean => {
   return (
     !isEmptyData(tx.data) &&
     isMultiSendTransaction(tx) &&
-    tx.data.substr(308, 8) === '7de7edef' && // 7de7edef - changeMasterCopy (308, 8)
-    tx.data.substr(550, 8) === 'f08a0323' // f08a0323 - setFallbackHandler (550, 8)
+    tx.data?.substr(308, 8) === '7de7edef' && // 7de7edef - changeMasterCopy (308, 8)
+    tx.data?.substr(550, 8) === 'f08a0323' // f08a0323 - setFallbackHandler (550, 8)
   )
 }
 
@@ -98,9 +99,9 @@ export const isCustomTransaction = async (
 export const getRefundParams = async (
   tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
-): Promise<any> => {
+): Promise<RefundParams | null> => {
   const txGasPrice = Number(tx.gasPrice)
-  let refundParams = null
+  let refundParams: RefundParams | null = null
 
   if (txGasPrice > 0) {
     let refundSymbol = 'ETH'

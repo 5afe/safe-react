@@ -33,6 +33,7 @@ export enum PendingActionType {
   REJECT = 'reject',
 }
 export type PendingActionValues = PendingActionType[keyof PendingActionType]
+export type RefundParams = { fee: string; symbol: string }
 
 export type TransactionProps = {
   baseGas: number
@@ -68,7 +69,7 @@ export type TransactionProps = {
   origin: string | null
   ownersWithPendingActions: Map<PendingActionValues, List<any>>
   recipient: string
-  refundParams: any
+  refundParams: RefundParams | null
   refundReceiver: string
   safeTxGas: number
   safeTxHash: string
