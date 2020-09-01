@@ -36,7 +36,7 @@ const getAmountWithSymbol = (
   { decimals = 0, symbol = NOT_AVAILABLE, value }: AmountData,
   formatted = false,
 ): string => {
-  const humanReadableAmount = humanReadableTokenAmount(value, decimals as number)
+  const humanReadableAmount = humanReadableTokenAmount(value, +decimals)
   const finalValue = formatted ? formatAmount(humanReadableAmount).toString() : humanReadableAmount
   const txAmount = finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 
