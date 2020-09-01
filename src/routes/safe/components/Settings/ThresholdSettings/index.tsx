@@ -1,6 +1,6 @@
 import { withStyles } from '@material-ui/core/styles'
 import { withSnackbar } from 'notistack'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import ChangeThreshold from './ChangeThreshold'
@@ -22,6 +22,7 @@ import {
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
   const [isModalOpen, setModalOpen] = useState(false)
@@ -51,6 +52,12 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
       } as any),
     )
   }
+
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+  }, [trackEvent])
 
   return (
     <>

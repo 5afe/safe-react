@@ -213,7 +213,6 @@ const createTransaction = (
       .send(sendParams)
       .once('transactionHash', async (hash) => {
         onUserConfirm?.(safeTxHash)
-
         try {
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
