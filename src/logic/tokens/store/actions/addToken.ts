@@ -1,5 +1,5 @@
 import { createAction } from 'redux-actions'
-import { Token } from '../model/token'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const ADD_TOKEN = 'ADD_TOKEN'
 
