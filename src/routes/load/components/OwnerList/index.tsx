@@ -79,7 +79,7 @@ const calculateSafeValues = (owners, threshold, values) => {
 }
 
 const OwnerListComponent = (props) => {
-  const [owners, setOwners] = useState([])
+  const [owners, setOwners] = useState<string[]>([])
   const { classes, updateInitialProps, values } = props
 
   useEffect(() => {

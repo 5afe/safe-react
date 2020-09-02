@@ -138,6 +138,8 @@ const SafeOwners = (props) => {
                   fieldMutator={(val) => {
                     form.mutators.setValue(addressName, val)
                   }}
+                  // eslint-disable-next-line
+                  // @ts-ignore
                   inputAdornment={
                     noErrorsOn(addressName, errors) && {
                       endAdornment: (

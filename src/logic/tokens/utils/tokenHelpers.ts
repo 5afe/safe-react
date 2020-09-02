@@ -35,7 +35,7 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
   // } catch {
   //   return 'Not a token address'
   // }
-  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
+  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') as string })
 
   return call !== '0x'
 }
@@ -78,7 +78,7 @@ export const getERC20DecimalsAndSymbol = async (
   try {
     const storedTokenInfo = await getTokenInfos(tokenAddress)
 
-    if (storedTokenInfo === null) {
+    if (!storedTokenInfo) {
       const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
         abi: ALTERNATIVE_TOKEN_ABI,
         address: tokenAddress,

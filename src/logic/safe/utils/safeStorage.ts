@@ -2,13 +2,18 @@ import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 
 export const SAFES_KEY = 'SAFES'
-export const TX_KEY = 'TX'
 export const DEFAULT_SAFE_KEY = 'DEFAULT_SAFE'
 
 type StoredSafes = Record<string, SafeRecordProps>
 
-export const getSafeName = async (safeAddress: string): Promise<string | undefined> => {
+export const loadStoredSafes = async (): Promise<StoredSafes | undefined> => {
   const safes = await loadFromStorage<StoredSafes>(SAFES_KEY)
+
+  return safes
+}
+
+export const getSafeName = async (safeAddress: string): Promise<string | undefined> => {
+  const safes = await loadStoredSafes()
   if (!safes) {
     return undefined
   }
@@ -26,8 +31,8 @@ export const saveSafes = async (safes) => {
 }
 
 export const getLocalSafe = async (safeAddress: string): Promise<SafeRecordProps | undefined> => {
-  const storedSafes = (await loadFromStorage<StoredSafes>(SAFES_KEY)) || {}
-  return storedSafes[safeAddress]
+  const storedSafes = await loadStoredSafes()
+  return storedSafes?.[safeAddress]
 }
 
 export const getDefaultSafe = async (): Promise<string> => {

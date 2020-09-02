@@ -120,6 +120,8 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
+            // eslint-disable-next-line
+            // @ts-ignore
             inputAdornment={
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
