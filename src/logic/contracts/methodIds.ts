@@ -87,9 +87,9 @@ export const SPENDING_LIMIT_METHODS_NAMES = {
 }
 
 export const SPENDING_LIMIT_METHOD_TO_ID = {
-  '0xe71bdf41': 'addDelegate',
-  '0xbeaeb388': 'setAllowance',
-  '0x4515641a': 'executeAllowanceTransfer',
+  '0xe71bdf41': SPENDING_LIMIT_METHODS_NAMES.ADD_DELEGATE,
+  '0xbeaeb388': SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE,
+  '0x4515641a': SPENDING_LIMIT_METHODS_NAMES.EXECUTE_ALLOWANCE_TRANSFER,
 }
 
 export const isSetAllowanceMethod = (data: string): boolean => {
@@ -180,8 +180,8 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transfer',
         parameters: [
-          { name: 'to', type: '', value: decodeParameters[0] },
-          { name: 'value', type: '', value: decodeParameters[1] },
+          { name: 'to', type: 'address', value: decodeParameters[0] },
+          { name: 'value', type: 'uint', value: decodeParameters[1] },
         ],
       }
     }
@@ -192,9 +192,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodeParameters[0] },
-          { name: 'to', type: '', value: decodeParameters[1] },
-          { name: 'value', type: '', value: decodeParameters[2] },
+          { name: 'from', type: 'address', value: decodeParameters[0] },
+          { name: 'to', type: 'address', value: decodeParameters[1] },
+          { name: 'value', type: 'uint', value: decodeParameters[2] },
         ],
       }
     }
@@ -205,9 +205,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'safeTransferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodedParameters[0] },
-          { name: 'to', type: '', value: decodedParameters[1] },
-          { name: 'value', type: '', value: decodedParameters[2] },
+          { name: 'from', type: 'address', value: decodedParameters[0] },
+          { name: 'to', type: 'address', value: decodedParameters[1] },
+          { name: 'value', type: 'uint', value: decodedParameters[2] },
         ],
       }
     }
