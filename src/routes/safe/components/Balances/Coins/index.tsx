@@ -1,10 +1,14 @@
 import React, { useEffect } from 'react'
 import TableCell from '@material-ui/core/TableCell'
+import Tooltip from '@material-ui/core/Tooltip'
+import Img from 'src/components/layout/Img'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
 import { useSelector } from 'react-redux'
+
+import InfoIcon from 'src/assets/icons/info.svg'
 
 import { styles } from './styles'
 
@@ -72,6 +76,20 @@ const Coins = (props: Props): React.ReactElement => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
   }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
 
+  const showCurrencyTooltip = (valueWithCurrency) => {
+    const value = valueWithCurrency.replace(/[^\d.-]/g, '')
+    if (!Number(value)) {
+      return (
+        <Tooltip placement="top" title="Balance may be zero due to missing token price information">
+          <span onClick={(event) => event.stopPropagation()}>
+            <Img className={classes.tooltipInfo} alt="Info Tooltip" height={18} src={InfoIcon} />
+          </span>
+        </Tooltip>
+      )
+    }
+    return null
+  }
+
   return (
     <TableContainer>
       <Table
@@ -102,10 +120,13 @@ const Coins = (props: Props): React.ReactElement => {
                     // If there are no values for that row but we have balances, we display as '0.00 {CurrencySelected}'
                     // In case we don't have balances, we display a skeleton
                     const showCurrencyValueRow = row[id] || row[BALANCE_TABLE_BALANCE_ID]
-
+                    const valueWithCurrency = row[id] ? row[id] : `0.00 ${selectedCurrency}`
                     cellItem =
                       showCurrencyValueRow && selectedCurrency ? (
-                        <div className={classes.currencyValueRow}>{row[id] ? row[id] : `0.00 ${selectedCurrency}`}</div>
+                        <div className={classes.currencyValueRow}>
+                          {valueWithCurrency}
+                          {showCurrencyTooltip(valueWithCurrency)}
+                        </div>
                       ) : (
                         <Skeleton animation="wave" />
                       )

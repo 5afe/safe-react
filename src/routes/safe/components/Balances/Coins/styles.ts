@@ -4,6 +4,11 @@ export const styles = () => ({
   iconSmall: {
     fontSize: 16,
   },
+  tooltipInfo: {
+    position: 'relative',
+    top: '4px',
+    left: '4px',
+  },
   hide: {
     '&:hover': {
       backgroundColor: '#fff3e2',
