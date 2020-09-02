@@ -18,7 +18,7 @@ const getTokenInfoFromBlockchain = (tokenAddress: string): string[] =>
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const useToken = (tokenAddress: string, isCustomToken = false): Token | NFTAsset => {
+export const useToken = (tokenAddress: string, isCustomToken = false): Token | NFTAsset | null => {
   const [token, setToken] = useState<Token | NFTAsset | null>(null)
   const tokens = useSelector(tokensSelector)
   const assets = useSelector(nftAssetsListSelector)

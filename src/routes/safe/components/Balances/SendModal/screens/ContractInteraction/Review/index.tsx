@@ -19,8 +19,13 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
-import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import {
+  generateFormFieldKey,
+  getValueFromTxInputs,
+} from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 const useStyles = makeStyles(styles)
 
@@ -43,6 +48,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
+  const token = useToken(ETH_ADDRESS) as Token | null
 
   useEffect(() => {
     let isCurrent = true
@@ -106,7 +112,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row align="center" margin="md">
           <Col xs={1}>
-            <TokenSymbol height={28} tokenAddress={ETH_ADDRESS} />
+            <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">

@@ -18,8 +18,10 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -86,6 +88,7 @@ const ConfirmTransactionModal = ({
   onClose,
 }: OwnProps): React.ReactElement => {
   const dispatch = useDispatch()
+  const ethToken = useToken(ETH_ADDRESS) as Token | null
   if (!isOpen) {
     return null
   }
@@ -141,7 +144,7 @@ const ConfirmTransactionModal = ({
                 <div className="section">
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
-                    <TokenSymbol height={40} tokenAddress={ETH_ADDRESS} />
+                    <TokenLogo height={40} tokenName={ethToken?.name} tokenLogoUri={ethToken?.logoUri} />
                     <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>

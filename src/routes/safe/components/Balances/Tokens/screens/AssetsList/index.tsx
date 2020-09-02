@@ -105,6 +105,7 @@ const AssetsList = (props: Props): React.ReactElement => {
   const nftAssetsFilteredList = filterBy(filterValue, nftAssetsList)
   const itemData = createItemData(nftAssetsFilteredList)
   const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomAsset')
+
   return (
     <>
       <Block className={classes.root}>

@@ -27,14 +27,16 @@ import {
   getHumanFriendlyToken,
 } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
+import { ETH_ADDRESS, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 const useStyles = makeStyles(styles)
 
@@ -49,6 +51,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
   const [data, setData] = useState('')
+  const token = useToken(ETH_ADDRESS) as Token | null
 
   useEffect(() => {
     let isCurrent = true
@@ -145,7 +148,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
         </Row>
         {txToken && (
           <Row align="center" margin="md">
-            <TokenSymbol height={28} tokenAddress={txToken.assetAddress} />
+            <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
             <Paragraph className={classes.amount} noMargin size="md">
               {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId)})
             </Paragraph>

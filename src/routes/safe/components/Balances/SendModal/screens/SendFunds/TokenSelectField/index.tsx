@@ -10,16 +10,21 @@ import { required } from 'src/components/forms/validator'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { TokenSelectFieldItem } from '../TokenSelectFieldItem'
+import { Token } from 'src/logic/tokens/store/model/token'
+
 const SelectedToken = ({ classes, tokenAddress, tokens }) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
+  const tokenData = useToken(token.address) as Token | null
 
   return (
     <MenuItem className={classes.container}>
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <TokenSymbol tokenAddress={token.address} />
+            <TokenLogo height={28} tokenName={tokenData?.name} tokenLogoUri={tokenData?.logoUri} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -49,16 +54,7 @@ const TokenSelectField = ({ classes, initialValue, isValid, tokens }) => (
     validate={required}
   >
     {tokens.map((token) => (
-      <MenuItem key={token.address} value={token.address}>
-        <ListItemIcon>
-          <TokenSymbol tokenAddress={token.address} />
-        </ListItemIcon>
-        <ListItemText
-          primary={token.name}
-          secondary={`${formatAmount(token.balance)} ${token.symbol}`}
-          data-testid={`select-token-${token.name}`}
-        />
-      </MenuItem>
+      <TokenSelectFieldItem token={token} key={token.address} />
     ))}
   </Field>
 )

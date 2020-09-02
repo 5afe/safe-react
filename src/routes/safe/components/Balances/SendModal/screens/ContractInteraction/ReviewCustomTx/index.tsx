@@ -27,7 +27,9 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 type Props = {
   onClose: () => void
@@ -43,6 +45,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
+  const token = useToken(ETH_ADDRESS) as Token | null
 
   useEffect(() => {
     let isCurrent = true
@@ -135,7 +138,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <TokenSymbol height={28} tokenAddress={ETH_ADDRESS} />
+          <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
           <Paragraph className={classes.value} noMargin size="md">
             {tx.value || 0}
             {' ETH'}

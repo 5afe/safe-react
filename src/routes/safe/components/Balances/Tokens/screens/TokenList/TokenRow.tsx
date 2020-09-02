@@ -10,9 +10,10 @@ import { styles } from './style'
 
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { List } from 'immutable'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
@@ -33,12 +34,13 @@ const TokenRow = memo(({ data, index, style }: Props) => {
   const classes = useStyles()
   const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
+  const tokenMetadata = useToken(token.address) as Token | null
 
   return (
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>
         <ListItemIcon className={classes.tokenIcon}>
-          <TokenSymbol height={28} tokenAddress={token.address} />
+          <TokenLogo height={28} tokenName={tokenMetadata?.name} tokenLogoUri={tokenMetadata?.logoUri} />
         </ListItemIcon>
         <ListItemText primary={token.symbol} secondary={token.name} />
         {token.address !== ETH_ADDRESS && (

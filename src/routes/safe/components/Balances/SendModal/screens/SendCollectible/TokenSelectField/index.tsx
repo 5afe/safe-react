@@ -12,27 +12,35 @@ import { required } from 'src/components/forms/validator'
 import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { textShortener } from 'src/utils/strings'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { AssetSelectFieldItem } from '../AssetSelectFieldItem'
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
-const SelectedToken = ({ assetAddress, assets }) => {
+type SelectedAssetProps = {
+  assetAddress: string
+  assets: Record<string, NFTAsset>
+}
+
+const SelectedAsset = ({ assetAddress, assets }: SelectedAssetProps): React.ReactElement => {
   const classes = useSelectedTokenStyles()
   const asset = assetAddress ? assets[assetAddress] : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
+  const token = useToken(asset.address) as NFTAsset | null
 
   return (
     <MenuItem className={classes.container}>
       {asset && asset.numberOfTokens ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <TokenSymbol tokenAddress={asset.address} />
+            <TokenLogo tokenName={token?.name} tokenLogoUri={token?.image} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
             primary={shortener(asset.name)}
-            secondary={`${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+            secondary={`${formatAmount(asset.numberOfTokens.toString())} ${asset.symbol}`}
           />
         </>
       ) : (
@@ -62,23 +70,13 @@ const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): Reac
       disabled={!assetsAddresses.length}
       initialValue={initialValue}
       name="assetAddress"
-      renderValue={(assetAddress) => <SelectedToken assetAddress={assetAddress} assets={assets} />}
+      renderValue={(assetAddress) => <SelectedAsset assetAddress={assetAddress} assets={assets} />}
       validate={required}
     >
       {assetsAddresses.map((assetAddress) => {
         const asset = assets[assetAddress]
 
-        return (
-          <MenuItem key={asset.slug} value={assetAddress}>
-            <ListItemIcon className={classes.tokenImage}>
-              <TokenSymbol tokenAddress={asset.address} height={28} />
-            </ListItemIcon>
-            <ListItemText
-              primary={asset.name}
-              secondary={`Count: ${formatAmount(asset.numberOfTokens.toString())} ${asset.symbol}`}
-            />
-          </MenuItem>
-        )
+        return <AssetSelectFieldItem asset={asset} key={asset.address} />
       })}
     </Field>
   )

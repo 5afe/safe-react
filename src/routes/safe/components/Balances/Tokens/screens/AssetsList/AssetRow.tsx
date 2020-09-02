@@ -12,7 +12,8 @@ import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
 
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
 type Props = {
@@ -36,12 +37,13 @@ const AssetRow = memo(
     const asset = assets[index]
     const { address, name, symbol } = asset
     const isActive = activeAssetsAddresses.has(asset.address)
+    const token = useToken(asset.address) as NFTAsset | null
 
     return (
       <div style={style}>
         <ListItem>
           <ListItemIcon className={classes.tokenIcon}>
-            <TokenSymbol height={28} tokenAddress={asset.address} />
+            <TokenLogo tokenName={token?.name} tokenLogoUri={token?.image} />
           </ListItemIcon>
           <ListItemText primary={symbol} secondary={name} />
           {address !== ETH_ADDRESS && (

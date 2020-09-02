@@ -11,21 +11,30 @@ import SelectField from 'src/components/forms/SelectField'
 import { required } from 'src/components/forms/validator'
 import Paragraph from 'src/components/layout/Paragraph'
 import { textShortener } from 'src/utils/strings'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { NFTAsset, NFTToken } from 'src/logic/collectibles/sources/OpenSea'
+import { CollectibleSelectFieldItem } from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectFieldItem'
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
-const SelectedCollectible = ({ tokenId, tokens }) => {
+type SelectedCollectibleProps = {
+  tokenId: string
+  tokens: NFTToken[]
+}
+
+const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): React.ReactElement => {
   const classes = useSelectedCollectibleStyles()
   const token = tokenId && tokens ? tokens.find(({ tokenId: id }) => tokenId === id) : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
+  const tokenLogoMetadata = useToken(token?.assetAddress) as NFTAsset | null
 
   return (
     <MenuItem className={classes.container}>
       {token ? (
         <>
           <ListItemIcon className={classes.tokenImage}>
-            <TokenSymbol height={28} tokenAddress={token.address} />
+            <TokenLogo height={28} tokenName={tokenLogoMetadata?.name} tokenLogoUri={tokenLogoMetadata?.image} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -44,7 +53,12 @@ const SelectedCollectible = ({ tokenId, tokens }) => {
 
 const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 
-const CollectibleSelectField = ({ initialValue, tokens }) => {
+type CollectibleSelectFieldType = {
+  initialValue: string
+  tokens: NFTToken[]
+}
+
+const CollectibleSelectField = ({ initialValue, tokens }: CollectibleSelectFieldType): React.ReactElement => {
   const classes = useCollectibleSelectFieldStyles()
 
   return (
@@ -58,12 +72,7 @@ const CollectibleSelectField = ({ initialValue, tokens }) => {
       validate={required}
     >
       {tokens.map((token) => (
-        <MenuItem key={`${token.assetAddress}-${token.tokenId}`} value={token.tokenId}>
-          <ListItemIcon className={classes.tokenImage}>
-            <TokenSymbol height={28} tokenAddress={token.address} />
-          </ListItemIcon>
-          <ListItemText primary={token.name} secondary={`token ID: ${token.tokenId}`} />
-        </MenuItem>
+        <CollectibleSelectFieldItem token={token} key={token.assetAddress} />
       ))}
     </Field>
   )

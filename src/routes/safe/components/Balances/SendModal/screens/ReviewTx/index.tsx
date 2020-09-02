@@ -30,7 +30,9 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
-import { TokenSymbol } from 'src/components/TokenSymbol'
+import { TokenLogo } from 'src/components/TokenLogo'
+import { useToken } from 'src/logic/tokens/hooks/useToken'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 const useStyles = makeStyles(styles)
 
@@ -55,6 +57,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const txToken = tokens.find((token) => token.address === tx.token)
   const isSendingETH = txToken.address === ETH_ADDRESS
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
+  const token = useToken(txToken.address) as Token | null
 
   useEffect(() => {
     let isCurrent = true
@@ -161,7 +164,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <TokenSymbol height={28} tokenAddress={txToken.address} />
+          <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
           <Paragraph className={classes.amount} noMargin size="md" data-testid={`amount-${txToken.symbol}-review-step`}>
             {tx.amount} {txToken.symbol}
           </Paragraph>
