@@ -66,7 +66,7 @@ const SpendingLimitRadioButtons = styled(RadioButtons)`
   }
 `
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
   const classes = useStyles()
