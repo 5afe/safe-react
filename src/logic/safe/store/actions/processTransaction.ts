@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -20,7 +19,6 @@ import {
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-import { makeConfirmation } from '../models/confirmation'
 import { storeTx } from './createTransaction'
 import { TransactionStatus } from '../models/types/transaction'
 
@@ -85,6 +83,8 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
         dispatch(closeSnackbarAction(beforeExecutionKey))
 
         await saveTxToHistory({ ...txArgs, signature })
+        // TODO: while we wait for the tx to be stored in the service and later update the tx info
+        //  we should update the tx status in the store to disable owners' action buttons
         dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
@@ -105,9 +105,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
 
     const txToMock: TxToMock = {
       ...txArgs,
-      confirmations: txArgs.confirmations, // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
-      submissionDate: txArgs.submissionDate,
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 
@@ -123,10 +121,14 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash }),
             storeTx(
-              mockedTx.updateIn(
-                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
-                (previous) => previous.push(from),
-              ),
+              mockedTx.withMutations((record) => {
+                record
+                  .updateIn(
+                    ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
+                    (previous) => previous.push(from),
+                  )
+                  .set('status', TransactionStatus.PENDING)
+              }),
               safeAddress,
               dispatch,
               state,
