@@ -16,6 +16,7 @@ import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellat
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
 export const TX_TABLE_DATE_ID = 'date'
+export const TX_DATE_ORDER_ID = 'dateOrder'
 export const TX_TABLE_AMOUNT_ID = 'amount'
 export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
@@ -98,7 +99,7 @@ const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): 
     [TX_TABLE_ID]: tx.blockNumber,
     [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
-    dateOrder: txDate ? getTime(parseISO(txDate)) : null,
+    [TX_DATE_ORDER_ID]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: await getTxAmount(tx),
     [TX_TABLE_STATUS_ID]: tx.status,
     [TX_TABLE_RAW_TX_ID]: tx,
