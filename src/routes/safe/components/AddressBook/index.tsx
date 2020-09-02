@@ -70,7 +70,7 @@ const AddressBookTable = ({ classes }) => {
     if (entryAddressToEditOrCreateNew) {
       const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
       const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
-      if (key >= 0) {
+      if (key && key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
         setSelectedEntry({ entry: value, index: key })
