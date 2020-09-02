@@ -15,7 +15,7 @@ import SafeEtherscanLink from 'src/components/EtherscanLink'
 const useStyles = makeStyles(styles)
 
 const NestedWrapper = styled.div`
-  text-indent: 24px;
+  word-break: break-word;
 `
 
 const StyledText = styled(Text)`
