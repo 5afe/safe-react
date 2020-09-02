@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components'
 import ManageApps from './components/ManageApps'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
+import { SafeApp } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -63,7 +64,7 @@ const Apps = (): React.ReactElement => {
   const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
     INITIAL_CONFIRM_TX_MODAL_STATE,
   )
-  const iframeRef = useRef<HTMLIFrameElement>()
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
   const { trackEvent } = useAnalytics()
   const granted = useSelector(grantedSelector)
@@ -146,14 +147,14 @@ const Apps = (): React.ReactElement => {
     sendMessageToIframe({
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
-        safeAddress,
+        safeAddress: safeAddress as string,
         network,
-        ethBalance,
+        ethBalance: ethBalance as string,
       },
     })
   }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
 
-  if (loadingAppList || !appList.length) {
+  if (loadingAppList || !appList.length || !safeAddress) {
     return (
       <LoadingContainer>
         <Loader size="md" />
@@ -199,10 +200,10 @@ const Apps = (): React.ReactElement => {
       </CenteredMT>
       <ConfirmTransactionModal
         isOpen={confirmTransactionModal.isOpen}
-        app={selectedApp}
+        app={selectedApp as SafeApp}
         safeAddress={safeAddress}
-        ethBalance={ethBalance}
-        safeName={safeName}
+        ethBalance={ethBalance as string}
+        safeName={safeName as string}
         txs={confirmTransactionModal.txs}
         onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
