@@ -38,7 +38,7 @@ const Transactions = (): React.ReactElement => {
       {transactionsByPage.map((tx: Transaction, index) => {
         let txHash = ''
         if ('transactionHash' in tx) {
-          txHash = tx.transactionHash
+          txHash = tx.transactionHash as string
         }
         if ('txHash' in tx) {
           txHash = tx.txHash

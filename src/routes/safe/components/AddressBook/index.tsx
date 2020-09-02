@@ -50,7 +50,7 @@ const AddressBookTable = ({ classes }) => {
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [selectedEntry, setSelectedEntry] = useState<any>(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
