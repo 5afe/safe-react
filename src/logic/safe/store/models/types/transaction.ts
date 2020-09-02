@@ -52,7 +52,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
-  fee?: string // It will be replace with the new TXs types.
+  fee: string | null // It will be replace with the new TXs types.
   gasPrice: string
   gasToken: string
   isCancellationTx: boolean
@@ -75,7 +75,7 @@ export type TransactionProps = {
   safeTxHash: string
   setupData: string
   status?: TransactionStatus
-  submissionDate?: string | null
+  submissionDate: string | null
   symbol?: string | null
   transactionHash: string | null
   transfers?: Transfer[]
@@ -88,7 +88,7 @@ export type Transaction = RecordOf<TransactionProps>
 
 export type TxArgs = {
   baseGas: number
-  data?: string | null
+  data: string
   gasPrice: string
   gasToken: string
   nonce: number

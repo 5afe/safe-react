@@ -5,8 +5,10 @@ export const SAFES_KEY = 'SAFES'
 export const TX_KEY = 'TX'
 export const DEFAULT_SAFE_KEY = 'DEFAULT_SAFE'
 
+type StoredSafes = Record<string, SafeRecordProps>
+
 export const getSafeName = async (safeAddress: string): Promise<string | undefined> => {
-  const safes = await loadFromStorage(SAFES_KEY)
+  const safes = await loadFromStorage<StoredSafes>(SAFES_KEY)
   if (!safes) {
     return undefined
   }
@@ -24,7 +26,7 @@ export const saveSafes = async (safes) => {
 }
 
 export const getLocalSafe = async (safeAddress: string): Promise<SafeRecordProps | undefined> => {
-  const storedSafes = (await loadFromStorage<Record<string, SafeRecordProps>>(SAFES_KEY)) || {}
+  const storedSafes = (await loadFromStorage<StoredSafes>(SAFES_KEY)) || {}
   return storedSafes[safeAddress]
 }
 

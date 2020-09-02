@@ -177,10 +177,10 @@ export const safeBlacklistedAssetsSelector = createSelector(
 )
 
 export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress).get('activeAssets')
+  safes.get(safeAddress)?.get('activeAssets') || Set()
 
 export const safeBlacklistedAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress).get('blacklistedAssets')
+  safes.get(safeAddress)?.get('blacklistedAssets') || Set()
 
 const baseSafe = makeSafe()
 
