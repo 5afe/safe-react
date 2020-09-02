@@ -20,7 +20,8 @@ import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/sa
 
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { storeTx } from './createTransaction'
-import { TransactionStatus } from '../models/types/transaction'
+import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 
 const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddress, tx, userAddress }) => async (
   dispatch,
@@ -177,16 +178,20 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
                     : TransactionStatus.FAILED,
                 )
                 .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
+                .updateIn(['ownersWithPendingActions', 'confirm'], (prev) => prev.clear())
             })
-          : mockedTx.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
+          : mockedTx.withMutations((record) => {
+              record
+                .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+                  previous.pop(),
+                )
+                .set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
+            })
 
         await storeTx(
-          toStoreTx.withMutations((record) => {
-            record
-              .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
-              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
-                previous.pop(from),
-              )
+          toStoreTx.update('confirmations', (confirmations) => {
+            const index = confirmations.findIndex(({ owner }) => owner === from)
+            return index === -1 ? confirmations.push(makeConfirmation({ owner: from })) : confirmations
           }),
           safeAddress,
           dispatch,
