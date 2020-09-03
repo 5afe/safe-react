@@ -60,7 +60,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     <>
       <Block className={classes.expandedTxBlock}>
         <Row>
-          <Col layout="column" xs={6}>
+          <Col layout="column" xs={6} className={classes.col}>
             <Block className={cn(classes.txDataContainer, (isIncomingTx || isCreationTx) && classes.incomingTxBlock)}>
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>

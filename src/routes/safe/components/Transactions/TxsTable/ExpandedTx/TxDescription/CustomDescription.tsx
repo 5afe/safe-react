@@ -24,6 +24,7 @@ import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
+import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -34,9 +35,9 @@ const useStyles = makeStyles(styles)
 const TxDetailsMethodName = styled(Text)`
   text-indent: 4px;
 `
-const TxDetailsMethodParam = styled.div`
-  text-indent: 8px;
-  display: flex;
+const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
+  padding-left: 8px;
+  display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
@@ -46,6 +47,10 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
+const StyledMethodName = styled(Text)`
+  white-space: nowrap;
+`
+
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
     <TxDetailsMethodName size="lg" strong>
@@ -53,11 +58,11 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
     </TxDetailsMethodName>
 
     {data.parameters.map((param, index) => (
-      <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
-        <Text size="lg" strong>
+      <TxDetailsMethodParam key={`${data.method}_param-${index}`} isArrayParameter={isArrayParameter(param.type)}>
+        <StyledMethodName size="lg" strong>
           {param.name}({param.type}):
-        </Text>
-        <Value method={data.method} type={param.type} value={param.value} />
+        </StyledMethodName>
+        <Value method={data.method} type={param.type} value={param.type} />
       </TxDetailsMethodParam>
     ))}
   </TxInfo>

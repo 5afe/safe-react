@@ -15,7 +15,7 @@ import SafeEtherscanLink from 'src/components/EtherscanLink'
 const useStyles = makeStyles(styles)
 
 const NestedWrapper = styled.div`
-  word-break: break-word;
+  padding-left: 4px;
 `
 
 const StyledText = styled(Text)`
@@ -25,7 +25,7 @@ const StyledText = styled(Text)`
 interface RenderValueProps {
   method: string
   type: string
-  value: string | string[]
+  value: string | unknown[]
 }
 
 const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactElement => {
@@ -57,19 +57,30 @@ const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactEl
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
-  if (isArrayParameter(type)) {
-    return (
+  const getTextValue = (value: string) => <StyledText size="lg">{value}</StyledText>
+
+  const getArrayValue = (parentId: string, value: unknown[] | string) => (
+    <div>
+      [
       <NestedWrapper>
-        {(value as string[]).map((value, index) => (
-          <StyledText key={`${method}-value-${index}`} size="lg">
-            {value}
-          </StyledText>
-        ))}
+        {(value as string[]).map((currentValue, index) => {
+          const key = `${parentId}-value-${index}`
+          return (
+            <div key={key}>
+              {Array.isArray(currentValue) ? getArrayValue(key, currentValue) : getTextValue(currentValue)}
+            </div>
+          )
+        })}
       </NestedWrapper>
-    )
+      ]
+    </div>
+  )
+
+  if (isArrayParameter(type) || Array.isArray(value)) {
+    return getArrayValue(method, value)
   }
 
-  return <StyledText size="lg">{value as string}</StyledText>
+  return getTextValue(value as string)
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
