@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -23,7 +23,10 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-const ThresholdSettings = ({ classes }) => {
+const useStyles = makeStyles(styles)
+
+const ThresholdSettings = (): React.ReactElement => {
+  const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
   const threshold = useSelector(safeThresholdSelector)
@@ -96,4 +99,4 @@ const ThresholdSettings = ({ classes }) => {
   )
 }
 
-export default withStyles(styles as any)(ThresholdSettings)
+export default ThresholdSettings
