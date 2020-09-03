@@ -58,7 +58,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
