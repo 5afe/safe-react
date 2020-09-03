@@ -18,8 +18,8 @@ export default handleActions(
       const { modules, safeAddress } = action.payload
       const oldModuleTxs = state[safeAddress] ?? []
       const oldModuleTxsHashes = oldModuleTxs.map(({ transactionHash }) => transactionHash)
-      // filtering in this level happens, because backend is returning the whole list of txs
-      // so, to avoid re-storing all the txs, those already stored are filtered out
+      // As backend is returning the whole list of txs on every request,
+      // to avoid duplicates, filtering happens in this level.
       const newModuleTxs = modules.filter((moduleTx) => !oldModuleTxsHashes.includes(moduleTx.transactionHash))
 
       return {
