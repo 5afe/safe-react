@@ -44,7 +44,7 @@ export type TransactionProps = {
   creator: string
   creationTx: boolean
   customTx: boolean
-  data?: string | null
+  data: string | null
   dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
   decodedParams: DecodedParams | null
@@ -64,7 +64,7 @@ export type TransactionProps = {
   masterCopy: string
   modifySettingsTx: boolean
   multiSendTx: boolean
-  nonce?: number | null
+  nonce: number
   operation: number
   origin: string | null
   ownersWithPendingActions: Map<PendingActionValues, List<any>>
@@ -74,7 +74,7 @@ export type TransactionProps = {
   safeTxGas: number
   safeTxHash: string
   setupData: string
-  status?: TransactionStatus
+  status: TransactionStatus
   submissionDate: string | null
   symbol?: string | null
   transactionHash: string | null

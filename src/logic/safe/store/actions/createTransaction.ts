@@ -100,7 +100,7 @@ interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number
-  origin?: string
+  origin?: string | null
   safeAddress: string
   to: string
   txData?: string
@@ -121,7 +121,7 @@ const createTransaction = (
     txNonce,
     operation = CALL,
     navigateToTransactionsTab = true,
-    origin = '',
+    origin = null,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
