@@ -76,8 +76,8 @@ const TxsTable = ({ classes }) => {
           size={filteredData.size}
         >
           {(sortedData) =>
-            sortedData.map((row, index) => (
-              <React.Fragment key={`${row.tx.safeTxHash}-${index}`}>
+            sortedData.map((row) => (
+              <React.Fragment key={row.tx.safeTxHash}>
                 <TableRow
                   className={cn(classes.row, expandedTx === row.tx.safeTxHash && classes.expandedRow)}
                   data-testid={TRANSACTION_ROW_TEST_ID}
