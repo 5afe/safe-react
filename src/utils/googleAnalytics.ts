@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useState } from 'react'
-import GoogleAnalytics from 'react-ga'
+import GoogleAnalytics, { EventArgs } from 'react-ga'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { loadFromCookie } from 'src/logic/cookies/utils'
 
+export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
+
 let analyticsLoaded = false
-export const loadGoogleAnalytics = () => {
+export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {
     return
   }
@@ -22,7 +24,12 @@ export const loadGoogleAnalytics = () => {
   }
 }
 
-export const useAnalytics = () => {
+type UseAnalyticsResponse = {
+  trackPage: (path: string) => void
+  trackEvent: (event: EventArgs) => void
+}
+
+export const useAnalytics = (): UseAnalyticsResponse => {
   const [analyticsAllowed, setAnalyticsAllowed] = useState(false)
 
   useEffect(() => {
@@ -37,18 +44,24 @@ export const useAnalytics = () => {
   }, [])
 
   const trackPage = useCallback(
-    (page, options = {}) => {
+    (page) => {
       if (!analyticsAllowed || !analyticsLoaded) {
         return
       }
-      GoogleAnalytics.set({
-        page,
-        ...options,
-      })
       GoogleAnalytics.pageview(page)
     },
     [analyticsAllowed],
   )
 
-  return { trackPage }
+  const trackEvent = useCallback(
+    (event: EventArgs) => {
+      if (!analyticsAllowed || !analyticsLoaded) {
+        return
+      }
+      GoogleAnalytics.event(event)
+    },
+    [analyticsAllowed],
+  )
+
+  return { trackPage, trackEvent }
 }
