@@ -10,7 +10,7 @@ import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { List } from 'immutable'
 
 describe('Utility function: sameAddress', () => {
-  it('Given no first address, returns false', () => {
+  it('It should return false if no address given', () => {
     // given
     const safeAddress = null
     const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -21,7 +21,7 @@ describe('Utility function: sameAddress', () => {
     // then
     expect(result).toBe(false)
   })
-  it('Given no second address, returns false', () => {
+  it('It should return false if not second address given', () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
     const safeAddress2 = null
@@ -32,7 +32,7 @@ describe('Utility function: sameAddress', () => {
     // then
     expect(result).toBe(false)
   })
-  it('Given two equal addresses, returns true', () => {
+  it('It should return true if two equal addresses given', () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 
@@ -42,7 +42,7 @@ describe('Utility function: sameAddress', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given two different addresses, returns false', () => {
+  it('If should return false if two different addresses given', () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
     const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -56,7 +56,7 @@ describe('Utility function: sameAddress', () => {
 })
 
 describe('Utility function: shortVersionOf', () => {
-  it('Given no address, returns Unknown ', () => {
+  it('It should return Unknown if no address given', () => {
     // given
     const safeAddress = null
     const cut = 5
@@ -68,7 +68,7 @@ describe('Utility function: shortVersionOf', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given 0x344B941b1aAE2e4Be73987212FC4741687Bf0503 and a cut = 5, returns 0x344...f0503', () => {
+  it('It should return 0x344...f0503 if given 0x344B941b1aAE2e4Be73987212FC4741687Bf0503 and a cut = 5', () => {
     // given
     const safeAddress = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
     const cut = 5
@@ -80,7 +80,7 @@ describe('Utility function: shortVersionOf', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a cut value bigger than the address length, returns the same address', () => {
+  it('If should return the same address if a cut value bigger than the address length given', () => {
     // given
     const safeAddress = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
     const cut = safeAddress.length
@@ -163,7 +163,7 @@ describe('Utility function: isUserAnOwner', () => {
 })
 
 describe('Utility function: isUserAnOwnerOfAnySafe', () => {
-  it('Given a list of safes, one of them has an owner equal to the userAccount, returns true', () => {
+  it('Should return true if given a list of safes, one of them has an owner equal to the userAccount', () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -180,7 +180,7 @@ describe('Utility function: isUserAnOwnerOfAnySafe', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a list of safes, none of them has an owner equal to the userAccount, returns false', () => {
+  it('It should return false if given a list of safes, none of them has an owner equal to the userAccount', () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -201,7 +201,7 @@ describe('Utility function: isUserAnOwnerOfAnySafe', () => {
 })
 
 describe('Utility function: isValidEnsName', () => {
-  it('Given no ens name, returns false', () => {
+  it('If should return false if given no ens name', () => {
     // given
     const ensName = null
     const expectedResult = false
