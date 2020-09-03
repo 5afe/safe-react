@@ -3,7 +3,6 @@
 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/NumberFormat
 
 // Locale is an empty array because we want it to use user's locale
-import { BigNumber } from 'bignumber.js'
 
 const lt1kFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 5 })
 const lt10kFormatter = new Intl.NumberFormat([], { maximumFractionDigits: 4 })
@@ -49,6 +48,3 @@ export const formatAmountInUsFormat = (amount: string): string => {
   const numberFloat: number = parseFloat(amount)
   return usNumberFormatter.format(numberFloat).replace('$', '')
 }
-
-export const humanReadableTokenAmount = (amount: string, decimals: number): string =>
-  new BigNumber(amount).times(`1e-${decimals}`).toFixed()
