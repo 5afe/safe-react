@@ -19,7 +19,7 @@ describe('getAddressesListFromAdbk', () => {
   const entry2 = getMockAddressBookEntry('78910', 'test2')
   const entry3 = getMockAddressBookEntry('4781321', 'test3')
 
-  it('Given a safeAddressBook, returns the list of addresses within the addressBook',  () => {
+  it('It should returns the list of addresses within the addressBook given a safeAddressBook',  () => {
     // given
     const safeAddressBook = List([entry1, entry2, entry3])
     const expectedResult = [entry1.address, entry2.address, entry3.address]
@@ -36,7 +36,7 @@ describe('getNameFromSafeAddressBook', () => {
   const entry1 = getMockAddressBookEntry('123456', 'test1')
   const entry2 = getMockAddressBookEntry('78910', 'test2')
   const entry3 = getMockAddressBookEntry('4781321', 'test3')
-  it('Given a safeAddressBook and an user account, returns the user name',  () => {
+  it('It should returns the user name given a safeAddressBook and an user account',  () => {
     // given
     const safeAddressBook = List([entry1, entry2, entry3])
     const expectedResult = entry2.name
@@ -53,7 +53,7 @@ describe('getOwnersWithNameFromAddressBook', () => {
   const entry1 = getMockAddressBookEntry('123456', 'test1')
   const entry2 = getMockAddressBookEntry('78910', 'test2')
   const entry3 = getMockAddressBookEntry('4781321', 'test3')
-  it('Given a safeAddressBook and a list of owners, returns the list of owners with their names',  () => {
+  it('It should returns the list of owners with their names given a safeAddressBook and a list of owners',  () => {
     // given
     const safeAddressBook = List([entry1, entry2, entry3])
     const ownerList = List([ { address: entry1.address, name: ''}, { address: entry2.address, name: ''}])
@@ -73,7 +73,7 @@ describe('saveAddressBook', () => {
   const entry1 = getMockAddressBookEntry('123456', 'test1')
   const entry2 = getMockAddressBookEntry('78910', 'test2')
   const entry3 = getMockAddressBookEntry('4781321', 'test3')
-  it('Given an addressBook, saves it to the localStorage',  async () => {
+  it('It should save a given addressBook to the localStorage',  async () => {
     // given
     const addressBook = Map({[safeAddress1]: List([entry1, entry2]), [safeAddress2]: List([entry3])})
 
