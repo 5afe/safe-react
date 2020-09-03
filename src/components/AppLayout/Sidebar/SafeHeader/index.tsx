@@ -142,7 +142,14 @@ const SafeHeader = ({
       )}
 
       <StyledText size="xl">{balance}</StyledText>
-      <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
+      <StyledButton
+        size="md"
+        disabled={!granted}
+        color="primary"
+        variant="contained"
+        onClick={onNewTransactionClick}
+        id="new-transaction-btn"
+      >
         <FixedIcon type="arrowSentWhite" />
         <Text size="lg" color="white">
           New Transaction

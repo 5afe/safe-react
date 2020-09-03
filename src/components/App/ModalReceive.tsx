@@ -92,7 +92,7 @@ const Receive = ({ classes, onClose }) => {
         ETH and ERC-20 tokens to this address!
       </Paragraph>
       <Col layout="column" middle="xs">
-        <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
+        <Paragraph className={classes.safeName} id="safe-name" noMargin size="lg" weight="bold">
           {safeName}
         </Paragraph>
         <Block className={classes.qrContainer}>
@@ -105,6 +105,7 @@ const Receive = ({ classes, onClose }) => {
             onClick={() => {
               copyToClipboard(safeAddress)
             }}
+            id="safe-address"
           >
             {safeAddress}
           </Paragraph>

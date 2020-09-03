@@ -124,6 +124,7 @@ const List = ({ items }: Props): React.ReactElement => {
         key={item.label}
         onClick={onClick}
         selected={item.selected || isSubItemSelected(item)}
+        id={`section-${item.label.toLowerCase()}`}
       >
         {item.icon && item.icon}
 
