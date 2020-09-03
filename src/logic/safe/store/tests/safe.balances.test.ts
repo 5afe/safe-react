@@ -13,7 +13,7 @@ describe('Feature > Balances', () => {
     store = aNewStore()
   })
 
-  it('Updates token balances', async () => {
+  it('It should return an updated balance when updates active tokens', async () => {
     // given
     const tokensAmount = '100'
     const token = makeToken({
@@ -43,7 +43,7 @@ describe('Feature > Balances', () => {
     expect(tokenIsActive).toBe(true)
   })
 
-  it('Updates ether balance', async () => {
+  it('The store should have an updated ether balance after updating the value', async () => {
     // given
     const etherAmount = '1'
     const expectedResult = '1'
