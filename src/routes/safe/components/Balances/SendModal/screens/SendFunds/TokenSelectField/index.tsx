@@ -17,7 +17,7 @@ import { Token } from 'src/logic/tokens/store/model/token'
 
 const SelectedToken = ({ classes, tokenAddress, tokens }) => {
   const token = tokens.find(({ address }) => address === tokenAddress)
-  const tokenData = useToken(token.address) as Token | null
+  const tokenData = useToken(token.address)
 
   return (
     <MenuItem className={classes.container}>

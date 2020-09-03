@@ -57,12 +57,12 @@ export const buildSafe = async (
 ): Promise<SafeRecordProps> => {
   const safeAddress = checksumAddress(safeAdd)
 
-  const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
+  const safeMethods = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
   const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
     generateBatchRequests({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
-      methods: safeParams,
+      methods: safeMethods,
     }),
     getLocalSafe(safeAddress),
     getBalanceInEtherOf(safeAddress),
