@@ -37,7 +37,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
@@ -59,12 +59,12 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     let isCurrent = true
 
     const estimateGas = async () => {
-      const { fromWei, toBN } = getWeb3().utils
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
 
       let txData = EMPTY_DATA
 
       if (!isSendingETH && txToken) {
-        const web3 = getWeb3()
         const ERC20Instance = new web3.eth.Contract(StandardToken.abi as AbiItem[], txToken.address)
         txData = ERC20Instance.methods
           .transfer(tx.recipientAddress, toTokenUnit(tx.amount, txToken.decimals))

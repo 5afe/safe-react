@@ -1,30 +1,19 @@
-import { RadioButtons, Text } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { BigNumber } from 'bignumber.js'
 import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
-import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import styled from 'styled-components'
-
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -32,15 +21,23 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
-import { BigNumber } from 'bignumber.js'
+import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
+import { styles } from './style'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -57,16 +54,7 @@ const formMutators = {
   },
 }
 
-// const txTypeDecorator
-
-// TODO: propose refactor in safe-react-components based on this requirements
-const SpendingLimitRadioButtons = styled(RadioButtons)`
-  & .MuiRadio-colorPrimary.Mui-checked {
-    color: ${({ theme }) => theme.colors.primary};
-  }
-`
-
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
   const classes = useStyles()
@@ -231,30 +219,11 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   </Col>
                 </Row>
                 {tokenSpendingLimit && (
-                  <Row margin="sm">
-                    <Col between="lg" style={{ flexDirection: 'column' }}>
-                      <Text size="lg">Send as</Text>
-                      <Field name="txType" initialValue="multiSig">
-                        {({ input: { name, value } }) => (
-                          <SpendingLimitRadioButtons
-                            name={name}
-                            value={value || 'multiSig'}
-                            onRadioChange={mutators.setTxType}
-                            options={[
-                              { label: 'Multisig Transaction', value: 'multiSig' },
-                              {
-                                label: `Spending Limit Transaction (${fromTokenUnit(
-                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
-                                )} ${selectedTokenRecord.symbol})`,
-                                value: 'spendingLimit',
-                              },
-                            ]}
-                          />
-                        )}
-                      </Field>
-                    </Col>
-                  </Row>
+                  <SpendingLimitRow
+                    onOptionSelect={mutators.setTxType}
+                    selectedToken={selectedTokenRecord}
+                    tokenSpendingLimit={tokenSpendingLimit}
+                  />
                 )}
                 <Row margin="xs">
                   <Col between="lg">

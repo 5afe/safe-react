@@ -87,9 +87,9 @@ export const SPENDING_LIMIT_METHODS_NAMES = {
 }
 
 export const SPENDING_LIMIT_METHOD_TO_ID = {
-  '0xe71bdf41': 'addDelegate',
-  '0xbeaeb388': 'setAllowance',
-  '0x4515641a': 'executeAllowanceTransfer',
+  '0xe71bdf41': SPENDING_LIMIT_METHODS_NAMES.ADD_DELEGATE,
+  '0xbeaeb388': SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE,
+  '0x4515641a': SPENDING_LIMIT_METHODS_NAMES.EXECUTE_ALLOWANCE_TRANSFER,
 }
 
 export const isSetAllowanceMethod = (data: string): boolean => {
