@@ -1,97 +1,30 @@
 import { useDispatch, useSelector } from 'react-redux'
-import { useEffect, useState } from 'react'
-import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
-import { fetchToken } from 'src/logic/tokens/api'
+import { useEffect, useMemo } from 'react'
+import { fetchToken } from 'src/logic/tokens/store/actions/fetchToken'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
-import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
+import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { Token } from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import etherLogo from 'src/assets/icons/icon_etherTokens.svg'
-import { addToken } from 'src/logic/tokens/store/actions/addToken'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
 
-const getTokenInfoFromBlockchain = (tokenAddress: string): string[] =>
-  generateBatchRequests({
-    abi: ERC20Detailed.abi,
-    address: tokenAddress,
-    methods: ['decimals', 'name', 'symbol'],
-  })
-
-export const useToken = (tokenAddress: string, isCustomToken = false): Token | NFTAsset | null => {
-  const [token, setToken] = useState<Token | NFTAsset | null>(null)
+export const useToken = (tokenAddress: string): Token | NFTAsset | null => {
   const tokens = useSelector(tokensSelector)
   const assets = useSelector(nftAssetsListSelector)
   const dispatch = useDispatch()
 
-  useEffect(() => {
-    const fetchTokenInfo = async () => {
-      // Custom token won't be on the backend, we dont try to fetch if in order to improve the performance
-      const remoteToken = !isCustomToken ? await fetchToken(tokenAddress) : null
-      if (remoteToken) {
-        const { address, decimals, symbol, logoUri, name } = remoteToken
-
-        if (!decimals) {
-          return
-        }
-
-        const tokenProps = {
-          address,
-          name: name || symbol,
-          symbol: symbol,
-          decimals: Number(decimals),
-          logoUri,
-        }
-        setToken(makeToken(tokenProps))
-        if (!isCustomToken) {
-          dispatch(addToken(tokenProps))
-        }
-      } else {
-        const [tokenDecimals, tokenName, tokenSymbol] = await getTokenInfoFromBlockchain(tokenAddress)
-        if (tokenDecimals === null) {
-          return null
-        }
-        const tokenProps = {
-          address: tokenAddress,
-          name: tokenName ? tokenName : tokenSymbol,
-          symbol: tokenSymbol,
-          decimals: Number(tokenDecimals),
-          logoUri: '',
-        }
-        setToken(makeToken(tokenProps))
-        if (!isCustomToken) {
-          dispatch(addToken(tokenProps))
-        }
-      }
-    }
-
+  const token = useMemo(() => {
     if (tokenAddress === ETH_ADDRESS) {
-      setToken(
-        makeToken({
-          address: ETH_ADDRESS,
-          name: 'Ether',
-          symbol: 'ETH',
-          decimals: 18,
-          logoUri: etherLogo,
-        }),
-      )
-      return
+      return getEthAsToken('0')
     }
+    return tokens.get(tokenAddress) || assets.find((asset) => asset.address === tokenAddress)
+  }, [assets, tokenAddress, tokens])
 
-    if (tokenAddress) {
-      const localToken = tokens.get(tokenAddress)
-      if (localToken) {
-        setToken(localToken)
-        return
-      }
-      const localAsset = assets.find((asset) => asset.address === tokenAddress)
-      if (localAsset) {
-        setToken(localAsset)
-        return
-      }
-      fetchTokenInfo()
+  useEffect(() => {
+    if (!token) {
+      dispatch(fetchToken(tokenAddress))
     }
-  }, [dispatch, isCustomToken, tokenAddress, tokens, assets])
+  }, [dispatch, tokenAddress, tokens, assets, token])
 
   return token
 }
