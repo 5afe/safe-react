@@ -46,7 +46,7 @@ export const checkIfSafeNeedsUpdate = async (
   lastSafeVersion: string,
 ): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
-    throw 'checkIfSafeNeedsUpdate: No Safe Instance or version provided'
+    throw new Error('checkIfSafeNeedsUpdate: No Safe Instance or version provided')
   }
   const safeMasterVersion = await getCurrentSafeVersion(gnosisSafeInstance)
   const current = semverValid(safeMasterVersion) as string

@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
-import { List, RecordOf } from 'immutable'
+import { List } from 'immutable'
 import React from 'react'
 
 import TxType from './TxType'
@@ -71,7 +71,7 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
   return getAmountWithSymbol({ decimals: decimals as string, symbol: symbol as string, value }, formatted)
 }
 
-interface TableData {
+export interface TableData {
   amount: string
   cancelTx?: Transaction
   date: string
