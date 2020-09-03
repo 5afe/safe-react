@@ -10,7 +10,7 @@ import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 
 
 describe('getEthAsToken', () => {
-  it('Given eth balance returns the balance as eth token', () => {
+  it('It should return the balance as eth token if given eth balance returns', () => {
     // given
     const balance = '1000'
     const expectedResult = makeToken({
@@ -32,7 +32,7 @@ describe('getEthAsToken', () => {
 
 describe('isTokenTransfer', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it('The transaction has no value but has transfer data, returns true',  () => {
+  it('It should return true if the transaction has no value but has transfer data',  () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0xa9059cbb' })
     const expectedResult = true
@@ -42,7 +42,7 @@ describe('isTokenTransfer', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('The transaction has no value but has data different from transfer, returns false',  () => {
+  it('It should return false if the transaction has no value but has data different from transfer',  () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0xa9055cbb' })
     const expectedResult = false
@@ -52,7 +52,7 @@ describe('isTokenTransfer', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('The transaction has empty data, returns false',  () => {
+  it('It should return false if the transaction has empty data',  () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
     const expectedResult = false
@@ -73,7 +73,7 @@ describe('getERC20DecimalsAndSymbol', () => {
     jest.unmock('src/logic/contracts/generateBatchRequests')
     jest.unmock('console')
   })
-  it('Given a DAI address, the information is saved on the store, returns it', async () => {
+  it('It should return DAI information from the store if given a DAI address', async () => {
     // given
     const tokenAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
     const decimals = Number(18)
@@ -102,7 +102,7 @@ describe('getERC20DecimalsAndSymbol', () => {
     expect(result).toEqual(expectedResult)
     expect(spy).toHaveBeenCalled()
   })
-  it('Given a token address, if there is an error fetching the data, results default value decimals: 18, symbol: UNKNOWN', async () => {
+  it('It should return default value decimals: 18, symbol: UNKNOWN if given a token address and if there is an error fetching the data', async () => {
     // given
     const tokenAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
     const decimals = Number(18)
@@ -127,7 +127,7 @@ describe('getERC20DecimalsAndSymbol', () => {
     expect(spy).toHaveBeenCalled()
     expect(spyConsole).toHaveBeenCalled()
   })
-  it('Given a token address, if the information is not stored, should fetch it from blockchain', async () => {
+  it('It should fetch token information from the blockchain if given a token address and if the information is not stored', async () => {
     // given
     const tokenAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
     const decimals = Number(18)
@@ -161,7 +161,7 @@ describe('isERC721Contract', () => {
   beforeEach(() => {
     jest.mock('src/logic/tokens/store/actions/fetchTokens')
   })
-  it('Given an random non-erc721 contract address, returns false', async () => {
+  it('It should return false if given an random non-erc721 contract address', async () => {
     // given
     const contractAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa" // DAI Address
     const expectedResult = false
@@ -172,7 +172,7 @@ describe('isERC721Contract', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('Given a Erc721 contract address, returns true', async () => {
+  it('It should return true if given a Erc721 contract address', async () => {
     // given
     const contractAddress = "0x014d5883274ab3a9708b0f1e4263df6e90160a30" // dummy ft Address
     const ERC721Contract = {
