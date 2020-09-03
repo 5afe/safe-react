@@ -1,18 +1,17 @@
-import { batch } from 'react-redux'
-import { ThunkAction, ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
 import { backOff } from 'exponential-backoff'
+import { batch } from 'react-redux'
+import { AnyAction } from 'redux'
+import { ThunkAction, ThunkDispatch } from 'redux-thunk'
 
-import { addIncomingTransactions } from '../../addIncomingTransactions'
+import { addIncomingTransactions } from 'src/logic/safe/store/actions/addIncomingTransactions'
+import { addModuleTransactions } from 'src/logic/safe/store/actions/addModuleTransactions'
+import { addOrUpdateCancellationTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
+import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
+import { AppReduxState } from 'src/store'
 
 import { loadIncomingTransactions } from './loadIncomingTransactions'
 import { loadModuleTransactions } from './loadModuleTransactions'
 import { loadOutgoingTransactions } from './loadOutgoingTransactions'
-
-import { addOrUpdateCancellationTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
-import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
-import { addModuleTransactions } from 'src/logic/safe/store/actions/addModuleTransactions'
-import { AppReduxState } from 'src/store'
 
 const noFunc = () => {}
 
@@ -48,7 +47,7 @@ export default (safeAddress: string): ThunkAction<Promise<void>, AppReduxState, 
 
     const moduleTransactions = await loadModuleTransactions(safeAddress)
 
-    if (moduleTransactions) {
+    if (moduleTransactions.length) {
       dispatch(addModuleTransactions({ modules: moduleTransactions, safeAddress }))
     }
   } catch (error) {
