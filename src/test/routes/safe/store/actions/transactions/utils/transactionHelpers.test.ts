@@ -26,7 +26,7 @@ import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
 describe('isInnerTransaction', () => {
-  it('The transaction to is our given safeAddress and the txValue is 0, should return true',   () => {
+  it('It should return true if the transaction to is our given safeAddress and the txValue is 0',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0'})
 
@@ -36,7 +36,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('The transaction to is our given safeAddress and the txValue is >0, should return false',   () => {
+  it('It should return false if the transaction to is our given safeAddress and the txValue is >0',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '100'})
 
@@ -46,7 +46,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('The transaction to is not our given safeAddress, should return false',   () => {
+  it('It should return false if the transaction to is not our given safeAddress',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0'})
 
@@ -56,7 +56,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('The transaction recipient is the given safeAddress and the txValue is 0, should return true',   () => {
+  it('It should return true if the transaction recipient is the given safeAddress and the txValue is 0',   () => {
     // given
     const transaction = makeTransaction({ recipient: safeAddress, value: '0'})
 
@@ -66,7 +66,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('The transaction recipient is the given safeAddress and the txValue is >0, should return false',   () => {
+  it('It should return false if the transaction recipient is the given safeAddress and the txValue is >0',   () => {
     // given
     const transaction = makeTransaction({ recipient: safeAddress, value: '100'})
 
@@ -76,7 +76,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('The transaction recipient is not the given safeAddress, should return false',   () => {
+  it('It should return false if the transaction recipient is not the given safeAddress',   () => {
     // given
     const transaction = makeTransaction({ recipient: safeAddress2, value: '100'})
 
@@ -91,7 +91,7 @@ describe('isInnerTransaction', () => {
 
 describe('isCancelTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it("Given a inner transaction with empty data, returns true", () => {
+  it("It should return false if given a inner transaction with empty data", () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -101,7 +101,7 @@ describe('isCancelTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it("Given a inner transaction without empty data, returns false", () => {
+  it("It should return false if given a inner transaction without empty data", () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test'})
 
@@ -114,7 +114,7 @@ describe('isCancelTransaction', () => {
 })
 
 describe('isPendingTransaction', () => {
-  it('If the transaction is on pending status return true',   () => {
+  it('It should return true if the transaction is on pending status',   () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.PENDING})
     const cancelTx = null
@@ -125,7 +125,7 @@ describe('isPendingTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('If the transaction is not on pending status but his cancellation transaction yes, return true',   () => {
+  it('It should return true If the transaction is not on pending status but his cancellation transaction yes',   () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.AWAITING_CONFIRMATIONS})
     const cancelTx = makeTransaction({ status: TransactionStatus.PENDING})
@@ -136,7 +136,7 @@ describe('isPendingTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('If the transaction is not pending status and his cancellation transaction also is not on that status, returns false',   () => {
+  it('It should return true If the transaction is not pending status and his cancellation transaction also is not on that status',   () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.CANCELLED})
     const cancelTx = makeTransaction({ status: TransactionStatus.AWAITING_CONFIRMATIONS})
@@ -152,7 +152,7 @@ describe('isPendingTransaction', () => {
 
 describe('isModifySettingsTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it('Given an inner transaction without empty data, returns true',   () => {
+  it('It should return true if given an inner transaction without empty data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test' })
 
@@ -162,7 +162,7 @@ describe('isModifySettingsTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given an inner transaction with empty data, returns false',   () => {
+  it('It should return false if given an inner transaction with empty data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -175,7 +175,7 @@ describe('isModifySettingsTransaction', () => {
 })
 
 describe('isMultiSendTransaction', () => {
-  it('Given a transaction without value, the data has multisend substring, returns true',   () => {
+  it('It should return true if given a transaction without value, the data has multisend substring',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
@@ -186,7 +186,7 @@ describe('isMultiSendTransaction', () => {
     expect(result).toBe(true)
 
   })
-  it('Given a transaction without data, returns false',   () => {
+  it('It should return false if given a transaction without data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -197,7 +197,7 @@ describe('isMultiSendTransaction', () => {
     expect(result).toBe(false)
 
   })
-  it('Given a transaction without value, the data has not multisend substring, returns true',   () => {
+  it('It should return true if given a transaction without value, the data has not multisend substring',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'thisiswrongdata' })
 
@@ -211,7 +211,7 @@ describe('isMultiSendTransaction', () => {
 })
 
 describe('isUpgradeTransaction', () => {
-  it('The transaction data is empty, returns false',   () => {
+  it('If should return true if the transaction data is empty',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -222,7 +222,7 @@ describe('isUpgradeTransaction', () => {
     expect(result).toBe(false)
 
   })
-  it('The transaction data is multisend transaction but does not have upgradeTx data, returns false',   () => {
+  it('It should return false if the transaction data is multisend transaction but does not have upgradeTx data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
@@ -233,7 +233,7 @@ describe('isUpgradeTransaction', () => {
     expect(result).toBe(false)
 
   })
-  it('The transaction data is multisend transaction has upgradeTx data, returns true',   () => {
+  it('It should return true if the transaction data is multisend transaction has upgradeTx data',   () => {
     // given
     const upgradeTxData = `0x8d80ff0a000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000f200dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247de7edef000000000000000000000000d5d82b6addc9027b22dca772aa68d5d74cdbdf4400dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024f08a032300000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000`
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: upgradeTxData })
@@ -248,7 +248,7 @@ describe('isUpgradeTransaction', () => {
 })
 
 describe('isOutgoingTransaction', () => {
-  it('The transaction has not a to address equal to the safe address and has no empty data, return true',   () => {
+  it('It should return true if the transaction has not a to address equal to the safe address and has no empty data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
 
@@ -259,7 +259,7 @@ describe('isOutgoingTransaction', () => {
     expect(result).toBe(true)
 
   })
-  it('The transaction has an address equal to the safe address, return false',   () => {
+  it('It should return true if the transaction has an address equal to the safe address',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: 'test' })
 
@@ -270,7 +270,7 @@ describe('isOutgoingTransaction', () => {
     expect(result).toBe(false)
 
   })
-  it('The transaction has not a to address equal to the safe address but has empty data, return false',   () => {
+  it('It should return false if the transaction has not a to address equal to the safe address but has empty data',   () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -288,7 +288,7 @@ describe('isCustomTransaction', () => {
   afterAll(() => {
     jest.unmock('src/logic/tokens/utils/tokenHelpers')
   })
-  it('Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction, returns true',   async () => {
+  it('It should return true if Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
@@ -317,7 +317,7 @@ describe('isCustomTransaction', () => {
     expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
 
   })
-  it('Is outgoing transaction, is not SendERC20Transaction, is not isUpgradeTransaction and not isSendERC721Transaction, returns true',   async () => {
+  it('It should return true if is outgoing transaction, is not SendERC20Transaction, is not isUpgradeTransaction and not isSendERC721Transaction',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
@@ -346,7 +346,7 @@ describe('isCustomTransaction', () => {
     expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
 
   })
-  it('Is outgoing transaction, not SendERC20Transaction, isUpgradeTransaction and not isSendERC721Transaction, returns false',   async () => {
+  it('It should return false if is outgoing transaction, not SendERC20Transaction, isUpgradeTransaction and not isSendERC721Transaction',   async () => {
     // given
     const upgradeTxData = `0x8d80ff0a000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000f200dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247de7edef000000000000000000000000d5d82b6addc9027b22dca772aa68d5d74cdbdf4400dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024f08a032300000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000`
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: upgradeTxData })
@@ -375,7 +375,7 @@ describe('isCustomTransaction', () => {
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
 
   })
-  it('Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and isSendERC721Transaction, returns false',   async () => {
+  it('It should return false if is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and isSendERC721Transaction',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
@@ -407,7 +407,7 @@ describe('isCustomTransaction', () => {
 })
 
 describe('getRefundParams', () => {
-  it('Given a transaction with the gasPrice == 0, returns null',   async () => {
+  it('It should return null if given a transaction with the gasPrice == 0',   async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', gasPrice: '0'})
 
@@ -418,7 +418,7 @@ describe('getRefundParams', () => {
     // then
     expect(result).toBe(null)
   })
-  it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 100 and 18 decimals, returns 0.000000000000020000',   async () => {
+  it('It should return 0.000000000000020000 if given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 100 and 18 decimals',   async () => {
     // given
     const gasPrice = '100'
     const baseGas = 100
@@ -476,7 +476,7 @@ describe('getRefundParams', () => {
     expect(result).toStrictEqual(expectedResult)
     expect(getTokenInfoMock).toBeCalled()
   })
-  it('Given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 400 and 5 decimals, returns 0.50000',   async () => {
+  it('It should return 0.50000 if given a transaction with the gasPrice = 100, the baseGas = 100, the txGas = 400 and 5 decimals',   async () => {
     // given
     const gasPrice = '100'
     const baseGas = 100
@@ -530,7 +530,7 @@ describe('isTransactionCancelled', () => {
 })
 
 describe('calculateTransactionStatus', () => {
-  it('The tx is executed and successful, returns SUCCESS',   () => {
+  it('It should return SUCCESS if the tx is executed and successful',   () => {
     // given
     const transaction = makeTransaction({ isExecuted: true, isSuccessful: true })
     const safe = makeSafe()
@@ -542,7 +542,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.SUCCESS)
   })
-  it('The tx is cancelled and successful, returns CANCELLED',   () => {
+  it('It should return CANCELLED if the tx is cancelled and successful',   () => {
     // given
     const transaction = makeTransaction({ cancelled: true })
     const safe = makeSafe()
@@ -554,7 +554,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.CANCELLED)
   })
-  it('The tx has an amount of confirmations equal to the safe threshold, returns AWAITING_EXECUTION',   () => {
+  it('It should return AWAITING_EXECUTION if the tx has an amount of confirmations equal to the safe threshold',   () => {
     // given
     const makeUser = Record({
       owner: '',
@@ -572,7 +572,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.CANCELLED)
   })
-  it('The tx is the creation transaction, returns SUCCESS',   () => {
+  it('It should return SUCCESS if the tx is the creation transaction',   () => {
     // given
     const transaction = makeTransaction({ creationTx: true, confirmations: List() } )
     const safe = makeSafe( { threshold: 3 })
@@ -584,7 +584,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.SUCCESS)
   })
-  it('The tx is pending, returns PENDING',   () => {
+  it('It should return PENDING if the tx is pending',   () => {
     // given
     const transaction = makeTransaction({ confirmations: List(), isPending: true } )
     const safe = makeSafe( { threshold: 3 })
@@ -596,7 +596,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.PENDING)
   })
-  it('The tx has no confirmations, returns PENDING',   () => {
+  it('It should return PENDING if the tx has no confirmations',   () => {
     // given
     const transaction = makeTransaction({ confirmations: List(), isPending: false } )
     const safe = makeSafe( { threshold: 3 })
@@ -608,7 +608,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.PENDING)
   })
-  it('The tx has confirmations bellow the threshold, the user is owner and signed, returns AWAITING_CONFIRMATIONS',   () => {
+  it('It should return AWAITING_CONFIRMATIONS if the tx has confirmations bellow the threshold, the user is owner and signed',   () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -628,7 +628,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.AWAITING_CONFIRMATIONS)
   })
-  it('The tx has confirmations bellow the threshold, the user is owner and not signed, returns AWAITING_YOUR_CONFIRMATION',   () => {
+  it('It should return AWAITING_YOUR_CONFIRMATION if the tx has confirmations bellow the threshold, the user is owner and not signed',   () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -649,7 +649,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.AWAITING_YOUR_CONFIRMATION)
   })
-  it('The tx has confirmations bellow the threshold, the user is not owner, returns AWAITING_CONFIRMATIONS',   () => {
+  it('It should return AWAITING_CONFIRMATIONS if the tx has confirmations bellow the threshold, the user is not owner',   () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -670,7 +670,7 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.AWAITING_CONFIRMATIONS)
   })
-  it('The tx is not successful, returns FAILED',   () => {
+  it('It should return FAILED if the tx is not successful',   () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -694,7 +694,7 @@ describe('calculateTransactionStatus', () => {
 })
 
 describe('calculateTransactionType', () => {
-  it('If the tx is a token transfer transaction returns TOKEN',   () => {
+  it('It should return TOKEN If the tx is a token transfer transaction',   () => {
     // given
     const transaction = makeTransaction({ isTokenTransfer: true } )
 
@@ -706,7 +706,7 @@ describe('calculateTransactionType', () => {
     expect(result).toBe(TransactionTypes.TOKEN)
 
   })
-  it('If the tx is a collectible transfer transaction returns COLLECTIBLE',   () => {
+  it('It should return COLLECTIBLE If the tx is a collectible transfer transaction',   () => {
     // given
     const transaction = makeTransaction({ isCollectibleTransfer: true } )
 
@@ -718,7 +718,7 @@ describe('calculateTransactionType', () => {
     expect(result).toBe(TransactionTypes.COLLECTIBLE)
 
   })
-  it('If the tx is a modifySettings transaction returns SETTINGS',   () => {
+  it('It should return SETTINGS If the tx is a modifySettings transaction',   () => {
     // given
     const transaction = makeTransaction({ modifySettingsTx: true } )
 
@@ -731,7 +731,7 @@ describe('calculateTransactionType', () => {
 
   })
 
-  it('If the tx is a cancellation transaction returns CANCELLATION',   () => {
+  it('It should return CANCELLATION If the tx is a cancellation transaction',   () => {
     // given
     const transaction = makeTransaction({ isCancellationTx: true } )
 
@@ -744,7 +744,7 @@ describe('calculateTransactionType', () => {
 
   })
 
-  it('If the tx is a custom transaction returns CUSTOM',   () => {
+  it('It should return CUSTOM If the tx is a custom transaction',   () => {
     // given
     const transaction = makeTransaction({ customTx: true } )
 
@@ -756,7 +756,7 @@ describe('calculateTransactionType', () => {
     expect(result).toBe(TransactionTypes.CUSTOM)
 
   })
-  it('If the tx is a creation transaction returns CUSTOM',   () => {
+  it('It should return CUSTOM If the tx is a creation transaction',   () => {
     // given
     const transaction = makeTransaction({ creationTx: true } )
 
@@ -768,7 +768,7 @@ describe('calculateTransactionType', () => {
     expect(result).toBe(TransactionTypes.CREATION)
 
   })
-  it('If the tx is an upgrade transaction returns UPGRADE',   () => {
+  it('It should return UPGRADE If the tx is an upgrade transaction',   () => {
     // given
     const transaction = makeTransaction({ upgradeTx: true } )
 
@@ -863,7 +863,7 @@ describe('updateStoredTransactionsStatus', () => {
 })
 
 describe('generateSafeTxHash', () => {
-  it('Given transactionArgs returns a safe transaction hash',   () => {
+  it('It should return a safe transaction hash if given transactionArgs',   () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
     const userAddress = 'address1'
