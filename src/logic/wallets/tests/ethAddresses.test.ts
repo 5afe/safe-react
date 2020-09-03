@@ -95,7 +95,7 @@ describe('shortVersionOf', () => {
 })
 
 describe('isUserAnOwner', () => {
-  it('Given no safe, returns false ', () => {
+  it("Should return false if there's no Safe", () => {
     // given
     const userAddress = 'address1'
     const safeInstance = null
@@ -107,7 +107,7 @@ describe('isUserAnOwner', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given no userAccount, returns false ', () => {
+  it("Should return false if there's no `userAccount`", () => {
     // given
     const userAddress = null
     const owners = List([makeOwner({ address: userAddress })])
@@ -120,7 +120,7 @@ describe('isUserAnOwner', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a safe without owners, returns false ', () => {
+  it('Should return false if there are no owners for the Safe', () => {
     // given
     const userAddress = 'address1'
     const owners = null
@@ -133,7 +133,7 @@ describe('isUserAnOwner', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a safe with 1 owner, and an userAddress equals to that owner, returns true ', () => {
+  it("Should return true if `userAccount` is not in the list of Safe's owners", () => {
     // given
     const userAddress = 'address1'
     const owners = List([makeOwner({ address: userAddress })])
@@ -146,7 +146,7 @@ describe('isUserAnOwner', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a safe with 1 owner, and an userAddress different to that owner, returns true ', () => {
+  it("Should return false if `userAccount` is not in the list of Safe's owners", () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -163,7 +163,7 @@ describe('isUserAnOwner', () => {
 })
 
 describe('isUserAnOwnerOfAnySafe', () => {
-  it('Given a list of safes, one of them has an owner equal to the userAddress, returns true', () => {
+  it('Given a list of safes, one of them has an owner equal to the userAccount, returns true', () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -180,7 +180,7 @@ describe('isUserAnOwnerOfAnySafe', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a list of safes, none of them has an owner equal to the userAddress, returns false', () => {
+  it('Given a list of safes, none of them has an owner equal to the userAccount, returns false', () => {
     // given
     const userAddress = 'address1'
     const userAddress2 = 'address2'
@@ -212,7 +212,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
+  it('It should return false for an ens without extension in format [value].[eth|test|xyz|luxe]', () => {
     // given
     const ensName = 'test'
     const expectedResult = false
@@ -223,7 +223,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name not the format [value].[eth|test|xyz|luxe], returns false', () => {
+  it('It should return false for an ens without the format [value].[eth|test|xyz|luxe]', () => {
     // given
     const ensName = 'test.et12312'
     const expectedResult = false
@@ -234,7 +234,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name in the format [value].eth, returns true', () => {
+  it('It should return true for an ens in format [value].eth', () => {
     // given
     const ensName = 'test.eth'
     const expectedResult = true
@@ -245,7 +245,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name in the format [value].test, returns true', () => {
+  it('It should return true for ens in format [value].test', () => {
     // given
     const ensName = 'test.test'
     const expectedResult = true
@@ -256,7 +256,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name in the format [value].xyz, returns true', () => {
+  it('It should return true for an ens in the format [value].xyz', () => {
     // given
     const ensName = 'test.xyz'
     const expectedResult = true
@@ -267,7 +267,7 @@ describe('isValidEnsName', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a ens name in the format [value].luxe, returns true', () => {
+  it('It should return true for an ens in format [value].luxe', () => {
     // given
     const ensName = 'test.luxe'
     const expectedResult = true
