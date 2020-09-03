@@ -33,7 +33,7 @@ export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 const useStyles = makeStyles(styles)
 
 type OwnProps = {
-  isOpen: true
+  isOpen: boolean
   onClose: () => void
   ownerAddress: string
   selectedOwnerName: string

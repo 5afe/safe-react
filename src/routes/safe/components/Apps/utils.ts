@@ -27,7 +27,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // Compound
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   // Idle
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUoqmq8jw98VwTSf7aTQeBCfPKicQgcJL5k2Bch9QT8BJ`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTpbdjjMxgjvuGDN62tLEF3qPSk8GBLAYGR9fMM6ftWKi`, disabled: false },
   // request
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
