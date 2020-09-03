@@ -9,7 +9,7 @@ import makeSafe from 'src/logic/safe/store/models/safe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { List } from 'immutable'
 
-describe('sameAddress', () => {
+describe('Utility function: sameAddress', () => {
   it('Given no first address, returns false', () => {
     // given
     const safeAddress = null
@@ -55,7 +55,7 @@ describe('sameAddress', () => {
   })
 })
 
-describe('shortVersionOf', () => {
+describe('Utility function: shortVersionOf', () => {
   it('Given no address, returns Unknown ', () => {
     // given
     const safeAddress = null
@@ -94,7 +94,7 @@ describe('shortVersionOf', () => {
   })
 })
 
-describe('isUserAnOwner', () => {
+describe('Utility function: isUserAnOwner', () => {
   it("Should return false if there's no Safe", () => {
     // given
     const userAddress = 'address1'
@@ -162,7 +162,7 @@ describe('isUserAnOwner', () => {
   })
 })
 
-describe('isUserAnOwnerOfAnySafe', () => {
+describe('Utility function: isUserAnOwnerOfAnySafe', () => {
   it('Given a list of safes, one of them has an owner equal to the userAccount, returns true', () => {
     // given
     const userAddress = 'address1'
@@ -200,7 +200,7 @@ describe('isUserAnOwnerOfAnySafe', () => {
   })
 })
 
-describe('isValidEnsName', () => {
+describe('Utility function: isValidEnsName', () => {
   it('Given no ens name, returns false', () => {
     // given
     const ensName = null
