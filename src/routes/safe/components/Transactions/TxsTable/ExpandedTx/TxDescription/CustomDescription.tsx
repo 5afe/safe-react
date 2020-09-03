@@ -1,4 +1,4 @@
-import { IconText, Text } from '@gnosis.pm/safe-react-components'
+import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import styled from 'styled-components'
@@ -12,8 +12,6 @@ import {
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import EtherscanLink from 'src/components/EtherscanLink'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
@@ -25,6 +23,7 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { getNetwork } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -38,6 +37,11 @@ const TxDetailsMethodName = styled(Text)`
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 8px;
   display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
+  align-items: center;
+
+  p:first-of-type {
+    margin-right: ${({ isArrayParameter }) => (isArrayParameter ? '0' : '4px')};
+  }
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
@@ -62,7 +66,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
         <StyledMethodName size="lg" strong>
           {param.name}({param.type}):
         </StyledMethodName>
-        <Value method={data.method} type={param.type} value={param.type} />
+        <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}
   </TxInfo>
@@ -81,7 +85,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <OwnerAddressTableCell address={tx.to} showLinks />
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetwork()} />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -178,11 +182,15 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
         <Bold>Send {amount} to:</Bold>
-        {recipientName ? (
-          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-        ) : (
-          <EtherscanLink knownAddress={false} type="address" value={recipient} />
-        )}
+
+        <EthHashInfo
+          hash={recipient}
+          name={!recipientName || recipientName === 'UNKNOWN' ? null : recipientName}
+          showIdenticon
+          showCopyBtn
+          showEtherscanBtn
+          network={getNetwork()}
+        />
       </Block>
 
       {!!storedTx?.dataDecoded && <TxActionData dataDecoded={storedTx.dataDecoded} />}
