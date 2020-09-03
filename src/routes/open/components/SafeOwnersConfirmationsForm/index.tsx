@@ -219,18 +219,21 @@ const SafeOwners = (props) => {
 
 const SafeOwnersForm = withStyles(styles as any)(withRouter(SafeOwners))
 
-const SafeOwnersPage = ({ updateInitialProps }) => (controls, { errors, form, values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <SafeOwnersForm
-        errors={errors}
-        form={form}
-        otherAccounts={getAccountsFrom(values)}
-        updateInitialProps={updateInitialProps}
-        values={values}
-      />
-    </OpenPaper>
-  </>
-)
+const SafeOwnersPage = ({ updateInitialProps }) =>
+  function OpenSafeOwnersPage(controls, { errors, form, values }) {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <SafeOwnersForm
+            errors={errors}
+            form={form}
+            otherAccounts={getAccountsFrom(values)}
+            updateInitialProps={updateInitialProps}
+            values={values}
+          />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default SafeOwnersPage

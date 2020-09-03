@@ -156,12 +156,15 @@ const OwnerListComponent = (props) => {
 
 const OwnerListPage = withStyles(styles as any)(OwnerListComponent)
 
-const OwnerList = ({ updateInitialProps }, network) => (controls, { values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
-    </OpenPaper>
-  </>
-)
+const OwnerList = ({ updateInitialProps }, network) =>
+  function LoadSafeOwnerList(controls, { values }): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default OwnerList

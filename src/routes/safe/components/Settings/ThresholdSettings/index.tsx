@@ -24,7 +24,7 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
+const ThresholdSettings = ({ classes }) => {
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
   const threshold = useSelector(safeThresholdSelector)
