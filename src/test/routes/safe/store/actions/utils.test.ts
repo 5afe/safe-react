@@ -4,7 +4,7 @@ import axios from 'axios'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'
 
 describe('shouldExecuteTransaction', () => {
-  it('Given a safe with a threshold > 1 should return false',  async () => {
+  it('It should return true if given a safe with a threshold > 1',  async () => {
     // given
     const nonce = '0'
     const threshold = '2'
@@ -17,7 +17,7 @@ describe('shouldExecuteTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('Given a safe with a threshold === 1 and the last transaction is first transaction (nonce 0), should return true ',  async () => {
+  it('It should return true if given a safe with a threshold === 1 and the last transaction is first transaction (nonce 0)',  async () => {
     // given
     const nonce = '0'
     const threshold = '1'
@@ -30,7 +30,7 @@ describe('shouldExecuteTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given a safe with a threshold === 1 and the last transaction is not the first transaction, the last transaction is already executed, return true ',  async () => {
+  it('It should return true if given a safe with a threshold === 1 and the last transaction is not the first transaction, the last transaction is already executed',  async () => {
     // given
     const nonce = '10'
     const threshold = '1'
@@ -43,7 +43,7 @@ describe('shouldExecuteTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('Given a safe with a threshold === 1 and the last transaction is not first transaction, the last transaction is not already executed, return false ',  async () => {
+  it('It should return false if given a safe with a threshold === 1 and the last transaction is not first transaction, the last transaction is not already executed',  async () => {
     // given
     const nonce = '10'
     const threshold = '1'
@@ -59,7 +59,7 @@ describe('shouldExecuteTransaction', () => {
 })
 
 describe('getNewTxNonce', () => {
-  it('Given the last transaction with nonce 1, returns 2',  async () => {
+  it('It should return 2 if given the last transaction with nonce 1',  async () => {
     // given
     const safeInstance = getMockedSafeInstance({})
     const lastTx = getMockedTxServiceModel({ nonce: 1 })
@@ -71,7 +71,7 @@ describe('getNewTxNonce', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a safe with the last nonce 0 and no lastTransaction, should call safeInstance nonce method and return 0',  async () => {
+  it('If should return 0 if given a safe with the last nonce 0 and no lastTransaction and should call safeInstance nonce method',  async () => {
     // given
     const safeNonce = '0'
     const safeInstance = getMockedSafeInstance({ nonce: safeNonce})
@@ -113,7 +113,7 @@ describe('getLastTx', () => {
     jest.unmock('console')
   })
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it('Given a safeAddress, returns the lastTx for it', async () => {
+  it('If should return the lastTx for a given a safeAddress', async () => {
     // given
     const lastTx = getMockedTxServiceModel({ nonce: 1 })
     const url = buildTxServiceUrl(safeAddress)
@@ -135,7 +135,7 @@ describe('getLastTx', () => {
     expect(axios.get).toHaveBeenCalled()
     expect(axios.get).toBeCalledWith(url, {"params": {"limit": 1}})
   })
-  it('If catch an error getting lastTx, return null', async () => {
+  it('If should return null If catch an error getting lastTx', async () => {
     // given
     const lastTx = null
     const url = buildTxServiceUrl(safeAddress)
