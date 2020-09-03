@@ -1,5 +1,4 @@
 import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -97,4 +96,4 @@ const ThresholdSettings = ({ classes }) => {
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(ThresholdSettings))
+export default withStyles(styles as any)(ThresholdSettings)
