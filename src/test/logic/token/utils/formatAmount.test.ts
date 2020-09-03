@@ -1,4 +1,5 @@
-import { formatAmount, formatAmountInUsFormat, humanReadableTokenAmount } from 'src/logic/tokens/utils/formatAmount'
+import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { humanReadableTokenAmount } from 'src/utils/tokenAmountReadable'
 
 
 describe('formatAmount', () => {

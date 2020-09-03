@@ -1,7 +1,7 @@
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { DataDecoded, METHOD_TO_ID, SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
+import { DataDecoded, METHOD_TO_ID } from 'src/routes/safe/store/models/types/transactions.d'
 
-export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
+
 
 export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => {
   const [methodId, params] = [data.slice(0, 10) as keyof typeof METHOD_TO_ID | string, data.slice(10)]
