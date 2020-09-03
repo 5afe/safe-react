@@ -43,7 +43,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector)
+  const { address: safeAddress } = useSelector(safeSelector) || {}
   const nftTokens = useSelector(nftTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const txToken = nftTokens.find(
@@ -66,7 +66,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
       const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.recipientAddress, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -148,7 +148,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
           <Row align="center" margin="md">
             <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.image} />
             <Paragraph className={classes.amount} noMargin size="md">
-              {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId)})
+              {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId as string)})
             </Paragraph>
           </Row>
         )}
