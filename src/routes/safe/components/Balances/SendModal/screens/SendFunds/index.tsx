@@ -2,22 +2,18 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { BigNumber } from 'bignumber.js'
 import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -25,14 +21,23 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
+import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
+import { styles } from './style'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -44,9 +49,12 @@ const formMutators = {
   setRecipient: (args, state, utils) => {
     utils.changeValue(state, 'recipientAddress', () => args[0])
   },
+  setTxType: (args, state, utils) => {
+    utils.changeValue(state, 'txType', () => args[0])
+  },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
   const classes = useStyles()
@@ -60,20 +68,24 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(true)
 
-  React.useMemo(() => {
+  React.useEffect(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
   }, [selectedEntry, pristine])
 
+  let tokenSpendingLimit
   const handleSubmit = (values) => {
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry.address
     }
-    onNext(submitValues)
+    onNext({ ...submitValues, tokenSpendingLimit })
   }
+
+  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const currentUser = useSelector(userAccountSelector)
 
   return (
     <>
@@ -91,8 +103,16 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
-          const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
+          const { token: tokenAddress, txType } = formState.values
+          const selectedTokenRecord = tokens?.find((token) => token.address === tokenAddress)
+          tokenSpendingLimit =
+            selectedTokenRecord &&
+            spendingLimits?.find(
+              ({ delegate, token }) =>
+                delegate.toLowerCase() === currentUser.toLowerCase() &&
+                (token === ZERO_ADDRESS ? ETH_ADDRESS : token.toLowerCase()) ===
+                  selectedTokenRecord.address.toLowerCase(),
+            )
 
           const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
@@ -198,13 +218,36 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                     />
                   </Col>
                 </Row>
+                {tokenSpendingLimit && (
+                  <SpendingLimitRow
+                    onOptionSelect={mutators.setTxType}
+                    selectedToken={selectedTokenRecord}
+                    tokenSpendingLimit={tokenSpendingLimit}
+                  />
+                )}
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Amount
                     </Paragraph>
                     <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      onClick={() =>
+                        mutators.setMax(
+                          tokenSpendingLimit && txType === 'spendingLimit'
+                            ? new BigNumber(selectedTokenRecord.balance).gt(
+                                fromTokenUnit(
+                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
+                                  selectedTokenRecord.decimals,
+                                ),
+                              )
+                              ? fromTokenUnit(
+                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
+                                  selectedTokenRecord.decimals,
+                                )
+                              : selectedTokenRecord.balance
+                            : selectedTokenRecord.balance,
+                        )
+                      }
                       weight="bold"
                       testId="send-max-btn"
                     >
@@ -230,7 +273,21 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         required,
                         mustBeFloat,
                         minValue(0, false),
-                        maxValue(selectedTokenRecord?.balance),
+                        maxValue(
+                          tokenSpendingLimit && txType === 'spendingLimit'
+                            ? new BigNumber(selectedTokenRecord.balance).gt(
+                                fromTokenUnit(
+                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
+                                  selectedTokenRecord.decimals,
+                                ),
+                              )
+                              ? fromTokenUnit(
+                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
+                                  selectedTokenRecord.decimals,
+                                )
+                              : selectedTokenRecord.balance
+                            : selectedTokenRecord?.balance,
+                        ),
                       )}
                     />
                     <OnChange name="token">

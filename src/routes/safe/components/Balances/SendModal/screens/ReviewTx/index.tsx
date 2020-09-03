@@ -1,14 +1,10 @@
+import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { BigNumber } from 'bignumber.js'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -20,21 +16,28 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
-import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { toTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import { AbiItem } from 'web3-utils'
 
-const useStyles = makeStyles(styles as any)
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
+const useStyles = makeStyles(styles)
 
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
@@ -44,25 +47,28 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
 
-  const txToken = tokens.find((token) => token.address === tx.token)
-  const isSendingETH = txToken.address === ETH_ADDRESS
-  const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
+  const txToken = React.useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
+  const isSendingETH = React.useMemo(() => txToken.address === ETH_ADDRESS, [txToken.address])
+  const txRecipient = React.useMemo(() => (isSendingETH ? tx.recipientAddress : txToken.address), [
+    isSendingETH,
+    tx.recipientAddress,
+    txToken.address,
+  ])
 
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async () => {
-      const { fromWei, toBN } = getWeb3().utils
+      const web3 = getWeb3()
+      const { fromWei, toBN } = web3.utils
 
       let txData = EMPTY_DATA
 
-      if (!isSendingETH) {
-        const StandardToken = await getHumanFriendlyToken()
-        const tokenInstance = await StandardToken.at(txToken.address)
-        const decimals = await tokenInstance.decimals()
-        const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
-
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
+      if (!isSendingETH && txToken) {
+        const ERC20Instance = new web3.eth.Contract(StandardToken.abi as AbiItem[], txToken.address)
+        txData = ERC20Instance.methods
+          .transfer(tx.recipientAddress, toTokenUnit(tx.amount, txToken.decimals))
+          .encodeABI()
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
@@ -80,27 +86,46 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken.address])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
+    const isSpendingLimit = tx.txType === 'spendingLimit'
     const web3 = getWeb3()
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether') : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: txRecipient,
-        valueInWei: txAmount,
-        txData: data,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
-    onClose()
+    if (isSpendingLimit) {
+      const spendingLimit = getSpendingLimitContract()
+      spendingLimit.methods
+        .executeAllowanceTransfer(
+          safeAddress,
+          txToken.address === ETH_ADDRESS ? ZERO_ADDRESS : txToken.address,
+          tx.recipientAddress,
+          toTokenUnit(tx.amount, txToken.decimals),
+          ZERO_ADDRESS,
+          0,
+          tx.tokenSpendingLimit.delegate,
+          EMPTY_DATA,
+        )
+        .send({ from: tx.tokenSpendingLimit.delegate })
+        .on('transactionHash', () => onClose())
+        .catch(console.error)
+    } else {
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: txRecipient,
+          valueInWei: txAmount,
+          txData: data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          enqueueSnackbar,
+          closeSnackbar,
+        } as any),
+      )
+      onClose()
+    }
   }
 
   return (

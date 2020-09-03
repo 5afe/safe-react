@@ -1,6 +1,11 @@
 import { IconText, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import Col from 'src/components/layout/Col'
+import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
+import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -24,6 +29,7 @@ import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
+import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -40,6 +46,7 @@ const TxDetailsMethodParam = styled.div`
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
+  overflow-wrap: break-word;
 `
 
 const TxInfo = styled.div`
@@ -63,9 +70,54 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   </TxInfo>
 )
 
+const SpendingLimitDetailsContainer = styled.div`
+  padding-left: 24px;
+`
+
+interface NewSpendingLimitDetailsProps {
+  data: DataDecoded
+}
+
+const NewSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
+  const [beneficiary, tokenAddress, amount, resetTimeMin] = React.useMemo(
+    () => data.parameters.map(({ value }) => value),
+    [data.parameters],
+  )
+
+  const resetTimeLabel = React.useMemo(
+    () => RESET_TIME_OPTIONS.find(({ value }) => +value === +resetTimeMin / 24 / 60)?.label ?? '',
+    [resetTimeMin],
+  )
+
+  const tokenInfo = useToken(tokenAddress)
+
+  return (
+    <>
+      <TxInfo>
+        <Bold>New Spending Limit:</Bold>
+      </TxInfo>
+      <SpendingLimitDetailsContainer>
+        <Col margin="lg">
+          <AddressInfo title="Beneficiary" address={beneficiary} />
+        </Col>
+        <Col margin="lg">
+          {tokenInfo && (
+            <TokenInfo amount={fromTokenUnit(amount, tokenInfo.decimals)} title="Amount" token={tokenInfo} />
+          )}
+        </Col>
+        <Col margin="lg">
+          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+        </Col>
+      </SpendingLimitDetailsContainer>
+    </>
+  )
+}
+
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
-  const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
+  const methodName = tx.dataDecoded?.method ? ` (${tx.dataDecoded.method})` : ''
+  const data = tx.dataDecoded ?? decodeMethods(tx.data)
+  const isNewSpendingLimit = isSetAllowanceMethod(tx.data || '')
 
   return (
     <Collapse
@@ -73,14 +125,20 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       headerWrapperClassName={classes.collapseHeaderWrapper}
       title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
     >
-      <TxDetailsContent>
-        <TxInfo>
-          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <OwnerAddressTableCell address={tx.to} showLinks />
-        </TxInfo>
+      {isNewSpendingLimit ? (
+        <TxDetailsContent>
+          <NewSpendingLimitDetails data={data} />
+        </TxDetailsContent>
+      ) : (
+        <TxDetailsContent>
+          <TxInfo>
+            <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+            <OwnerAddressTableCell address={tx.to} showLinks />
+          </TxInfo>
 
-        {!!tx.data && <TxInfoDetails data={tx.data} />}
-      </TxDetailsContent>
+          {!!data ? <TxInfoDetails data={data} /> : <HexEncodedData data={tx.data} />}
+        </TxDetailsContent>
+      )}
     </Collapse>
   )
 }
@@ -158,6 +216,21 @@ const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.Reac
   )
 }
 
+interface HexEncodedDataProps {
+  data: string
+}
+
+const HexEncodedData = ({ data }: HexEncodedDataProps): React.ReactElement => {
+  const classes = useStyles()
+
+  return (
+    <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
+      <Bold>Data (hex encoded):</Bold>
+      <TxData data={data} />
+    </Block>
+  )
+}
+
 interface GenericCustomDataProps {
   amount?: string
   data: string
@@ -166,10 +239,13 @@ interface GenericCustomDataProps {
 }
 
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
-  const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const txData = storedTx?.dataDecoded ?? decodeMethods(data)
+  const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
-  return (
+  return isNewSpendingLimit ? (
+    <NewSpendingLimitDetails data={txData} />
+  ) : (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
         <Bold>Send {amount} to:</Bold>
@@ -180,12 +256,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
         )}
       </Block>
 
-      {!!storedTx?.dataDecoded && <TxActionData dataDecoded={storedTx.dataDecoded} />}
-
-      <Block className={classes.txData} data-testid={TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID}>
-        <Bold>Data (hex encoded):</Bold>
-        <TxData data={data} />
-      </Block>
+      {!!txData ? <TxActionData dataDecoded={txData} /> : <HexEncodedData data={data} />}
     </Block>
   )
 }

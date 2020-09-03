@@ -80,8 +80,82 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
   }
 }
 
+export const SPENDING_LIMIT_METHODS_NAMES = {
+  ADD_DELEGATE: 'addDelegate',
+  SET_ALLOWANCE: 'setAllowance',
+  EXECUTE_ALLOWANCE_TRANSFER: 'executeAllowanceTransfer',
+}
+
+export const SPENDING_LIMIT_METHOD_TO_ID = {
+  '0xe71bdf41': SPENDING_LIMIT_METHODS_NAMES.ADD_DELEGATE,
+  '0xbeaeb388': SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE,
+  '0x4515641a': SPENDING_LIMIT_METHODS_NAMES.EXECUTE_ALLOWANCE_TRANSFER,
+}
+
+export const isSetAllowanceMethod = (data: string): boolean => {
+  const methodId = data.slice(0, 10) as keyof typeof SPENDING_LIMIT_METHOD_TO_ID
+  return SPENDING_LIMIT_METHOD_TO_ID[methodId] === SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE
+}
+
+export const decodeParamsFromSpendingLimit = (data: string): DataDecoded | null => {
+  const [methodId, params] = [data.slice(0, 10) as keyof typeof SPENDING_LIMIT_METHOD_TO_ID | string, data.slice(10)]
+
+  switch (methodId) {
+    // addDelegate
+    case '0xe71bdf41': {
+      const decodedParameter = (web3.eth.abi.decodeParameter('address', params) as unknown) as string
+      return {
+        method: SPENDING_LIMIT_METHOD_TO_ID[methodId],
+        parameters: [
+          { name: 'delegate', type: 'address', value: decodedParameter },
+        ],
+      }
+    }
+
+    // setAllowance
+    case '0xbeaeb388': {
+      const decodedParameters = web3.eth.abi.decodeParameters(['address', 'address', 'uint96', 'uint16', 'uint32'], params)
+      return {
+        method: SPENDING_LIMIT_METHOD_TO_ID[methodId],
+        parameters: [
+          { name: 'delegate', type: 'address', value: decodedParameters[0] },
+          { name: 'token', type: 'address', value: decodedParameters[1] },
+          { name: 'allowanceAmount', type: 'uint96', value: decodedParameters[2] },
+          { name: 'resetTimeMin', type: 'uint16', value: decodedParameters[3] },
+          { name: 'resetBaseMin', type: 'uint32', value: decodedParameters[4] },
+        ],
+      }
+    }
+
+    // executeAllowanceTransfer
+    case '0x4515641a': {
+      const decodedParameters = web3.eth.abi.decodeParameters(['address', 'address', 'address', 'uint96', 'address', 'uint96', 'address', 'bytes'], params)
+      return {
+        method: SPENDING_LIMIT_METHOD_TO_ID[methodId],
+        parameters: [
+          { name: "safe", type: "address", value: decodedParameters[0] },
+          { name: "token", type: "address", value: decodedParameters[1] },
+          { name: "to", type: "address", value: decodedParameters[2] },
+          { name: "amount", type: "uint96", value: decodedParameters[3] },
+          { name: "paymentToken", type: "address", value: decodedParameters[4] },
+          { name: "payment", type: "uint96", value: decodedParameters[5] },
+          { name: "delegate", type: "address", value: decodedParameters[6] },
+          { name: "signature", type: "bytes", value: decodedParameters[7] }
+        ]
+      }
+    }
+
+    default:
+      return null
+  }
+}
+
 const isSafeMethod = (methodId: string): boolean => {
   return !!METHOD_TO_ID[methodId]
+}
+
+const isSpendingLimitMethod = (methodId: string): boolean => {
+  return !!SPENDING_LIMIT_METHOD_TO_ID[methodId]
 }
 
 export const decodeMethods = (data: string): DataDecoded | null => {
@@ -95,6 +169,10 @@ export const decodeMethods = (data: string): DataDecoded | null => {
     return decodeParamsFromSafeMethod(data)
   }
 
+  if (isSpendingLimitMethod(methodId)) {
+    return decodeParamsFromSpendingLimit(data)
+  }
+
   switch (methodId) {
     // a9059cbb - transfer(address,uint256)
     case '0xa9059cbb': {
@@ -102,8 +180,8 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transfer',
         parameters: [
-          { name: 'to', type: '', value: decodeParameters[0] },
-          { name: 'value', type: '', value: decodeParameters[1] },
+          { name: 'to', type: 'address', value: decodeParameters[0] },
+          { name: 'value', type: 'uint', value: decodeParameters[1] },
         ],
       }
     }
@@ -114,9 +192,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'transferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodeParameters[0] },
-          { name: 'to', type: '', value: decodeParameters[1] },
-          { name: 'value', type: '', value: decodeParameters[2] },
+          { name: 'from', type: 'address', value: decodeParameters[0] },
+          { name: 'to', type: 'address', value: decodeParameters[1] },
+          { name: 'value', type: 'uint', value: decodeParameters[2] },
         ],
       }
     }
@@ -127,9 +205,9 @@ export const decodeMethods = (data: string): DataDecoded | null => {
       return {
         method: 'safeTransferFrom',
         parameters: [
-          { name: 'from', type: '', value: decodedParameters[0] },
-          { name: 'to', type: '', value: decodedParameters[1] },
-          { name: 'value', type: '', value: decodedParameters[2] },
+          { name: 'from', type: 'address', value: decodedParameters[0] },
+          { name: 'to', type: 'address', value: decodedParameters[1] },
+          { name: 'value', type: 'uint', value: decodedParameters[2] },
         ],
       }
     }
