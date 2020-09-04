@@ -40,6 +40,7 @@ import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(styles)
 
@@ -56,6 +57,11 @@ const AddressBookTable = (): React.ReactElement => {
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
+  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {

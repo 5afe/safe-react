@@ -1,9 +1,9 @@
+import React, { useEffect } from 'react'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import { List } from 'immutable'
-import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { styles } from './styles'
@@ -29,6 +29,7 @@ import {
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import { Skeleton } from '@material-ui/lab'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(styles as any)
 
@@ -61,6 +62,11 @@ const Coins = (props: Props): React.ReactElement => {
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
   const [filteredData, setFilteredData] = React.useState<List<BalanceData>>(List())
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
+  }, [trackEvent])
 
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
