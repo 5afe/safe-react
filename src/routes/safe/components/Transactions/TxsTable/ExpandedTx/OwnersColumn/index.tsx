@@ -21,6 +21,7 @@ import { styles } from './style'
 import { makeTransaction } from 'src/logic/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export type OwnersWithoutConfirmations = {
   hasPendingAcceptActions: boolean
@@ -47,7 +48,7 @@ function getPendingOwnersConfirmations(
   tx: Transaction,
   userAddress: string,
 ): [OwnersWithoutConfirmations, boolean] {
-  const ownersWithNoConfirmations = []
+  const ownersWithNoConfirmations: string[] = []
   let currentUserNotConfirmed = true
 
   owners.forEach((owner) => {
@@ -65,8 +66,8 @@ function getPendingOwnersConfirmations(
 
   const ownersWithNoConfirmationsSorted = ownersWithNoConfirmations
     .map((owner) => ({
-      hasPendingAcceptActions: confirmationPendingActions.includes(owner),
-      hasPendingRejectActions: confirmationRejectActions.includes(owner),
+      hasPendingAcceptActions: !!confirmationPendingActions?.includes(owner),
+      hasPendingRejectActions: !!confirmationRejectActions?.includes(owner),
       owner,
     }))
     // Reorders the list of unconfirmed owners, owners with pendingActions should be first
@@ -119,7 +120,7 @@ const OwnersColumn = ({
   } else {
     showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
-  const owners = useSelector(safeOwnersSelector)
+  const owners = useSelector(safeOwnersSelector) as List<SafeOwner>
   const threshold = useSelector(safeThresholdSelector)
   const userAddress = useSelector(userAccountSelector)
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)

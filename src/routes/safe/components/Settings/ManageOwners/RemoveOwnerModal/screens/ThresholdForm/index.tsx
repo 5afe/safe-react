@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -21,9 +21,12 @@ import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
-const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
+const useStyles = makeStyles(styles)
+
+const ThresholdForm = ({ onClickBack, onClose, onSubmit }) => {
+  const classes = useStyles()
   const owners = useSelector(safeOwnersSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) as number
   const handleSubmit = (values) => {
     onSubmit(values)
   }
@@ -43,7 +46,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
       <Hairline />
       <GnoForm initialValues={{ threshold: defaultThreshold.toString() }} onSubmit={handleSubmit}>
         {() => {
-          const numOptions = owners.size > 1 ? owners.size - 1 : 1
+          const numOptions = owners && owners.size > 1 ? owners.size - 1 : 1
 
           return (
             <>
@@ -82,7 +85,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
                   </Col>
                   <Col xs={10}>
                     <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                      out of {owners.size - 1} owner(s)
+                      out of {owners ? owners.size - 1 : 0} owner(s)
                     </Paragraph>
                   </Col>
                 </Row>
@@ -111,4 +114,4 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
   )
 }
 
-export default withStyles(styles as any)(ThresholdForm)
+export default ThresholdForm
