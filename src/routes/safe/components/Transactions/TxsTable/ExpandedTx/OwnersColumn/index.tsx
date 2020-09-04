@@ -111,7 +111,7 @@ const OwnersColumn = ({
   onTxReject,
   canExecute,
   canExecuteCancel,
-}: ownersColumnProps): React.ReactElement | null => {
+}: ownersColumnProps): React.ReactElement => {
   const classes = useStyles()
   let showOlderTxAnnotation
 
