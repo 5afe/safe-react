@@ -53,7 +53,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
     name: '',
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
