@@ -3,7 +3,6 @@ export type AddressBookEntry = {
   name: string
 }
 
-// todo remove
 export const makeAddressBookEntry = ({
   address = '',
   name = '',
