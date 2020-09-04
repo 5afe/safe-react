@@ -27,8 +27,7 @@ export type TxServiceModel = {
   blockNumber?: number | null
   confirmations: ConfirmationServiceModel[]
   confirmationsRequired: number
-  creationTx?: boolean | null
-  data?: string | null
+  data: string | null
   dataDecoded?: DataDecoded
   ethGasPrice: string
   executionDate?: string | null
@@ -40,15 +39,15 @@ export type TxServiceModel = {
   isExecuted: boolean
   isSuccessful: boolean
   modified: string
-  nonce?: number | null
+  nonce: number
   operation: number
-  origin?: string | null
+  origin: string | null
   refundReceiver: string
   safe: string
   safeTxGas: number
   safeTxHash: string
   signatures: string
-  submissionDate?: string | null
+  submissionDate: string | null
   to: string
   transactionHash?: string | null
   value: string
@@ -78,7 +77,7 @@ export type BatchProcessTxsProps = OutgoingTxs & {
  */
 const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxServiceModel[]): OutgoingTxs => {
   return outgoingTxs.reduce(
-    (acc, transaction) => {
+    (acc: { cancellationTxs: Record<number, TxServiceModel>; outgoingTxs: TxServiceModel[] }, transaction) => {
       if (
         isCancelTransaction(transaction, safeAddress) &&
         outgoingTxs.find((tx) => tx.nonce === transaction.nonce && !isCancelTransaction(tx, safeAddress))
@@ -164,7 +163,7 @@ const batchProcessOutgoingTransactions = async ({
   // outgoing transactions
   const outgoingTxsWithData = outgoingTxs.length ? await batchRequestContractCode(outgoingTxs) : []
 
-  const outgoing = []
+  const outgoing: Transaction[] = []
   for (const [tx, txCode] of outgoingTxsWithData) {
     outgoing.push(
       await buildTx({
@@ -182,7 +181,7 @@ const batchProcessOutgoingTransactions = async ({
   return { cancel, outgoing }
 }
 
-let previousETag = null
+let previousETag: string | null = null
 export const loadOutgoingTransactions = async (safeAddress: string): Promise<SafeTransactionsType> => {
   const defaultResponse = {
     cancel: Map(),

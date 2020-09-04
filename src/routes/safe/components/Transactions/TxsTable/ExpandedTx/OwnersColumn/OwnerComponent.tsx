@@ -178,7 +178,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </div>
       <EthHashInfo
         hash={owner}
-        name={!nameInAdbk || nameInAdbk === 'UNKNOWN' ? null : nameInAdbk}
+        name={!nameInAdbk || nameInAdbk === 'UNKNOWN' ? '' : nameInAdbk}
         shortenHash={4}
         showIdenticon
         showCopyBtn

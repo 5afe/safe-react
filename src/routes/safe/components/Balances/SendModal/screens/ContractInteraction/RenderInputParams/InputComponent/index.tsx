@@ -15,7 +15,7 @@ type Props = {
   placeholder: string
 }
 
-const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElement => {
+const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElement | null => {
   if (!type) {
     return null
   }
