@@ -37,7 +37,7 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
-  const [filteredData, setFilteredData] = useState < List<TableData>(null)
+  const [filteredData, setFilteredData] = useState<List<TableData>>(List())
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
@@ -77,7 +77,7 @@ const TxsTable = ({ classes }) => {
         .map((tx, id) => {
           return {
             ...tx,
-            id,
+            id: id.toString(),
           }
         })
       setFilteredData(filteredData)

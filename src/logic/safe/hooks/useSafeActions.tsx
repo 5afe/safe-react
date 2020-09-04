@@ -11,7 +11,7 @@ type SafeActionState = {
 const INITIAL_STATE: SafeActionState = {
   sendFunds: {
     isOpen: false,
-    selectedToken: undefined,
+    selectedToken: '',
   },
   showReceive: false,
 }
@@ -66,7 +66,7 @@ const useSafeActions = (): Response => {
         ...prevState,
         sendFunds: {
           isOpen: false,
-          selectedToken: undefined,
+          selectedToken: '',
         },
       }))
     },

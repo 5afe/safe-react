@@ -121,6 +121,10 @@ const ConfirmTransactionModal = ({
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
+  if (!ethToken) {
+    return null
+  }
+
   const body = areTxsMalformed ? (
     <>
       <IconText>
@@ -144,7 +148,7 @@ const ConfirmTransactionModal = ({
                 <div className="section">
                   <Heading tag="h3">Value</Heading>
                   <div className="value-section">
-                    <TokenLogo height={40} tokenName={ethToken?.name} tokenLogoUri={ethToken?.logoUri} />
+                    <TokenLogo height={40} tokenName={ethToken.name} tokenLogoUri={ethToken.logoUri as string} />
                     <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                   </div>
                 </div>
