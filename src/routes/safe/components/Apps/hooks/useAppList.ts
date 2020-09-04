@@ -42,7 +42,7 @@ const useAppList = (): UseAppListReturnType => {
         }
       })
 
-      let apps = []
+      let apps: SafeApp[] = []
       // using the appURL to recover app info
       for (let index = 0; index < list.length; index++) {
         try {

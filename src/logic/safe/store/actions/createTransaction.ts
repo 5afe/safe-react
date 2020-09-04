@@ -100,7 +100,7 @@ interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number
-  origin?: string
+  origin?: string | null
   safeAddress: string
   to: string
   txData?: string

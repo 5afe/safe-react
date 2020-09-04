@@ -33,7 +33,7 @@ const isTxValid = (t: Transaction): boolean => {
   }
 
   const isAddressValid = mustBeEthereumAddress(t.to) === undefined
-  return isAddressValid && t.data && typeof t.data === 'string'
+  return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
 const Wrapper = styled.div`
@@ -86,7 +86,7 @@ const ConfirmTransactionModal = ({
   onCancel,
   onUserConfirm,
   onClose,
-}: OwnProps): React.ReactElement => {
+}: OwnProps): React.ReactElement | null => {
   const dispatch = useDispatch()
   const ethToken = useToken(ETH_ADDRESS) as Token | null
   if (!isOpen) {

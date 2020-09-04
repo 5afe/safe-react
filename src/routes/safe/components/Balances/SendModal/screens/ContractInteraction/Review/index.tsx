@@ -18,7 +18,7 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import {
   generateFormFieldKey,
   getValueFromTxInputs,
@@ -46,7 +46,7 @@ type Props = {
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const token = useToken(ETH_ADDRESS) as Token | null
 
@@ -57,7 +57,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress as string, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -75,7 +75,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
 
   const submitTx = async () => {
     const web3 = getWeb3()
-    const txRecipient = tx.contractAddress
+    const txRecipient = tx.contractAddress as string
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
 
@@ -103,7 +103,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <AddressInfo safeAddress={tx.contractAddress} />
+          <AddressInfo safeAddress={tx.contractAddress as string} />
         </Row>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -112,7 +112,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row align="center" margin="md">
           <Col xs={1}>
-            <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
+            <TokenLogo height={28} tokenName={token?.name || ''} tokenLogoUri={token?.logoUri || ''} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
@@ -130,11 +130,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row align="center" margin="md">
           <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
-            {tx.selectedMethod.name}
+            {tx.selectedMethod?.name}
           </Paragraph>
         </Row>
-        {tx.selectedMethod.inputs.map(({ name, type }, index) => {
-          const key = generateFormFieldKey(type, tx.selectedMethod.signatureHash, index)
+        {tx.selectedMethod?.inputs?.map(({ name, type }, index) => {
+          const key = generateFormFieldKey(type, tx.selectedMethod?.signatureHash || '', index)
           const value: string = getValueFromTxInputs(key, type, tx)
 
           return (

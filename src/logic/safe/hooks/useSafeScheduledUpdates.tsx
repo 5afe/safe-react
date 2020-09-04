@@ -8,9 +8,9 @@ import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
-export const useSafeScheduledUpdates = (safeAddress: string): void => {
+export const useSafeScheduledUpdates = (safeAddress?: string): void => {
   const dispatch = useDispatch()
-  const timer = useRef<number>(null)
+  const timer = useRef<number>()
 
   useEffect(() => {
     // using this variable to prevent setting a timeout when the component is already unmounted or the effect
@@ -29,7 +29,7 @@ export const useSafeScheduledUpdates = (safeAddress: string): void => {
 
       if (mounted) {
         timer.current = setTimeout(() => {
-          fetchSafeData(safeAddress)
+          fetchSafeData(address)
         }, TIMEOUT * 3)
       }
     }

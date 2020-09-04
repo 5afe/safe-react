@@ -12,7 +12,14 @@ import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
 import Status from './Status'
-import { TX_TABLE_ID, TX_TABLE_RAW_CANCEL_TX_ID, TX_TABLE_RAW_TX_ID, generateColumns, getTxTableData } from './columns'
+import {
+  TX_TABLE_ID,
+  TX_TABLE_RAW_CANCEL_TX_ID,
+  TX_TABLE_RAW_TX_ID,
+  generateColumns,
+  getTxTableData,
+  TableData,
+} from './columns'
 import { styles } from './style'
 
 import Table from 'src/components/Table'
@@ -22,6 +29,7 @@ import Row from 'src/components/layout/Row'
 import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { extendedTransactionsSelector } from 'src/logic/safe/store/selectors/transactions'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { List } from 'immutable'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -29,7 +37,7 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
-  const [filteredData, setFilteredData] = useState(null)
+  const [filteredData, setFilteredData] = useState < List<TableData>(null)
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
@@ -75,9 +83,12 @@ const TxsTable = ({ classes }) => {
       setFilteredData(filteredData)
     }
     fetchTxTableData()
-  }, [transactions, cancellationTransactions])
+  }, [transactions, cancellationTransactions, setFilteredData])
 
-  if (!filteredData) return null
+  if (!filteredData) {
+    return null
+  }
+
   return (
     <Block className={classes.container}>
       <TableContainer>

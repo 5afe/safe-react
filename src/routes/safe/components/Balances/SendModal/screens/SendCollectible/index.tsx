@@ -70,7 +70,7 @@ const SendCollectible = ({
     name: '',
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -146,7 +146,7 @@ const SendCollectible = ({
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -167,7 +167,7 @@ const SendCollectible = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -175,7 +175,7 @@ const SendCollectible = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
