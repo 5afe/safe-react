@@ -14,6 +14,7 @@ import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from '../../../addressBook/store/actions/addOrUpdateAddressBookEntry'
 
 const watchedActions = [
   ADD_SAFE,
@@ -62,12 +63,16 @@ const safeStorageMware = (store) => (next) => async (action) => {
           const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
           dispatch(addAddressBookEntry(checksumEntry, true))
         })
+        dispatch(addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name })))
         break
       }
       case UPDATE_SAFE: {
-        const { activeTokens } = action.payload
+        const { activeTokens, name, address } = action.payload
         if (activeTokens) {
           recalculateActiveTokens(state)
+        }
+        if (name) {
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
         }
         break
       }
