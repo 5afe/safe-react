@@ -40,7 +40,7 @@ const INITIAL_VALUES: AddAppFormValues = {
 }
 
 const APP_INFO: SafeApp = {
-  id: undefined,
+  id: '',
   url: '',
   name: '',
   iconUrl: appsIconSvg,
