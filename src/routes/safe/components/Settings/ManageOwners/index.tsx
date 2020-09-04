@@ -30,7 +30,7 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { AddressBookEntryProps } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
@@ -42,7 +42,7 @@ export const OWNERS_ROW_TEST_ID = 'owners-row'
 const useStyles = makeStyles(styles)
 
 type Props = {
-  addressBook: unknown
+  addressBook: AddressBookState
   granted: boolean
   owners: List<SafeOwner>
 }
@@ -84,7 +84,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook as AddressBookEntryProps, owners)
+  const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
   const ownerData = getOwnerData(ownersAdbk)
 
   return (

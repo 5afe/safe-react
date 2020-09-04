@@ -25,7 +25,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -51,7 +51,7 @@ const useStyles = makeStyles(styles as any)
 const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',

@@ -1,11 +1,10 @@
-import { List } from 'immutable'
-
 import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
 import { safesListSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'redux'
 import { AppReduxState } from 'src/store'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 const loadAddressBookFromStorage = () => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   try {
@@ -15,15 +14,14 @@ const loadAddressBookFromStorage = () => async (dispatch: Dispatch, getState: ()
       storedAdBk = []
     }
 
-    let addressBook = buildAddressBook(storedAdBk)
-    // Fetch all the current safes, in case that we don't have a safe on the adbk, we add it
+    const addressBook = buildAddressBook(storedAdBk)
+    // Fetch all the current safes, in case that we don't have a safe on the addressBook, we add it
     const safes = safesListSelector(state)
-    const adbkEntries = addressBook.keySeq().toArray()
     safes.forEach((safe) => {
       const { address } = safe
-      const found = adbkEntries.includes(address)
+      const found = addressBook.find((entry) => entry.address === address)
       if (!found) {
-        addressBook = addressBook.set(address, List([]))
+        addressBook.push(makeAddressBookEntry({ address }))
       }
     })
     dispatch(loadAddressBook(addressBook))

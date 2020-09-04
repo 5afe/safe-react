@@ -20,7 +20,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAdbk } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -41,13 +41,19 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }) => {
+const SendCollectible = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = {},
+}): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',

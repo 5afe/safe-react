@@ -2,7 +2,7 @@ import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEnt
 import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { REMOVE_ENTRY } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { saveAddressBook } from 'src/logic/addressBook/utils'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -16,14 +16,14 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
   if (watchedActions.includes(action.type)) {
     const state = store.getState()
     const { dispatch } = store
-    const addressBook = addressBookMapSelector(state)
-    if (addressBook.size) {
+    const addressBook = addressBookSelector(state)
+    if (addressBook.length) {
       await saveAddressBook(addressBook)
     }
 
     switch (action.type) {
       case ADD_ENTRY: {
-        const { isOwner } = action.payload.entry
+        const { isOwner } = action.payload
         if (!isOwner) {
           const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
           dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))

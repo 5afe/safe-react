@@ -5,7 +5,7 @@ import { applyMiddleware, combineReducers, compose, createStore, CombinedState, 
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID, AddressBookState } from 'src/logic/addressBook/store/reducer/addressBook'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -37,6 +37,7 @@ import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/redu
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
+import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export const history = createHashHistory()
 

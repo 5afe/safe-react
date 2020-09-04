@@ -1,15 +1,18 @@
-import { Record, RecordOf } from 'immutable'
-
-export interface AddressBookEntryProps {
+export type AddressBookEntry = {
   address: string
   name: string
-  isOwner: boolean
 }
 
-export type AddressBookEntry = RecordOf<AddressBookEntryProps>
-
-export const makeAddressBookEntry = Record<AddressBookEntryProps>({
-  address: '',
-  name: '',
-  isOwner: false,
+// todo remove
+export const makeAddressBookEntry = ({
+  address = '',
+  name = '',
+}: {
+  address: string
+  name?: string
+}): AddressBookEntry => ({
+  address,
+  name,
 })
+
+export type AddressBookState = AddressBookEntry[]

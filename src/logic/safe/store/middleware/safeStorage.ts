@@ -13,6 +13,7 @@ import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 const watchedActions = [
   ADD_SAFE,
@@ -57,14 +58,9 @@ const safeStorageMware = (store) => (next) => async (action) => {
       }
       case ADD_SAFE: {
         const { safe } = action.payload
-        // Adds the owners to the address book
         safe.owners.forEach((owner) => {
-          const checksumEntries = {
-            ...owner,
-            isOwner: true,
-            address: checksumAddress(owner.address),
-          }
-          dispatch(addAddressBookEntry(checksumEntries))
+          const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
+          dispatch(addAddressBookEntry(checksumEntry, true))
         })
         break
       }

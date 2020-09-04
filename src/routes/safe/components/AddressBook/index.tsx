@@ -20,7 +20,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe } from 'src/logic/wallets/ethAddresses'
 import CreateEditEntryModal from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
@@ -36,11 +36,11 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
-import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -51,7 +51,7 @@ const AddressBookTable = (): React.ReactElement => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
@@ -72,11 +72,10 @@ const AddressBookTable = (): React.ReactElement => {
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
       const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
-      const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
-      if (key >= 0) {
+      const oldEntryIndex = addressBook.findIndex((entry) => entry.address === checksumEntryAdd)
+      if (oldEntryIndex >= 0) {
         // Edit old entry
-        const value = addressBook.get(key)
-        setSelectedEntry({ entry: value, index: key })
+        setSelectedEntry({ entry: addressBook[oldEntryIndex], index: oldEntryIndex })
       } else {
         // Create new entry
         setSelectedEntry({
@@ -141,7 +140,7 @@ const AddressBookTable = (): React.ReactElement => {
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"
-            size={addressBook?.size || 0}
+            size={addressBook?.length || 0}
           >
             {(sortedData) =>
               sortedData.map((row, index) => {
@@ -154,15 +153,17 @@ const AddressBookTable = (): React.ReactElement => {
                     key={index}
                     tabIndex={-1}
                   >
-                    {autoColumns.map((column) => (
-                      <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
-                        {column.id === AB_ADDRESS_ID ? (
-                          <OwnerAddressTableCell address={row[column.id]} showLinks />
-                        ) : (
-                          row[column.id]
-                        )}
-                      </TableCell>
-                    ))}
+                    {autoColumns.map((column) => {
+                      return (
+                        <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
+                          {column.id === AB_ADDRESS_ID ? (
+                            <OwnerAddressTableCell address={row[column.id]} showLinks />
+                          ) : (
+                            getValidAddressBookName(row[column.id])
+                          )}
+                        </TableCell>
+                      )
+                    })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
                         <Img
@@ -180,14 +181,12 @@ const AddressBookTable = (): React.ReactElement => {
                         />
                         <Img
                           alt="Remove entry"
-                          className={userOwner ? classes.removeEntryButtonDisabled : classes.removeEntryButton}
+                          className={classes.removeEntryButton}
                           onClick={() => {
-                            if (!userOwner) {
-                              setSelectedEntry({ entry: row })
-                              setDeleteEntryModalOpen(true)
-                            }
+                            setSelectedEntry({ entry: row })
+                            setDeleteEntryModalOpen(true)
                           }}
-                          src={userOwner ? RemoveOwnerIconDisabled : RemoveOwnerIcon}
+                          src={RemoveOwnerIcon}
                           testId={REMOVE_ENTRY_BUTTON}
                         />
                         {granted ? (
