@@ -13,8 +13,10 @@ import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addOrUpdateAddressBookEntry } from '../../../addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { getValidAddressBookName } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 const watchedActions = [
   ADD_SAFE,
@@ -43,6 +45,30 @@ const recalculateActiveTokens = (state) => {
   saveActiveTokens(activeTokens)
 }
 
+/**
+ * If the owner has a valid name that means that should be on the addressBook
+ * if the owner is not currently on the addressBook, that means the user deleted it
+ * or that it's a new safe with valid names, so we also check if it's a new safe or an already loaded one
+ * @param name
+ * @param address
+ * @param addressBook
+ * @param safeAlreadyLoaded -> true if the safe was loaded from the localStorage
+ */
+// TODO TEST
+const checkIfOwnerWasDeletedFromAddressBook = (
+  { name, address }: AddressBookEntry,
+  addressBook: AddressBookState,
+  safeAlreadyLoaded: boolean,
+) => {
+  if (!safeAlreadyLoaded) {
+    return false
+  }
+
+  const addressShouldBeOnTheAddressBook = !!getValidAddressBookName(name)
+  const isAlreadyInAddressBook = !!addressBook.find((entry) => entry.address.toLowerCase() === address.toLowerCase())
+  return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
+}
+
 const safeStorageMware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 
@@ -50,6 +76,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
     const state = store.getState()
     const { dispatch } = store
     const safes = safesMapSelector(state)
+    const addressBook = addressBookSelector(state)
     await saveSafes(safes.toJSON())
 
     switch (action.type) {
@@ -58,12 +85,28 @@ const safeStorageMware = (store) => (next) => async (action) => {
         break
       }
       case ADD_SAFE: {
-        const { safe } = action.payload
+        const { safe, loadedFromStorage } = action.payload
         safe.owners.forEach((owner) => {
           const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
-          dispatch(addAddressBookEntry(checksumEntry, true))
+          const ownerWasAlreadyInAddressBook = checkIfOwnerWasDeletedFromAddressBook(
+            checksumEntry,
+            addressBook,
+            loadedFromStorage,
+          )
+
+          if (!ownerWasAlreadyInAddressBook) {
+            dispatch(addAddressBookEntry(checksumEntry, true))
+          }
         })
-        dispatch(addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name })))
+        const safeWasAlreadyInAddressBook = checkIfOwnerWasDeletedFromAddressBook(
+          { address: safe.address, name: safe.name },
+          addressBook,
+          loadedFromStorage,
+        )
+
+        if (!safeWasAlreadyInAddressBook) {
+          dispatch(addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name }), true))
+        }
         break
       }
       case UPDATE_SAFE: {
@@ -72,7 +115,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
           recalculateActiveTokens(state)
         }
         if (name) {
-          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })), true)
         }
         break
       }

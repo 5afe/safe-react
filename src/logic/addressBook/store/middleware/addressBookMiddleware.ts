@@ -23,8 +23,8 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
 
     switch (action.type) {
       case ADD_ENTRY: {
-        const { isOwner } = action.payload
-        if (!isOwner) {
+        const { shouldAvoidUpdatesNotifications } = action.payload
+        if (!shouldAvoidUpdatesNotifications) {
           const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY)
           dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
         }
