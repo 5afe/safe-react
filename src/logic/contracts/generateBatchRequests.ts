@@ -10,8 +10,9 @@ import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
  * @param {array<{ args: [any], method: string, type: 'eth'|undefined } | string>} args.methods - methods to be called
  * @returns {Promise<[*]>}
  */
-const generateBatchRequests = ({ abi, address, batch = new web3.BatchRequest() , context, methods }: any): any => {
+const generateBatchRequests = ({ abi, address, batch, context, methods }: any): any => {
   const contractInstance: any = new web3.eth.Contract(abi, address)
+  const localBatch = new web3.BatchRequest()
 
   const values = methods.map((methodObject) => {
     let method, type, args = []
@@ -39,14 +40,14 @@ const generateBatchRequests = ({ abi, address, batch = new web3.BatchRequest() ,
           request = contractInstance.methods[method](...args).call.request(resolver)
         }
 
-        batch.add(request)
+        batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
         resolve(null)
       }
     })
   })
 
-  batch.execute()
+  !batch && localBatch.execute()
 
   const returnValues = context ? [context, ...values] : values
 
