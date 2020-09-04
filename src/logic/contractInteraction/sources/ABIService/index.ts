@@ -2,7 +2,12 @@ import { AbiItem } from 'web3-utils'
 
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 
-export interface AbiItemExtended extends AbiItem {
+export interface AllowedAbiItem extends AbiItem {
+  name: string
+  type: 'function'
+}
+
+export interface AbiItemExtended extends AllowedAbiItem {
   action: string
   methodSignature: string
   signatureHash: string
@@ -43,8 +48,9 @@ export const getMethodAction = ({ stateMutability }: AbiItem): 'read' | 'write' 
 }
 
 export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
-  return abi
-    .filter(isAllowedMethod)
+  const allowedAbiItems = abi.filter(isAllowedMethod) as AllowedAbiItem[]
+
+  return allowedAbiItems
     .map(
       (method): AbiItemExtended => ({
         action: getMethodAction(method),
@@ -53,10 +59,6 @@ export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
       }),
     )
     .sort(({ name: a }, { name: b }) => {
-      if (!a || !b) {
-        return -1
-      }
-
       return a.toLowerCase() > b.toLowerCase() ? 1 : -1
     })
 }
