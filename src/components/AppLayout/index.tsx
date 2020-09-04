@@ -60,9 +60,9 @@ export const FooterWrapper = styled.footer`
 
 type Props = {
   sidebarItems: ListItemType[]
-  safeAddress: string | null
-  safeName: string | null
-  balance: string | null
+  safeAddress: string | undefined
+  safeName: string | undefined
+  balance: string | undefined
   granted: boolean
   onToggleSafeList: () => void
   onReceiveClick: () => void

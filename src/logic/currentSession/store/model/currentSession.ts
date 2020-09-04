@@ -1,5 +1,9 @@
 import { Record } from 'immutable'
 
-export const makeCurrentSession = Record({
+type SessionProps = {
+  viewedSafes: string[]
+}
+
+export const makeCurrentSession = Record<SessionProps>({
   viewedSafes: [],
 })

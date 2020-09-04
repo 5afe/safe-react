@@ -19,7 +19,7 @@ export const saveAddressBook = async (addressBook) => {
   }
 }
 
-export const getAddressesListFromAdbk = (addressBook) => Array.from(addressBook).map((entry: any) => entry.address)
+export const getAddressesListFromAdbk = (addressBook: List<any>) => addressBook.map((entry: any) => entry.address)
 
 export const getNameFromAdbk = (addressBook, userAddress) => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
