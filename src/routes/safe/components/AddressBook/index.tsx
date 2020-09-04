@@ -168,7 +168,7 @@ const AddressBookTable = (): React.ReactElement => {
                       <Row align="end" className={classes.actions}>
                         <Img
                           alt="Edit entry"
-                          className={classes.editEntryButton}
+                          className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
                           onClick={() => {
                             setSelectedEntry({
                               entry: row,
@@ -181,7 +181,7 @@ const AddressBookTable = (): React.ReactElement => {
                         />
                         <Img
                           alt="Remove entry"
-                          className={classes.removeEntryButton}
+                          className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
                           onClick={() => {
                             setSelectedEntry({ entry: row })
                             setDeleteEntryModalOpen(true)

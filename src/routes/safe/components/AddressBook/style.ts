@@ -39,6 +39,9 @@ export const styles = createStyles({
     cursor: 'pointer',
     marginBottom: marginButtonImg,
   },
+  editEntryButtonNonOwner: {
+    cursor: 'pointer',
+  },
   removeEntryButton: {
     marginLeft: lg,
     marginRight: lg,
@@ -50,6 +53,11 @@ export const styles = createStyles({
     marginRight: lg,
     marginBottom: marginButtonImg,
     cursor: 'default',
+  },
+  removeEntryButtonNonOwner: {
+    marginLeft: lg,
+    marginRight: lg,
+    cursor: 'pointer',
   },
   message: {
     padding: `${md} 0`,
