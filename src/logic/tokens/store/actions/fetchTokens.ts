@@ -12,8 +12,9 @@ import { fetchTokenList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
+import { Dispatch } from 'redux'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -87,7 +88,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token | undef
   return token
 }
 
-export const fetchTokens = () => async (dispatch, getState) => {
+export const fetchTokens = () => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 
