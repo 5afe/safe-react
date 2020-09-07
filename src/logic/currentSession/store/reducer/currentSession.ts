@@ -17,7 +17,7 @@ export default handleActions(
     [UPDATE_VIEWED_SAFES]: (state, action) => {
       const safeAddress = action.payload
 
-      const newState = state.updateIn(['viewedSafes'], (prev = []) =>
+      const newState = state.updateIn(['viewedSafes'], (prev: string[] = []) =>
         prev.includes(safeAddress) ? prev : [...prev, safeAddress],
       )
 
