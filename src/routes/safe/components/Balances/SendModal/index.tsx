@@ -4,7 +4,6 @@ import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
-import { Token } from 'src/types/contracts/Token'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -45,9 +44,7 @@ type SendModalProps = {
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
-  safeAddress?: string
-  safeName?: string
-  selectedToken?: Token
+  selectedToken?: string
   ethBalance?: string
 }
 
@@ -55,18 +52,18 @@ const SendModal = ({
   activeScreenType,
   isOpen,
   onClose,
-  recipientAddress,
+  recipientAddress = '',
   selectedToken,
 }: SendModalProps): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
-  const [tx, setTx] = useState(null)
+  const [tx, setTx] = useState<{ recipientAddress: string }>({ recipientAddress })
   const [isABI, setIsABI] = useState(true)
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setIsABI(true)
-    setTx({})
+    setTx({ recipientAddress: '' })
   }, [activeScreenType, isOpen])
 
   const scalableModalSize = activeScreen === 'chooseTxType'

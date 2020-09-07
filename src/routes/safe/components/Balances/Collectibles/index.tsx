@@ -80,9 +80,9 @@ const useStyles = makeStyles(
 
 const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
-  const [selectedToken, setSelectedToken] = React.useState(null)
+  const [selectedToken, setSelectedToken] = React.useState<NFTToken>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
-  const { address, ethBalance, name } = useSelector(safeSelector) || {}
+  const { ethBalance } = useSelector(safeSelector) || {}
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
   const { trackEvent } = useAnalytics()
@@ -131,8 +131,6 @@ const Collectibles = (): React.ReactElement => {
         ethBalance={ethBalance}
         isOpen={sendNFTsModalOpen}
         onClose={() => setSendNFTsModalOpen(false)}
-        safeAddress={address}
-        safeName={name}
         selectedToken={selectedToken}
       />
     </Card>

@@ -51,7 +51,7 @@ const Balances = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
-  const address = useSelector(safeParamAddressFromStateSelector)
+  const address = useSelector(safeParamAddressFromStateSelector) as string
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const safeName = useSelector(safeNameSelector)
 
