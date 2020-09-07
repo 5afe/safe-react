@@ -88,7 +88,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               {!isCreationTx ? (
                 <Paragraph noMargin>
                   <Bold>Fee: </Bold>
-                  {tx.fee ? fromWei(toBN(tx.fee)) : 'n/a'}
+                  {tx.fee ? fromWei(toBN(tx.fee)) + ' ETH' : 'n/a'}
                 </Paragraph>
               ) : null}
               <CreationTx tx={tx} />
