@@ -55,7 +55,7 @@ const Balances = (): React.ReactElement => {
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const safeName = useSelector(safeNameSelector)
 
-  useFetchTokens(address as string)
+  useFetchTokens(address)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes('ERC721'))

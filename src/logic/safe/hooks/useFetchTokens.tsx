@@ -10,11 +10,12 @@ import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
-export const useFetchTokens = (safeAddress: string): void => {
+export const useFetchTokens = (safeAddress: string | undefined): void => {
   const dispatch = useDispatch<Dispatch>()
   const location = useLocation()
 
   useMemo(() => {
+    if (!safeAddress) return
     if (COINS_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
         // fetch tokens there to get symbols for tokens in TXs list
