@@ -45,7 +45,12 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   const batch = new web3ReadOnly.BatchRequest()
 
   const whenTxsValues = txs.map((tx) => {
-    const methods = ['symbol', 'decimals', { method: 'getTransaction', args: [tx.transactionHash], type: 'eth' }]
+    const methods = [
+      'symbol',
+      'decimals',
+      { method: 'getTransaction', args: [tx.transactionHash], type: 'eth' },
+      { method: 'getTransactionReceipt', args: [tx.transactionHash], type: 'eth' },
+    ]
 
     return generateBatchRequests({
       abi: ALTERNATIVE_TOKEN_ABI,
@@ -59,11 +64,11 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   batch.execute()
 
   return Promise.all(whenTxsValues).then((txsValues) =>
-    txsValues.map(([tx, symbol, decimals, { gas, gasPrice }]) => [
+    txsValues.map(([tx, symbol, decimals, { gasPrice }, { gasUsed }]) => [
       tx,
       symbol === null ? 'ETH' : symbol,
       decimals === null ? '18' : decimals,
-      new bn(gas).div(gasPrice).toFixed(),
+      new bn(gasPrice).times(gasUsed),
     ]),
   )
 }

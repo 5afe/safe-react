@@ -7,7 +7,6 @@ import {
   isSendERC20Transaction,
   isSendERC721Transaction,
 } from 'src/logic/tokens/utils/tokenHelpers'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
@@ -243,7 +242,6 @@ export const buildTx = async ({
   tx,
   txCode,
 }: BuildTx): Promise<Transaction> => {
-  const { fromWei, toBN } = getWeb3().utils
   const safeAddress = safe.address
   const isModifySettingsTx = isModifySettingsTransaction(tx, safeAddress)
   const isTxCancelled = isTransactionCancelled(tx, outgoingTxs, cancellationTxs)
@@ -284,7 +282,7 @@ export const buildTx = async ({
     executionDate: tx.executionDate,
     executionTxHash: tx.transactionHash,
     executor: tx.executor,
-    fee: tx.fee ? fromWei(toBN(tx.fee)) : null,
+    fee: tx.fee,
     gasPrice: tx.gasPrice,
     gasToken: tx.gasToken || ZERO_ADDRESS,
     isCancellationTx,
