@@ -176,10 +176,13 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
   }
 
   const onRetry = async () => {
-    const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
-    delete values?.txHash
-    await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
-    setSafeCreationPendingInfo(values)
+    const values = await loadFromStorage<{ txHash?: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    if (values) {
+      delete values.txHash
+      await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
+      setSafeCreationPendingInfo(values)
+    }
+
     createSafeProxy()
   }
 
