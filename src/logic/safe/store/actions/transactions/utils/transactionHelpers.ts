@@ -282,6 +282,7 @@ export const buildTx = async ({
     executionDate: tx.executionDate,
     executionTxHash: tx.transactionHash,
     executor: tx.executor,
+    fee: tx.fee,
     gasPrice: tx.gasPrice,
     gasToken: tx.gasToken || ZERO_ADDRESS,
     isCancellationTx,
