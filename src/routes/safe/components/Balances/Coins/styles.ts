@@ -1,6 +1,7 @@
 import { sm, xs } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   iconSmall: {
     fontSize: 16,
   },
