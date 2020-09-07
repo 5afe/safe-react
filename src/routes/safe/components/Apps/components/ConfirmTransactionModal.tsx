@@ -140,27 +140,25 @@ const ConfirmTransactionModal = ({
     <>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
-      {txs.map((tx, index) => {
-        return (
-          <Wrapper key={index}>
-            <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
-              <CollapseContent>
-                <div className="section">
-                  <Heading tag="h3">Value</Heading>
-                  <div className="value-section">
-                    <TokenLogo height={40} tokenName={ethToken.name} tokenLogoUri={ethToken.logoUri as string} />
-                    <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
-                  </div>
+      {txs.map((tx, index) => (
+        <Wrapper key={index}>
+          <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
+            <CollapseContent>
+              <div className="section">
+                <Heading tag="h3">Value</Heading>
+                <div className="value-section">
+                  <TokenLogo height={40} name={ethToken.name} logoUri={ethToken.logoUri as string} />
+                  <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                 </div>
-                <div className="section">
-                  <Heading tag="h3">Data (hex encoded)*</Heading>
-                  <StyledTextBox>{tx.data}</StyledTextBox>
-                </div>
-              </CollapseContent>
-            </Collapse>
-          </Wrapper>
-        )
-      })}
+              </div>
+              <div className="section">
+                <Heading tag="h3">Data (hex encoded)*</Heading>
+                <StyledTextBox>{tx.data}</StyledTextBox>
+              </div>
+            </CollapseContent>
+          </Collapse>
+        </Wrapper>
+      ))}
     </>
   )
 
