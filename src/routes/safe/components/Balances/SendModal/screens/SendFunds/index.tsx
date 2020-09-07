@@ -76,7 +76,7 @@ const SendFunds = ({
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -148,7 +148,7 @@ const SendFunds = ({
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -169,7 +169,7 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -177,7 +177,7 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
@@ -222,7 +222,7 @@ const SendFunds = ({
                       Amount
                     </Paragraph>
                     <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      onClick={() => mutators.setMax(selectedTokenRecord?.balance)}
                       weight="bold"
                       testId="send-max-btn"
                     >
@@ -248,7 +248,7 @@ const SendFunds = ({
                         required,
                         mustBeFloat,
                         minValue(0, false),
-                        maxValue(selectedTokenRecord?.balance),
+                        maxValue(selectedTokenRecord?.balance || 0),
                       )}
                     />
                     <OnChange name="token">

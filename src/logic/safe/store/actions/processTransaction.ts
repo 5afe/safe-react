@@ -34,7 +34,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(null, lastTx, safeInstance)
+  const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
@@ -105,9 +105,9 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
 
     const txToMock: TxToMock = {
       ...txArgs,
-      confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
+      confirmations: txArgs.confirmations, // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
-      submissionDate: new Date().toISOString(),
+      submissionDate: txArgs.submissionDate,
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 

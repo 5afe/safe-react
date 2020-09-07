@@ -12,7 +12,7 @@ export const fetchCurrencyValues = (safeAddress: string) => async (
   dispatch: Dispatch<typeof setCurrencyBalances | typeof setSelectedCurrency | typeof setCurrencyRate>,
 ): Promise<void> => {
   try {
-    const storedCurrencies: Map<string, CurrencyRateValue> | unknown = await loadCurrencyValues()
+    const storedCurrencies = await loadCurrencyValues()
     const storedCurrency = storedCurrencies[safeAddress]
     if (!storedCurrency) {
       return batch(() => {

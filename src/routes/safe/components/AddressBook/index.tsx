@@ -41,6 +41,7 @@ import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bi
 import RemoveOwnerIconDisabled from 'src/routes/safe/components/Settings/assets/icons/disabled-bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const AddressBookTable = ({ classes }) => {
   const columns = generateColumns()
@@ -49,10 +50,15 @@ const AddressBookTable = ({ classes }) => {
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [selectedEntry, setSelectedEntry] = useState<any>(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'AddressBook' })
+  }, [trackEvent])
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
@@ -64,7 +70,7 @@ const AddressBookTable = ({ classes }) => {
     if (entryAddressToEditOrCreateNew) {
       const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
       const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
-      if (key >= 0) {
+      if (key && key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
         setSelectedEntry({ entry: value, index: key })

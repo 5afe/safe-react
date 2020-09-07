@@ -1,6 +1,7 @@
+import { createStyles } from '@material-ui/core/styles'
 import { background, error, lg, md, sm } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',

@@ -2,7 +2,7 @@ import { List } from 'immutable'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
-export const sameAddress = (firstAddress: string, secondAddress: string): boolean => {
+export const sameAddress = (firstAddress: string | undefined, secondAddress: string | undefined): boolean => {
   if (!firstAddress) {
     return false
   }

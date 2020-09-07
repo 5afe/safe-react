@@ -1,5 +1,5 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import classNames from 'classnames'
@@ -27,8 +27,11 @@ const openIconStyle = {
   color: secondary,
 }
 
-const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+const useStyles = makeStyles(styles)
+
+const RemoveSafeComponent = ({ isOpen, onClose }) => {
+  const classes = useStyles()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()
   const etherScanLink = getEtherScanLink('address', safeAddress)
@@ -104,4 +107,4 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
   )
 }
 
-export const RemoveSafeModal = withStyles(styles as any)(RemoveSafeComponent)
+export const RemoveSafeModal = RemoveSafeComponent

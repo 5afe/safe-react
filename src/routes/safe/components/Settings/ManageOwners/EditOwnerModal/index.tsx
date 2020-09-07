@@ -33,7 +33,7 @@ export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 const useStyles = makeStyles(styles)
 
 type OwnProps = {
-  isOpen: true
+  isOpen: boolean
   onClose: () => void
   ownerAddress: string
   selectedOwnerName: string
@@ -42,7 +42,7 @@ type OwnProps = {
 const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const handleSubmit = (values) => {
     const { ownerName } = values
 
