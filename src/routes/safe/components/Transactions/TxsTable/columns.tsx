@@ -6,7 +6,6 @@ import React from 'react'
 
 import TxType from './TxType'
 
-import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
 import { humanReadableTokenAmount } from 'src/utils/tokenAmountReadable'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
@@ -52,11 +51,14 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
     return `1 ${tx.symbol}`
   }
 
-  return getAmountWithSymbol(tx, formatted)
+  return getAmountWithSymbol(
+    { decimals: tx.decimals as string, symbol: tx.symbol as string, value: tx.value },
+    formatted,
+  )
 }
 
 export const getTxAmount = async (tx: Transaction, formatted = true): Promise<string> => {
-  const { decimals = 18, decodedParams, isTokenTransfer } = tx
+  const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
   const { value } = (isTokenTransfer && !!decodedParams && !!decodedParams.transfer
     ? decodedParams.transfer
     : tx) as Transaction
@@ -69,35 +71,35 @@ export const getTxAmount = async (tx: Transaction, formatted = true): Promise<st
     return NOT_AVAILABLE
   }
 
-  return getAmountWithSymbol({ decimals, value }, formatted)
+  return getAmountWithSymbol({ decimals: decimals as string, symbol: symbol as string, value }, formatted)
 }
 
-type TableData = {
-  id?: number
-  type: React.ReactElement
+export interface TableData {
   date: string
-  dateOrder?: number
+  dateOrder: number | null
   amount: string
   status?: TransactionStatus
   tx: Transaction
   cancelTx?: Transaction
+  id: string
+  type: React.ReactElement
 }
 
 const getIncomingTxTableData = (tx: Transaction): TableData => ({
-  [TX_TABLE_ID]: tx.blockNumber,
-  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
-  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
-  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" origin={null} />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate || '0'),
+  dateOrder: getTime(parseISO(tx.executionDate || '0')),
   [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
   [TX_TABLE_STATUS_ID]: tx.status,
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = async (tx: Transaction, cancelTx: Transaction): Promise<TableData> => {
+const getTransactionTableData = async (tx: Transaction, cancelTx?: Transaction): Promise<TableData> => {
   const txDate = tx.submissionDate
 
   return {
-    [TX_TABLE_ID]: tx.blockNumber,
+    [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
     [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [TX_DATE_ORDER_ID]: txDate ? getTime(parseISO(txDate)) : null,

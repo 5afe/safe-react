@@ -26,9 +26,8 @@ import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 import { TokenLogo } from 'src/components/TokenLogo'
 import { useToken } from 'src/logic/tokens/hooks/useToken'
@@ -49,15 +48,13 @@ type Props = {
 const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector)
-  const tokens = useSelector(extendedSafeTokensSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
 
-  const txToken = tokens.find((token) => token.address === tx.token)
-  const isSendingETH = txToken.address === ETH_ADDRESS
-  const txRecipient = isSendingETH ? tx.recipientAddress : txToken.address
-  const token = useToken(txToken.address) as Token | null
+  const txToken = useToken(tx.token) as Token
+  const isSendingETH = txToken?.address === ETH_ADDRESS
+  const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
     let isCurrent = true
@@ -65,18 +62,22 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     const estimateGas = async () => {
       const { fromWei, toBN } = getWeb3().utils
 
+      if (!txToken) {
+        return
+      }
+
       let txData = EMPTY_DATA
 
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
-        const tokenInstance = await StandardToken.at(txToken.address)
+        const tokenInstance = await StandardToken.at(txToken.address as string)
         const decimals = await tokenInstance.decimals()
         const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
 
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -91,7 +92,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken.address])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
     const web3 = getWeb3()
@@ -103,7 +104,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     dispatch(
       createTransaction({
         safeAddress,
-        to: txRecipient,
+        to: txRecipient as string,
         valueInWei: txAmount,
         txData: data,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
@@ -164,9 +165,14 @@ const ReviewTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <TokenLogo height={28} tokenName={token?.name} tokenLogoUri={token?.logoUri} />
-          <Paragraph className={classes.amount} noMargin size="md" data-testid={`amount-${txToken.symbol}-review-step`}>
-            {tx.amount} {txToken.symbol}
+          <TokenLogo height={28} tokenName={txToken.name} tokenLogoUri={txToken.logoUri as string} />
+          <Paragraph
+            className={classes.amount}
+            noMargin
+            size="md"
+            data-testid={`amount-${txToken?.symbol as string}-review-step`}
+          >
+            {tx.amount} {txToken?.symbol}
           </Paragraph>
         </Row>
         <Row>

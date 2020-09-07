@@ -30,7 +30,7 @@ import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logi
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-import Receive from './ModalReceive'
+import Receive from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 import { Token } from 'src/types/contracts/Token'
 
@@ -80,7 +80,8 @@ const App: React.FC = ({ children }) => {
 
   const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: Token }
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
-  const balance = !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : null
+  const balance =
+    !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
 
   useEffect(() => {
     if (matchSafe?.isExact) {
@@ -134,14 +135,16 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          <Modal
-            description="Receive Tokens Form"
-            handleClose={onReceiveHide}
-            open={safeActionsState.showReceive as boolean}
-            title="Receive Tokens"
-          >
-            <Receive onClose={onReceiveHide} />
-          </Modal>
+          {safeAddress && safeName && (
+            <Modal
+              description="Receive Tokens Form"
+              handleClose={onReceiveHide}
+              open={safeActionsState.showReceive as boolean}
+              title="Receive Tokens"
+            >
+              <Receive onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+            </Modal>
+          )}
         </>
       </SnackbarProvider>
       <CookiesBanner />

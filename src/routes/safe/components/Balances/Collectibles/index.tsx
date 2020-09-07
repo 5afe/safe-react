@@ -82,7 +82,7 @@ const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = React.useState(null)
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
-  const { address, ethBalance, name } = useSelector(safeSelector)
+  const { address, ethBalance, name } = useSelector(safeSelector) || {}
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
   const { trackEvent } = useAnalytics()

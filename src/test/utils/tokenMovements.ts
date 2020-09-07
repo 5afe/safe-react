@@ -57,13 +57,13 @@ export const getFirstTokenContract = undefined //ensureOnce(createTokenOMGContra
 export const getSecondTokenContract = undefined //ensureOnce(createTokenRDNContract)
 export const get6DecimalsTokenContract = undefined //ensureOnce(create6DecimalsTokenContract)
 
-export const sendTokenTo = async (safe, value, tokenContract?: any) => {
-  const web3 = getWeb3()
-  const accounts = await web3.eth.getAccounts()
+// export const sendTokenTo = async (safe, value, tokenContract?: any) => {
+//   const web3 = getWeb3()
+//   const accounts = await web3.eth.getAccounts()
 
-  const OMGToken = tokenContract || (await getFirstTokenContract(web3, accounts[0]))
-  const nativeValue = toNative(value, 18)
-  await OMGToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
+//   const OMGToken = tokenContract || (await getFirstTokenContract(web3, accounts[0]))
+//   const nativeValue = toNative(value, 18)
+//   await OMGToken.transfer(safe, nativeValue.valueOf(), { from: accounts[0], gas: '5000000' })
 
-  return OMGToken.address
-}
+//   return OMGToken.address
+// }

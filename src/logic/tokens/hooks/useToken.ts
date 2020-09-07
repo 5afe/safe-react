@@ -8,7 +8,9 @@ import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import { NFTAsset } from 'src/logic/collectibles/sources/OpenSea'
 
-export const useToken = (tokenAddress: string): Token | NFTAsset | null => {
+export const isToken = (token: Token | NFTAsset): token is Token => typeof (token as Token).logoUri !== 'undefined'
+
+export const useToken = (tokenAddress: string): Token | NFTAsset | undefined => {
   const tokens = useSelector(tokensSelector)
   const assets = useSelector(nftAssetsListSelector)
   const dispatch = useDispatch()
