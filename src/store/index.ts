@@ -19,7 +19,10 @@ import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
+import currentSession, {
+  CURRENT_SESSION_REDUCER_ID,
+  SerializedSessionState,
+} from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
@@ -37,7 +40,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
-import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
+import allTransactions, { TRANSACTIONS, TransactionsState } from 'src/logic/safe/store/reducer/allTransactions'
 
 export const history = createHashHistory()
 
@@ -86,7 +89,7 @@ export type AppReduxState = CombinedState<{
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
-  [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
+  [CURRENT_SESSION_REDUCER_ID]: SerializedSessionState
   [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>

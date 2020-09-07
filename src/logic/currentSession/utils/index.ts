@@ -6,9 +6,9 @@ const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 export const getCurrentSessionFromStorage = async (): Promise<SerializedSessionState | undefined> =>
   loadFromStorage(CURRENT_SESSION_STORAGE_KEY)
 
-export const saveCurrentSessionToStorage = async (currentSession) => {
+export const saveCurrentSessionToStorage = async (currentSession: SerializedSessionState): Promise<void> => {
   try {
-    await saveToStorage(CURRENT_SESSION_STORAGE_KEY, currentSession.toJSON())
+    await saveToStorage(CURRENT_SESSION_STORAGE_KEY, currentSession)
   } catch (err) {
     console.error('Error storing currentSession in localStorage', err)
   }
