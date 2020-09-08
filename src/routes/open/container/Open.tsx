@@ -161,7 +161,7 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
         name,
-        tx: pendingCreation.txHash,
+        tx: pendingCreation?.txHash,
       },
     }
 
@@ -177,7 +177,7 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
 
   const onRetry = async () => {
     const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
-    delete values.txHash
+    delete values?.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)
     createSafeProxy()
