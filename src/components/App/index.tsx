@@ -32,7 +32,6 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import Receive from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
-import { Token } from 'src/types/contracts/Token'
 
 const notificationStyles = {
   success: {
@@ -78,7 +77,7 @@ const App: React.FC = ({ children }) => {
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
-  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: Token }
+  const { sendFunds } = safeActionsState
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
@@ -139,7 +138,7 @@ const App: React.FC = ({ children }) => {
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
-              open={safeActionsState.showReceive as boolean}
+              open={safeActionsState.showReceive}
               title="Receive Tokens"
             >
               <Receive onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />

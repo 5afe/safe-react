@@ -80,7 +80,7 @@ const useStyles = makeStyles(
 
 const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
-  const [selectedToken, setSelectedToken] = React.useState<NFTToken>()
+  const [selectedToken, setSelectedToken] = React.useState<string>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
   const { ethBalance } = useSelector(safeSelector) || {}
   const nftTokens = useSelector(nftTokensSelector)
@@ -91,8 +91,8 @@ const Collectibles = (): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
   }, [trackEvent])
 
-  const handleItemSend = (nftToken: NFTToken) => {
-    setSelectedToken(nftToken)
+  const handleItemSend = (tokenAddress: string) => {
+    setSelectedToken(tokenAddress)
     setSendNFTsModalOpen(true)
   }
 
@@ -115,7 +115,7 @@ const Collectibles = (): React.ReactElement => {
                       <Item
                         data={nftToken}
                         key={`${nftAsset.slug}_${nftToken.tokenId}`}
-                        onSend={() => handleItemSend(nftToken)}
+                        onSend={() => handleItemSend(nftToken.assetAddress)}
                       />
                     ))}
                 </div>

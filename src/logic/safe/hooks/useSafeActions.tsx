@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useCallback } from 'react'
 
 type SafeActionState = {
   sendFunds: {
@@ -16,62 +16,52 @@ const INITIAL_STATE: SafeActionState = {
   showReceive: false,
 }
 
-type Response = {
-  onShow: (action: string) => void
-  onHide: (action: string) => void
+type ReturnType = {
+  onShow: (action: Action) => void
+  onHide: (action: Action) => void
   showSendFunds: (token: string) => void
   hideSendFunds: () => void
-  safeActionsState: Record<string, unknown>
+  safeActionsState: SafeActionState
 }
 
-const useSafeActions = (): Response => {
+type Action = 'Receive'
+
+const useSafeActions = (): ReturnType => {
   const [safeActionsState, setSafeActionsState] = useState<SafeActionState>(INITIAL_STATE)
 
-  const onShow = useMemo(
-    () => (action) => {
-      setSafeActionsState((prevState) => ({
-        ...prevState,
-        [`show${action}`]: true,
-      }))
-    },
-    [],
-  )
+  const onShow = useCallback((action) => {
+    setSafeActionsState((prevState) => ({
+      ...prevState,
+      [`show${action}`]: true,
+    }))
+  }, [])
 
-  const onHide = useMemo(
-    () => (action) => {
-      setSafeActionsState((prevState) => ({
-        ...prevState,
-        [`show${action}`]: false,
-      }))
-    },
-    [],
-  )
+  const onHide = useCallback((action) => {
+    setSafeActionsState((prevState) => ({
+      ...prevState,
+      [`show${action}`]: false,
+    }))
+  }, [])
 
-  const showSendFunds = useMemo(
-    () => (token) => {
-      setSafeActionsState((prevState) => ({
-        ...prevState,
-        sendFunds: {
-          isOpen: true,
-          selectedToken: token,
-        },
-      }))
-    },
-    [],
-  )
+  const showSendFunds = useCallback((token) => {
+    setSafeActionsState((prevState) => ({
+      ...prevState,
+      sendFunds: {
+        isOpen: true,
+        selectedToken: token,
+      },
+    }))
+  }, [])
 
-  const hideSendFunds = useMemo(
-    () => () => {
-      setSafeActionsState((prevState) => ({
-        ...prevState,
-        sendFunds: {
-          isOpen: false,
-          selectedToken: '',
-        },
-      }))
-    },
-    [],
-  )
+  const hideSendFunds = useCallback(() => {
+    setSafeActionsState((prevState) => ({
+      ...prevState,
+      sendFunds: {
+        isOpen: false,
+        selectedToken: '',
+      },
+    }))
+  }, [])
 
   return { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds }
 }

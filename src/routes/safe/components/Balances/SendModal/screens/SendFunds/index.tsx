@@ -53,7 +53,7 @@ type SendFundsProps = {
   onClose: () => void
   onNext: (txInfo) => void
   recipientAddress: string
-  selectedToken: Token
+  selectedToken?: string
   initialValues: {
     recipientAddress: string
   }

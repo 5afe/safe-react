@@ -17,7 +17,7 @@ const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
 
 const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
-const ContractInteractionReview: any = React.lazy(() => import('./screens/ContractInteraction/Review'))
+const ContractInteractionReview = React.lazy(() => import('./screens/ContractInteraction/Review'))
 
 const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
 
@@ -48,6 +48,18 @@ type SendModalProps = {
   ethBalance?: string
 }
 
+type ProposedTX = {
+  recipientAddress: string
+  contractAddress: string
+  amount: string
+}
+
+const getInitialTxValue = (recipientAddress = '') => ({
+  recipientAddress,
+  contractAddress: '',
+  amount: '',
+})
+
 const SendModal = ({
   activeScreenType,
   isOpen,
@@ -57,13 +69,13 @@ const SendModal = ({
 }: SendModalProps): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
-  const [tx, setTx] = useState<{ recipientAddress: string }>({ recipientAddress })
+  const [tx, setTx] = useState<ProposedTX>(getInitialTxValue(recipientAddress))
   const [isABI, setIsABI] = useState(true)
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setIsABI(true)
-    setTx({ recipientAddress: '' })
+    setTx(getInitialTxValue())
   }, [activeScreenType, isOpen])
 
   const scalableModalSize = activeScreen === 'chooseTxType'
