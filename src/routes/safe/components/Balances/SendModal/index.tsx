@@ -87,17 +87,17 @@ const SendModal = ({
     setTx(txInfo)
   }
 
-  const handleContractInteractionCreation = (contractInteractionInfo: any, submit: boolean): void => {
+  const handleContractInteractionCreation = (contractInteractionInfo: ProposedTX, submit: boolean): void => {
     setTx(contractInteractionInfo)
     if (submit) setActiveScreen('contractInteractionReview')
   }
 
-  const handleCustomTxCreation = (customTxInfo: any, submit: boolean): void => {
+  const handleCustomTxCreation = (customTxInfo: ProposedTX, submit: boolean): void => {
     setTx(customTxInfo)
     if (submit) setActiveScreen('reviewCustomTx')
   }
 
-  const handleSendCollectible = (txInfo) => {
+  const handleSendCollectible = (txInfo: ProposedTX) => {
     setActiveScreen('reviewCollectible')
     setTx(txInfo)
   }
