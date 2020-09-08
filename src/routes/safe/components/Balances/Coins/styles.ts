@@ -6,8 +6,8 @@ export const styles = () => ({
   },
   tooltipInfo: {
     position: 'relative',
-    top: '4px',
-    left: '4px',
+    top: '3px',
+    left: '3px',
   },
   hide: {
     '&:hover': {
