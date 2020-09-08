@@ -125,7 +125,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       headerWrapperClassName={classes.collapseHeaderWrapper}
       title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
     >
-      {isNewSpendingLimit ? (
+      {isNewSpendingLimit && data ? (
         <TxDetailsContent>
           <ModifySpendingLimitDetails data={data} />
         </TxDetailsContent>
@@ -136,7 +136,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
             <OwnerAddressTableCell address={tx.to} showLinks />
           </TxInfo>
 
-          {!!data ? <TxInfoDetails data={data} /> : <HexEncodedData data={tx.data} />}
+          {!!data ? <TxInfoDetails data={data} /> : tx.data && <HexEncodedData data={tx.data} />}
         </TxDetailsContent>
       )}
     </Collapse>
@@ -248,7 +248,7 @@ export const GenericCustomData = ({
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
-  return isNewSpendingLimit ? (
+  return isNewSpendingLimit && txData ? (
     <ModifySpendingLimitDetails data={txData} />
   ) : (
     <Block>

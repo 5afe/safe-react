@@ -36,35 +36,41 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
   const dispatch = useDispatch()
 
   const removeSelectedSpendingLimit = async (): Promise<void> => {
-    try {
-      const web3 = getWeb3()
-      const spendingLimitContract = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
-      const {
-        beneficiary,
-        spent: { tokenAddress },
-      } = spendingLimit
+    if (safeAddress) {
+      try {
+        const web3 = getWeb3()
+        const spendingLimitContract = new web3.eth.Contract(
+          SpendingLimitModule.abi as any,
+          SPENDING_LIMIT_MODULE_ADDRESS,
+        )
+        const {
+          beneficiary,
+          spent: { tokenAddress },
+        } = spendingLimit
 
-      // TODO: replace with a proper way to remove allowances.
-      //  as we don't have a current way to remove an allowance, we tweak it by setting its `amount` and `resetTimeMin` to 0
-      //  This is directly related to `discardZeroAllowance`
-      const txData = spendingLimitContract.methods
-        .setAllowance(beneficiary, tokenAddress === ETH_ADDRESS ? ZERO_ADDRESS : tokenAddress, 0, 0, 0)
-        .encodeABI()
+        // TODO: replace with a proper way to remove allowances.
+        //  as we don't have a current way to remove an allowance,
+        //  we tweak it by setting its `amount` and `resetTimeMin` to 0.
+        //  This is directly related to `discardZeroAllowance`
+        const txData = spendingLimitContract.methods
+          .setAllowance(beneficiary, tokenAddress === ETH_ADDRESS ? ZERO_ADDRESS : tokenAddress, 0, 0, 0)
+          .encodeABI()
 
-      dispatch(
-        createTransaction({
-          safeAddress,
-          to: SPENDING_LIMIT_MODULE_ADDRESS,
-          valueInWei: '0',
-          txData,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
-        }),
-      )
-    } catch (e) {
-      console.error(
-        `failed to remove spending limit ${spendingLimit.beneficiary} -> ${spendingLimit.spent.tokenAddress}`,
-        e.message,
-      )
+        dispatch(
+          createTransaction({
+            safeAddress,
+            to: SPENDING_LIMIT_MODULE_ADDRESS,
+            valueInWei: '0',
+            txData,
+            notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
+          }),
+        )
+      } catch (e) {
+        console.error(
+          `failed to remove spending limit ${spendingLimit.beneficiary} -> ${spendingLimit.spent.tokenAddress}`,
+          e.message,
+        )
+      }
     }
   }
 

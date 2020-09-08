@@ -50,7 +50,10 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
     return `1 ${tx.symbol}`
   }
 
-  return getAmountWithSymbol(tx, formatted)
+  return getAmountWithSymbol(
+    { decimals: tx.decimals as string, symbol: tx.symbol as string, value: tx.value },
+    formatted,
+  )
 }
 
 export const getTxAmount = (tx: Transaction, formatted = true): string => {
@@ -65,7 +68,7 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
     return NOT_AVAILABLE
   }
 
-  return getAmountWithSymbol({ decimals, symbol, value }, formatted)
+  return getAmountWithSymbol({ decimals: decimals as string, symbol: symbol as string, value }, formatted)
 }
 
 export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): string => {
@@ -102,7 +105,7 @@ export interface TableData {
 
 const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
   [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
-  [TX_TABLE_TYPE_ID]: <TxType txType={tx.type} />,
+  [TX_TABLE_TYPE_ID]: <TxType txType={tx.type} origin={null} />,
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
   [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
   [TX_TABLE_AMOUNT_ID]: getModuleAmount(tx),
@@ -112,15 +115,15 @@ const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
 
 const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
-  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" />,
-  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
-  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_TYPE_ID]: <TxType txType="incoming" origin={null} />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate || '0'),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate || '0')),
   [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
   [TX_TABLE_STATUS_ID]: tx.status,
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getTransactionTableData = (tx: Transaction, cancelTx: Transaction): TableData => {
+const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): TableData => {
   const txDate = tx.submissionDate
   // given that setAllowance will always be part of
   // a spendingLimit related tx (as of now, until removeDelegate is implemented)

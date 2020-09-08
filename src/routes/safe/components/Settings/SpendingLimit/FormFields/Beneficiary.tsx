@@ -24,7 +24,7 @@ const Beneficiary = (): React.ReactElement => {
   const { initialValues } = useFormState()
   const { mutators } = useForm()
 
-  const [selectedEntry, setSelectedEntry] = React.useState<{ address: string; name: string } | null>({
+  const [selectedEntry, setSelectedEntry] = React.useState<{ address?: string; name?: string } | null>({
     address: initialValues?.beneficiary || '',
     name: '',
   })
@@ -90,6 +90,7 @@ const Beneficiary = (): React.ReactElement => {
       <BeneficiaryInput>
         <AddressBookInput
           fieldMutator={mutators?.setBeneficiary}
+          setIsValidAddress={() => {}}
           pristine={pristine}
           setSelectedEntry={setSelectedEntry}
           label="Beneficiary"

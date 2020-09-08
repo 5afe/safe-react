@@ -20,7 +20,7 @@ const isIncomingTransfer = (transfer: Transfer): boolean => {
 export const extractERC20TransferDetails = (transfer: Transfer): ERC20TransferDetails => {
   const erc20TransferDetails = {
     tokenAddress: transfer.tokenInfo?.address || TxConstants.UNKNOWN,
-    value: humanReadableValue(transfer.value, transfer.tokenInfo?.decimals),
+    value: humanReadableValue(transfer.value || 0, transfer.tokenInfo?.decimals),
     name: transfer.tokenInfo?.name || transfer.tokenInfo?.symbol || TxConstants.UNKNOWN,
     txHash: transfer.transactionHash,
   }
@@ -59,7 +59,7 @@ export const extractERC721TransferDetails = (transfer: Transfer): ERC721Transfer
 
 export const extractETHTransferDetails = (transfer: Transfer): ETHTransferDetails => {
   const ethTransferDetails = {
-    value: humanReadableValue(transfer.value),
+    value: humanReadableValue(transfer.value || 0),
     txHash: transfer.transactionHash,
   }
   if (isIncomingTransfer(transfer)) {

@@ -20,7 +20,7 @@ const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): React.React
     <DataDisplay title={title}>
       <EthHashInfo
         hash={address}
-        name={name !== 'UNKNOWN' && name}
+        name={name === 'UNKNOWN' ? undefined : name}
         showCopyBtn
         showEtherscanBtn
         showIdenticon
