@@ -71,7 +71,7 @@ describe('getNewTxNonce', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('If should return 0 if given a safe with the last nonce 0 and no lastTransaction and should call safeInstance nonce method',  async () => {
+  it('It should return 0 if given a safe with the last nonce 0 and no lastTransaction, also should call safeInstance nonce method',  async () => {
     // given
     const safeNonce = '0'
     const safeInstance = getMockedSafeInstance({ nonce: safeNonce})

@@ -117,7 +117,7 @@ describe('isPendingTransaction', () => {
   it('It should return true if the transaction is on pending status',   () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.PENDING})
-    const cancelTx = null
+    const cancelTx = makeTransaction({ data: null})
 
     // when
     const result = isPendingTransaction(transaction, cancelTx)
@@ -839,6 +839,7 @@ describe('buildTx',  () => {
       symbol: 'ETH',
       upgradeTx: false,
       value: '0',
+      fee: ''
     })
 
     // when
@@ -872,7 +873,7 @@ describe('generateSafeTxHash', () => {
     const safeInstance = getMockedSafeInstance({ })
     const txArgs = {
       baseGas: 100,
-      data: null,
+      data: '',
       gasPrice: '1000',
       gasToken: '',
       nonce: 0,
