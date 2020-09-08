@@ -1,7 +1,8 @@
+import React, { Suspense, useEffect, useState } from 'react'
+import cn from 'classnames'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
-import React, { Suspense, useEffect, useState } from 'react'
+import { ProposedTX } from './SendModal.d'
 
 import Modal from 'src/components/Modal'
 
@@ -46,13 +47,6 @@ type SendModalProps = {
   recipientAddress?: string
   selectedToken?: string
   ethBalance?: string
-}
-
-type ProposedTX = {
-  recipientAddress: string
-  contractAddress: string
-  amount: string
-  token: string
 }
 
 const getInitialTxValue = (recipientAddress = '') => ({

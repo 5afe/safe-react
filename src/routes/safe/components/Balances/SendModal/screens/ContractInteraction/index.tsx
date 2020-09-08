@@ -20,14 +20,14 @@ import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
 import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
-import { TransactionReviewType } from './Review'
+import { ProposedTX } from '../../SendModal.d'
 
 const useStyles = makeStyles(styles)
 
 export interface CreatedTx {
   contractAddress: string
   data: string
-  selectedMethod: TransactionReviewType
+  selectedMethod: ProposedTX
   value: string | number
 }
 
@@ -37,17 +37,17 @@ export interface ContractInteractionProps {
   isABI: boolean
   onClose: () => void
   switchMethod: () => void
-  onNext: (tx: CreatedTx, submit: boolean) => void
+  onNext: (tx: ProposedTX, submit: boolean) => void
 }
 
-const ContractInteraction: React.FC<ContractInteractionProps> = ({
+const ContractInteraction = ({
   contractAddress,
   initialValues,
   onClose,
   onNext,
   switchMethod,
   isABI,
-}) => {
+}: ContractInteractionProps): React.ReactElement => {
   const classes = useStyles()
   const { address: safeAddress = '' } = useSelector(safeSelector) || {}
   let setCallResults

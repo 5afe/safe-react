@@ -9,7 +9,6 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -26,21 +25,14 @@ import {
 import { TokenLogo } from 'src/components/TokenLogo'
 import { useToken } from 'src/logic/tokens/hooks/useToken'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { ProposedTX } from '../../../SendModal.d'
 
 const useStyles = makeStyles(styles)
-
-export type TransactionReviewType = {
-  abi?: string
-  contractAddress?: string
-  data?: string
-  value?: string
-  selectedMethod?: AbiItemExtended
-}
 
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: TransactionReviewType
+  tx: ProposedTX
 }
 
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
