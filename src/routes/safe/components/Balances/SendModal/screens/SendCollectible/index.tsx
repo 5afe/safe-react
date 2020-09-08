@@ -51,7 +51,7 @@ type SendCollectibleTypes = {
   onClose: () => void
   onNext: (txInfo: unknown) => void
   recipientAddress: string
-  selectedToken?: Token
+  selectedToken?: string
 }
 
 const SendCollectible = ({

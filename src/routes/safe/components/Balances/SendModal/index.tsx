@@ -52,12 +52,14 @@ type ProposedTX = {
   recipientAddress: string
   contractAddress: string
   amount: string
+  token: string
 }
 
 const getInitialTxValue = (recipientAddress = '') => ({
   recipientAddress,
   contractAddress: '',
   amount: '',
+  token: '',
 })
 
 const SendModal = ({
