@@ -40,6 +40,7 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }: any): 
           request = contractInstance.methods[method](...args).call.request(resolver)
         }
 
+        // If batch was provided add to external batch
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
         resolve(null)
@@ -47,6 +48,10 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }: any): 
     })
   })
 
+  // TODO fix this so all batch.execute() are handled here
+  // If batch was created locally we can already execute it
+  // If batch was provided we should execute once we finish to generate the batch,
+  // in the outside function where the batch object is created.
   !batch && localBatch.execute()
 
   const returnValues = context ? [context, ...values] : values
