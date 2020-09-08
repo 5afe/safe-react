@@ -16,13 +16,15 @@ export type ModuleTxServiceModel = {
   dataDecoded: DataDecoded
 }
 
-let previousETag = null
+type ETag = string | null
+
+let previousETag: ETag = null
 export const loadModuleTransactions = async (safeAddress: string): Promise<ModuleTxServiceModel[]> => {
   if (!safeAddress) {
     return []
   }
 
-  const { eTag, results }: { eTag: string | null; results: ModuleTxServiceModel[] } = await fetchTransactions(
+  const { eTag, results }: { eTag: ETag; results: ModuleTxServiceModel[] } = await fetchTransactions(
     TransactionTypes.MODULE,
     safeAddress,
     previousETag,

@@ -99,7 +99,7 @@ export interface TableData {
   dateOrder?: number
   id: string
   status: string
-  tx?: Transaction | SafeModuleTransaction
+  tx: Transaction | SafeModuleTransaction
   type: any
 }
 
@@ -119,7 +119,7 @@ const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate || '0'),
   [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate || '0')),
   [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
-  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_STATUS_ID]: tx.status ?? '',
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
@@ -137,7 +137,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): Table
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
-    [TX_TABLE_STATUS_ID]: tx.status,
+    [TX_TABLE_STATUS_ID]: tx.status ?? '',
     [TX_TABLE_RAW_TX_ID]: tx,
     [TX_TABLE_RAW_CANCEL_TX_ID]: cancelTx,
   }
