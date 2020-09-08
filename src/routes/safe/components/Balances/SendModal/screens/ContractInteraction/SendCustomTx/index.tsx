@@ -50,7 +50,14 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
-const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
+const SendCustomTx = ({
+  initialValues,
+  onClose,
+  onNext,
+  contractAddress,
+  switchMethod,
+  isABI,
+}: Props): React.ReactElement => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)

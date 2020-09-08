@@ -248,7 +248,6 @@
     "@types/react-dom": "^16.9.6",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.5",
-    "@types/redux-actions": "^2.6.1",
     "@types/styled-components": "^5.1.2",
     "@typescript-eslint/eslint-plugin": "4.0.1",
     "@typescript-eslint/parser": "4.0.1",
