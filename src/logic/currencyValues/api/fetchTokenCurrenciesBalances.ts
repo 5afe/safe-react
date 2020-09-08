@@ -11,9 +11,12 @@ export type BalanceEndpoint = {
   usdConversion: string
 }
 
-const fetchTokenCurrenciesBalances = (safeAddress: string): Promise<AxiosResponse<BalanceEndpoint[]>> => {
+const fetchTokenCurrenciesBalances = (
+  safeAddress: string,
+  excludeSpamTokens = true,
+): Promise<AxiosResponse<BalanceEndpoint[]>> => {
   const apiUrl = getTxServiceHost()
-  const url = `${apiUrl}safes/${safeAddress}/balances/usd/`
+  const url = `${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`
 
   return axios.get(url, {
     params: {
