@@ -48,7 +48,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string | null }>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
