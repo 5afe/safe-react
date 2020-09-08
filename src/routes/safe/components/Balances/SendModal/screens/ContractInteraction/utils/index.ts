@@ -59,7 +59,7 @@ export const formMutators: Record<string, Mutator<{ selectedMethod: { name: stri
   },
   setSelectedMethod: (args, state, utils) => {
     const modified =
-      state.lastFormState.values.selectedMethod && state.lastFormState.values.selectedMethod.name !== args[0].name
+      state.lastFormState?.values.selectedMethod && state.lastFormState.values.selectedMethod.name !== args[0].name
 
     if (modified) {
       utils.changeValue(state, 'callResults', () => '')
@@ -115,8 +115,8 @@ export const createTxObject = (
 ): ContractSendMethod => {
   const web3 = getWeb3()
   const contract: any = new web3.eth.Contract([method], contractAddress)
-  const { inputs, name, signatureHash } = method
-  const args = inputs.map(extractMethodArgs(signatureHash, values))
+  const { inputs, name = '', signatureHash } = method
+  const args = inputs?.map(extractMethodArgs(signatureHash, values)) || []
 
   return contract.methods[name](...args)
 }

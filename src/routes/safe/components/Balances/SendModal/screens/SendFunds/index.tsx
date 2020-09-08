@@ -66,7 +66,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useEffect(() => {
     if (selectedEntry === null && pristine) {
@@ -150,7 +150,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -171,7 +171,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -179,7 +179,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
@@ -218,7 +218,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                     />
                   </Col>
                 </Row>
-                {tokenSpendingLimit && (
+                {tokenSpendingLimit && selectedTokenRecord && (
                   <SpendingLimitRow
                     onOptionSelect={mutators.setTxType}
                     selectedToken={selectedTokenRecord}
@@ -234,18 +234,18 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       onClick={() =>
                         mutators.setMax(
                           tokenSpendingLimit && txType === 'spendingLimit'
-                            ? new BigNumber(selectedTokenRecord.balance).gt(
+                            ? new BigNumber(selectedTokenRecord?.balance ?? 0).gt(
                                 fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 ),
                               )
                               ? fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 )
-                              : selectedTokenRecord.balance
-                            : selectedTokenRecord.balance,
+                              : selectedTokenRecord?.balance ?? 0
+                            : selectedTokenRecord?.balance ?? 0,
                         )
                       }
                       weight="bold"
@@ -275,17 +275,17 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         minValue(0, false),
                         maxValue(
                           tokenSpendingLimit && txType === 'spendingLimit'
-                            ? new BigNumber(selectedTokenRecord.balance).gt(
+                            ? new BigNumber(selectedTokenRecord?.balance ?? 0).gt(
                                 fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 ),
                               )
                               ? fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 )
-                              : selectedTokenRecord.balance
+                              : selectedTokenRecord?.balance ?? 0
                             : selectedTokenRecord?.balance,
                         ),
                       )}

@@ -3,8 +3,9 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { AbiItem } from 'web3-utils'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -27,13 +28,11 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
+import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { toTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
-import { AbiItem } from 'web3-utils'
-
-import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
@@ -42,18 +41,14 @@ const useStyles = makeStyles(styles)
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector)
+  const { address: safeAddress } = useSelector(safeSelector) || {}
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
 
-  const txToken = React.useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
-  const isSendingETH = React.useMemo(() => txToken.address === ETH_ADDRESS, [txToken.address])
-  const txRecipient = React.useMemo(() => (isSendingETH ? tx.recipientAddress : txToken.address), [
-    isSendingETH,
-    tx.recipientAddress,
-    txToken.address,
-  ])
+  const txToken = useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
+  const isSendingETH = txToken?.address === ETH_ADDRESS
+  const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
     let isCurrent = true
@@ -62,16 +57,20 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
       const web3 = getWeb3()
       const { fromWei, toBN } = web3.utils
 
+      if (!txToken) {
+        return
+      }
+
       let txData = EMPTY_DATA
 
-      if (!isSendingETH && txToken) {
+      if (!isSendingETH) {
         const ERC20Instance = new web3.eth.Contract(StandardToken.abi as AbiItem[], txToken.address)
         txData = ERC20Instance.methods
           .transfer(tx.recipientAddress, toTokenUnit(tx.amount, txToken.decimals))
           .encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -96,7 +95,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether') : '0'
 
-    if (isSpendingLimit) {
+    if (isSpendingLimit && txToken) {
       const spendingLimit = getSpendingLimitContract()
       spendingLimit.methods
         .executeAllowanceTransfer(
@@ -180,9 +179,14 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.logoUri} />
-          <Paragraph className={classes.amount} noMargin size="md" data-testid={`amount-${txToken.symbol}-review-step`}>
-            {tx.amount} {txToken.symbol}
+          <Img alt={txToken?.name as string} height={28} onError={setImageToPlaceholder} src={txToken?.logoUri} />
+          <Paragraph
+            className={classes.amount}
+            noMargin
+            size="md"
+            data-testid={`amount-${txToken?.symbol as string}-review-step`}
+          >
+            {tx.amount} {txToken?.symbol}
           </Paragraph>
         </Row>
         <Row>
