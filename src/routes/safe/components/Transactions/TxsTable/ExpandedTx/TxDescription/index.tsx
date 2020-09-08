@@ -16,13 +16,14 @@ export const TRANSACTIONS_DESC_SEND_TEST_ID = 'tx-description-send'
 const useStyles = makeStyles(styles)
 
 const SettingsDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement => {
-  const { action, addedOwner, module, newThreshold, removedOwner } = getTxData(tx)
+  const { action = '', addedOwner, module, newThreshold, removedOwner } = getTxData(tx)
   return <SettingsDescription {...{ action, addedOwner, module, newThreshold, removedOwner }} />
 }
 
 const CustomDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement => {
   const amount = getTxAmount(tx, false)
-  const { data, recipient } = getTxData(tx)
+  const { data: txData, recipient = '' } = getTxData(tx)
+  const data = txData ?? ''
   return <CustomDescription {...{ amount, data, recipient }} storedTx={tx} />
 }
 
@@ -33,7 +34,7 @@ const UpgradeDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement =
 
 const TransferDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement => {
   const amount = getTxAmount(tx, false)
-  const { recipient } = getTxData(tx)
+  const { recipient = '' } = getTxData(tx)
   return <TransferDescription {...{ amount, recipient }} />
 }
 

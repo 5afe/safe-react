@@ -21,9 +21,9 @@ const StyledImageName = styled.div`
   align-items: center;
 `
 
-type FormattedAmountsProps = { amount: string; spent: string; token?: Token }
+type FormattedAmountsProps = { amount: string; spent: string; token: Token | null }
 
-type FormattedAmounts = { amount: string; spent: string }
+type FormattedAmounts = { amount: string; spent: string } | null
 
 const useFormattedAmounts = ({ amount, spent, token }: FormattedAmountsProps): FormattedAmounts => {
   return React.useMemo(() => {
@@ -43,14 +43,14 @@ interface SpentVsAmountProps {
   tokenAddress: string
 }
 
-const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProps): React.ReactElement => {
+const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProps): React.ReactElement | null => {
   const { width } = useWindowDimensions()
   const showIcon = React.useMemo(() => width > 1024, [width])
 
   const token = useToken(tokenAddress)
   const spentInfo = useFormattedAmounts({ amount, spent, token })
 
-  return spentInfo ? (
+  return spentInfo && token ? (
     <StyledImageName>
       {showIcon && <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />}
       <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${token.symbol}`}</Text>

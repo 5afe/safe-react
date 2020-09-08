@@ -14,11 +14,12 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getEncodedMultiSendCallData } from 'src/logic/safe/utils/upgradeSafe'
-import { Token } from 'src/logic/tokens/store/model/token'
+import { getEncodedMultiSendCallData, MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
+import { Token, makeToken } from 'src/logic/tokens/store/model/token'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
@@ -34,9 +35,9 @@ import {
 } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 
 interface ReviewSpendingLimitProps {
-  onBack: () => void
+  onBack: ActionCallback
   onClose: () => void
-  txToken: Token | null
+  txToken: Token
   values: Record<string, string>
   existentSpendingLimit?: SpendingLimitRow
 }
@@ -52,7 +53,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
   // undefined: before setting a value
   // null: if no previous value
   // SpendingLimit: if previous value exists
-  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit>()
+  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit | null>(null)
   React.useEffect(() => {
     const checkExistence = async () => {
       // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
@@ -80,15 +81,16 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     const spendingLimitContract = getSpendingLimitContract()
     const isSpendingLimitEnabled = spendingLimits !== null
 
-    const transactions = []
+    const transactions: MultiSendTx[] = []
 
     // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
-    if (!isSpendingLimitEnabled) {
+    if (!isSpendingLimitEnabled && safeAddress) {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       transactions.push({
         to: safeAddress,
         value: 0,
         data: safeInstance.methods.enableModule(SPENDING_LIMIT_MODULE_ADDRESS).encodeABI(),
+        operation: DELEGATE_CALL,
       })
     }
 
@@ -103,6 +105,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
         to: SPENDING_LIMIT_MODULE_ADDRESS,
         value: 0,
         data: spendingLimitContract.methods.addDelegate(values?.beneficiary).encodeABI(),
+        operation: DELEGATE_CALL,
       })
     }
 
@@ -120,32 +123,35 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           values.withResetTime ? startTime : 0,
         )
         .encodeABI(),
+      operation: DELEGATE_CALL,
     }
 
-    // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
-    if (transactions.length === 0) {
-      dispatch(
-        createTransaction({
-          safeAddress,
-          to: SPENDING_LIMIT_MODULE_ADDRESS,
-          valueInWei: '0',
-          txData: setAllowanceTx.data,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-        }),
-      )
-    } else {
-      transactions.push(setAllowanceTx)
+    if (safeAddress) {
+      // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
+      if (transactions.length === 0) {
+        dispatch(
+          createTransaction({
+            safeAddress,
+            to: SPENDING_LIMIT_MODULE_ADDRESS,
+            valueInWei: '0',
+            txData: setAllowanceTx.data,
+            notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
+          }),
+        )
+      } else {
+        transactions.push(setAllowanceTx)
 
-      dispatch(
-        createTransaction({
-          safeAddress,
-          to: MULTI_SEND_ADDRESS,
-          valueInWei: '0',
-          txData: getEncodedMultiSendCallData(transactions, getWeb3()),
-          notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-          operation: DELEGATE_CALL,
-        }),
-      )
+        dispatch(
+          createTransaction({
+            safeAddress,
+            to: MULTI_SEND_ADDRESS,
+            valueInWei: '0',
+            txData: getEncodedMultiSendCallData(transactions, getWeb3()),
+            notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
+            operation: DELEGATE_CALL,
+          }),
+        )
+      }
     }
   }
 
@@ -193,7 +199,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
       </Block>
 
       <Modal.Footer>
-        <Button color="primary" size="md" onClick={onBack}>
+        <Button color="primary" size="md" onClick={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}>
           Back
         </Button>
 

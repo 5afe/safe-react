@@ -286,7 +286,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                                   selectedTokenRecord?.decimals ?? 0,
                                 )
                               : selectedTokenRecord?.balance ?? 0
-                            : selectedTokenRecord?.balance,
+                            : selectedTokenRecord?.balance ?? 0,
                         ),
                       )}
                     />

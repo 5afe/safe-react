@@ -38,7 +38,7 @@ const SelectedToken = ({ tokenAddress, tokens }: SelectTokenProps): React.ReactE
           <ListItemText
             className={classes.tokenData}
             primary={token.name}
-            secondary={`${formatAmount(token.balance.toString())} ${token.symbol}`}
+            secondary={`${formatAmount(token.balance?.toString() ?? '0')} ${token.symbol}`}
           />
         </>
       ) : (
@@ -79,7 +79,7 @@ const TokenSelectField = ({ initialValue, isValid = true, tokens }: TokenSelectF
           </ListItemIcon>
           <ListItemText
             primary={token.name}
-            secondary={`${formatAmount(token.balance.toString())} ${token.symbol}`}
+            secondary={`${formatAmount(token.balance?.toString() ?? '0')} ${token.symbol}`}
             data-testid={`select-token-${token.name}`}
           />
         </MenuItem>

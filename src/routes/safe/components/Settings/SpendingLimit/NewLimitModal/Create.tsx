@@ -40,9 +40,9 @@ const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> =
 }
 
 interface NewSpendingLimitProps {
-  initialValues?: Record<string, string>
+  initialValues?: Record<string, string> | null
   onCancel: () => void
-  onReview: (values) => void
+  onReview: (values: Record<string, string>) => void
 }
 
 const canReview = ({

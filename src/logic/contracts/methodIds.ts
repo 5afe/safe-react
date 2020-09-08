@@ -158,8 +158,8 @@ const isSpendingLimitMethod = (methodId: string): boolean => {
   return !!SPENDING_LIMIT_METHOD_TO_ID[methodId]
 }
 
-export const decodeMethods = (data: string): DataDecoded | null => {
-  if(!data.length) {
+export const decodeMethods = (data: string | null): DataDecoded | null => {
+  if(!data?.length) {
     return null
   }
 

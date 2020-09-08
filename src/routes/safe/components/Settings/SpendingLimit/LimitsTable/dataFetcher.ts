@@ -40,7 +40,9 @@ const relativeTime = (baseTimeMin: string, resetTimeMin: string): string => {
   return formatRelative(nextResetTimeMilliseconds, Date.now())
 }
 
-export const getSpendingLimitData = (spendingLimits: SpendingLimitRow[] | null): SpendingLimitTable[] | undefined =>
+export const getSpendingLimitData = (
+  spendingLimits: SpendingLimitRow[] | null | undefined,
+): SpendingLimitTable[] | undefined =>
   spendingLimits?.map((spendingLimit) => ({
     [SPENDING_LIMIT_TABLE_BENEFICIARY_ID]: spendingLimit.delegate,
     [SPENDING_LIMIT_TABLE_SPENT_ID]: {

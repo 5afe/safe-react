@@ -108,7 +108,7 @@ export const requestAllowancesByDelegatesAndTokens = async (
 ): Promise<SpendingLimitRow[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
-  const whenRequestValues = []
+  const whenRequestValues: any[] = []
 
   for (const [delegate, tokens] of tokensByDelegate) {
     for (const token of tokens) {
