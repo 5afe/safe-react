@@ -38,6 +38,18 @@ const useStyles = makeStyles(styles as any)
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
   const classes = useStyles()
 
+  const recipient = React.useMemo(() => {
+    if (tx.type === TransactionTypes.SPENDING_LIMIT) {
+      if (tx.dataDecoded) {
+        // if `dataDecoded` is defined, then it's a token transfer
+        return tx.dataDecoded?.parameters[0].value
+      } else {
+        // if `data` is not defined, then it's an ETH transfer
+        return tx.to
+      }
+    }
+  }, [tx.dataDecoded, tx.to, tx.type])
+
   return (
     <Block className={classes.expandedTxBlock}>
       <Row>
@@ -59,9 +71,11 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
             </div>
           </Block>
           <Hairline />
-          <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-            <TransferDescription amount={getModuleAmount(tx)} recipient={tx.dataDecoded.parameters[0].value} />
-          </Block>
+          {recipient && (
+            <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+              <TransferDescription amount={getModuleAmount(tx)} recipient={recipient} />
+            </Block>
+          )}
         </Col>
       </Row>
     </Block>

@@ -71,8 +71,18 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
 export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): string => {
   if (tx.type === TransactionTypes.SPENDING_LIMIT && tx.tokenInfo) {
     const { decimals, symbol } = tx.tokenInfo
-    const [, amount] = tx.dataDecoded.parameters
-    const { value } = amount
+
+    let value
+
+    if (tx.dataDecoded) {
+      // if `dataDecoded` is defined, then it's a token transfer
+      const [, amount] = tx.dataDecoded.parameters
+      value = amount.value
+    } else {
+      // if `dataDecoded` is not defined, then it's an ETH transfer
+      value = tx.value
+    }
+
     return getAmountWithSymbol({ decimals, symbol, value }, formatted)
   }
 

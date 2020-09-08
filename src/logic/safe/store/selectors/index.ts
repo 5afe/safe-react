@@ -23,6 +23,7 @@ import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -145,7 +146,14 @@ export const safeModuleTransactionsSelector = createSelector(
       // add token info to the model, so data can be properly displayed in the UI
       let tokenInfo
       if (type === TransactionTypes.SPENDING_LIMIT) {
-        tokenInfo = tokens.find(({ address }) => sameAddress(address, moduleTx.to))
+        if (moduleTx.data) {
+          // if `data` is defined, then it's a token transfer
+          tokenInfo = tokens.find(({ address }) => sameAddress(address, moduleTx.to))
+        } else {
+          // if `data` is not defined, then it's an ETH transfer
+          // ETH does not exist in the list of tokens, so we recreate the record here
+          tokenInfo = getEthAsToken(0)
+        }
       }
 
       return {
