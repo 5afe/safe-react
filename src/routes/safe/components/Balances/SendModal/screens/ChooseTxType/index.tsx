@@ -3,9 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import * as React from 'react'
-// import { useSelector } from 'react-redux'
 
-// import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
@@ -16,7 +14,6 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/custom.svg'
-// import { safeSelector } from 'src/routes/safe/store/selectors'
 import { lg, md, sm } from 'src/theme/variables'
 
 const useStyles = makeStyles({
@@ -62,8 +59,6 @@ const useStyles = makeStyles({
 
 const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
   const classes = useStyles()
-  // const { featuresEnabled } = useSelector(safeSelector)
-  // const erc721Enabled = featuresEnabled.includes('ERC721')
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
 
   React.useEffect(() => {
@@ -114,23 +109,6 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
             <Img alt="Send funds" className={classNames(classes.leftIcon, classes.iconSmall)} src={Token} />
             Send funds
           </Button>
-          {/* {erc721Enabled && (
-            <Button
-              className={classes.firstButton}
-              color="primary"
-              minHeight={52}
-              minWidth={260}
-              onClick={() => setActiveScreen('sendCollectible')}
-              variant="contained"
-            >
-              <Img
-                alt="Send collectible"
-                className={classNames(classes.leftIcon, classes.iconSmall)}
-                src={Collectible}
-              />
-              Send collectible
-            </Button>
-          )} */}
           <Button
             color="primary"
             disabled={disableContractInteraction}
