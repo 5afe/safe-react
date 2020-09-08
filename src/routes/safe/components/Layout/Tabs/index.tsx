@@ -14,7 +14,6 @@ import {
 } from 'src/routes/safe/components/Layout'
 import SettingsTab from 'src/routes/safe/components/Layout/Tabs/SettingsTab'
 import { AddressBookIcon } from 'src/routes/safe/components/assets/AddressBookIcon'
-// import { AppsIcon } from 'src/routes/safe/components/assets/AppsIcon'
 import { BalancesIcon } from 'src/routes/safe/components/assets/BalancesIcon'
 import { TransactionsIcon } from 'src/routes/safe/components/assets/TransactionsIcon'
 
@@ -38,13 +37,6 @@ const AddressBookLabel = (
     Address Book
   </>
 )
-
-// const AppsLabel = (
-//   <>
-//     <AppsIcon />
-//     Apps
-//   </>
-// )
 
 const TransactionsLabel = (
   <>
@@ -100,15 +92,6 @@ const TabsComponent = (props: Props) => {
         label={TransactionsLabel}
         value={`${match.url}/transactions`}
       />
-      {/* <Tab
-        classes={{
-          selected: classes.tabWrapperSelected,
-          wrapper: classes.tabWrapper,
-        }}
-        data-testid={TRANSACTIONS_TAB_BTN_TEST_ID}
-        label={AppsLabel}
-        value={`${match.url}/apps`}
-      /> */}
       <Tab
         classes={{
           selected: classes.tabWrapperSelected,

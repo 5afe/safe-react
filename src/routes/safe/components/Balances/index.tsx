@@ -9,7 +9,6 @@ import { styles } from './style'
 import Modal from 'src/components/Modal'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-// import Divider from 'src/components/layout/Divider'
 
 import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -19,7 +18,6 @@ import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from '
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from '../../container/hooks/useFetchTokens'
-// import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
@@ -87,46 +85,13 @@ const Balances = (props) => {
     }))
   }
 
-  const {
-    // assetDivider,
-    // assetTab,
-    // assetTabActive,
-    assetTabs,
-    controls,
-    manageTokensButton,
-    receiveModal,
-    tokenControls,
-  } = props.classes
+  const { assetTabs, controls, manageTokensButton, receiveModal, tokenControls } = props.classes
   const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
 
   return (
     <>
       <Row align="center" className={controls}>
-        <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          {/* <NavLink
-            to={`${SAFELIST_ADDRESS}/${address}/balances`}
-            activeClassName={assetTabActive}
-            className={assetTab}
-            data-testid={'coins-assets-btn'}
-            exact
-          >
-            Coins
-          </NavLink> */}
-          {/* {erc721Enabled ? (
-            <>
-              <Divider className={assetDivider} />
-              <NavLink
-                to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
-                activeClassName={assetTabActive}
-                className={assetTab}
-                data-testid={'collectibles-assets-btn'}
-                exact
-              >
-                Collectibles
-              </NavLink>
-            </>
-          ) : null} */}
-        </Col>
+        <Col className={assetTabs} sm={6} start="sm" xs={12}></Col>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}

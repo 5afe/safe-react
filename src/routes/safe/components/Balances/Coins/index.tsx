@@ -2,9 +2,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
-// import CallMade from '@material-ui/icons/CallMade'
-// import CallReceived from '@material-ui/icons/CallReceived'
-// import classNames from 'classnames/bind'
 import { List } from 'immutable'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -101,7 +98,6 @@ const Coins = (props) => {
                       testId="balance-send-btn"
                       variant="contained"
                     >
-                      {/* <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} /> */}
                       Send
                     </Button>
                   )}
@@ -112,10 +108,6 @@ const Coins = (props) => {
                     size="small"
                     variant="contained"
                   >
-                    {/* <CallReceived
-                      alt="Receive Transaction"
-                      className={classNames(classes.leftIcon, classes.iconSmall)}
-                    /> */}
                     Receive
                   </Button>
                 </Row>
