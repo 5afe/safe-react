@@ -21,14 +21,14 @@ export const getNewTxNonce = async (
   lastTx: TxServiceModel | null,
   safeInstance: GnosisSafe,
 ): Promise<string> => {
-  if (typeof txNonce === 'string' && !Number.isInteger(Number.parseInt(txNonce, 10))) {
+  if (!txNonce || !Number.isInteger(Number.parseInt(txNonce, 10))) {
     return lastTx === null
       ? // use current's safe nonce as fallback
         (await safeInstance.methods.nonce().call()).toString()
       : `${lastTx.nonce + 1}`
   }
 
-  return txNonce as string
+  return txNonce
 }
 
 export const shouldExecuteTransaction = async (
