@@ -8,7 +8,7 @@ interface CellWidth {
   maxWidth: string
 }
 
-export const cellWidth = (width: string | number): CellWidth | undefined => {
+export const cellWidth = (width?: string | number): CellWidth | undefined => {
   if (!width) {
     return undefined
   }
