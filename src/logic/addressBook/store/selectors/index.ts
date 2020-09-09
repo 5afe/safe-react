@@ -4,6 +4,7 @@ import { createSelector } from 'reselect'
 
 import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
 import { AddressBookMap } from 'src/logic/addressBook/store/reducer/types/addressBook.d'
+import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 export const addressBookMapSelector = (state: AppReduxState): AddressBookMap =>
@@ -13,8 +14,8 @@ export const getAddressBook = createSelector(
   addressBookMapSelector,
   safeParamAddressFromStateSelector,
   (addressBook, safeAddress) => {
-    let result = List([])
-    if (addressBook) {
+    let result: List<AddressBookEntryRecord> = List([])
+    if (addressBook && safeAddress) {
       result = addressBook.get(safeAddress, List())
     }
     return result
