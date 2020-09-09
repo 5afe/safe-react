@@ -1,16 +1,15 @@
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { CurrencyRateValue } from '../model/currencyValues'
-import { Map } from 'immutable'
+import { AVAILABLE_CURRENCIES } from '../model/currencyValues'
 
-const CURRENCY_VALUES_STORAGE_KEY = 'CURRENCY_VALUES_STORAGE_KEY'
-export const saveCurrencyValues = async (currencyValues: Map<string, CurrencyRateValue>): Promise<void> => {
+const SELECTED_CURRENCY_STORAGE_KEY = 'SELECTED_CURRENCY'
+export const saveSelectedCurrency = async (selectedCurrency: AVAILABLE_CURRENCIES): Promise<void> => {
   try {
-    await saveToStorage(CURRENCY_VALUES_STORAGE_KEY, currencyValues)
+    await saveToStorage(SELECTED_CURRENCY_STORAGE_KEY, selectedCurrency)
   } catch (err) {
     console.error('Error storing currency values info in localstorage', err)
   }
 }
 
-export const loadCurrencyValues = async (): Promise<Record<string, CurrencyRateValue>> => {
-  return (await loadFromStorage(CURRENCY_VALUES_STORAGE_KEY)) || {}
+export const loadSelectedCurrency = async (): Promise<AVAILABLE_CURRENCIES | undefined> => {
+  return await loadFromStorage(SELECTED_CURRENCY_STORAGE_KEY)
 }
