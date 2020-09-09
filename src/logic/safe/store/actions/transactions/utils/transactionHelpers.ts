@@ -19,7 +19,6 @@ import {
   TransactionTypes,
   TransactionTypeValues,
   TxArgs,
-  RefundParams,
 } from 'src/logic/safe/store/models/types/transaction'
 import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
@@ -66,15 +65,15 @@ export const isModifySettingsTransaction = (tx: TxServiceModel, safeAddress: str
 }
 
 export const isMultiSendTransaction = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0x8d80ff0a' && Number(tx.value) === 0
+  return !isEmptyData(tx.data) && tx.data.substring(0, 10) === '0x8d80ff0a' && Number(tx.value) === 0
 }
 
 export const isUpgradeTransaction = (tx: TxServiceModel): boolean => {
   return (
     !isEmptyData(tx.data) &&
     isMultiSendTransaction(tx) &&
-    tx.data?.substr(308, 8) === '7de7edef' && // 7de7edef - changeMasterCopy (308, 8)
-    tx.data?.substr(550, 8) === 'f08a0323' // f08a0323 - setFallbackHandler (550, 8)
+    tx.data.substr(308, 8) === '7de7edef' && // 7de7edef - changeMasterCopy (308, 8)
+    tx.data.substr(550, 8) === 'f08a0323' // f08a0323 - setFallbackHandler (550, 8)
   )
 }
 
@@ -84,7 +83,7 @@ export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress: string): 
 
 export const isCustomTransaction = async (
   tx: TxServiceModel,
-  txCode: string | null,
+  txCode: string,
   safeAddress: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
@@ -99,9 +98,9 @@ export const isCustomTransaction = async (
 export const getRefundParams = async (
   tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
-): Promise<RefundParams | null> => {
+): Promise<any> => {
   const txGasPrice = Number(tx.gasPrice)
-  let refundParams: RefundParams | null = null
+  let refundParams = null
 
   if (txGasPrice > 0) {
     let refundSymbol = 'ETH'
@@ -274,6 +273,7 @@ export const buildTx = async ({
     blockNumber: tx.blockNumber,
     cancelled: isTxCancelled,
     confirmations,
+    creationTx: tx.creationTx,
     customTx: isCustomTx,
     data: tx.data ? tx.data : EMPTY_DATA,
     dataDecoded: tx.dataDecoded,
@@ -327,7 +327,7 @@ export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppRed
 
   return buildTx({
     cancellationTxs,
-    currentUser: undefined,
+    currentUser: null,
     knownTokens,
     outgoingTxs,
     safe,
@@ -346,7 +346,7 @@ export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRe
     dispatch(
       addOrUpdateTransactions({
         safeAddress,
-        transactions: transactions.withMutations((list: any[]) =>
+        transactions: transactions.withMutations((list) =>
           list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
         ),
       }),

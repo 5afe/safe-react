@@ -56,7 +56,7 @@ export const extractMultiSendDetails = (parameter: Parameter): MultiSendDetails[
 
 export const extractMultiSendDataDecoded = (tx: Transaction): MultiSendDataDecoded => {
   const transfersDetails = tx.transfers?.map(extractTransferDetails)
-  const txDetails = tx.dataDecoded?.parameters[0] ? extractMultiSendDetails(tx.dataDecoded?.parameters[0]) : undefined
+  const txDetails = extractMultiSendDetails(tx.dataDecoded?.parameters[0])
 
   return { txDetails, transfersDetails }
 }

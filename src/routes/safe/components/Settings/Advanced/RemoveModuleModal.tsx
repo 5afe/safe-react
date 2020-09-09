@@ -46,7 +46,7 @@ interface RemoveModuleModal {
 const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): React.ReactElement => {
   const classes = useStyles()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
   const removeSelectedModule = async (): Promise<void> => {

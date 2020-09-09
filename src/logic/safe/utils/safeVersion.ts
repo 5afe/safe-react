@@ -11,15 +11,13 @@ export const FEATURES = [
   { name: 'ERC1155', validVersion: '>=1.1.1' },
 ]
 
-type Feature = typeof FEATURES[number]
-
-export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string): boolean => {
+export const safeNeedsUpdate = (currentVersion: string, latestVersion: string): boolean => {
   if (!currentVersion || !latestVersion) {
     return false
   }
 
-  const current = semverValid(currentVersion) as string
-  const latest = semverValid(latestVersion) as string
+  const current = semverValid(currentVersion)
+  const latest = semverValid(latestVersion)
 
   return latest ? semverLessThan(current, latest) : false
 }
@@ -28,7 +26,7 @@ export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<s
   gnosisSafeInstance.methods.VERSION().call()
 
 export const enabledFeatures = (version: string): string[] =>
-  FEATURES.reduce((acc: string[], feature: Feature) => {
+  FEATURES.reduce((acc, feature) => {
     if (semverSatisfies(version, feature.validVersion)) {
       acc.push(feature.name)
     }
@@ -46,11 +44,11 @@ export const checkIfSafeNeedsUpdate = async (
   lastSafeVersion: string,
 ): Promise<SafeVersionInfo> => {
   if (!gnosisSafeInstance || !lastSafeVersion) {
-    throw new Error('checkIfSafeNeedsUpdate: No Safe Instance or version provided')
+    return null
   }
   const safeMasterVersion = await getCurrentSafeVersion(gnosisSafeInstance)
-  const current = semverValid(safeMasterVersion) as string
-  const latest = semverValid(lastSafeVersion) as string
+  const current = semverValid(safeMasterVersion)
+  const latest = semverValid(lastSafeVersion)
   const needUpdate = safeNeedsUpdate(safeMasterVersion, lastSafeVersion)
 
   return { current, latest, needUpdate }

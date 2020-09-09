@@ -14,7 +14,7 @@ const AppAgreement = (): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
   // trick to prevent having the field validated by default. Not sure why this happens in this form
-  const validate = !visited?.agreementAccepted ? undefined : required
+  const validate = !visited.agreementAccepted ? undefined : required
 
   return (
     <Field

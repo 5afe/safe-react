@@ -26,7 +26,7 @@ export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
 
@@ -90,7 +90,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                  {`${values.threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                  {`${values.threshold} out of ${owners.size - 1} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
@@ -98,11 +98,11 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
           <Col className={classes.owners} layout="column" xs={8}>
             <Row className={classes.ownersTitle}>
               <Paragraph color="primary" noMargin size="lg">
-                {`${owners ? owners.size - 1 : 0} Safe owner(s)`}
+                {`${owners.size - 1} Safe owner(s)`}
               </Paragraph>
             </Row>
             <Hairline />
-            {owners?.map(
+            {owners.map(
               (owner) =>
                 owner.address !== ownerAddress && (
                   <React.Fragment key={owner.address}>
