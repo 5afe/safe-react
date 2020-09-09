@@ -103,6 +103,18 @@ describe('getNewTxNonce', () => {
     // then
     expect(result).toBe(expectedResult)
   })
+  it('Given a next nonce number, should return it',  async () => {
+    // given
+    const safeInstance = getMockedSafeInstance({ })
+    const expectedResult = '114'
+    const nextNonce = '114'
+
+    // when
+    const result = await getNewTxNonce(nextNonce, null, safeInstance)
+
+    // then
+    expect(result).toBe(expectedResult)
+  })
 })
 
 jest.mock('axios')
