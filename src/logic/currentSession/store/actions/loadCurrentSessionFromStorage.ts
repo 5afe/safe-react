@@ -5,9 +5,7 @@ import { getCurrentSessionFromStorage } from 'src/logic/currentSession/utils'
 const loadCurrentSessionFromStorage = () => async (dispatch) => {
   const currentSession = await getCurrentSessionFromStorage()
 
-  if (currentSession) {
-    dispatch(loadCurrentSession(makeCurrentSession(currentSession)))
-  }
+  dispatch(loadCurrentSession(makeCurrentSession(currentSession ? currentSession : {})))
 }
 
 export default loadCurrentSessionFromStorage

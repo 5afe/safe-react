@@ -6,11 +6,12 @@ import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
 
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
+import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
+import { loadFromStorage } from 'src/utils/storage'
 import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -26,7 +27,7 @@ export const loadSafe = async (
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
-  const storedSafes = (await loadStoredSafes()) || {}
+  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
 
   storedSafes[safeAddress] = safeProps
 

@@ -22,7 +22,7 @@ import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
 
 const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
-  const threshold = useSelector(safeThresholdSelector) as number
+  const threshold = useSelector(safeThresholdSelector)
   const owners = useSelector(safeOwnersSelector)
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -60,7 +60,7 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
                     render={(props) => (
                       <>
                         <SelectField {...props} disableError>
-                          {[...Array(Number(owners ? owners.size + 1 : 0))].map((x, index) => (
+                          {[...Array(Number(owners.size + 1))].map((x, index) => (
                             <MenuItem key={index} value={`${index + 1}`}>
                               {index + 1}
                             </MenuItem>
@@ -73,17 +73,12 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
                         )}
                       </>
                     )}
-                    validate={composeValidators(
-                      required,
-                      mustBeInteger,
-                      minValue(1),
-                      maxValue(owners ? owners.size + 1 : 0),
-                    )}
+                    validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(owners.size + 1))}
                   />
                 </Col>
                 <Col xs={10}>
                   <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                    out of {owners ? owners.size + 1 : 0} owner(s)
+                    out of {owners.size + 1} owner(s)
                   </Paragraph>
                 </Col>
               </Row>

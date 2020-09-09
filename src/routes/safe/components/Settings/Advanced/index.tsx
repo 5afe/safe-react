@@ -42,7 +42,7 @@ const Advanced = (): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const modules = useSelector(safeModulesSelector)
-  const moduleData = modules ? getModuleData(modules) ?? null : null
+  const moduleData = getModuleData(modules) ?? null
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {

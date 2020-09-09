@@ -79,10 +79,10 @@ const UnStyledButton = styled.button`
 `
 
 type Props = {
-  address: string | undefined
-  safeName: string | undefined
+  address: string | null
+  safeName: string
   granted: boolean
-  balance: string | undefined
+  balance: string | null
   onToggleSafeList: () => void
   onReceiveClick: () => void
   onNewTransactionClick: () => void

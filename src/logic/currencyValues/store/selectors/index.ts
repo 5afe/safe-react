@@ -16,7 +16,7 @@ export const safeFiatBalancesSelector = createSelector(
   currencyValuesSelector,
   safeParamAddressFromStateSelector,
   (currencyValues, safeAddress): CurrencyReducerMap | undefined => {
-    if (!currencyValues || !safeAddress) return
+    if (!currencyValues) return
     return currencyValues.get(safeAddress)
   },
 )
