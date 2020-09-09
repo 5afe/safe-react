@@ -16,7 +16,7 @@ import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
@@ -44,6 +44,10 @@ import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 const useStyles = makeStyles(styles)
 
+interface AddressBookSelectedEntry extends AddressBookEntry {
+  isNew?: boolean
+}
+
 const AddressBookTable = (): React.ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
@@ -53,7 +57,11 @@ const AddressBookTable = (): React.ReactElement => {
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(addressBookSelector)
   const granted = useSelector(grantedSelector)
-  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [selectedEntry, setSelectedEntry] = useState<{
+    entry?: AddressBookSelectedEntry
+    index?: number
+    isOwnerAddress?: boolean
+  } | null>(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
@@ -109,7 +117,7 @@ const AddressBookTable = (): React.ReactElement => {
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = checksumAddress(selectedEntry.entry.address)
+    const entryAddress = selectedEntry && selectedEntry.entry ? checksumAddress(selectedEntry.entry.address) : ''
     setSelectedEntry(null)
     setDeleteEntryModalOpen(false)
     dispatch(removeAddressBookEntry(entryAddress))

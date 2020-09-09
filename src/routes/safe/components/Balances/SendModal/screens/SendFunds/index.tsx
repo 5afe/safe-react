@@ -52,7 +52,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
@@ -70,7 +70,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      submitValues.recipientAddress = selectedEntry?.address
     }
     onNext(submitValues)
   }

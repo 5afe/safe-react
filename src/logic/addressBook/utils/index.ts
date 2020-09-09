@@ -6,9 +6,9 @@ import { SafeOwner } from 'src/logic/safe/store/models/safe'
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
 export const getAddressBookFromStorage = async (): Promise<AddressBookState | undefined> => {
-  const result: string = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+  const result: string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
 
-  return JSON.parse(result)
+  return result ? JSON.parse(result) : result
 }
 
 export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {

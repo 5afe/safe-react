@@ -54,7 +54,7 @@ const SendCollectible = ({
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(addressBookSelector)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
@@ -70,7 +70,7 @@ const SendCollectible = ({
   const handleSubmit = (values) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      values.recipientAddress = selectedEntry.address
+      values.recipientAddress = selectedEntry?.address
     }
 
     values.assetName = nftAssets[values.assetAddress].name
