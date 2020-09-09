@@ -1,15 +1,15 @@
-import { Dispatch } from 'redux'
+import { addSafe } from './addSafe'
 
 import { SAFES_KEY } from 'src/logic/safe/utils'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { buildSafe } from 'src/logic/safe/store/reducer/safe'
-import { loadFromStorage } from 'src/utils/storage'
 
-import { addSafe } from './addSafe'
+import { buildSafe } from 'src/logic/safe/store/reducer/safe'
+
+import { loadFromStorage } from 'src/utils/storage'
+import { Dispatch } from 'redux'
 
 const loadSafesFromStorage = () => async (dispatch: Dispatch): Promise<void> => {
   try {
-    const safes = await loadFromStorage<Record<string, SafeRecordProps>>(SAFES_KEY)
+    const safes = await loadFromStorage(SAFES_KEY)
 
     if (safes) {
       Object.values(safes).forEach((safeProps) => {

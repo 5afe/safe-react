@@ -44,8 +44,8 @@ const TxsTable = ({ classes }) => {
   const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort((tx1, tx2) => {
       // First order by nonce
-      const aNonce = tx1.tx?.nonce
-      const bNonce = tx1.tx?.nonce
+      const aNonce = tx1.tx.nonce
+      const bNonce = tx1.tx.nonce
       if (aNonce && bNonce) {
         const difference = aNonce - bNonce
         if (difference !== 0) {

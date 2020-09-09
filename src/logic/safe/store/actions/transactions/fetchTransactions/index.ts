@@ -39,9 +39,8 @@ export default (safeAddress: string): ThunkAction<Promise<void>, AppReduxState, 
     }
 
     const incomingTransactions = await loadIncomingTransactions(safeAddress)
-    const safeIncomingTxs = incomingTransactions.get(safeAddress)
 
-    if (safeIncomingTxs?.size) {
+    if (incomingTransactions.get(safeAddress).size) {
       dispatch(addIncomingTransactions(incomingTransactions))
     }
   } catch (error) {

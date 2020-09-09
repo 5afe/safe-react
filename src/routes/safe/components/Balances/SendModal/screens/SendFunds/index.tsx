@@ -58,7 +58,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(false)
+  const [isValidAddress, setIsValidAddress] = useState(true)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -130,7 +130,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string' })
+                        setSelectedEntry(null)
                       }
                     }}
                     role="listbox"
@@ -151,7 +151,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry(null)}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -159,7 +159,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry(null)}
                               weight="bolder"
                             >
                               {selectedEntry.address}
@@ -204,7 +204,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       Amount
                     </Paragraph>
                     <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord?.balance)}
+                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
                       weight="bold"
                       testId="send-max-btn"
                     >
@@ -230,7 +230,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         required,
                         mustBeFloat,
                         minValue(0, false),
-                        maxValue(selectedTokenRecord?.balance || 0),
+                        maxValue(selectedTokenRecord?.balance),
                       )}
                     />
                     <OnChange name="token">

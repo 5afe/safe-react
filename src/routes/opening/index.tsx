@@ -105,7 +105,7 @@ const BackButton = styled(Button)`
 const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: any) => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
-  const [safeCreationTxHash, setSafeCreationTxHash] = useState('')
+  const [safeCreationTxHash, setSafeCreationTxHash] = useState()
   const [createdSafeAddress, setCreatedSafeAddress] = useState()
 
   const [error, setError] = useState(false)
@@ -242,7 +242,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   useEffect(() => {
     let interval
 
-    const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
+    const awaitUntilSafeIsDeployed = async () => {
       try {
         const web3 = getWeb3()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
@@ -283,9 +283,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       return
     }
 
-    if (typeof safeCreationTxHash === 'string') {
-      awaitUntilSafeIsDeployed(safeCreationTxHash)
-    }
+    awaitUntilSafeIsDeployed()
 
     return () => {
       clearInterval(interval)
@@ -296,7 +294,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     return <Loader size="sm" />
   }
 
-  let FooterComponent
+  let FooterComponent = null
   if (error) {
     FooterComponent = ErrorFooter
   } else if (steps[stepIndex].footerComponent) {

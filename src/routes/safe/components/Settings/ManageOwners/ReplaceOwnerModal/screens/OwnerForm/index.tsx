@@ -39,7 +39,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
     onSubmit(values)
   }
   const owners = useSelector(safeOwnersSelector)
-  const ownerDoesntExist = uniqueAddress(owners?.map((o) => o.address) || [])
+  const ownerDoesntExist = uniqueAddress(owners.map((o) => o.address))
 
   return (
     <>

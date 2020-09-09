@@ -20,17 +20,13 @@ const useStyles = makeStyles(styles)
 interface EthValueProps {
   onSetMax: (ethBalance: string) => void
 }
-const EthValue = ({ onSetMax }: EthValueProps): React.ReactElement | null => {
+const EthValue = ({ onSetMax }: EthValueProps) => {
   const classes = useStyles()
-  const { ethBalance } = useSelector(safeSelector) || {}
+  const { ethBalance } = useSelector(safeSelector)
   const {
     input: { value: method },
   } = useField('selectedMethod', { subscription: { value: true } })
   const disabled = !isPayable(method)
-
-  if (!ethBalance) {
-    return null
-  }
 
   return disabled ? null : (
     <>

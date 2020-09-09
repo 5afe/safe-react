@@ -74,7 +74,7 @@ const ApproveTxModal = ({
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
@@ -91,7 +91,7 @@ const ApproveTxModal = ({
       const estimatedGasCosts = await estimateTxGasCosts(
         safeAddress,
         tx.recipient,
-        tx.data as string,
+        tx.data,
         tx,
         approveAndExecute ? userAddress : undefined,
       )
