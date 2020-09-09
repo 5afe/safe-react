@@ -31,7 +31,7 @@ const isTxValid = (t: Transaction): boolean => {
   }
 
   const isAddressValid = mustBeEthereumAddress(t.to) === undefined
-  return isAddressValid && !!t.data && typeof t.data === 'string'
+  return isAddressValid && t.data && typeof t.data === 'string'
 }
 
 const Wrapper = styled.div`
@@ -84,7 +84,7 @@ const ConfirmTransactionModal = ({
   onCancel,
   onUserConfirm,
   onClose,
-}: OwnProps): React.ReactElement | null => {
+}: OwnProps): React.ReactElement => {
   const dispatch = useDispatch()
   if (!isOpen) {
     return null

@@ -39,10 +39,10 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
 
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
-  const threshold = useSelector(safeThresholdSelector) as number
-  const [openModal, setOpenModal] = useState<'approveTx' | 'executeRejectTx' | 'rejectTx'>()
+  const threshold = useSelector(safeThresholdSelector)
+  const [openModal, setOpenModal] = useState(null)
   const openApproveModal = () => setOpenModal('approveTx')
-  const closeModal = () => setOpenModal(undefined)
+  const closeModal = () => setOpenModal(null)
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
   const isCreationTx = tx.type === TransactionTypes.CREATION
 

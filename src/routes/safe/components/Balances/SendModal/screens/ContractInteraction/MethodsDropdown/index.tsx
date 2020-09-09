@@ -16,7 +16,7 @@ import { NO_CONTRACT } from 'src/routes/safe/components/Balances/SendModal/scree
 import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
-import { extractUsefulMethods, AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
+import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
 const MENU_WIDTH = '452px'
 
@@ -24,7 +24,7 @@ interface MethodsDropdownProps {
   onChange: (method: AbiItem) => void
 }
 
-const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement | null => {
+const MethodsDropdown = ({ onChange }: MethodsDropdownProps) => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
@@ -34,8 +34,8 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement
     initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
   const [selectedMethod, setSelectedMethod] = React.useState(selectedMethodByDefault ? selectedMethodByDefault : {})
-  const [methodsList, setMethodsList] = React.useState<AbiItemExtended[]>([])
-  const [methodsListFiltered, setMethodsListFiltered] = React.useState<AbiItemExtended[]>([])
+  const [methodsList, setMethodsList] = React.useState([])
+  const [methodsListFiltered, setMethodsListFiltered] = React.useState([])
   const [anchorEl, setAnchorEl] = React.useState(null)
   const [searchParams, setSearchParams] = React.useState('')
 
@@ -50,7 +50,7 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement
   }, [abi])
 
   React.useEffect(() => {
-    setMethodsListFiltered(methodsList.filter(({ name }) => name?.toLowerCase().includes(searchParams.toLowerCase())))
+    setMethodsListFiltered(methodsList.filter(({ name }) => name.toLowerCase().includes(searchParams.toLowerCase())))
   }, [methodsList, searchParams])
 
   const handleClick = (event) => {
