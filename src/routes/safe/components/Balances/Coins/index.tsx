@@ -76,9 +76,10 @@ const Coins = (props: Props): React.ReactElement => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
   }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
 
-  const showCurrencyTooltip = (valueWithCurrency: string): React.ReactElement | null => {
+  const showCurrencyTooltip = (valueWithCurrency: string, balanceWithSymbol: string): React.ReactElement | null => {
+    const balance = balanceWithSymbol.replace(/[^\d.-]/g, '')
     const value = valueWithCurrency.replace(/[^\d.-]/g, '')
-    if (!Number(value)) {
+    if (!Number(value) && Number(balance)) {
       return (
         <Tooltip placement="top" title="Balance may be zero due to missing token price information">
           <span onClick={(event) => event.stopPropagation()}>
@@ -125,7 +126,7 @@ const Coins = (props: Props): React.ReactElement => {
                       showCurrencyValueRow && selectedCurrency ? (
                         <div className={classes.currencyValueRow}>
                           {valueWithCurrency}
-                          {showCurrencyTooltip(valueWithCurrency)}
+                          {showCurrencyTooltip(valueWithCurrency, row[BALANCE_TABLE_BALANCE_ID])}
                         </div>
                       ) : (
                         <Skeleton animation="wave" />
