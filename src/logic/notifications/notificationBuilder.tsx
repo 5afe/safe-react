@@ -15,7 +15,7 @@ const setNotificationOrigin = (notification: Notification, origin: string): Noti
   }
 
   const appInfo = getAppInfoFromOrigin(origin)
-  return { ...notification, message: `${appInfo ? appInfo.name : 'Unknown origin'}: ${notification.message}` }
+  return { ...notification, message: `${appInfo.name}: ${notification.message}` }
 }
 
 const getStandardTxNotificationsQueue = (

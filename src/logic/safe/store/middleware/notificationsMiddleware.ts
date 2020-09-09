@@ -85,7 +85,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
+        if (!isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
           break
         }
 

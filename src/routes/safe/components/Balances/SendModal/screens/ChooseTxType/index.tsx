@@ -62,8 +62,8 @@ const useStyles = makeStyles({
 
 const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }) => {
   const classes = useStyles()
-  const { featuresEnabled } = useSelector(safeSelector) || {}
-  const erc721Enabled = featuresEnabled?.includes('ERC721')
+  const { featuresEnabled } = useSelector(safeSelector)
+  const erc721Enabled = featuresEnabled.includes('ERC721')
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
 
   React.useEffect(() => {

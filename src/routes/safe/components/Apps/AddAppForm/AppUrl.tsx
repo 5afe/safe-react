@@ -28,7 +28,7 @@ export const appUrlResolver = createDecorator({
   },
 })
 
-export const AppInfoUpdater = ({ onAppInfo }: { onAppInfo: (appInfo: SafeApp) => void }): null => {
+export const AppInfoUpdater = ({ onAppInfo }: { onAppInfo: (appInfo: SafeApp) => void }): React.ReactElement => {
   const {
     input: { value: appUrl },
   } = useField('appUrl', { subscription: { value: true } })
@@ -52,7 +52,7 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
   // trick to prevent having the field validated by default. Not sure why this happens in this form
-  const validate = !visited?.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
+  const validate = !visited.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
 
   return (
     <Field label="App URL" name="appUrl" placeholder="App URL" type="text" component={TextField} validate={validate} />

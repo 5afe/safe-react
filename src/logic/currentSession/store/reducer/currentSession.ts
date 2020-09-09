@@ -7,10 +7,6 @@ import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 
-export type SerializedSessionState = {
-  viewedSafes: string[]
-}
-
 export default handleActions(
   {
     [LOAD_CURRENT_SESSION]: (state, action) => state.merge(Map(action.payload)),

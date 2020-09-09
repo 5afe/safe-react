@@ -5,7 +5,7 @@ export type TokenProps = {
   name: string
   symbol: string
   decimals: number | string
-  logoUri: string
+  logoUri?: string | null
   balance?: number | string
 }
 
