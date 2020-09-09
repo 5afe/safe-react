@@ -45,7 +45,7 @@ const EthAddressInput = ({
   const {
     input: { value },
   } = useField('contractAddress', { subscription: { value: true } })
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: value,
     name: '',
   })
