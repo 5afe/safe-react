@@ -36,7 +36,7 @@ const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELL
 
 const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
-export const safeParamAddressFromStateSelector = (state: AppReduxState): string | undefined => {
+export const safeParamAddressFromStateSelector = (state: AppReduxState): string | null => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
     path: `${SAFELIST_ADDRESS}/:safeAddress`,
   })
@@ -45,7 +45,7 @@ export const safeParamAddressFromStateSelector = (state: AppReduxState): string 
     return checksumAddress(match.params.safeAddress)
   }
 
-  return undefined
+  return null
 }
 
 export const safeParamAddressSelector = (
@@ -177,16 +177,16 @@ export const safeBlacklistedAssetsSelector = createSelector(
 )
 
 export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress)?.get('activeAssets') || Set()
+  safes.get(safeAddress).get('activeAssets')
 
 export const safeBlacklistedAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress)?.get('blacklistedAssets') || Set()
+  safes.get(safeAddress).get('blacklistedAssets')
 
 const baseSafe = makeSafe()
 
 export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
   safe: SafeRecord,
-): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
+): SafeRecordProps[K] | null => (safe ? safe.get(field, baseSafe.get(field)) : null)
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 

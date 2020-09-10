@@ -1,13 +1,8 @@
 import { List } from 'immutable'
 
 import { isPendingTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
-export const getAwaitingTransactions = (
-  allTransactions: List<Transaction>,
-  cancellationTxs,
-  userAccount: string,
-): List<Transaction> => {
+export const getAwaitingTransactions = (allTransactions = List([]), cancellationTxs, userAccount: string) => {
   return allTransactions.filter((tx) => {
     const cancelTx = !!tx.nonce && !isNaN(Number(tx.nonce)) ? cancellationTxs.get(`${tx.nonce}`) : null
 

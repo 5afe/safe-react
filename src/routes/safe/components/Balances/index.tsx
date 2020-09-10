@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Receive from 'src/components/App/ReceiveModal'
+import Receive from 'src/components/App/ModalReceive'
 import Tokens from './Tokens'
 import { styles } from './style'
 
@@ -15,11 +15,7 @@ import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import CurrencyDropdown from 'src/routes/safe/components/CurrencyDropdown'
-import {
-  safeFeaturesEnabledSelector,
-  safeParamAddressFromStateSelector,
-  safeNameSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
@@ -37,7 +33,7 @@ const INITIAL_STATE = {
   showManageCollectibleModal: false,
   sendFunds: {
     isOpen: false,
-    selectedToken: '',
+    selectedToken: undefined,
   },
   showReceive: false,
 }
@@ -53,12 +49,11 @@ const Balances = (): React.ReactElement => {
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
-  const safeName = useSelector(safeNameSelector)
 
   useFetchTokens(address)
 
   useEffect(() => {
-    const erc721Enabled = Boolean(featuresEnabled?.includes('ERC721'))
+    const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
 
     setState((prevState) => ({
       ...prevState,
@@ -89,7 +84,7 @@ const Balances = (): React.ReactElement => {
       ...prevState,
       sendFunds: {
         isOpen: false,
-        selectedToken: '',
+        selectedToken: undefined,
       },
     }))
   }
@@ -229,7 +224,7 @@ const Balances = (): React.ReactElement => {
         paperClassName={receiveModal}
         title="Receive Tokens"
       >
-        <Receive safeAddress={address as string} safeName={safeName as string} onClose={() => onHide('Receive')} />
+        <Receive onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )

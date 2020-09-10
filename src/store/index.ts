@@ -19,10 +19,7 @@ import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import currentSession, {
-  CURRENT_SESSION_REDUCER_ID,
-  SerializedSessionState,
-} from 'src/logic/currentSession/store/reducer/currentSession'
+import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
@@ -89,7 +86,7 @@ export type AppReduxState = CombinedState<{
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookReducerMap
-  [CURRENT_SESSION_REDUCER_ID]: SerializedSessionState
+  [CURRENT_SESSION_REDUCER_ID]: Map<string, any>
   [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>

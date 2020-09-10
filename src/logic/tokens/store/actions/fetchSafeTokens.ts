@@ -48,7 +48,7 @@ const extractDataFromResult = (currentTokens: TokenState) => (
   if (tokenAddress === null) {
     acc.ethBalance = humanReadableValue(balance, 18)
   } else {
-    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token?.decimals)) })
+    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token.decimals)) })
 
     if (currentTokens && !currentTokens.get(tokenAddress)) {
       acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
@@ -57,7 +57,7 @@ const extractDataFromResult = (currentTokens: TokenState) => (
 
   acc.currencyList = acc.currencyList.push(
     makeBalanceCurrency({
-      currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : undefined,
+      currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : null,
       tokenAddress,
       balanceInBaseCurrency: balanceUsd,
       balanceInSelectedCurrency: balanceUsd,

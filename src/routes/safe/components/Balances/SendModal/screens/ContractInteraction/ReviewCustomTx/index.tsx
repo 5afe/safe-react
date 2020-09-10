@@ -1,6 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -38,9 +39,10 @@ type Props = {
 const useStyles = makeStyles(styles)
 
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const { address: safeAddress } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
 
   useEffect(() => {
@@ -50,7 +52,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -74,12 +76,14 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
 
     dispatch(
       createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
+        safeAddress,
+        to: txRecipient,
         valueInWei: txValue,
         txData,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
+        enqueueSnackbar,
+        closeSnackbar,
+      } as any),
     )
 
     onClose()
@@ -114,15 +118,15 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
         </Row>
         <Row align="center" margin="md">
           <Col xs={1}>
-            <Identicon address={tx.contractAddress as string} diameter={32} />
+            <Identicon address={tx.contractAddress} diameter={32} />
           </Col>
           <Col layout="column" xs={11}>
             <Block justify="left">
               <Paragraph noMargin weight="bolder">
                 {tx.contractAddress}
               </Paragraph>
-              <CopyBtn content={tx.contractAddress as string} />
-              <EtherscanBtn type="address" value={tx.contractAddress as string} />
+              <CopyBtn content={tx.contractAddress} />
+              <EtherscanBtn type="address" value={tx.contractAddress} />
             </Block>
           </Col>
         </Row>

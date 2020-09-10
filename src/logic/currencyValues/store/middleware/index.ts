@@ -1,18 +1,19 @@
 import fetchCurrencyRate from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
-import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
-import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { SET_CURRENCY_BALANCES } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
+import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { CurrencyReducerMap } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
 import { saveCurrencyValues } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
+import { AVAILABLE_CURRENCIES, CurrencyRateValue } from '../model/currencyValues'
+import { Map } from 'immutable'
 
 const watchedActions = [SET_CURRENT_CURRENCY, SET_CURRENCY_RATE, SET_CURRENCY_BALANCES]
 
 const currencyValuesStorageMiddleware = (store) => (next) => async (action) => {
   const handledAction = next(action)
   if (watchedActions.includes(action.type)) {
-    const { dispatch, getState } = store
-    const state = getState()
+    const state = store.getState()
+    const { dispatch } = store
     switch (action.type) {
       case SET_CURRENT_CURRENCY: {
         const { safeAddress, selectedCurrency } = action.payload
@@ -23,10 +24,12 @@ const currencyValuesStorageMiddleware = (store) => (next) => async (action) => {
       case SET_CURRENCY_BALANCES: {
         const currencyValues = currencyValuesSelector(state)
 
-        const currencyValuesWithoutBalances = currencyValues.map((entry: CurrencyReducerMap) => {
+        const currencyValuesWithoutBalances: Map<string, CurrencyRateValue> = currencyValues.map((currencyValue) => {
+          const currencyRate: number = currencyValue.get('currencyRate')
+          const selectedCurrency: AVAILABLE_CURRENCIES = currencyValue.get('selectedCurrency')
           return {
-            currencyRate: entry.get('currencyRate'),
-            selectedCurrency: entry.get('selectedCurrency'),
+            currencyRate,
+            selectedCurrency,
           }
         })
 
