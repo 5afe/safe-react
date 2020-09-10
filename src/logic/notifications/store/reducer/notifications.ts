@@ -20,7 +20,7 @@ export default handleActions(
       const { dismissAll, key } = action.payload
 
       if (key) {
-        return state.update(key, (prev) => prev?.set('dismissed', true) ?? prev)
+        return state.update(key, (prev) => prev.set('dismissed', true))
       }
       if (dismissAll) {
         return state.withMutations((map) => {
