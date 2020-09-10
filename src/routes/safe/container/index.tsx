@@ -29,7 +29,7 @@ const Container = (): React.ReactElement => {
     title: null,
     body: null,
     footer: null,
-    onClose: () => {},
+    onClose: null,
   })
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -42,7 +42,7 @@ const Container = (): React.ReactElement => {
 
   const closeGenericModal = () => {
     if (modal.onClose) {
-      modal.onClose?.()
+      modal.onClose()
     }
 
     setModal({
@@ -50,7 +50,7 @@ const Container = (): React.ReactElement => {
       title: null,
       body: null,
       footer: null,
-      onClose: () => {},
+      onClose: null,
     })
   }
 
@@ -59,26 +59,22 @@ const Container = (): React.ReactElement => {
       <Switch>
         <Route
           exact
-          path={`${matchSafeWithAddress?.path}/balances/:assetType?`}
+          path={`${matchSafeWithAddress.path}/balances/:assetType?`}
           render={() => wrapInSuspense(<Balances />, null)}
         />
         <Route
           exact
-          path={`${matchSafeWithAddress?.path}/transactions`}
+          path={`${matchSafeWithAddress.path}/transactions`}
           render={() => wrapInSuspense(<TxsTable />, null)}
         />
-        <Route exact path={`${matchSafeWithAddress?.path}/apps`} render={() => wrapInSuspense(<Apps />, null)} />
+        <Route exact path={`${matchSafeWithAddress.path}/apps`} render={() => wrapInSuspense(<Apps />, null)} />
+        <Route exact path={`${matchSafeWithAddress.path}/settings`} render={() => wrapInSuspense(<Settings />, null)} />
         <Route
           exact
-          path={`${matchSafeWithAddress?.path}/settings`}
-          render={() => wrapInSuspense(<Settings />, null)}
-        />
-        <Route
-          exact
-          path={`${matchSafeWithAddress?.path}/address-book`}
+          path={`${matchSafeWithAddress.path}/address-book`}
           render={() => wrapInSuspense(<AddressBookTable />, null)}
         />
-        <Redirect to={`${matchSafeWithAddress?.path}/balances`} />
+        <Redirect to={`${matchSafeWithAddress.path}/balances`} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>

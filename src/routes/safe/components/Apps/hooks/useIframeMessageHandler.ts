@@ -44,7 +44,7 @@ const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
   openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
   closeModal: () => void,
-  iframeRef: MutableRefObject<HTMLIFrameElement | null>,
+  iframeRef: MutableRefObject<HTMLIFrameElement>,
 ): ReturnType => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const safeName = useSelector(safeNameSelector)
@@ -60,8 +60,8 @@ const useIframeMessageHandler = (
         requestId: requestId || Math.trunc(window.performance.now()),
       }
 
-      if (iframeRef && selectedApp) {
-        iframeRef.current?.contentWindow?.postMessage(requestWithMessage, selectedApp.url)
+      if (iframeRef?.current && selectedApp) {
+        iframeRef.current.contentWindow.postMessage(requestWithMessage, selectedApp.url)
       }
     },
     [iframeRef, selectedApp],
@@ -77,9 +77,7 @@ const useIframeMessageHandler = (
 
       switch (msg.data.messageId) {
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          if (msg.data.data) {
-            openConfirmationModal(msg.data.data, requestId)
-          }
+          openConfirmationModal(msg.data.data, requestId)
           break
         }
 
@@ -87,9 +85,9 @@ const useIframeMessageHandler = (
           const message = {
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
-              safeAddress: safeAddress as string,
-              network,
-              ethBalance: ethBalance as string,
+              safeAddress,
+              network: network,
+              ethBalance,
             },
           }
 
@@ -106,7 +104,7 @@ const useIframeMessageHandler = (
       if (message.origin === window.origin) {
         return
       }
-      if (!selectedApp?.url.includes(message.origin)) {
+      if (!selectedApp.url.includes(message.origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
       }

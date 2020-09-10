@@ -1,7 +1,6 @@
-import { createStyles } from '@material-ui/core/styles'
 import { border, fontColor, lg, secondaryText, smallFontSize, xl } from 'src/theme/variables'
 
-export const styles = createStyles({
+export const styles = () => ({
   ownersText: {
     color: secondaryText,
     '& b': {
