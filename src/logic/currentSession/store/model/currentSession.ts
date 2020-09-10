@@ -1,9 +1,9 @@
 import { Record } from 'immutable'
 
-type SessionProps = {
+export type SerializedSessionState = {
   viewedSafes: string[]
 }
 
-export const makeCurrentSession = Record<SessionProps>({
+export const makeCurrentSession = Record<SerializedSessionState>({
   viewedSafes: [],
 })

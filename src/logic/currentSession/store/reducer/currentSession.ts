@@ -7,26 +7,19 @@ import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 
-export type SerializedSessionState = {
-  viewedSafes: string[]
-}
-
 export default handleActions(
   {
     [LOAD_CURRENT_SESSION]: (state, action) => state.merge(Map(action.payload)),
     [UPDATE_VIEWED_SAFES]: (state, action) => {
       const safeAddress = action.payload
 
-      if (state.hasIn(['viewedSafes'])) {
-        const newState = state.updateIn(['viewedSafes'], (prev) =>
-          prev.includes(safeAddress) ? prev : [...prev, safeAddress],
-        )
+      const newState = state.updateIn(['viewedSafes'], (prev) =>
+        prev.includes(safeAddress) ? prev : [...prev, safeAddress],
+      )
 
-        saveCurrentSessionToStorage(newState)
+      saveCurrentSessionToStorage(newState)
 
-        return newState
-      }
-      return state
+      return newState
     },
   },
   Map(),
