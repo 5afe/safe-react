@@ -14,7 +14,8 @@ import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
-import { Dispatch } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -92,7 +93,10 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   return token
 }
 
-export const fetchTokens = () => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+export const fetchTokens = () => async (
+  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+  getState: () => AppReduxState,
+): Promise<void> => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 
