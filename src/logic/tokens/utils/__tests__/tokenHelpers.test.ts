@@ -165,11 +165,21 @@ describe('isERC721Contract', () => {
     const contractAddress = '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa' // DAI Address
     const expectedResult = false
 
+    const ERC721Contract = {
+      at: () => {
+        throw new Error('Contract is not ERC721')
+      },
+    }
+
+    const fetchTokens = require('src/logic/tokens/store/actions/fetchTokens')
+    const standardContractSpy = fetchTokens.getStandardTokenContract.mockImplementation(() => ERC721Contract)
+
     // when
     const result = await isERC721Contract(contractAddress)
 
     // then
     expect(result).toEqual(expectedResult)
+    expect(standardContractSpy).toHaveBeenCalled
   })
   it('It should return true if given a Erc721 contract address', async () => {
     // given
@@ -180,13 +190,13 @@ describe('isERC721Contract', () => {
     const expectedResult = true
 
     const fetchTokens = require('src/logic/tokens/store/actions/fetchTokens')
-    const standarContractSpy = fetchTokens.getStandardTokenContract.mockImplementation(() => ERC721Contract)
+    const standardContractSpy = fetchTokens.getStandardTokenContract.mockImplementation(() => ERC721Contract)
 
     // when
     const result = await isERC721Contract(contractAddress)
 
     // then
     expect(result).toEqual(expectedResult)
-    expect(standarContractSpy).toHaveBeenCalled()
+    expect(standardContractSpy).toHaveBeenCalled()
   })
 })
