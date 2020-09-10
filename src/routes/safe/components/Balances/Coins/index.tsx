@@ -55,6 +55,28 @@ export type BalanceDataRow = List<{
   value: string
 }>
 
+type CurrencyTooltipProps = {
+  valueWithCurrency: string
+  balanceWithSymbol: string
+}
+
+const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null => {
+  const { balanceWithSymbol, valueWithCurrency } = props
+  const classes = useStyles()
+  const balance = balanceWithSymbol.replace(/[^\d.-]/g, '')
+  const value = valueWithCurrency.replace(/[^\d.-]/g, '')
+  if (!Number(value) && Number(balance)) {
+    return (
+      <Tooltip placement="top" title="Balance may be zero due to missing token price information">
+        <span>
+          <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
+        </span>
+      </Tooltip>
+    )
+  }
+  return null
+}
+
 const Coins = (props: Props): React.ReactElement => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
@@ -75,21 +97,6 @@ const Coins = (props: Props): React.ReactElement => {
   React.useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
   }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
-
-  const showCurrencyTooltip = (valueWithCurrency: string, balanceWithSymbol: string): React.ReactElement | null => {
-    const balance = balanceWithSymbol.replace(/[^\d.-]/g, '')
-    const value = valueWithCurrency.replace(/[^\d.-]/g, '')
-    if (!Number(value) && Number(balance)) {
-      return (
-        <Tooltip placement="top" title="Balance may be zero due to missing token price information">
-          <span onClick={(event) => event.stopPropagation()}>
-            <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
-          </span>
-        </Tooltip>
-      )
-    }
-    return null
-  }
 
   return (
     <TableContainer>
@@ -126,7 +133,10 @@ const Coins = (props: Props): React.ReactElement => {
                       showCurrencyValueRow && selectedCurrency ? (
                         <div className={classes.currencyValueRow}>
                           {valueWithCurrency}
-                          {showCurrencyTooltip(valueWithCurrency, row[BALANCE_TABLE_BALANCE_ID])}
+                          <CurrencyTooltip
+                            valueWithCurrency={valueWithCurrency}
+                            balanceWithSymbol={row[BALANCE_TABLE_BALANCE_ID]}
+                          />
                         </div>
                       ) : (
                         <Skeleton animation="wave" />
