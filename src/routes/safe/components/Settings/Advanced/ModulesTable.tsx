@@ -50,7 +50,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  const [selectedModule, setSelectedModule] = React.useState<ModulePair>()
+  const [selectedModule, setSelectedModule] = React.useState(null)
   const triggerRemoveSelectedModule = (module: ModulePair): void => {
     setSelectedModule(module)
     setViewRemoveModuleModal(true)
@@ -67,7 +67,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
           disablePagination
           label="Modules"
           noBorder
-          size={moduleData?.length}
+          size={moduleData.length}
         >
           {(sortedData) =>
             sortedData.map((row, index) => (
@@ -117,9 +117,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
           }
         </Table>
       </TableContainer>
-      {viewRemoveModuleModal && selectedModule && (
-        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModule={selectedModule} />
-      )}
+      {viewRemoveModuleModal && <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModule={selectedModule} />}
     </>
   )
 }

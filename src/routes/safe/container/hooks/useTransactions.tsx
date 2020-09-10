@@ -19,7 +19,7 @@ export const useTransactions = (props: Props): { transactions: Transaction[]; to
   const { offset, limit } = props
   const dispatch = useDispatch()
   const transactions = useSelector(safeAllTransactionsSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const totalTransactionsCount = useSelector(safeTotalTransactionsAmountSelector)
   useEffect(() => {
     async function loadNewTxs() {

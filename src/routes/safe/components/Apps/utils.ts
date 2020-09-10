@@ -1,7 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp } from './types.d'
+import { SafeApp } from './types'
 
 import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
@@ -62,8 +62,8 @@ export const isAppManifestValid = (appInfo: SafeApp): boolean =>
   !appInfo.error
 
 export const getAppInfoFromUrl = memoize(
-  async (appUrl: string): Promise<SafeApp> => {
-    let res = { id: '', url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
+  async (appUrl?: string): Promise<SafeApp> => {
+    let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
 
     if (!appUrl?.length) {
       return res

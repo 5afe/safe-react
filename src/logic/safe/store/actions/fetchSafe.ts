@@ -18,7 +18,7 @@ import { Action, Dispatch } from 'redux'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
 
-const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
+const buildOwnersFrom = (safeOwners: string[], localSafe: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
     const convertedAdd = checksumAddress(ownerAddress)
 
@@ -85,7 +85,7 @@ export const buildSafe = async (
     needsUpdate,
     featuresEnabled,
     balances: Map(),
-    latestIncomingTxBlock: 0,
+    latestIncomingTxBlock: null,
     activeAssets: Set(),
     activeTokens: Set(),
     blacklistedAssets: Set(),

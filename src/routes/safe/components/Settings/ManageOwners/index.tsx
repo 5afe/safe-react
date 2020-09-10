@@ -51,8 +51,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
   const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
-  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState('')
-  const [selectedOwnerName, setSelectedOwnerName] = useState('')
+  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState()
+  const [selectedOwnerName, setSelectedOwnerName] = useState()
   const [modalsStatus, setModalStatus] = useState({
     showAddOwner: false,
     showRemoveOwner: false,
@@ -74,8 +74,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
       ...prevState,
       [`show${action}`]: !Boolean(prevState[`show${action}`]),
     }))
-    setSelectedOwnerAddress('')
-    setSelectedOwnerName('')
+    setSelectedOwnerAddress(undefined)
+    setSelectedOwnerName(undefined)
   }
 
   useEffect(() => {

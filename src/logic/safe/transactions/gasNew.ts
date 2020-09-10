@@ -25,7 +25,7 @@ const estimateDataGasCosts = (data: string): number => {
     return accumulator + 16
   }
 
-  return data.match(/.{2}/g)?.reduce(reducer, 0)
+  return data.match(/.{2}/g).reduce(reducer, 0)
 }
 
 export const estimateTxGasCosts = async (
@@ -38,11 +38,6 @@ export const estimateTxGasCosts = async (
   try {
     const web3 = getWeb3()
     const from = await getAccountFrom(web3)
-
-    if (!from) {
-      return 0
-    }
-
     const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()

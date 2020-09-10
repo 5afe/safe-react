@@ -16,7 +16,8 @@ export const loadLastUsedProvider = async (): Promise<string | undefined> => {
   return lastUsedProvider
 }
 
-let watcherInterval
+let watcherInterval = null
+
 const providerWatcherMware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 

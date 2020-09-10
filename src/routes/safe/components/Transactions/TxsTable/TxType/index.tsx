@@ -35,7 +35,7 @@ const typeToLabel = {
 }
 
 interface TxTypeProps {
-  origin: string | null
+  origin?: string
   txType: keyof typeof typeToLabel
 }
 
@@ -45,11 +45,7 @@ const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
   const [forceCustom, setForceCustom] = useState(false)
 
   useEffect(() => {
-    const getAppInfo = async (origin: string | null) => {
-      if (!origin) {
-        return
-      }
-
+    const getAppInfo = async () => {
       const parsedOrigin = getAppInfoFromOrigin(origin)
 
       if (!parsedOrigin) {
@@ -64,7 +60,11 @@ const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
       setLoading(false)
     }
 
-    getAppInfo(origin)
+    if (!origin) {
+      return
+    }
+
+    getAppInfo()
   }, [origin, txType])
 
   if (forceCustom || !origin) {

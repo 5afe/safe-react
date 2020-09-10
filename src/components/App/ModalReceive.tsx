@@ -1,8 +1,9 @@
 import IconButton from '@material-ui/core/IconButton'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
+import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -13,79 +14,72 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
 
-const useStyles = makeStyles(
-  createStyles({
-    heading: {
-      padding: `${md} ${lg}`,
-      justifyContent: 'space-between',
-      maxHeight: '75px',
-      boxSizing: 'border-box',
+const styles = () => ({
+  heading: {
+    padding: `${md} ${lg}`,
+    justifyContent: 'space-between',
+    maxHeight: '75px',
+    boxSizing: 'border-box',
+  },
+  close: {
+    height: lg,
+    width: lg,
+    fill: secondaryText,
+  },
+  qrContainer: {
+    backgroundColor: '#fff',
+    padding: md,
+    borderRadius: '6px',
+    border: `1px solid ${secondaryText}`,
+  },
+  annotation: {
+    margin: lg,
+    marginBottom: 0,
+  },
+  safeName: {
+    margin: `${md} 0`,
+  },
+  buttonRow: {
+    height: '84px',
+    justifyContent: 'center',
+    '& > button': {
+      fontFamily: 'Averta',
+      fontSize: md,
+      boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     },
-    close: {
-      height: lg,
-      width: lg,
-      fill: secondaryText,
-    },
-    qrContainer: {
-      backgroundColor: '#fff',
-      padding: md,
-      borderRadius: '6px',
-      border: `1px solid ${secondaryText}`,
-    },
-    annotation: {
-      margin: lg,
-      marginBottom: 0,
-    },
-    safeName: {
-      margin: `${md} 0`,
-    },
-    buttonRow: {
-      height: '84px',
-      justifyContent: 'center',
-      '& > button': {
-        fontFamily: 'Averta',
-        fontSize: md,
-        boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-      },
-    },
-    addressContainer: {
-      flexDirection: 'column',
-      justifyContent: 'center',
-      margin: `${lg} 0`,
+  },
+  addressContainer: {
+    flexDirection: 'column',
+    justifyContent: 'center',
+    margin: `${lg} 0`,
 
-      [`@media (min-width: ${screenSm}px)`]: {
-        flexDirection: 'row',
-      },
+    [`@media (min-width: ${screenSm}px)`]: {
+      flexDirection: 'row',
     },
-    address: {
-      marginLeft: sm,
-      marginRight: sm,
-      maxWidth: '70%',
-      overflowWrap: 'break-word',
+  },
+  address: {
+    marginLeft: sm,
+    marginRight: sm,
+    maxWidth: '70%',
+    overflowWrap: 'break-word',
 
-      [`@media (min-width: ${screenSm}px)`]: {
-        maxWidth: 'none',
-      },
+    [`@media (min-width: ${screenSm}px)`]: {
+      maxWidth: 'none',
     },
-  }),
-)
+  },
+})
 
-type Props = {
-  onClose: () => void
-  safeAddress: string
-  safeName: string
-}
-
-const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
-  const classes = useStyles()
-
+const Receive = ({ classes, onClose }) => {
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSelector(safeNameSelector)
   return (
     <>
       <Row align="center" className={classes.heading} grow>
-        <Paragraph noMargin size="xl" weight="bolder">
+        <Paragraph className={classes.manage} noMargin size="xl" weight="bolder">
           Receive funds
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -128,4 +122,4 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
   )
 }
 
-export default ReceiveModal
+export default withStyles(styles as any)(Receive)

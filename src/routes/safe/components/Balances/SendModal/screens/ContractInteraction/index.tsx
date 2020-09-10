@@ -49,7 +49,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const { address: safeAddress = '' } = useSelector(safeSelector) || {}
+  const { address: safeAddress = '' } = useSelector(safeSelector)
   let setCallResults
 
   React.useMemo(() => {
