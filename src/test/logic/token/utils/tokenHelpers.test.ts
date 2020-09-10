@@ -32,7 +32,7 @@ describe('getEthAsToken', () => {
 
 describe('isTokenTransfer', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  it('It should return true if the transaction has no value but has transfer data',  () => {
+  it('It should return false if the transaction has no value but but "transfer" function signature is encoded in the data',  () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0xa9059cbb' })
     const expectedResult = true
@@ -42,7 +42,7 @@ describe('isTokenTransfer', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('It should return false if the transaction has no value but has data different from transfer',  () => {
+  it('It should return false if the transaction has no value but and no "transfer" function signature encoded in data',  () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0xa9055cbb' })
     const expectedResult = false
@@ -127,7 +127,7 @@ describe('getERC20DecimalsAndSymbol', () => {
     expect(spy).toHaveBeenCalled()
     expect(spyConsole).toHaveBeenCalled()
   })
-  it('It should fetch token information from the blockchain if given a token address and if the information is not stored', async () => {
+  it('It should fetch token information from the blockchain if given a token address and if the token doesn\'t exist in redux store', async () => {
     // given
     const tokenAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa"
     const decimals = Number(18)
@@ -161,7 +161,7 @@ describe('isERC721Contract', () => {
   beforeEach(() => {
     jest.mock('src/logic/tokens/store/actions/fetchTokens')
   })
-  it('It should return false if given an random non-erc721 contract address', async () => {
+  it('It should return false if given non-erc721 contract address', async () => {
     // given
     const contractAddress = "0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa" // DAI Address
     const expectedResult = false
