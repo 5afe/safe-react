@@ -1,6 +1,6 @@
-import { Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
+import { makeCurrentSession } from 'src/logic/currentSession/store/model/currentSession'
 import { LOAD_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/loadCurrentSession'
 import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/updateViewedSafes'
 import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
@@ -9,7 +9,7 @@ export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 
 export default handleActions(
   {
-    [LOAD_CURRENT_SESSION]: (state, action) => state.merge(Map(action.payload)),
+    [LOAD_CURRENT_SESSION]: (state, action) => state.merge(makeCurrentSession(action.payload)),
     [UPDATE_VIEWED_SAFES]: (state, action) => {
       const safeAddress = action.payload
 
@@ -22,5 +22,5 @@ export default handleActions(
       return newState
     },
   },
-  Map(),
+  makeCurrentSession(),
 )
