@@ -1,5 +1,5 @@
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { SerializedSessionState } from 'src/logic/currentSession/store/reducer/currentSession'
+import { SerializedSessionState } from 'src/logic/currentSession/store/model/currentSession'
 
 const CURRENT_SESSION_STORAGE_KEY = 'CURRENT_SESSION'
 
