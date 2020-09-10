@@ -50,7 +50,7 @@ const HeaderComponent = (): React.ReactElement => {
   }
 
   const getProviderInfoBased = () => {
-    if (!loaded || !provider) {
+    if (!loaded) {
       return <ProviderDisconnected />
     }
 

@@ -40,11 +40,11 @@ type Props = {
   tx: TransactionReviewType
 }
 
-const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+const ContractInteractionReview = ({ onClose, onPrev, tx }: Props) => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const { address: safeAddress } = useSelector(safeSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
@@ -54,7 +54,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, tx.contractAddress, txData)
       const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
       const formattedGasCosts = formatAmount(gasCostsAsEth)
 
@@ -102,7 +102,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </Paragraph>
         </Row>
         <Row align="center" margin="md">
-          <AddressInfo safeAddress={tx.contractAddress as string} />
+          <AddressInfo safeAddress={tx.contractAddress} />
         </Row>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -129,11 +129,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row align="center" margin="md">
           <Paragraph className={classes.value} size="md" style={{ margin: 0 }}>
-            {tx.selectedMethod?.name}
+            {tx.selectedMethod.name}
           </Paragraph>
         </Row>
-        {tx.selectedMethod?.inputs?.map(({ name, type }, index) => {
-          const key = generateFormFieldKey(type, tx.selectedMethod?.signatureHash || '', index)
+        {tx.selectedMethod.inputs.map(({ name, type }, index) => {
+          const key = generateFormFieldKey(type, tx.selectedMethod.signatureHash, index)
           const value: string = getValueFromTxInputs(key, type, tx)
 
           return (

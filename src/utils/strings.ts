@@ -16,7 +16,15 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
    * @param text
    * @returns {string|?string}
    */
-  (text = ''): string => {
+  (text = null) => {
+    if (typeof text !== 'string') {
+      throw new TypeError(` A string is required. ${typeof text} was provided instead.`)
+    }
+
+    if (!text) {
+      return ''
+    }
+
     const amountOfCharsToKeep = charsEnd + charsStart
     const finalStringLength = amountOfCharsToKeep + ellipsis.length
 

@@ -35,18 +35,18 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
   // } catch {
   //   return 'Not a token address'
   // }
-  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') as string })
+  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
 
   return call !== '0x'
 }
 
 export const isTokenTransfer = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
+  return !isEmptyData(tx.data) && tx.data.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
 }
 
 export const isSendERC721Transaction = (
   tx: TxServiceModel,
-  txCode: string | null,
+  txCode: string,
   knownTokens: Map<string, Token>,
 ): boolean => {
   // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
@@ -78,7 +78,7 @@ export const getERC20DecimalsAndSymbol = async (
   try {
     const storedTokenInfo = await getTokenInfos(tokenAddress)
 
-    if (!storedTokenInfo) {
+    if (storedTokenInfo === null) {
       const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
         abi: ALTERNATIVE_TOKEN_ABI,
         address: tokenAddress,
@@ -96,7 +96,7 @@ export const getERC20DecimalsAndSymbol = async (
 
 export const isSendERC20Transaction = async (
   tx: TxServiceModel,
-  txCode: string | null,
+  txCode: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
   let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
