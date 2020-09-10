@@ -1,17 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
 import Tooltip from '@material-ui/core/Tooltip'
-import Img from 'src/components/layout/Img'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { makeStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
-import { useSelector } from 'react-redux'
+import { Skeleton } from '@material-ui/lab'
 
 import InfoIcon from 'src/assets/icons/info.svg'
 
-import { styles } from './styles'
+import { useStyles } from './styles'
 
+import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Button from 'src/components/layout/Button'
@@ -32,10 +32,7 @@ import {
   BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import { Skeleton } from '@material-ui/lab'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-
-const useStyles = makeStyles(styles as any)
 
 type Props = {
   showReceiveFunds: () => void
@@ -94,7 +91,7 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  React.useMemo(() => {
+  useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
   }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
 
