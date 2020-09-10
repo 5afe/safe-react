@@ -17,13 +17,16 @@ export default handleActions(
     [UPDATE_VIEWED_SAFES]: (state, action) => {
       const safeAddress = action.payload
 
-      const newState = state.updateIn(['viewedSafes'], (prev) =>
-        prev.includes(safeAddress) ? prev : [...prev, safeAddress],
-      )
+      if (state.hasIn(['viewedSafes'])) {
+        const newState = state.updateIn(['viewedSafes'], (prev) =>
+          prev.includes(safeAddress) ? prev : [...prev, safeAddress],
+        )
 
-      saveCurrentSessionToStorage(newState)
+        saveCurrentSessionToStorage(newState)
 
-      return newState
+        return newState
+      }
+      return state
     },
   },
   Map(),
