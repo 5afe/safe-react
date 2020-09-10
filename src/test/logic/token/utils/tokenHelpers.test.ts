@@ -10,7 +10,7 @@ import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 
 
 describe('getEthAsToken', () => {
-  it('It should return the balance as eth token if given eth balance returns', () => {
+  it('Should return eth balance as token', () => {
     // given
     const balance = '1000'
     const expectedResult = makeToken({
