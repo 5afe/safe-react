@@ -11,6 +11,7 @@ const styles = () => ({
       paddingTop: '0',
       paddingBottom: '0',
       alignItems: 'auto',
+      maxWidth: '420px',
       '& > textarea': {
         fontSize: '15px',
         letterSpacing: '-0.5px',

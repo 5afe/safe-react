@@ -25,7 +25,7 @@ export const styles = createStyles({
     cursor: 'pointer',
   },
   formContainer: {
-    padding: `${md} ${lg}`,
+    padding: `${md} ${sm} ${md} ${lg}`,
   },
   value: {
     marginLeft: sm,
@@ -68,6 +68,7 @@ export const styles = createStyles({
     cursor: 'pointer',
   },
   fullWidth: {
+    maxWidth: '420px',
     justifyContent: 'space-between',
   },
 })

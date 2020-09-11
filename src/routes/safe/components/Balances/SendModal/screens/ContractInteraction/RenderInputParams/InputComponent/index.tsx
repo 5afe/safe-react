@@ -1,5 +1,6 @@
 import { Checkbox } from '@gnosis.pm/safe-react-components'
 import React from 'react'
+import styled from 'styled-components'
 
 import Col from 'src/components/layout/Col'
 import Field from 'src/components/forms/Field'
@@ -8,6 +9,10 @@ import TextField from 'src/components/forms/TextField'
 import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import ArrayTypeInput from './ArrayTypeInput'
+
+const TextFieldFixedWidth = styled(TextField)`
+  max-width: 420px;
+`
 
 type Props = {
   type: string
@@ -35,7 +40,7 @@ const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElem
       return (
         <Col>
           <Field
-            component={TextField}
+            component={TextFieldFixedWidth}
             name={keyValue}
             placeholder={placeholder}
             testId={keyValue}
@@ -53,7 +58,7 @@ const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElem
             <ArrayTypeInput name={keyValue} text={placeholder} type={type} />
           ) : (
             <Field
-              component={TextField}
+              component={TextFieldFixedWidth}
               name={keyValue}
               placeholder={placeholder}
               testId={keyValue}

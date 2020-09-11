@@ -10,7 +10,7 @@ import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/component
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 const FormContainer = styled.div`
-  padding: 24px;
+  padding: 24px 8px 24px 24px;
   align-items: center;
   display: grid;
   grid-template-columns: 4fr 1fr;

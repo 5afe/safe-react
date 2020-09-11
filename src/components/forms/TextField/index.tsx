@@ -16,6 +16,9 @@ const styles = () => ({
     paddingBottom: '12px',
     lineHeight: 0,
   },
+  inputWidth: {
+    maxWidth: '420px',
+  },
 })
 
 class TextField extends React.PureComponent<any> {
@@ -49,7 +52,7 @@ class TextField extends React.PureComponent<any> {
     }
     const inputRootProps = {
       ...inputAdornment,
-      className: `${inputRoot} ${statusClasses}`,
+      className: `${inputRoot} ${classes.inputWidth} ${statusClasses}`,
       disableUnderline: disableUnderline,
     }
 

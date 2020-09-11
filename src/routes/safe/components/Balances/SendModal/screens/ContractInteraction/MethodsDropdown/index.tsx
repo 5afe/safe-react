@@ -18,7 +18,7 @@ import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/s
 import { DropdownListTheme } from 'src/theme/mui'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
-const MENU_WIDTH = '452px'
+const MENU_WIDTH = '420px'
 
 interface MethodsDropdownProps {
   onChange: (method: AbiItem) => void

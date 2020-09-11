@@ -5,7 +5,8 @@ import Select from '@material-ui/core/Select'
 import React from 'react'
 
 const style = {
-  minWidth: '100%',
+  minWidth: '420px',
+  maxWidth: '420px',
 }
 
 const SelectInput = ({

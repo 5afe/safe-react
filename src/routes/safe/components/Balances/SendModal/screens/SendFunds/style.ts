@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { lg, md, secondaryText } from 'src/theme/variables'
+import { lg, md, secondaryText, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   heading: {
@@ -25,7 +25,7 @@ export const styles = createStyles({
     cursor: 'pointer',
   },
   formContainer: {
-    padding: `${md} ${lg}`,
+    padding: `${md} ${sm} ${md} ${lg}`,
   },
   buttonRow: {
     height: '84px',

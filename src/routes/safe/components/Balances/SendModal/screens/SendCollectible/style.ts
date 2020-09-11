@@ -1,4 +1,4 @@
-import { lg, md, secondaryText } from 'src/theme/variables'
+import { lg, md, secondaryText, sm } from 'src/theme/variables'
 
 export const styles = () => ({
   heading: {
@@ -24,7 +24,7 @@ export const styles = () => ({
     cursor: 'pointer',
   },
   formContainer: {
-    padding: `${md} ${lg}`,
+    padding: `${md} ${sm} ${md} ${lg}`,
   },
   buttonRow: {
     height: '84px',

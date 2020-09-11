@@ -4,7 +4,7 @@ import { useField } from 'react-final-form'
 import Row from 'src/components/layout/Row'
 
 import InputComponent from './InputComponent'
-import { generateFormFieldKey } from '../utils'
+import { generateFormFieldKey } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 
 const RenderInputParams = (): React.ReactElement => {
