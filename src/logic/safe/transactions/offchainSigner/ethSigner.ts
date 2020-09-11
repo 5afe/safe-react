@@ -4,26 +4,13 @@ import { AbstractProvider } from 'web3-core/types'
 
 const ETH_SIGN_NOT_SUPPORTED_ERROR_MSG = 'ETH_SIGN_NOT_SUPPORTED'
 
-export const ethSigner = async ({
-  baseGas,
-  data,
-  gasPrice,
-  gasToken,
-  nonce,
-  operation,
-  refundReceiver,
-  safeInstance,
-  safeTxGas,
-  sender,
-  to,
-  valueInWei,
-}): Promise<string> => {
+type EthSignerArgs = {
+  safeTxHash: string
+  sender: string
+}
+
+export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<string> => {
   const web3 = await getWeb3()
-  const txHash = await safeInstance.methods
-    .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
-    .call({
-      from: sender,
-    })
 
   return new Promise(function (resolve, reject) {
     const provider = web3.currentProvider as AbstractProvider
@@ -31,7 +18,7 @@ export const ethSigner = async ({
       {
         jsonrpc: '2.0',
         method: 'eth_sign',
-        params: [sender, txHash],
+        params: [sender, safeTxHash],
         id: new Date().getTime(),
       },
       async function (err, signature) {

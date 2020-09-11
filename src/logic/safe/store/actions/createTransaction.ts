@@ -169,6 +169,7 @@ const createTransaction = (
     sender: from,
     sigs,
   }
+  const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
 
   try {
     // Here we're checking that safe contract version is greater or equal 1.1.1, but
@@ -176,20 +177,19 @@ const createTransaction = (
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
-      const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
+      const signature = await tryOffchainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
+        dispatch(fetchTransactions(safeAddress))
 
         await saveTxToHistory({ ...txArgs, signature, origin })
-        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
-
-        dispatch(fetchTransactions(safeAddress))
+        onUserConfirm?.(safeTxHash)
         return
       }
     }
 
-    const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
     const tx = isExecution
       ? await getExecutionTransaction(txArgs)
       : await getApprovalTransaction(safeInstance, safeTxHash)
