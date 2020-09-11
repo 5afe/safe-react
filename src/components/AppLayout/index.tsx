@@ -28,7 +28,7 @@ const GridTopbarWrapper = styled.nav`
 
 const GridSidebarWrapper = styled.aside`
   width: 200px;
-  padding: 64px 8px 0 8px;
+  padding: 62px 8px 0 8px;
   height: 100%;
   background-color: ${({ theme }) => theme.colors.white};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
@@ -37,10 +37,6 @@ const GridSidebarWrapper = styled.aside`
   box-sizing: border-box;
   position: fixed;
   grid-area: sidebar;
-
-  div:last-of-type {
-    margin-top: auto;
-  }
 `
 
 const GridBodyWrapper = styled.section`
