@@ -1,4 +1,4 @@
-import { Transfer, TxConstants } from 'src/routes/safe/store/models/types/transactions.d'
+import { Transfer, TxConstants } from 'src/logic/safe/store/models/types/transactions.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { store } from 'src/store'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
@@ -7,7 +7,7 @@ import {
   ERC721TransferDetails,
   ETHTransferDetails,
   UnknownTransferDetails,
-} from './transferDetails.d'
+} from 'src/logic/safe/store/actions/transactions/utils/transferDetails.d'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 
 const isIncomingTransfer = (transfer: Transfer): boolean => {

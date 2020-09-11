@@ -20,6 +20,8 @@ const typeToIcon = {
   creation: SettingsTxIcon,
   cancellation: SettingsTxIcon,
   upgrade: SettingsTxIcon,
+  module: SettingsTxIcon,
+  spendingLimit: SettingsTxIcon,
 }
 
 const typeToLabel = {
@@ -32,6 +34,8 @@ const typeToLabel = {
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
   upgrade: 'Contract Upgrade',
+  module: 'Module transaction',
+  spendingLimit: 'Spending Limit',
 }
 
 interface TxTypeProps {
@@ -73,4 +77,5 @@ const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
 
   return loading ? <Loader size="sm" /> : <CustomIconText iconUrl={appInfo!.iconUrl} text={appInfo!.name} />
 }
+
 export default TxType

@@ -5,11 +5,11 @@ import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/container'
 import { TRANSACTION_ROW_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable'
 import {
   TRANSACTIONS_DESC_SEND_TEST_ID,
-} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription'
+} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTxRow/TxDescription'
 import {
   TRANSACTIONS_DESC_ADD_OWNER_TEST_ID,
   TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID,
-} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/SettingsDescription'
+} from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTxRow/TxDescription/SettingsDescription'
 
 export const getLastTransaction = async (SafeDom) => {
   // Travel to transactions

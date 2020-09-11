@@ -7,7 +7,7 @@ import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import EtherscanLink from 'src/components/EtherscanLink'
 import Paragraph from 'src/components/layout/Paragraph'
-import { SAFE_METHODS_NAMES, SafeMethods } from 'src/routes/safe/store/models/types/transactions.d'
+import { SAFE_METHODS_NAMES, SafeMethods } from 'src/logic/safe/store/models/types/transactions.d'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
 export const TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID = 'tx-description-remove-owner'

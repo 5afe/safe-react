@@ -3,6 +3,12 @@ import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import {
+  getModuleAmount,
+  TableData,
+  TX_TABLE_RAW_CANCEL_TX_ID,
+  TX_TABLE_RAW_TX_ID,
+} from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -24,10 +30,58 @@ import Span from 'src/components/layout/Span'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
+import TransferDescription from './TxDescription/TransferDescription'
 
 const useStyles = makeStyles(styles as any)
+
+const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
+  const classes = useStyles()
+
+  const recipient = React.useMemo(() => {
+    if (tx.type === TransactionTypes.SPENDING_LIMIT) {
+      if (tx.dataDecoded) {
+        // if `dataDecoded` is defined, then it's a token transfer
+        return tx.dataDecoded?.parameters[0].value
+      } else {
+        // if `data` is not defined, then it's an ETH transfer
+        return tx.to
+      }
+    }
+  }, [tx.dataDecoded, tx.to, tx.type])
+
+  return (
+    <Block className={classes.expandedTxBlock}>
+      <Row>
+        <Col layout="column" xs={6}>
+          <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+            <div style={{ display: 'flex' }}>
+              <Bold className={classes.txHash}>Hash:</Bold>
+              {tx.executionTxHash ? (
+                <EthHashInfo
+                  hash={tx.executionTxHash}
+                  shortenHash={4}
+                  showCopyBtn
+                  showEtherscanBtn
+                  network={getNetwork()}
+                />
+              ) : (
+                'n/a'
+              )}
+            </div>
+          </Block>
+          <Hairline />
+          {recipient && (
+            <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+              <TransferDescription amount={getModuleAmount(tx)} recipient={recipient} />
+            </Block>
+          )}
+        </Col>
+      </Row>
+    </Block>
+  )
+}
 
 interface ExpandedTxProps {
   cancelTx: Transaction
@@ -139,4 +193,14 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   )
 }
 
-export default ExpandedTx
+const ExpandedTxRow = ({ row }: { row: TableData }): React.ReactElement => {
+  const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(row.tx.type)
+
+  if (isModuleTx) {
+    return <ExpandedModuleTx tx={row[TX_TABLE_RAW_TX_ID] as SafeModuleTransaction} />
+  }
+
+  return <ExpandedTx cancelTx={row[TX_TABLE_RAW_CANCEL_TX_ID]} tx={row[TX_TABLE_RAW_TX_ID] as Transaction} />
+}
+
+export default ExpandedTxRow

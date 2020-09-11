@@ -6,7 +6,7 @@ import {
   Parameter,
   Transaction,
   TxType,
-} from 'src/routes/safe/store/models/types/transactions.d'
+} from 'src/logic/safe/store/models/types/transactions.d'
 
 export const isMultiSigTx = (tx: Transaction): tx is MultiSigTransaction => {
   return TxType[tx.txType] === TxType.MULTISIG_TRANSACTION

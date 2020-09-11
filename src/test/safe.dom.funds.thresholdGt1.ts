@@ -1,4 +1,4 @@
-// 
+//
 import { fireEvent, waitForElement } from '@testing-library/react'
 import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
@@ -13,7 +13,7 @@ import { TRANSACTIONS_TAB_BTN_TEST_ID } from 'src/routes/safe/container'
 import { TRANSACTION_ROW_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable'
 import { useTestAccountAt, resetTestAccount } from './utils/accounts'
 //import { CONFIRM_TX_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/OwnersColumn/ButtonRow'
-import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/ApproveTxModal'
+import { APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTxRow/ApproveTxModal'
 
 afterEach(resetTestAccount)
 

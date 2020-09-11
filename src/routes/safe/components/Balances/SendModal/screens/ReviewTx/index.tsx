@@ -2,7 +2,6 @@ import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStand
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -39,7 +38,7 @@ import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
-const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+const ReviewTx = ({ onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector)
@@ -94,7 +93,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether') : '0'
+    const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether').toString() : '0'
 
     if (isSpendingLimit) {
       const spendingLimit = getSpendingLimitContract()
@@ -120,9 +119,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
           valueInWei: txAmount,
           txData: data,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          enqueueSnackbar,
-          closeSnackbar,
-        } as any),
+        }),
       )
       onClose()
     }
@@ -213,4 +210,4 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   )
 }
 
-export default withSnackbar(ReviewTx)
+export default ReviewTx

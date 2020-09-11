@@ -12,8 +12,8 @@ import {
   extractERC721TransferDetails,
   extractETHTransferDetails,
   extractUnknownTransferDetails,
-} from './transferDetails'
-import { isMultiSendParameter } from './newTransactionHelpers'
+} from 'src/logic/safe/store/actions/transactions/utils/transferDetails'
+import { isMultiSendParameter } from 'src/logic/safe/store/actions/transactions/utils/newTransactionHelpers'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 export type MultiSendDetails = {

@@ -9,10 +9,10 @@ import TxType from './TxType'
 
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -68,16 +68,47 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
   return getAmountWithSymbol({ decimals, symbol, value }, formatted)
 }
 
-interface TableData {
+export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): string => {
+  if (tx.type === TransactionTypes.SPENDING_LIMIT && tx.tokenInfo) {
+    const { decimals, symbol } = tx.tokenInfo
+
+    let value
+
+    if (tx.dataDecoded) {
+      // if `dataDecoded` is defined, then it's a token transfer
+      const [, amount] = tx.dataDecoded.parameters
+      value = amount.value
+    } else {
+      // if `dataDecoded` is not defined, then it's an ETH transfer
+      value = tx.value
+    }
+
+    return getAmountWithSymbol({ decimals, symbol, value }, formatted)
+  }
+
+  return NOT_AVAILABLE
+}
+
+export interface TableData {
   amount: string
   cancelTx?: Transaction
   date: string
   dateOrder?: number
   id: string
   status: string
-  tx?: Transaction
+  tx?: Transaction | SafeModuleTransaction
   type: any
 }
+
+const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
+  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+  [TX_TABLE_TYPE_ID]: <TxType txType={tx.type} />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_AMOUNT_ID]: getModuleAmount(tx),
+  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_RAW_TX_ID]: tx,
+})
 
 const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
@@ -91,10 +122,15 @@ const getIncomingTxTableData = (tx: Transaction): TableData => ({
 
 const getTransactionTableData = (tx: Transaction, cancelTx: Transaction): TableData => {
   const txDate = tx.submissionDate
+  // given that setAllowance will always be part of
+  // a spendingLimit related tx (as of now, until removeDelegate is implemented)
+  // we can use this method to identify an SpendingLimit tx
+  const setAllowanceHash = 'beaeb388'
+  const txType = tx.data?.includes(setAllowanceHash) ? TransactionTypes.SPENDING_LIMIT : tx.type
 
   return {
     [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
-    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
+    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
@@ -105,15 +141,22 @@ const getTransactionTableData = (tx: Transaction, cancelTx: Transaction): TableD
 }
 
 export const getTxTableData = (
-  transactions: List<Transaction>,
+  transactions: List<Transaction | SafeModuleTransaction>,
   cancelTxs: CancellationTransactions,
 ): List<TableData> => {
   return transactions.map((tx) => {
-    if (INCOMING_TX_TYPES[tx.type] !== undefined) {
-      return getIncomingTxTableData(tx)
+    const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(tx.type)
+    const isIncomingTx = INCOMING_TX_TYPES[tx.type] !== undefined
+
+    if (isModuleTx) {
+      return getModuleTxTableData(tx as SafeModuleTransaction)
     }
 
-    return getTransactionTableData(tx, cancelTxs.get(`${tx.nonce}`))
+    if (isIncomingTx) {
+      return getIncomingTxTableData(tx as Transaction)
+    }
+
+    return getTransactionTableData(tx as Transaction, cancelTxs.get(`${tx.nonce}`))
   })
 }
 
