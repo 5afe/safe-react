@@ -19,7 +19,7 @@ import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
 } from 'src/logic/currencyValues/store/reducer/currencyValues'
-import { CurrentSessionState } from 'src/logic/currentSession/store/model/currentSession'
+import { CurrentSessionState } from 'src/logic/currentSession/store/reducer/currentSession'
 import currentSession, { CURRENT_SESSION_REDUCER_ID } from 'src/logic/currentSession/store/reducer/currentSession'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
