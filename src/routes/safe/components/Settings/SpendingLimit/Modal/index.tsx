@@ -53,7 +53,7 @@ const TopBar = ({ title, titleNote, onClose }: TopBarProps): React.ReactElement 
       {titleNote && (
         <>
           {' '}
-          <Text size="lg" color="secondaryLight">
+          <Text size="lg" color="secondaryLight" as="span">
             {titleNote}
           </Text>
         </>
