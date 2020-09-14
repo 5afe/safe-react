@@ -70,6 +70,21 @@ const useStyles = makeStyles((theme: Theme) =>
       width: '100%',
       maxWidth: 200,
       backgroundColor: theme.palette.background.paper,
+      overflowX: 'auto',
+      margin: '8px 0 -4px 0',
+      '&::-webkit-scrollbar': {
+        width: '0.5em',
+      },
+      '&::-webkit-scrollbar-track': {
+        boxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
+        webkitBoxShadow: 'inset 0 0 6px rgba(0, 0, 0, 0.3)',
+        borderRadius: '20px',
+      },
+      '&::-webkit-scrollbar-thumb': {
+        backgroundColor: 'darkgrey',
+        outline: '1px solid #dadada',
+        borderRadius: '20px',
+      },
     },
     nested: {
       paddingLeft: theme.spacing(3),

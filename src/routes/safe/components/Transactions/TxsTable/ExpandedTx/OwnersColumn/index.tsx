@@ -143,6 +143,7 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
+  // TODO: simplify this whole logic around tx status, it's getting hard to maintain and follow
   const showConfirmBtn =
     !tx.isExecuted &&
     tx.status !== 'pending' &&
@@ -152,7 +153,8 @@ const OwnersColumn = ({
     !currentUserAlreadyConfirmed &&
     !thresholdReached
 
-  const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
+  const showExecuteBtn =
+    canExecute && !tx.isExecuted && thresholdReached && tx.status !== 'pending' && cancelTx.status !== 'pending'
 
   const showRejectBtn =
     !cancelTx.isExecuted &&
@@ -164,7 +166,13 @@ const OwnersColumn = ({
     !cancelThresholdReached &&
     displayButtonRow
 
-  const showExecuteRejectBtn = !cancelTx.isExecuted && !tx.isExecuted && canExecuteCancel && cancelThresholdReached
+  const showExecuteRejectBtn =
+    !cancelTx.isExecuted &&
+    !tx.isExecuted &&
+    canExecuteCancel &&
+    cancelThresholdReached &&
+    tx.status !== 'pending' &&
+    cancelTx.status !== 'pending'
 
   const txThreshold = cancelTx.isExecuted ? tx.confirmations.size : threshold
   const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold
