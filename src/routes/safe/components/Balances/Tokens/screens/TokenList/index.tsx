@@ -89,18 +89,21 @@ class Tokens extends React.Component<any> {
 
   onSwitch = (token) => () => {
     this.setState((prevState: any) => {
-      const activeTokensAddresses = prevState.activeTokensAddresses.has(token.address)
-        ? prevState.activeTokensAddresses.remove(token.address)
-        : prevState.activeTokensAddresses.add(token.address)
-
-      let { blacklistedTokensAddresses } = prevState
-      if (activeTokensAddresses.has(token.address)) {
-        blacklistedTokensAddresses = prevState.blacklistedTokensAddresses.remove(token.address)
-      } else if (prevState.initialActiveTokensAddresses.has(token.address)) {
-        blacklistedTokensAddresses = prevState.blacklistedTokensAddresses.add(token.address)
+      let newActiveTokenAddresses
+      let newBlacklistedTokenAddresses
+      if (prevState.activeTokensAddresses.has(token.address)) {
+        newActiveTokenAddresses = prevState.activeTokensAddresses.remove(token.address)
+        newBlacklistedTokenAddresses = prevState.blacklistedTokensAddresses.add(token.address)
+      } else {
+        newActiveTokenAddresses = prevState.activeTokensAddresses.add(token.address)
+        newBlacklistedTokenAddresses = prevState.blacklistedTokensAddresses.remove(token.address)
       }
 
-      return { ...prevState, activeTokensAddresses, blacklistedTokensAddresses }
+      return {
+        ...prevState,
+        activeTokensAddresses: newActiveTokenAddresses,
+        blacklistedTokensAddresses: newBlacklistedTokenAddresses,
+      }
     })
   }
 
