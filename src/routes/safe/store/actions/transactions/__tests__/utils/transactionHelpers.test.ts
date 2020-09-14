@@ -27,7 +27,7 @@ import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
 describe('isInnerTransaction', () => {
-  it('It should return true if the transaction to is our given safeAddress and the txValue is 0', () => {
+  it('It should return true if the transaction recipient is our given safeAddress and the txValue is 0', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0' })
 
@@ -37,7 +37,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('It should return false if the transaction to is our given safeAddress and the txValue is >0', () => {
+  it('It should return false if the transaction recipient is our given safeAddress and the txValue is >0', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '100' })
 
@@ -47,7 +47,7 @@ describe('isInnerTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('It should return false if the transaction to is not our given safeAddress', () => {
+  it('It should return false if the transaction recipient is not our given safeAddress', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0' })
 
@@ -125,7 +125,7 @@ describe('isPendingTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('It should return true If the transaction is not on pending status but his cancellation transaction yes', () => {
+  it('It should return true If the transaction is not pending status but the cancellation transaction is', () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.AWAITING_CONFIRMATIONS })
     const cancelTx = makeTransaction({ status: TransactionStatus.PENDING })
@@ -136,7 +136,7 @@ describe('isPendingTransaction', () => {
     // then
     expect(result).toBe(true)
   })
-  it('It should return true If the transaction is not pending status and his cancellation transaction also is not on that status', () => {
+  it('It should return true If the transaction and a cancellation transaction are not pending', () => {
     // given
     const transaction = makeTransaction({ status: TransactionStatus.CANCELLED })
     const cancelTx = makeTransaction({ status: TransactionStatus.AWAITING_CONFIRMATIONS })
@@ -217,7 +217,7 @@ describe('isUpgradeTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('It should return false if the transaction data is multisend transaction but does not have upgradeTx data', () => {
+  it('It should return false if the transaction function signature is multisend transaction but does not have upgradeTx function signature encoded in data', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
@@ -241,7 +241,7 @@ describe('isUpgradeTransaction', () => {
 })
 
 describe('isOutgoingTransaction', () => {
-  it('It should return true if the transaction has not a to address equal to the safe address and has no empty data', () => {
+  it('It should return true if the transaction recipient is not a safe address and data is not empty', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
 
@@ -261,7 +261,7 @@ describe('isOutgoingTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('It should return false if the transaction has not a to address equal to the safe address but has empty data', () => {
+  it('It should return false if the transaction recipient is not a safe address and data is empty', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
 
@@ -278,7 +278,7 @@ describe('isCustomTransaction', () => {
   afterAll(() => {
     jest.unmock('src/logic/tokens/utils/tokenHelpers')
   })
-  it('It should return true if Is outgoing transaction, is not SendERC20Transaction, not isUpgradeTransaction and not isSendERC721Transaction', async () => {
+  it('It should return true if Is outgoing transaction, is not an erc20 transaction, not an upgrade transaction and not and erc721 transaction', async () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0', data: 'test' })
     const txCode = ''
@@ -760,7 +760,7 @@ describe('calculateTransactionType', () => {
 })
 
 describe('buildTx', () => {
-  it('Sends transaction params an receives a transaction object', async () => {
+  it('Returns a valid transaction', async () => {
     // given
     const cancelTx1 = makeTransaction()
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0' })
@@ -843,7 +843,7 @@ describe('updateStoredTransactionsStatus', () => {
 })
 
 describe('generateSafeTxHash', () => {
-  it('It should return a safe transaction hash if given transactionArgs', () => {
+  it('It should return a safe transaction hash', () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
     const userAddress = 'address1'

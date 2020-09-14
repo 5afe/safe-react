@@ -1,34 +1,6 @@
-import logo from 'src/assets/icons/icon_etherTokens.svg'
 import { makeToken } from 'src/logic/tokens/store/model/token'
-import {
-  ETH_ADDRESS,
-  getERC20DecimalsAndSymbol,
-  getEthAsToken,
-  isERC721Contract,
-  isTokenTransfer,
-} from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC20DecimalsAndSymbol, isERC721Contract, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
-
-describe('getEthAsToken', () => {
-  it('Should return eth balance as token', () => {
-    // given
-    const balance = '1000'
-    const expectedResult = makeToken({
-      address: ETH_ADDRESS,
-      name: 'Ether',
-      symbol: 'ETH',
-      decimals: 18,
-      logoUri: logo,
-      balance,
-    })
-
-    // when
-    const result = getEthAsToken(balance)
-
-    // then
-    expect(result).toStrictEqual(expectedResult)
-  })
-})
 
 describe('isTokenTransfer', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
