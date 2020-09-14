@@ -27,6 +27,19 @@ jobs:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
+      # Add cache for yarn directory
+      - name: Get yarn cache directory path
+        id: yarn-cache-dir-path
+        run: echo "::set-output name=dir::$(yarn cache dir)"
+
+      - uses: actions/cache@v2
+        id: yarn-cache # use this to check for `cache-hit` (`steps.yarn-cache.outputs.cache-hit != 'true'`)
+        with:
+          path: ${{ steps.yarn-cache-dir-path.outputs.dir }}
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
         shell: powershell
@@ -67,21 +80,21 @@ jobs:
           release: ${{ startsWith(github.ref, 'refs/tags/v') }}
 
       - name: 'Upload Artifacts OSX'
-        if: contains(github.ref, 'master') && startsWith(matrix.os, 'macos')
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'macos')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop OSX
           path: ./dist/Safe[ ]Multisig*.dmg
 
       - name: 'Upload Artifacts Linux'
-        if: contains(github.ref, 'master') && startsWith(matrix.os, 'ubuntu')
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Linux
           path: ./dist/Safe[ ]Multisig*.AppImage
 
       - name: 'Upload Artifacts Windows'
-        if: contains(github.ref, 'master') && startsWith(matrix.os, 'windows')
+        if: contains(github.ref, 'development') && startsWith(matrix.os, 'windows')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Windows
