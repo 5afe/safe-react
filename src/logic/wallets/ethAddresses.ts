@@ -20,7 +20,7 @@ export const shortVersionOf = (value: string, cut: number): string => {
   }
 
   const final = value.length - cut
-  if (value.length < final) {
+  if (value.length <= cut) {
     return value
   }
 
