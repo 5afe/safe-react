@@ -111,6 +111,7 @@ interface CreateTransactionArgs {
 
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
+type RejectEventHandler = () => void
 
 const createTransaction = (
   {
@@ -125,6 +126,7 @@ const createTransaction = (
     origin = null,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
+  onUserReject?: RejectEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
@@ -242,6 +244,22 @@ const createTransaction = (
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
+
+        // Different wallets return different error messages in this case. This is an assumption that if
+        // error message includes "user" word, the tx was rejected by user
+        if (typeof error === 'string') {
+          const includesUserWord = (error as string).includes('User') || (error as string).includes('user')
+          if (includesUserWord) {
+            onUserReject()
+          }
+        }
+
+        if (error.message) {
+          const includesUserWord = error.message.includes('User') || error.message.includes('user')
+          if (includesUserWord) {
+            onUserReject()
+          }
+        }
       })
       .then(async (receipt) => {
         if (pendingExecutionKey) {

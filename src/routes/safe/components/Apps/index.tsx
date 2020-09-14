@@ -101,6 +101,13 @@ const Apps = (): React.ReactElement => {
     )
   }
 
+  const onUserTxReject = () => {
+    sendMessageToIframe(
+      { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
+      confirmTransactionModal.requestId,
+    )
+  }
+
   const onSelectApp = useCallback(
     (appId) => {
       if (selectedAppId === appId) {
@@ -207,6 +214,7 @@ const Apps = (): React.ReactElement => {
         onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
         onUserConfirm={onUserTxConfirm}
+        onUserTxReject={onUserTxReject}
       />
     </>
   )
