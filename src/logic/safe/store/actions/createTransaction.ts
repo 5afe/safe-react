@@ -5,6 +5,7 @@ import semverSatisfies from 'semver/functions/satisfies'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
+import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
@@ -205,6 +206,7 @@ const createTransaction = (
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
       safeTxHash,
+      dataDecoded: decodeMethods(txArgs.data),
       submissionDate: new Date().toISOString(),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
