@@ -1,13 +1,17 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
+import { useSelector } from 'react-redux'
+import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
+import Tooltip from '@material-ui/core/Tooltip'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { makeStyles } from '@material-ui/core/styles'
-import { List } from 'immutable'
-import { useSelector } from 'react-redux'
+import { Skeleton } from '@material-ui/lab'
 
-import { styles } from './styles'
+import InfoIcon from 'src/assets/icons/info.svg'
 
+import { useStyles } from './styles'
+
+import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Button from 'src/components/layout/Button'
@@ -28,10 +32,7 @@ import {
   BalanceData,
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
-import { Skeleton } from '@material-ui/lab'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-
-const useStyles = makeStyles(styles as any)
 
 type Props = {
   showReceiveFunds: () => void
@@ -51,6 +52,28 @@ export type BalanceDataRow = List<{
   value: string
 }>
 
+type CurrencyTooltipProps = {
+  valueWithCurrency: string
+  balanceWithSymbol: string
+}
+
+const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null => {
+  const { balanceWithSymbol, valueWithCurrency } = props
+  const classes = useStyles()
+  const balance = balanceWithSymbol.replace(/[^\d.-]/g, '')
+  const value = valueWithCurrency.replace(/[^\d.-]/g, '')
+  if (!Number(value) && Number(balance)) {
+    return (
+      <Tooltip placement="top" title="Balance may be zero due to missing token price information">
+        <span>
+          <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
+        </span>
+      </Tooltip>
+    )
+  }
+  return null
+}
+
 const Coins = (props: Props): React.ReactElement => {
   const { showReceiveFunds, showSendFunds } = props
   const classes = useStyles()
@@ -68,7 +91,7 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  React.useMemo(() => {
+  useMemo(() => {
     setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
   }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
 
@@ -102,10 +125,16 @@ const Coins = (props: Props): React.ReactElement => {
                     // If there are no values for that row but we have balances, we display as '0.00 {CurrencySelected}'
                     // In case we don't have balances, we display a skeleton
                     const showCurrencyValueRow = row[id] || row[BALANCE_TABLE_BALANCE_ID]
-
+                    const valueWithCurrency = row[id] ? row[id] : `0.00 ${selectedCurrency}`
                     cellItem =
                       showCurrencyValueRow && selectedCurrency ? (
-                        <div className={classes.currencyValueRow}>{row[id] ? row[id] : `0.00 ${selectedCurrency}`}</div>
+                        <div className={classes.currencyValueRow}>
+                          {valueWithCurrency}
+                          <CurrencyTooltip
+                            valueWithCurrency={valueWithCurrency}
+                            balanceWithSymbol={row[BALANCE_TABLE_BALANCE_ID]}
+                          />
+                        </div>
                       ) : (
                         <Skeleton animation="wave" />
                       )
