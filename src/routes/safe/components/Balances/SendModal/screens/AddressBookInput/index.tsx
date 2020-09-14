@@ -22,7 +22,7 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }> | null,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name?: string }> | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
 }

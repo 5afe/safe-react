@@ -48,7 +48,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string | null }>({
+  const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
@@ -100,7 +100,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()
