@@ -142,6 +142,10 @@ process.on('uncaughtException',function(error){
 
 app.userAgentFallback = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/7.1.7 Safari/537.36';
 
+// We have one non-context-aware module in node_modules/usb. This is used by @ledgerhq/hw-transport-node-hid
+// This type of modules will be impossible to use after electron 10
+app.allowRendererProcessReuse = false;
+
 app.commandLine.appendSwitch('ignore-certificate-errors');
 app.on("ready", () =>{
   // Hide the menu
