@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useMemo } from 'react'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
@@ -79,7 +79,7 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  const filteredData: List<BalanceData> = React.useMemo(
+  const filteredData: List<BalanceData> = useMemo(
     () => getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate),
     [activeTokens, selectedCurrency, currencyValues, currencyRate],
   )
