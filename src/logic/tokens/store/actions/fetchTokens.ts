@@ -45,7 +45,7 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
-export const containsMethodByHash = async (contractAddress, methodHash) => {
+export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()
   const byteCode = await web3.eth.getCode(contractAddress)
 
