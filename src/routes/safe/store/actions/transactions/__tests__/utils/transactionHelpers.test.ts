@@ -174,7 +174,7 @@ describe('isModifySettingsTransaction', () => {
 })
 
 describe('isMultiSendTransaction', () => {
-  it('It should return true if given a transaction without value, the data has multisend substring', () => {
+  it('It should return true if given a transaction without value, the data has multisend data', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
@@ -217,7 +217,7 @@ describe('isUpgradeTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('It should return false if the transaction function signature is multisend transaction but does not have upgradeTx function signature encoded in data', () => {
+  it('It should return false if the transaction data is multisend transaction but does not have upgradeTx function signature encoded in data', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: '0x8d80ff0a' })
 
@@ -227,7 +227,7 @@ describe('isUpgradeTransaction', () => {
     // then
     expect(result).toBe(false)
   })
-  it('It should return true if the transaction data is multisend transaction has upgradeTx data', () => {
+  it('It should return true if the transaction data is multisend transaction and has upgradeTx enconded in function signature data', () => {
     // given
     const upgradeTxData = `0x8d80ff0a000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000000000f200dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000247de7edef000000000000000000000000d5d82b6addc9027b22dca772aa68d5d74cdbdf4400dfa693da0d16f5e7e78fdcbede8fc6ebea44f1cf00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000024f08a032300000000000000000000000034cfac646f301356faa8b21e94227e3583fe3f5f0000000000000000000000000000`
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: upgradeTxData })
