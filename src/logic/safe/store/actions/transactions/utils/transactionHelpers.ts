@@ -87,12 +87,12 @@ export const isCustomTransaction = async (
   safeAddress: string,
   knownTokens: Map<string, Token>,
 ): Promise<boolean> => {
-  return (
-    isOutgoingTransaction(tx, safeAddress) &&
-    !(await isSendERC20Transaction(tx, txCode, knownTokens)) &&
-    !isUpgradeTransaction(tx) &&
-    !isSendERC721Transaction(tx, txCode, knownTokens)
-  )
+  const isOutgoing = isOutgoingTransaction(tx, safeAddress)
+  const isErc20 = await isSendERC20Transaction(tx, txCode, knownTokens)
+  const isUpgrade = isUpgradeTransaction(tx)
+  const isErc721 = isSendERC721Transaction(tx, txCode, knownTokens)
+
+  return isOutgoing && !isErc20 && !isUpgrade && !isErc721
 }
 
 export const getRefundParams = async (
