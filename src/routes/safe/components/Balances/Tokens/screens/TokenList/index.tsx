@@ -51,20 +51,12 @@ export const TokenList = (props: Props): React.ReactElement => {
   const [filter, setFilter] = useState('')
   const dispatch = useDispatch()
 
-  const onUpdateActiveTokens = () => {
-    dispatch(updateActiveTokens(safeAddress, activeTokensAddresses))
-  }
-
-  const onUpdateBlacklistedTokens = () => {
-    dispatch(updateBlacklistedTokens(safeAddress, blacklistedTokensAddresses))
-  }
-
   useEffect(() => {
     return () => {
-      onUpdateActiveTokens()
-      onUpdateBlacklistedTokens()
+      dispatch(updateActiveTokens(safeAddress, activeTokensAddresses))
+      dispatch(updateBlacklistedTokens(safeAddress, blacklistedTokensAddresses))
     }
-  }, [onUpdateActiveTokens, onUpdateBlacklistedTokens])
+  }, [dispatch, safeAddress, activeTokensAddresses, blacklistedTokensAddresses])
 
   const searchClasses = {
     input: classes.searchInput,
