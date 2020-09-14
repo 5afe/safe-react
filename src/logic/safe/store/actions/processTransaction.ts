@@ -1,4 +1,3 @@
-import { fromJS } from 'immutable'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -20,9 +19,9 @@ import {
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-import { makeConfirmation } from '../models/confirmation'
 import { storeTx } from './createTransaction'
-import { TransactionStatus } from '../models/types/transaction'
+import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 
 const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddress, tx, userAddress }) => async (
   dispatch,
@@ -85,6 +84,8 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
         dispatch(closeSnackbarAction(beforeExecutionKey))
 
         await saveTxToHistory({ ...txArgs, signature })
+        // TODO: while we wait for the tx to be stored in the service and later update the tx info
+        //  we should update the tx status in the store to disable owners' action buttons
         dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
@@ -105,9 +106,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
 
     const txToMock: TxToMock = {
       ...txArgs,
-      confirmations: txArgs.confirmations, // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
-      submissionDate: txArgs.submissionDate,
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 
@@ -123,10 +122,14 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash }),
             storeTx(
-              mockedTx.updateIn(
-                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
-                (previous) => previous.push(from),
-              ),
+              mockedTx.withMutations((record) => {
+                record
+                  .updateIn(
+                    ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
+                    (previous) => previous.push(from),
+                  )
+                  .set('status', TransactionStatus.PENDING)
+              }),
               safeAddress,
               dispatch,
               state,
@@ -175,16 +178,20 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
                     : TransactionStatus.FAILED,
                 )
                 .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
+                .updateIn(['ownersWithPendingActions', 'confirm'], (prev) => prev.clear())
             })
-          : mockedTx.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
+          : mockedTx.withMutations((record) => {
+              record
+                .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
+                  previous.pop(),
+                )
+                .set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
+            })
 
         await storeTx(
-          toStoreTx.withMutations((record) => {
-            record
-              .set('confirmations', fromJS([...tx.confirmations, makeConfirmation({ owner: from })]))
-              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
-                previous.pop(from),
-              )
+          toStoreTx.update('confirmations', (confirmations) => {
+            const index = confirmations.findIndex(({ owner }) => owner === from)
+            return index === -1 ? confirmations.push(makeConfirmation({ owner: from })) : confirmations
           }),
           safeAddress,
           dispatch,

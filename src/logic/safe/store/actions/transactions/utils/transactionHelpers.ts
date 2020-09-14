@@ -34,7 +34,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
-import { DecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
+import { DataDecoded, DecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -316,6 +316,7 @@ export type TxToMock = TxArgs & {
   safeTxHash: string
   value: string
   submissionDate: string
+  dataDecoded: DataDecoded | null
 }
 
 export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
