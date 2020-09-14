@@ -1,7 +1,8 @@
 name: Build/Release Desktop app
 
 # this will help you specify where to run
-on: [workflow_dispatch]
+on: 
+  workflow_dispatch
 
 env:
   REACT_APP_BLOCKNATIVE_KEY: ${{ secrets.REACT_APP_BLOCKNATIVE_KEY }}
