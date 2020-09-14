@@ -118,8 +118,8 @@ export const isERC721Contract = async (contractAddress: string): Promise<boolean
   let isERC721 = false
 
   try {
-    isERC721 = true
     await ERC721Token.at(contractAddress)
+    isERC721 = true
   } catch (error) {
     console.warn('Asset not found')
   }
