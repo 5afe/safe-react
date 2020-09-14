@@ -102,9 +102,7 @@ const SafeHeader = ({
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
-          <div>
-            <FixedIcon type="notConnected" />
-          </div>
+          <FixedIcon type="notConnected" />
           <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <Icon size="md" type="circleDropdown" />
           </UnStyledButton>

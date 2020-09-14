@@ -1,8 +1,14 @@
+import { makeStyles } from '@material-ui/core/styles'
 import { sm, xs } from 'src/theme/variables'
 
-export const styles = () => ({
+export const useStyles = makeStyles({
   iconSmall: {
     fontSize: 16,
+  },
+  tooltipInfo: {
+    position: 'relative',
+    top: '3px',
+    left: '3px',
   },
   hide: {
     '&:hover': {

@@ -10,14 +10,14 @@ const StyledDivider = styled(Divider)`
 `
 
 const HelpContainer = styled.div`
-  height: 58px;
+  margin-top: auto;
 `
 
 const HelpCenterLink = styled.a`
   height: 30px;
   width: 166px;
-  padding: 10px 0 0 16px;
-  margin: 10px 0px;
+  padding: 6px 0 0 16px;
+  margin: 14px 0px;
   text-decoration: none;
   display: block;
 
