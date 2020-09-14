@@ -3,9 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
 import React, { useState } from 'react'
-import { connect, useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import actions from './actions'
 import { styles } from './style'
 
 import Hairline from 'src/components/layout/Hairline'
@@ -25,8 +24,14 @@ export const MANAGE_TOKENS_MODAL_CLOSE_BUTTON_TEST_ID = 'manage-tokens-close-mod
 
 const useStyles = makeStyles(styles)
 
-const Tokens = (props) => {
-  const { activateTokenForAllSafes, addToken, modalScreen, onClose, safeAddress, updateActiveTokens } = props
+type Props = {
+  safeAddress: string
+  modalScreen: string
+  onClose: () => void
+}
+
+const Tokens = (props: Props): React.ReactElement => {
+  const { modalScreen, onClose, safeAddress } = props
   const tokens = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
@@ -56,15 +61,12 @@ const Tokens = (props) => {
       {activeScreen === 'assetsList' && <AssetsList setActiveScreen={setActiveScreen} />}
       {activeScreen === 'addCustomToken' && (
         <AddCustomToken
-          activateTokenForAllSafes={activateTokenForAllSafes}
           activeTokens={activeTokens}
-          addToken={addToken}
           onClose={onClose}
           parentList={'tokenList'}
           safeAddress={safeAddress}
           setActiveScreen={setActiveScreen}
           tokens={tokens}
-          updateActiveTokens={updateActiveTokens}
         />
       )}
       {activeScreen === 'addCustomAsset' && (
@@ -74,4 +76,4 @@ const Tokens = (props) => {
   )
 }
 
-export default connect(undefined, actions)(Tokens)
+export default Tokens
