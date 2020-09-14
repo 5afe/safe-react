@@ -8,7 +8,7 @@ import Identicon from 'src/components/Identicon'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { required } from 'src/components/forms/validator'
+import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -132,7 +132,7 @@ const OwnerListComponent = (props) => {
                   placeholder="Owner Name*"
                   text="Owner Name"
                   type="text"
-                  validate={required}
+                  validate={composeValidators(required, minMaxLength(1, 50))}
                   testId={`load-safe-owner-name-${index}`}
                 />
               </Col>

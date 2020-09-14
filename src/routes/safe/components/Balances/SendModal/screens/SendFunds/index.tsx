@@ -26,7 +26,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { getNameFromSafeAddressBook } from 'src/logic/addressBook/utils'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -48,7 +48,25 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
+type SendFundsProps = {
+  initialValues: {
+    amount?: string
+    recipientAddress?: string
+    token?: string
+  }
+  onClose: () => void
+  onNext: (txInfo: unknown) => void
+  recipientAddress: string
+  selectedToken: string
+}
+
+const SendFunds = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = '',
+}: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(getAddressBook)
@@ -100,10 +118,10 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()

@@ -1,27 +1,28 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { AddressBookEntryProps } from './../model/addressBook'
+import { AddressBookEntryRecord, AddressBookEntryProps } from '../model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import { AddressBookCollection } from '../store/reducer/addressBook'
+import { AddressBookMap } from '../store/reducer/types/addressBook'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
 export const getAddressBookFromStorage = async (): Promise<Array<AddressBookEntryProps> | undefined> => {
-  const data = await loadFromStorage<Array<AddressBookEntryProps>>(ADDRESS_BOOK_STORAGE_KEY)
-
-  return data
+  return await loadFromStorage<Array<AddressBookEntryProps>>(ADDRESS_BOOK_STORAGE_KEY)
 }
 
-export const saveAddressBook = async (addressBook) => {
+export const saveAddressBook = async (addressBook: AddressBookMap): Promise<void> => {
   try {
-    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJSON())
+    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, addressBook.toJS())
   } catch (err) {
     console.error('Error storing addressBook in localstorage', err)
   }
 }
 
-export const getAddressesListFromAdbk = (addressBook: List<any>) => addressBook.map((entry: any) => entry.address)
+export const getAddressesListFromSafeAddressBook = (addressBook: AddressBookCollection): string[] =>
+  Array.from(addressBook).map((entry: AddressBookEntryRecord) => entry.address)
 
-export const getNameFromAdbk = (addressBook, userAddress) => {
+export const getNameFromSafeAddressBook = (addressBook: AddressBookCollection, userAddress: string): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
     return entry.name
@@ -30,18 +31,17 @@ export const getNameFromAdbk = (addressBook, userAddress) => {
 }
 
 export const getOwnersWithNameFromAddressBook = (
-  addressBook: AddressBookEntryProps,
+  addressBook: AddressBookCollection,
   ownerList: List<SafeOwner>,
 ): List<SafeOwner> | [] => {
   if (!ownerList) {
     return []
   }
-  const ownersListWithAdbkNames = ownerList.map((owner) => {
-    const ownerName = getNameFromAdbk(addressBook, owner.address)
+  return ownerList.map((owner) => {
+    const ownerName = getNameFromSafeAddressBook(addressBook, owner.address)
     return {
       address: owner.address,
       name: ownerName || owner.name,
     }
   })
-  return ownersListWithAdbkNames
 }

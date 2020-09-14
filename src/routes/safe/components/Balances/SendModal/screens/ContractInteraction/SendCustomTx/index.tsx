@@ -54,7 +54,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: contractAddress || initialValues.contractAddress,
     name: '',
   })
