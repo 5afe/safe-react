@@ -1,8 +1,7 @@
 import { formatAmount, formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 
-
 describe('formatAmount', () => {
-  it('Given 0 returns 0',  () => {
+  it('Given 0 returns 0', () => {
     // given
     const input = '0'
     const expectedResult = '0'
@@ -13,7 +12,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given 1 returns 1',  () => {
+  it('Given 1 returns 1', () => {
     // given
     const input = '1'
     const expectedResult = '1'
@@ -24,7 +23,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a string in format XXXXX.XXX returns a number of format XX,XXX.XXX',  () => {
+  it('Given a string in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
     // given
     const input = '19797.899'
     const expectedResult = '19,797.899'
@@ -35,7 +34,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given number > 0.001 && < 1000 returns the same number as string',  () => {
+  it('Given number > 0.001 && < 1000 returns the same number as string', () => {
     // given
     const input = 999
     const expectedResult = '999'
@@ -45,7 +44,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number between 1000 and 10000 returns a number of format XX,XXX',  () => {
+  it('Given a number between 1000 and 10000 returns a number of format XX,XXX', () => {
     // given
     const input = 9999
     const expectedResult = '9,999'
@@ -55,7 +54,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number between 10000 and 100000 returns a number of format XX,XXX',  () => {
+  it('Given a number between 10000 and 100000 returns a number of format XX,XXX', () => {
     // given
     const input = 99999
     const expectedResult = '99,999'
@@ -65,7 +64,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number between 100000 and 1000000 returns a number of format XXX,XXX',  () => {
+  it('Given a number between 100000 and 1000000 returns a number of format XXX,XXX', () => {
     // given
     const input = 999999
     const expectedResult = '999,999'
@@ -75,7 +74,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number between 10000000 and 100000000 returns a number of format X,XXX,XXX',  () => {
+  it('Given a number between 10000000 and 100000000 returns a number of format X,XXX,XXX', () => {
     // given
     const input = 9999999
     const expectedResult = '9,999,999'
@@ -85,7 +84,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given number < 0.001 returns < 0.001',  () => {
+  it('Given number < 0.001 returns < 0.001', () => {
     // given
     const input = 0.000001
     const expectedResult = '< 0.001'
@@ -95,7 +94,7 @@ describe('formatAmount', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given number > 10 ** 15 returns > 1000T',  () => {
+  it('Given number > 10 ** 15 returns > 1000T', () => {
     // given
     const input = 10 ** 15 * 2
     const expectedResult = '> 1000T'
@@ -109,7 +108,7 @@ describe('formatAmount', () => {
 })
 
 describe('FormatsAmountsInUsFormat', () => {
-  it('Given 0 returns 0.00',  () => {
+  it('Given 0 returns 0.00', () => {
     // given
     const input = 0
     const expectedResult = '0.00'
@@ -120,7 +119,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given 1 returns 1.00',  () => {
+  it('Given 1 returns 1.00', () => {
     // given
     const input = 1
     const expectedResult = '1.00'
@@ -131,9 +130,9 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX',  () => {
+  it('Given a number in format XXXXX.XX returns a number of format XXX,XXX.XX', () => {
     // given
-    const input = 311137.30
+    const input = 311137.3
     const expectedResult = '311,137.30'
 
     // when
@@ -142,7 +141,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX',  () => {
+  it('Given a number in format XXXXX.XXX returns a number of format XX,XXX.XXX', () => {
     // given
     const input = 19797.899
     const expectedResult = '19,797.899'
@@ -153,7 +152,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX',  () => {
+  it('Given a number in format XXXXXXXX.XXX returns a number of format XX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899.479
     const expectedResult = '19,797,899.479'
@@ -164,7 +163,7 @@ describe('FormatsAmountsInUsFormat', () => {
     // then
     expect(result).toBe(expectedResult)
   })
-  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX',  () => {
+  it('Given a number in format XXXXXXXXXXX.XXX returns a number of format XX,XXX,XXX,XXX.XXX', () => {
     // given
     const input = 19797899479.999
     const expectedResult = '19,797,899,479.999'
@@ -176,4 +175,3 @@ describe('FormatsAmountsInUsFormat', () => {
     expect(result).toBe(expectedResult)
   })
 })
-
