@@ -50,7 +50,7 @@ const AddressBookTable = ({ classes }) => {
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState(null)
+  const [selectedEntry, setSelectedEntry] = useState<any>(null)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
@@ -70,7 +70,7 @@ const AddressBookTable = ({ classes }) => {
     if (entryAddressToEditOrCreateNew) {
       const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
       const key = addressBook.findKey((entry) => entry.address === checksumEntryAdd)
-      if (key >= 0) {
+      if (key && key >= 0) {
         // Edit old entry
         const value = addressBook.get(key)
         setSelectedEntry({ entry: value, index: key })

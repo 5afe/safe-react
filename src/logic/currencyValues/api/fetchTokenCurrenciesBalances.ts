@@ -6,15 +6,12 @@ import { TokenProps } from 'src/logic/tokens/store/model/token'
 export type BalanceEndpoint = {
   balance: string
   balanceUsd: string
-  tokenAddress?: string
+  tokenAddress: string
   token?: TokenProps
   usdConversion: string
 }
 
-const fetchTokenCurrenciesBalances = (safeAddress?: string): Promise<AxiosResponse<BalanceEndpoint[]>> => {
-  if (!safeAddress) {
-    return null
-  }
+const fetchTokenCurrenciesBalances = (safeAddress: string): Promise<AxiosResponse<BalanceEndpoint[]>> => {
   const apiUrl = getTxServiceHost()
   const url = `${apiUrl}safes/${safeAddress}/balances/usd/`
 

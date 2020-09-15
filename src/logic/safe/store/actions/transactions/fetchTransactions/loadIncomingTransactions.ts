@@ -73,8 +73,8 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   )
 }
 
-let previousETag = null
-export const loadIncomingTransactions = async (safeAddress: string) => {
+let previousETag: string | null = null
+export const loadIncomingTransactions = async (safeAddress: string): Promise<Map<string, List<any>>> => {
   const { eTag, results } = await fetchTransactions(TransactionTypes.INCOMING, safeAddress, previousETag)
   previousETag = eTag
 

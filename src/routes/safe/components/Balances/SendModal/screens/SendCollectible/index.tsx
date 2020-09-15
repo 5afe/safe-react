@@ -48,12 +48,12 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string | null }>({
+  const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -100,7 +100,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -129,7 +129,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -150,7 +150,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -158,7 +158,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
