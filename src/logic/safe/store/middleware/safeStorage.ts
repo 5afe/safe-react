@@ -96,7 +96,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
           )
 
           if (!ownerWasAlreadyInAddressBook) {
-            dispatch(addAddressBookEntry(checksumEntry, true))
+            dispatch(addAddressBookEntry(checksumEntry, { notifyEntryUpdate: true }))
           }
         })
         const safeWasAlreadyInAddressBook = checkIfOwnerWasDeletedFromAddressBook(
@@ -106,7 +106,11 @@ const safeStorageMware = (store) => (next) => async (action) => {
         )
 
         if (!safeWasAlreadyInAddressBook) {
-          dispatch(addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name }), true))
+          dispatch(
+            addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name }), {
+              notifyEntryUpdate: true,
+            }),
+          )
         }
         break
       }
@@ -116,7 +120,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
           recalculateActiveTokens(state)
         }
         if (name) {
-          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })), true)
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })), { notifyEntryUpdate: true })
         }
         break
       }
