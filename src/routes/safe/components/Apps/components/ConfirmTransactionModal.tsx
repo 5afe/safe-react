@@ -71,6 +71,7 @@ type OwnProps = {
   ethBalance: string
   onCancel: () => void
   onUserConfirm: (safeTxHash: string) => void
+  onUserTxReject: () => void
   onClose: () => void
 }
 
@@ -84,6 +85,7 @@ const ConfirmTransactionModal = ({
   onCancel,
   onUserConfirm,
   onClose,
+  onUserTxReject,
 }: OwnProps): React.ReactElement | null => {
   const dispatch = useDispatch()
   if (!isOpen) {
@@ -111,6 +113,7 @@ const ConfirmTransactionModal = ({
           navigateToTransactionsTab: false,
         },
         handleUserConfirmation,
+        onUserTxReject,
       ),
     )
     onClose()
@@ -133,27 +136,25 @@ const ConfirmTransactionModal = ({
     <>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
-      {txs.map((tx, index) => {
-        return (
-          <Wrapper key={index}>
-            <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
-              <CollapseContent>
-                <div className="section">
-                  <Heading tag="h3">Value</Heading>
-                  <div className="value-section">
-                    <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
-                  </div>
+      {txs.map((tx, index) => (
+        <Wrapper key={index}>
+          <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
+            <CollapseContent>
+              <div className="section">
+                <Heading tag="h3">Value</Heading>
+                <div className="value-section">
+                  <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
+                  <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                 </div>
-                <div className="section">
-                  <Heading tag="h3">Data (hex encoded)*</Heading>
-                  <StyledTextBox>{tx.data}</StyledTextBox>
-                </div>
-              </CollapseContent>
-            </Collapse>
-          </Wrapper>
-        )
-      })}
+              </div>
+              <div className="section">
+                <Heading tag="h3">Data (hex encoded)*</Heading>
+                <StyledTextBox>{tx.data}</StyledTextBox>
+              </div>
+            </CollapseContent>
+          </Collapse>
+        </Wrapper>
+      ))}
     </>
   )
 

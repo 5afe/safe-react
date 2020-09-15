@@ -24,7 +24,7 @@ import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
 
 const CurrencyDropdown = (): React.ReactElement | null => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
