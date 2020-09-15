@@ -50,7 +50,7 @@ export const Base = (): React.ReactElement => {
       safeAddress="0xEE63624cC4Dd2355B16b35eFaadF3F7450A9438B"
       safeName="someName"
       granted={true}
-      balance={null}
+      balance={undefined}
       onToggleSafeList={() => console.log}
       onReceiveClick={() => console.log}
       onNewTransactionClick={() => console.log}

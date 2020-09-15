@@ -33,7 +33,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(null, lastTx, safeInstance)
+  const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 

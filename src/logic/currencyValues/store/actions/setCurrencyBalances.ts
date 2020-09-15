@@ -1,9 +1,12 @@
 import { createAction } from 'redux-actions'
+import { BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 
 export const SET_CURRENCY_BALANCES = 'SET_CURRENCY_BALANCES'
 
-// eslint-disable-next-line max-len
-export const setCurrencyBalances = createAction(SET_CURRENCY_BALANCES, (safeAddress, currencyBalances) => ({
-  safeAddress,
-  currencyBalances,
-}))
+export const setCurrencyBalances = createAction(
+  SET_CURRENCY_BALANCES,
+  (safeAddress: string, currencyBalances: BalanceCurrencyList) => ({
+    safeAddress,
+    currencyBalances,
+  }),
+)
