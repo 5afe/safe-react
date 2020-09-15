@@ -51,7 +51,7 @@ export default handleActions(
       return state.updateIn(
         ['safes', safeAddress],
         makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
-        (prevSafe) => prevSafe.merge(safe),
+        (prevSafe) => prevSafe.mergeDeep(safe),
       )
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
@@ -65,7 +65,7 @@ export default handleActions(
             const safeActiveTokens = map.getIn(['safes', safeAddress, 'activeTokens'])
             const activeTokens = safeActiveTokens.add(tokenAddress)
 
-            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
+            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.mergeDeep({ activeTokens }))
           })
       })
     },
