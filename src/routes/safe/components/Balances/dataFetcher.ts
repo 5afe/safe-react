@@ -42,7 +42,9 @@ const getTokenPriceInCurrency = (
 
 export interface BalanceData {
   asset: { name: string; logoUri: string; address: string; symbol: string }
+  assetOrder: string
   balance: string
+  balanceOrder: number
   fixed: boolean
   value: string
 }

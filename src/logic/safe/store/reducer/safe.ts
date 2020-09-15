@@ -77,7 +77,7 @@ export default handleActions(
       // with initial props and it would overwrite existing ones
 
       if (state.hasIn(['safes', safe.address])) {
-        return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.merge(safe))
+        return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.mergeDeep(safe))
       }
 
       return state.setIn(['safes', safe.address], makeSafe(safe))

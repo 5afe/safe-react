@@ -38,7 +38,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
-import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
+import allTransactions, { TRANSACTIONS, TransactionsState } from 'src/logic/safe/store/reducer/allTransactions'
 
 export const history = createHashHistory()
 
