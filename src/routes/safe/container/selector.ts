@@ -33,7 +33,7 @@ export const extendedSafeTokensSelector = createSelector(
     const extendedTokens = Map<string, Token>().withMutations((map) => {
       safeTokens.forEach((tokenAddress) => {
         const baseToken = tokensList.get(tokenAddress)
-        const tokenBalance = balances.get(tokenAddress)
+        const tokenBalance = balances?.get(tokenAddress)
 
         if (baseToken) {
           map.set(tokenAddress, baseToken.set('balance', tokenBalance || '0'))

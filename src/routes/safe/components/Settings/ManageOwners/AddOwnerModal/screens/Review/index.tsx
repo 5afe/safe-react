@@ -26,7 +26,7 @@ export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   useEffect(() => {
@@ -90,7 +90,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                  {`${values.threshold} out of ${owners.size + 1} owner(s)`}
+                  {`${values.threshold} out of ${(owners?.size || 0) + 1} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
@@ -98,11 +98,11 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
           <Col className={classes.owners} layout="column" xs={8}>
             <Row className={classes.ownersTitle}>
               <Paragraph color="primary" noMargin size="lg">
-                {`${owners.size + 1} Safe owner(s)`}
+                {`${(owners?.size || 0) + 1} Safe owner(s)`}
               </Paragraph>
             </Row>
             <Hairline />
-            {owners.map((owner) => (
+            {owners?.map((owner) => (
               <React.Fragment key={owner.address}>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>

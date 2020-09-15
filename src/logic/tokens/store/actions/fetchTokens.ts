@@ -59,11 +59,7 @@ const getTokenValues = (tokenAddress) =>
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
-  if (!tokenAddress) {
-    return null
-  }
-
+export const getTokenInfos = async (tokenAddress: string): Promise<Token | undefined> => {
   const { tokens } = store.getState()
   const localToken = tokens.get(tokenAddress)
 
@@ -76,7 +72,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
-    return null
+    return undefined
   }
 
   const token = makeToken({
