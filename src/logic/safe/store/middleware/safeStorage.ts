@@ -17,6 +17,7 @@ import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/lo
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const watchedActions = [
   ADD_SAFE,
@@ -65,7 +66,7 @@ const checkIfOwnerWasDeletedFromAddressBook = (
   }
 
   const addressShouldBeOnTheAddressBook = !!getValidAddressBookName(name)
-  const isAlreadyInAddressBook = !!addressBook.find((entry) => entry.address.toLowerCase() === address.toLowerCase())
+  const isAlreadyInAddressBook = !!addressBook.find((entry) => sameAddress(entry.address, address))
   return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
 }
 
