@@ -82,7 +82,7 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  currentSafe: string | null
+  currentSafe: string | undefined
   defaultSafe: DefaultSafe
   safes: SafeRecord[]
   onSafeClick: () => void

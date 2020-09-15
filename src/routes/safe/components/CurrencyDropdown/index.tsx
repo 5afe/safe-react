@@ -22,7 +22,7 @@ import { setImageToPlaceholder } from '../Balances/utils'
 import Img from 'src/components/layout/Img/index'
 import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
 
-const CurrencyDropdown = (): React.ReactElement => {
+const CurrencyDropdown = (): React.ReactElement | null => {
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const dispatch = useDispatch()
@@ -48,7 +48,11 @@ const CurrencyDropdown = (): React.ReactElement => {
     handleClose()
   }
 
-  return !selectedCurrency ? null : (
+  if (!selectedCurrency) {
+    return null
+  }
+
+  return (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
         <button className={classes.button} onClick={handleClick} type="button">

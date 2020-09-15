@@ -11,6 +11,7 @@ import {
   mustBeEthereumAddress,
   mustBeEthereumContractAddress,
   required,
+  Validator,
 } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -34,8 +35,12 @@ const EthAddressInput = ({
   text,
 }: EthAddressInputProps): React.ReactElement => {
   const classes = useStyles()
-  const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
-  const validate = composeValidators(...validatorsList.filter((_) => _))
+  const validatorsList = [
+    isRequired && required,
+    mustBeEthereumAddress,
+    isContract && mustBeEthereumContractAddress,
+  ] as Validator[]
+  const validate = composeValidators(...validatorsList.filter((validator) => validator))
   const { pristine } = useFormState({ subscription: { pristine: true } })
   const {
     input: { value },

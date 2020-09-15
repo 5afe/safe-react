@@ -85,7 +85,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const safes = safesMapSelector(state)
         const currentSafe = safes.get(safeAddress)
 
-        if (!isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
+        if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
           break
         }
 
@@ -104,7 +104,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       case ADD_INCOMING_TRANSACTIONS: {
         action.payload.forEach((incomingTransactions, safeAddress) => {
           const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress)
-          const viewedSafes = state.currentSession ? state.currentSession.get('viewedSafes') : []
+          const viewedSafes = state.currentSession['viewedSafes']
           const recurringUser = viewedSafes?.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)

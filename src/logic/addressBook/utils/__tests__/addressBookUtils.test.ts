@@ -93,6 +93,7 @@ describe('saveAddressBook', () => {
     // @ts-ignore
     await saveAddressBook(addressBook)
     const storedAdBk = await getAddressBookFromStorage()
+    // @ts-ignore
     let result = buildAddressBook(storedAdBk)
 
     // then
