@@ -88,7 +88,7 @@ export const getEIP712Signer = (version?: string) => async (txArgs) => {
         return
       }
 
-      if (signature.result == null) {
+      if (signature?.result == null) {
         reject(new Error(EIP712_NOT_SUPPORTED_ERROR_MSG))
         return
       }
