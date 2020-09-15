@@ -9,8 +9,6 @@ import { Skeleton } from '@material-ui/lab'
 
 import InfoIcon from 'src/assets/icons/info.svg'
 
-import { useStyles } from './styles'
-
 import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
@@ -33,24 +31,15 @@ import {
 } from 'src/routes/safe/components/Balances/dataFetcher'
 import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { makeStyles } from '@material-ui/core/styles'
+import { styles } from './styles'
+
+const useStyles = makeStyles(styles)
 
 type Props = {
   showReceiveFunds: () => void
   showSendFunds: (tokenAddress: string) => void
 }
-
-export type BalanceDataRow = List<{
-  asset: {
-    name: string
-    address: string
-    logoUri: string
-  }
-  assetOrder: string
-  balance: string
-  balanceOrder: number
-  fixed: boolean
-  value: string
-}>
 
 type CurrencyTooltipProps = {
   valueWithCurrency: string
@@ -84,16 +73,16 @@ const Coins = (props: Props): React.ReactElement => {
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
-  const [filteredData, setFilteredData] = React.useState<List<BalanceData>>(List())
   const { trackEvent } = useAnalytics()
 
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  useMemo(() => {
-    setFilteredData(getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate))
-  }, [activeTokens, selectedCurrency, currencyValues, currencyRate])
+  const filteredData: List<BalanceData> = useMemo(
+    () => getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate),
+    [activeTokens, selectedCurrency, currencyValues, currencyRate],
+  )
 
   return (
     <TableContainer>
