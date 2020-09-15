@@ -247,18 +247,17 @@ const createTransaction = (
 
         // Different wallets return different error messages in this case. This is an assumption that if
         // error message includes "user" word, the tx was rejected by user
+
+        let errorIncludesUserWord = false
         if (typeof error === 'string') {
-          const includesUserWord = (error as string).includes('User') || (error as string).includes('user')
-          if (includesUserWord) {
-            onUserReject()
-          }
+          errorIncludesUserWord = (error as string).includes('User') || (error as string).includes('user')
+        }
+        if (error.message) {
+          errorIncludesUserWord = error.message.includes('User') || error.message.includes('user')
         }
 
-        if (error.message) {
-          const includesUserWord = error.message.includes('User') || error.message.includes('user')
-          if (includesUserWord) {
-            onUserReject()
-          }
+        if (errorIncludesUserWord) {
+          onUserReject?.()
         }
       })
       .then(async (receipt) => {
