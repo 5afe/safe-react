@@ -8,6 +8,7 @@ import {
   INTERFACE_MESSAGES,
   RequestId,
   Transaction,
+  LowercaseNetworks,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
@@ -88,7 +89,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network,
+              network: network.toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
