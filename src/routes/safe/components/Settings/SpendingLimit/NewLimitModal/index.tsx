@@ -2,31 +2,31 @@ import { List } from 'immutable'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { Token } from 'src/logic/tokens/store/model/token'
+import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
 import Review from './Review'
 
-const CREATE = 'CREATE' as const
-const REVIEW = 'REVIEW' as const
+export const CREATE = 'CREATE' as const
+export const REVIEW = 'REVIEW' as const
 
 type Step = typeof CREATE | typeof REVIEW
 
 type State = {
-  step?: Step
-  values?: Record<string, string> | null
-  txToken?: Token | null
+  step: Step
+  values: Record<string, string>
+  txToken: Token
 }
 
 type Action = {
   type: Step
-  newState?: State
-  tokens?: List<Token>
+  newState: State
+  tokens: List<Token>
 }
 
-const newLimitModalReducer = (state: State, action: Action) => {
+const newLimitModalReducer = (state: State, action: Action): State => {
   const { type, newState, tokens } = action
 
   switch (type) {
@@ -42,14 +42,14 @@ const newLimitModalReducer = (state: State, action: Action) => {
         ...state,
         ...newState,
         // we lookup into the list of tokens for the selected token info
-        txToken: tokens.find((token) => token.address === newState.values.token) ?? null,
+        txToken: tokens.find((token) => token.address === newState.values.token) ?? state.txToken,
         step: REVIEW,
       }
     }
   }
 }
 
-type ActionCallback = (state?: State) => void
+export type ActionCallback = (state: State) => void
 type NewLimitModalHook = [State, { create: ActionCallback; review: ActionCallback }]
 
 const useNewLimitModal = (initialStep: Step): NewLimitModalHook => {
@@ -57,14 +57,18 @@ const useNewLimitModal = (initialStep: Step): NewLimitModalHook => {
   const tokens = useSelector(extendedSafeTokensSelector)
 
   // setup the reducer with initial values
-  const [state, dispatch] = React.useReducer(newLimitModalReducer, {
-    step: initialStep,
-    values: null,
-    txToken: null,
-  })
+  const [state, dispatch] = React.useReducer<React.Reducer<State, Action>, State>(
+    newLimitModalReducer,
+    {
+      step: initialStep,
+      txToken: makeToken(),
+      values: {},
+    },
+    (state) => state,
+  )
 
   // define actions
-  const create = React.useCallback<ActionCallback>(() => dispatch({ type: CREATE }), [])
+  const create = React.useCallback<ActionCallback>((newState) => dispatch({ type: CREATE, newState, tokens }), [tokens])
   const review = React.useCallback<ActionCallback>((newState) => dispatch({ type: REVIEW, newState, tokens }), [tokens])
 
   // returns state and dispatch
@@ -82,7 +86,7 @@ const NewLimitModal = ({ close, open }: SpendingLimitModalProps): React.ReactEle
 
   const handleReview = async (values) => {
     // if form is valid, we update the state to REVIEW and sets values
-    review({ values })
+    review({ step, txToken, values })
   }
 
   return (

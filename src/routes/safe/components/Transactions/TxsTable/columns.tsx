@@ -99,7 +99,7 @@ export interface TableData {
   dateOrder?: number
   id: string
   status: string
-  tx?: Transaction | SafeModuleTransaction
+  tx: Transaction | SafeModuleTransaction
   type: any
 }
 

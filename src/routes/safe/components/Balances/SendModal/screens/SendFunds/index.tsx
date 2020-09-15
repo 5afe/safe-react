@@ -141,7 +141,7 @@ const SendFunds = ({
             const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName || '',
+              name: scannedName,
               address: scannedAddress,
             })
             closeQrModal()
@@ -236,7 +236,7 @@ const SendFunds = ({
                     />
                   </Col>
                 </Row>
-                {tokenSpendingLimit && (
+                {tokenSpendingLimit && selectedTokenRecord && (
                   <SpendingLimitRow
                     onOptionSelect={mutators.setTxType}
                     selectedToken={selectedTokenRecord}
@@ -252,18 +252,18 @@ const SendFunds = ({
                       onClick={() =>
                         mutators.setMax(
                           tokenSpendingLimit && txType === 'spendingLimit'
-                            ? new BigNumber(selectedTokenRecord?.balance || 0).gt(
+                            ? new BigNumber(selectedTokenRecord?.balance ?? 0).gt(
                                 fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 ),
                               )
                               ? fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 )
-                              : selectedTokenRecord?.balance || 0
-                            : selectedTokenRecord?.balance || 0,
+                              : selectedTokenRecord?.balance ?? 0
+                            : selectedTokenRecord?.balance ?? 0,
                         )
                       }
                       weight="bold"
@@ -293,18 +293,18 @@ const SendFunds = ({
                         minValue(0, false),
                         maxValue(
                           tokenSpendingLimit && txType === 'spendingLimit'
-                            ? new BigNumber(selectedTokenRecord?.balance || 0).gt(
+                            ? new BigNumber(selectedTokenRecord?.balance ?? 0).gt(
                                 fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 ),
                               )
                               ? fromTokenUnit(
                                   new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord.decimals,
+                                  selectedTokenRecord?.decimals ?? 0,
                                 )
-                              : selectedTokenRecord?.balance || 0
-                            : selectedTokenRecord?.balance || 0,
+                              : selectedTokenRecord?.balance ?? 0
+                            : selectedTokenRecord?.balance ?? 0,
                         ),
                       )}
                     />

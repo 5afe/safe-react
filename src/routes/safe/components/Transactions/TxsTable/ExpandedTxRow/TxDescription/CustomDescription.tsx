@@ -125,7 +125,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       headerWrapperClassName={classes.collapseHeaderWrapper}
       title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
     >
-      {isNewSpendingLimit ? (
+      {isNewSpendingLimit && data ? (
         <TxDetailsContent>
           <ModifySpendingLimitDetails data={data} />
         </TxDetailsContent>
@@ -136,7 +136,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
             <OwnerAddressTableCell address={tx.to} showLinks />
           </TxInfo>
 
-          {!!data ? <TxInfoDetails data={data} /> : <HexEncodedData data={tx.data} />}
+          {!!data ? <TxInfoDetails data={data} /> : tx.data && <HexEncodedData data={tx.data} />}
         </TxDetailsContent>
       )}
     </Collapse>
@@ -233,14 +233,14 @@ const HexEncodedData = ({ data }: HexEncodedDataProps): React.ReactElement => {
 
 interface GenericCustomDataProps {
   amount?: string
-  data: string
-  recipient: string
+  data?: string | null
+  recipient?: string
   storedTx: Transaction | SafeModuleTransaction
 }
 
 export const GenericCustomData = ({
   amount = '0',
-  data,
+  data = null,
   recipient,
   storedTx,
 }: GenericCustomDataProps): React.ReactElement => {
@@ -248,28 +248,30 @@ export const GenericCustomData = ({
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
-  return isNewSpendingLimit ? (
+  return isNewSpendingLimit && txData ? (
     <ModifySpendingLimitDetails data={txData} />
   ) : (
     <Block>
-      <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
-        <Bold>Send {amount} to:</Bold>
-        {recipientName ? (
-          <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-        ) : (
-          <EtherscanLink knownAddress={false} type="address" value={recipient} />
-        )}
-      </Block>
+      {recipient && (
+        <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
+          <Bold>Send {amount} to:</Bold>
+          {recipientName ? (
+            <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
+          ) : (
+            <EtherscanLink knownAddress={false} type="address" value={recipient} />
+          )}
+        </Block>
+      )}
 
-      {!!txData ? <TxActionData dataDecoded={txData} /> : <HexEncodedData data={data} />}
+      {!!txData ? <TxActionData dataDecoded={txData} /> : data && <HexEncodedData data={data} />}
     </Block>
   )
 }
 
 interface CustomDescriptionProps {
   amount?: string
-  data: string
-  recipient: string
+  data?: string | null
+  recipient?: string
   storedTx: Transaction
 }
 

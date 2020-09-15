@@ -1,4 +1,3 @@
-import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -17,7 +16,7 @@ import TxDescription from './TxDescription'
 import { IncomingTx } from './IncomingTx'
 import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
-import { styles } from './style'
+import useStyles from './style'
 
 import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -33,8 +32,6 @@ import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/s
 import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
 import TransferDescription from './TxDescription/TransferDescription'
-
-const useStyles = makeStyles(styles as any)
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
   const classes = useStyles()
@@ -72,11 +69,9 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
             </div>
           </Block>
           <Hairline />
-          {recipient && (
-            <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-              <TransferDescription amount={getModuleAmount(tx)} recipient={recipient} />
-            </Block>
-          )}
+          <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
+            {recipient && <TransferDescription amount={getModuleAmount(tx)} recipient={recipient} />}
+          </Block>
         </Col>
       </Row>
     </Block>
@@ -84,7 +79,7 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
 }
 
 interface ExpandedTxProps {
-  cancelTx: Transaction
+  cancelTx?: Transaction
   tx: Transaction
 }
 
@@ -179,7 +174,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
         />
       )}
       {openModal === 'rejectTx' && <RejectTxModal isOpen onClose={closeModal} tx={tx} />}
-      {openModal === 'executeRejectTx' && (
+      {openModal === 'executeRejectTx' && cancelTx && (
         <ApproveTxModal
           canExecute={canExecuteCancel}
           isCancelTx

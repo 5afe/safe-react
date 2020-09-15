@@ -22,12 +22,12 @@ export const saveAddressBook = async (addressBook: AddressBookMap): Promise<void
 export const getAddressesListFromSafeAddressBook = (addressBook: AddressBookCollection): string[] =>
   Array.from(addressBook).map((entry: AddressBookEntryRecord) => entry.address)
 
-export const getNameFromSafeAddressBook = (addressBook: AddressBookCollection, userAddress: string): string | null => {
+export const getNameFromSafeAddressBook = (addressBook: AddressBookCollection, userAddress: string): string => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
     return entry.name
   }
-  return null
+  return ''
 }
 
 export const getOwnersWithNameFromAddressBook = (

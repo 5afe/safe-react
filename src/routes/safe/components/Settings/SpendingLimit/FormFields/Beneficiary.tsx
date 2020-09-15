@@ -24,7 +24,7 @@ const Beneficiary = (): React.ReactElement => {
   const { initialValues } = useFormState()
   const { mutators } = useForm()
 
-  const [selectedEntry, setSelectedEntry] = React.useState<{ address: string; name: string } | null>({
+  const [selectedEntry, setSelectedEntry] = React.useState<{ address?: string; name?: string } | null>({
     address: initialValues?.beneficiary || '',
     name: '',
   })
@@ -67,7 +67,7 @@ const Beneficiary = (): React.ReactElement => {
     setSelectedEntry(null)
   }
 
-  return selectedEntry !== null && selectedEntry.address ? (
+  return selectedEntry?.address ? (
     <BeneficiaryInput
       role="button"
       aria-pressed="false"
@@ -92,6 +92,7 @@ const Beneficiary = (): React.ReactElement => {
           fieldMutator={mutators?.setBeneficiary}
           pristine={pristine}
           setSelectedEntry={setSelectedEntry}
+          setIsValidAddress={() => {}}
           label="Beneficiary"
         />
       </BeneficiaryInput>

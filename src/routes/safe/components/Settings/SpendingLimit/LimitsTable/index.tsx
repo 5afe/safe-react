@@ -42,7 +42,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
 
-  const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>(null)
+  const [selectedRow, setSelectedRow] = React.useState<SpendingLimitTable>()
 
   return (
     <>
@@ -55,7 +55,7 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
           defaultRowsPerPage={5}
           label="Spending Limits"
           noBorder
-          size={data.length}
+          size={data?.length}
         >
           {(sortedData) =>
             sortedData.map((row, index) => (
@@ -100,8 +100,8 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): React.ReactElement => {
           }
         </Table>
       </TableContainer>
-      {selectedRow !== null && (
-        <RemoveLimitModal onClose={() => setSelectedRow(null)} spendingLimit={selectedRow} open={true} />
+      {selectedRow && (
+        <RemoveLimitModal onClose={() => setSelectedRow(undefined)} spendingLimit={selectedRow} open={true} />
       )}
     </>
   )

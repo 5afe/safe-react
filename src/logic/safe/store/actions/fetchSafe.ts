@@ -89,7 +89,6 @@ export const buildSafe = async (
     currentVersion,
     needsUpdate,
     featuresEnabled,
-    spendingLimits: null,
     balances: Map(),
     latestIncomingTxBlock: 0,
     activeAssets: Set(),

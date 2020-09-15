@@ -100,7 +100,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName || '',
+              name: scannedName,
               address: scannedAddress,
             })
             closeQrModal()

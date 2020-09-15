@@ -25,15 +25,13 @@ type FormattedAmountsProps = { amount: string; spent: string; token?: Token }
 
 type FormattedAmounts = { amount: string; spent: string }
 
-const useFormattedAmounts = ({ amount, spent, token }: FormattedAmountsProps): FormattedAmounts => {
+const useFormattedAmounts = ({ amount, spent, token }: FormattedAmountsProps): FormattedAmounts | undefined => {
   return React.useMemo(() => {
     if (token) {
       const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
       const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
       return { amount: formattedAmount, spent: formattedSpent }
     }
-
-    return null
   }, [amount, spent, token])
 }
 
@@ -43,14 +41,14 @@ interface SpentVsAmountProps {
   tokenAddress: string
 }
 
-const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProps): React.ReactElement => {
+const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProps): React.ReactElement | null => {
   const { width } = useWindowDimensions()
   const showIcon = React.useMemo(() => width > 1024, [width])
 
   const token = useToken(tokenAddress)
   const spentInfo = useFormattedAmounts({ amount, spent, token })
 
-  return spentInfo ? (
+  return spentInfo && token ? (
     <StyledImageName>
       {showIcon && <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />}
       <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${token.symbol}`}</Text>

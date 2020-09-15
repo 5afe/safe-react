@@ -10,7 +10,7 @@ import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { MultiSend } from 'src/types/contracts/MultiSend.d'
 
-interface MultiSendTx {
+export interface MultiSendTx {
   operation: number
   to: string
   value: number

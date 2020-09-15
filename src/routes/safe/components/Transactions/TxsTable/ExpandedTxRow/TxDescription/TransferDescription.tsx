@@ -10,12 +10,13 @@ import EtherscanLink from 'src/components/EtherscanLink'
 
 interface TransferDescriptionProps {
   amount: string
-  recipient: string
+  recipient?: string
 }
 
-const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProps): React.ReactElement => {
+const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProps): React.ReactElement | null => {
   const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
-  return (
+
+  return recipient ? (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
       <Bold>Send {amount} to:</Bold>
       {recipientName ? (
@@ -24,7 +25,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProp
         <EtherscanLink knownAddress={false} type="address" value={recipient} />
       )}
     </Block>
-  )
+  ) : null
 }
 
 export default TransferDescription

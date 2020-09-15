@@ -24,7 +24,7 @@ export type SafeRecordProps = {
   ethBalance: string
   owners: List<SafeOwner>
   modules: ModulePair[] | null
-  spendingLimits: SpendingLimit[] | null
+  spendingLimits?: SpendingLimit[]
   activeTokens: Set<string>
   activeAssets: Set<string>
   blacklistedTokens: Set<string>

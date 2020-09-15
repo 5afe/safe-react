@@ -91,7 +91,7 @@ const useStyles = makeStyles(styles)
 
 type ownersColumnProps = {
   tx: Transaction
-  cancelTx: Transaction
+  cancelTx?: Transaction
   thresholdReached: boolean
   cancelThresholdReached: boolean
   onTxConfirm: () => void

@@ -90,7 +90,7 @@ const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
 )
 
 interface SettingsDescriptionProps {
-  action: SafeMethods
+  action?: SafeMethods
   addedOwner?: string
   newThreshold?: string
   removedOwner?: string
