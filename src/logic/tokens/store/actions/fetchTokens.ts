@@ -12,8 +12,10 @@ import { fetchTokenList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -43,7 +45,7 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
-export const containsMethodByHash = async (contractAddress, methodHash) => {
+export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()
   const byteCode = await web3.eth.getCode(contractAddress)
 
@@ -57,11 +59,7 @@ const getTokenValues = (tokenAddress) =>
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
-  if (!tokenAddress) {
-    return null
-  }
-
+export const getTokenInfos = async (tokenAddress: string): Promise<Token | undefined> => {
   const { tokens } = store.getState()
   const localToken = tokens.get(tokenAddress)
 
@@ -74,7 +72,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
-    return null
+    return undefined
   }
 
   const token = makeToken({
@@ -91,7 +89,10 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   return token
 }
 
-export const fetchTokens = () => async (dispatch, getState) => {
+export const fetchTokens = () => async (
+  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+  getState: () => AppReduxState,
+): Promise<void> => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 

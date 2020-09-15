@@ -48,7 +48,25 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
+type SendFundsProps = {
+  initialValues: {
+    amount?: string
+    recipientAddress?: string
+    token?: string
+  }
+  onClose: () => void
+  onNext: (txInfo: unknown) => void
+  recipientAddress: string
+  selectedToken: string
+}
+
+const SendFunds = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = '',
+}: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
@@ -58,7 +76,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -103,7 +121,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -130,7 +148,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -151,7 +169,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -159,7 +177,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
@@ -204,7 +222,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       Amount
                     </Paragraph>
                     <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      onClick={() => mutators.setMax(selectedTokenRecord?.balance)}
                       weight="bold"
                       testId="send-max-btn"
                     >
@@ -230,7 +248,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         required,
                         mustBeFloat,
                         minValue(0, false),
-                        maxValue(selectedTokenRecord?.balance),
+                        maxValue(selectedTokenRecord?.balance || 0),
                       )}
                     />
                     <OnChange name="token">

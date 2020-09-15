@@ -10,7 +10,13 @@ import { StepperPageFormProps } from 'src/components/Stepper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { mustBeEthereumAddress, noErrorsOn, required } from 'src/components/forms/validator'
+import {
+  mustBeEthereumAddress,
+  noErrorsOn,
+  required,
+  composeValidators,
+  minMaxLength,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -109,7 +115,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             placeholder="Name of the Safe"
             text="Safe name"
             type="text"
-            validate={required}
+            validate={composeValidators(required, minMaxLength(1, 50))}
             testId="load-safe-name-field"
           />
         </Col>
@@ -120,6 +126,8 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
+            // eslint-disable-next-line
+            // @ts-ignore
             inputAdornment={
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
@@ -156,12 +164,15 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
   )
 }
 
-const DetailsPage = () => (controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement => (
-  <>
-    <OpenPaper controls={controls}>
-      <DetailsForm errors={errors} form={form} />
-    </OpenPaper>
-  </>
-)
+const DetailsPage = () =>
+  function LoadSafeDetails(controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls}>
+          <DetailsForm errors={errors} form={form} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default DetailsPage

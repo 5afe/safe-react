@@ -20,9 +20,9 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name?: string }> | null,
   ) => void
-  setIsValidAddress: (valid?: boolean) => void
+  setIsValidAddress: (valid: boolean) => void
 }
 
 const useStyles = makeStyles(styles)
@@ -148,7 +148,7 @@ const AddressBookInput = ({
           optionsArray.filter((item) => {
             const inputLowerCase = inputValue.toLowerCase()
             const foundName = item.name.toLowerCase().includes(inputLowerCase)
-            const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
+            const foundAddress = item.address?.toLowerCase().includes(inputLowerCase)
             return foundName || foundAddress
           })
         }
@@ -203,6 +203,11 @@ const AddressBookInput = ({
         )}
         renderOption={(adbkEntry) => {
           const { address, name } = adbkEntry
+
+          if (!address) {
+            return
+          }
+
           return (
             <div className={classes.itemOptionList}>
               <div className={classes.identicon}>

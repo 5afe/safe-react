@@ -30,7 +30,7 @@ interface RenderValueProps {
 
 const EtherscanLink = ({ method, type, value }: RenderValueProps): React.ReactElement => {
   const classes = useStyles()
-  const [cut, setCut] = React.useState(undefined)
+  const [cut, setCut] = React.useState(0)
   const { width } = useWindowDimensions()
 
   React.useEffect(() => {
