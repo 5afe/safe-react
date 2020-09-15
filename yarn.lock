@@ -1484,9 +1484,10 @@
     "@ethersproject/rlp" "^5.0.0"
     "@ethersproject/signing-key" "^5.0.0"
 
-"@gnosis.pm/safe-apps-sdk@https://github.com/gnosis/safe-apps-sdk.git#7792429":
-  version "0.3.1"
-  resolved "https://github.com/gnosis/safe-apps-sdk.git#779242944d7517f6d29dd55b50ff8711c4d43a0e"
+"@gnosis.pm/safe-apps-sdk@0.4.0":
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-0.4.0.tgz#26c821513c995b9dc023ebbdfe103a832e731521"
+  integrity sha512-hUt/Siz5kSu9jgvMZXejQsxQiUo/NIow67KNAQGfMt7D0S1YoyvpCGAgSliNelY/bP7EanBhhStOnItnu7DwUA==
 
 "@gnosis.pm/safe-contracts@1.1.1-dev.2":
   version "1.1.1-dev.2"
@@ -11475,14 +11476,11 @@ is-natural-number@^4.0.1:
   resolved "https://registry.yarnpkg.com/is-natural-number/-/is-natural-number-4.0.1.tgz#ab9d76e1db4ced51e35de0c72ebecf09f734cde8"
   integrity sha1-q5124dtM7VHjXeDHLr7PCfc0zeg=
 
-<<<<<<< HEAD
 is-negated-glob@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/is-negated-glob/-/is-negated-glob-1.0.0.tgz#6910bca5da8c95e784b5751b976cf5a10fee36d2"
   integrity sha1-aRC8pdqMleeEtXUbl2z1oQ/uNtI=
 
-=======
->>>>>>> e000958c28c73602f90ce820a211a9edd1a2bcfe
 is-negative-zero@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/is-negative-zero/-/is-negative-zero-2.0.0.tgz#9553b121b0fac28869da9ed459e20c7543788461"
