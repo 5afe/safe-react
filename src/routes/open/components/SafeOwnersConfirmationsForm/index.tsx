@@ -16,7 +16,14 @@ import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minValue, mustBeInteger, noErrorsOn, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  minValue,
+  mustBeInteger,
+  noErrorsOn,
+  required,
+  minMaxLength,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -129,7 +136,7 @@ const SafeOwners = (props) => {
                   placeholder="Owner Name*"
                   text="Owner Name"
                   type="text"
-                  validate={required}
+                  validate={composeValidators(required, minMaxLength(1, 50))}
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
