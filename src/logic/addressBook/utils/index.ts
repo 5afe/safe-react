@@ -74,9 +74,9 @@ export const getValidAddressBookName = (addressbookName: string): string | null 
 export const getOwnersWithNameFromAddressBook = (
   addressBook: AddressBookState,
   ownerList: List<SafeOwner>,
-): List<SafeOwner> | [] => {
+): List<SafeOwner> => {
   if (!ownerList) {
-    return []
+    return List([])
   }
   return ownerList.map((owner) => {
     const ownerName = getNameFromAdbk(addressBook, owner.address)
