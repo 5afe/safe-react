@@ -1,14 +1,48 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-export const getAddressBookFromStorage = async (): Promise<AddressBookState | undefined> => {
-  const result: string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+type OldAddressbookType = {
+  [safeAddress: string]: [
+    {
+      address: string
+      name: string
+      isOwner: boolean
+    },
+  ]
+}
 
-  return result ? JSON.parse(result) : result
+const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): AddressBookState => {
+  const values: AddressBookState = []
+  const adbkValues = Object.values(oldAddressBook)
+
+  for (const safeIterator of adbkValues) {
+    for (const safeAddressBook of safeIterator) {
+      if (!values.find((entry) => sameAddress(entry.address, safeAddressBook.address))) {
+        values.push(makeAddressBookEntry({ address: safeAddressBook.address, name: safeAddressBook.name }))
+      }
+    }
+  }
+
+  return values
+}
+
+export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
+  const result: OldAddressbookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+
+  if (!result) {
+    return null
+  }
+
+  if (typeof result === 'string') {
+    return JSON.parse(result)
+  }
+
+  return migrateOldAddressBook(result as OldAddressbookType)
 }
 
 export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
