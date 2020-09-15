@@ -1,3 +1,4 @@
+//@ts-nocheck
 import { NonPayableTransactionObject } from 'src/types/contracts/types'
 import { PromiEvent } from 'web3-core'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe'

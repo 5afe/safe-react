@@ -1,6 +1,7 @@
 import { lg, md } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   title: {
     padding: `${lg} 0 20px`,
     fontSize: md,

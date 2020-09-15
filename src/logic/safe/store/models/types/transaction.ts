@@ -37,6 +37,7 @@ export enum PendingActionType {
   REJECT = 'reject',
 }
 export type PendingActionValues = PendingActionType[keyof PendingActionType]
+export type RefundParams = { fee: string; symbol: string }
 
 export type TransactionProps = {
   baseGas: number
@@ -47,7 +48,7 @@ export type TransactionProps = {
   creator: string
   creationTx: boolean
   customTx: boolean
-  data?: string | null
+  data: string | null
   dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
   decodedParams: DecodedParams | null
@@ -55,7 +56,7 @@ export type TransactionProps = {
   executionTxHash?: string | null
   executor: string
   factoryAddress: string
-  fee?: string // It will be replace with the new TXs types.
+  fee: string | null // It will be replace with the new TXs types.
   gasPrice: string
   gasToken: string
   isCancellationTx: boolean
@@ -67,18 +68,18 @@ export type TransactionProps = {
   masterCopy: string
   modifySettingsTx: boolean
   multiSendTx: boolean
-  nonce?: number | null
+  nonce: number
   operation: number
   origin: string | null
   ownersWithPendingActions: Map<PendingActionValues, List<any>>
   recipient: string
-  refundParams: any
+  refundParams: RefundParams | null
   refundReceiver: string
   safeTxGas: number
   safeTxHash: string
   setupData: string
-  status?: TransactionStatus
-  submissionDate?: string | null
+  status: TransactionStatus
+  submissionDate: string | null
   symbol?: string | null
   transactionHash: string | null
   transfers?: Transfer[]
@@ -91,7 +92,7 @@ export type Transaction = RecordOf<TransactionProps>
 
 export type TxArgs = {
   baseGas: number
-  data?: string | null
+  data: string
   gasPrice: string
   gasToken: string
   nonce: number

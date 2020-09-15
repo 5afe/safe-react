@@ -34,7 +34,9 @@ describe('Feature > Balances', () => {
     store.dispatch(updateSafe({ address: safeAddress, balances }))
 
     const safe = safesMapSelector(store.getState()).get(safeAddress)
+    //@ts-ignore
     const balanceResult = safe.get('balances').get(token.address)
+    //@ts-ignore
     const activeTokens = safe.get('activeTokens')
     const tokenIsActive = activeTokens.has(token.address)
 
@@ -51,6 +53,7 @@ describe('Feature > Balances', () => {
     // when
     store.dispatch(updateSafe({ address: safeAddress, ethBalance: etherAmount }))
     const safe = safesMapSelector(store.getState()).get(safeAddress)
+    //@ts-ignore
     const balanceResult = safe.get('ethBalance')
 
     // then

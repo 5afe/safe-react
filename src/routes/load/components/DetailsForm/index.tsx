@@ -126,6 +126,8 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
+            // eslint-disable-next-line
+            // @ts-ignore
             inputAdornment={
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
@@ -162,12 +164,15 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
   )
 }
 
-const DetailsPage = () => (controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement => (
-  <>
-    <OpenPaper controls={controls}>
-      <DetailsForm errors={errors} form={form} />
-    </OpenPaper>
-  </>
-)
+const DetailsPage = () =>
+  function LoadSafeDetails(controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls}>
+          <DetailsForm errors={errors} form={form} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default DetailsPage

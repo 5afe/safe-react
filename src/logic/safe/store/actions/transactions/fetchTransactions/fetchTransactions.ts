@@ -35,7 +35,7 @@ async function fetchTransactions(
   txType: TransactionTypes.MODULE | TransactionTypes.INCOMING | TransactionTypes.OUTGOING,
   safeAddress: string,
   eTag: string | null,
-): Promise<{ eTag: string; results: ModuleTxServiceModel[] | TxServiceModel[] | IncomingTxServiceModel[] }> {
+): Promise<{ eTag: string | null; results: ModuleTxServiceModel[] | TxServiceModel[] | IncomingTxServiceModel[] }> {
   try {
     const url = getServiceUrl(txType, safeAddress)
     const response = await axios.get(url, eTag ? { headers: { 'If-None-Match': eTag } } : undefined)

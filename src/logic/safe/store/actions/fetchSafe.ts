@@ -23,7 +23,7 @@ import { getSpendingLimitContract, SENTINEL_ADDRESS } from 'src/logic/contracts/
 import { AppReduxState } from 'src/store'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
-const buildOwnersFrom = (safeOwners: string[], localSafe: SafeRecordProps): List<SafeOwner> => {
+const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
     const convertedAdd = checksumAddress(ownerAddress)
 
@@ -91,7 +91,7 @@ export const buildSafe = async (
     featuresEnabled,
     spendingLimits: null,
     balances: Map(),
-    latestIncomingTxBlock: null,
+    latestIncomingTxBlock: 0,
     activeAssets: Set(),
     activeTokens: Set(),
     blacklistedAssets: Set(),
