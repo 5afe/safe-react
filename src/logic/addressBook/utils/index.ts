@@ -6,17 +6,17 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-type OldAddressbookType = {
-  [safeAddress: string]: [
-    {
-      address: string
-      name: string
-      isOwner: boolean
-    },
-  ]
+export type OldAddressbookEntry = {
+  address: string
+  name: string
+  isOwner: boolean
 }
 
-const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): AddressBookState => {
+export type OldAddressbookType = {
+  [safeAddress: string]: [OldAddressbookEntry]
+}
+
+export const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): AddressBookState => {
   const values: AddressBookState = []
   const adbkValues = Object.values(oldAddressBook)
 

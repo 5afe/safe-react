@@ -1,9 +1,12 @@
-import { List } from 'immutable'
+import { List, Map } from 'immutable'
 import {
   getAddressBookFromStorage,
   getAddressesListFromAdbk,
   getNameFromAdbk,
   getOwnersWithNameFromAddressBook,
+  migrateOldAddressBook,
+  OldAddressbookEntry,
+  OldAddressbookType,
   saveAddressBook,
 } from 'src/logic/addressBook/utils/index'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
@@ -14,6 +17,14 @@ const getMockAddressBookEntry = (address: string, name: string = 'test'): Addres
     address,
     name,
   })
+
+const getMockOldAddressBookEntry = ({ address = '', name = '', isOwner = false }): OldAddressbookEntry => {
+  return {
+    address,
+    name,
+    isOwner,
+  }
+}
 
 describe('getAddressesListFromAdbk', () => {
   const entry1 = getMockAddressBookEntry('123456', 'test1')
@@ -94,5 +105,97 @@ describe('saveAddressBook', () => {
 
     // then
     expect(result).toStrictEqual(addressBook)
+  })
+})
+
+describe('migrateOldAddressBook', () => {
+  const safeAddress1 = '0x696fd93D725d84acfFf6c62a1fe8C94E1c9E934A'
+  const safeAddress2 = '0x2C7aC78b01Be0FC66AD29b684ffAb0C93B381D00'
+  const mockAdd1 = '0x9163c2F4452E3399CB60AAf737231Af87548DA91'
+  const mockAdd2 = '0xC4e446Da9C3D37385C86488294C6758c4e25dbD8'
+
+  it('It should receive an addressBook in old format and return the same addressBook in new format', () => {
+    // given
+    const entry1 = getMockOldAddressBookEntry({ name: 'test1', address: mockAdd1 })
+    const entry2 = getMockOldAddressBookEntry({ name: 'test2', address: mockAdd2 })
+
+    const oldAddressBook: OldAddressbookType = {
+      [safeAddress1]: [entry1],
+      [safeAddress2]: [entry2],
+    }
+
+    const expectedEntry1 = getMockAddressBookEntry(mockAdd1, 'test1')
+    const expectedEntry2 = getMockAddressBookEntry(mockAdd2, 'test2')
+    const expectedResult = [expectedEntry1, expectedEntry2]
+
+    // when
+    const result = migrateOldAddressBook(oldAddressBook)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+})
+
+jest.mock('src/utils/storage/index')
+describe('getAddressBookFromStorage', () => {
+  const safeAddress1 = '0x696fd93D725d84acfFf6c62a1fe8C94E1c9E934A'
+  const safeAddress2 = '0x2C7aC78b01Be0FC66AD29b684ffAb0C93B381D00'
+  const mockAdd1 = '0x9163c2F4452E3399CB60AAf737231Af87548DA91'
+  const mockAdd2 = '0xC4e446Da9C3D37385C86488294C6758c4e25dbD8'
+  afterAll(() => {
+    jest.unmock('src/utils/storage/index')
+  })
+  it('It should return null if no addressBook in storage', async () => {
+    // given
+
+    const expectedResult = null
+    const storageUtils = require('src/utils/storage/index')
+    const spy = storageUtils.loadFromStorage.mockImplementationOnce(() => null)
+
+    // when
+    const result = await getAddressBookFromStorage()
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+    expect(spy).toHaveBeenCalled()
+  })
+  it('It should return migrated addressBook if old addressBook in storage', async () => {
+    // given
+    const expectedEntry1 = getMockAddressBookEntry(mockAdd1, 'test1')
+    const expectedEntry2 = getMockAddressBookEntry(mockAdd2, 'test2')
+    const entry1 = getMockOldAddressBookEntry({ name: 'test1', address: mockAdd1 })
+    const entry2 = getMockOldAddressBookEntry({ name: 'test2', address: mockAdd2 })
+    const oldAddressBook: OldAddressbookType = {
+      [safeAddress1]: [entry1],
+      [safeAddress2]: [entry2],
+    }
+    const expectedResult = [expectedEntry1, expectedEntry2]
+
+    const storageUtils = require('src/utils/storage/index')
+    const spy = storageUtils.loadFromStorage.mockImplementationOnce(() => oldAddressBook)
+
+    // when
+    const result = await getAddressBookFromStorage()
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+    expect(spy).toHaveBeenCalled()
+  })
+  it('It should return addressBook if addressBook in storage', async () => {
+    // given
+    const expectedEntry1 = getMockAddressBookEntry(mockAdd1, 'test1')
+    const expectedEntry2 = getMockAddressBookEntry(mockAdd2, 'test2')
+
+    const expectedResult = [expectedEntry1, expectedEntry2]
+
+    const storageUtils = require('src/utils/storage/index')
+    const spy = storageUtils.loadFromStorage.mockImplementationOnce(() => JSON.stringify(expectedResult))
+
+    // when
+    const result = await getAddressBookFromStorage()
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+    expect(spy).toHaveBeenCalled()
   })
 })
