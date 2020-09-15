@@ -144,7 +144,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                 </Paragraph>
               </Row>
               <Row align="center" margin="md">
-                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
+                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0, wordBreak: 'break-word' }}>
                   {value}
                 </Paragraph>
               </Row>
