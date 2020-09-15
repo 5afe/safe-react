@@ -51,7 +51,7 @@ export default handleActions(
       return state.updateIn(
         ['safes', safeAddress],
         makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
-        (prevSafe) => prevSafe.mergeDeep(safe),
+        (prevSafe) => prevSafe.merge(safe),
       )
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
@@ -77,7 +77,7 @@ export default handleActions(
       // with initial props and it would overwrite existing ones
 
       if (state.hasIn(['safes', safe.address])) {
-        return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.merge(safe))
+        return state
       }
 
       return state.setIn(['safes', safe.address], makeSafe(safe))
