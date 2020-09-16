@@ -95,7 +95,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     <>
       <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
       <Hairline />
-      <Block className={classes.formContainer}>
+      <Block className={classes.formContainer} style={{ wordBreak: 'break-word' }}>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Contract Address
@@ -144,7 +144,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
                 </Paragraph>
               </Row>
               <Row align="center" margin="md">
-                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0, wordBreak: 'break-word' }}>
+                <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                   {value}
                 </Paragraph>
               </Row>
