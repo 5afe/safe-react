@@ -1,4 +1,6 @@
 import updateSafe from './updateSafe'
+import { Set } from 'immutable'
+import { Dispatch } from 'redux'
 
 // the selector uses ownProps argument/router props to get the address of the safe
 // so in order to use it I had to recreate the same structure
@@ -10,7 +12,7 @@ import updateSafe from './updateSafe'
 //   },
 // })
 
-const updateActiveTokens = (safeAddress, activeTokens) => async (dispatch) => {
+const updateActiveTokens = (safeAddress: string, activeTokens: Set<string>) => (dispatch: Dispatch): void => {
   dispatch(updateSafe({ address: safeAddress, activeTokens }))
 }
 

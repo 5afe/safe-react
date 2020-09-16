@@ -14,6 +14,8 @@ type Props = {
   onAppRemoved: (appId: string) => void
 }
 
+type AppListItem = SafeApp & { checked: boolean }
+
 const ManageApps = ({ appList, onAppAdded, onAppToggle, onAppRemoved }: Props): React.ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true)
@@ -28,7 +30,7 @@ const ManageApps = ({ appList, onAppAdded, onAppToggle, onAppRemoved }: Props): 
 
   const closeModal = () => setIsOpen(false)
 
-  const getItemList = () =>
+  const getItemList = (): AppListItem[] =>
     appList.map((a) => {
       return { ...a, checked: !a.disabled }
     })

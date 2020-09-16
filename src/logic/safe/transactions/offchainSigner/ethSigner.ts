@@ -39,7 +39,7 @@ export const ethSigner = async ({
           return reject(err)
         }
 
-        if (signature.result == null) {
+        if (signature?.result == null) {
           reject(new Error(ETH_SIGN_NOT_SUPPORTED_ERROR_MSG))
           return
         }
