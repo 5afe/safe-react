@@ -32,6 +32,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
+  // Safe-Connect
+  { url: `${gnosisAppsUrl}/safe-connect`, disabled: false },
   // Synthetix
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
   // OpenZeppelin
