@@ -95,7 +95,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     <>
       <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
       <Hairline />
-      <Block className={classes.formContainer} style={{ wordBreak: 'break-word' }}>
+      <Block className={classes.formContainer}>
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Contract Address
