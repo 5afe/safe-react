@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { INTERFACE_MESSAGES, Transaction, RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
@@ -102,6 +102,13 @@ const Apps = (): React.ReactElement => {
     )
   }
 
+  const onUserTxReject = () => {
+    sendMessageToIframe(
+      { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
+      confirmTransactionModal.requestId,
+    )
+  }
+
   const onSelectApp = useCallback(
     (appId) => {
       if (selectedAppId === appId) {
@@ -148,7 +155,7 @@ const Apps = (): React.ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network,
+        network: network.toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -208,6 +215,7 @@ const Apps = (): React.ReactElement => {
         onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
         onUserConfirm={onUserTxConfirm}
+        onUserTxReject={onUserTxReject}
       />
     </>
   )
