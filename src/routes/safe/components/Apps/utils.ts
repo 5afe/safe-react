@@ -27,11 +27,11 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // Compound
   { url: `${gnosisAppsUrl}/compound`, disabled: false },
   // Idle
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTpbdjjMxgjvuGDN62tLEF3qPSk8GBLAYGR9fMM6ftWKi`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZ3oug89a3BaVqdJrJEA8CKmLF4M8snuAnphR6z1yq8V8`, disabled: false },
   // request
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmabPEk7g4zaytFefp6fE4nz8f85QMJoWmRQQZypvJViNG`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmeHa5CS6eAMRvQfTBwWfcXKrXZ7itZTpWSM6625ZZ522N`, disabled: false },
   // Synthetix
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
   // OpenZeppelin
