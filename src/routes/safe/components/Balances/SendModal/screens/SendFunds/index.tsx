@@ -55,6 +55,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
   const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
+    ensToAddress: '',
   })
 
   const [pristine, setPristine] = useState(true)
@@ -105,6 +106,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             setSelectedEntry({
               name: scannedName,
               address: scannedAddress,
+              ensToAddress: '',
             })
             closeQrModal()
           }
@@ -165,8 +167,8 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>
-                          <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <CopyBtn content={selectedEntry.ensToAddress || selectedEntry.address} />
+                          <EtherscanBtn type="address" value={selectedEntry.ensToAddress || selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -238,6 +240,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         setSelectedEntry({
                           name: selectedEntry?.name,
                           address: selectedEntry?.address,
+                          ensToAddress: selectedEntry?.ensToAddress,
                         })
                         mutators.onTokenChange()
                       }}

@@ -51,6 +51,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
+    ensToAddress: '',
   })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(true)
@@ -102,6 +103,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             setSelectedEntry({
               name: scannedName,
               address: scannedAddress,
+              ensToAddress: '',
             })
             closeQrModal()
           }

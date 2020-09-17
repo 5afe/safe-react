@@ -22,7 +22,9 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
+    entry:
+      | { address?: string; name?: string; ensToAddress?: string }
+      | React.SetStateAction<{ address: string; name: string; ensToAddress: string }>,
   ) => void
   setIsValidAddress: (valid?: boolean) => void
 }
@@ -84,6 +86,7 @@ const AddressBookInput = ({
 
   const onAddressInputChanged = async (value: string): Promise<void> => {
     const normalizedAddress = trimSpaces(value)
+    const isENSDomain = isValidEnsName(normalizedAddress)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
     let isValidText
@@ -94,10 +97,11 @@ const AddressBookInput = ({
       return
     }
     if (normalizedAddress) {
-      if (isValidEnsName(normalizedAddress)) {
+      if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
       }
+
       isValidText = mustBeEthereumAddress(resolvedAddress)
       if (isCustomTx && isValidText === undefined) {
         isValidText = await mustBeEthereumContractAddress(resolvedAddress)
@@ -115,7 +119,7 @@ const AddressBookInput = ({
       })
       setADBKList(filteredADBK)
       if (!isValidText) {
-        setSelectedEntry({ address: normalizedAddress })
+        setSelectedEntry({ address: normalizedAddress, ensToAddress: isENSDomain ? resolvedAddress : '' })
       }
     }
     setIsValidForm(isValidText === undefined)
