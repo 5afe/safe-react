@@ -16,7 +16,7 @@ type OwnerAddressTableCellProps = {
 
 const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
   const { address, knownAddress, showLinks, userName } = props
-  const [cut, setCut] = useState(undefined)
+  const [cut, setCut] = useState(0)
   const { width } = useWindowDimensions()
 
   useEffect(() => {
@@ -25,7 +25,7 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
     } else if (width <= 1024) {
       setCut(12)
     } else {
-      setCut(undefined)
+      setCut(0)
     }
   }, [width])
 

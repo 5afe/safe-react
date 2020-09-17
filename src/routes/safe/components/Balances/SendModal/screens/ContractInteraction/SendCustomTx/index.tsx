@@ -52,9 +52,9 @@ const useStyles = makeStyles(styles)
 
 const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
-  const { ethBalance } = useSelector(safeSelector)
+  const { ethBalance } = useSelector(safeSelector) || {}
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: contractAddress || initialValues.contractAddress,
     name: '',
   })
@@ -230,7 +230,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                       placeholder="Value*"
                       text="Value*"
                       type="text"
-                      validate={composeValidators(mustBeFloat, maxValue(ethBalance), minValue(0))}
+                      validate={composeValidators(mustBeFloat, maxValue(ethBalance || '0'), minValue(0))}
                     />
                   </Col>
                 </Row>

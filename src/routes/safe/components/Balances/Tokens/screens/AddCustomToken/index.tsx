@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { FormSpy } from 'react-final-form'
 
@@ -22,6 +22,12 @@ import Row from 'src/components/layout/Row'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Checkbox } from '@gnosis.pm/safe-react-components'
+import { useDispatch } from 'react-redux'
+import { addToken } from 'src/logic/tokens/store/actions/addToken'
+import updateActiveTokens from 'src/logic/safe/store/actions/updateActiveTokens'
+import activateTokenForAllSafes from 'src/logic/safe/store/actions/activateTokenForAllSafes'
+import { Token } from 'src/logic/tokens/store/model/token'
+import { List, Set } from 'immutable'
 
 export const ADD_CUSTOM_TOKEN_ADDRESS_INPUT_TEST_ID = 'add-custom-token-address-input'
 export const ADD_CUSTOM_TOKEN_SYMBOLS_INPUT_TEST_ID = 'add-custom-token-symbols-input'
@@ -35,20 +41,22 @@ const INITIAL_FORM_STATE = {
   logoUri: '',
 }
 
-const AddCustomToken = (props) => {
-  const {
-    activateTokenForAllSafes,
-    activeTokens,
-    addToken,
-    classes,
-    onClose,
-    parentList,
-    safeAddress,
-    setActiveScreen,
-    tokens,
-    updateActiveTokens,
-  } = props
+const useStyles = makeStyles(styles)
+
+type Props = {
+  activeTokens: List<Token>
+  onClose: () => void
+  parentList: string
+  safeAddress: string
+  setActiveScreen: (screen: string) => void
+  tokens: List<Token>
+}
+
+const AddCustomToken = (props: Props): React.ReactElement => {
+  const { activeTokens, onClose, parentList, safeAddress, setActiveScreen, tokens } = props
   const [formValues, setFormValues] = useState(INITIAL_FORM_STATE)
+  const classes = useStyles()
+  const dispatch = useDispatch()
 
   const handleSubmit = (values) => {
     const address = checksumAddress(values.address)
@@ -59,12 +67,12 @@ const AddCustomToken = (props) => {
       name: values.symbol,
     }
 
-    addToken(token)
+    dispatch(addToken(token))
     if (values.showForAllSafes) {
-      activateTokenForAllSafes(token.address)
+      dispatch(activateTokenForAllSafes(token.address))
     } else {
-      const activeTokensAddresses = activeTokens.map(({ address }) => address)
-      updateActiveTokens(safeAddress, activeTokensAddresses.push(token.address))
+      const activeTokensAddresses = Set(activeTokens.map(({ address }) => address))
+      dispatch(updateActiveTokens(safeAddress, activeTokensAddresses.add(token.address)))
     }
 
     onClose()
@@ -203,6 +211,4 @@ const AddCustomToken = (props) => {
   )
 }
 
-const AddCustomTokenComponent = withStyles(styles as any)(AddCustomToken)
-
-export default AddCustomTokenComponent
+export default AddCustomToken

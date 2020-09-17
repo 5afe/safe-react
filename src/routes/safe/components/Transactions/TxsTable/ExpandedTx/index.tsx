@@ -21,6 +21,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
@@ -34,12 +35,14 @@ interface ExpandedTxProps {
 }
 
 const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
+  const { fromWei, toBN } = getWeb3().utils
+
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
-  const threshold = useSelector(safeThresholdSelector)
-  const [openModal, setOpenModal] = useState(null)
+  const threshold = useSelector(safeThresholdSelector) as number
+  const [openModal, setOpenModal] = useState<'approveTx' | 'executeRejectTx' | 'rejectTx'>()
   const openApproveModal = () => setOpenModal('approveTx')
-  const closeModal = () => setOpenModal(null)
+  const closeModal = () => setOpenModal(undefined)
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
   const isCreationTx = tx.type === TransactionTypes.CREATION
 
@@ -85,7 +88,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               {!isCreationTx ? (
                 <Paragraph noMargin>
                   <Bold>Fee: </Bold>
-                  {tx.fee ? tx.fee : 'n/a'}
+                  {tx.fee ? fromWei(toBN(tx.fee)) + ' ETH' : 'n/a'}
                 </Paragraph>
               ) : null}
               <CreationTx tx={tx} />

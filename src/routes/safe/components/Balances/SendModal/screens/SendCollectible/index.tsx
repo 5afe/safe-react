@@ -21,7 +21,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { getNameFromSafeAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -54,7 +54,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
     ensToAddress: '',
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -98,10 +98,10 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
               ensToAddress: '',
             })
@@ -131,7 +131,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -152,7 +152,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -160,7 +160,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}

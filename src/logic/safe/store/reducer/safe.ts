@@ -37,7 +37,7 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
     blacklistedTokens,
     activeAssets,
     blacklistedAssets,
-    latestIncomingTxBlock: null,
+    latestIncomingTxBlock: 0,
     modules: null,
   }
 }
@@ -65,7 +65,7 @@ export default handleActions(
             const safeActiveTokens = map.getIn(['safes', safeAddress, 'activeTokens'])
             const activeTokens = safeActiveTokens.add(tokenAddress)
 
-            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.merge({ activeTokens }))
+            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.mergeDeep({ activeTokens }))
           })
       })
     },
@@ -77,7 +77,7 @@ export default handleActions(
       // with initial props and it would overwrite existing ones
 
       if (state.hasIn(['safes', safe.address])) {
-        return state.updateIn(['safes', safe.address], (prevSafe) => prevSafe.merge(safe))
+        return state
       }
 
       return state.setIn(['safes', safe.address], makeSafe(safe))

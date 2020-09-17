@@ -4,7 +4,7 @@ import axios from 'axios'
 
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
 
-export const getLastTx = async (safeAddress: string): Promise<TxServiceModel> => {
+export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
     const url = buildTxServiceUrl(safeAddress)
     const response = await axios.get(url, { params: { limit: 1 } })
@@ -17,23 +17,22 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel> =>
 }
 
 export const getNewTxNonce = async (
-  txNonce: string | null,
-  lastTx: TxServiceModel,
+  txNonce: string | undefined,
+  lastTx: TxServiceModel | null,
   safeInstance: GnosisSafe,
 ): Promise<string> => {
-  if (!Number.isInteger(Number.parseInt(txNonce, 10))) {
-    return lastTx === null
-      ? // use current's safe nonce as fallback
-        (await safeInstance.methods.nonce().call()).toString()
-      : `${lastTx.nonce + 1}`
+  if (txNonce) {
+    return txNonce
   }
-  return txNonce
+
+  // use current's safe nonce as fallback
+  return lastTx ? `${lastTx.nonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
 }
 
 export const shouldExecuteTransaction = async (
   safeInstance: GnosisSafe,
   nonce: string,
-  lastTx: TxServiceModel,
+  lastTx: TxServiceModel | null,
 ): Promise<boolean> => {
   const threshold = await safeInstance.methods.getThreshold().call()
 
@@ -45,7 +44,7 @@ export const shouldExecuteTransaction = async (
     // by the user using the exec button.
     const canExecuteCurrentTransaction = lastTx && lastTx.isExecuted
 
-    return isFirstTransaction || canExecuteCurrentTransaction
+    return isFirstTransaction || !!canExecuteCurrentTransaction
   }
 
   return false
