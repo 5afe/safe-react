@@ -22,10 +22,7 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry:
-      | { address?: string; name?: string; ensToAddress?: string }
-      | React.SetStateAction<{ address?: string; name?: string; ensToAddress?: string }>
-      | null,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name? }> | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
 }
@@ -120,7 +117,10 @@ const AddressBookInput = ({
       })
       setADBKList(filteredADBK)
       if (!isValidText) {
-        setSelectedEntry({ address: normalizedAddress, ensToAddress: isENSDomain ? resolvedAddress : '' })
+        setSelectedEntry({
+          name: isENSDomain ? normalizedAddress : undefined,
+          address: isENSDomain ? resolvedAddress : '',
+        })
       }
     }
     setIsValidForm(isValidText === undefined)

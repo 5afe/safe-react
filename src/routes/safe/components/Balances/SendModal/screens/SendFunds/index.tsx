@@ -73,7 +73,6 @@ const SendFunds = ({
   const [selectedEntry, setSelectedEntry] = useState({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
-    ensToAddress: '',
   })
 
   const [pristine, setPristine] = useState(true)
@@ -124,7 +123,6 @@ const SendFunds = ({
             setSelectedEntry({
               name: scannedName || '',
               address: scannedAddress,
-              ensToAddress: '',
             })
             closeQrModal()
           }
@@ -150,7 +148,7 @@ const SendFunds = ({
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -171,7 +169,7 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -179,14 +177,14 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>
-                          <CopyBtn content={selectedEntry.ensToAddress || selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.ensToAddress || selectedEntry.address} />
+                          <CopyBtn content={selectedEntry.address} />
+                          <EtherscanBtn type="address" value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -258,7 +256,6 @@ const SendFunds = ({
                         setSelectedEntry({
                           name: selectedEntry?.name,
                           address: selectedEntry?.address,
-                          ensToAddress: selectedEntry?.ensToAddress,
                         })
                         mutators.onTokenChange()
                       }}
