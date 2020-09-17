@@ -17,6 +17,7 @@ import { ModulePair, SafeOwner, SafeRecordProps } from 'src/logic/safe/store/mod
 import { Action, Dispatch } from 'redux'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
+import { latestMasterContractVersionSelector } from '../selectors'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -157,7 +158,7 @@ export default (safeAdd: string) => async (
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
-    const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
+    const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
     const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 
     dispatch(addSafe(safeProps))
