@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
@@ -83,6 +83,22 @@ export const getOwnersWithNameFromAddressBook = (
     return {
       address: owner.address,
       name: ownerName || owner.name,
+    }
+  })
+}
+
+export const fromAddressListToAddressBookNames = (
+  addressBook: AddressBookState,
+  addresses: string[],
+): AddressBookEntry[] => {
+  if (!addresses) {
+    return []
+  }
+  return addresses.map((address) => {
+    const ownerName = getNameFromAdbk(addressBook, address)
+    return {
+      address: address,
+      name: ownerName || '',
     }
   })
 }
