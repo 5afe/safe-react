@@ -1,5 +1,4 @@
 import MuiTextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
@@ -74,7 +73,7 @@ const AddressBookInput = ({
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: AddressBookProps) => {
+}: AddressBookProps): React.ReactElement => {
   const classes = useStyles()
   const addressBook = useSelector(getAddressBook)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -242,4 +241,4 @@ const AddressBookInput = ({
   )
 }
 
-export default withStyles(styles as any)(AddressBookInput)
+export default AddressBookInput
