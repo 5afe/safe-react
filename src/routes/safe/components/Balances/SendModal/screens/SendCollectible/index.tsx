@@ -131,7 +131,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string' })
+                        setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })
                       }
                     }}
                     role="listbox"
@@ -152,7 +152,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -160,7 +160,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
