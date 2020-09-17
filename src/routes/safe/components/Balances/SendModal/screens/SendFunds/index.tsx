@@ -150,7 +150,7 @@ const SendFunds = ({
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string' })
+                        setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })
                       }
                     }}
                     role="listbox"
@@ -171,7 +171,7 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -179,7 +179,7 @@ const SendFunds = ({
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string', ensToAddress: '' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
