@@ -24,7 +24,7 @@ export interface AddressBookProps {
   setSelectedEntry: (
     entry:
       | { address?: string; name?: string; ensToAddress?: string }
-      | React.SetStateAction<{ address: string; name: string; ensToAddress: string }>
+      | React.SetStateAction<{ address?: string; name?: string; ensToAddress?: string }>
       | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
