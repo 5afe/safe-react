@@ -1,8 +1,8 @@
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import {
   getAddressBookFromStorage,
-  getAddressesListFromAdressBook,
-  getNameFromAddressbook,
+  getAddressesListFromAddressBook,
+  getNameFromAddressBook,
   getOwnersWithNameFromAddressBook,
   migrateOldAddressBook,
   OldAddressbookEntry,
@@ -37,7 +37,7 @@ describe('getAddressesListFromAdbk', () => {
     const expectedResult = [entry1.address, entry2.address, entry3.address]
 
     // when
-    const result = getAddressesListFromAdressBook(safeAddressBook)
+    const result = getAddressesListFromAddressBook(safeAddressBook)
 
     // then
     expect(result).toStrictEqual(expectedResult)
@@ -54,7 +54,7 @@ describe('getNameFromSafeAddressBook', () => {
     const expectedResult = entry2.name
 
     // when
-    const result = getNameFromAddressbook(safeAddressBook, entry2.address)
+    const result = getNameFromAddressBook(safeAddressBook, entry2.address)
 
     // then
     expect(result).toBe(expectedResult)
