@@ -9,8 +9,14 @@ type addAddressBookEntryOptions = {
 
 export const addAddressBookEntry = createAction(
   ADD_ENTRY,
-  (entry: AddressBookEntry, { notifyEntryUpdate = true }: addAddressBookEntryOptions) => ({
-    entry,
-    shouldAvoidUpdatesNotifications: notifyEntryUpdate,
-  }),
+  (entry: AddressBookEntry, options: addAddressBookEntryOptions) => {
+    let notifyEntryUpdate = true
+    if (options) {
+      notifyEntryUpdate = options.notifyEntryUpdate
+    }
+    return {
+      entry,
+      shouldAvoidUpdatesNotifications: !notifyEntryUpdate,
+    }
+  },
 )
