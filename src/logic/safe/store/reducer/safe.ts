@@ -51,7 +51,8 @@ export default handleActions(
       return state.updateIn(
         ['safes', safeAddress],
         makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
-        (prevSafe) => prevSafe.merge(safe),
+        // `mergeDeep` because with `merge` nested data gets overwritten
+        (prevSafe) => prevSafe.mergeDeep(safe),
       )
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
