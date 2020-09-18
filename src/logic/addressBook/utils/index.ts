@@ -56,10 +56,18 @@ export const saveAddressBook = async (addressBook: AddressBookState): Promise<vo
 export const getAddressesListFromAddressBook = (addressBook: AddressBookState): string[] =>
   addressBook.map((entry) => entry.address)
 
-export const getNameFromAddressBook = (addressBook: AddressBookState, userAddress: string): string | null => {
+type getNameFromAddressBookOptions = {
+  filterOnlyValidName: boolean
+}
+
+export const getNameFromAddressBook = (
+  addressBook: AddressBookState,
+  userAddress: string,
+  options?: getNameFromAddressBookOptions,
+): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
-    return entry.name
+    return options?.filterOnlyValidName ? getValidAddressBookName(entry.name) : entry.name
   }
   return null
 }
