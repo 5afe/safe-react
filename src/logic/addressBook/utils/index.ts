@@ -53,10 +53,10 @@ export const saveAddressBook = async (addressBook: AddressBookState): Promise<vo
   }
 }
 
-export const getAddressesListFromAdbk = (addressBook: AddressBookState): string[] =>
+export const getAddressesListFromAdressBook = (addressBook: AddressBookState): string[] =>
   addressBook.map((entry) => entry.address)
 
-export const getNameFromAdbk = (addressBook: AddressBookState, userAddress: string): string | null => {
+export const getNameFromAddressbook = (addressBook: AddressBookState, userAddress: string): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
     return entry.name
@@ -79,7 +79,7 @@ export const getOwnersWithNameFromAddressBook = (
     return List([])
   }
   return ownerList.map((owner) => {
-    const ownerName = getNameFromAdbk(addressBook, owner.address)
+    const ownerName = getNameFromAddressbook(addressBook, owner.address)
     return {
       address: owner.address,
       name: ownerName || owner.name,
