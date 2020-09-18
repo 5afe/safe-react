@@ -30,8 +30,8 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { AddressBookEntryProps } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import { AddressBookCollection } from 'src/logic/addressBook/store/reducer/addressBook'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -51,8 +51,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
   const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
-  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState()
-  const [selectedOwnerName, setSelectedOwnerName] = useState()
+  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState('')
+  const [selectedOwnerName, setSelectedOwnerName] = useState('')
   const [modalsStatus, setModalStatus] = useState({
     showAddOwner: false,
     showRemoveOwner: false,
@@ -74,8 +74,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
       ...prevState,
       [`show${action}`]: !Boolean(prevState[`show${action}`]),
     }))
-    setSelectedOwnerAddress(undefined)
-    setSelectedOwnerName(undefined)
+    setSelectedOwnerAddress('')
+    setSelectedOwnerName('')
   }
 
   useEffect(() => {
@@ -84,7 +84,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook as AddressBookEntryProps, owners)
+  const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook as AddressBookCollection, owners)
   const ownerData = getOwnerData(ownersAdbk)
 
   return (

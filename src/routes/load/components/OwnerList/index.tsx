@@ -8,7 +8,7 @@ import Identicon from 'src/components/Identicon'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { required } from 'src/components/forms/validator'
+import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -79,7 +79,7 @@ const calculateSafeValues = (owners, threshold, values) => {
 }
 
 const OwnerListComponent = (props) => {
-  const [owners, setOwners] = useState([])
+  const [owners, setOwners] = useState<string[]>([])
   const { classes, updateInitialProps, values } = props
 
   useEffect(() => {
@@ -132,7 +132,7 @@ const OwnerListComponent = (props) => {
                   placeholder="Owner Name*"
                   text="Owner Name"
                   type="text"
-                  validate={required}
+                  validate={composeValidators(required, minMaxLength(1, 50))}
                   testId={`load-safe-owner-name-${index}`}
                 />
               </Col>
@@ -156,12 +156,15 @@ const OwnerListComponent = (props) => {
 
 const OwnerListPage = withStyles(styles as any)(OwnerListComponent)
 
-const OwnerList = ({ updateInitialProps }, network) => (controls, { values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
-    </OpenPaper>
-  </>
-)
+const OwnerList = ({ updateInitialProps }, network) =>
+  function LoadSafeOwnerList(controls, { values }): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default OwnerList

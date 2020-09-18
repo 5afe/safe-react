@@ -12,7 +12,7 @@ const getSafeVersion = (data) => {
 }
 
 interface TxData {
-  data?: string
+  data?: string | null
   recipient?: string
   module?: string
   action?: string
@@ -34,12 +34,12 @@ export const getTxData = (tx: Transaction): TxData => {
 
   if (tx.decodedParams) {
     if (tx.isTokenTransfer) {
-      const { to } = tx.decodedParams.transfer
+      const { to } = tx.decodedParams.transfer || {}
       txData.recipient = to
       txData.isTokenTransfer = true
     } else if (tx.isCollectibleTransfer) {
       const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
-      const { to, value } = safeTransferFrom || transferFrom || transfer
+      const { to, value } = safeTransferFrom || transferFrom || transfer || {}
       txData.recipient = to
       txData.tokenId = value
       txData.isCollectibleTransfer = true
