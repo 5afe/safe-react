@@ -2,7 +2,7 @@ import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ErrorFooter } from './components/Footer'
+import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
 import Button from 'src/components/layout/Button'
@@ -13,6 +13,8 @@ import { initContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { background, connected } from 'src/theme/variables'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
 
 const loaderDotsSvg = require('./assets/loader-dots.svg')
 const successSvg = require('./assets/success.svg')
@@ -102,16 +104,17 @@ const BackButton = styled(Button)`
 //   onCancel: () => void
 // }
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: any) => {
+const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }): React.ReactElement => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState('')
-  const [createdSafeAddress, setCreatedSafeAddress] = useState()
+  const [createdSafeAddress, setCreatedSafeAddress] = useState('')
 
   const [error, setError] = useState(false)
   const [intervalStarted, setIntervalStarted] = useState(false)
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
+  const provider = useSelector(providerNameSelector)
 
   const confirmationStep = isConfirmationStep(stepIndex)
 

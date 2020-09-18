@@ -19,12 +19,28 @@ import {
 import Welcome from 'src/routes/welcome/components/Layout'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
+import { networkSelector, providerNameSelector, userAccountSelector } from '../../../logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
 
 const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount, safeProps) => {
+type SafeProps = {
+  name: string
+  ownerAddresses: any
+  ownerNames: string
+  threshold: string
+}
+
+type InitialValuesForm = {
+  owner0Address?: string
+  owner0Name?: string
+  confirmations: string
+  safeName?: string
+}
+
+const initialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
   if (!safeProps) {
     return {
       [getOwnerNameBy(0)]: 'My Wallet',
@@ -66,8 +82,17 @@ const formMutators = {
   },
 }
 
-const Layout = (props) => {
-  const { network, onCallSafeContractSubmit, provider, safeProps, userAccount } = props
+type LayoutProps = {
+  onCallSafeContractSubmit: (formValues: unknown) => void
+  safeProps?: SafeProps
+}
+
+const Layout = (props: LayoutProps): React.ReactElement => {
+  const { onCallSafeContractSubmit, safeProps } = props
+
+  const provider = useSelector(providerNameSelector)
+  const network = useSelector(networkSelector)
+  const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
     if (provider) {
