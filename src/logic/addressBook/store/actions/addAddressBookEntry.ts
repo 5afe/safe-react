@@ -11,6 +11,6 @@ export const addAddressBookEntry = createAction(
   ADD_ENTRY,
   (entry: AddressBookEntry, { notifyEntryUpdate = true }: addAddressBookEntryOptions) => ({
     entry,
-    shouldAvoidUpdatesNotifications: notifyEntryUpdate,
+    shouldAvoidUpdatesNotifications: !notifyEntryUpdate,
   }),
 )
