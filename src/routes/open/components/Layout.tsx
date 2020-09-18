@@ -19,8 +19,9 @@ import {
 import Welcome from 'src/routes/welcome/components/Layout'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
-import { networkSelector, providerNameSelector, userAccountSelector } from '../../../logic/wallets/store/selectors'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
+import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
 
 const { useEffect } = React
 
@@ -40,17 +41,19 @@ type InitialValuesForm = {
   safeName?: string
 }
 
-const initialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+  const ownerName = useSelector((state) => getNameFromAddressBook(state, userAccount))
+
   if (!safeProps) {
     return {
-      [getOwnerNameBy(0)]: 'My Wallet',
+      [getOwnerNameBy(0)]: ownerName || 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
     }
   }
   let obj = {}
   const { name, ownerAddresses, ownerNames, threshold } = safeProps
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
     obj = {
@@ -102,7 +105,7 @@ const Layout = (props: LayoutProps): React.ReactElement => {
 
   const steps = getSteps()
 
-  const initialValues = initialValuesFrom(userAccount, safeProps)
+  const initialValues = useInitialValuesFrom(userAccount, safeProps)
 
   return (
     <>
