@@ -5,6 +5,7 @@ import semverSatisfies from 'semver/functions/satisfies'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
+import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
@@ -100,7 +101,7 @@ interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number
-  origin?: string
+  origin?: string | null
   safeAddress: string
   to: string
   txData?: string
@@ -110,6 +111,7 @@ interface CreateTransactionArgs {
 
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
+type RejectEventHandler = () => void
 
 const createTransaction = (
   {
@@ -124,6 +126,7 @@ const createTransaction = (
     origin = null,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
+  onUserReject?: RejectEventHandler,
 ): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
   const state = getState()
 
@@ -205,6 +208,7 @@ const createTransaction = (
       confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
       value: txArgs.valueInWei,
       safeTxHash,
+      dataDecoded: decodeMethods(txArgs.data),
       submissionDate: new Date().toISOString(),
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
@@ -240,6 +244,21 @@ const createTransaction = (
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
+
+        // Different wallets return different error messages in this case. This is an assumption that if
+        // error message includes "user" word, the tx was rejected by user
+
+        let errorIncludesUserWord = false
+        if (typeof error === 'string') {
+          errorIncludesUserWord = (error as string).includes('User') || (error as string).includes('user')
+        }
+        if (error.message) {
+          errorIncludesUserWord = error.message.includes('User') || error.message.includes('user')
+        }
+
+        if (errorIncludesUserWord) {
+          onUserReject?.()
+        }
       })
       .then(async (receipt) => {
         if (pendingExecutionKey) {

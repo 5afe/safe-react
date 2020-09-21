@@ -34,7 +34,7 @@ type Props = {
 const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const classes = useStyles()
 
   useEffect(() => {

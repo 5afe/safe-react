@@ -42,7 +42,9 @@ const getTokenPriceInCurrency = (
 
 export interface BalanceData {
   asset: { name: string; logoUri: string; address: string; symbol: string }
+  assetOrder: string
   balance: string
+  balanceOrder: number
   fixed: boolean
   value: string
 }
@@ -61,7 +63,7 @@ export const getBalanceData = (
       symbol: token.symbol,
     },
     assetOrder: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance.toString())} ${token.symbol}`,
+    [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance?.toString() || '0')} ${token.symbol}`,
     balanceOrder: Number(token.balance),
     [FIXED]: token.symbol === 'ETH',
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),

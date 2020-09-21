@@ -3,7 +3,7 @@ import { batch, useDispatch } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 
 import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
-import { fetchCurrencyValues } from 'src/logic/currencyValues/store/actions/fetchCurrencyValues'
+import { fetchSelectedCurrency } from 'src/logic/currencyValues/store/actions/fetchSelectedCurrency'
 import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAssetsByBalance'
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
@@ -19,7 +19,7 @@ export const useFetchTokens = (safeAddress: string): void => {
       batch(() => {
         // fetch tokens there to get symbols for tokens in TXs list
         dispatch(fetchTokens())
-        dispatch(fetchCurrencyValues(safeAddress))
+        dispatch(fetchSelectedCurrency(safeAddress))
         dispatch(fetchSafeTokens(safeAddress))
       })
     }

@@ -21,6 +21,7 @@ import { styles } from './style'
 import { makeTransaction } from 'src/logic/safe/store/models/transaction'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export type OwnersWithoutConfirmations = {
   hasPendingAcceptActions: boolean
@@ -47,7 +48,7 @@ function getPendingOwnersConfirmations(
   tx: Transaction,
   userAddress: string,
 ): [OwnersWithoutConfirmations, boolean] {
-  const ownersWithNoConfirmations = []
+  const ownersWithNoConfirmations: string[] = []
   let currentUserNotConfirmed = true
 
   owners.forEach((owner) => {
@@ -65,8 +66,8 @@ function getPendingOwnersConfirmations(
 
   const ownersWithNoConfirmationsSorted = ownersWithNoConfirmations
     .map((owner) => ({
-      hasPendingAcceptActions: confirmationPendingActions.includes(owner),
-      hasPendingRejectActions: confirmationRejectActions.includes(owner),
+      hasPendingAcceptActions: !!confirmationPendingActions?.includes(owner),
+      hasPendingRejectActions: !!confirmationRejectActions?.includes(owner),
       owner,
     }))
     // Reorders the list of unconfirmed owners, owners with pendingActions should be first
@@ -119,7 +120,7 @@ const OwnersColumn = ({
   } else {
     showOlderTxAnnotation = (thresholdReached && !canExecute) || (cancelThresholdReached && !canExecuteCancel)
   }
-  const owners = useSelector(safeOwnersSelector)
+  const owners = useSelector(safeOwnersSelector) as List<SafeOwner>
   const threshold = useSelector(safeThresholdSelector)
   const userAddress = useSelector(userAccountSelector)
   const [ownersWhoConfirmed, currentUserAlreadyConfirmed] = getOwnersConfirmations(tx, userAddress)
@@ -142,6 +143,7 @@ const OwnersColumn = ({
     displayButtonRow = false
   }
 
+  // TODO: simplify this whole logic around tx status, it's getting hard to maintain and follow
   const showConfirmBtn =
     !tx.isExecuted &&
     tx.status !== 'pending' &&
@@ -151,7 +153,8 @@ const OwnersColumn = ({
     !currentUserAlreadyConfirmed &&
     !thresholdReached
 
-  const showExecuteBtn = canExecute && !tx.isExecuted && thresholdReached
+  const showExecuteBtn =
+    canExecute && !tx.isExecuted && thresholdReached && tx.status !== 'pending' && cancelTx.status !== 'pending'
 
   const showRejectBtn =
     !cancelTx.isExecuted &&
@@ -163,7 +166,13 @@ const OwnersColumn = ({
     !cancelThresholdReached &&
     displayButtonRow
 
-  const showExecuteRejectBtn = !cancelTx.isExecuted && !tx.isExecuted && canExecuteCancel && cancelThresholdReached
+  const showExecuteRejectBtn =
+    !cancelTx.isExecuted &&
+    !tx.isExecuted &&
+    canExecuteCancel &&
+    cancelThresholdReached &&
+    tx.status !== 'pending' &&
+    cancelTx.status !== 'pending'
 
   const txThreshold = cancelTx.isExecuted ? tx.confirmations.size : threshold
   const cancelThreshold = tx.isExecuted ? cancelTx.confirmations.size : threshold

@@ -1,15 +1,16 @@
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
+import contractDataImage from './images/contractData.png'
 
 const USER_ENABLED_LEDGER_TX_DATA = 'USER_ENABLED_LEDGER_TX_DATA'
 function transactionDataCheck(): any {
   return async (stateAndHelpers) => {
     const { wallet } = stateAndHelpers
     const isTransactionDataEnabled = await loadFromStorage<boolean>(USER_ENABLED_LEDGER_TX_DATA)
-    if (wallet && wallet.name === WALLET_PROVIDER.LEDGER && !isTransactionDataEnabled) {
+    if (wallet && wallet.name.toUpperCase() === WALLET_PROVIDER.LEDGER && !isTransactionDataEnabled) {
       return {
         heading: 'Allow Transaction Data', // edit modal heading here
-        description: 'Please allow transaction data on your Ledger device.', // edit modal description that is displayed here. You can include html strings here and they will be rendered as html elements.
+        description: `<div><p><strong>Important</strong>: In order to sign transactions with your Ledger device, you will have to activate the "Contract Data" setting in the Ethereum app on your Ledger.</p><img style="width:100%" src=${contractDataImage} /></div>`, // edit modal description that is displayed here. You can include html strings here and they will be rendered as html elements.
         eventCode: 'allowTransactionData',
         button: {
           text: 'Done',

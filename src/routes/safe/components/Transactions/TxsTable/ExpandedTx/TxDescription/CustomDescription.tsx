@@ -185,7 +185,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
 
         <EthHashInfo
           hash={recipient}
-          name={!recipientName || recipientName === 'UNKNOWN' ? null : recipientName}
+          name={recipientName === 'UNKNOWN' ? undefined : recipientName}
           showIdenticon
           showCopyBtn
           showEtherscanBtn

@@ -28,7 +28,7 @@ type Props = {
   tx: Transaction
 }
 
-export const CreationTx = ({ tx }: Props): React.ReactElement => {
+export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
 
   if (!tx) {

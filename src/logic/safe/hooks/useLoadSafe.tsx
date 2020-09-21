@@ -10,7 +10,7 @@ import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTr
 import fetchSafeCreationTx from 'src/logic/safe/store/actions/fetchSafeCreationTx'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
-export const useLoadSafe = (safeAddress: string): void => {
+export const useLoadSafe = (safeAddress?: string): void => {
   const dispatch = useDispatch<Dispatch>()
 
   useEffect(() => {
