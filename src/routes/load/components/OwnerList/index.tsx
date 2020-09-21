@@ -21,7 +21,7 @@ import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fi
 import { useSelector } from 'react-redux'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
-import { fromAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
+import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { styles } from './styles'
 
@@ -37,7 +37,7 @@ const calculateSafeValues = (owners, threshold, values) => {
 const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] => {
   const addressBook = useSelector(addressBookSelector)
 
-  return fromAddressListToAddressBookNames(addressBook, ownersList)
+  return formatAddressListToAddressBookNames(addressBook, ownersList)
 }
 
 const useStyles = makeStyles(styles)
