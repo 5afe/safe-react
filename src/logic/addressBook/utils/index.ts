@@ -6,17 +6,17 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
-export type OldAddressbookEntry = {
+export type OldAddressBookEntry = {
   address: string
   name: string
   isOwner: boolean
 }
 
-export type OldAddressbookType = {
-  [safeAddress: string]: [OldAddressbookEntry]
+export type OldAddressBookType = {
+  [safeAddress: string]: [OldAddressBookEntry]
 }
 
-export const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): AddressBookState => {
+export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
   const values: AddressBookState = []
   const adbkValues = Object.values(oldAddressBook)
 
@@ -32,7 +32,7 @@ export const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): Addre
 }
 
 export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
-  const result: OldAddressbookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+  const result: OldAddressBookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
 
   if (!result) {
     return null
@@ -42,7 +42,7 @@ export const getAddressBookFromStorage = async (): Promise<AddressBookState | nu
     return JSON.parse(result)
   }
 
-  return migrateOldAddressBook(result as OldAddressbookType)
+  return migrateOldAddressBook(result as OldAddressBookType)
 }
 
 export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
