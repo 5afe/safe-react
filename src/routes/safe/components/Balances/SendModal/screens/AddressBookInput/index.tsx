@@ -97,6 +97,10 @@ const AddressBookInput = ({
       if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
+        setSelectedEntry({
+          name: normalizedAddress,
+          address: resolvedAddress,
+        })
       }
 
       isValidText = mustBeEthereumAddress(resolvedAddress)
@@ -115,10 +119,10 @@ const AddressBookInput = ({
         )
       })
       setADBKList(filteredADBK)
-      if (!isValidText) {
+      if (!isValidText && !isENSDomain) {
         setSelectedEntry({
-          name: isENSDomain ? normalizedAddress : undefined,
-          address: isENSDomain ? resolvedAddress : '',
+          name: undefined,
+          address: '',
         })
       }
     }
