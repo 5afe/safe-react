@@ -19,13 +19,13 @@ const StyledText = styled(Text)`
 interface RenderValueProps {
   method: string
   type: string
-  value: string | unknown[]
+  value: string | string[]
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
   const getTextValue = (value: string) => <StyledText size="lg">{value}</StyledText>
 
-  const getArrayValue = (parentId: string, value: unknown[] | string) => (
+  const getArrayValue = (parentId: string, value: string[] | string) => (
     <div>
       [
       <NestedWrapper>
