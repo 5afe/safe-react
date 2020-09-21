@@ -47,16 +47,15 @@ const recalculateActiveTokens = (state) => {
 }
 
 /**
- * If the owner has a valid name that means that should be on the addressBook
- * if the owner is not currently on the addressBook, that means the user deleted it
- * or that it's a new safe with valid names, so we also check if it's a new safe or an already loaded one
+ * If the safe is not loaded, the owner wasn't not deleted
+ * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
  * @param name
  * @param address
  * @param addressBook
- * @param safeAlreadyLoaded -> true if the safe was loaded from the localStorage
+ * @param safeAlreadyLoaded
  */
 // TODO TEST
-const checkIfOwnerWasDeletedFromAddressBook = (
+const checkIfEntryWasDeletedFromAddressBook = (
   { name, address }: AddressBookEntry,
   addressBook: AddressBookState,
   safeAlreadyLoaded: boolean,
@@ -87,22 +86,26 @@ const safeStorageMware = (store) => (next) => async (action) => {
       }
       case ADD_SAFE: {
         const { safe, loadedFromStorage } = action.payload
+        const safeAlreadyLoaded =
+          loadedFromStorage || safes.find((safeIterator) => sameAddress(safeIterator.address, safe.address))
+
         safe.owners.forEach((owner) => {
           const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
-          const ownerWasAlreadyInAddressBook = checkIfOwnerWasDeletedFromAddressBook(
+
+          const ownerWasAlreadyInAddressBook = checkIfEntryWasDeletedFromAddressBook(
             checksumEntry,
             addressBook,
-            loadedFromStorage,
+            safeAlreadyLoaded,
           )
 
           if (!ownerWasAlreadyInAddressBook) {
             dispatch(addAddressBookEntry(checksumEntry, { notifyEntryUpdate: false }))
           }
         })
-        const safeWasAlreadyInAddressBook = checkIfOwnerWasDeletedFromAddressBook(
+        const safeWasAlreadyInAddressBook = checkIfEntryWasDeletedFromAddressBook(
           { address: safe.address, name: safe.name },
           addressBook,
-          loadedFromStorage,
+          safeAlreadyLoaded,
         )
 
         if (!safeWasAlreadyInAddressBook) {
