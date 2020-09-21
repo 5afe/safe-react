@@ -51,14 +51,16 @@ export default handleActions(
       return state
     },
     [ADD_OR_UPDATE_ENTRY]: (state, action) => {
-      const { entry, entryAddress } = action.payload
+      const { entry } = action.payload
 
       // Only updates entries with valid names
       const validName = getValidAddressBookName(entry.name)
       if (!validName) {
         return state
       }
-      const entryIndex = state.findIndex((oldEntry) => oldEntry.address === entryAddress)
+
+      const entryIndex = state.findIndex((oldEntry) => oldEntry.address === entry.address)
+
       if (entryIndex >= 0) {
         state[entryIndex] = entry
       } else {

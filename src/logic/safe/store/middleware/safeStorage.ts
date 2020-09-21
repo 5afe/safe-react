@@ -120,7 +120,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
           recalculateActiveTokens(state)
         }
         if (name) {
-          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })), { notifyEntryUpdate: false })
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
         }
         break
       }
