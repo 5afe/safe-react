@@ -21,7 +21,8 @@ import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 const { useEffect } = React
 
@@ -42,7 +43,8 @@ type InitialValuesForm = {
 }
 
 const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
-  const ownerName = useSelector((state) => getNameFromAddressBook(state, userAccount))
+  const addressBook = useSelector(addressBookSelector)
+  const ownerName = getNameFromAddressBook(addressBook, userAccount, { filterOnlyValidName: true })
 
   if (!safeProps) {
     return {
