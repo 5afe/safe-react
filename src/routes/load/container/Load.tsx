@@ -16,8 +16,6 @@ import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { addSafe } from 'src/logic/safe/store/actions/addSafe'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { safesListSelector } from 'src/logic/safe/store/selectors'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 
 export const loadSafe = async (
   safeName: string,
@@ -47,15 +45,8 @@ const Load = (): React.ReactElement => {
   const provider = useSelector(providerNameSelector)
   const network = useSelector(networkSelector)
   const userAddress = useSelector(userAccountSelector)
-  const currentSafes = useSelector(safesListSelector)
 
   const addSafeHandler = (safe: SafeRecordProps) => {
-    const safeExists = currentSafes.find((safeIterator) => safeIterator.address === safe.address)
-    if (safeExists) {
-      safe.owners.forEach((owner) => {
-        dispatch(addOrUpdateAddressBookEntry(owner))
-      })
-    }
     dispatch(addSafe(safe))
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
