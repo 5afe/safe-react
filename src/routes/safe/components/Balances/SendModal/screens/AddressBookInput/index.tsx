@@ -86,7 +86,7 @@ const AddressBookInput = ({
     const isENSDomain = isValidEnsName(normalizedAddress)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
-    let isValidText
+    let addressErrorMessage
     if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
@@ -97,15 +97,11 @@ const AddressBookInput = ({
       if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
-        setSelectedEntry({
-          name: normalizedAddress,
-          address: resolvedAddress,
-        })
       }
 
-      isValidText = mustBeEthereumAddress(resolvedAddress)
-      if (isCustomTx && isValidText === undefined) {
-        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
+      addressErrorMessage = mustBeEthereumAddress(resolvedAddress)
+      if (isCustomTx && addressErrorMessage === undefined) {
+        addressErrorMessage = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
       // First removes the entries that are not contracts if the operation is custom tx
@@ -119,17 +115,17 @@ const AddressBookInput = ({
         )
       })
       setADBKList(filteredADBK)
-      if (!isValidText && !isENSDomain) {
+      if (!addressErrorMessage) {
         setSelectedEntry({
-          name: undefined,
-          address: '',
+          name: normalizedAddress,
+          address: resolvedAddress,
         })
       }
     }
-    setIsValidForm(isValidText === undefined)
-    setValidationText(isValidText)
+    setIsValidForm(addressErrorMessage === undefined)
+    setValidationText(addressErrorMessage)
     fieldMutator(resolvedAddress)
-    setIsValidAddress(isValidText === undefined)
+    setIsValidAddress(addressErrorMessage === undefined)
   }
 
   useEffect(() => {
