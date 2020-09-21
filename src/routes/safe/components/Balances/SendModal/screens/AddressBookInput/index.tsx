@@ -1,5 +1,4 @@
 import MuiTextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
 import { List } from 'immutable'
@@ -22,7 +21,7 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name?: string }> | null,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name? }> | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
 }
@@ -71,7 +70,7 @@ const AddressBookInput = ({
   recipientAddress,
   setIsValidAddress,
   setSelectedEntry,
-}: AddressBookProps) => {
+}: AddressBookProps): React.ReactElement => {
   const classes = useStyles()
   const addressBook = useSelector(getAddressBook)
   const [isValidForm, setIsValidForm] = useState(true)
@@ -84,9 +83,10 @@ const AddressBookInput = ({
 
   const onAddressInputChanged = async (value: string): Promise<void> => {
     const normalizedAddress = trimSpaces(value)
+    const isENSDomain = isValidEnsName(normalizedAddress)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
-    let isValidText
+    let addressErrorMessage
     if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
@@ -94,13 +94,14 @@ const AddressBookInput = ({
       return
     }
     if (normalizedAddress) {
-      if (isValidEnsName(normalizedAddress)) {
+      if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
       }
-      isValidText = mustBeEthereumAddress(resolvedAddress)
-      if (isCustomTx && isValidText === undefined) {
-        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
+
+      addressErrorMessage = mustBeEthereumAddress(resolvedAddress)
+      if (isCustomTx && addressErrorMessage === undefined) {
+        addressErrorMessage = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
       // First removes the entries that are not contracts if the operation is custom tx
@@ -114,14 +115,17 @@ const AddressBookInput = ({
         )
       })
       setADBKList(filteredADBK)
-      if (!isValidText) {
-        setSelectedEntry({ address: normalizedAddress })
+      if (!addressErrorMessage) {
+        setSelectedEntry({
+          name: normalizedAddress,
+          address: resolvedAddress,
+        })
       }
     }
-    setIsValidForm(isValidText === undefined)
-    setValidationText(isValidText)
+    setIsValidForm(addressErrorMessage === undefined)
+    setValidationText(addressErrorMessage)
     fieldMutator(resolvedAddress)
-    setIsValidAddress(isValidText === undefined)
+    setIsValidAddress(addressErrorMessage === undefined)
   }
 
   useEffect(() => {
@@ -237,4 +241,4 @@ const AddressBookInput = ({
   )
 }
 
-export default withStyles(styles as any)(AddressBookInput)
+export default AddressBookInput
