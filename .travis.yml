@@ -1,6 +1,6 @@
 if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 sudo: required
-dist: xenial
+dist: bionic
 language: node_js
 node_js:
   - '12'
