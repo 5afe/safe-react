@@ -115,7 +115,7 @@ const AddressBookInput = ({
         // if address is valid, and is in the address book, then we use the stored values
         if (filteredADBK.length === 1) {
           const addressBookContact = filteredADBK[0]
-          addressName = addressBookContact.name ?? ''
+          addressName = addressBookContact.name ?? addressName
         }
 
         setSelectedEntry({
