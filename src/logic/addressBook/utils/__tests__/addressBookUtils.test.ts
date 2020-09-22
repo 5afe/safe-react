@@ -5,8 +5,8 @@ import {
   getNameFromAddressBook,
   getOwnersWithNameFromAddressBook,
   migrateOldAddressBook,
-  OldAddressbookEntry,
-  OldAddressbookType,
+  OldAddressBookEntry,
+  OldAddressBookType,
   saveAddressBook,
 } from 'src/logic/addressBook/utils/index'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
@@ -18,7 +18,7 @@ const getMockAddressBookEntry = (address: string, name: string = 'test'): Addres
     name,
   })
 
-const getMockOldAddressBookEntry = ({ address = '', name = '', isOwner = false }): OldAddressbookEntry => {
+const getMockOldAddressBookEntry = ({ address = '', name = '', isOwner = false }): OldAddressBookEntry => {
   return {
     address,
     name,
@@ -119,7 +119,7 @@ describe('migrateOldAddressBook', () => {
     const entry1 = getMockOldAddressBookEntry({ name: 'test1', address: mockAdd1 })
     const entry2 = getMockOldAddressBookEntry({ name: 'test2', address: mockAdd2 })
 
-    const oldAddressBook: OldAddressbookType = {
+    const oldAddressBook: OldAddressBookType = {
       [safeAddress1]: [entry1],
       [safeAddress2]: [entry2],
     }
@@ -165,7 +165,7 @@ describe('getAddressBookFromStorage', () => {
     const expectedEntry2 = getMockAddressBookEntry(mockAdd2, 'test2')
     const entry1 = getMockOldAddressBookEntry({ name: 'test1', address: mockAdd1 })
     const entry2 = getMockOldAddressBookEntry({ name: 'test2', address: mockAdd2 })
-    const oldAddressBook: OldAddressbookType = {
+    const oldAddressBook: OldAddressBookType = {
       [safeAddress1]: [entry1],
       [safeAddress2]: [entry2],
     }
