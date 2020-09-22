@@ -108,10 +108,20 @@ const AddressBookInput = ({
       })
       setADBKList(filteredADBK)
       if (!addressErrorMessage) {
-        setSelectedEntry({
-          name: normalizedAddress,
-          address: resolvedAddress,
-        })
+        // if address is valid, and is in the address book, then we use the stored values
+        if (filteredADBK.length === 1) {
+          const addressBookContact = filteredADBK[0]
+          setSelectedEntry({
+            name: addressBookContact.name ?? '',
+            address: addressBookContact.address ?? resolvedAddress,
+          })
+        } else {
+          // if address is valid, but does not exist in the address book, we just set the address
+          setSelectedEntry({
+            name: '',
+            address: resolvedAddress,
+          })
+        }
       }
     }
     setIsValidForm(addressErrorMessage === undefined)
