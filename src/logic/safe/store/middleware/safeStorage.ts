@@ -15,9 +15,10 @@ import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
-import { getValidAddressBookName } from 'src/logic/addressBook/utils'
+import { getValidAddressBookName, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 
 const watchedActions = [
   ADD_SAFE,
@@ -100,6 +101,10 @@ const safeStorageMware = (store) => (next) => async (action) => {
 
           if (!ownerWasAlreadyInAddressBook) {
             dispatch(addAddressBookEntry(checksumEntry, { notifyEntryUpdate: false }))
+          }
+          const addressAlreadyExists = addressBook.find((entry) => sameAddress(entry.address, checksumEntry.address))
+          if (isValidAddressBookName(checksumEntry.name) && addressAlreadyExists) {
+            dispatch(updateAddressBookEntry(checksumEntry))
           }
         })
         const safeWasAlreadyInAddressBook = checkIfEntryWasDeletedFromAddressBook(

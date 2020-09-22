@@ -15,6 +15,7 @@ import { makeOwner } from 'src/logic/safe/store/models/owner'
 import makeSafe, { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
+import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -81,6 +82,12 @@ export default handleActions(
       }
 
       return state.setIn(['safes', safe.address], makeSafe(safe))
+    },
+    [ADD_OR_UPDATE_SAFE]: (state: SafeReducerMap, action) => {
+      const { safe } = action.payload
+      const safeAddress = safe.address
+
+      return state.updateIn(['safes', safeAddress], makeSafe(safe), (prevSafe) => prevSafe.merge(safe))
     },
     [REMOVE_SAFE]: (state: SafeReducerMap, action) => {
       const safeAddress = action.payload
