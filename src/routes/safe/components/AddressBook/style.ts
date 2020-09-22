@@ -1,6 +1,7 @@
 import { lg, marginButtonImg, md, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   formContainer: {
     minHeight: '250px',
   },
@@ -38,6 +39,9 @@ export const styles = () => ({
     cursor: 'pointer',
     marginBottom: marginButtonImg,
   },
+  editEntryButtonNonOwner: {
+    cursor: 'pointer',
+  },
   removeEntryButton: {
     marginLeft: lg,
     marginRight: lg,
@@ -49,6 +53,11 @@ export const styles = () => ({
     marginRight: lg,
     marginBottom: marginButtonImg,
     cursor: 'default',
+  },
+  removeEntryButtonNonOwner: {
+    marginLeft: lg,
+    marginRight: lg,
+    cursor: 'pointer',
   },
   message: {
     padding: `${md} 0`,
