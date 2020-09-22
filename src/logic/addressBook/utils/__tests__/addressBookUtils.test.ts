@@ -4,6 +4,7 @@ import {
   getAddressesListFromAddressBook,
   getNameFromAddressBook,
   getOwnersWithNameFromAddressBook,
+  isValidAddressBookName,
   migrateOldAddressBook,
   OldAddressBookEntry,
   OldAddressBookType,
@@ -197,5 +198,56 @@ describe('getAddressBookFromStorage', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(spy).toHaveBeenCalled()
+  })
+})
+
+describe('isValidAddressBookName', () => {
+  it('It should return false if given a blacklisted name like UNKNOWN', () => {
+    // given
+    const addressNameInput = 'UNKNOWN'
+
+    const expectedResult = false
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+  it('It should return false if given a blacklisted name like MY WALLET', () => {
+    // given
+    const addressNameInput = 'MY WALLET'
+
+    const expectedResult = false
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+  it('It should return false if given a blacklisted name like OWNER #', () => {
+    // given
+    const addressNameInput = 'MY WALLET'
+
+    const expectedResult = false
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+  it('It should true false if the given address is not blacklisted', () => {
+    // given
+    const addressNameInput = 'User'
+
+    const expectedResult = true
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
   })
 })
