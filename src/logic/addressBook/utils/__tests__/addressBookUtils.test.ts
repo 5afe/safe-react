@@ -87,6 +87,7 @@ describe('getOwnersWithNameFromAddressBook', () => {
   })
 })
 
+jest.mock('src/utils/storage/index')
 describe('saveAddressBook', () => {
   const mockAdd1 = '0x696fd93D725d84acfFf6c62a1fe8C94E1c9E934A'
   const mockAdd2 = '0x2C7aC78b01Be0FC66AD29b684ffAb0C93B381D00'
@@ -94,19 +95,27 @@ describe('saveAddressBook', () => {
   const entry1 = getMockAddressBookEntry(mockAdd1, 'test1')
   const entry2 = getMockAddressBookEntry(mockAdd2, 'test2')
   const entry3 = getMockAddressBookEntry(mockAdd3, 'test3')
+  afterAll(() => {
+    jest.unmock('src/utils/storage/index')
+  })
   it('It should save a given addressBook to the localStorage', async () => {
     // given
     const addressBook: AddressBookState = [entry1, entry2, entry3]
 
     // when
-    // @ts-ignore
     await saveAddressBook(addressBook)
-    const storedAdBk = await getAddressBookFromStorage()
+
+    const storageUtils = require('src/utils/storage/index')
+    const spy = storageUtils.loadFromStorage.mockImplementationOnce(() => JSON.stringify(addressBook))
+
+    const storedAddressBook = await getAddressBookFromStorage()
+
     // @ts-ignore
-    let result = buildAddressBook(storedAdBk)
+    let result = buildAddressBook(storedAddressBook)
 
     // then
     expect(result).toStrictEqual(addressBook)
+    expect(spy).toHaveBeenCalled()
   })
 })
 
@@ -149,7 +158,6 @@ describe('getAddressBookFromStorage', () => {
   })
   it('It should return null if no addressBook in storage', async () => {
     // given
-
     const expectedResult = null
     const storageUtils = require('src/utils/storage/index')
     const spy = storageUtils.loadFromStorage.mockImplementationOnce(() => null)

@@ -11,8 +11,8 @@ import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-export const buildAddressBook = (storedAdbk: AddressBookState): AddressBookState => {
-  return storedAdbk.map((addressBookEntry) => {
+export const buildAddressBook = (storedAddressBook: AddressBookState): AddressBookState => {
+  return storedAddressBook.map((addressBookEntry) => {
     const { address, name } = addressBookEntry
     return makeAddressBookEntry({ address: checksumAddress(address), name })
   })
