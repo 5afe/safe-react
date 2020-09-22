@@ -103,13 +103,23 @@ const AddressBookInput = ({
         const { address, name } = adbkEntry
         return (
           name.toLowerCase().includes(normalizedAddress.toLowerCase()) ||
-          address.toLowerCase().includes(normalizedAddress.toLowerCase())
+          address.toLowerCase().includes(resolvedAddress.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
       if (!addressErrorMessage) {
+        // base case if isENSDomain we set the domain as the name
+        // if address does not exist in address book we use blank name
+        let addressName = isENSDomain ? normalizedAddress : ''
+
+        // if address is valid, and is in the address book, then we use the stored values
+        if (filteredADBK.length === 1) {
+          const addressBookContact = filteredADBK[0]
+          addressName = addressBookContact.name ?? addressName
+        }
+
         setSelectedEntry({
-          name: normalizedAddress,
+          name: addressName,
           address: resolvedAddress,
         })
       }
