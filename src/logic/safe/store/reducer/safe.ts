@@ -51,8 +51,78 @@ export default handleActions(
       return state.updateIn(
         ['safes', safeAddress],
         makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
-        // `mergeDeep` because with `merge` nested data gets overwritten
-        (prevSafe) => prevSafe.mergeDeep(safe),
+        (prevSafe) => {
+          return prevSafe.withMutations((record) => {
+            // Every property is updated individually to overcome the issue with nested data being overwritten
+            if (safe.name) {
+              record.set('name', safe.name)
+            }
+
+            if (safe.address) {
+              record.set('address', safe.address)
+            }
+
+            if (safe.threshold) {
+              record.set('threshold', safe.threshold)
+            }
+
+            if (safe.ethBalance) {
+              record.set('ethBalance', safe.ethBalance)
+            }
+
+            if (safe.owners?.size) {
+              record.update('owners', (current) => current.set(safe.owners))
+            }
+
+            if (safe.modules?.length) {
+              record.update('modules', () => safe.modules)
+            }
+
+            if (safe.activeTokens?.size) {
+              record.update('activeTokens', (current) => current.merge(safe.activeTokens))
+            }
+
+            if (safe.activeAssets?.size) {
+              record.update('activeAssets', (current) => current.merge(safe.activeAssets))
+            }
+
+            if (safe.blacklistedTokens?.size) {
+              record.update('blacklistedTokens', (current) => current.merge(safe.blacklistedTokens))
+            }
+
+            if (safe.blacklistedAssets?.size) {
+              record.update('blacklistedAssets', (current) => current.merge(safe.blacklistedAssets))
+            }
+
+            if (safe.balances?.size) {
+              record.update('balances', (current) => current.merge(safe.balances))
+            }
+
+            if (safe.nonce) {
+              record.set('nonce', safe.nonce)
+            }
+
+            if (safe.latestIncomingTxBlock) {
+              record.set('latestIncomingTxBlock', safe.latestIncomingTxBlock)
+            }
+
+            if (safe.recurringUser) {
+              record.set('recurringUser', safe.recurringUser)
+            }
+
+            if (safe.currentVersion) {
+              record.set('currentVersion', safe.currentVersion)
+            }
+
+            if (safe.needsUpdate !== undefined) {
+              record.set('needsUpdate', safe.needsUpdate)
+            }
+
+            if (safe.featuresEnabled?.length) {
+              record.update('featuresEnabled', () => safe.featuresEnabled)
+            }
+          })
+        },
       )
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
