@@ -108,20 +108,20 @@ const AddressBookInput = ({
       })
       setADBKList(filteredADBK)
       if (!addressErrorMessage) {
+        // base case if isENSDomain we set the domain as the name
+        // if address does not exist in address book we use blank name
+        let addressName = isENSDomain ? normalizedAddress : ''
+
         // if address is valid, and is in the address book, then we use the stored values
         if (filteredADBK.length === 1) {
           const addressBookContact = filteredADBK[0]
-          setSelectedEntry({
-            name: addressBookContact.name ?? '',
-            address: addressBookContact.address ?? resolvedAddress,
-          })
-        } else {
-          // if address is valid, but does not exist in the address book, we just set the address
-          setSelectedEntry({
-            name: '',
-            address: resolvedAddress,
-          })
+          addressName = addressBookContact.name ?? ''
         }
+
+        setSelectedEntry({
+          name: addressName,
+          address: resolvedAddress,
+        })
       }
     }
     setIsValidForm(addressErrorMessage === undefined)
