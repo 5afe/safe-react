@@ -20,7 +20,7 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name?: string }> | null,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name? }> | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
 }
@@ -75,9 +75,10 @@ const AddressBookInput = ({
 
   const onAddressInputChanged = async (value: string): Promise<void> => {
     const normalizedAddress = trimSpaces(value)
+    const isENSDomain = isValidEnsName(normalizedAddress)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
-    let isValidText
+    let addressErrorMessage
     if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
@@ -85,13 +86,14 @@ const AddressBookInput = ({
       return
     }
     if (normalizedAddress) {
-      if (isValidEnsName(normalizedAddress)) {
+      if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
       }
-      isValidText = mustBeEthereumAddress(resolvedAddress)
-      if (isCustomTx && isValidText === undefined) {
-        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
+
+      addressErrorMessage = mustBeEthereumAddress(resolvedAddress)
+      if (isCustomTx && addressErrorMessage === undefined) {
+        addressErrorMessage = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
       // First removes the entries that are not contracts if the operation is custom tx
@@ -105,14 +107,17 @@ const AddressBookInput = ({
         )
       })
       setADBKList(filteredADBK)
-      if (!isValidText) {
-        setSelectedEntry({ address: normalizedAddress })
+      if (!addressErrorMessage) {
+        setSelectedEntry({
+          name: normalizedAddress,
+          address: resolvedAddress,
+        })
       }
     }
-    setIsValidForm(isValidText === undefined)
-    setValidationText(isValidText)
+    setIsValidForm(addressErrorMessage === undefined)
+    setValidationText(addressErrorMessage)
     fieldMutator(resolvedAddress)
-    setIsValidAddress(isValidText === undefined)
+    setIsValidAddress(addressErrorMessage === undefined)
   }
 
   useEffect(() => {
