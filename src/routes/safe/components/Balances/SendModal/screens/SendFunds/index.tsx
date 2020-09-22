@@ -25,8 +25,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromSafeAddressBook } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -69,8 +69,8 @@ const SendFunds = ({
 }: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
@@ -88,7 +88,7 @@ const SendFunds = ({
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      submitValues.recipientAddress = selectedEntry?.address
     }
     onNext(submitValues)
   }
@@ -118,7 +118,7 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName || '',
