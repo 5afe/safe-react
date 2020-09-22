@@ -12,6 +12,7 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
+import { getTxServiceHost } from 'src/config/'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
@@ -85,7 +86,7 @@ const useIframeMessageHandler = (
         }
 
         case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
-          const message = {
+          const safeInfoMessage = {
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
@@ -93,8 +94,15 @@ const useIframeMessageHandler = (
               ethBalance: ethBalance as string,
             },
           }
+          const envInfoMessage = {
+            messageId: INTERFACE_MESSAGES.ENV_INFO,
+            data: {
+              txServiceUrl: getTxServiceHost(),
+            },
+          }
 
-          sendMessageToIframe(message)
+          sendMessageToIframe(safeInfoMessage)
+          sendMessageToIframe(envInfoMessage)
           break
         }
         default: {

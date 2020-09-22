@@ -102,7 +102,7 @@ const Apps = (): React.ReactElement => {
     )
   }
 
-  const onUserTxReject = () => {
+  const onTxReject = () => {
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
       confirmTransactionModal.requestId,
@@ -212,10 +212,9 @@ const Apps = (): React.ReactElement => {
         ethBalance={ethBalance as string}
         safeName={safeName as string}
         txs={confirmTransactionModal.txs}
-        onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
         onUserConfirm={onUserTxConfirm}
-        onUserTxReject={onUserTxReject}
+        onTxReject={onTxReject}
       />
     </>
   )
