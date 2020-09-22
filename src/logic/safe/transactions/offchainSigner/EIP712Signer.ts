@@ -1,5 +1,6 @@
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { AbstractProvider } from 'web3-core'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 const EIP712_NOT_SUPPORTED_ERROR_MSG = "EIP712 is not supported by user's wallet"
 
@@ -59,7 +60,7 @@ const generateTypedDataFrom = async ({
 }
 
 export const getEIP712Signer = (version?: string) => async (txArgs) => {
-  const web3: any = getWeb3()
+  const web3 = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
 
   let method = 'eth_signTypedData_v3'
@@ -80,13 +81,14 @@ export const getEIP712Signer = (version?: string) => async (txArgs) => {
   }
 
   return new Promise((resolve, reject) => {
-    web3.currentProvider.sendAsync(signedTypedData, (err, signature) => {
+    const provider = web3.currentProvider as AbstractProvider
+    provider.sendAsync(signedTypedData, (err, signature) => {
       if (err) {
         reject(err)
         return
       }
 
-      if (signature.result == null) {
+      if (signature?.result == null) {
         reject(new Error(EIP712_NOT_SUPPORTED_ERROR_MSG))
         return
       }
