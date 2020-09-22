@@ -116,3 +116,25 @@ export const formatAddressListToAddressBookNames = (
     }
   })
 }
+
+/**
+ * If the safe is not loaded, the owner wasn't not deleted
+ * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
+ * @param name
+ * @param address
+ * @param addressBook
+ * @param safeAlreadyLoaded
+ */
+export const checkIfEntryWasDeletedFromAddressBook = (
+  { name, address }: AddressBookEntry,
+  addressBook: AddressBookState,
+  safeAlreadyLoaded: boolean,
+): boolean => {
+  if (!safeAlreadyLoaded) {
+    return false
+  }
+
+  const addressShouldBeOnTheAddressBook = !!getValidAddressBookName(name)
+  const isAlreadyInAddressBook = !!addressBook.find((entry) => sameAddress(entry.address, address))
+  return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
+}

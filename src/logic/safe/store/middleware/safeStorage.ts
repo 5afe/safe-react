@@ -13,9 +13,9 @@ import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
-import { getValidAddressBookName, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { checkIfEntryWasDeletedFromAddressBook, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
@@ -45,29 +45,6 @@ const recalculateActiveTokens = (state) => {
   })
 
   saveActiveTokens(activeTokens)
-}
-
-/**
- * If the safe is not loaded, the owner wasn't not deleted
- * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
- * @param name
- * @param address
- * @param addressBook
- * @param safeAlreadyLoaded
- */
-// TODO TEST
-const checkIfEntryWasDeletedFromAddressBook = (
-  { name, address }: AddressBookEntry,
-  addressBook: AddressBookState,
-  safeAlreadyLoaded: boolean,
-) => {
-  if (!safeAlreadyLoaded) {
-    return false
-  }
-
-  const addressShouldBeOnTheAddressBook = !!getValidAddressBookName(name)
-  const isAlreadyInAddressBook = !!addressBook.find((entry) => sameAddress(entry.address, address))
-  return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
 }
 
 const safeStorageMware = (store) => (next) => async (action) => {
