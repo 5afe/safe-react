@@ -103,7 +103,7 @@ const AddressBookInput = ({
         const { address, name } = adbkEntry
         return (
           name.toLowerCase().includes(normalizedAddress.toLowerCase()) ||
-          address.toLowerCase().includes(normalizedAddress.toLowerCase())
+          address.toLowerCase().includes(resolvedAddress.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
