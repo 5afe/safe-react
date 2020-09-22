@@ -1,5 +1,5 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import * as React from 'react'
 
@@ -22,7 +22,7 @@ import { background, border, lg, screenSm, sm } from 'src/theme/variables'
 
 const { useEffect, useState } = React
 
-const styles = () => ({
+const styles = createStyles({
   root: {
     minHeight: '300px',
     [`@media (min-width: ${screenSm}px)`]: {
@@ -84,7 +84,15 @@ const styles = () => ({
   },
 })
 
-const ReviewComponent = ({ classes, userAccount, values }: any) => {
+const useStyles = makeStyles(styles)
+
+type ReviewComponentProps = {
+  userAccount: string
+  values: any
+}
+
+const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
+  const classes = useStyles()
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
@@ -198,12 +206,11 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
   )
 }
 
-const ReviewPage = withStyles(styles as any)(ReviewComponent)
-
-const Review = () => (controls, { values }) => (
+// eslint-disable-next-line react/display-name
+const Review = () => (controls, props): React.ReactElement => (
   <>
     <OpenPaper controls={controls} padding={false}>
-      <ReviewPage values={values} />
+      <ReviewComponent {...props} />
     </OpenPaper>
   </>
 )
