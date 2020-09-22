@@ -18,7 +18,7 @@ import {
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T

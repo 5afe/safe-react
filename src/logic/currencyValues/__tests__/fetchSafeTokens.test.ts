@@ -7,7 +7,8 @@ jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
   let store
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
-  beforeEach(async () => {
+  const excludeSpamTokens = true
+  beforeEach(() => {
     store = aNewStore()
   })
   afterAll(() => {
@@ -43,11 +44,13 @@ describe('fetchTokenCurrenciesBalances', () => {
     axios.get.mockImplementationOnce(() => Promise.resolve(expectedResult))
 
     // when
-    const result = await fetchTokenCurrenciesBalances(safeAddress)
+    const result = await fetchTokenCurrenciesBalances(safeAddress, excludeSpamTokens)
 
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/`, { params: { limit: 3000 } })
+    expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`, {
+      params: { limit: 3000 },
+    })
   })
 })
