@@ -20,8 +20,8 @@ import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { addSafe } from 'src/logic/safe/store/actions/addSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -143,7 +143,7 @@ const Open = (): React.ReactElement => {
     const ownerAddresses = getAccountsFrom(pendingCreation)
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
 
-    dispatch(addSafe(safeProps))
+    dispatch(addOrUpdateSafe(safeProps))
 
     ReactGA.event({
       category: 'User',
