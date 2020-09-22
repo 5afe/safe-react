@@ -147,12 +147,14 @@ describe('migrateOldAddressBook', () => {
   })
 })
 
-jest.mock('src/utils/storage/index')
 describe('getAddressBookFromStorage', () => {
   const safeAddress1 = '0x696fd93D725d84acfFf6c62a1fe8C94E1c9E934A'
   const safeAddress2 = '0x2C7aC78b01Be0FC66AD29b684ffAb0C93B381D00'
   const mockAdd1 = '0x9163c2F4452E3399CB60AAf737231Af87548DA91'
   const mockAdd2 = '0xC4e446Da9C3D37385C86488294C6758c4e25dbD8'
+  beforeAll(() => {
+    jest.mock('src/utils/storage/index')
+  })
   afterAll(() => {
     jest.unmock('src/utils/storage/index')
   })
