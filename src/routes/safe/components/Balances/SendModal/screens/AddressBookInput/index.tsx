@@ -1,7 +1,6 @@
 import MuiTextField from '@material-ui/core/TextField'
 import makeStyles from '@material-ui/core/styles/makeStyles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { trimSpaces } from 'src/utils/strings'
@@ -10,10 +9,10 @@ import { styles } from './style'
 
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -44,23 +43,16 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async (
-  addressBook: List<AddressBookEntryRecord>,
-): Promise<List<AddressBookEntryRecord>> => {
+const filterAddressBookWithContractAddresses = async (addressBook: AddressBookState): Promise<AddressBookEntry[]> => {
   const abFlags = await Promise.all(
     addressBook.map(
-      async ({ address }: AddressBookEntryRecord): Promise<boolean> => {
+      async ({ address }: AddressBookEntry): Promise<boolean> => {
         return (await mustBeEthereumContractAddress(address)) === undefined
       },
     ),
   )
 
   return addressBook.filter((_, index) => abFlags[index])
-}
-
-interface FilteredAddressBookEntry {
-  name: string
-  address: string
 }
 
 const AddressBookInput = ({
@@ -72,12 +64,12 @@ const AddressBookInput = ({
   setSelectedEntry,
 }: AddressBookProps): React.ReactElement => {
   const classes = useStyles()
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState<List<FilteredAddressBookEntry>>(List([]))
+  const [adbkList, setADBKList] = useState<AddressBookEntry[]>([])
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
@@ -168,7 +160,7 @@ const AddressBookInput = ({
         freeSolo
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
-        onChange={(_, value: FilteredAddressBookEntry) => {
+        onChange={(_, value: AddressBookEntry) => {
           let address = ''
           let name = ''
           if (value) {
@@ -184,7 +176,7 @@ const AddressBookInput = ({
           setBlurred(false)
         }}
         open={!blurred}
-        options={adbkList.toArray()}
+        options={adbkList}
         renderInput={(params) => (
           <MuiTextField
             {...params}
