@@ -1,6 +1,10 @@
 import { border, lg, md } from 'src/theme/variables'
 
 const cssStyles = {
+  col: {
+    wordBreak: 'break-word',
+    whiteSpace: 'normal',
+  },
   expandedTxBlock: {
     borderBottom: `2px solid ${border}`,
   },
