@@ -16,6 +16,8 @@ export type OldAddressbookType = {
   [safeAddress: string]: [OldAddressbookEntry]
 }
 
+const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
+
 export const migrateOldAddressBook = (oldAddressBook: OldAddressbookType): AddressBookState => {
   const values: AddressBookState = []
   const adbkValues = Object.values(oldAddressBook)
@@ -72,11 +74,16 @@ export const getNameFromAddressBook = (
   return null
 }
 
-export const getValidAddressBookName = (addressbookName: string): string | null => {
-  const INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
-  const isInvalid = INVALID_NAMES.find((invalidName) => addressbookName.toUpperCase().includes(invalidName))
-  if (isInvalid) return null
-  return addressbookName
+// @todo (agustin) add test
+export const isValidAddressBookName = (addressBookName: string): boolean => {
+  const hasInvalidName = ADDRESSBOOK_INVALID_NAMES.find((invalidName) =>
+    addressBookName.toUpperCase().includes(invalidName),
+  )
+  return !hasInvalidName
+}
+
+export const getValidAddressBookName = (addressBookName: string): string | null => {
+  return isValidAddressBookName(addressBookName) ? addressBookName : null
 }
 
 export const getOwnersWithNameFromAddressBook = (
