@@ -119,6 +119,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   dispatch(
     updateSafe({
       address: safeAddress,
+      name: localSafe?.name,
       modules: buildModulesLinkedList(modules?.array, modules?.next),
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),

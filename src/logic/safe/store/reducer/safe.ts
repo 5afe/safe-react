@@ -77,7 +77,7 @@ export default handleActions(
 
       return state.updateIn(
         ['safes', safeAddress],
-        makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
+        makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
         (prevSafe) => updateSafeProps(prevSafe, safe),
       )
     },
