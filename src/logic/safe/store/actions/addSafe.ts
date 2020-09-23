@@ -18,15 +18,16 @@ export const buildOwnersFrom = (names: string[], addresses: string[]): List<Safe
   return List(owners)
 }
 
-export const addSafe = createAction(ADD_SAFE, (safe) => ({
+export const addSafe = createAction(ADD_SAFE, (safe: SafeRecordProps, loadedFromStorage = false) => ({
   safe,
+  loadedFromStorage,
 }))
 
 const saveSafe = (safe: SafeRecordProps) => (dispatch: Dispatch, getState: () => AppReduxState): void => {
   const state = getState()
   const safeList = safesListSelector(state)
 
-  dispatch(addSafe(safe))
+  dispatch(addSafe(safe, true))
 
   if (safeList.size === 0) {
     dispatch(setDefaultSafe(safe.address))

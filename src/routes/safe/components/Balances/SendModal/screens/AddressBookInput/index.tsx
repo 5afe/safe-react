@@ -1,7 +1,6 @@
 import MuiTextField from '@material-ui/core/TextField'
 import { makeStyles } from '@material-ui/core/styles'
 import Autocomplete from '@material-ui/lab/Autocomplete'
-import { List } from 'immutable'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { trimSpaces } from 'src/utils/strings'
@@ -10,10 +9,10 @@ import { styles } from './style'
 
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { AddressBookEntryRecord } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -21,7 +20,7 @@ export interface AddressBookProps {
   pristine: boolean
   recipientAddress?: string
   setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name?: string }> | null,
+    entry: { address?: string; name?: string } | React.SetStateAction<{ address?: string; name? }> | null,
   ) => void
   setIsValidAddress: (valid: boolean) => void
   label?: string
@@ -45,23 +44,16 @@ const textFieldInputStyle = makeStyles(() => ({
   },
 }))
 
-const filterAddressBookWithContractAddresses = async (
-  addressBook: List<AddressBookEntryRecord>,
-): Promise<List<AddressBookEntryRecord>> => {
+const filterAddressBookWithContractAddresses = async (addressBook: AddressBookState): Promise<AddressBookEntry[]> => {
   const abFlags = await Promise.all(
     addressBook.map(
-      async ({ address }: AddressBookEntryRecord): Promise<boolean> => {
+      async ({ address }: AddressBookEntry): Promise<boolean> => {
         return (await mustBeEthereumContractAddress(address)) === undefined
       },
     ),
   )
 
   return addressBook.filter((_, index) => abFlags[index])
-}
-
-interface FilteredAddressBookEntry {
-  name: string
-  address: string
 }
 
 const AddressBookInput = ({
@@ -74,20 +66,21 @@ const AddressBookInput = ({
   setSelectedEntry,
 }: AddressBookProps): React.ReactElement => {
   const classes = useStyles()
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
   const [isValidForm, setIsValidForm] = useState(true)
   const [validationText, setValidationText] = useState<string>('')
   const [inputTouched, setInputTouched] = useState(false)
   const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState<List<FilteredAddressBookEntry>>(List([]))
+  const [adbkList, setADBKList] = useState<AddressBookEntry[]>([])
 
   const [inputAddValue, setInputAddValue] = useState(recipientAddress)
 
   const onAddressInputChanged = async (value: string): Promise<void> => {
     const normalizedAddress = trimSpaces(value)
+    const isENSDomain = isValidEnsName(normalizedAddress)
     setInputAddValue(normalizedAddress)
     let resolvedAddress = normalizedAddress
-    let isValidText
+    let addressErrorMessage
     if (inputTouched && !normalizedAddress) {
       setIsValidForm(false)
       setValidationText('Required')
@@ -95,13 +88,14 @@ const AddressBookInput = ({
       return
     }
     if (normalizedAddress) {
-      if (isValidEnsName(normalizedAddress)) {
+      if (isENSDomain) {
         resolvedAddress = await getAddressFromENS(normalizedAddress)
         setInputAddValue(resolvedAddress)
       }
-      isValidText = mustBeEthereumAddress(resolvedAddress)
-      if (isCustomTx && isValidText === undefined) {
-        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
+
+      addressErrorMessage = mustBeEthereumAddress(resolvedAddress)
+      if (isCustomTx && addressErrorMessage === undefined) {
+        addressErrorMessage = await mustBeEthereumContractAddress(resolvedAddress)
       }
 
       // First removes the entries that are not contracts if the operation is custom tx
@@ -111,18 +105,31 @@ const AddressBookInput = ({
         const { address, name } = adbkEntry
         return (
           name.toLowerCase().includes(normalizedAddress.toLowerCase()) ||
-          address.toLowerCase().includes(normalizedAddress.toLowerCase())
+          address.toLowerCase().includes(resolvedAddress.toLowerCase())
         )
       })
       setADBKList(filteredADBK)
-      if (!isValidText) {
-        setSelectedEntry({ address: normalizedAddress })
+      if (!addressErrorMessage) {
+        // base case if isENSDomain we set the domain as the name
+        // if address does not exist in address book we use blank name
+        let addressName = isENSDomain ? normalizedAddress : ''
+
+        // if address is valid, and is in the address book, then we use the stored values
+        if (filteredADBK.length === 1) {
+          const addressBookContact = filteredADBK[0]
+          addressName = addressBookContact.name ?? addressName
+        }
+
+        setSelectedEntry({
+          name: addressName,
+          address: resolvedAddress,
+        })
       }
     }
-    setIsValidForm(isValidText === undefined)
-    setValidationText(isValidText)
+    setIsValidForm(addressErrorMessage === undefined)
+    setValidationText(addressErrorMessage)
     fieldMutator(resolvedAddress)
-    setIsValidAddress?.(isValidText === undefined)
+    setIsValidAddress(addressErrorMessage === undefined)
   }
 
   useEffect(() => {
@@ -165,7 +172,7 @@ const AddressBookInput = ({
         freeSolo
         getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
         id="free-solo-demo"
-        onChange={(_, value: FilteredAddressBookEntry) => {
+        onChange={(_, value: AddressBookEntry) => {
           let address = ''
           let name = ''
           if (value) {
@@ -181,7 +188,7 @@ const AddressBookInput = ({
           setBlurred(false)
         }}
         open={!blurred}
-        options={adbkList.toArray()}
+        options={adbkList}
         renderInput={(params) => (
           <MuiTextField
             {...params}

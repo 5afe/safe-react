@@ -1,4 +1,4 @@
-import { IconText, Text } from '@gnosis.pm/safe-react-components'
+import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import Col from 'src/components/layout/Col'
@@ -17,18 +17,18 @@ import {
   MultiSendDetails,
 } from 'src/logic/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import EtherscanLink from 'src/components/EtherscanLink'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { Transaction, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
+import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { getNetwork } from 'src/config'
 import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
@@ -40,9 +40,14 @@ const useStyles = makeStyles(styles)
 const TxDetailsMethodName = styled(Text)`
   text-indent: 4px;
 `
-const TxDetailsMethodParam = styled.div`
-  text-indent: 8px;
-  display: flex;
+const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
+  padding-left: 8px;
+  display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
+  align-items: center;
+
+  p:first-of-type {
+    margin-right: ${({ isArrayParameter }) => (isArrayParameter ? '0' : '4px')};
+  }
 `
 const TxDetailsContent = styled.div`
   padding: 8px 8px 8px 16px;
@@ -53,6 +58,10 @@ const TxInfo = styled.div`
   padding: 8px 8px 8px 16px;
 `
 
+const StyledMethodName = styled(Text)`
+  white-space: nowrap;
+`
+
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
     <TxDetailsMethodName size="lg" strong>
@@ -60,10 +69,10 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
     </TxDetailsMethodName>
 
     {data.parameters.map((param, index) => (
-      <TxDetailsMethodParam key={`${data.method}_param-${index}`}>
-        <Text size="lg" strong>
+      <TxDetailsMethodParam key={`${data.method}_param-${index}`} isArrayParameter={isArrayParameter(param.type)}>
+        <StyledMethodName size="lg" strong>
           {param.name}({param.type}):
-        </Text>
+        </StyledMethodName>
         <Value method={data.method} type={param.type} value={param.value} />
       </TxDetailsMethodParam>
     ))}
@@ -133,7 +142,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
         <TxDetailsContent>
           <TxInfo>
             <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-            <OwnerAddressTableCell address={tx.to} showLinks />
+            <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetwork()} />
           </TxInfo>
 
           {!!data ? <TxInfoDetails data={data} /> : tx.data && <HexEncodedData data={tx.data} />}
@@ -244,7 +253,7 @@ export const GenericCustomData = ({
   recipient,
   storedTx,
 }: GenericCustomDataProps): React.ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
@@ -255,11 +264,15 @@ export const GenericCustomData = ({
       {recipient && (
         <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
           <Bold>Send {amount} to:</Bold>
-          {recipientName ? (
-            <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
-          ) : (
-            <EtherscanLink knownAddress={false} type="address" value={recipient} />
-          )}
+
+          <EthHashInfo
+            hash={recipient}
+            name={recipientName === 'UNKNOWN' ? undefined : recipientName}
+            showIdenticon
+            showCopyBtn
+            showEtherscanBtn
+            network={getNetwork()}
+          />
         </Block>
       )}
 

@@ -69,9 +69,8 @@ type OwnProps = {
   safeAddress: string
   safeName: string
   ethBalance: string
-  onCancel: () => void
   onUserConfirm: (safeTxHash: string) => void
-  onUserTxReject: () => void
+  onTxReject: () => void
   onClose: () => void
 }
 
@@ -82,14 +81,18 @@ const ConfirmTransactionModal = ({
   safeAddress,
   ethBalance,
   safeName,
-  onCancel,
   onUserConfirm,
   onClose,
-  onUserTxReject,
+  onTxReject,
 }: OwnProps): React.ReactElement | null => {
   const dispatch = useDispatch()
   if (!isOpen) {
     return null
+  }
+
+  const handleTxRejection = () => {
+    onTxReject()
+    onClose()
   }
 
   const handleUserConfirmation = (safeTxHash: string): void => {
@@ -113,10 +116,9 @@ const ConfirmTransactionModal = ({
           navigateToTransactionsTab: false,
         },
         handleUserConfirmation,
-        onUserTxReject,
+        handleTxRejection,
       ),
     )
-    onClose()
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
@@ -165,13 +167,13 @@ const ConfirmTransactionModal = ({
       footer={
         <ModalFooterConfirmation
           cancelText="Cancel"
-          handleCancel={onCancel}
+          handleCancel={handleTxRejection}
           handleOk={confirmTransactions}
           okDisabled={areTxsMalformed}
           okText="Submit"
         />
       }
-      onClose={onClose}
+      onClose={handleTxRejection}
     />
   )
 }

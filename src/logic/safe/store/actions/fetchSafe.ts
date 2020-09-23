@@ -6,7 +6,6 @@ import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
-import addSafe from 'src/logic/safe/store/actions/addSafe'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
@@ -21,6 +20,7 @@ import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic
 import { Action, Dispatch } from 'redux'
 import { getSpendingLimitContract, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
+import { latestMasterContractVersionSelector } from '../selectors'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
@@ -139,11 +139,12 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   const spendingLimits = await getSpendingLimits(modules, safeAddress)
 
   // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : undefined
+  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
 
   dispatch(
     updateSafe({
       address: safeAddress,
+      name: localSafe?.name,
       modules: buildModulesLinkedList(modules?.array, modules?.next),
       spendingLimits,
       nonce: Number(remoteNonce),
@@ -152,30 +153,27 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   )
 
   // If the remote owners does not contain a local address, we remove that local owner
-  if (localOwners) {
-    localOwners.forEach((localAddress) => {
-      const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
-      if (remoteOwnerIndex === -1) {
-        dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
-      }
-    })
+  localOwners.forEach((localAddress) => {
+    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
+    if (remoteOwnerIndex === -1) {
+      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
+    }
+  })
 
-    // If the remote has an owner that we don't have locally, we add it
-    remoteOwners.forEach((remoteAddress) => {
-      const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
-      if (localOwnerIndex === -1) {
-        dispatch(
-          addSafeOwner({
-            safeAddress,
-            ownerAddress: remoteAddress,
-            ownerName: 'UNKNOWN',
-          }),
-        )
-      }
-    })
-  }
+  // If the remote has an owner that we don't have locally, we add it
+  remoteOwners.forEach((remoteAddress) => {
+    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
+    if (localOwnerIndex === -1) {
+      dispatch(
+        addSafeOwner({
+          safeAddress,
+          ownerAddress: remoteAddress,
+          ownerName: 'UNKNOWN',
+        }),
+      )
+    }
+  })
 }
-
 export default (safeAdd: string) => async (
   dispatch: Dispatch<any>,
   getState: () => AppReduxState,
@@ -183,12 +181,15 @@ export default (safeAdd: string) => async (
   try {
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
-    const latestMasterContractVersion = getState().safes.get('latestMasterContractVersion')
+    const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
     const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 
-    dispatch(addSafe(safeProps))
+    // `updateSafe`, as `loadSafesFromStorage` will populate the store previous to this call
+    // and `addSafe` will only add a newly non-existent safe
+    // For the case where the safe does not exist in the localStorage,
+    // `updateSafe` uses a default `notSetValue` to add the Safe to the store
+    dispatch(updateSafe(safeProps))
   } catch (err) {
-    // eslint-disable-next-line
     console.error('Error while updating Safe information: ', err)
 
     return Promise.resolve()

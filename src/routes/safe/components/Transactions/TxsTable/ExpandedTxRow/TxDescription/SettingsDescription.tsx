@@ -1,7 +1,7 @@
 import { useSelector } from 'react-redux'
 import React from 'react'
 
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
@@ -21,7 +21,7 @@ interface RemovedOwnerProps {
 }
 
 const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): React.ReactElement => {
-  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, removedOwner))
+  const ownerChangedName = useSelector((state) => getNameFromAddressBookSelector(state, removedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_REMOVE_OWNER_TEST_ID}>
@@ -40,7 +40,7 @@ interface AddedOwnerProps {
 }
 
 const AddedOwner = ({ addedOwner }: AddedOwnerProps): React.ReactElement => {
-  const ownerChangedName = useSelector((state) => getNameFromAddressBook(state, addedOwner))
+  const ownerChangedName = useSelector((state) => getNameFromAddressBookSelector(state, addedOwner))
 
   return (
     <Block data-testid={TRANSACTIONS_DESC_ADD_OWNER_TEST_ID}>

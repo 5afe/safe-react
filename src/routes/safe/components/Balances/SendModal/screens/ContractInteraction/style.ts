@@ -26,6 +26,7 @@ export const styles = createStyles({
   },
   formContainer: {
     padding: `${md} ${sm} ${md} ${lg}`,
+    wordBreak: 'break-word',
   },
   value: {
     marginLeft: sm,

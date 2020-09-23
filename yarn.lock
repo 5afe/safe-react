@@ -1807,16 +1807,6 @@
     "@ledgerhq/logs" "^5.22.0"
     u2f-api "0.2.7"
 
-"@ledgerhq/hw-transport-webusb@^5.22.0":
-  version "5.22.0"
-  resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport-webusb/-/hw-transport-webusb-5.22.0.tgz#f433b4ad8175e1b47b091766b85071c35175a27d"
-  integrity sha512-fPj9x+Ce48g1t7vv2RvT29KonDMUPhLMPGcsX7Kr+IRsheBnaJUhgUVzKXHevaNF1xWhkJEW/Sd8Wo5wyK1pOw==
-  dependencies:
-    "@ledgerhq/devices" "^5.22.0"
-    "@ledgerhq/errors" "^5.22.0"
-    "@ledgerhq/hw-transport" "^5.22.0"
-    "@ledgerhq/logs" "^5.22.0"
-
 "@ledgerhq/hw-transport@^5.22.0":
   version "5.22.0"
   resolved "https://registry.yarnpkg.com/@ledgerhq/hw-transport/-/hw-transport-5.22.0.tgz#d627948b43005ec9e7dfe85adf9aa01e130de280"
@@ -5374,14 +5364,13 @@ bn.js@^5.1.1, bn.js@^5.1.2:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-5.1.3.tgz#beca005408f642ebebea80b042b4d18d2ac0ee6b"
   integrity sha512-GkTiFpjFtUzU9CbMeJ5iazkCzGL3jrhzerzZIuqLABjbwRaFt33I9tUdSNryIptM+RxDet6OKm2WnLXzW51KsQ==
 
-bnc-onboard@1.12.0:
-  version "1.12.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.12.0.tgz#b6c447ae6c98bbaf3f2dcd1e41b8a9ede22445a5"
-  integrity sha512-vWNlmOMFaWFZ8JyhHnbNOOaU2cuwNPUdAIz6CsyzYfcOTH/6bEJSk6r6VhWtl3B9NEud+MFjBd2WBpzF7Mrg4w==
+bnc-onboard@1.13.1:
+  version "1.13.1"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.13.1.tgz#281629e15c01ab47425f9494b33c4ce28a9db01e"
+  integrity sha512-Mv06oWNjkjDNU3vR8l/aJFKTBya5lj6vPfYcl9ONpyyaoY/8neZS4icQrFeRv9nDvENVz6esxcYAyX62f0+rwA==
   dependencies:
     "@ledgerhq/hw-app-eth" "^5.21.0"
     "@ledgerhq/hw-transport-u2f" "^5.21.0"
-    "@ledgerhq/hw-transport-webusb" "^5.22.0"
     "@portis/web3" "^2.0.0-beta.57"
     "@toruslabs/torus-embed" "^1.8.2"
     "@unilogin/provider" "^0.6.1"

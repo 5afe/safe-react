@@ -2,7 +2,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { TRANSACTIONS_DESC_SEND_TEST_ID } from './index'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
@@ -14,7 +14,7 @@ interface TransferDescriptionProps {
 }
 
 const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProps): React.ReactElement | null => {
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
 
   return recipient ? (
     <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>

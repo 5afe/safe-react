@@ -7,13 +7,18 @@ import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
+import Identicon from 'src/components/Identicon'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
+import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -21,9 +26,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromSafeAddressBook } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -36,8 +40,6 @@ import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/scre
 import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
-import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
-import { styles } from './style'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -77,8 +79,8 @@ const SendFunds = ({
 }: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
@@ -97,7 +99,7 @@ const SendFunds = ({
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      submitValues.recipientAddress = selectedEntry?.address
     }
     onNext({ ...submitValues, tokenSpendingLimit })
   }
@@ -138,7 +140,7 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromSafeAddressBook(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName,

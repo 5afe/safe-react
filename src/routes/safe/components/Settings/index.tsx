@@ -24,7 +24,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/logic/safe/store/selectors'
 
@@ -43,7 +43,7 @@ const Settings: React.FC = () => {
   const owners = useSelector(safeOwnersSelector)
   const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))

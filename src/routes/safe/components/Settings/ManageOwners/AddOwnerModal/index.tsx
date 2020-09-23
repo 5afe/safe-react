@@ -16,6 +16,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -92,7 +93,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) 
     try {
       await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, dispatch)
       dispatch(
-        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+        addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)
