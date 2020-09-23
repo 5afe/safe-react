@@ -40,6 +40,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
   // Wallet-Connect
   { url: `${gnosisAppsUrl}/walletConnect`, disabled: false },
+  // Yearn Vaults
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`, disabled: false },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {

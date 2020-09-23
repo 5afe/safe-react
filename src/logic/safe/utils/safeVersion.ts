@@ -71,7 +71,7 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
 
 export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
   try {
-    const safeMaster = await getGnosisSafeInstanceAt(safeAddress)
+    const safeMaster = getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()
     return checkIfSafeNeedsUpdate(safeMaster, lastSafeVersion)
   } catch (err) {
