@@ -15,7 +15,7 @@ import Bold from 'src/components/layout/Bold'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
@@ -176,7 +176,7 @@ interface GenericCustomDataProps {
 
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
-  const recipientName = useSelector((state) => getNameFromAddressBook(state, recipient))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
 
   return (
     <Block>

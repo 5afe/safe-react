@@ -19,22 +19,43 @@ import {
 import Welcome from 'src/routes/welcome/components/Layout'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount, safeProps) => {
+type SafeProps = {
+  name: string
+  ownerAddresses: any
+  ownerNames: string
+  threshold: string
+}
+
+type InitialValuesForm = {
+  owner0Address?: string
+  owner0Name?: string
+  confirmations: string
+  safeName?: string
+}
+
+const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+  const addressBook = useSelector(addressBookSelector)
+  const ownerName = getNameFromAddressBook(addressBook, userAccount, { filterOnlyValidName: true })
+
   if (!safeProps) {
     return {
-      [getOwnerNameBy(0)]: 'My Wallet',
+      [getOwnerNameBy(0)]: ownerName || 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
     }
   }
   let obj = {}
   const { name, ownerAddresses, ownerNames, threshold } = safeProps
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
     obj = {
@@ -66,8 +87,17 @@ const formMutators = {
   },
 }
 
-const Layout = (props) => {
-  const { network, onCallSafeContractSubmit, provider, safeProps, userAccount } = props
+type LayoutProps = {
+  onCallSafeContractSubmit: (formValues: unknown) => void
+  safeProps?: SafeProps
+}
+
+const Layout = (props: LayoutProps): React.ReactElement => {
+  const { onCallSafeContractSubmit, safeProps } = props
+
+  const provider = useSelector(providerNameSelector)
+  const network = useSelector(networkSelector)
+  const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
     if (provider) {
@@ -77,7 +107,7 @@ const Layout = (props) => {
 
   const steps = getSteps()
 
-  const initialValues = initialValuesFrom(userAccount, safeProps)
+  const initialValues = useInitialValuesFrom(userAccount, safeProps)
 
   return (
     <>
