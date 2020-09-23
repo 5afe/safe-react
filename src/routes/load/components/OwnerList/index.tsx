@@ -1,5 +1,5 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
@@ -17,57 +17,13 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
-import { border, disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
 
-const styles = () => ({
-  details: {
-    padding: lg,
-    borderRight: `solid 1px ${border}`,
-    height: '100%',
-  },
-  owners: {
-    display: 'flex',
-    justifyContent: 'flex-start',
-  },
-  ownerName: {
-    marginBottom: '15px',
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      marginBottom: '0',
-      minWidth: '0',
-    },
-  },
-  ownerAddresses: {
-    alignItems: 'center',
-    marginLeft: `${sm}`,
-  },
-  address: {
-    paddingLeft: '6px',
-    marginRight: sm,
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  title: {
-    padding: `${md} ${lg}`,
-  },
-  owner: {
-    padding: `0 ${lg}`,
-    marginBottom: '12px',
-  },
-  header: {
-    padding: `${sm} ${lg}`,
-    color: disabled,
-    fontSize: extraSmallFontSize,
-  },
-  name: {
-    marginRight: `${sm}`,
-  },
-})
+import { useSelector } from 'react-redux'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+
+import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { styles } from './styles'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -78,9 +34,20 @@ const calculateSafeValues = (owners, threshold, values) => {
   return initialValues
 }
 
+const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] => {
+  const addressBook = useSelector(addressBookSelector)
+
+  return formatAddressListToAddressBookNames(addressBook, ownersList)
+}
+
+const useStyles = makeStyles(styles)
+
 const OwnerListComponent = (props) => {
   const [owners, setOwners] = useState<string[]>([])
-  const { classes, updateInitialProps, values } = props
+  const classes = useStyles()
+  const { updateInitialProps, values } = props
+
+  const ownersWithNames = useAddressBookForOwnersNames(owners)
 
   useEffect(() => {
     let isCurrent = true
@@ -121,47 +88,48 @@ const OwnerListComponent = (props) => {
         </Row>
         <Hairline />
         <Block margin="md" padding="md">
-          {owners.map((address, index) => (
-            <Row className={classes.owner} key={address} data-testid="owner-row">
-              <Col className={classes.ownerName} xs={4}>
-                <Field
-                  className={classes.name}
-                  component={TextField}
-                  initialValue={`Owner #${index + 1}`}
-                  name={getOwnerNameBy(index)}
-                  placeholder="Owner Name*"
-                  text="Owner Name"
-                  type="text"
-                  validate={composeValidators(required, minMaxLength(1, 50))}
-                  testId={`load-safe-owner-name-${index}`}
-                />
-              </Col>
-              <Col xs={8}>
-                <Row className={classes.ownerAddresses}>
-                  <Identicon address={address} diameter={32} />
-                  <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                    {address}
-                  </Paragraph>
-                  <CopyBtn content={address} />
-                  <EtherscanBtn type="address" value={address} />
-                </Row>
-              </Col>
-            </Row>
-          ))}
+          {ownersWithNames.map(({ address, name }, index) => {
+            const ownerName = name || `Owner #${index + 1}`
+            return (
+              <Row className={classes.owner} key={address} data-testid="owner-row">
+                <Col className={classes.ownerName} xs={4}>
+                  <Field
+                    className={classes.name}
+                    component={TextField}
+                    initialValue={ownerName}
+                    name={getOwnerNameBy(index)}
+                    placeholder="Owner Name*"
+                    text="Owner Name"
+                    type="text"
+                    validate={composeValidators(required, minMaxLength(1, 50))}
+                    testId={`load-safe-owner-name-${index}`}
+                  />
+                </Col>
+                <Col xs={8}>
+                  <Row className={classes.ownerAddresses}>
+                    <Identicon address={address} diameter={32} />
+                    <Paragraph className={classes.address} color="disabled" noMargin size="md">
+                      {address}
+                    </Paragraph>
+                    <CopyBtn content={address} />
+                    <EtherscanBtn type="address" value={address} />
+                  </Row>
+                </Col>
+              </Row>
+            )
+          })}
         </Block>
       </TableContainer>
     </>
   )
 }
 
-const OwnerListPage = withStyles(styles as any)(OwnerListComponent)
-
 const OwnerList = ({ updateInitialProps }, network) =>
   function LoadSafeOwnerList(controls, { values }): React.ReactElement {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
-          <OwnerListPage network={network} updateInitialProps={updateInitialProps} values={values} />
+          <OwnerListComponent network={network} updateInitialProps={updateInitialProps} values={values} />
         </OpenPaper>
       </>
     )

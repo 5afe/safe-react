@@ -14,8 +14,8 @@ import { history } from 'src/store'
 import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { addSafe } from 'src/logic/safe/store/actions/addSafe'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 export const loadSafe = async (
   safeName: string,
@@ -46,8 +46,8 @@ const Load = (): React.ReactElement => {
   const network = useSelector(networkSelector)
   const userAddress = useSelector(userAccountSelector)
 
-  const addSafeHandler = (safe: SafeRecordProps) => {
-    dispatch(addSafe(safe))
+  const addSafeHandler = async (safe: SafeRecordProps) => {
+    await dispatch(addOrUpdateSafe(safe))
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]

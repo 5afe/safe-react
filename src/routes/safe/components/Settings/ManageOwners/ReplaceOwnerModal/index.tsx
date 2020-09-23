@@ -14,6 +14,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
 const styles = () => ({
   biggerModalWindow: {
@@ -96,10 +97,7 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
       await sendReplaceOwner(values, safeAddress, ownerAddress, enqueueSnackbar, closeSnackbar, threshold, dispatch)
 
       dispatch(
-        // Needs the `address` field because we need to provide the minimum required values to ADD a new entry
-        // The reducer will update all the addressBooks stored, so we cannot decide what to do beforehand,
-        // thus, we pass the minimum required fields (name and address)
-        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+        addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)
