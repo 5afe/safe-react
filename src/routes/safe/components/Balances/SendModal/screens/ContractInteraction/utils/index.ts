@@ -40,12 +40,12 @@ export const ensResolver = createDecorator({
         if (resolvedAddress) {
           return resolvedAddress
         }
+
+        return contractAddress
       } catch (e) {
         console.error(e.message)
         return contractAddress
       }
-
-      return contractAddress
     },
   },
 })
