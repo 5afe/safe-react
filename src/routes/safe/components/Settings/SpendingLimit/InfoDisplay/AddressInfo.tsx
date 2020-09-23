@@ -3,7 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { getNetwork } from 'src/config'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import DataDisplay from './DataDisplay'
 
@@ -14,7 +14,7 @@ interface AddressInfoProps {
 }
 
 const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): React.ReactElement => {
-  const name = useSelector((state) => getNameFromAddressBook(state, address))
+  const name = useSelector((state) => getNameFromAddressBookSelector(state, address))
 
   return (
     <DataDisplay title={title}>
