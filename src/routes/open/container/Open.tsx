@@ -143,7 +143,7 @@ const Open = (): React.ReactElement => {
     const ownerAddresses = getAccountsFrom(pendingCreation)
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
 
-    dispatch(addOrUpdateSafe(safeProps))
+    await dispatch(addOrUpdateSafe(safeProps))
 
     ReactGA.event({
       category: 'User',

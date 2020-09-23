@@ -46,8 +46,8 @@ const Load = (): React.ReactElement => {
   const network = useSelector(networkSelector)
   const userAddress = useSelector(userAccountSelector)
 
-  const addSafeHandler = (safe: SafeRecordProps) => {
-    dispatch(addOrUpdateSafe(safe))
+  const addSafeHandler = async (safe: SafeRecordProps) => {
+    await dispatch(addOrUpdateSafe(safe))
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]

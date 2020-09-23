@@ -19,11 +19,13 @@ import { checkIfEntryWasDeletedFromAddressBook, isValidAddressBookName } from 's
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
+import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 const watchedActions = [
   ADD_SAFE,
   UPDATE_SAFE,
   REMOVE_SAFE,
+  ADD_OR_UPDATE_SAFE,
   ADD_SAFE_OWNER,
   REMOVE_SAFE_OWNER,
   REPLACE_SAFE_OWNER,
@@ -97,6 +99,16 @@ const safeStorageMware = (store) => (next) => async (action) => {
             }),
           )
         }
+        break
+      }
+      case ADD_OR_UPDATE_SAFE: {
+        const { safe } = action.payload
+        safe.owners.forEach((owner) => {
+          const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
+          if (isValidAddressBookName(checksumEntry.name)) {
+            dispatch(addOrUpdateAddressBookEntry(checksumEntry))
+          }
+        })
         break
       }
       case UPDATE_SAFE: {
