@@ -19,7 +19,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // 1inch
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`, disabled: false },
   // Aave
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmcs2UnBZwrjmPRz4HAQb5d8KsW6aXfS8pnFteiorwoE5c`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`, disabled: false },
   //Balancer Exchange
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`, disabled: false },
   //Balancer Pool
