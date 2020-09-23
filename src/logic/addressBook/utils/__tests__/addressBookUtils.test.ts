@@ -249,7 +249,7 @@ describe('isValidAddressBookName', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
   })
-  it('It should true false if the given address name is valid', () => {
+  it('It should return true if the given address name is valid', () => {
     // given
     const addressNameInput = 'User'
 
