@@ -63,7 +63,8 @@ export default handleActions(
                   // If type is array we update the array
                   record.update(key, () => safe[key])
                 } else if (safe[key].size) {
-                  // If type is object we merge the object properties
+                  // If type is Immutable List we replace current List
+                  // If type is Object we do a merge
                   List.isList(safe[key])
                     ? record.update(key, (current) => current.set(safe[key]))
                     : record.update(key, (current) => current.merge(safe[key]))
