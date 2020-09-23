@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable'
+import { Map, Set, List } from 'immutable'
 import { handleActions } from 'redux-actions'
 
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from 'src/logic/safe/store/actions/activateTokenForAllSafes'
@@ -64,7 +64,9 @@ export default handleActions(
                   record.update(key, () => safe[key])
                 } else if (safe[key].size) {
                   // If type is object we merge the object properties
-                  record.update(key, (current) => current.merge(safe[key]))
+                  List.isList(safe[key])
+                    ? record.update(key, (current) => current.set(safe[key]))
+                    : record.update(key, (current) => current.merge(safe[key]))
                 }
               } else {
                 // By default we overwrite the value. This is for strings, numbers and unset values
