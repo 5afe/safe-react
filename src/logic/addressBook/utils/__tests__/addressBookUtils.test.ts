@@ -239,7 +239,7 @@ describe('isValidAddressBookName', () => {
   })
   it('It should return false if given a blacklisted name like OWNER #', () => {
     // given
-    const addressNameInput = 'MY WALLET'
+    const addressNameInput = 'OWNER #'
 
     const expectedResult = false
 
@@ -249,7 +249,7 @@ describe('isValidAddressBookName', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
   })
-  it('It should true false if the given address is not blacklisted', () => {
+  it('It should true false if the given address name is valid', () => {
     // given
     const addressNameInput = 'User'
 
@@ -270,7 +270,7 @@ describe('checkIfEntryWasDeletedFromAddressBook', () => {
   const entry1 = getMockAddressBookEntry(mockAdd1, 'test1')
   const entry2 = getMockAddressBookEntry(mockAdd2, 'test2')
   const entry3 = getMockAddressBookEntry(mockAdd3, 'test3')
-  it('It should return true if given an entry was deleted from addressBook', () => {
+  it('It should return true if a given entry was deleted from addressBook', () => {
     // given
     const addressBookEntry = entry1
     const addressBook: AddressBookState = [entry2, entry3]
@@ -283,7 +283,7 @@ describe('checkIfEntryWasDeletedFromAddressBook', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('It should return false if given an entry was not deleted from addressBook', () => {
+  it('It should return false if a given entry was not deleted from addressBook', () => {
     // given
     const addressBookEntry = entry1
     const addressBook: AddressBookState = [entry1, entry2, entry3]
@@ -296,7 +296,7 @@ describe('checkIfEntryWasDeletedFromAddressBook', () => {
     // then
     expect(result).toEqual(expectedResult)
   })
-  it('If the safe was not already loaded should return false', () => {
+  it('It should return false if the safe was not already loaded', () => {
     // given
     const addressBookEntry = entry1
     const addressBook: AddressBookState = [entry1, entry2, entry3]
