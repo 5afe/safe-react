@@ -1,4 +1,4 @@
-import { Map, Set } from 'immutable'
+import { Map, Set, List } from 'immutable'
 import { handleActions } from 'redux-actions'
 
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from 'src/logic/safe/store/actions/activateTokenForAllSafes'
@@ -52,7 +52,31 @@ export default handleActions(
       return state.updateIn(
         ['safes', safeAddress],
         makeSafe({ name: 'LOADED SAFE', address: safeAddress }),
-        (prevSafe) => prevSafe.merge(safe),
+        (prevSafe) => {
+          return prevSafe.withMutations((record) => {
+            // Every property is updated individually to overcome the issue with nested data being overwritten
+            const safeProperties = Object.keys(safe)
+
+            // We check each safe property sent in action.payload
+            safeProperties.forEach((key) => {
+              if (safe[key] && typeof safe[key] === 'object') {
+                if (safe[key].length) {
+                  // If type is array we update the array
+                  record.update(key, () => safe[key])
+                } else if (safe[key].size) {
+                  // If type is Immutable List we replace current List
+                  // If type is Object we do a merge
+                  List.isList(safe[key])
+                    ? record.update(key, (current) => current.set(safe[key]))
+                    : record.update(key, (current) => current.merge(safe[key]))
+                }
+              } else {
+                // By default we overwrite the value. This is for strings, numbers and unset values
+                record.set(key, safe[key])
+              }
+            })
+          })
+        },
       )
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {

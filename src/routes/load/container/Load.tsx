@@ -62,7 +62,7 @@ const Load = (): React.ReactElement => {
       safeAddress = checksumAddress(safeAddress)
       const ownerNames = getNamesFrom(values)
 
-      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const ownerAddresses = await gnosisSafe.methods.getOwners().call()
       const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 
