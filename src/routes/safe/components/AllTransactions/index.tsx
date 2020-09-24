@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTransactions } from 'src/routes/safe/container/hooks/useTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions.d'
 
 const Transactions = (): React.ReactElement => {
   const [currentPage, setCurrentPage] = useState(0)

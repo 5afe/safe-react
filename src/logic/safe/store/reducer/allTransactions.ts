@@ -1,6 +1,6 @@
 import { handleActions } from 'redux-actions'
 
-import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions.d'
 import {
   LOAD_MORE_TRANSACTIONS,
   LoadMoreTransactionsAction,
