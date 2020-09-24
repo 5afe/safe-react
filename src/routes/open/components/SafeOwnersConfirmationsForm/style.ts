@@ -1,6 +1,7 @@
 import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     display: 'flex',
   },

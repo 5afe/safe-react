@@ -22,13 +22,13 @@ export const useLoadSafe = (safeAddress?: string): void => {
             return dispatch(fetchSafeTokens(safeAddress))
           })
           .then(() => {
-            dispatch(loadAddressBookFromStorage())
             dispatch(fetchSafeCreationTx(safeAddress))
             dispatch(fetchTransactions(safeAddress))
             return dispatch(addViewedSafe(safeAddress))
           })
       }
     }
+    dispatch(loadAddressBookFromStorage())
 
     fetchData()
   }, [dispatch, safeAddress])

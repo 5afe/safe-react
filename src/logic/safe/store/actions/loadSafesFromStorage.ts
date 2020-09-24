@@ -13,7 +13,7 @@ const loadSafesFromStorage = () => async (dispatch: Dispatch): Promise<void> => 
 
     if (safes) {
       Object.values(safes).forEach((safeProps) => {
-        dispatch(addSafe(buildSafe(safeProps)))
+        dispatch(addSafe(buildSafe(safeProps), true))
       })
     }
   } catch (err) {

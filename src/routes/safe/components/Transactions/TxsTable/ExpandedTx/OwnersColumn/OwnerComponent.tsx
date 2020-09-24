@@ -16,7 +16,7 @@ import { styles } from './style'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { OwnersWithoutConfirmations } from './index'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
@@ -64,7 +64,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
     showExecuteRejectBtn,
     confirmed,
   } = props
-  const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
+  const nameInAdbk = useSelector((state) => getNameFromAddressBookSelector(state, owner))
   const classes = useStyles()
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 

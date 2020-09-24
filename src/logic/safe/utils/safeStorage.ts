@@ -6,23 +6,16 @@ export const DEFAULT_SAFE_KEY = 'DEFAULT_SAFE'
 
 type StoredSafes = Record<string, SafeRecordProps>
 
-export const loadStoredSafes = async (): Promise<StoredSafes | undefined> => {
-  const safes = await loadFromStorage<StoredSafes>(SAFES_KEY)
-
-  return safes
+export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
+  return loadFromStorage<StoredSafes>(SAFES_KEY)
 }
 
 export const getSafeName = async (safeAddress: string): Promise<string | undefined> => {
   const safes = await loadStoredSafes()
-  if (!safes) {
-    return undefined
-  }
-  const safe = safes[safeAddress]
-
-  return safe ? safe.name : undefined
+  return safes?.[safeAddress]?.name
 }
 
-export const saveSafes = async (safes) => {
+export const saveSafes = async (safes: StoredSafes): Promise<void> => {
   try {
     await saveToStorage(SAFES_KEY, safes)
   } catch (err) {

@@ -8,7 +8,7 @@ import { ethSigner } from './ethSigner'
 const SIGNERS = {
   EIP712_V3: getEIP712Signer('v3'),
   EIP712_V4: getEIP712Signer('v4'),
-  EIP712: getEIP712Signer() as any,
+  EIP712: getEIP712Signer(),
   ETH_SIGN: ethSigner,
 }
 
@@ -18,13 +18,13 @@ const getSignersByWallet = (isHW) =>
 
 export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
 
-export const tryOffchainSigning = async (txArgs, isHW) => {
+export const tryOffchainSigning = async (safeTxHash: string, txArgs, isHW: boolean): Promise<string> => {
   let signature
 
   const signerByWallet = getSignersByWallet(isHW)
   for (const signingFunc of signerByWallet) {
     try {
-      signature = await signingFunc(txArgs)
+      signature = await signingFunc({ ...txArgs, safeTxHash })
 
       break
     } catch (err) {
