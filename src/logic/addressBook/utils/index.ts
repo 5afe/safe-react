@@ -1,6 +1,6 @@
 import { List } from 'immutable'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
@@ -15,6 +15,8 @@ export type OldAddressBookEntry = {
 export type OldAddressBookType = {
   [safeAddress: string]: [OldAddressBookEntry]
 }
+
+const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
 
 export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
   const values: AddressBookState = []
@@ -56,19 +58,31 @@ export const saveAddressBook = async (addressBook: AddressBookState): Promise<vo
 export const getAddressesListFromAddressBook = (addressBook: AddressBookState): string[] =>
   addressBook.map((entry) => entry.address)
 
-export const getNameFromAddressBook = (addressBook: AddressBookState, userAddress: string): string | null => {
+type GetNameFromAddressBookOptions = {
+  filterOnlyValidName: boolean
+}
+
+export const getNameFromAddressBook = (
+  addressBook: AddressBookState,
+  userAddress: string,
+  options?: GetNameFromAddressBookOptions,
+): string | null => {
   const entry = addressBook.find((addressBookItem) => addressBookItem.address === userAddress)
   if (entry) {
-    return entry.name
+    return options?.filterOnlyValidName ? getValidAddressBookName(entry.name) : entry.name
   }
   return null
 }
 
-export const getValidAddressBookName = (addressbookName: string): string | null => {
-  const INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
-  const isInvalid = INVALID_NAMES.find((invalidName) => addressbookName.toUpperCase().includes(invalidName))
-  if (isInvalid) return null
-  return addressbookName
+export const isValidAddressBookName = (addressBookName: string): boolean => {
+  const hasInvalidName = ADDRESSBOOK_INVALID_NAMES.find((invalidName) =>
+    addressBookName.toUpperCase().includes(invalidName),
+  )
+  return !hasInvalidName
+}
+
+export const getValidAddressBookName = (addressBookName: string): string | null => {
+  return isValidAddressBookName(addressBookName) ? addressBookName : null
 }
 
 export const getOwnersWithNameFromAddressBook = (
@@ -85,4 +99,42 @@ export const getOwnersWithNameFromAddressBook = (
       name: ownerName || owner.name,
     }
   })
+}
+
+export const formatAddressListToAddressBookNames = (
+  addressBook: AddressBookState,
+  addresses: string[],
+): AddressBookEntry[] => {
+  if (!addresses.length) {
+    return []
+  }
+  return addresses.map((address) => {
+    const ownerName = getNameFromAddressBook(addressBook, address)
+    return {
+      address: address,
+      name: ownerName || '',
+    }
+  })
+}
+
+/**
+ * If the safe is not loaded, the owner wasn't not deleted
+ * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
+ * @param name
+ * @param address
+ * @param addressBook
+ * @param safeAlreadyLoaded
+ */
+export const checkIfEntryWasDeletedFromAddressBook = (
+  { name, address }: AddressBookEntry,
+  addressBook: AddressBookState,
+  safeAlreadyLoaded: boolean,
+): boolean => {
+  if (!safeAlreadyLoaded) {
+    return false
+  }
+
+  const addressShouldBeOnTheAddressBook = !!getValidAddressBookName(name)
+  const isAlreadyInAddressBook = !!addressBook.find((entry) => sameAddress(entry.address, address))
+  return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
 }

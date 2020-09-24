@@ -19,7 +19,12 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
 
-const ReviewComponent = ({ userAccount, values }: any) => {
+type ReviewComponentProps = {
+  userAccount: string
+  values: any
+}
+
+const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   const classes = useStyles()
 
   const [gasCosts, setGasCosts] = useState('< 0.001')
@@ -136,11 +141,11 @@ const ReviewComponent = ({ userAccount, values }: any) => {
 }
 
 const Review = () =>
-  function ReviewPage(controls, { values }): React.ReactElement {
+  function ReviewPage(controls, props): React.ReactElement {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
-          <ReviewComponent values={values} />
+          <ReviewComponent {...props} />
         </OpenPaper>
       </>
     )
