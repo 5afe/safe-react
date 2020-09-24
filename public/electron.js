@@ -5,6 +5,7 @@ const log = require('electron-log');
 const fs = require('fs');
 const Menu = electron.Menu;
 const https = require('https');
+const detect = require('detect-port');
 const autoUpdater = require('./auto-updater');
 
 const app = electron.app;
@@ -20,15 +21,24 @@ const options = {
   ca:   fs.readFileSync(path.join(__dirname, './ssl/rootCA.crt'))
 };
 
-const PORT = 5000;
+const DEFAULT_PORT = 5000;
 
-const createServer = () => {
+const createServer = async () => {
   const app = express();
   const staticRoute = path.join(__dirname, '../build');
   app.use(express.static(staticRoute));
-  https.createServer(options, app).listen(PORT);
+  let selectedPort = DEFAULT_PORT;
+  try {
+    const _port = await detect(DEFAULT_PORT);
+    if(_port !== DEFAULT_PORT)
+      selectedPort = _port;
+    https.createServer(options, app).listen(selectedPort);
+  }catch (e){
+    log.error(e);
+  }finally {
+    return selectedPort;
+  }
 }
-
 
 let mainWindow;
 
@@ -78,7 +88,7 @@ function getOpenedWindow(url,options) {
 
 }
 
-function createWindow() {
+function createWindow(port = DEFAULT_PORT) {
   mainWindow = new BrowserWindow({
     show: false,
     width: 1024,
@@ -98,7 +108,7 @@ function createWindow() {
   mainWindow.loadURL(
     isDev
       ? "http://localhost:3000"
-      : `https://localhost:${PORT}`
+      : `https://localhost:${port}`
       )
 
   if (isDev) {
@@ -147,11 +157,13 @@ app.userAgentFallback = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWe
 app.allowRendererProcessReuse = false;
 
 app.commandLine.appendSwitch('ignore-certificate-errors');
-app.on("ready", () =>{
+app.on("ready", async () =>{
   // Hide the menu
   Menu.setApplicationMenu(null);
-  if(!isDev) createServer();
-  createWindow();
+  let usedPort = DEFAULT_PORT;
+  if(!isDev)
+    usedPort = await createServer();
+  createWindow(usedPort);
 });
 
 app.on("window-all-closed", () => {
