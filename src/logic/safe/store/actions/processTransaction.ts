@@ -78,7 +78,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
     const canTryOffchainSigning =
       !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
     if (canTryOffchainSigning) {
-      const signature = await tryOffchainSigning({ ...txArgs, safeAddress }, hardwareWallet)
+      const signature = await tryOffchainSigning(tx.safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
         dispatch(closeSnackbarAction(beforeExecutionKey))

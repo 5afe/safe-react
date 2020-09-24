@@ -1,4 +1,3 @@
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { saveDefaultSafe, saveSafes } from 'src/logic/safe/utils'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
@@ -13,11 +12,20 @@ import { REPLACE_SAFE_OWNER } from 'src/logic/safe/store/actions/replaceSafeOwne
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { checkIfEntryWasDeletedFromAddressBook, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
+import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 const watchedActions = [
   ADD_SAFE,
   UPDATE_SAFE,
   REMOVE_SAFE,
+  ADD_OR_UPDATE_SAFE,
   ADD_SAFE_OWNER,
   REMOVE_SAFE_OWNER,
   REPLACE_SAFE_OWNER,
@@ -48,6 +56,7 @@ const safeStorageMware = (store) => (next) => async (action) => {
     const state = store.getState()
     const { dispatch } = store
     const safes = safesMapSelector(state)
+    const addressBook = addressBookSelector(state)
     await saveSafes(safes.toJSON())
 
     switch (action.type) {
@@ -56,18 +65,59 @@ const safeStorageMware = (store) => (next) => async (action) => {
         break
       }
       case ADD_SAFE: {
+        const { safe, loadedFromStorage } = action.payload
+        const safeAlreadyLoaded =
+          loadedFromStorage || safes.find((safeIterator) => sameAddress(safeIterator.address, safe.address))
+
+        safe.owners.forEach((owner) => {
+          const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
+
+          const ownerWasAlreadyInAddressBook = checkIfEntryWasDeletedFromAddressBook(
+            checksumEntry,
+            addressBook,
+            safeAlreadyLoaded,
+          )
+
+          if (!ownerWasAlreadyInAddressBook) {
+            dispatch(addAddressBookEntry(checksumEntry, { notifyEntryUpdate: false }))
+          }
+          const addressAlreadyExists = addressBook.find((entry) => sameAddress(entry.address, checksumEntry.address))
+          if (isValidAddressBookName(checksumEntry.name) && addressAlreadyExists) {
+            dispatch(updateAddressBookEntry(checksumEntry))
+          }
+        })
+        const safeWasAlreadyInAddressBook = checkIfEntryWasDeletedFromAddressBook(
+          { address: safe.address, name: safe.name },
+          addressBook,
+          safeAlreadyLoaded,
+        )
+
+        if (!safeWasAlreadyInAddressBook) {
+          dispatch(
+            addAddressBookEntry(makeAddressBookEntry({ address: safe.address, name: safe.name }), {
+              notifyEntryUpdate: true,
+            }),
+          )
+        }
+        break
+      }
+      case ADD_OR_UPDATE_SAFE: {
         const { safe } = action.payload
-        const ownersArray = safe.owners.toJS()
-        // Adds the owners to the address book
-        ownersArray.forEach((owner) => {
-          dispatch(addAddressBookEntry(makeAddressBookEntry({ ...owner, isOwner: true })))
+        safe.owners.forEach((owner) => {
+          const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
+          if (isValidAddressBookName(checksumEntry.name)) {
+            dispatch(addOrUpdateAddressBookEntry(checksumEntry))
+          }
         })
         break
       }
       case UPDATE_SAFE: {
-        const { activeTokens } = action.payload
+        const { activeTokens, name, address } = action.payload
         if (activeTokens) {
           recalculateActiveTokens(state)
+        }
+        if (name) {
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
         }
         break
       }
