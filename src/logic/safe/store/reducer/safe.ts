@@ -134,6 +134,7 @@ export default handleActions(
       const addressFound = state
         .getIn(['safes', safeAddress])
         .owners.find((owner) => sameAddress(owner.address, ownerAddress))
+
       if (addressFound) {
         return state
       }
