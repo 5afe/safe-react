@@ -5,7 +5,7 @@ import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import { List, Set } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
-import * as React from 'react'
+import React, { useState } from 'react'
 import { FixedSizeList } from 'react-window'
 
 import TokenRow from './TokenRow'
@@ -17,7 +17,6 @@ import Button from 'src/components/layout/Button'
 import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
-import { useState } from 'react'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { useDispatch } from 'react-redux'
 import updateBlacklistedTokens from 'src/logic/safe/store/actions/updateBlacklistedTokens'
@@ -73,16 +72,15 @@ export const TokenList = (props: Props): React.ReactElement => {
     if (activeTokensAddresses.has(token.address)) {
       newActiveTokensAddresses = activeTokensAddresses.delete(token.address)
       newBlacklistedTokensAddresses = blacklistedTokensAddresses.add(token.address)
-
-      setActiveTokensAddresses(newActiveTokensAddresses)
-      setBlacklistedTokensAddresses(newBlacklistedTokensAddresses)
     } else {
       newActiveTokensAddresses = activeTokensAddresses.add(token.address)
       newBlacklistedTokensAddresses = blacklistedTokensAddresses.delete(token.address)
-      setActiveTokensAddresses(newActiveTokensAddresses)
-      setBlacklistedTokensAddresses(newBlacklistedTokensAddresses)
     }
 
+    // Set local state
+    setActiveTokensAddresses(newActiveTokensAddresses)
+    setBlacklistedTokensAddresses(newBlacklistedTokensAddresses)
+    // Dispatch to global state
     dispatch(updateActiveTokens(safeAddress, newActiveTokensAddresses))
     dispatch(updateBlacklistedTokens(safeAddress, newBlacklistedTokensAddresses))
   }
