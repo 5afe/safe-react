@@ -1,7 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp } from './types'
+import { SafeApp } from './types.d'
 
 import { getGnosisSafeAppsUrl } from 'src/config/index'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
@@ -38,6 +38,10 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQovvfYYMUXjZfNbysQDUEXR8nr55iJRwcYgJQGJR7KEA`, disabled: false },
   // TX-Builder
   { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
+  // Wallet-Connect
+  { url: `${gnosisAppsUrl}/walletConnect`, disabled: false },
+  // Yearn Vaults
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`, disabled: false },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {
@@ -62,8 +66,8 @@ export const isAppManifestValid = (appInfo: SafeApp): boolean =>
   !appInfo.error
 
 export const getAppInfoFromUrl = memoize(
-  async (appUrl?: string): Promise<SafeApp> => {
-    let res = { id: undefined, url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
+  async (appUrl: string): Promise<SafeApp> => {
+    let res = { id: '', url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
 
     if (!appUrl?.length) {
       return res

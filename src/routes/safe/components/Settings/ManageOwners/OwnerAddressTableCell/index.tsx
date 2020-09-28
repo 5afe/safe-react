@@ -6,6 +6,7 @@ import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 import { useEffect, useState } from 'react'
+import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 type OwnerAddressTableCellProps = {
   address: string
@@ -16,7 +17,7 @@ type OwnerAddressTableCellProps = {
 
 const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
   const { address, knownAddress, showLinks, userName } = props
-  const [cut, setCut] = useState(undefined)
+  const [cut, setCut] = useState(0)
   const { width } = useWindowDimensions()
 
   useEffect(() => {
@@ -25,7 +26,7 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
     } else if (width <= 1024) {
       setCut(12)
     } else {
-      setCut(undefined)
+      setCut(0)
     }
   }, [width])
 
@@ -34,7 +35,7 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
       <Identicon address={address} diameter={32} />
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
-          {!userName || userName === 'UNKNOWN' ? null : userName}
+          {userName && getValidAddressBookName(userName)}
           <EtherScanLink knownAddress={knownAddress} type="address" value={address} cut={cut} />
         </div>
       ) : (

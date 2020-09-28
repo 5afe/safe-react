@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useTransactions } from 'src/routes/safe/container/hooks/useTransactions'
 import { ButtonLink, Loader } from '@gnosis.pm/safe-react-components'
-import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions.d'
 
 const Transactions = (): React.ReactElement => {
   const [currentPage, setCurrentPage] = useState(0)
@@ -38,7 +38,7 @@ const Transactions = (): React.ReactElement => {
       {transactionsByPage.map((tx: Transaction, index) => {
         let txHash = ''
         if ('transactionHash' in tx) {
-          txHash = tx.transactionHash
+          txHash = tx.transactionHash as string
         }
         if ('txHash' in tx) {
           txHash = tx.txHash

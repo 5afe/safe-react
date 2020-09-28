@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import { INTERFACE_MESSAGES, Transaction, RequestId } from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
@@ -7,6 +7,7 @@ import styled, { css } from 'styled-components'
 import ManageApps from './components/ManageApps'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
+import { SafeApp } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
@@ -19,6 +20,7 @@ import {
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const centerCSS = css`
   display: flex;
@@ -62,8 +64,9 @@ const Apps = (): React.ReactElement => {
   const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
     INITIAL_CONFIRM_TX_MODAL_STATE,
   )
-  const iframeRef = useRef<HTMLIFrameElement>()
+  const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  const { trackEvent } = useAnalytics()
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
@@ -99,6 +102,13 @@ const Apps = (): React.ReactElement => {
     )
   }
 
+  const onTxReject = () => {
+    sendMessageToIframe(
+      { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
+      confirmTransactionModal.requestId,
+    )
+  }
+
   const onSelectApp = useCallback(
     (appId) => {
       if (selectedAppId === appId) {
@@ -111,6 +121,7 @@ const Apps = (): React.ReactElement => {
     [selectedAppId],
   )
 
+  // Auto Select app first App
   useEffect(() => {
     const selectFirstEnabledApp = () => {
       const firstEnabledApp = appList.find((a) => !a.disabled)
@@ -124,7 +135,14 @@ const Apps = (): React.ReactElement => {
     if (initialSelect || currentAppWasDisabled) {
       selectFirstEnabledApp()
     }
-  }, [appList, selectedApp, selectedAppId])
+  }, [appList, selectedApp, selectedAppId, trackEvent])
+
+  // track GA
+  useEffect(() => {
+    if (selectedApp) {
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: selectedApp.name })
+    }
+  }, [selectedApp, trackEvent])
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current
@@ -136,14 +154,14 @@ const Apps = (): React.ReactElement => {
     sendMessageToIframe({
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
-        safeAddress,
-        network,
-        ethBalance,
+        safeAddress: safeAddress as string,
+        network: network.toLowerCase() as LowercaseNetworks,
+        ethBalance: ethBalance as string,
       },
     })
   }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
 
-  if (loadingAppList || !appList.length) {
+  if (loadingAppList || !appList.length || !safeAddress) {
     return (
       <LoadingContainer>
         <Loader size="md" />
@@ -189,14 +207,14 @@ const Apps = (): React.ReactElement => {
       </CenteredMT>
       <ConfirmTransactionModal
         isOpen={confirmTransactionModal.isOpen}
-        app={selectedApp}
+        app={selectedApp as SafeApp}
         safeAddress={safeAddress}
-        ethBalance={ethBalance}
-        safeName={safeName}
+        ethBalance={ethBalance as string}
+        safeName={safeName as string}
         txs={confirmTransactionModal.txs}
-        onCancel={closeConfirmationModal}
         onClose={closeConfirmationModal}
         onUserConfirm={onUserTxConfirm}
+        onTxReject={onTxReject}
       />
     </>
   )

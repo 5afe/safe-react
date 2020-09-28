@@ -1,10 +1,8 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
-import { withRouter } from 'react-router-dom'
-
 import { styles } from './style'
 import { getAddressValidator } from './validators'
 
@@ -16,7 +14,14 @@ import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import SelectField from 'src/components/forms/SelectField'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minValue, mustBeInteger, noErrorsOn, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  minValue,
+  mustBeInteger,
+  noErrorsOn,
+  required,
+  minMaxLength,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -31,6 +36,9 @@ import {
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
+import { useSelector } from 'react-redux'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 const { useState } = React
 
@@ -56,10 +64,14 @@ export const calculateValuesAfterRemoving = (index, notRemovedOwners, values) =>
   return initialValues
 }
 
-const SafeOwners = (props) => {
-  const { classes, errors, form, otherAccounts, values } = props
+const useStyles = makeStyles(styles)
+
+const SafeOwnersForm = (props): React.ReactElement => {
+  const { errors, form, otherAccounts, values } = props
+  const classes = useStyles()
 
   const validOwners = getNumOwnersFrom(values)
+  const addressBook = useSelector(addressBookSelector)
 
   const [numOwners, setNumOwners] = useState(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState(false)
@@ -118,6 +130,7 @@ const SafeOwners = (props) => {
       <Block margin="md" padding="md">
         {[...Array(Number(numOwners))].map((x, index) => {
           const addressName = getOwnerAddressBy(index)
+          const ownerName = getOwnerNameBy(index)
 
           return (
             <Row className={classes.owner} key={`owner${index}`} data-testid={`create-safe-owner-row`}>
@@ -125,19 +138,27 @@ const SafeOwners = (props) => {
                 <Field
                   className={classes.name}
                   component={TextField}
-                  name={getOwnerNameBy(index)}
+                  name={ownerName}
                   placeholder="Owner Name*"
                   text="Owner Name"
                   type="text"
-                  validate={required}
+                  validate={composeValidators(required, minMaxLength(1, 50))}
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
               <Col className={classes.ownerAddress} xs={6}>
                 <AddressInput
-                  fieldMutator={(val) => {
-                    form.mutators.setValue(addressName, val)
+                  fieldMutator={(newOwnerAddress) => {
+                    const newOwnerName = getNameFromAddressBook(addressBook, newOwnerAddress, {
+                      filterOnlyValidName: true,
+                    })
+                    form.mutators.setValue(addressName, newOwnerAddress)
+                    if (newOwnerName) {
+                      form.mutators.setValue(ownerName, newOwnerName)
+                    }
                   }}
+                  // eslint-disable-next-line
+                  // @ts-ignore
                   inputAdornment={
                     noErrorsOn(addressName, errors) && {
                       endAdornment: (
@@ -215,20 +236,21 @@ const SafeOwners = (props) => {
   )
 }
 
-const SafeOwnersForm = withStyles(styles as any)(withRouter(SafeOwners))
-
-const SafeOwnersPage = ({ updateInitialProps }) => (controls, { errors, form, values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <SafeOwnersForm
-        errors={errors}
-        form={form}
-        otherAccounts={getAccountsFrom(values)}
-        updateInitialProps={updateInitialProps}
-        values={values}
-      />
-    </OpenPaper>
-  </>
-)
+const SafeOwnersPage = ({ updateInitialProps }) =>
+  function OpenSafeOwnersPage(controls, { errors, form, values }) {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <SafeOwnersForm
+            errors={errors}
+            form={form}
+            otherAccounts={getAccountsFrom(values)}
+            updateInitialProps={updateInitialProps}
+            values={values}
+          />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default SafeOwnersPage

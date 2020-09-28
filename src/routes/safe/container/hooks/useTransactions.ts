@@ -7,7 +7,7 @@ import {
   safeAllTransactionsSelector,
   safeTotalTransactionsAmountSelector,
 } from 'src/logic/safe/store/selectors/allTransactions'
-import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
@@ -19,7 +19,7 @@ export const useTransactions = (props: Props): { transactions: Transaction[]; to
   const { offset, limit } = props
   const dispatch = useDispatch()
   const transactions = useSelector(safeAllTransactionsSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const totalTransactionsCount = useSelector(safeTotalTransactionsAmountSelector)
   useEffect(() => {
     async function loadNewTxs() {

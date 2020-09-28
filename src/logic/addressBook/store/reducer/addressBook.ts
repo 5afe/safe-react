@@ -1,130 +1,73 @@
-import { List, Map } from 'immutable'
 import { handleActions } from 'redux-actions'
 
-import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { ADD_ADDRESS_BOOK } from 'src/logic/addressBook/store/actions/addAddressBook'
+import { AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { LOAD_ADDRESS_BOOK } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { REMOVE_ENTRY } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { getAddressesListFromAdbk } from 'src/logic/addressBook/utils'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
-export type AddressBookCollection = List<AddressBookEntry>
-export type AddressBookState = Map<string, Map<string, AddressBookCollection>>
-
-export const buildAddressBook = (storedAdbk) => {
-  let addressBookBuilt = Map([])
-  Object.entries(storedAdbk).forEach((adbkProps: any) => {
-    const safeAddress = checksumAddress(adbkProps[0])
-    const adbkRecords = adbkProps[1].map(makeAddressBookEntry)
-    const adbkSafeEntries = List(adbkRecords)
-    addressBookBuilt = addressBookBuilt.set(safeAddress, adbkSafeEntries)
+export const buildAddressBook = (storedAddressBook: AddressBookState): AddressBookState => {
+  return storedAddressBook.map((addressBookEntry) => {
+    const { address, name } = addressBookEntry
+    return makeAddressBookEntry({ address: checksumAddress(address), name })
   })
-  return addressBookBuilt
 }
 
 export default handleActions(
   {
     [LOAD_ADDRESS_BOOK]: (state, action) => {
       const { addressBook } = action.payload
-      return state.set('addressBook', addressBook)
-    },
-    [ADD_ADDRESS_BOOK]: (state, action) => {
-      const { addressBook, safeAddress } = action.payload
-      // Adds the address book if it does not exists
-      const found = state.getIn(['addressBook', safeAddress])
-      if (!found) {
-        return state.setIn(['addressBook', safeAddress], addressBook)
-      }
-      return state
+      return addressBook
     },
     [ADD_ENTRY]: (state, action) => {
       const { entry } = action.payload
 
-      // Adds the entry to all the safes (if it does not already exists)
-      const newState = state.withMutations((map) => {
-        const adbkMap = map.get('addressBook')
+      const entryFound = state.find((oldEntry) => oldEntry.address === entry.address)
 
-        if (adbkMap) {
-          adbkMap.keySeq().forEach((safeAddress) => {
-            const safeAddressBook = state.getIn(['addressBook', safeAddress])
-
-            if (safeAddressBook) {
-              const adbkAddressList = getAddressesListFromAdbk(safeAddressBook)
-              const found = adbkAddressList.includes(entry.address)
-              if (!found) {
-                const updatedSafeAdbkList = safeAddressBook.push(entry)
-                map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
-              }
-            }
-          })
-        }
-      })
-      return newState
+      // Only adds entries with valid names
+      const validName = getValidAddressBookName(entry.name)
+      if (!entryFound && validName) {
+        state.push(entry)
+      }
+      return state
     },
     [UPDATE_ENTRY]: (state, action) => {
       const { entry } = action.payload
-
-      // Updates the entry from all the safes
-      const newState = state.withMutations((map) => {
-        map
-          .get('addressBook')
-          .keySeq()
-          .forEach((safeAddress) => {
-            const entriesList = state.getIn(['addressBook', safeAddress])
-            const entryIndex = entriesList.findIndex((entryItem) => sameAddress(entryItem.address, entry.address))
-            const updatedEntriesList = entriesList.set(entryIndex, entry)
-            map.setIn(['addressBook', safeAddress], updatedEntriesList)
-          })
-      })
-
-      return newState
+      const entryIndex = state.findIndex((oldEntry) => oldEntry.address === entry.address)
+      if (entryIndex >= 0) {
+        state[entryIndex] = entry
+      }
+      return state
     },
     [REMOVE_ENTRY]: (state, action) => {
       const { entryAddress } = action.payload
-      // Removes the entry from all the safes
-      const newState = state.withMutations((map) => {
-        map
-          .get('addressBook')
-          .keySeq()
-          .forEach((safeAddress) => {
-            const entriesList = state.getIn(['addressBook', safeAddress])
-            const entryIndex = entriesList.findIndex((entry) => sameAddress(entry.address, entryAddress))
-            const updatedEntriesList = entriesList.remove(entryIndex)
-            map.setIn(['addressBook', safeAddress], updatedEntriesList)
-          })
-      })
-      return newState
+      const entryIndex = state.findIndex((oldEntry) => oldEntry.address === entryAddress)
+      state.splice(entryIndex, 1)
+      return state
     },
     [ADD_OR_UPDATE_ENTRY]: (state, action) => {
-      const { entry, entryAddress } = action.payload
+      const { entry } = action.payload
 
-      // Adds or Updates the entry to all the safes
-      return state.withMutations((map) => {
-        const addressBook = map.get('addressBook')
-        if (addressBook) {
-          addressBook.keySeq().forEach((safeAddress) => {
-            const safeAddressBook = state.getIn(['addressBook', safeAddress])
-            const entryIndex = safeAddressBook.findIndex((entryItem) => sameAddress(entryItem.address, entryAddress))
+      // Only updates entries with valid names
+      const validName = getValidAddressBookName(entry.name)
+      if (!validName) {
+        return state
+      }
 
-            if (entryIndex !== -1) {
-              const updatedEntriesList = safeAddressBook.update(entryIndex, (currentEntry) => currentEntry.merge(entry))
-              map.setIn(['addressBook', safeAddress], updatedEntriesList)
-            } else {
-              const updatedSafeAdbkList = safeAddressBook.push(makeAddressBookEntry(entry))
-              map.setIn(['addressBook', safeAddress], updatedSafeAdbkList)
-            }
-          })
-        }
-      })
+      const entryIndex = state.findIndex((oldEntry) => oldEntry.address === entry.address)
+
+      if (entryIndex >= 0) {
+        state[entryIndex] = entry
+      } else {
+        state.push(entry)
+      }
+      return state
     },
   },
-  Map({
-    addressBook: Map({}),
-  }),
+  [],
 )

@@ -1,7 +1,6 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
-import * as React from 'react'
+import React, { useEffect, useState } from 'react'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 
@@ -18,73 +17,16 @@ import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
-import { background, border, lg, screenSm, sm } from 'src/theme/variables'
+import { useStyles } from './styles'
 
-const { useEffect, useState } = React
+type ReviewComponentProps = {
+  userAccount: string
+  values: any
+}
 
-const styles = () => ({
-  root: {
-    minHeight: '300px',
-    [`@media (min-width: ${screenSm}px)`]: {
-      flexDirection: 'row',
-    },
-  },
-  detailsColumn: {
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      minWidth: '0',
-    },
-  },
-  ownersColumn: {
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      minWidth: '0',
-    },
-  },
-  details: {
-    padding: lg,
-    borderRight: `solid 1px ${border}`,
-    height: '100%',
-  },
-  info: {
-    backgroundColor: background,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: lg,
-    textAlign: 'center',
-  },
-  owners: {
-    padding: lg,
-  },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
-  owner: {
-    alignItems: 'center',
-    minWidth: 'fit-content',
-    padding: sm,
-    paddingLeft: lg,
-  },
-  user: {
-    justifyContent: 'left',
-    '& > p': {
-      marginRight: sm,
-    },
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
+const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
+  const classes = useStyles()
 
-const ReviewComponent = ({ classes, userAccount, values }: any) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
@@ -198,14 +140,15 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
   )
 }
 
-const ReviewPage = withStyles(styles as any)(ReviewComponent)
-
-const Review = () => (controls, { values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <ReviewPage values={values} />
-    </OpenPaper>
-  </>
-)
+const Review = () =>
+  function ReviewPage(controls, props): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <ReviewComponent {...props} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default Review

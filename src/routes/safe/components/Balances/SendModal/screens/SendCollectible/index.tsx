@@ -20,8 +20,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -41,19 +41,25 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }) => {
+const SendCollectible = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = {},
+}): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -64,7 +70,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
   const handleSubmit = (values) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      values.recipientAddress = selectedEntry.address
+      values.recipientAddress = selectedEntry?.address
     }
 
     values.assetName = nftAssets[values.assetAddress].name
@@ -97,7 +103,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName,
@@ -129,7 +135,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -150,7 +156,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -158,7 +164,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}

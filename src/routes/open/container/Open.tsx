@@ -2,15 +2,9 @@ import { Loader } from '@gnosis.pm/safe-react-components'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
-import { connect } from 'react-redux'
-import { withRouter, RouteComponentProps } from 'react-router-dom'
-
-import Opening from '../../opening'
-import Layout from '../components/Layout'
-
-import actions from './actions'
-import selector from './selector'
-
+import { useDispatch, useSelector } from 'react-redux'
+import Opening from 'src/routes/opening'
+import Layout from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
@@ -25,6 +19,9 @@ import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -39,13 +36,15 @@ const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) =>
   if (Number.isNaN(Number(threshold))) {
     return false
   }
-  if (threshold > ownerAddresses.length) {
-    return false
-  }
-  return true
+  return threshold <= ownerAddresses.length
 }
 
-export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddresses) => {
+export const getSafeProps = async (
+  safeAddress: string,
+  safeName: string,
+  ownersNames: string[],
+  ownerAddresses: string[],
+): Promise<SafeRecordProps> => {
   const safeProps = await buildSafe(safeAddress, safeName)
   const owners = getOwnersFrom(ownersNames, ownerAddresses)
   safeProps.owners = owners
@@ -81,19 +80,14 @@ export const createSafe = (values, userAccount) => {
   return promiEvent
 }
 
-interface OwnProps extends RouteComponentProps {
-  userAccount: string
-  network: string
-  provider: string
-  addSafe: any
-}
-
-const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.ReactElement => {
+const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState()
   const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
   const [safePropsFromUrl, setSafePropsFromUrl] = useState()
+  const userAccount = useSelector(userAccountSelector)
+  const dispatch = useDispatch()
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
@@ -141,14 +135,15 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
     setShowProgress(true)
   }
 
-  const onSafeCreated = async (safeAddress) => {
+  const onSafeCreated = async (safeAddress): Promise<void> => {
     const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
     const ownerAddresses = getAccountsFrom(pendingCreation)
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
-    addSafe(safeProps)
+
+    await dispatch(addOrUpdateSafe(safeProps))
 
     ReactGA.event({
       category: 'User',
@@ -161,7 +156,7 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
         name,
-        tx: pendingCreation.txHash,
+        tx: pendingCreation?.txHash,
       },
     }
 
@@ -177,7 +172,7 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
 
   const onRetry = async () => {
     const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
-    delete values.txHash
+    delete values?.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)
     createSafeProxy()
@@ -194,21 +189,14 @@ const Open = ({ addSafe, network, provider, userAccount }: OwnProps): React.Reac
           creationTxHash={safeCreationPendingInfo?.txHash}
           onCancel={onCancel}
           onRetry={onRetry}
-          onSuccess={onSafeCreated as any}
-          provider={provider}
+          onSuccess={onSafeCreated}
           submittedPromise={creationTxPromise}
         />
       ) : (
-        <Layout
-          network={network}
-          onCallSafeContractSubmit={createSafeProxy}
-          provider={provider}
-          safeProps={safePropsFromUrl}
-          userAccount={userAccount}
-        />
+        <Layout onCallSafeContractSubmit={createSafeProxy} safeProps={safePropsFromUrl} />
       )}
     </Page>
   )
 }
 
-export default connect(selector, actions)(withRouter(Open))
+export default Open

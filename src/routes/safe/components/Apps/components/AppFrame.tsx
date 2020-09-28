@@ -54,7 +54,7 @@ const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameC
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
   if (!selectedApp) {
-    return null
+    return <div />
   }
 
   if (!consentReceived) {

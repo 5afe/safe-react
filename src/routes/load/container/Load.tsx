@@ -6,17 +6,16 @@ import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
 
 import Page from 'src/components/layout/Page'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { SAFES_KEY, saveSafes } from 'src/logic/safe/utils'
+import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
 import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
-import { loadFromStorage } from 'src/utils/storage'
 import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { addSafe } from 'src/logic/safe/store/actions/addSafe'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 export const loadSafe = async (
   safeName: string,
@@ -27,7 +26,7 @@ export const loadSafe = async (
   const safeProps = await buildSafe(safeAddress, safeName)
   safeProps.owners = owners
 
-  const storedSafes = (await loadFromStorage(SAFES_KEY)) || {}
+  const storedSafes = (await loadStoredSafes()) || {}
 
   storedSafes[safeAddress] = safeProps
 
@@ -47,8 +46,8 @@ const Load = (): React.ReactElement => {
   const network = useSelector(networkSelector)
   const userAddress = useSelector(userAccountSelector)
 
-  const addSafeHandler = (safe: SafeRecordProps) => {
-    dispatch(addSafe(safe))
+  const addSafeHandler = async (safe: SafeRecordProps) => {
+    await dispatch(addOrUpdateSafe(safe))
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
@@ -63,7 +62,7 @@ const Load = (): React.ReactElement => {
       safeAddress = checksumAddress(safeAddress)
       const ownerNames = getNamesFrom(values)
 
-      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const ownerAddresses = await gnosisSafe.methods.getOwners().call()
       const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
 

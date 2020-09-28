@@ -31,7 +31,7 @@ const isTxValid = (t: Transaction): boolean => {
   }
 
   const isAddressValid = mustBeEthereumAddress(t.to) === undefined
-  return isAddressValid && t.data && typeof t.data === 'string'
+  return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
 const Wrapper = styled.div`
@@ -69,8 +69,8 @@ type OwnProps = {
   safeAddress: string
   safeName: string
   ethBalance: string
-  onCancel: () => void
   onUserConfirm: (safeTxHash: string) => void
+  onTxReject: () => void
   onClose: () => void
 }
 
@@ -81,13 +81,18 @@ const ConfirmTransactionModal = ({
   safeAddress,
   ethBalance,
   safeName,
-  onCancel,
   onUserConfirm,
   onClose,
-}: OwnProps): React.ReactElement => {
+  onTxReject,
+}: OwnProps): React.ReactElement | null => {
   const dispatch = useDispatch()
   if (!isOpen) {
     return null
+  }
+
+  const handleTxRejection = () => {
+    onTxReject()
+    onClose()
   }
 
   const handleUserConfirmation = (safeTxHash: string): void => {
@@ -111,9 +116,9 @@ const ConfirmTransactionModal = ({
           navigateToTransactionsTab: false,
         },
         handleUserConfirmation,
+        handleTxRejection,
       ),
     )
-    onClose()
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
@@ -133,27 +138,25 @@ const ConfirmTransactionModal = ({
     <>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
-      {txs.map((tx, index) => {
-        return (
-          <Wrapper key={index}>
-            <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
-              <CollapseContent>
-                <div className="section">
-                  <Heading tag="h3">Value</Heading>
-                  <div className="value-section">
-                    <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                    <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
-                  </div>
+      {txs.map((tx, index) => (
+        <Wrapper key={index}>
+          <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
+            <CollapseContent>
+              <div className="section">
+                <Heading tag="h3">Value</Heading>
+                <div className="value-section">
+                  <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
+                  <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
                 </div>
-                <div className="section">
-                  <Heading tag="h3">Data (hex encoded)*</Heading>
-                  <StyledTextBox>{tx.data}</StyledTextBox>
-                </div>
-              </CollapseContent>
-            </Collapse>
-          </Wrapper>
-        )
-      })}
+              </div>
+              <div className="section">
+                <Heading tag="h3">Data (hex encoded)*</Heading>
+                <StyledTextBox>{tx.data}</StyledTextBox>
+              </div>
+            </CollapseContent>
+          </Collapse>
+        </Wrapper>
+      ))}
     </>
   )
 
@@ -164,13 +167,13 @@ const ConfirmTransactionModal = ({
       footer={
         <ModalFooterConfirmation
           cancelText="Cancel"
-          handleCancel={onCancel}
+          handleCancel={handleTxRejection}
           handleOk={confirmTransactions}
           okDisabled={areTxsMalformed}
           okText="Submit"
         />
       }
-      onClose={onClose}
+      onClose={handleTxRejection}
     />
   )
 }

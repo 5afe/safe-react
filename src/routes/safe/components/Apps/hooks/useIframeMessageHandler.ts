@@ -8,16 +8,18 @@ import {
   INTERFACE_MESSAGES,
   RequestId,
   Transaction,
+  LowercaseNetworks,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
+import { getTxServiceHost } from 'src/config/'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -44,7 +46,7 @@ const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
   openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
   closeModal: () => void,
-  iframeRef: MutableRefObject<HTMLIFrameElement>,
+  iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const safeName = useSelector(safeNameSelector)
@@ -60,8 +62,8 @@ const useIframeMessageHandler = (
         requestId: requestId || Math.trunc(window.performance.now()),
       }
 
-      if (iframeRef?.current && selectedApp) {
-        iframeRef.current.contentWindow.postMessage(requestWithMessage, selectedApp.url)
+      if (iframeRef && selectedApp) {
+        iframeRef.current?.contentWindow?.postMessage(requestWithMessage, selectedApp.url)
       }
     },
     [iframeRef, selectedApp],
@@ -77,21 +79,30 @@ const useIframeMessageHandler = (
 
       switch (msg.data.messageId) {
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          openConfirmationModal(msg.data.data, requestId)
+          if (msg.data.data) {
+            openConfirmationModal(msg.data.data, requestId)
+          }
           break
         }
 
         case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
-          const message = {
+          const safeInfoMessage = {
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
-              safeAddress,
-              network: network,
-              ethBalance,
+              safeAddress: safeAddress as string,
+              network: network.toLowerCase() as LowercaseNetworks,
+              ethBalance: ethBalance as string,
+            },
+          }
+          const envInfoMessage = {
+            messageId: INTERFACE_MESSAGES.ENV_INFO,
+            data: {
+              txServiceUrl: getTxServiceHost(),
             },
           }
 
-          sendMessageToIframe(message)
+          sendMessageToIframe(safeInfoMessage)
+          sendMessageToIframe(envInfoMessage)
           break
         }
         default: {
@@ -104,7 +115,7 @@ const useIframeMessageHandler = (
       if (message.origin === window.origin) {
         return
       }
-      if (!selectedApp.url.includes(message.origin)) {
+      if (!selectedApp?.url.includes(message.origin)) {
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
       }

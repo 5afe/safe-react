@@ -25,8 +25,8 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -48,17 +48,35 @@ const formMutators = {
 
 const useStyles = makeStyles(styles as any)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }): React.ReactElement => {
+type SendFundsProps = {
+  initialValues: {
+    amount?: string
+    recipientAddress?: string
+    token?: string
+  }
+  onClose: () => void
+  onNext: (txInfo: unknown) => void
+  recipientAddress: string
+  selectedToken: string
+}
+
+const SendFunds = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken = '',
+}: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: recipientAddress || initialValues.recipientAddress,
     name: '',
   })
 
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -70,7 +88,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      submitValues.recipientAddress = selectedEntry?.address
     }
     onNext(submitValues)
   }
@@ -100,10 +118,10 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -130,7 +148,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <div
                     onKeyDown={(e) => {
                       if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                        setSelectedEntry({ address: '', name: 'string' })
                       }
                     }}
                     role="listbox"
@@ -151,7 +169,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -159,7 +177,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
@@ -204,7 +222,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       Amount
                     </Paragraph>
                     <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
+                      onClick={() => mutators.setMax(selectedTokenRecord?.balance)}
                       weight="bold"
                       testId="send-max-btn"
                     >
@@ -230,7 +248,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                         required,
                         mustBeFloat,
                         minValue(0, false),
-                        maxValue(selectedTokenRecord?.balance),
+                        maxValue(selectedTokenRecord?.balance || 0),
                       )}
                     />
                     <OnChange name="token">

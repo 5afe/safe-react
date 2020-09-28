@@ -1,4 +1,5 @@
 import { List } from 'immutable'
+import { TableCellProps } from '@material-ui/core/TableCell/TableCell'
 
 export const ADDRESS_BOOK_ROW_ID = 'address-book-row'
 export const TX_TABLE_ADDRESS_BOOK_ID = 'idAddressBook'
@@ -9,7 +10,17 @@ export const EDIT_ENTRY_BUTTON = 'edit-entry-btn'
 export const REMOVE_ENTRY_BUTTON = 'remove-entry-btn'
 export const SEND_ENTRY_BUTTON = 'send-entry-btn'
 
-export const generateColumns = () => {
+type AddressBookColumn = {
+  id: string
+  order: boolean
+  disablePadding?: boolean
+  label: string
+  width?: number
+  custom?: boolean
+  align?: TableCellProps['align']
+}
+
+export const generateColumns = (): List<AddressBookColumn> => {
   const nameColumn = {
     id: AB_NAME_ID,
     order: false,

@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 
 import { getAllTransactionsUriFrom, getTxServiceHost } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { Transaction } from '../../models/types/transactions'
+import { Transaction } from '../../models/types/transactions.d'
 
 export type ServiceUriParams = {
   safeAddress: string
@@ -30,8 +30,8 @@ const getAllTransactionsUri = (safeAddress: string): string => {
 
 const fetchAllTransactions = async (
   urlParams: ServiceUriParams,
-  eTag: string | null,
-): Promise<{ responseEtag: string; results: Transaction[]; count?: number }> => {
+  eTag?: string,
+): Promise<{ responseEtag?: string; results: Transaction[]; count?: number }> => {
   const { safeAddress, limit, offset, orderBy, queued, trusted } = urlParams
   try {
     const url = getAllTransactionsUri(safeAddress)

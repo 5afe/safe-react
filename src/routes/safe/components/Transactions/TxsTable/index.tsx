@@ -7,7 +7,7 @@ import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import ExpandedTxComponent from './ExpandedTx'
@@ -21,6 +21,7 @@ import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { extendedTransactionsSelector } from 'src/logic/safe/store/selectors/transactions'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
@@ -28,6 +29,11 @@ const TxsTable = ({ classes }) => {
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
+  }, [trackEvent])
 
   const handleTxExpand = (safeTxHash) => {
     setExpandedTx((prevTx) => (prevTx === safeTxHash ? null : safeTxHash))
@@ -38,8 +44,8 @@ const TxsTable = ({ classes }) => {
   const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort((tx1, tx2) => {
       // First order by nonce
-      const aNonce = tx1.tx.nonce
-      const bNonce = tx1.tx.nonce
+      const aNonce = tx1.tx?.nonce
+      const bNonce = tx1.tx?.nonce
       if (aNonce && bNonce) {
         const difference = aNonce - bNonce
         if (difference !== 0) {

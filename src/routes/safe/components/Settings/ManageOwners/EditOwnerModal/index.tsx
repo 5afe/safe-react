@@ -20,12 +20,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -33,7 +33,7 @@ export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 const useStyles = makeStyles(styles)
 
 type OwnProps = {
-  isOpen: true
+  isOpen: boolean
   onClose: () => void
   ownerAddress: string
   selectedOwnerName: string
@@ -42,12 +42,12 @@ type OwnProps = {
 const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const handleSubmit = (values) => {
     const { ownerName } = values
 
     dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
-    dispatch(updateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
+    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
     dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
 
     onClose()

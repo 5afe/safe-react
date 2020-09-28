@@ -1,5 +1,5 @@
 export type SafeApp = {
-  id: string | undefined
+  id: string
   url: string
   name: string
   iconUrl: string
