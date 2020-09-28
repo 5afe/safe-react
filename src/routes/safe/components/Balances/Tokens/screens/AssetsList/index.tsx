@@ -1,4 +1,3 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
@@ -132,14 +131,14 @@ const AssetsList = (props) => {
       </Block>
       {!nftAssetsList.length && (
         <Block className={classes.progressContainer} justify="center">
-          <CircularProgress />
+          No collectibles available
         </Block>
       )}
-      {nftAssetsList.length > 0 && (
+      {nftAssetsFilteredList.length > 0 && (
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}
-            itemCount={nftAssetsFilteredList.size}
+            itemCount={nftAssetsFilteredList.length}
             itemData={itemData}
             itemKey={getItemKey}
             itemSize={51}
