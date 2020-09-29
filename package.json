@@ -164,7 +164,7 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "0.4.0",
+    "@gnosis.pm/safe-apps-sdk": "0.4.1",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#1bf397f",
     "@gnosis.pm/util-contracts": "2.0.6",
@@ -186,7 +186,7 @@
     "electron-is-dev": "^1.2.0",
     "electron-log": "4.2.4",
     "electron-settings": "^4.0.2",
-    "electron-updater": "4.3.4",
+    "electron-updater": "4.3.5",
     "eth-sig-util": "^2.5.3",
     "ethereum-blockies-base64": "^1.0.2",
     "ethereumjs-abi": "0.6.8",
@@ -254,8 +254,8 @@
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
-    "electron": "9.3.0",
-    "electron-builder": "22.8.0",
+    "electron": "9.3.1",
+    "electron-builder": "22.8.1",
     "electron-notarize": "1.0.0",
     "eslint": "6.8.0",
     "eslint-config-prettier": "6.12.0",
