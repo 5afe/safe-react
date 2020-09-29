@@ -11,6 +11,8 @@ import { REMOVE_SAFE_OWNER } from 'src/logic/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from 'src/logic/safe/store/actions/replaceSafeOwner'
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
+import { UPDATE_TOKENS_LIST } from 'src/logic/safe/store/actions/updateTokensList'
+import { UPDATE_ASSETS_LIST } from 'src/logic/safe/store/actions/updateAssetsList'
 import { getActiveTokensAddressesForAllSafes, safesMapSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -31,6 +33,8 @@ const watchedActions = [
   REPLACE_SAFE_OWNER,
   EDIT_SAFE_OWNER,
   ACTIVATE_TOKEN_FOR_ALL_SAFES,
+  UPDATE_TOKENS_LIST,
+  UPDATE_ASSETS_LIST,
   SET_DEFAULT_SAFE,
 ]
 
