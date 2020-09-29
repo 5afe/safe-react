@@ -21,6 +21,8 @@ matrix:
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
 cache:
   yarn: true
+before_script:
+  - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi;
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
