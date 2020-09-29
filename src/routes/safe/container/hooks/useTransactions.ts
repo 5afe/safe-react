@@ -7,7 +7,7 @@ import {
   safeAllTransactionsSelector,
   safeTotalTransactionsAmountSelector,
 } from 'src/logic/safe/store/selectors/allTransactions'
-import { Transaction } from 'src/logic/safe/store/models/types/transactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transactions.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
