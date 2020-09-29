@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import SearchBar from 'material-ui-search-bar'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
 
@@ -55,11 +55,6 @@ const AssetsList = (props) => {
   const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedAssets)
   const nftAssetsList = useSelector(nftAssetsListSelector)
 
-  useEffect(() => {
-    dispatch(updateActiveAssets(safeAddress, activeAssetsAddresses))
-    dispatch(updateBlacklistedAssets(safeAddress, blacklistedAssetsAddresses))
-  }, [activeAssetsAddresses, blacklistedAssetsAddresses, dispatch, safeAddress])
-
   const onCancelSearch = () => {
     setFilterValue('')
   }
@@ -73,19 +68,22 @@ const AssetsList = (props) => {
   }
 
   const onSwitch = (asset) => () => {
-    const { address } = asset
-    const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
-      ? activeAssetsAddresses.remove(address)
-      : activeAssetsAddresses.add(address)
-    const blacklistedAssetsAddressesResult = activeAssetsAddresses.has(address)
-      ? blacklistedAssetsAddresses.add(address)
-      : blacklistedAssetsAddresses.remove(address)
-    setActiveAssetsAddresses(activeAssetsAddressesResult)
-    setBlacklistedAssetsAddresses(blacklistedAssetsAddressesResult)
-    return {
-      activeAssetsAddresses: activeAssetsAddressesResult,
-      blacklistedAssetsAddresses: blacklistedAssetsAddressesResult,
+    let newActiveAssetsAddresses
+    let newBlacklistedAssetsAddresses
+    if (activeAssetsAddresses.has(asset.address)) {
+      newActiveAssetsAddresses = activeAssetsAddresses.delete(asset.address)
+      newBlacklistedAssetsAddresses = blacklistedAssetsAddresses.add(asset.address)
+    } else {
+      newActiveAssetsAddresses = activeAssetsAddresses.add(asset.address)
+      newBlacklistedAssetsAddresses = blacklistedAssetsAddresses.delete(asset.address)
     }
+
+    // Set local state
+    setActiveAssetsAddresses(newActiveAssetsAddresses)
+    setBlacklistedAssetsAddresses(newBlacklistedAssetsAddresses)
+    // Dispatch to global state
+    dispatch(updateActiveAssets(safeAddress, newActiveAssetsAddresses))
+    dispatch(updateBlacklistedAssets(safeAddress, newBlacklistedAssetsAddresses))
   }
 
   const createItemData = (assetsList) => {
