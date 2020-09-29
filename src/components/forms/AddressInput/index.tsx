@@ -7,6 +7,7 @@ import { Validator, composeValidators, mustBeEthereumAddress, required } from 's
 import { trimSpaces } from 'src/utils/strings'
 import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 // an idea for second field was taken from here
 // https://github.com/final-form/react-final-form-listeners/blob/master/src/OnBlur.js
@@ -56,11 +57,15 @@ const AddressInput = ({
         if (isValidEnsName(address)) {
           try {
             const resolverAddr = await getAddressFromENS(address)
-            fieldMutator(resolverAddr)
+            const formattedAddress = checksumAddress(resolverAddr)
+            fieldMutator(formattedAddress)
           } catch (err) {
             console.error('Failed to resolve address for ENS name: ', err)
           }
-        } else fieldMutator(address)
+        } else {
+          const formattedAddress = checksumAddress(address)
+          fieldMutator(formattedAddress)
+        }
       }}
     </OnChange>
   </>
