@@ -6,7 +6,7 @@ import React from 'react'
 import EtherscanOpenIcon from './img/etherscan-open.svg'
 
 import Img from 'src/components/layout/Img'
-import { getExplorerLink } from 'src/logic/wallets/getWeb3'
+import { ExplorerTypes, getExplorerLink } from 'src/logic/wallets/getWeb3'
 import { xs } from 'src/theme/variables'
 
 const useStyles = makeStyles({
@@ -30,7 +30,7 @@ const useStyles = makeStyles({
 interface EtherscanBtnProps {
   className?: string
   increaseZindex?: boolean
-  type: 'tx' | 'address'
+  type: ExplorerTypes
   value: string
 }
 

@@ -1,6 +1,4 @@
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
-
-export const NETWORK = process.env.REACT_APP_NETWORK || ETHEREUM_NETWORK.RINKEBY
+export const NETWORK = process.env.REACT_APP_NETWORK || 'RINKEBY'
 export const GOOGLE_ANALYTICS_ID_RINKEBY = process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY
 export const GOOGLE_ANALYTICS_ID_MAINNET = process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET
 export const INTERCOM_ID = process.env.REACT_APP_INTERCOM_ID

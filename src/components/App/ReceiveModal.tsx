@@ -13,6 +13,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
 
@@ -115,7 +116,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn type="address" value={safeAddress} />
+          <EtherscanBtn type={ExplorerTypes.Address} value={safeAddress} />
         </Block>
       </Col>
       <Hairline />

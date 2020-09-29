@@ -7,8 +7,9 @@ import { getNetwork } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
-const network = getNetwork()
-const formattedNetwork = network[ETHEREUM_NETWORK.UNKNOWN]?.toUpperCase() //+ network.substring(1).toLowerCase()
+const interfaceNetwork = getNetwork()
+const formatNetwork = (network: number): string =>
+  ETHEREUM_NETWORK[network][0].toUpperCase() + ETHEREUM_NETWORK[network].substring(1).toLowerCase()
 
 const useStyles = makeStyles({
   container: {
@@ -33,11 +34,12 @@ const useStyles = makeStyles({
 })
 
 interface NetworkLabelProps {
-  network?: string
+  network?: number
 }
 
 const NetworkLabel = ({ network = interfaceNetwork }: NetworkLabelProps): React.ReactElement => {
   const classes = useStyles()
+  const formattedNetwork = formatNetwork(network)
 
   return (
     <Col className={classes.container} middle="xs" start="xs">

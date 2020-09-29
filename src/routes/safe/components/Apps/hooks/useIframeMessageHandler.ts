@@ -18,6 +18,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
@@ -90,7 +91,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: network.toLowerCase() as LowercaseNetworks,
+              network: ETHEREUM_NETWORK[network].toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }

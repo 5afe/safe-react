@@ -1,4 +1,5 @@
 import React from 'react'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 import {
   Icon,
@@ -128,7 +129,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton value={address} network={getNetwork()} />
+        <EtherscanButton value={address} network={ETHEREUM_NETWORK[getNetwork()]} />
       </IconContainer>
 
       {granted ? null : (

@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -17,7 +18,7 @@ interface EtherscanLinkProps {
   className?: string
   cut?: number
   knownAddress?: boolean
-  type: 'tx' | 'address'
+  type: ExplorerTypes
   value: string
 }
 

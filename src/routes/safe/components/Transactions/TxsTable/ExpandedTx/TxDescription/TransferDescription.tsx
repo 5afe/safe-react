@@ -1,12 +1,13 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
-
-import { TRANSACTIONS_DESC_SEND_TEST_ID } from './index'
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import EtherscanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import EtherscanLink from 'src/components/EtherscanLink'
+
+import { TRANSACTIONS_DESC_SEND_TEST_ID } from './index'
 
 interface TransferDescriptionProps {
   amount: string
@@ -21,7 +22,7 @@ const TransferDescription = ({ amount = '', recipient }: TransferDescriptionProp
       {recipientName ? (
         <OwnerAddressTableCell address={recipient} knownAddress showLinks userName={recipientName} />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={recipient} />
+        <EtherscanLink knownAddress={false} type={ExplorerTypes.Address} value={recipient} />
       )}
     </Block>
   )

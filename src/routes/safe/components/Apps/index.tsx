@@ -2,6 +2,7 @@ import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled, { css } from 'styled-components'
 
 import ManageApps from './components/ManageApps'
@@ -155,7 +156,7 @@ const Apps = (): React.ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: network.toLowerCase() as LowercaseNetworks,
+        network: ETHEREUM_NETWORK[network].toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
@@ -185,7 +186,7 @@ const Apps = (): React.ReactElement => {
               granted={granted}
               selectedApp={selectedApp}
               safeAddress={safeAddress}
-              network={network}
+              network={ETHEREUM_NETWORK[network]}
               appIsLoading={appIsLoading}
               onIframeLoad={handleIframeLoad}
             />

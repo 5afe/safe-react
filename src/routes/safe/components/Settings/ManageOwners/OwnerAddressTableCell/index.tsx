@@ -1,12 +1,13 @@
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 
 import EtherScanLink from 'src/components/EtherscanLink'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
-import { useEffect, useState } from 'react'
 import { getValidAddressBookName } from 'src/logic/addressBook/utils'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 type OwnerAddressTableCellProps = {
   address: string
@@ -36,7 +37,7 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
           {userName && getValidAddressBookName(userName)}
-          <EtherScanLink knownAddress={knownAddress} type="address" value={address} cut={cut} />
+          <EtherScanLink knownAddress={knownAddress} type={ExplorerTypes.Address} value={address} cut={cut} />
         </div>
       ) : (
         <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>

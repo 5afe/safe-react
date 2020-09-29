@@ -136,7 +136,7 @@ class OpenSea {
    * @param {string} network
    * @returns {Promise<Collectibles>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): Promise<Collectibles> {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: ETHEREUM_NETWORK): Promise<Collectibles> {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`

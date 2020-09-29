@@ -1,9 +1,10 @@
+import { NETWORK } from 'src/utils/constants'
 import Web3 from 'web3'
 
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
-import { getNetwork } from '../../config'
+import { getNetwork } from 'src/config'
 import { ContentHash } from 'web3-eth-ens'
 import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
@@ -91,9 +92,7 @@ export const getRPCUrl = (network: ETHEREUM_NETWORK): string => {
 // And our own one to fetch data
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
-    ? new Web3.providers.HttpProvider(
-        getRPCUrl(ETHEREUM_NETWORK[process.env.REACT_APP_NETWORK.toUpperCase()] ?? ETHEREUM_NETWORK.RINKEBY),
-      )
+    ? new Web3.providers.HttpProvider(getRPCUrl(ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY))
     : window.web3?.currentProvider || 'ws://localhost:8545',
 )
 

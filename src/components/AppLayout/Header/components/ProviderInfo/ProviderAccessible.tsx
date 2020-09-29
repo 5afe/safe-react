@@ -62,7 +62,8 @@ const useStyles = makeStyles({
 interface ProviderInfoProps {
   connected: boolean
   provider: string
-  network: string
+  // TODO: [xDai] Review. This may cause some issues with EthHashInfo.
+  network: number
   userAddress: string
 }
 

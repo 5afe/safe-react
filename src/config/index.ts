@@ -14,6 +14,7 @@ import prodConfig from './production'
 import mainnetDevConfig from './development-mainnet'
 import mainnetProdConfig from './production-mainnet'
 import mainnetStagingConfig from './staging-mainnet'
+import { NETWORK } from 'src/utils/constants';
 
 const DEFAULT_NETWORK = ETHEREUM_NETWORK.RINKEBY
 
@@ -39,7 +40,7 @@ const configuration = () => {
     : devConfig
 }
 
-export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[process.env.REACT_APP_NETWORK.toUpperCase()] ?? DEFAULT_NETWORK
+export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? DEFAULT_NETWORK
 
 const getConfig = ensureOnce(configuration)
 

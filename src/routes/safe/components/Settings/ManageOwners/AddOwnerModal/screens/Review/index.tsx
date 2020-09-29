@@ -5,8 +5,6 @@ import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -17,10 +15,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+
+import { styles } from './style'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -118,7 +118,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
                           {owner.address}
                         </Paragraph>
                         <CopyBtn content={owner.address} />
-                        <EtherscanBtn type="address" value={owner.address} />
+                        <EtherscanBtn type={ExplorerTypes.Address} value={owner.address} />
                       </Block>
                     </Block>
                   </Col>
@@ -146,7 +146,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn type="address" value={values.ownerAddress} />
+                    <EtherscanBtn type={ExplorerTypes.Address} value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>

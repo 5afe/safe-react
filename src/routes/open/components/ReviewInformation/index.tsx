@@ -2,21 +2,21 @@ import TableContainer from '@material-ui/core/TableContainer'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 
-import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
-import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
+
+import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 
 type ReviewComponentProps = {
@@ -118,7 +118,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />
-                        <EtherscanBtn type="address" value={addresses[index]} />
+                        <EtherscanBtn type={ExplorerTypes.Address} value={addresses[index]} />
                       </Block>
                     </Block>
                   </Col>

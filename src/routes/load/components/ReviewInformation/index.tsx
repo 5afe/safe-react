@@ -5,13 +5,14 @@ import React from 'react'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
-import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME, THRESHOLD } from 'src/routes/load/components/fields'
 import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
@@ -76,7 +77,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                   {shortVersionOf(safeAddress, 4)}
                 </Paragraph>
                 <CopyBtn content={safeAddress} />
-                <EtherscanBtn type="address" value={safeAddress} />
+                <EtherscanBtn type={ExplorerTypes.Address} value={safeAddress} />
               </Row>
             </Block>
             <Block margin="lg">
@@ -121,7 +122,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                           {address}
                         </Paragraph>
                         <CopyBtn content={address} />
-                        <EtherscanBtn type="address" value={address} />
+                        <EtherscanBtn type={ExplorerTypes.Address} value={address} />
                       </Block>
                     </Block>
                   </Col>
