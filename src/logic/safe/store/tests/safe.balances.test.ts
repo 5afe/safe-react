@@ -30,15 +30,13 @@ describe('Feature > Balances', () => {
     const expectedResult = '100'
 
     // when
-    store.dispatch(updateActiveTokens(safeAddress, Set([token.address])))
     store.dispatch(updateSafe({ address: safeAddress, balances }))
+    store.dispatch(updateActiveTokens(safeAddress, Set([token.address])))
 
     const safe = safesMapSelector(store.getState()).get(safeAddress)
-    //@ts-ignore
-    const balanceResult = safe.get('balances').get(token.address)
-    //@ts-ignore
-    const activeTokens = safe.get('activeTokens')
-    const tokenIsActive = activeTokens.has(token.address)
+    const balanceResult = safe?.get('balances').get(token.address)
+    const activeTokens = safe?.get('activeTokens')
+    const tokenIsActive = activeTokens?.has(token.address)
 
     // then
     expect(balanceResult).toBe(expectedResult)
@@ -53,8 +51,7 @@ describe('Feature > Balances', () => {
     // when
     store.dispatch(updateSafe({ address: safeAddress, ethBalance: etherAmount }))
     const safe = safesMapSelector(store.getState()).get(safeAddress)
-    //@ts-ignore
-    const balanceResult = safe.get('ethBalance')
+    const balanceResult = safe?.get('ethBalance')
 
     // then
     expect(balanceResult).toBe(expectedResult)
