@@ -3,12 +3,12 @@ import { EnvironmentSettings, NetworkConfig } from 'src/config/network'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig: EnvironmentSettings = {
-  txServiceHost: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
-  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
-  rpcServiceUrl: 'https://mainnet.infura.io:443/v3/',
-  networkExplorerUrl: 'https://etherscan.io/',
-  networkExplorerApiUrl: 'https://api.etherscan.io/api',
+  txServiceUri: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',
+  safeAppsUri: 'https://safe-apps.dev.gnosisdev.com/',
+  gasPriceOracleUri: 'https://ethgasstation.info/json/ethgasAPI.json',
+  rpcServiceUri: 'https://mainnet.infura.io:443/v3/',
+  networkExplorerUri: 'https://etherscan.io/',
+  networkExplorerApiUri: 'https://api.etherscan.io/api',
 }
 
 const mainnet: NetworkConfig = {
@@ -18,12 +18,12 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
+      safeAppsUri: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      txServiceHost: 'https://safe-transaction.mainnet.gnosis.io/api/v1/',
-      safeAppsUrl: 'https://apps.gnosis-safe.io/',
+      txServiceUri: 'https://safe-transaction.mainnet.gnosis.io/api/v1/',
+      safeAppsUri: 'https://apps.gnosis-safe.io/',
     },
   },
   network: {
