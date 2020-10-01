@@ -1,3 +1,5 @@
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+
 type DisplayFlag = 'enable' | 'disable'
 
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
@@ -10,7 +12,7 @@ type Token = {
 }
 
 type NetworkSettings = {
-  id: number,
+  id: ETHEREUM_NETWORK,
   color: string,
   label: string,
   nativeCoin: Token,
