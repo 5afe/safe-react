@@ -1,7 +1,7 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
 import { NetworkConfig } from 'src/config/network'
 
-const dev = {
+const baseConfig = {
   TX_SERVICE_HOST: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
   SAFE_APPS_URL: 'https://safe-apps.dev.gnosisdev.com/',
   GAS_PRICE_ORACLE_URL: 'https://ethgasstation.info/json/ethgasAPI.json',
@@ -12,13 +12,15 @@ const dev = {
 
 const rinkeby: NetworkConfig = {
   environment: {
-    dev,
+    dev:{
+      ...baseConfig
+    },
     staging: {
-      ...dev,
+      ...baseConfig,
       SAFE_APPS_URL: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
-      ...dev,
+      ...baseConfig,
       TX_SERVICE_HOST: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
       SAFE_APPS_URL: 'https://apps.gnosis-safe.io/',
     },

@@ -1,7 +1,7 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
 import { EnvironmentSettings, NetworkConfig } from 'src/config/network'
 
-const dev: EnvironmentSettings = {
+const baseConfig: EnvironmentSettings = {
   TX_SERVICE_HOST: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',
   SAFE_APPS_URL: 'https://safe-apps.dev.gnosisdev.com/',
   GAS_PRICE_ORACLE_URL: 'https://ethgasstation.info/json/ethgasAPI.json',
@@ -12,13 +12,15 @@ const dev: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
-    dev,
+    dev:{
+      ...baseConfig
+    },
     staging: {
-      ...dev,
+      ...baseConfig,
       SAFE_APPS_URL: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
-      ...dev,
+      ...baseConfig,
       TX_SERVICE_HOST: 'https://safe-transaction.mainnet.gnosis.io/api/v1/',
       SAFE_APPS_URL: 'https://apps.gnosis-safe.io/',
     },
