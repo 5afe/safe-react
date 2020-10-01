@@ -1,8 +1,9 @@
 import { NetworkConfig } from 'src/config/network'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const xDai: NetworkConfig = {
   network: {
-    ID: 100,
+    ID: ETHEREUM_NETWORK.XDAI,
     COLOR: '#48A8A6',
     LABEL: 'xDai STAKE',
     NATIVE_COIN: {

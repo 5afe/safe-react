@@ -1,5 +1,6 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
 import { EnvironmentSettings, NetworkConfig } from 'src/config/network'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig: EnvironmentSettings = {
   TX_SERVICE_HOST: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',
@@ -12,8 +13,8 @@ const baseConfig: EnvironmentSettings = {
 
 const mainnet: NetworkConfig = {
   environment: {
-    dev:{
-      ...baseConfig
+    dev: {
+      ...baseConfig,
     },
     staging: {
       ...baseConfig,
@@ -26,7 +27,7 @@ const mainnet: NetworkConfig = {
     },
   },
   network: {
-    ID: 1,
+    ID: ETHEREUM_NETWORK.MAINNET,
     COLOR: '#E8E7E6',
     LABEL: 'Mainnet',
     NATIVE_COIN: {

@@ -1,5 +1,6 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
 import { NetworkConfig } from 'src/config/network'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig = {
   TX_SERVICE_HOST: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
@@ -12,8 +13,8 @@ const baseConfig = {
 
 const rinkeby: NetworkConfig = {
   environment: {
-    dev:{
-      ...baseConfig
+    dev: {
+      ...baseConfig,
     },
     staging: {
       ...baseConfig,
@@ -26,7 +27,7 @@ const rinkeby: NetworkConfig = {
     },
   },
   network: {
-    ID: 4,
+    ID: ETHEREUM_NETWORK.RINKEBY,
     COLOR: '#E8673C',
     LABEL: 'Rinkeby',
     NATIVE_COIN: {
