@@ -3,41 +3,40 @@ import { NetworkConfig } from 'src/config/network'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig = {
-  TX_SERVICE_HOST: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
-  SAFE_APPS_URL: 'https://safe-apps.dev.gnosisdev.com/',
-  GAS_PRICE_ORACLE_URL: 'https://ethgasstation.info/json/ethgasAPI.json',
-  RPC_SERVICE_URL: 'https://rinkeby.infura.io:443/v3/',
-  NETWORK_EXPLORER_URL: 'https://rinkeby.etherscan.io/',
-  NETWORK_EXPLORER_API_URL: 'https://api-rinkeby.etherscan.io/api'
+  txServiceHost: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
+  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
+  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
+  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3/',
+  networkExplorerUrl: 'https://rinkeby.etherscan.io/',
+  networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
 }
 
 const rinkeby: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
-    },
-    staging: {
+    }, staging: {
       ...baseConfig,
-      SAFE_APPS_URL: 'https://safe-apps.staging.gnosisdev.com',
+      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      TX_SERVICE_HOST: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
-      SAFE_APPS_URL: 'https://apps.gnosis-safe.io/',
+      txServiceHost: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
+      safeAppsUrl: 'https://apps.gnosis-safe.io/',
     },
   },
   network: {
-    ID: ETHEREUM_NETWORK.RINKEBY,
-    COLOR: '#E8673C',
-    LABEL: 'Rinkeby',
-    NATIVE_COIN: {
+    id: ETHEREUM_NETWORK.RINKEBY,
+    color: '#E8673C',
+    label: 'Rinkeby',
+    nativeCoin: {
       address: '0x000',
       name: 'Ether',
       symbol: 'ETH',
       decimals: 18,
       logoUri: EtherLogo,
     },
-  }
+  },
 }
 
 export default rinkeby

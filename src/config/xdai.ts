@@ -3,10 +3,10 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const xDai: NetworkConfig = {
   network: {
-    ID: ETHEREUM_NETWORK.XDAI,
-    COLOR: '#48A8A6',
-    LABEL: 'xDai STAKE',
-    NATIVE_COIN: {
+    id: ETHEREUM_NETWORK.XDAI,
+    color: '#48A8A6',
+    label: 'xDai STAKE',
+    nativeCoin: {
       address: '0x000',
       name: 'xDai',
       symbol: 'xDai',
@@ -16,12 +16,12 @@ const xDai: NetworkConfig = {
   },
   environment: {
     production: {
-      TX_SERVICE_HOST: 'https://safe-transaction.xdai.gnosis.io/api/v1/',
-      SAFE_APPS_URL: 'https://apps.gnosis-safe.io/',
-      GAS_PRICE: 1e9,
-      RPC_SERVICE_URL: 'https://rpc.xdaichain.com/',
-      NETWORK_EXPLORER_URL: 'https://blockscout.com/poa/xdai/',
-      NETWORK_EXPLORER_API_URL: 'https://blockscout.com/poa/xdai/api',
+      txServiceHost: 'https://safe-transaction.xdai.gnosis.io/api/v1/',
+      safeAppsUrl: 'https://apps.gnosis-safe.io/',
+      gasPrice: 1e9,
+      rpcServiceUrl: 'https://rpc.xdaichain.com/',
+      networkExplorerUrl: 'https://blockscout.com/poa/xdai/',
+      networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
     },
   }
 }

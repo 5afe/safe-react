@@ -10,38 +10,38 @@ type Token = {
 }
 
 type NetworkSettings = {
-  ID: number,
-  COLOR: string,
-  LABEL: string,
-  NATIVE_COIN: Token,
+  id: number,
+  color: string,
+  label: string,
+  nativeCoin: Token,
 }
 
 // something around this to display or not some critical sections in the app, depending on the network support
 // I listed the ones that may conflict with the network.
 // If non is present, all the sections are available.
 type SafeFeatures = {
-  SAFE_APPS?: DisplayFlag,
-  COLLECTIBLES?: DisplayFlag,
-  CONTRACT_INTERACTION?: DisplayFlag
+  safeApps?: DisplayFlag,
+  collectibles?: DisplayFlag,
+  contractInteraction?: DisplayFlag
 }
 
 type GasPrice = {
-  GAS_PRICE: number
-  GAS_PRICE_ORACLE_URL?: string
+  gasPrice: number
+  gasPriceOracleUrl?: string
 } | {
-  GAS_PRICE?: number
+  gasPrice?: number
   // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-  GAS_PRICE_ORACLE_URL: string
+  gasPriceOracleUrl: string
 }
 
 export type EnvironmentSettings = GasPrice & {
-  TX_SERVICE_HOST: string
+  txServiceHost: string
   // Shall we keep a reference to the relay?
-  RELAY_API_URL?: string
-  SAFE_APPS_URL: string
-  RPC_SERVICE_URL: string
-  NETWORK_EXPLORER_URL: string
-  NETWORK_EXPLORER_API_URL: string
+  relayApiUrl?: string
+  safeAppsUrl: string
+  rpcServiceUrl: string
+  networkExplorerUrl: string
+  networkExplorerApiUrl: string
 }
 
 type SafeEnvironments = {
