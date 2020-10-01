@@ -1,5 +1,5 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
-import { EnvironmentSettings, NetworkConfig } from 'src/config/network'
+import { EnvironmentSettings, NetworkConfig } from 'src/config/networks/network'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig: EnvironmentSettings = {

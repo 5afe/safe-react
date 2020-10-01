@@ -1,4 +1,4 @@
-import { NetworkConfig } from 'src/config/network'
+import { NetworkConfig } from 'src/config/networks/network'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const xDai: NetworkConfig = {
