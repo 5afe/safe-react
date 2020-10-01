@@ -3,6 +3,7 @@ import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { EthHashInfo, Icon, Text, ButtonLink } from '@gnosis.pm/safe-react-components'
 import * as React from 'react'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
@@ -114,7 +115,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
                   name={safe.name}
                   showIdenticon
                   shortenHash={4}
-                  network={getNetwork()}
+                  network={ETHEREUM_NETWORK[getNetwork()]}
                 />
 
                 <AddressDetails>

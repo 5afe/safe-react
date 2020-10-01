@@ -105,7 +105,13 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn showEtherscanBtn shortenHash={4} network={network} />
+            <EthHashInfo
+              hash={userAddress}
+              showCopyBtn
+              showEtherscanBtn
+              shortenHash={4}
+              network={ETHEREUM_NETWORK[network]}
+            />
           ) : (
             'Address not available'
           )}
