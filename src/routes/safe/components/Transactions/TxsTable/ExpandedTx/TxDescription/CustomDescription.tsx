@@ -1,6 +1,7 @@
 import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -85,7 +86,13 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetwork()} />
+          <EthHashInfo
+            hash={tx.to}
+            showIdenticon
+            showCopyBtn
+            showEtherscanBtn
+            network={ETHEREUM_NETWORK[getNetwork()]}
+          />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -189,7 +196,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           showIdenticon
           showCopyBtn
           showEtherscanBtn
-          network={getNetwork()}
+          network={ETHEREUM_NETWORK[getNetwork()]}
         />
       </Block>
 

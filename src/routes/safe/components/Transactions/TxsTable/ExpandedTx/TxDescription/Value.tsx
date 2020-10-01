@@ -1,5 +1,6 @@
 import { Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React from 'react'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
 import { getNetwork } from 'src/config'
@@ -52,7 +53,13 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
   if (isAddress(type)) {
     return (
-      <EthHashInfo hash={props.value as string} showCopyBtn showEtherscanBtn shortenHash={4} network={getNetwork()} />
+      <EthHashInfo
+        hash={props.value as string}
+        showCopyBtn
+        showEtherscanBtn
+        shortenHash={4}
+        network={ETHEREUM_NETWORK[getNetwork()]}
+      />
     )
   }
 

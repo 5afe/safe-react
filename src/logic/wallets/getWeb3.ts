@@ -21,8 +21,6 @@ export enum ETHEREUM_NETWORK {
   UNKNOWN = 0,
 }
 
-export type EthereumNetworks = typeof ETHEREUM_NETWORK[keyof typeof ETHEREUM_NETWORK]
-
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
   METAMASK: 'METAMASK',
@@ -48,7 +46,7 @@ export enum ExplorerTypes {
 
 export const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes, value: string): string =>
   `https://${
-    network === ETHEREUM_NETWORK.MAINNET ? '' : `${network[network].toLowerCase()}.`
+    network === ETHEREUM_NETWORK.MAINNET ? '' : `${ETHEREUM_NETWORK[network].toLowerCase()}.`
   }etherscan.io/${type}/${value}`
 
 export const getExplorerLink = (type: ExplorerTypes, value: string): string => {

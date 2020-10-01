@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { ETHEREUM_NETWORK, EthereumNetworks } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import { AppReduxState } from 'src/store'
 
@@ -18,7 +18,7 @@ export const providerNameSelector = createSelector(providerSelector, (provider: 
 
 export const networkSelector = createSelector(
   providerSelector,
-  (provider: ProviderState): EthereumNetworks => {
+  (provider: ProviderState): ETHEREUM_NETWORK => {
     const networkId = provider.get('network')
 
     return networkId ?? ETHEREUM_NETWORK.UNKNOWN

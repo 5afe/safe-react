@@ -1,6 +1,7 @@
 import { OptionsObject } from 'notistack'
 
 import { getNetwork } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { capitalize } from 'src/utils/css'
 
 export const SUCCESS = 'success'
@@ -198,7 +199,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${capitalize(getNetwork())}`,
+    message: `Wrong network: Please use ${capitalize(ETHEREUM_NETWORK[getNetwork()])}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 
