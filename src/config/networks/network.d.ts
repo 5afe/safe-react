@@ -27,21 +27,21 @@ type SafeFeatures = {
 
 type GasPrice = {
   gasPrice: number
-  gasPriceOracleUri?: string
+  gasPriceOracleUrl?: string
 } | {
   gasPrice?: number
   // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-  gasPriceOracleUri: string
+  gasPriceOracleUrl: string
 }
 
 export type EnvironmentSettings = GasPrice & {
-  txServiceUri: string
+  txServiceUrl: string
   // Shall we keep a reference to the relay?
-  relayApiUri?: string
-  safeAppsUri: string
-  rpcServiceUri: string
-  networkExplorerUri: string
-  networkExplorerApiUri: string
+  relayApiUrl?: string
+  safeAppsUrl: string
+  rpcServiceUrl: string
+  networkExplorerUrl: string
+  networkExplorerApiUrl: string
 }
 
 type SafeEnvironments = {

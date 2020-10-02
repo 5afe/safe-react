@@ -4,12 +4,12 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 const xDai: NetworkConfig = {
   environment: {
     production: {
-      txServiceUri: 'https://safe-transaction.xdai.gnosis.io/api/v1/',
-      safeAppsUri: 'https://apps.gnosis-safe.io/',
+      txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1/',
+      safeAppsUrl: 'https://apps.gnosis-safe.io/',
       gasPrice: 1e9,
-      rpcServiceUri: 'https://rpc.xdaichain.com/',
-      networkExplorerUri: 'https://blockscout.com/poa/xdai/',
-      networkExplorerApiUri: 'https://blockscout.com/poa/xdai/api',
+      rpcServiceUrl: 'https://rpc.xdaichain.com/',
+      networkExplorerUrl: 'https://blockscout.com/poa/xdai/',
+      networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
     },
   },
   network: {
