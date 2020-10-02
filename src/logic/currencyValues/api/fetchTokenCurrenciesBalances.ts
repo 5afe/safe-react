@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceHost } from 'src/config'
+import { getTxServiceUrl } from 'src/config'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 
 export type BalanceEndpoint = {
@@ -15,7 +15,7 @@ const fetchTokenCurrenciesBalances = (
   safeAddress: string,
   excludeSpamTokens = true,
 ): Promise<AxiosResponse<BalanceEndpoint[]>> => {
-  const apiUrl = getTxServiceHost()
+  const apiUrl = getTxServiceUrl()
   const url = `${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`
 
   return axios.get(url, {

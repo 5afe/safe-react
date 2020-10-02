@@ -31,7 +31,7 @@ const configuration = (): Promise<NetworkSpecificConfiguration> => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-export const getTxServiceHost = (): string => getConfig()?.txServiceUrl
+export const getTxServiceUrl = (): string => getConfig()?.txServiceUrl
 
 export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
@@ -48,7 +48,7 @@ export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddres
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkName()]
 
 export const buildSafeCreationTxUrl = (safeAddress) => {
-  const host = getTxServiceHost()
+  const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
   const base = getSafeCreationTxUri(address)
 
