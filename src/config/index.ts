@@ -2,28 +2,59 @@ import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
   ETHEREUM_NETWORK,
-  NetworkConfig,
   NetworkSettings,
   SafeFeatures,
 } from 'src/config/networks/network'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { GOOGLE_ANALYTICS_ID, NETWORK } from 'src/utils/constants'
+import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
-export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
-type NetworkSpecificConfiguration = EnvironmentSettings & {
-  network: NetworkSettings,
-  features: SafeFeatures,
+const getCurrentEnvironment = (): string => {
+  if (NODE_ENV === 'test') {
+    return 'test'
+  }
+
+  if (NODE_ENV === 'production') {
+    if (APP_ENV === 'production') {
+      return 'production'
+    } else {
+      return 'staging'
+    }
+  }
+
+  return 'dev'
 }
 
-const configuration = (): Promise<NetworkSpecificConfiguration> => {
-  const configFile: NetworkConfig = networks[getNetworkName().toLowerCase()]
+type NetworkSpecificConfiguration = EnvironmentSettings & {
+  network: NetworkSettings,
+  features?: SafeFeatures,
+}
+
+const configuration = (): NetworkSpecificConfiguration => {
+  const currentEnvironment = getCurrentEnvironment()
+
+  // special case for test environment
+  if (currentEnvironment === 'test') {
+    const configFile = networks.local
+
+    return {
+      ...configFile.environment.production,
+      network: configFile.network,
+      features: configFile.features,
+    }
+  }
+
+  // lookup the config file based on the network specified in the NETWORK variable
+  const configFile = networks[getNetworkName().toLowerCase()]
+  // defaults to 'production' as it's the only environment that is required for the network configs
+  const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
 
   return {
-    ...configFile.environment[process.env.REACT_APP_ENV ?? 'production'],
+    ...networkBaseConfig,
     network: configFile.network,
     features: configFile.features,
   }
@@ -45,7 +76,7 @@ export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: s
   apiUrl: getConfig()?.networkExplorerApiUrl,
 })
 
-export const getNetworkConfigFeatures = (): SafeFeatures => getConfig()?.features
+export const getNetworkConfigFeatures = (): SafeFeatures | undefined => getConfig()?.features
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 
