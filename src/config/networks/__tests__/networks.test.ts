@@ -1,7 +1,7 @@
 import fs from 'fs'
 
 import networks from 'src/config/networks'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { isValidURL } from 'src/utils/url'
 
 describe('Networks config files test', () => {

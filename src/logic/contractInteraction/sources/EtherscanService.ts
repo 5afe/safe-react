@@ -1,7 +1,7 @@
 import { RateLimit } from 'async-sema'
 import memoize from 'lodash.memoize'
 
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { ETHERSCAN_API_KEY } from 'src/utils/constants'
 
 class EtherscanService {

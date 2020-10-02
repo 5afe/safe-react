@@ -1,6 +1,6 @@
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 import Layout from 'src/routes/load/components/Layout'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'

@@ -1,6 +1,11 @@
 import networks from 'src/config/networks'
-import { EnvironmentSettings, NetworkConfig, NetworkSettings, SafeFeatures } from 'src/config/networks/network'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import {
+  EnvironmentSettings,
+  ETHEREUM_NETWORK,
+  NetworkConfig,
+  NetworkSettings,
+  SafeFeatures,
+} from 'src/config/networks/network'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { GOOGLE_ANALYTICS_ID, NETWORK } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'

@@ -1,5 +1,3 @@
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
-
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
 type Token = {
   address: string
@@ -7,6 +5,19 @@ type Token = {
   symbol: string
   decimals: number
   logoUri?: string
+}
+
+export enum ETHEREUM_NETWORK {
+  MAINNET = 1,
+  MORDEN = 2,
+  ROPSTEN = 3,
+  RINKEBY = 4,
+  GOERLI = 5,
+  KOVAN = 42,
+  XDAI = 100,
+  ENERGY_WEB_CHAIN = 246,
+  VOLTA = 73799,
+  UNKNOWN = 0,
 }
 
 export type NetworkSettings = {

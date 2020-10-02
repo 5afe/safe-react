@@ -1,6 +1,5 @@
 import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
-import { EnvironmentSettings, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/',

@@ -1,6 +1,6 @@
 import { RateLimit } from 'async-sema'
 
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from 'src/utils/constants'
 

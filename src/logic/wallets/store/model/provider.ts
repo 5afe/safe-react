@@ -1,5 +1,6 @@
 import { Record, RecordOf } from 'immutable'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 export type ProviderProps = {
   name: string

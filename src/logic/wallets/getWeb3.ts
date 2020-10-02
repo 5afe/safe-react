@@ -1,26 +1,13 @@
-import { NETWORK } from 'src/utils/constants'
 import Web3 from 'web3'
-
-import { sameAddress } from './ethAddresses'
-import { EMPTY_DATA } from './ethTransactions'
+import { provider as Provider } from 'web3-core'
+import { ContentHash } from 'web3-eth-ens'
 
 import { getNetworkId } from 'src/config'
-import { ContentHash } from 'web3-eth-ens'
-import { provider as Provider } from 'web3-core'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { NETWORK } from 'src/utils/constants'
+import { sameAddress } from './ethAddresses'
+import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-
-export enum ETHEREUM_NETWORK {
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  XDAI = 100,
-  ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
-}
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',

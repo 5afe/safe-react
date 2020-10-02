@@ -4,7 +4,7 @@ import * as React from 'react'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { border, md, screenSm, sm, xs } from 'src/theme/variables'
 
 const interfaceNetwork = getNetworkId()
