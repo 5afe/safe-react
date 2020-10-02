@@ -4,7 +4,7 @@ import { NetworkConfig } from 'src/config/networks/network.d'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { isValidURL } from 'src/utils/url'
 
-describe('Network config file test', () => {
+describe('Networks config files test', () => {
   const NETWORKS_PATH = 'src/config/networks/'
   const configFiles = fs.readdirSync(NETWORKS_PATH)
   const networksFileNames = configFiles
