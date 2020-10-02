@@ -1,6 +1,6 @@
-import updateSafe from './updateSafe'
 import { Set } from 'immutable'
-import { Dispatch } from 'redux'
+import updateTokensList from './updateTokensList'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 // the selector uses ownProps argument/router props to get the address of the safe
 // so in order to use it I had to recreate the same structure
@@ -13,7 +13,7 @@ import { Dispatch } from 'redux'
 // })
 
 const updateActiveTokens = (safeAddress: string, activeTokens: Set<string>) => (dispatch: Dispatch): void => {
-  dispatch(updateSafe({ address: safeAddress, activeTokens }))
+  dispatch(updateTokensList({ safeAddress, activeTokens }))
 }
 
 export default updateActiveTokens

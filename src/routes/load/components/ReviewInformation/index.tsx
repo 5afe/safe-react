@@ -136,15 +136,15 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
   )
 }
 
-const Review = ({ userAddress }: { userAddress: string }) => (
-  controls: React.ReactNode,
-  { values }: { values: Record<string, string> },
-): React.ReactElement => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <ReviewComponent userAddress={userAddress} values={values} />
-    </OpenPaper>
-  </>
-)
+const Review = ({ userAddress }: { userAddress: string }) =>
+  function ReviewPage(controls: React.ReactNode, { values }: { values: Record<string, string> }): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <ReviewComponent userAddress={userAddress} values={values} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default Review
