@@ -8,6 +8,7 @@ const xDai: NetworkConfig = {
       safeAppsUrl: 'https://apps.gnosis-safe.io/',
       gasPrice: 1e9,
       rpcServiceUrl: 'https://rpc.xdaichain.com/',
+      networkExplorerName: 'Blockscout',
       networkExplorerUrl: 'https://blockscout.com/poa/xdai/',
       networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
     },

@@ -7,6 +7,7 @@ const baseConfig: EnvironmentSettings = {
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
   gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3/',
+  networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io/',
   networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
 }

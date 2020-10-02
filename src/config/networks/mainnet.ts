@@ -7,6 +7,7 @@ const baseConfig: EnvironmentSettings = {
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
   gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3/',
+  networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://etherscan.io/',
   networkExplorerApiUrl: 'https://api.etherscan.io/api',
 }
