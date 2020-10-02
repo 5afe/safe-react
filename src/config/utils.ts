@@ -1,6 +1,6 @@
 import { ETHEREUM_NETWORK } from '../logic/wallets/getWeb3'
-import { NetworkConfig } from './network'
-import mainnet from './mainnet'
+import { NetworkConfig } from './networks/network'
+import mainnet from './networks/mainnet'
 
 // @todo (agustin) add missing configs
 export const getNetworkConfig = (network: ETHEREUM_NETWORK): NetworkConfig | null => {
