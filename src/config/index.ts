@@ -37,7 +37,19 @@ export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
 export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
 
-export const getTxServiceUriFrom = (safeAddress) => `safes/${safeAddress}/transactions/`
+export const getRpcServiceUrl = (): string => getConfig()?.rpcServiceUrl
+
+export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
+  name: getConfig()?.networkExplorerName,
+  url: getConfig()?.networkExplorerUrl,
+  apiUrl: getConfig()?.networkExplorerApiUrl,
+})
+
+export const getNetworkConfigFeatures = (): SafeFeatures => getConfig()?.features
+
+export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
+
+export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
 
 export const getIncomingTxServiceUriTo = (safeAddress: string) => `safes/${safeAddress}/incoming-transfers/`
 
@@ -47,7 +59,7 @@ export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddres
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkName()]
 
-export const buildSafeCreationTxUrl = (safeAddress) => {
+export const buildSafeCreationTxUrl = (safeAddress: string) => {
   const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
   const base = getSafeCreationTxUri(address)
