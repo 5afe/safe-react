@@ -1,6 +1,7 @@
 import { ETHEREUM_NETWORK } from '../logic/wallets/getWeb3'
 import { NetworkConfig } from './networks/network'
 import mainnet from './networks/mainnet'
+import rinkeby from './networks/rinkeby'
 
 // @todo (agustin) add missing configs
 export const getNetworkConfig = (network: ETHEREUM_NETWORK): NetworkConfig | null => {
@@ -10,7 +11,7 @@ export const getNetworkConfig = (network: ETHEREUM_NETWORK): NetworkConfig | nul
       return mainnet
     }
     case ETHEREUM_NETWORK.RINKEBY: {
-      break
+      return rinkeby
     }
     case ETHEREUM_NETWORK.KOVAN: {
       break
