@@ -11,7 +11,7 @@ type Token = {
   logoUri?: string
 }
 
-type NetworkSettings = {
+export type NetworkSettings = {
   id: ETHEREUM_NETWORK,
   color: string,
   label: string,
@@ -21,7 +21,7 @@ type NetworkSettings = {
 // something around this to display or not some critical sections in the app, depending on the network support
 // I listed the ones that may conflict with the network.
 // If non is present, all the sections are available.
-type SafeFeatures = {
+export type SafeFeatures = {
   safeApps?: DisplayFlag,
   collectibles?: DisplayFlag,
   contractInteraction?: DisplayFlag

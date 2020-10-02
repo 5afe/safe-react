@@ -1,51 +1,42 @@
-import { checksumAddress } from 'src/utils/checksumAddress';
-import { ensureOnce } from 'src/utils/singleton'
+import networks from 'src/config/networks'
+import { EnvironmentSettings, NetworkConfig, NetworkSettings, SafeFeatures } from 'src/config/networks/network'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
-import {
-  RELAY_API_URL,
-  SIGNATURES_VIA_METAMASK,
-  TX_SERVICE_HOST,
-  SAFE_APPS_URL
-} from 'src/config/names'
-import devConfig from './development'
-import testConfig from './testing'
-import stagingConfig from './staging'
-import prodConfig from './production'
-import mainnetDevConfig from './development-mainnet'
-import mainnetProdConfig from './production-mainnet'
-import mainnetStagingConfig from './staging-mainnet'
-import { NETWORK } from 'src/utils/constants'
-
-const configuration = () => {
-  if (process.env.NODE_ENV === 'test') {
-    return testConfig
-  }
-
-  if (process.env.NODE_ENV === 'production') {
-    if (process.env.REACT_APP_NETWORK === 'mainnet') {
-      return process.env.REACT_APP_ENV === 'production'
-        ? mainnetProdConfig
-        : mainnetStagingConfig
-    }
-
-    return process.env.REACT_APP_ENV === 'production'
-      ? prodConfig
-      : stagingConfig
-  }
-
-  return process.env.REACT_APP_NETWORK === 'mainnet'
-    ? mainnetDevConfig
-    : devConfig
-}
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { GOOGLE_ANALYTICS_ID, NETWORK } from 'src/utils/constants'
+import { ensureOnce } from 'src/utils/singleton'
 
 export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
 
-const getConfig = ensureOnce(configuration)
+type NetworkSpecificConfiguration = EnvironmentSettings & {
+  network: NetworkSettings,
+  features: SafeFeatures,
+}
 
-export const getTxServiceHost = () => {
+const configuration = (): Promise<NetworkSpecificConfiguration> => {
+  const configFile: NetworkConfig = networks[ETHEREUM_NETWORK[getNetwork()].toLowerCase()]
+
+  return {
+    ...configFile.environment[process.env.REACT_APP_ENV ?? 'production'],
+    network: configFile.network,
+    features: configFile.features,
+  }
+}
+
+const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
+
+export const getTxServiceHost = (): string => {
   const config = getConfig()
+  return config.txServiceUri
+}
 
-  return config[TX_SERVICE_HOST]
+export const getRelayUrl = (): string | undefined => {
+  const config = getConfig()
+  return config.relayApiUri
+}
+
+export const getGnosisSafeAppsUrl = (): string => {
+  const config = getConfig()
+  return config.safeAppsUri
 }
 
 export const getTxServiceUriFrom = (safeAddress) =>
@@ -59,34 +50,20 @@ export const getAllTransactionsUriFrom = (safeAddress: string): string =>
 
 export const getSafeCreationTxUri = (safeAddress) => `safes/${safeAddress}/creation/`
 
-export const getRelayUrl = () => getConfig()[RELAY_API_URL]
+export const getGoogleAnalyticsTrackingID = () => GOOGLE_ANALYTICS_ID[ETHEREUM_NETWORK[getNetwork()]]
 
-export const signaturesViaMetamask = () => {
-  const config = getConfig()
-
-  return config[SIGNATURES_VIA_METAMASK]
-}
-
-export const getGnosisSafeAppsUrl = () => {
-  const config = getConfig()
-
-  return config[SAFE_APPS_URL]
-}
-
-export const getGoogleAnalyticsTrackingID = () =>
-  getNetwork() === ETHEREUM_NETWORK.MAINNET
-    ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET
-    : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY
-
+// TODO: replace this with an `INTERCOM_ID` constant?
 export const getIntercomId = () =>
   process.env.REACT_APP_ENV === 'production'
     ? process.env.REACT_APP_INTERCOM_ID
     : 'plssl1fl'
 
+// TODO: handle this within one function? or expose both urls in respective constants?
+//  `EXCHANGE_RATE_URI`, `EXCHANGE_RATES_URI_FALLBACK`
 export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
-
 export const getExchangeRatesUrlFallback = () => 'https://api.coinbase.com/v2/exchange-rates'
 
+// TODO: This can be exposed directly in the `constants.ts` file
 export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
 
 export const buildSafeCreationTxUrl = (safeAddress) => {
