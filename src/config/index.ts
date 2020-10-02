@@ -14,19 +14,17 @@ export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
 const getCurrentEnvironment = (): string => {
-  if (NODE_ENV === 'test') {
-    return 'test'
-  }
-
-  if (NODE_ENV === 'production') {
-    if (APP_ENV === 'production') {
-      return 'production'
-    } else {
-      return 'staging'
+  switch (NODE_ENV) {
+    case 'test': {
+      return 'test'
+    }
+    case 'production': {
+      return APP_ENV === 'production' ? 'production' : 'staging'
+    }
+    default: {
+      return 'dev'
     }
   }
-
-  return 'dev'
 }
 
 type NetworkSpecificConfiguration = EnvironmentSettings & {
