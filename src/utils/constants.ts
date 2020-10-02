@@ -1,6 +1,6 @@
 export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
-export const NETWORK = process.env.REACT_APP_NETWORK || 'RINKEBY'
+export const NETWORK = process.env.REACT_APP_NETWORK?.toUpperCase() || 'RINKEBY'
 export const GOOGLE_ANALYTICS_ID = {
   RINKEBY: process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY,
   MAINNET: process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET,
