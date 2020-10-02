@@ -13,7 +13,6 @@ import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
 import { styles } from './style'
 
-import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -21,11 +20,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import { ETHEREUM_NETWORK, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const useStyles = makeStyles(styles as any)
 
@@ -59,6 +59,8 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     }
   }
 
+  const scanBlockUrl = useExplorerInfo(tx.executionTxHash)
+
   return (
     <>
       <Block className={classes.expandedTxBlock}>
@@ -68,13 +70,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <EthHashInfo
-                    hash={tx.executionTxHash}
-                    shortenHash={4}
-                    showCopyBtn
-                    showEtherscanBtn
-                    network={ETHEREUM_NETWORK[getNetwork()]}
-                  />
+                  <EthHashInfo hash={tx.executionTxHash} shortenHash={4} showCopyBtn scanBlockUrl={scanBlockUrl} />
                 ) : (
                   'n/a'
                 )}

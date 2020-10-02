@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 import NetworkLabel from '../NetworkLabel'
 import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
@@ -9,6 +8,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const useStyles = makeStyles({
   network: {
@@ -71,6 +71,7 @@ interface ProviderInfoProps {
 const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const addressColor = connected ? 'text' : 'warning'
+  const scanBlockUrl = useExplorerInfo(userAddress)
   return (
     <>
       {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
@@ -95,7 +96,7 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
               identiconSize="xs"
               textColor={addressColor}
               textSize="sm"
-              network={ETHEREUM_NETWORK[network]}
+              scanBlockUrl={scanBlockUrl}
             />
           ) : (
             <Text size="md" color={addressColor}>

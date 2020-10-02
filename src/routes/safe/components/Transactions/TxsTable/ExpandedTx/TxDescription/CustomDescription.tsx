@@ -1,7 +1,7 @@
 import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -24,7 +24,8 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { getNetwork } from 'src/config'
+
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -76,7 +77,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
-
+  const scanBlockUrl = useExplorerInfo(tx.to)
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -86,13 +87,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo
-            hash={tx.to}
-            showIdenticon
-            showCopyBtn
-            showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
-          />
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn scanBlockUrl={scanBlockUrl} />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -184,7 +179,7 @@ interface GenericCustomDataProps {
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
-
+  const scanBlockUrl = useExplorerInfo(recipient)
   return (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
@@ -195,8 +190,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           name={recipientName === 'UNKNOWN' ? undefined : recipientName}
           showIdenticon
           showCopyBtn
-          showEtherscanBtn
-          network={ETHEREUM_NETWORK[getNetwork()]}
+          scanBlockUrl={scanBlockUrl}
         />
       </Block>
 

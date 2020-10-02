@@ -15,6 +15,7 @@ import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
@@ -92,7 +93,7 @@ const styles = () => ({
 const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
   const status = connected ? 'Connected' : 'Connection error'
   const color = connected ? 'primary' : 'warning'
-
+  const scanBlockUrl = useExplorerInfo(userAddress)
   return (
     <>
       <Block className={classes.container}>
@@ -105,13 +106,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo
-              hash={userAddress}
-              showCopyBtn
-              showEtherscanBtn
-              shortenHash={4}
-              network={ETHEREUM_NETWORK[network]}
-            />
+            <EthHashInfo hash={userAddress} showCopyBtn scanBlockUrl={scanBlockUrl} shortenHash={4} />
           ) : (
             'Address not available'
           )}

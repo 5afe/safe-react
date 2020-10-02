@@ -1,13 +1,12 @@
 import { Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React from 'react'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
-import { getNetwork } from 'src/config'
 import {
   isAddress,
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const NestedWrapper = styled.div`
   padding-left: 4px;
@@ -51,16 +50,9 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
+  const scanBlockUrl = useExplorerInfo(props.value as string)
   if (isAddress(type)) {
-    return (
-      <EthHashInfo
-        hash={props.value as string}
-        showCopyBtn
-        showEtherscanBtn
-        shortenHash={4}
-        network={ETHEREUM_NETWORK[getNetwork()]}
-      />
-    )
+    return <EthHashInfo hash={props.value as string} showCopyBtn scanBlockUrl={scanBlockUrl} shortenHash={4} />
   }
 
   return <GenericValue type={type} {...props} />

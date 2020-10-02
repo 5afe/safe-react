@@ -1,15 +1,15 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getNetwork } from 'src/config'
 
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+
 import { formatDate } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import Block from 'src/components/layout/Block'
 import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const useStyles = makeStyles({
   address: {
@@ -31,7 +31,9 @@ type Props = {
 
 export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
-
+  const scanBlockUrl = useExplorerInfo(tx?.creator)
+  const scanBlockFactoryAddressUrl = useExplorerInfo(tx?.factoryAddress)
+  const scanBlockMasterCopyUrl = useExplorerInfo(tx?.masterCopy)
   if (!tx) {
     return null
   }
@@ -46,28 +48,12 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
       </Paragraph>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Creator:</Bold>
-        {tx.creator ? (
-          <EthHashInfo
-            hash={tx.creator}
-            shortenHash={4}
-            showCopyBtn
-            showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
-          />
-        ) : (
-          'n/a'
-        )}
+        {tx.creator ? <EthHashInfo hash={tx.creator} shortenHash={4} showCopyBtn scanBlockUrl={scanBlockUrl} /> : 'n/a'}
       </Block>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Factory:</Bold>
         {tx.factoryAddress ? (
-          <EthHashInfo
-            hash={tx.factoryAddress}
-            shortenHash={4}
-            showCopyBtn
-            showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
-          />
+          <EthHashInfo hash={tx.factoryAddress} shortenHash={4} showCopyBtn scanBlockUrl={scanBlockFactoryAddressUrl} />
         ) : (
           'n/a'
         )}
@@ -75,13 +61,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Mastercopy:</Bold>
         {tx.masterCopy ? (
-          <EthHashInfo
-            hash={tx.masterCopy}
-            shortenHash={4}
-            showCopyBtn
-            showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
-          />
+          <EthHashInfo hash={tx.masterCopy} shortenHash={4} showCopyBtn scanBlockUrl={scanBlockMasterCopyUrl} />
         ) : (
           'n/a'
         )}

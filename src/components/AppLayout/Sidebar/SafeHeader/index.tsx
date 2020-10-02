@@ -1,5 +1,4 @@
 import React from 'react'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 import {
   Icon,
@@ -12,8 +11,8 @@ import {
   EtherscanButton,
 } from '@gnosis.pm/safe-react-components'
 
-import { getNetwork } from 'src/config'
 import FlexSpacer from 'src/components/FlexSpacer'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -98,6 +97,7 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
+  const scanBlockUrl = useExplorerInfo(address)
   if (!address) {
     return (
       <Container>
@@ -129,7 +129,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton value={address} network={ETHEREUM_NETWORK[getNetwork()]} />
+        <EtherscanButton scanBlockUrl={scanBlockUrl} />
       </IconContainer>
 
       {granted ? null : (

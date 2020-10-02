@@ -3,8 +3,6 @@ import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getNetwork } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -19,6 +17,7 @@ import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { OwnersWithoutConfirmations } from './index'
+import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -164,7 +163,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </>
     )
   }
-
+  const scanBlockUrl = useExplorerInfo(owner)
   return (
     <Block className={classes.container}>
       <div
@@ -183,8 +182,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
         shortenHash={4}
         showIdenticon
         showCopyBtn
-        showEtherscanBtn
-        network={ETHEREUM_NETWORK[getNetwork()]}
+        scanBlockUrl={scanBlockUrl}
       />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
