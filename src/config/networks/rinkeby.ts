@@ -3,13 +3,13 @@ import { EnvironmentSettings, NetworkConfig } from 'src/config/networks/network.
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 const baseConfig: EnvironmentSettings = {
-  txServiceUri: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
-  safeAppsUri: 'https://safe-apps.dev.gnosisdev.com/',
-  gasPriceOracleUri: 'https://ethgasstation.info/json/ethgasAPI.json',
-  rpcServiceUri: 'https://rinkeby.infura.io:443/v3/',
-  networkExplorerUri: 'https://rinkeby.etherscan.io/',
-  networkExplorerApiUri: 'https://api-rinkeby.etherscan.io/api',
+  txServiceUrl: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
+  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
+  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
+  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3/',
   networkExplorerName: 'Etherscan',
+  networkExplorerUrl: 'https://rinkeby.etherscan.io/',
+  networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
 }
 
 const rinkeby: NetworkConfig = {
@@ -19,12 +19,12 @@ const rinkeby: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUri: 'https://safe-apps.staging.gnosisdev.com',
+      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      txServiceUri: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
-      safeAppsUri: 'https://apps.gnosis-safe.io/',
+      txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
+      safeAppsUrl: 'https://apps.gnosis-safe.io/',
     },
   },
   network: {

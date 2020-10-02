@@ -20,7 +20,7 @@ export const useExplorerInfo = (hash?: string | null): BlockScanInfo => {
       return result
     }
     const type = hash.length > 42 ? 'tx' : 'address'
-    result.url = `${config?.environment.dev?.networkExplorerUri}${type}/${hash}`
+    result.url = `${config?.environment.dev?.networkExplorerUrl}${type}/${hash}`
     result.alt = config?.environment.dev?.networkExplorerName || ''
 
     return result
