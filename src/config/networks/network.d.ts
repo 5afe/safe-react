@@ -1,7 +1,5 @@
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
-type DisplayFlag = 'enable' | 'disable'
-
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
 type Token = {
   address: string
@@ -22,9 +20,9 @@ type NetworkSettings = {
 // I listed the ones that may conflict with the network.
 // If non is present, all the sections are available.
 type SafeFeatures = {
-  safeApps?: DisplayFlag,
-  collectibles?: DisplayFlag,
-  contractInteraction?: DisplayFlag
+  safeApps?: boolean,
+  collectibles?: boolean,
+  contractInteraction?: boolean
 }
 
 type GasPrice = {
