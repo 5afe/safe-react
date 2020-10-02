@@ -4,7 +4,7 @@ import networks from 'src/config/networks'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { isValidURL } from 'src/utils/url'
 
-describe('Network config file test', () => {
+describe('Networks config files test', () => {
   const environments = ['dev', 'staging', 'production']
 
   const NETWORKS_PATH = 'src/config/networks/'

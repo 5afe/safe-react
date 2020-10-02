@@ -26,11 +26,11 @@ const configuration = (): Promise<NetworkSpecificConfiguration> => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-export const getTxServiceHost = (): string => getConfig()?.txServiceUri
+export const getTxServiceHost = (): string => getConfig()?.txServiceUrl
 
-export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUri
+export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
-export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUri
+export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
 
 export const getTxServiceUriFrom = (safeAddress) => `safes/${safeAddress}/transactions/`
 
