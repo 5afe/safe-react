@@ -1,5 +1,5 @@
 import { getInfuraUrl, getRPCUrl } from '../getWeb3'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 
 const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
 
@@ -7,7 +7,7 @@ const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f
 // const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
 const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
 
-const network = getNetwork()
+const network = getNetworkId()
 const infuraUrl = getInfuraUrl(network)
 
 const wallets = [

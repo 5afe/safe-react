@@ -16,7 +16,7 @@ import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
@@ -55,7 +55,7 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetwork()
+const desiredNetwork = getNetworkId()
 
 const useStyles = makeStyles(notificationStyles)
 

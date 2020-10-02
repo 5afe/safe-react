@@ -3,7 +3,7 @@ import React from 'react'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import {
   isAddress,
   isArrayParameter,
@@ -58,7 +58,7 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
         showCopyBtn
         showEtherscanBtn
         shortenHash={4}
-        network={ETHEREUM_NETWORK[getNetwork()]}
+        network={ETHEREUM_NETWORK[getNetworkId()]}
       />
     )
   }

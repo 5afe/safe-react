@@ -3,7 +3,7 @@ import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
@@ -184,7 +184,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
         showIdenticon
         showCopyBtn
         showEtherscanBtn
-        network={ETHEREUM_NETWORK[getNetwork()]}
+        network={ETHEREUM_NETWORK[getNetworkId()]}
       />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}

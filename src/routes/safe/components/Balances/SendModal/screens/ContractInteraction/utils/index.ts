@@ -3,7 +3,7 @@ import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -23,7 +23,7 @@ export const abiExtractor = createDecorator({
       ) {
         return
       }
-      const network = getNetwork()
+      const network = getNetworkId()
       const source = getConfiguredSource()
       return source.getContractABI(contractAddress, network)
     },

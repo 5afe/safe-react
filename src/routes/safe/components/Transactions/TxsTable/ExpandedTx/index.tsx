@@ -13,7 +13,7 @@ import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
 import { styles } from './style'
 
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -73,7 +73,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
                     shortenHash={4}
                     showCopyBtn
                     showEtherscanBtn
-                    network={ETHEREUM_NETWORK[getNetwork()]}
+                    network={ETHEREUM_NETWORK[getNetworkId()]}
                   />
                 ) : (
                   'n/a'

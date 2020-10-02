@@ -4,7 +4,7 @@ import Web3 from 'web3'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { ContentHash } from 'web3-eth-ens'
 import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
@@ -51,7 +51,7 @@ export const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes,
   }etherscan.io/${type}/${value}`
 
 export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
-  const network = getNetwork()
+  const network = getNetworkId()
 
   switch (network) {
     case ETHEREUM_NETWORK.MAINNET:

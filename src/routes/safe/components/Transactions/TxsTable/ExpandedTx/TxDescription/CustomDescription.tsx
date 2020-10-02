@@ -24,7 +24,7 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -91,7 +91,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
             showIdenticon
             showCopyBtn
             showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
+            network={ETHEREUM_NETWORK[getNetworkId()]}
           />
         </TxInfo>
 
@@ -196,7 +196,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           showIdenticon
           showCopyBtn
           showEtherscanBtn
-          network={ETHEREUM_NETWORK[getNetwork()]}
+          network={ETHEREUM_NETWORK[getNetworkId()]}
         />
       </Block>
 

@@ -2,7 +2,7 @@ import Onboard from 'bnc-onboard'
 import React from 'react'
 
 import Button from 'src/components/layout/Button'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
@@ -20,7 +20,7 @@ const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
   dappId: BLOCKNATIVE_API_KEY,
-  networkId: getNetwork(),
+  networkId: getNetworkId(),
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {

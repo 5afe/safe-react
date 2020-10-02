@@ -9,7 +9,7 @@ import styled from 'styled-components'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
 import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import DefaultBadge from './DefaultBadge'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
@@ -115,7 +115,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
                   name={safe.name}
                   showIdenticon
                   shortenHash={4}
-                  network={ETHEREUM_NETWORK[getNetwork()]}
+                  network={ETHEREUM_NETWORK[getNetworkId()]}
                 />
 
                 <AddressDetails>

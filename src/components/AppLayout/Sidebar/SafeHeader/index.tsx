@@ -12,7 +12,7 @@ import {
   EtherscanButton,
 } from '@gnosis.pm/safe-react-components'
 
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import FlexSpacer from 'src/components/FlexSpacer'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
@@ -129,7 +129,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton value={address} network={ETHEREUM_NETWORK[getNetwork()]} />
+        <EtherscanButton value={address} network={ETHEREUM_NETWORK[getNetworkId()]} />
       </IconContainer>
 
       {granted ? null : (

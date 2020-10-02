@@ -5,7 +5,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { GOOGLE_ANALYTICS_ID, NETWORK } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
-export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
 
 type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings,
@@ -13,7 +13,7 @@ type NetworkSpecificConfiguration = EnvironmentSettings & {
 }
 
 const configuration = (): Promise<NetworkSpecificConfiguration> => {
-  const configFile: NetworkConfig = networks[ETHEREUM_NETWORK[getNetwork()].toLowerCase()]
+  const configFile: NetworkConfig = networks[ETHEREUM_NETWORK[getNetworkId()].toLowerCase()]
 
   return {
     ...configFile.environment[process.env.REACT_APP_ENV ?? 'production'],

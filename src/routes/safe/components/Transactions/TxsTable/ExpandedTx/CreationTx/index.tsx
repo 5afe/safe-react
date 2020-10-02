@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
@@ -52,7 +52,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
             shortenHash={4}
             showCopyBtn
             showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
+            network={ETHEREUM_NETWORK[getNetworkId()]}
           />
         ) : (
           'n/a'
@@ -66,7 +66,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
             shortenHash={4}
             showCopyBtn
             showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
+            network={ETHEREUM_NETWORK[getNetworkId()]}
           />
         ) : (
           'n/a'
@@ -80,7 +80,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
             shortenHash={4}
             showCopyBtn
             showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
+            network={ETHEREUM_NETWORK[getNetworkId()]}
           />
         ) : (
           'n/a'
