@@ -7,13 +7,15 @@ import { ensureOnce } from 'src/utils/singleton'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
 
+export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
+
 type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings,
   features: SafeFeatures,
 }
 
 const configuration = (): Promise<NetworkSpecificConfiguration> => {
-  const configFile: NetworkConfig = networks[ETHEREUM_NETWORK[getNetworkId()].toLowerCase()]
+  const configFile: NetworkConfig = networks[getNetworkName().toLowerCase()]
 
   return {
     ...configFile.environment[process.env.REACT_APP_ENV ?? 'production'],

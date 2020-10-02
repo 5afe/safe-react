@@ -1,9 +1,8 @@
 import { Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React from 'react'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
-import { getNetworkId } from 'src/config'
+import { getNetworkName } from 'src/config'
 import {
   isAddress,
   isArrayParameter,
@@ -58,7 +57,7 @@ const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
         showCopyBtn
         showEtherscanBtn
         shortenHash={4}
-        network={ETHEREUM_NETWORK[getNetworkId()]}
+        network={getNetworkName()}
       />
     )
   }
