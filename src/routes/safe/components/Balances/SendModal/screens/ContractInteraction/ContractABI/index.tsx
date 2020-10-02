@@ -32,14 +32,18 @@ const ContractABI = (): React.ReactElement => {
 
   React.useEffect(() => {
     const validateAndSetAbi = async () => {
-      if (!mustBeEthereumAddress(contractAddress) && !(await mustBeEthereumContractAddress(contractAddress))) {
+      const isEthereumAddress = mustBeEthereumAddress(contractAddress) === undefined
+      const isEthereumContractAddress = (await mustBeEthereumContractAddress(contractAddress)) === undefined
+
+      if (isEthereumAddress && isEthereumContractAddress) {
         const network = getNetwork()
         const source = getConfiguredSource()
         const abi = await source.getContractABI(contractAddress, network)
+        const isValidABI = hasUsefulMethods(abi) === undefined
 
         // this check may help in scenarios where the user first pastes the ABI,
         // and then sets a Proxy contract that has no useful methods
-        if (hasUsefulMethods(abi) === undefined) {
+        if (isValidABI) {
           setAbiValue.current(abi)
         }
       }
