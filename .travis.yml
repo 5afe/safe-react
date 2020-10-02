@@ -9,9 +9,6 @@ os:
 matrix:
   include:
     - env:
-        - REACT_APP_ENV='production'
-      if: tag IS present
-    - env:
         - REACT_APP_NETWORK='mainnet'
         - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
