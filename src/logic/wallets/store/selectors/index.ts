@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import { AppReduxState } from 'src/store'
 

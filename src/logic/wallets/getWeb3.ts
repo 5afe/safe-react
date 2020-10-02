@@ -3,7 +3,7 @@ import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 
 import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { NETWORK } from 'src/utils/constants'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'

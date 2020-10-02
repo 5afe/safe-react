@@ -4,7 +4,7 @@ import {
   ETHEREUM_NETWORK,
   NetworkSettings,
   SafeFeatures,
-} from 'src/config/networks/network'
+} from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'

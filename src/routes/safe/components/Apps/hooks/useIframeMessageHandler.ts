@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { getTxServiceUrl } from 'src/config/'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import {
   safeEthBalanceSelector,
   safeNameSelector,

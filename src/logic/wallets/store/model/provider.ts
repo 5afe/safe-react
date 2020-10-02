@@ -1,6 +1,6 @@
 import { Record, RecordOf } from 'immutable'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export type ProviderProps = {
   name: string

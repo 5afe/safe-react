@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import NetworkLabel from '../NetworkLabel'
 import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Col from 'src/components/layout/Col'
