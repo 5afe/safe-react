@@ -18,6 +18,7 @@ export enum ETHEREUM_NETWORK {
   ENERGY_WEB_CHAIN = 246,
   VOLTA = 73799,
   UNKNOWN = 0,
+  LOCAL = 4447,
 }
 
 export type NetworkSettings = {

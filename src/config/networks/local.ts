@@ -6,7 +6,7 @@ const baseConfig: EnvironmentSettings = {
   relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'http://localhost:3002/',
   gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
-  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3/',
+  rpcServiceUrl: 'http://localhost:4447/',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io/',
   networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
@@ -19,9 +19,9 @@ const local: NetworkConfig = {
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.RINKEBY,
+    id: ETHEREUM_NETWORK.LOCAL,
     color: '#E8673C',
-    label: 'Rinkeby',
+    label: 'LocalRPC',
     nativeCoin: {
       address: '0x000',
       name: 'Ether',

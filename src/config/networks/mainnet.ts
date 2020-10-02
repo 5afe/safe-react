@@ -18,7 +18,7 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
+      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com/',
     },
     production: {
       ...baseConfig,
