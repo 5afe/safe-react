@@ -15,6 +15,10 @@ import mainnetDevConfig from './development-mainnet'
 import mainnetProdConfig from './production-mainnet'
 import mainnetStagingConfig from './staging-mainnet'
 import { NETWORK } from 'src/utils/constants'
+import { NetworkConfig } from './networks/network'
+import mainnet from './networks/mainnet'
+import rinkeby from './networks/rinkeby'
+import xDai from './networks/xdai'
 
 const configuration = () => {
   if (process.env.NODE_ENV === 'test') {
@@ -95,4 +99,43 @@ export const buildSafeCreationTxUrl = (safeAddress) => {
   const base = getSafeCreationTxUri(address)
 
   return `${host}${base}`
+}
+
+// @todo (agustin) add missing configs
+export const getNetworkConfig = (network: ETHEREUM_NETWORK): NetworkConfig | null => {
+
+  switch(network) {
+    case ETHEREUM_NETWORK.MAINNET: {
+      return mainnet
+    }
+    case ETHEREUM_NETWORK.RINKEBY: {
+      return rinkeby
+    }
+    case ETHEREUM_NETWORK.KOVAN: {
+      break
+    }
+    case ETHEREUM_NETWORK.ROPSTEN: {
+      break
+    }
+    case ETHEREUM_NETWORK.GOERLI: {
+      break
+    }
+    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN: {
+      break
+    }
+    case ETHEREUM_NETWORK.MORDEN: {
+      break
+    }
+    case ETHEREUM_NETWORK.VOLTA: {
+      break
+    }
+    case ETHEREUM_NETWORK.XDAI: {
+      return xDai
+    }
+    case ETHEREUM_NETWORK.UNKNOWN: {
+      break
+    }
+  }
+
+  return null
 }

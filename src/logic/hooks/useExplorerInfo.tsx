@@ -1,6 +1,6 @@
 import { useSelector } from 'react-redux'
 import { providerSelector } from '../wallets/store/selectors'
-import { getNetworkConfig } from 'src/config/utils'
+import { getNetworkConfig } from 'src/config/index'
 
 export type BlockScanInfo = () => {
   alt?: string
