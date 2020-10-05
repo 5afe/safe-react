@@ -2,33 +2,12 @@ import { FORM_ERROR, Mutator, SubmissionErrors } from 'final-form'
 import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
 
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getNetwork } from 'src/config'
-import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export const NO_CONTRACT = 'no contract'
-
-export const abiExtractor = createDecorator({
-  field: 'contractAddress',
-  updates: {
-    abi: async (contractAddress) => {
-      if (
-        !contractAddress ||
-        mustBeEthereumAddress(contractAddress) ||
-        (await mustBeEthereumContractAddress(contractAddress))
-      ) {
-        return
-      }
-      const network = getNetwork()
-      const source = getConfiguredSource()
-      return source.getContractABI(contractAddress, network)
-    },
-  },
-})
 
 export const ensResolver = createDecorator({
   field: 'contractAddress',
@@ -40,12 +19,12 @@ export const ensResolver = createDecorator({
         if (resolvedAddress) {
           return resolvedAddress
         }
+
+        return contractAddress
       } catch (e) {
         console.error(e.message)
         return contractAddress
       }
-
-      return contractAddress
     },
   },
 })
@@ -70,6 +49,9 @@ export const formMutators: Record<string, Mutator<{ selectedMethod: { name: stri
   },
   setCallResults: (args, state, utils) => {
     utils.changeValue(state, 'callResults', () => args[0])
+  },
+  setAbiValue: (args, state, utils) => {
+    utils.changeValue(state, 'abi', () => args[0])
   },
 }
 
