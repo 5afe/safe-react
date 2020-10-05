@@ -5,7 +5,7 @@ import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { buildSafe } from 'src/logic/safe/store/reducer/safe'
 import { loadFromStorage } from 'src/utils/storage'
 
-import { addSafe } from './addSafe'
+import { addOrUpdateSafe } from './addOrUpdateSafe'
 
 const loadSafesFromStorage = () => async (dispatch: Dispatch): Promise<void> => {
   try {
@@ -13,7 +13,7 @@ const loadSafesFromStorage = () => async (dispatch: Dispatch): Promise<void> => 
 
     if (safes) {
       Object.values(safes).forEach((safeProps) => {
-        dispatch(addSafe(buildSafe(safeProps), true))
+        dispatch(addOrUpdateSafe(buildSafe(safeProps), true))
       })
     }
   } catch (err) {
