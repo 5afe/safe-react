@@ -19,7 +19,7 @@ import Header from './Header'
 import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
+import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
 
 const useStyles = makeStyles(styles)
@@ -92,7 +92,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
       <Hairline />
       <GnoForm
-        decorators={[abiExtractor, ensResolver]}
+        decorators={[ensResolver]}
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
