@@ -16,8 +16,8 @@ import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetwork } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
@@ -26,7 +26,7 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
+import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
@@ -55,7 +55,7 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetwork()
+const desiredNetwork = getNetworkId()
 
 const useStyles = makeStyles(notificationStyles)
 

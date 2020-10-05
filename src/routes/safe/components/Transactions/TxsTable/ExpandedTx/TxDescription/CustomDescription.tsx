@@ -1,7 +1,6 @@
 import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -24,7 +23,7 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { getNetwork } from 'src/config'
+import { getNetworkName } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -86,13 +85,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo
-            hash={tx.to}
-            showIdenticon
-            showCopyBtn
-            showEtherscanBtn
-            network={ETHEREUM_NETWORK[getNetwork()]}
-          />
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetworkName()} />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -196,7 +189,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           showIdenticon
           showCopyBtn
           showEtherscanBtn
-          network={ETHEREUM_NETWORK[getNetwork()]}
+          network={getNetworkName()}
         />
       </Block>
 

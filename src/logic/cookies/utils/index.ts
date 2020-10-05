@@ -1,9 +1,8 @@
 import Cookies from 'js-cookie'
 
-import { getNetwork } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { getNetworkName } from 'src/config'
 
-const PREFIX = `v1_${ETHEREUM_NETWORK[getNetwork()]}`
+const PREFIX = `v1_${getNetworkName()}`
 
 export const loadFromCookie = async (key) => {
   try {

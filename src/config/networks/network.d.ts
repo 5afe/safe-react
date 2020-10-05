@@ -1,5 +1,3 @@
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
-
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
 type Token = {
   address: string
@@ -9,7 +7,22 @@ type Token = {
   logoUri?: string
 }
 
-type NetworkSettings = {
+export enum ETHEREUM_NETWORK {
+  MAINNET = 1,
+  MORDEN = 2,
+  ROPSTEN = 3,
+  RINKEBY = 4,
+  GOERLI = 5,
+  KOVAN = 42,
+  XDAI = 100,
+  ENERGY_WEB_CHAIN = 246,
+  VOLTA = 73799,
+  UNKNOWN = 0,
+  LOCAL = 4447,
+}
+
+export type NetworkSettings = {
+  // TODO: id now seems to be unnecessary
   id: ETHEREUM_NETWORK,
   color: string,
   label: string,
@@ -19,7 +32,7 @@ type NetworkSettings = {
 // something around this to display or not some critical sections in the app, depending on the network support
 // I listed the ones that may conflict with the network.
 // If non is present, all the sections are available.
-type SafeFeatures = {
+export type SafeFeatures = {
   safeApps?: boolean,
   collectibles?: boolean,
   contractInteraction?: boolean

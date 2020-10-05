@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import styled, { css } from 'styled-components'
 
 import ManageApps from './components/ManageApps'

@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getAllTransactionsUriFrom, getTxServiceHost } from 'src/config'
+import { getAllTransactionsUriFrom, getTxServiceUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Transaction } from '../../models/types/transactions.d'
 
@@ -21,7 +21,7 @@ type TransactionDTO = {
 }
 
 const getAllTransactionsUri = (safeAddress: string): string => {
-  const host = getTxServiceHost()
+  const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
   const base = getAllTransactionsUriFrom(address)
 
