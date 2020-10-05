@@ -14,7 +14,7 @@ const xDai: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.XDAI,
-    color: '#48A8A6',
+    backgroundColor: '#48A8A6',
     label: 'xDai STAKE',
     nativeCoin: {
       address: '0x000',

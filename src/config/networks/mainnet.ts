@@ -28,7 +28,7 @@ const mainnet: NetworkConfig = {
   },
   network: {
     id: ETHEREUM_NETWORK.MAINNET,
-    color: '#E8E7E6',
+    backgroundColor: '#E8E7E6',
     label: 'Mainnet',
     nativeCoin: {
       address: '0x000',
