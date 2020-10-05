@@ -61,7 +61,8 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.{.test.*}",
       "!src/**/test/**/*",
-      "!src/**/assets/**"
+      "!src/**/assets/**",
+      "!src/config/**/*"
     ]
   },
   "productName": "Safe Multisig",
