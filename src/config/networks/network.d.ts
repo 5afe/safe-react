@@ -25,6 +25,7 @@ export type NetworkSettings = {
   // TODO: id now seems to be unnecessary
   id: ETHEREUM_NETWORK,
   backgroundColor: string,
+  textColor: string,
   label: string,
   nativeCoin: Token,
 }
