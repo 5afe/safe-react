@@ -5,7 +5,7 @@ import TextareaField from 'src/components/forms/TextareaField'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
@@ -36,7 +36,7 @@ const ContractABI = (): React.ReactElement => {
       const isEthereumContractAddress = (await mustBeEthereumContractAddress(contractAddress)) === undefined
 
       if (isEthereumAddress && isEthereumContractAddress) {
-        const network = getNetwork()
+        const network = getNetworkId()
         const source = getConfiguredSource()
         const abi = await source.getContractABI(contractAddress, network)
         const isValidABI = hasUsefulMethods(abi) === undefined
