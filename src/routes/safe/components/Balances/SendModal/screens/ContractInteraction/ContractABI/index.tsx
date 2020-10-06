@@ -5,8 +5,7 @@ import TextareaField from 'src/components/forms/TextareaField'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getNetworkId } from 'src/config'
-import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
+import { getContractABI } from 'src/config'
 import { extractUsefulMethods } from 'src/logic/contractInteraction/sources/ABIService'
 
 export const NO_DATA = 'no data'
@@ -36,9 +35,7 @@ const ContractABI = (): React.ReactElement => {
       const isEthereumContractAddress = (await mustBeEthereumContractAddress(contractAddress)) === undefined
 
       if (isEthereumAddress && isEthereumContractAddress) {
-        const network = getNetworkId()
-        const source = getConfiguredSource()
-        const abi = await source.getContractABI(contractAddress, network)
+        const abi = await getContractABI(contractAddress)
         const isValidABI = hasUsefulMethods(abi) === undefined
 
         // this check may help in scenarios where the user first pastes the ABI,

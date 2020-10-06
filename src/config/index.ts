@@ -6,8 +6,9 @@ import {
   SafeFeatures,
 } from 'src/config/networks/network.d'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV } from 'src/utils/constants'
+import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV, ETHERSCAN_API_KEY } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
+import memoize from 'lodash.memoize'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
@@ -94,6 +95,59 @@ export const buildSafeCreationTxUrl = (safeAddress: string) => {
   const base = getSafeCreationTxUri(address)
 
   return `${host}${base}`
+}
+
+const fetchContractABI = memoize(
+  async (url: string, contractAddress: string, apiKey?: string) => {
+    let params: any = {
+      module: 'contract',
+      action: 'getAbi',
+      address: contractAddress,
+    }
+
+    if (apiKey) {
+      params = { ...params, apiKey }
+    }
+
+    const response = await fetch(`${url}?${new URLSearchParams(params)}`)
+
+    if (!response.ok) {
+      return { status: 0, result: [] }
+    }
+
+    return response.json()
+  },
+  (url, contractAddress) => `${url}_${contractAddress}`,
+)
+
+const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined=> {
+  switch (networkExplorerName.toLowerCase()) {
+    case 'etherscan': {
+      return  ETHERSCAN_API_KEY
+    }
+    default: {
+      return undefined
+    }
+  }
+}
+
+export const getContractABI = async (contractAddress: string)  =>{
+  const { apiUrl, name } = getNetworkExplorerInfo()
+
+  const apiKey = getNetworkExplorerApiKey(name)
+
+  try {
+    const { result, status } = await fetchContractABI(apiUrl, contractAddress, apiKey)
+
+    if (status === '0') {
+      return []
+    }
+
+    return result
+  } catch (e) {
+    console.error('Failed to retrieve ABI', e)
+    return undefined
+  }
 }
 
 export type BlockScanInfo = () => {
