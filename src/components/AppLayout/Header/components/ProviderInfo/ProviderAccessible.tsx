@@ -8,7 +8,6 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
-import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles({
   network: {
@@ -71,7 +70,6 @@ interface ProviderInfoProps {
 const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const addressColor = connected ? 'text' : 'warning'
-  const explorerUrl = getExplorerInfo(userAddress)
   return (
     <>
       {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
@@ -96,7 +94,6 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
               identiconSize="xs"
               textColor={addressColor}
               textSize="sm"
-              explorerUrl={explorerUrl}
             />
           ) : (
             <Text size="md" color={addressColor}>
