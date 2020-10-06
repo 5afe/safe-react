@@ -1,4 +1,7 @@
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { default as networks } from 'src/config/networks'
+
+const { mainnet, xdai } = networks
 
 describe('Config Services', () => {
   beforeEach(() => {
@@ -41,8 +44,8 @@ describe('Config Services', () => {
       NETWORK: 'MAINNET',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/'
-    const SAFE_APPS_URL = 'https://safe-apps.dev.gnosisdev.com/'
+    const TX_SERVICE_URL = mainnet.environment.dev?.txServiceUrl
+    const SAFE_APPS_URL = mainnet.environment.dev?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
@@ -60,8 +63,8 @@ describe('Config Services', () => {
       NETWORK: 'MAINNET',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1/'
-    const SAFE_APPS_URL = 'https://safe-apps.staging.gnosisdev.com/'
+    const TX_SERVICE_URL = mainnet.environment.staging?.txServiceUrl
+    const SAFE_APPS_URL = mainnet.environment.staging?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
@@ -80,8 +83,8 @@ describe('Config Services', () => {
       APP_ENV: 'production'
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = 'https://safe-transaction.mainnet.gnosis.io/api/v1/'
-    const SAFE_APPS_URL = 'https://apps.gnosis-safe.io/'
+    const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
+    const SAFE_APPS_URL = mainnet.environment.production.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
@@ -100,8 +103,8 @@ describe('Config Services', () => {
       APP_ENV: 'production'
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = 'https://safe-transaction.xdai.gnosis.io/api/v1/'
-    const SAFE_APPS_URL = 'https://apps.gnosis-safe.io/'
+    const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
+    const SAFE_APPS_URL = xdai.environment.production.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()
@@ -119,8 +122,8 @@ describe('Config Services', () => {
       NETWORK: 'XDAI',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = 'https://safe-transaction.xdai.gnosis.io/api/v1/'
-    const SAFE_APPS_URL = 'https://apps.gnosis-safe.io/'
+    const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
+    const SAFE_APPS_URL = xdai.environment.production.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()

@@ -1,5 +1,5 @@
 import makeSafe from 'src/logic/safe/store/models/safe'
-import { buildOwnersFrom } from 'src/logic/safe/store/actions/addSafe'
+import { buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
   FIELD_NAME,
   FIELD_CONFIRMATIONS,
