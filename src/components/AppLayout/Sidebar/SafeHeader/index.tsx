@@ -8,11 +8,11 @@ import {
   Identicon,
   Button,
   CopyToClipboardBtn,
-  EtherscanButton,
+  ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
 
-import { getNetworkName } from 'src/config'
 import FlexSpacer from 'src/components/FlexSpacer'
+import { getExplorerInfo } from 'src/config'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -110,7 +110,7 @@ const SafeHeader = ({
       </Container>
     )
   }
-
+  const explorerUrl = getExplorerInfo(address)
   return (
     <Container>
       <IdenticonContainer>
@@ -128,7 +128,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton value={address} network={getNetworkName()} />
+        <ExplorerButton explorerUrl={explorerUrl} />
       </IconContainer>
 
       {granted ? null : (

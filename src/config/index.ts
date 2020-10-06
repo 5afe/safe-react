@@ -149,3 +149,23 @@ export const getContractABI = async (contractAddress: string)  =>{
     return undefined
   }
 }
+
+export type BlockScanInfo = () => {
+  alt: string
+  url: string
+}
+
+export const getExplorerInfo = (hash: string): BlockScanInfo => {
+  const { name, url } = getNetworkExplorerInfo()
+
+  const blockScanInfo = () => {
+    const type = hash.length > 42 ? 'tx' : 'address'
+
+    return  {
+      url: `${url}${type}/${hash}`,
+      alt:  name || '',
+    }
+  }
+
+  return blockScanInfo
+}
