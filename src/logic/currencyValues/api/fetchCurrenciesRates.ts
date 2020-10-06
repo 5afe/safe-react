@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { getExchangeRatesUrl } from 'src/config'
+import { EXCHANGE_RATE_URL } from 'src/utils/constants'
 import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
 import fetchTokenCurrenciesBalances from './fetchTokenCurrenciesBalances'
 import BigNumber from 'bignumber.js'
@@ -25,7 +25,7 @@ const fetchCurrenciesRates = async (
   }
 
   try {
-    const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
+    const url = `${EXCHANGE_RATE_URL}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
     const result = await axios.get(url)
     if (result?.data) {
       const { rates } = result.data

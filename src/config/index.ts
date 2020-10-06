@@ -1,141 +1,97 @@
-import { checksumAddress } from 'src/utils/checksumAddress';
-import { ensureOnce } from 'src/utils/singleton'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import networks from 'src/config/networks'
 import {
-  RELAY_API_URL,
-  SIGNATURES_VIA_METAMASK,
-  TX_SERVICE_HOST,
-  SAFE_APPS_URL
-} from 'src/config/names'
-import devConfig from './development'
-import testConfig from './testing'
-import stagingConfig from './staging'
-import prodConfig from './production'
-import mainnetDevConfig from './development-mainnet'
-import mainnetProdConfig from './production-mainnet'
-import mainnetStagingConfig from './staging-mainnet'
-import { NETWORK } from 'src/utils/constants'
-import { NetworkConfig } from './networks/network'
-import mainnet from './networks/mainnet'
-import rinkeby from './networks/rinkeby'
-import xDai from './networks/xdai'
+  EnvironmentSettings,
+  ETHEREUM_NETWORK,
+  NetworkSettings,
+  SafeFeatures,
+} from 'src/config/networks/network.d'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV } from 'src/utils/constants'
+import { ensureOnce } from 'src/utils/singleton'
 
-const configuration = () => {
-  if (process.env.NODE_ENV === 'test') {
-    return testConfig
-  }
+export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
-  if (process.env.NODE_ENV === 'production') {
-    if (process.env.REACT_APP_NETWORK === 'mainnet') {
-      return process.env.REACT_APP_ENV === 'production'
-        ? mainnetProdConfig
-        : mainnetStagingConfig
+export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
+
+const getCurrentEnvironment = (): string => {
+  switch (NODE_ENV) {
+    case 'test': {
+      return 'test'
     }
+    case 'production': {
+      return APP_ENV === 'production' ? 'production' : 'staging'
+    }
+    default: {
+      return 'dev'
+    }
+  }
+}
 
-    return process.env.REACT_APP_ENV === 'production'
-      ? prodConfig
-      : stagingConfig
+type NetworkSpecificConfiguration = EnvironmentSettings & {
+  network: NetworkSettings,
+  features?: SafeFeatures,
+}
+
+const configuration = (): NetworkSpecificConfiguration => {
+  const currentEnvironment = getCurrentEnvironment()
+
+  // special case for test environment
+  if (currentEnvironment === 'test') {
+    const configFile = networks.local
+
+    return {
+      ...configFile.environment.production,
+      network: configFile.network,
+      features: configFile.features,
+    }
   }
 
-  return process.env.REACT_APP_NETWORK === 'mainnet'
-    ? mainnetDevConfig
-    : devConfig
+  // lookup the config file based on the network specified in the NETWORK variable
+  const configFile = networks[getNetworkName().toLowerCase()]
+  // defaults to 'production' as it's the only environment that is required for the network configs
+  const networkBaseConfig = configFile.environment[currentEnvironment] ?? configFile.environment.production
+
+  return {
+    ...networkBaseConfig,
+    network: configFile.network,
+    features: configFile.features,
+  }
 }
 
-export const getNetwork = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY
+const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-const getConfig = ensureOnce(configuration)
+export const getTxServiceUrl = (): string => getConfig()?.txServiceUrl
 
-export const getTxServiceHost = () => {
-  const config = getConfig()
+export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
-  return config[TX_SERVICE_HOST]
-}
+export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
 
-export const getTxServiceUriFrom = (safeAddress) =>
-  `safes/${safeAddress}/transactions/`
+export const getRpcServiceUrl = (): string => getConfig()?.rpcServiceUrl
 
-export const getIncomingTxServiceUriTo = (safeAddress) =>
-  `safes/${safeAddress}/incoming-transfers/`
+export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
+  name: getConfig()?.networkExplorerName,
+  url: getConfig()?.networkExplorerUrl,
+  apiUrl: getConfig()?.networkExplorerApiUrl,
+})
 
-export const getAllTransactionsUriFrom = (safeAddress: string): string =>
-  `safes/${safeAddress}/all-transactions/`
+export const getNetworkConfigFeatures = (): SafeFeatures | undefined => getConfig()?.features
 
-export const getSafeCreationTxUri = (safeAddress) => `safes/${safeAddress}/creation/`
+export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 
-export const getRelayUrl = () => getConfig()[RELAY_API_URL]
+export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
 
-export const signaturesViaMetamask = () => {
-  const config = getConfig()
+export const getIncomingTxServiceUriTo = (safeAddress: string) => `safes/${safeAddress}/incoming-transfers/`
 
-  return config[SIGNATURES_VIA_METAMASK]
-}
+export const getAllTransactionsUriFrom = (safeAddress: string) => `safes/${safeAddress}/all-transactions/`
 
-export const getGnosisSafeAppsUrl = () => {
-  const config = getConfig()
+export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddress}/creation/`
 
-  return config[SAFE_APPS_URL]
-}
+export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkName()]
 
-export const getGoogleAnalyticsTrackingID = () =>
-  getNetwork() === ETHEREUM_NETWORK.MAINNET
-    ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET
-    : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY
-
-export const getIntercomId = () =>
-  process.env.REACT_APP_ENV === 'production'
-    ? process.env.REACT_APP_INTERCOM_ID
-    : 'plssl1fl'
-
-export const getExchangeRatesUrl = () => 'https://api.exchangeratesapi.io/latest'
-
-export const getExchangeRatesUrlFallback = () => 'https://api.coinbase.com/v2/exchange-rates'
-
-export const getSafeLastVersion = () => process.env.REACT_APP_LATEST_SAFE_VERSION  || '1.1.1'
-
-export const buildSafeCreationTxUrl = (safeAddress) => {
-  const host = getTxServiceHost()
+export const buildSafeCreationTxUrl = (safeAddress: string) => {
+  const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
   const base = getSafeCreationTxUri(address)
 
   return `${host}${base}`
-}
-
-// @todo (agustin) add missing configs
-export const getNetworkConfig = (network: ETHEREUM_NETWORK): NetworkConfig | null => {
-
-  switch(network) {
-    case ETHEREUM_NETWORK.MAINNET: {
-      return mainnet
-    }
-    case ETHEREUM_NETWORK.RINKEBY: {
-      return rinkeby
-    }
-    case ETHEREUM_NETWORK.KOVAN: {
-      break
-    }
-    case ETHEREUM_NETWORK.ROPSTEN: {
-      break
-    }
-    case ETHEREUM_NETWORK.GOERLI: {
-      break
-    }
-    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN: {
-      break
-    }
-    case ETHEREUM_NETWORK.MORDEN: {
-      break
-    }
-    case ETHEREUM_NETWORK.VOLTA: {
-      break
-    }
-    case ETHEREUM_NETWORK.XDAI: {
-      return xDai
-    }
-    case ETHEREUM_NETWORK.UNKNOWN: {
-      break
-    }
-  }
-
-  return null
 }

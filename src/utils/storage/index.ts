@@ -1,7 +1,6 @@
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
-import { getNetwork } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { getNetworkName } from 'src/config'
 
 // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22
@@ -9,7 +8,7 @@ import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
 const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
-const PREFIX = `v2_${ETHEREUM_NETWORK[getNetwork()]}`
+const PREFIX = `v2_${getNetworkName()}`
 
 export const loadFromStorage = async <T = unknown>(key: string): Promise<T | undefined> => {
   try {

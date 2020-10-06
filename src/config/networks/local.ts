@@ -2,34 +2,26 @@ import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  txServiceUrl: 'https://safe-transaction.staging.gnosisdev.com/api/v1/',
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com/',
+  txServiceUrl: 'http://localhost:8000/api/v1/',
+  relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
+  safeAppsUrl: 'http://localhost:3002/',
   gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
-  rpcServiceUrl: 'https://rinkeby.infura.io:443/v3/',
+  rpcServiceUrl: 'http://localhost:4447/',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io/',
   networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
 }
 
-const rinkeby: NetworkConfig = {
+const local: NetworkConfig = {
   environment: {
-    dev: {
-      ...baseConfig,
-    },
-    staging: {
-      ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
-    },
     production: {
       ...baseConfig,
-      txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1/',
-      safeAppsUrl: 'https://apps.gnosis-safe.io/',
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.RINKEBY,
+    id: ETHEREUM_NETWORK.LOCAL,
     color: '#E8673C',
-    label: 'Rinkeby',
+    label: 'LocalRPC',
     nativeCoin: {
       address: '0x000',
       name: 'Ether',
@@ -40,4 +32,4 @@ const rinkeby: NetworkConfig = {
   },
 }
 
-export default rinkeby
+export default local

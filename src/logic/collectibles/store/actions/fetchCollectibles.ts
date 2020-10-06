@@ -1,13 +1,13 @@
 import { batch } from 'react-redux'
 
-import { getNetwork } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { getConfiguredSource } from 'src/logic/collectibles/sources'
 import { addNftAssets, addNftTokens } from 'src/logic/collectibles/store/actions/addCollectibles'
 import { Dispatch } from 'redux'
 
 const fetchCollectibles = (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
   try {
-    const network = getNetwork()
+    const network = getNetworkId()
     const source = getConfiguredSource()
     const collectibles = await source.fetchAllUserCollectiblesByCategoryAsync(safeAddress, network)
 

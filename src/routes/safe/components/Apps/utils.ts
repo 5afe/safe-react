@@ -3,7 +3,7 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config/index'
+import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 

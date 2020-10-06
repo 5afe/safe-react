@@ -14,7 +14,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
 
 const dot = require('../../assets/dotRinkeby.svg')

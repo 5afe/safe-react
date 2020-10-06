@@ -1,26 +1,13 @@
-import { NETWORK } from 'src/utils/constants'
 import Web3 from 'web3'
+import { provider as Provider } from 'web3-core'
+import { ContentHash } from 'web3-eth-ens'
 
+import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { NETWORK } from 'src/utils/constants'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
-
-import { getNetwork } from 'src/config'
-import { ContentHash } from 'web3-eth-ens'
-import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
-
-export enum ETHEREUM_NETWORK {
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  XDAI = 100,
-  ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
-}
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -51,7 +38,7 @@ export const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes,
   }etherscan.io/${type}/${value}`
 
 export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
-  const network = getNetwork()
+  const network = getNetworkId()
 
   switch (network) {
     case ETHEREUM_NETWORK.MAINNET:

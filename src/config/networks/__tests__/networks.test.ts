@@ -1,25 +1,39 @@
 import fs from 'fs'
 
-import { NetworkConfig } from 'src/config/networks/network.d'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import networks from 'src/config/networks'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isValidURL } from 'src/utils/url'
 
 describe('Networks config files test', () => {
+  const environments = ['dev', 'staging', 'production']
+
   const NETWORKS_PATH = 'src/config/networks/'
   const configFiles = fs.readdirSync(NETWORKS_PATH)
   const networksFileNames = configFiles
     .filter((file) => !fs.lstatSync(`${NETWORKS_PATH}${file}`).isDirectory())
     .filter((file) => {
-      const [, extension] = file.split('.')
-      return extension === 'ts'
+      const [fileName, extension] = file.split('.')
+      return extension === 'ts' && fileName !== 'index'
     })
-  const environments = ['dev', 'staging', 'production']
+    .map((file) => file.split('.')[0])
+
+  it(`should verify that the network file is exported in the networks/index.ts file`, () => {
+    networksFileNames.forEach((networkFileName) => {
+      const isValid = !!networks[networkFileName]
+
+      if (!isValid) {
+        console.log(`Network file "${networkFileName}" is not exported in "networks/index.ts"`)
+      }
+
+      expect(isValid).toBeTruthy()
+    })
+  })
 
   environments.forEach((environment) => {
     networksFileNames.forEach((networkFileName) => {
-      it(`should validate "${environment}" environment URIs for ${networkFileName} config`, async () => {
+      it(`should validate "${environment}" environment URIs for ${networkFileName} config`, () => {
         // Given
-        const { default: networkConfig } = await import(`${NETWORKS_PATH}${networkFileName}`)
+        const networkConfig = networks[networkFileName]
 
         // When
         const networkConfigElement = networkConfig.environment[environment]
@@ -49,9 +63,9 @@ describe('Networks config files test', () => {
   })
 
   networksFileNames.forEach((networkFileName) => {
-    it(`should have a valid 'decimal' value for 'nativeToken'`, async() => {
+    it(`should have a valid 'decimal' value for 'nativeToken'`, () => {
       // Given
-      const { default: networkConfig }: { default: NetworkConfig } = await import(`${NETWORKS_PATH}${networkFileName}`)
+      const networkConfig = networks[networkFileName]
 
       // When
       const { decimals } = networkConfig.network.nativeCoin
@@ -68,9 +82,9 @@ describe('Networks config files test', () => {
   })
 
   networksFileNames.forEach((networkFileName) => {
-    it(`should have one of 'ETHEREUM_NETWORK' values for 'network.id'`, async() => {
+    it(`should have one of 'ETHEREUM_NETWORK' values for 'network.id'`, () => {
       // Given
-      const { default: networkConfig }: { default: NetworkConfig } = await import(`${NETWORKS_PATH}${networkFileName}`)
+      const networkConfig = networks[networkFileName]
 
       // When
       const { id } = networkConfig.network
@@ -87,9 +101,9 @@ describe('Networks config files test', () => {
   })
 
   networksFileNames.forEach((networkFileName) => {
-    it(`should have a valid CSS color defined for 'network.color'`, async() => {
+    it(`should have a valid CSS color defined for 'network.color'`, () => {
       // Given
-      const { default: networkConfig }: { default: NetworkConfig } = await import(`${NETWORKS_PATH}${networkFileName}`)
+      const networkConfig = networks[networkFileName]
 
       // When
       const { color } = networkConfig.network
