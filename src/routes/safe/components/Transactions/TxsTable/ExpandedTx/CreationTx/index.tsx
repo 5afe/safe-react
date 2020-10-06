@@ -31,7 +31,7 @@ type Props = {
 
 export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
-  const explorerUrl = getExplorerInfo(tx?.creator)
+  const explorerUrl = tx?.creator ? getExplorerInfo(tx.creator) : null
   const scanBlockFactoryAddressUrl = getExplorerInfo(tx?.factoryAddress)
   const scanBlockMasterCopyUrl = getExplorerInfo(tx?.masterCopy)
   if (!tx) {

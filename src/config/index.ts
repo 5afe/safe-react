@@ -101,22 +101,16 @@ export type BlockScanInfo = () => {
   url: string
 }
 
-export const getExplorerInfo = (hash?: string | null): BlockScanInfo => {
+export const getExplorerInfo = (hash: string): BlockScanInfo => {
   const { name, url } = getNetworkExplorerInfo()
 
   const blockScanInfo = () => {
-    const result = {
-      url: '',
-      alt: '',
-    }
-    if (!hash) {
-      return result
-    }
     const type = hash.length > 42 ? 'tx' : 'address'
-    result.url = `${url}${type}/${hash}`
-    result.alt = name || ''
 
-    return result
+    return  {
+      url: `${url}${type}/${hash}`,
+      alt:  name || '',
+    }
   }
 
   return blockScanInfo
