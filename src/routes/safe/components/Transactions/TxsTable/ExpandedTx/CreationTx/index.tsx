@@ -48,22 +48,12 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
       </Paragraph>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Creator:</Bold>
-        {tx.creator ? (
-          <EthHashInfo hash={tx.creator} shortenHash={4} showCopyBtn explorerUrl={explorerUrl} showScanBlocksButton />
-        ) : (
-          'n/a'
-        )}
+        {tx.creator ? <EthHashInfo hash={tx.creator} shortenHash={4} showCopyBtn explorerUrl={explorerUrl} /> : 'n/a'}
       </Block>
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Factory:</Bold>
         {tx.factoryAddress ? (
-          <EthHashInfo
-            hash={tx.factoryAddress}
-            shortenHash={4}
-            showCopyBtn
-            explorerUrl={scanBlockFactoryAddressUrl}
-            showScanBlocksButton
-          />
+          <EthHashInfo hash={tx.factoryAddress} shortenHash={4} showCopyBtn explorerUrl={scanBlockFactoryAddressUrl} />
         ) : (
           'n/a'
         )}
@@ -71,13 +61,7 @@ export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
       <Block align="left" className={classes.txData}>
         <Bold className={classes.txHash}>Mastercopy:</Bold>
         {tx.masterCopy ? (
-          <EthHashInfo
-            hash={tx.masterCopy}
-            shortenHash={4}
-            showCopyBtn
-            explorerUrl={scanBlockMasterCopyUrl}
-            showScanBlocksButton
-          />
+          <EthHashInfo hash={tx.masterCopy} shortenHash={4} showCopyBtn explorerUrl={scanBlockMasterCopyUrl} />
         ) : (
           'n/a'
         )}

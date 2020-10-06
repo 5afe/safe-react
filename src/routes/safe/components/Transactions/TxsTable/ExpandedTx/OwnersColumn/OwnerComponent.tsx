@@ -182,7 +182,6 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
         shortenHash={4}
         showIdenticon
         showCopyBtn
-        showScanBlocksButton
         explorerUrl={explorerUrl}
       />
       <Block className={classes.spacer} />

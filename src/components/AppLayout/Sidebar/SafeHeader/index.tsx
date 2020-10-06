@@ -8,7 +8,7 @@ import {
   Identicon,
   Button,
   CopyToClipboardBtn,
-  ScanBlockButton,
+  ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
 
 import FlexSpacer from 'src/components/FlexSpacer'
@@ -129,7 +129,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <ScanBlockButton explorerUrl={explorerUrl} />
+        <ExplorerButton explorerUrl={explorerUrl} />
       </IconContainer>
 
       {granted ? null : (

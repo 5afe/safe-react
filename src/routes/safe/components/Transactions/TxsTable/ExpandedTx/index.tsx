@@ -70,13 +70,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <EthHashInfo
-                    hash={tx.executionTxHash}
-                    shortenHash={4}
-                    showCopyBtn
-                    explorerUrl={explorerUrl}
-                    showScanBlocksButton
-                  />
+                  <EthHashInfo hash={tx.executionTxHash} shortenHash={4} showCopyBtn explorerUrl={explorerUrl} />
                 ) : (
                   'n/a'
                 )}

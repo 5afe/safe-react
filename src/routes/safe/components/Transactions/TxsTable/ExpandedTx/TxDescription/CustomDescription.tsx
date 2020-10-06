@@ -87,7 +87,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} showScanBlocksButton />
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -191,7 +191,6 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           showIdenticon
           showCopyBtn
           explorerUrl={explorerUrl}
-          showScanBlocksButton
         />
       </Block>
 

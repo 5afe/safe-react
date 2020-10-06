@@ -106,13 +106,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo
-              hash={userAddress}
-              showCopyBtn
-              explorerUrl={explorerUrl}
-              shortenHash={4}
-              showScanBlocksButton
-            />
+            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
           ) : (
             'Address not available'
           )}
