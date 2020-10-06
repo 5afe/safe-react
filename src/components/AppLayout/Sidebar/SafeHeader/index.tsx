@@ -8,7 +8,7 @@ import {
   Identicon,
   Button,
   CopyToClipboardBtn,
-  EtherscanButton,
+  ScanBlockButton,
 } from '@gnosis.pm/safe-react-components'
 
 import FlexSpacer from 'src/components/FlexSpacer'
@@ -97,7 +97,7 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
-  const scanBlockUrl = getExplorerInfo(address)
+  const explorerUrl = getExplorerInfo(address)
   if (!address) {
     return (
       <Container>
@@ -129,7 +129,7 @@ const SafeHeader = ({
           <Icon size="sm" type="qrCode" tooltip="Show QR" />
         </UnStyledButton>
         <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton scanBlockUrl={scanBlockUrl} />
+        <ScanBlockButton explorerUrl={explorerUrl} />
       </IconContainer>
 
       {granted ? null : (

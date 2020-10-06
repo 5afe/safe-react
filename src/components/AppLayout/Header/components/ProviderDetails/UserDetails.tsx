@@ -93,7 +93,7 @@ const styles = () => ({
 const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
   const status = connected ? 'Connected' : 'Connection error'
   const color = connected ? 'primary' : 'warning'
-  const scanBlockUrl = getExplorerInfo(userAddress)
+  const explorerUrl = getExplorerInfo(userAddress)
   return (
     <>
       <Block className={classes.container}>
@@ -109,7 +109,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
             <EthHashInfo
               hash={userAddress}
               showCopyBtn
-              scanBlockUrl={scanBlockUrl}
+              explorerUrl={explorerUrl}
               shortenHash={4}
               showScanBlocksButton
             />

@@ -77,7 +77,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
-  const scanBlockUrl = getExplorerInfo(tx.to)
+  const explorerUrl = getExplorerInfo(tx.to)
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -87,7 +87,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn scanBlockUrl={scanBlockUrl} showScanBlocksButton />
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} showScanBlocksButton />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -179,7 +179,7 @@ interface GenericCustomDataProps {
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
-  const scanBlockUrl = getExplorerInfo(recipient)
+  const explorerUrl = getExplorerInfo(recipient)
   return (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
@@ -190,7 +190,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           name={recipientName === 'UNKNOWN' ? undefined : recipientName}
           showIdenticon
           showCopyBtn
-          scanBlockUrl={scanBlockUrl}
+          explorerUrl={explorerUrl}
           showScanBlocksButton
         />
       </Block>

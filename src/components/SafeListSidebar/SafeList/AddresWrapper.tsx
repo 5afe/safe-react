@@ -52,10 +52,10 @@ type Props = {
 export const AddressWrapper = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { safe, defaultSafe, setDefaultSafe } = props
-  const scanBlockUrl = getExplorerInfo(safe.address)
+  const explorerUrl = getExplorerInfo(safe.address)
   return (
     <div className={classes.wrapper}>
-      <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} scanBlockUrl={scanBlockUrl} />
+      <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} explorerUrl={explorerUrl} />
 
       <div className={classes.addressDetails}>
         <Text size="xl">{`${formatAmount(safe.ethBalance)} ETH`}</Text>

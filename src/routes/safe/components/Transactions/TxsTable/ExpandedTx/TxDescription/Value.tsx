@@ -50,13 +50,13 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
-  const scanBlockUrl = getExplorerInfo(props.value as string)
+  const explorerUrl = getExplorerInfo(props.value as string)
   if (isAddress(type)) {
     return (
       <EthHashInfo
         hash={props.value as string}
         showCopyBtn
-        scanBlockUrl={scanBlockUrl}
+        explorerUrl={explorerUrl}
         shortenHash={4}
         showScanBlocksButton
       />

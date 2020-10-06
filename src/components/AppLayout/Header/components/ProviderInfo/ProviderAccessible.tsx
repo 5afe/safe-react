@@ -71,7 +71,7 @@ interface ProviderInfoProps {
 const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const addressColor = connected ? 'text' : 'warning'
-  const scanBlockUrl = getExplorerInfo(userAddress)
+  const explorerUrl = getExplorerInfo(userAddress)
   return (
     <>
       {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
@@ -96,7 +96,7 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
               identiconSize="xs"
               textColor={addressColor}
               textSize="sm"
-              scanBlockUrl={scanBlockUrl}
+              explorerUrl={explorerUrl}
             />
           ) : (
             <Text size="md" color={addressColor}>

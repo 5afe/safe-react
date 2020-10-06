@@ -163,7 +163,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </>
     )
   }
-  const scanBlockUrl = getExplorerInfo(owner)
+  const explorerUrl = getExplorerInfo(owner)
   return (
     <Block className={classes.container}>
       <div
@@ -183,7 +183,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
         showIdenticon
         showCopyBtn
         showScanBlocksButton
-        scanBlockUrl={scanBlockUrl}
+        explorerUrl={explorerUrl}
       />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}

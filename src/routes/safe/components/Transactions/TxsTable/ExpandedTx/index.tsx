@@ -59,7 +59,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     }
   }
 
-  const scanBlockUrl = getExplorerInfo(tx.executionTxHash)
+  const explorerUrl = getExplorerInfo(tx.executionTxHash)
 
   return (
     <>
@@ -74,7 +74,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
                     hash={tx.executionTxHash}
                     shortenHash={4}
                     showCopyBtn
-                    scanBlockUrl={scanBlockUrl}
+                    explorerUrl={explorerUrl}
                     showScanBlocksButton
                   />
                 ) : (
