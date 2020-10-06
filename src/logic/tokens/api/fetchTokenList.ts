@@ -1,9 +1,10 @@
 import axios from 'axios'
 
-import { getRelayUrl } from 'src/config/index'
+import { getTxServiceUrl } from 'src/config/index'
 
 const fetchTokenList = () => {
-  const apiUrl = getRelayUrl()
+  const apiUrl = getTxServiceUrl()
+
   const url = `${apiUrl}tokens/`
 
   return axios.get(url, {
