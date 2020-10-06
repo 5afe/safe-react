@@ -4,10 +4,10 @@ import { ContentHash } from 'web3-eth-ens'
 
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { NETWORK } from 'src/utils/constants'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
+import { NODE_ENV, NETWORK, INFURA_TOKEN } from 'src/utils/constants'
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -55,9 +55,7 @@ export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
 }
 
 export const getInfuraUrl = (network: ETHEREUM_NETWORK): string =>
-  `https://${network === ETHEREUM_NETWORK.MAINNET ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${
-    process.env.REACT_APP_INFURA_TOKEN
-  }`
+  `https://${ETHEREUM_NETWORK[network].toLowerCase()}.infura.io:443/v3/${INFURA_TOKEN}`
 
 export const getRPCUrl = (network: ETHEREUM_NETWORK): string => {
   switch (network) {
@@ -92,7 +90,7 @@ export const resetWeb3 = (): void => {
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
-  if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
+  if (NODE_ENV === 'test' && window.testAccountIndex) {
     return accounts[window.testAccountIndex]
   }
 
