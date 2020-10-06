@@ -9,6 +9,7 @@ import {
   RequestId,
   Transaction,
   LowercaseNetworks,
+  SendTransactionParams,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
@@ -44,7 +45,7 @@ interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessage
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
+  openConfirmationModal: (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
@@ -86,14 +87,15 @@ const useIframeMessageHandler = (
         // possible solution: https://stackoverflow.com/a/43879897/7820085
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
           if (messagePayload) {
-            openConfirmationModal(messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS'], requestId)
+            openConfirmationModal(messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS'], undefined, requestId)
           }
           break
         }
 
         case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
-          if (messagePayload) {
-            openConfirmationModal(messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS_V2'], requestId)
+          const payload = messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS_V2']
+          if (payload) {
+            openConfirmationModal(payload.txs, payload.params, requestId)
           }
           break
         }
@@ -119,7 +121,7 @@ const useIframeMessageHandler = (
           break
         }
         default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${msg.data.messageId}.`)
+          console.error(`ThirdPartyApp: A message was received with an unknown message id ${messageId}.`)
           break
         }
       }
