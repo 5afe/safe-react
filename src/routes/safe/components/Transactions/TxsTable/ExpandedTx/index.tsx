@@ -59,7 +59,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     }
   }
 
-  const explorerUrl = getExplorerInfo(tx.executionTxHash)
+  const explorerUrl = tx.executionTxHash ? getExplorerInfo(tx.executionTxHash) : null
 
   return (
     <>

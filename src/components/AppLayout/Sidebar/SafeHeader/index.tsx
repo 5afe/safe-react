@@ -97,7 +97,6 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(address)
   if (!address) {
     return (
       <Container>
@@ -111,7 +110,7 @@ const SafeHeader = ({
       </Container>
     )
   }
-
+  const explorerUrl = getExplorerInfo(address)
   return (
     <Container>
       <IdenticonContainer>
