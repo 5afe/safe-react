@@ -164,7 +164,7 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "https://github.com/gnosis/safe-apps-sdk#ae7329bd990acef251e1e1fe23bdd32a500192e7",
+    "@gnosis.pm/safe-apps-sdk": "https://github.com/gnosis/safe-apps-sdk#b3d41ac7699b27596a588637b8d2c53992edc66e",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#1bf397f",
     "@gnosis.pm/util-contracts": "2.0.6",
