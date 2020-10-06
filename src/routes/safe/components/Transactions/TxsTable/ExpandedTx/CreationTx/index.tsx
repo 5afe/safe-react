@@ -31,12 +31,12 @@ type Props = {
 
 export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
-  const explorerUrl = tx?.creator ? getExplorerInfo(tx.creator) : null
-  const scanBlockFactoryAddressUrl = getExplorerInfo(tx?.factoryAddress)
-  const scanBlockMasterCopyUrl = getExplorerInfo(tx?.masterCopy)
   if (!tx) {
     return null
   }
+  const explorerUrl = getExplorerInfo(tx.creator)
+  const scanBlockFactoryAddressUrl = getExplorerInfo(tx.factoryAddress)
+  const scanBlockMasterCopyUrl = getExplorerInfo(tx.masterCopy)
 
   const isCreationTx = tx.type === TransactionTypes.CREATION
 
