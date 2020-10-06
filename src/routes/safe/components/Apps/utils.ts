@@ -76,6 +76,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
       ETHEREUM_NETWORK.RINKEBY,
       ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
       ETHEREUM_NETWORK.VOLTA,
+      ETHEREUM_NETWORK.XDAI,
     ],
   },
   // TX-Builder
@@ -87,6 +88,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
       ETHEREUM_NETWORK.RINKEBY,
       ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
       ETHEREUM_NETWORK.VOLTA,
+      ETHEREUM_NETWORK.XDAI,
     ],
   },
   // Wallet-Connect
@@ -98,6 +100,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
       ETHEREUM_NETWORK.RINKEBY,
       ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
       ETHEREUM_NETWORK.VOLTA,
+      ETHEREUM_NETWORK.XDAI,
     ],
   },
   // Yearn Vaults
