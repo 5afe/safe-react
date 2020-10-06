@@ -2,7 +2,6 @@ import { Map, Set, List } from 'immutable'
 import { handleActions } from 'redux-actions'
 
 import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from 'src/logic/safe/store/actions/activateTokenForAllSafes'
-import { ADD_SAFE, buildOwnersFrom } from 'src/logic/safe/store/actions/addSafe'
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
 import { EDIT_SAFE_OWNER } from 'src/logic/safe/store/actions/editSafeOwner'
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
@@ -17,7 +16,7 @@ import { makeOwner } from 'src/logic/safe/store/models/owner'
 import makeSafe, { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
-import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { ADD_OR_UPDATE_SAFE, buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -99,19 +98,7 @@ export default handleActions(
           })
       })
     },
-    [ADD_SAFE]: (state: SafeReducerMap, action) => {
-      const { safe } = action.payload
 
-      // if you add a new Safe it needs to be set as a record
-      // in case of update it shouldn't, because a record would be initialized
-      // with initial props and it would overwrite existing ones
-
-      if (state.hasIn(['safes', safe.address])) {
-        return state
-      }
-
-      return state.setIn(['safes', safe.address], makeSafe(safe))
-    },
     [ADD_OR_UPDATE_SAFE]: (state: SafeReducerMap, action) => {
       const { safe } = action.payload
 
