@@ -121,8 +121,8 @@ const fetchContractABI = memoize(
 )
 
 const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined=> {
-  switch (networkExplorerName) {
-    case 'Etherscan': {
+  switch (networkExplorerName.toLowerCase()) {
+    case 'etherscan': {
       return  ETHERSCAN_API_KEY
     }
     default: {
