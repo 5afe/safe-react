@@ -61,6 +61,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
 
   const scanBlockUrl = useExplorerInfo(tx.executionTxHash)
 
+  console.log('scanblock', scanBlockUrl())
   return (
     <>
       <Block className={classes.expandedTxBlock}>
@@ -70,7 +71,13 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <EthHashInfo hash={tx.executionTxHash} shortenHash={4} showCopyBtn scanBlockUrl={scanBlockUrl} />
+                  <EthHashInfo
+                    hash={tx.executionTxHash}
+                    shortenHash={4}
+                    showCopyBtn
+                    scanBlockUrl={scanBlockUrl}
+                    showScanBlocksButton
+                  />
                 ) : (
                   'n/a'
                 )}
