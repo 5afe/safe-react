@@ -6,7 +6,7 @@ import {
   isAddress,
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 const NestedWrapper = styled.div`
   padding-left: 4px;
@@ -50,7 +50,7 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
-  const scanBlockUrl = useExplorerInfo(props.value as string)
+  const scanBlockUrl = getExplorerInfo(props.value as string)
   if (isAddress(type)) {
     return (
       <EthHashInfo

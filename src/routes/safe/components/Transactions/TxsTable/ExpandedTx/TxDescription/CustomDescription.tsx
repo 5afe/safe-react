@@ -25,7 +25,7 @@ import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -77,7 +77,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
-  const scanBlockUrl = useExplorerInfo(tx.to)
+  const scanBlockUrl = getExplorerInfo(tx.to)
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -179,7 +179,7 @@ interface GenericCustomDataProps {
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
-  const scanBlockUrl = useExplorerInfo(recipient)
+  const scanBlockUrl = getExplorerInfo(recipient)
   return (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>

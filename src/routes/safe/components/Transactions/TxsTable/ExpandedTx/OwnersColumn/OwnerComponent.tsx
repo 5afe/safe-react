@@ -17,7 +17,7 @@ import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { OwnersWithoutConfirmations } from './index'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -163,7 +163,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </>
     )
   }
-  const scanBlockUrl = useExplorerInfo(owner)
+  const scanBlockUrl = getExplorerInfo(owner)
   return (
     <Block className={classes.container}>
       <div

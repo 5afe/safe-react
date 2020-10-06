@@ -25,7 +25,7 @@ import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransacti
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles(styles as any)
 
@@ -59,9 +59,8 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     }
   }
 
-  const scanBlockUrl = useExplorerInfo(tx.executionTxHash)
+  const scanBlockUrl = getExplorerInfo(tx.executionTxHash)
 
-  console.log('scanblock', scanBlockUrl())
   return (
     <>
       <Block className={classes.expandedTxBlock}>

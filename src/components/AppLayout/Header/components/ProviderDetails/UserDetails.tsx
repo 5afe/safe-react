@@ -15,7 +15,7 @@ import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
@@ -93,7 +93,7 @@ const styles = () => ({
 const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
   const status = connected ? 'Connected' : 'Connection error'
   const color = connected ? 'primary' : 'warning'
-  const scanBlockUrl = useExplorerInfo(userAddress)
+  const scanBlockUrl = getExplorerInfo(userAddress)
   return (
     <>
       <Block className={classes.container}>

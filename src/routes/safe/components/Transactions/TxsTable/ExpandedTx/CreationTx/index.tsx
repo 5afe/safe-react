@@ -9,7 +9,7 @@ import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import Block from 'src/components/layout/Block'
 import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles({
   address: {
@@ -31,9 +31,9 @@ type Props = {
 
 export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
-  const scanBlockUrl = useExplorerInfo(tx?.creator)
-  const scanBlockFactoryAddressUrl = useExplorerInfo(tx?.factoryAddress)
-  const scanBlockMasterCopyUrl = useExplorerInfo(tx?.masterCopy)
+  const scanBlockUrl = getExplorerInfo(tx?.creator)
+  const scanBlockFactoryAddressUrl = getExplorerInfo(tx?.factoryAddress)
+  const scanBlockMasterCopyUrl = getExplorerInfo(tx?.masterCopy)
   if (!tx) {
     return null
   }

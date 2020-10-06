@@ -12,7 +12,7 @@ import {
 } from '@gnosis.pm/safe-react-components'
 
 import FlexSpacer from 'src/components/FlexSpacer'
-import { useExplorerInfo } from 'src/logic/hooks/useExplorerInfo'
+import { getExplorerInfo } from 'src/config'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -97,7 +97,7 @@ const SafeHeader = ({
   onReceiveClick,
   onNewTransactionClick,
 }: Props): React.ReactElement => {
-  const scanBlockUrl = useExplorerInfo(address)
+  const scanBlockUrl = getExplorerInfo(address)
   if (!address) {
     return (
       <Container>
