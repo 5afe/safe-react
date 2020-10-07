@@ -25,7 +25,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import ScanQRModal from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sm } from 'src/theme/variables'
@@ -178,7 +177,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type={ExplorerTypes.Address} value={selectedEntry.address} />
+                          <EtherscanBtn value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>

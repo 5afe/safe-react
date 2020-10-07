@@ -2,7 +2,6 @@ import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 
-import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
@@ -25,33 +24,6 @@ export const WALLET_PROVIDER = {
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
   TREZOR: 'TREZOR',
-}
-
-export enum ExplorerTypes {
-  Tx = 'tx',
-  Address = 'address',
-}
-
-export const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes, value: string): string =>
-  `https://${
-    network === ETHEREUM_NETWORK.MAINNET ? '' : `${ETHEREUM_NETWORK[network].toLowerCase()}.`
-  }etherscan.io/${type}/${value}`
-
-export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
-  const network = getNetworkId()
-
-  switch (network) {
-    case ETHEREUM_NETWORK.MAINNET:
-      return getEtherScanLink(ETHEREUM_NETWORK.MAINNET, type, value)
-    case ETHEREUM_NETWORK.RINKEBY:
-      return getEtherScanLink(ETHEREUM_NETWORK.RINKEBY, type, value)
-    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
-      return `https://explorer.energyweb.org/${type}/${value}`
-    case ETHEREUM_NETWORK.VOLTA:
-      return `https://volta-explorer.energyweb.org/${type}/${value}`
-    default:
-      return getEtherScanLink(network, type, value)
-  }
 }
 
 export const getInfuraUrl = (network: ETHEREUM_NETWORK): string =>

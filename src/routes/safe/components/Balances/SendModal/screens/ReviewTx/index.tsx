@@ -24,7 +24,7 @@ import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchToken
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
@@ -149,7 +149,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type={ExplorerTypes.Address} value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>

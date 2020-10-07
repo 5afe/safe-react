@@ -23,7 +23,7 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -124,7 +124,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn type={ExplorerTypes.Address} value={owner.address} />
+                            <EtherscanBtn value={owner.address} />
                           </Block>
                         </Block>
                       </Col>
@@ -153,7 +153,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn type={ExplorerTypes.Address} value={ownerAddress} />
+                    <EtherscanBtn value={ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -178,7 +178,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn type={ExplorerTypes.Address} value={values.ownerAddress} />
+                    <EtherscanBtn value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>
