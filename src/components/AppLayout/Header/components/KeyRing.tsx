@@ -77,5 +77,3 @@ export const KeyRing = ({ center = false, circleSize, dotRight, dotSize, dotTop,
     </>
   )
 }
-
-//export default withStyles(styles as any)(KeyRing)
