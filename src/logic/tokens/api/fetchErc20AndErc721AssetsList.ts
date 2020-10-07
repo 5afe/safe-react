@@ -2,7 +2,7 @@ import axios from 'axios'
 
 import { getTxServiceUrl } from 'src/config/index'
 
-const fetchTokenList = () => {
+const fetchErc20AndErc721AssetsList = () => {
   const apiUrl = getTxServiceUrl()
 
   const url = `${apiUrl}tokens/`
@@ -14,4 +14,4 @@ const fetchTokenList = () => {
   })
 }
 
-export default fetchTokenList
+export default fetchErc20AndErc721AssetsList
