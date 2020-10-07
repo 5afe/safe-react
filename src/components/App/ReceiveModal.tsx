@@ -14,9 +14,11 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
-import { lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
+import { border, fontColor, lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
+import { getNetworkInfo } from 'src/config'
 
+const networkInfo = getNetworkInfo()
 const useStyles = makeStyles(
   createStyles({
     heading: {
@@ -37,9 +39,9 @@ const useStyles = makeStyles(
       border: `1px solid ${secondaryText}`,
     },
     networkInfo: {
-      backgroundColor: '#E8673C',
-      color: '#fff',
-      margin: lg,
+      backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
+      color: `${networkInfo?.textColor ?? fontColor}`,
+      padding: md,
       marginBottom: 0,
     },
     annotation: {
@@ -101,7 +103,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
       </Row>
       <Hairline />
       <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
-        Rinkeby Network only send Rinkeby assets to this Safe.
+        {networkInfo.label} Network only send {networkInfo.label} assets to this Safe.
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send

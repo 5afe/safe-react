@@ -23,7 +23,7 @@ const useStyles = makeStyles({
     },
   },
   text: {
-    background: `${networkInfo?.backgroundColor ?? border}`,
+    backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
     color: `${networkInfo?.textColor ?? fontColor}`,
     borderRadius: '3px',
     lineHeight: 'normal',
