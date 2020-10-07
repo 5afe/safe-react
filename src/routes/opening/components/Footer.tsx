@@ -16,7 +16,8 @@ const ButtonWithMargin = styled(Button)`
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }) => {
   const explorerInfo = getExplorerInfo(safeCreationTxHash)
   const { url, alt } = explorerInfo()
-  const [, explorerDomain] = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url) ?? []
+  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
+  const explorerDomain = match !== null ? match[2] : 'Network Explorer'
 
   return (
     <span>
