@@ -30,6 +30,9 @@ let safeMaster: GnosisSafe
  */
 const createGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
   const networks = GnosisSafeSol.networks
+  // TODO: this may not be the most scalable approach,
+  //  but up until v1.2.0 the address is the same for all the networks.
+  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
   const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
   return new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], contractAddress) as unknown as GnosisSafe
 }
@@ -41,6 +44,9 @@ const createGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
  */
 const createProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
   const networks = ProxyFactorySol.networks
+  // TODO: this may not be the most scalable approach,
+  //  but up until v1.2.0 the address is the same for all the networks.
+  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
   const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
   return new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
 }
