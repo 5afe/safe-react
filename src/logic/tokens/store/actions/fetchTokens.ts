@@ -100,11 +100,13 @@ export const fetchTokens = () => async (
       data: { results: tokenList },
     } = await fetchTokenList()
 
-    if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
+    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+    if (currentSavedTokens && currentSavedTokens.size === erc20Tokens.length) {
       return
     }
 
-    const tokens = List(tokenList.map((token) => makeToken(token)))
+    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
 
     dispatch(saveTokens(tokens))
   } catch (err) {
