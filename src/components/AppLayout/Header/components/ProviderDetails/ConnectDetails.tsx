@@ -2,11 +2,12 @@ import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
 import ConnectButton from 'src/components/ConnectButton'
-import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
+
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { lg, md } from 'src/theme/variables'
+import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const styles = () => ({
   container: {
@@ -42,7 +43,7 @@ const ConnectDetails = ({ classes }) => (
       </Row>
     </div>
     <Row className={classes.logo} margin="lg">
-      <CircleDot center circleSize={75} dotRight={25} dotSize={25} dotTop={50} keySize={32} mode="error" />
+      <KeyRing center circleSize={75} dotRight={25} dotSize={25} dotTop={50} keySize={32} mode="error" />
     </Row>
     <Block className={classes.connect}>
       <ConnectButton data-testid="heading-connect-btn" />

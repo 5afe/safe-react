@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import * as React from 'react'
 
@@ -9,7 +9,7 @@ import { border, fancy, screenSm, warning } from 'src/theme/variables'
 const key = require('../assets/key.svg')
 const triangle = require('../assets/triangle.svg')
 
-const styles = () => ({
+const styles = createStyles({
   root: {
     display: 'none',
     [`@media (min-width: ${screenSm}px)`]: {
@@ -33,6 +33,8 @@ const styles = () => ({
   },
 })
 
+const useStyles = makeStyles(styles)
+
 const buildKeyStyleFrom = (size, center, dotSize) => ({
   width: `${size}px`,
   height: `${size}px`,
@@ -49,17 +51,10 @@ const buildDotStyleFrom = (size, top, right, mode) => ({
   color: mode === 'error' ? fancy : warning,
 })
 
-const KeyRing = ({
-  center = false,
-  circleSize,
-  classes,
-  dotRight,
-  dotSize,
-  dotTop,
-  hideDot = false,
-  keySize,
-  mode,
-}) => {
+// @todo (agustin) add props
+
+export const KeyRing = ({ center = false, circleSize, dotRight, dotSize, dotTop, hideDot = false, keySize, mode }) => {
+  const classes = useStyles(styles)
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
   const isWarning = mode === 'warning'
@@ -83,4 +78,4 @@ const KeyRing = ({
   )
 }
 
-export default withStyles(styles as any)(KeyRing)
+//export default withStyles(styles as any)(KeyRing)

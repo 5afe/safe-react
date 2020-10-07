@@ -4,7 +4,6 @@ import classNames from 'classnames'
 import * as React from 'react'
 import { EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
 
-import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -15,6 +14,7 @@ import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
@@ -100,7 +100,7 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
           {connected ? (
             <Identicon address={userAddress || 'random'} size="lg" />
           ) : (
-            <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
+            <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
         <Block className={classes.user} justify="center">

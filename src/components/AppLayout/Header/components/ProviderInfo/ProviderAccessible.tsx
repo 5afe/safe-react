@@ -4,11 +4,11 @@ import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import NetworkLabel from '../NetworkLabel'
-import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
+import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const useStyles = makeStyles({
   network: {
@@ -73,7 +73,7 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
   const addressColor = connected ? 'text' : 'warning'
   return (
     <>
-      {!connected && <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
+      {!connected && <KeyRing circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={14} mode="warning" />}
       <WalletIcon provider={provider.toUpperCase()} />
       <Col className={classes.account} layout="column" start="sm">
         <Paragraph
