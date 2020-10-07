@@ -94,6 +94,7 @@ const useIframeMessageHandler = (
 
         case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
           const payload = messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS_V2']
+          console.log(payload)
           if (payload) {
             openConfirmationModal(payload.txs, payload.params, requestId)
           }

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
-import { Transaction } from '@gnosis.pm/safe-apps-sdk'
+import { Transaction, SendTransactionParams } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
 
 import AddressInfo from 'src/components/AddressInfo'
@@ -66,6 +66,7 @@ type OwnProps = {
   isOpen: boolean
   app: SafeApp
   txs: Transaction[]
+  params?: SendTransactionParams
   safeAddress: string
   safeName: string
   ethBalance: string
@@ -81,6 +82,7 @@ const ConfirmTransactionModal = ({
   safeAddress,
   ethBalance,
   safeName,
+  params,
   onUserConfirm,
   onClose,
   onTxReject,
@@ -114,6 +116,7 @@ const ConfirmTransactionModal = ({
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
+          safeTxGas: params?.safeTxGas,
         },
         handleUserConfirmation,
         handleTxRejection,
@@ -153,6 +156,12 @@ const ConfirmTransactionModal = ({
                 <Heading tag="h3">Data (hex encoded)*</Heading>
                 <StyledTextBox>{tx.data}</StyledTextBox>
               </div>
+              {params?.safeTxGas && (
+                <div className="section">
+                  <Heading tag="h3">SafeTxGas*</Heading>
+                  <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
+                </div>
+              )}
             </CollapseContent>
           </Collapse>
         </Wrapper>

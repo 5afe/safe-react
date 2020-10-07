@@ -223,6 +223,7 @@ const Apps = (): React.ReactElement => {
         txs={confirmTransactionModal.txs}
         onClose={closeConfirmationModal}
         onUserConfirm={onUserTxConfirm}
+        params={confirmTransactionModal.params}
         onTxReject={onTxReject}
       />
     </>
