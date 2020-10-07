@@ -1,4 +1,4 @@
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly as web3 } from 'src/config'
 
 /**
  * Generates a batch request for grouping RPC calls

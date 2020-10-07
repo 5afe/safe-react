@@ -1,5 +1,5 @@
 import { AbstractProvider } from 'web3-core'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/config'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
 const EIP712_NOT_SUPPORTED_ERROR_MSG = "EIP712 is not supported by user's wallet"

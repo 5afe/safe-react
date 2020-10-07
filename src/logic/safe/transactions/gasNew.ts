@@ -9,7 +9,8 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
-import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/config'
+import { getAccountFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 const estimateDataGasCosts = (data: string): number => {

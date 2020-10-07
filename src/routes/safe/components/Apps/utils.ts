@@ -3,8 +3,7 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config'
-import { getContentFromENS } from 'src/logic/wallets/getWeb3'
+import { getContentFromENS, getGnosisSafeAppsUrl } from 'src/config'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 

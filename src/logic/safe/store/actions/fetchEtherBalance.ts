@@ -1,4 +1,4 @@
-import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
+import { getBalanceInEtherOf } from 'src/config'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { Dispatch } from 'redux'

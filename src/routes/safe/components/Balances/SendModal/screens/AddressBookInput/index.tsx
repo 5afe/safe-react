@@ -10,7 +10,7 @@ import { styles } from './style'
 import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
+import { getAddressFromENS } from 'src/config'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 

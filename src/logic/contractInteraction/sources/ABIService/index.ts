@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly as web3 } from 'src/config'
 
 export interface AllowedAbiItem extends AbiItem {
   name: string

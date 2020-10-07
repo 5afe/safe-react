@@ -1,8 +1,6 @@
-// 
-import { } from 'redux'
 import { aNewStore, } from 'src/store'
 import { sleep } from 'src/utils/timer'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/config'
 import { sendEtherTo } from 'src/test/utils/tokenMovements'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'

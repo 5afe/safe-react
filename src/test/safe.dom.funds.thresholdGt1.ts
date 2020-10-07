@@ -1,10 +1,9 @@
-// 
 import { fireEvent, waitForElement } from '@testing-library/react'
 import { aNewStore } from 'src/store'
 import { aMinedSafe } from 'src/test/builder/safe.redux.builder'
 import { sendEtherTo } from 'src/test/utils/tokenMovements'
 import { renderSafeView } from 'src/test/builder/safe.dom.utils'
-import { getWeb3, getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
+import { getBalanceInEtherOf, getWeb3 } from 'src/config'
 import { sleep } from 'src/utils/timer'
 import '@testing-library/jest-dom/extend-expect'
 import { BALANCE_ROW_TEST_ID } from 'src/routes/safe/components/Balances'
