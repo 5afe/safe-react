@@ -36,6 +36,12 @@ const useStyles = makeStyles(
       borderRadius: '6px',
       border: `1px solid ${secondaryText}`,
     },
+    networkInfo: {
+      backgroundColor: '#E8673C',
+      color: '#fff',
+      margin: lg,
+      marginBottom: 0,
+    },
     annotation: {
       margin: lg,
       marginBottom: 0,
@@ -94,6 +100,9 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
         </IconButton>
       </Row>
       <Hairline />
+      <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
+        Rinkeby Network only send Rinkeby assets to this Safe.
+      </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
         This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
         ETH and ERC-20 tokens to this address!

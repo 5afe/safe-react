@@ -11,7 +11,7 @@ import {
   EtherscanButton,
 } from '@gnosis.pm/safe-react-components'
 
-import { getNetworkName } from 'src/config'
+import { getNetworkInfo, getNetworkName } from 'src/config'
 import FlexSpacer from 'src/components/FlexSpacer'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
@@ -45,6 +45,14 @@ const StyledButton = styled(Button)`
   *:first-child {
     margin: 0 4px 0 0;
   }
+`
+const StyledTextLabel = styled(Text)`
+  margin: -8px 0 4px -8px;
+  padding: 4px 8px;
+  width:100%;
+  text-align: center;
+  background: (props) => (props.networkInfo?.backgroundColor),
+  color: (props) => (props.networkInfo?.textColor),
 `
 const StyledEthHashInfo = styled(EthHashInfo)`
   p {
@@ -110,43 +118,49 @@ const SafeHeader = ({
       </Container>
     )
   }
-
+  
+  /* const networkInfo = getNetworkInfo()
+  console.log(networkInfo)
+ */
   return (
-    <Container>
-      <IdenticonContainer>
-        <FlexSpacer />
-        <Identicon address={address} size="lg" />
-        <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
-          <Icon size="md" type="circleDropdown" />
-        </UnStyledButton>
-      </IdenticonContainer>
+    <>
+    {/* <StyledTextLabel size="sm" networkInfo={networkInfo}> {networkInfo.label}</StyledTextLabel> */}
+      <Container>
+        <IdenticonContainer>
+          <FlexSpacer />
+          <Identicon address={address} size="lg" />
+          <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+            <Icon size="md" type="circleDropdown" />
+          </UnStyledButton>
+        </IdenticonContainer>
 
-      <Text size="xl">{safeName}</Text>
-      <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
-      <IconContainer>
-        <UnStyledButton onClick={onReceiveClick}>
-          <Icon size="sm" type="qrCode" tooltip="Show QR" />
-        </UnStyledButton>
-        <CopyToClipboardBtn textToCopy={address} />
-        <EtherscanButton value={address} network={getNetworkName()} />
-      </IconContainer>
+        <Text size="xl">{safeName}</Text>
+        <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
+        <IconContainer>
+          <UnStyledButton onClick={onReceiveClick}>
+            <Icon size="sm" type="qrCode" tooltip="Show QR" />
+          </UnStyledButton>
+          <CopyToClipboardBtn textToCopy={address} />
+          <EtherscanButton value={address} network={getNetworkName()} />
+        </IconContainer>
 
-      {granted ? null : (
-        <StyledLabel>
-          <Text size="sm" color="white">
-            READ ONLY
+        {granted ? null : (
+          <StyledLabel>
+            <Text size="sm" color="white">
+                        READ ONLY
+            </Text>
+          </StyledLabel>
+        )}
+
+        <StyledText size="xl">{balance}</StyledText>
+        <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
+          <FixedIcon type="arrowSentWhite" />
+          <Text size="lg" color="white">
+            New Transaction
           </Text>
-        </StyledLabel>
-      )}
-
-      <StyledText size="xl">{balance}</StyledText>
-      <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
-        <FixedIcon type="arrowSentWhite" />
-        <Text size="lg" color="white">
-          New Transaction
-        </Text>
-      </StyledButton>
-    </Container>
+        </StyledButton>
+      </Container>
+    </>
   )
 }
 
