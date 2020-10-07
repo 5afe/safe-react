@@ -51,9 +51,27 @@ const buildDotStyleFrom = (size, top, right, mode) => ({
   color: mode === 'error' ? fancy : warning,
 })
 
-// @todo (agustin) add props
+type Props = {
+  center?: boolean
+  circleSize?: number
+  dotRight?: number
+  dotSize?: number
+  dotTop?: number
+  hideDot?: boolean
+  keySize: number
+  mode?: string
+}
 
-export const KeyRing = ({ center = false, circleSize, dotRight, dotSize, dotTop, hideDot = false, keySize, mode }) => {
+export const KeyRing = ({
+  center = false,
+  circleSize,
+  dotRight,
+  dotSize,
+  dotTop,
+  hideDot = false,
+  keySize,
+  mode,
+}: Props): React.ReactElement => {
   const classes = useStyles(styles)
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
