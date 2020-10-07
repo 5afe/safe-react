@@ -13,6 +13,8 @@ import {
 
 import { getNetworkInfo, getNetworkName } from 'src/config'
 import FlexSpacer from 'src/components/FlexSpacer'
+import { NetworkSettings } from 'src/config/networks/network'
+import { border, fontColor } from 'src/theme/variables'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
 
@@ -46,13 +48,18 @@ const StyledButton = styled(Button)`
     margin: 0 4px 0 0;
   }
 `
+
+type StyledTextLabelProps = {
+  networkInfo: NetworkSettings
+}
+
 const StyledTextLabel = styled(Text)`
   margin: -8px 0 4px -8px;
   padding: 4px 8px;
-  width:100%;
+  width: 100%;
   text-align: center;
-  background: (props) => (props.networkInfo?.backgroundColor),
-  color: (props) => (props.networkInfo?.textColor),
+  color: ${(props: StyledTextLabelProps) => props.networkInfo?.textColor ?? fontColor};
+  background-color: ${(props: StyledTextLabelProps) => props.networkInfo?.backgroundColor ?? border};
 `
 const StyledEthHashInfo = styled(EthHashInfo)`
   p {
@@ -118,13 +125,14 @@ const SafeHeader = ({
       </Container>
     )
   }
-  
-  /* const networkInfo = getNetworkInfo()
-  console.log(networkInfo)
- */
+
+  const networkInfo = getNetworkInfo()
+
   return (
     <>
-    {/* <StyledTextLabel size="sm" networkInfo={networkInfo}> {networkInfo.label}</StyledTextLabel> */}
+      <StyledTextLabel size="sm" networkInfo={networkInfo}>
+        {networkInfo.label}
+      </StyledTextLabel>
       <Container>
         <IdenticonContainer>
           <FlexSpacer />
@@ -147,7 +155,7 @@ const SafeHeader = ({
         {granted ? null : (
           <StyledLabel>
             <Text size="sm" color="white">
-                        READ ONLY
+              READ ONLY
             </Text>
           </StyledLabel>
         )}
