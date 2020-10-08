@@ -81,13 +81,13 @@ export const getNetworkConfigFeatures = (): SafeFeatures | undefined => getConfi
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 
-export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
+export const getTxServiceUriFrom = (safeAddress: string) => `/safes/${safeAddress}/transactions/`
 
-export const getIncomingTxServiceUriTo = (safeAddress: string) => `safes/${safeAddress}/incoming-transfers/`
+export const getIncomingTxServiceUriTo = (safeAddress: string) => `/safes/${safeAddress}/incoming-transfers/`
 
-export const getAllTransactionsUriFrom = (safeAddress: string) => `safes/${safeAddress}/all-transactions/`
+export const getAllTransactionsUriFrom = (safeAddress: string) => `/safes/${safeAddress}/all-transactions/`
 
-export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddress}/creation/`
+export const getSafeCreationTxUri = (safeAddress: string) => `/safes/${safeAddress}/creation/`
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkId()]
 
