@@ -67,7 +67,7 @@ const App: React.FC = ({ children }) => {
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeName = useSelector(safeNameSelector) ?? ''
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
@@ -77,7 +77,7 @@ const App: React.FC = ({ children }) => {
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
-  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
+  const sendFunds = safeActionsState.sendFunds
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
@@ -138,7 +138,7 @@ const App: React.FC = ({ children }) => {
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
-              open={safeActionsState.showReceive as boolean}
+              open={safeActionsState.showReceive}
               title="Receive Tokens"
             >
               <Receive onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
