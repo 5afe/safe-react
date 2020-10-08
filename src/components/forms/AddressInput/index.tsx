@@ -5,7 +5,7 @@ import { OnChange } from 'react-final-form-listeners'
 import TextField from 'src/components/forms/TextField'
 import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 import { trimSpaces } from 'src/utils/strings'
-import { getAddressFromENS } from 'src/config'
+import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 

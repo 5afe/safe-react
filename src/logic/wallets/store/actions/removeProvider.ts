@@ -4,7 +4,7 @@ import { createAction } from 'redux-actions'
 import { onboard } from 'src/components/ConnectButton'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { resetWeb3 } from 'src/config'
+import { resetWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 

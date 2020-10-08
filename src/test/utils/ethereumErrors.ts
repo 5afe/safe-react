@@ -1,5 +1,6 @@
+// 
 import abi from 'ethereumjs-abi'
-import { getWeb3 } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 export const getErrorMessage = async (to, value, data, from) => {
   const web3 = getWeb3()

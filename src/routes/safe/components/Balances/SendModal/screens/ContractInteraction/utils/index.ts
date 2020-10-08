@@ -3,7 +3,7 @@ import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
 
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
-import { getAddressFromENS, getWeb3 } from 'src/config'
+import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
 import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 

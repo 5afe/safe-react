@@ -21,7 +21,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from 'src/logic/contracts/safeContracts'
-import { getWeb3 } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
 

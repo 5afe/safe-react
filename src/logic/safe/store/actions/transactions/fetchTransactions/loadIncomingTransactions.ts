@@ -3,7 +3,7 @@ import { List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
-import { web3ReadOnly } from 'src/config'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { makeIncomingTransaction } from 'src/logic/safe/store/models/incomingTransaction'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
 import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'

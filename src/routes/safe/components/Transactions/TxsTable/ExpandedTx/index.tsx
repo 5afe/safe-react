@@ -20,11 +20,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
-import { getExplorerInfo, getWeb3 } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles(styles as any)
 

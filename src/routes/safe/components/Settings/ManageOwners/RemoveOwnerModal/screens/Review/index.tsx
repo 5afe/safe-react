@@ -18,7 +18,7 @@ import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/s
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 

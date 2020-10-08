@@ -17,7 +17,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'

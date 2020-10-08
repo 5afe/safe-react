@@ -1,6 +1,5 @@
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
-import { getWeb3 } from 'src/config'
-import { WALLET_PROVIDER, getProviderInfo } from 'src/logic/wallets/getWeb3'
+import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from 'src/logic/wallets/store/actions/removeProvider'

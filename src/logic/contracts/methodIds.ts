@@ -1,4 +1,4 @@
-import { web3ReadOnly as web3 } from 'src/config'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { DataDecoded, METHOD_TO_ID } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => {

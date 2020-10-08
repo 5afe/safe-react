@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/config'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import memoize from 'lodash.memoize'
 
 type ValidatorReturnType = string | undefined

@@ -1,10 +1,11 @@
 import axios from 'axios'
 import { List } from 'immutable'
 
-import { buildSafeCreationTxUrl, web3ReadOnly } from 'src/config'
+import { buildSafeCreationTxUrl } from 'src/config'
 import { addOrUpdateTransactions } from './transactions/addOrUpdateTransactions'
 import { makeTransaction } from 'src/logic/safe/store/models/transaction'
 import { TransactionTypes, TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 const getCreationTx = async (safeAddress) => {
   const url = buildSafeCreationTxUrl(safeAddress)

@@ -2,7 +2,7 @@ import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
-import { web3ReadOnly } from 'src/config'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
