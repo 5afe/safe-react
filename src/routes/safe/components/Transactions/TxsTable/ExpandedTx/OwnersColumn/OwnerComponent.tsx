@@ -12,12 +12,12 @@ import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
 import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
-import { getNetworkName } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { OwnersWithoutConfirmations } from './index'
+import { getExplorerInfo } from 'src/config'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
@@ -163,7 +163,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
       </>
     )
   }
-
+  const explorerUrl = getExplorerInfo(owner)
   return (
     <Block className={classes.container}>
       <div
@@ -182,8 +182,7 @@ const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
         shortenHash={4}
         showIdenticon
         showCopyBtn
-        showEtherscanBtn
-        network={getNetworkName()}
+        explorerUrl={explorerUrl}
       />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
