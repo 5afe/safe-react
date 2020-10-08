@@ -2,11 +2,11 @@ import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
-import { NODE_ENV, NETWORK, INFURA_TOKEN } from 'src/utils/constants'
+import { NODE_ENV } from 'src/utils/constants'
+import { getRpcServiceUrl } from 'src/config'
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -26,29 +26,11 @@ export const WALLET_PROVIDER = {
   TREZOR: 'TREZOR',
 }
 
-export const getInfuraUrl = (network: ETHEREUM_NETWORK): string =>
-  `https://${ETHEREUM_NETWORK[network].toLowerCase()}.infura.io:443/v3/${INFURA_TOKEN}`
-
-export const getRPCUrl = (network: ETHEREUM_NETWORK): string => {
-  switch (network) {
-    case ETHEREUM_NETWORK.MAINNET:
-      return getInfuraUrl(network)
-    case ETHEREUM_NETWORK.RINKEBY:
-      return getInfuraUrl(network)
-    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
-      return 'https://rpc.energyweb.org'
-    case ETHEREUM_NETWORK.VOLTA:
-      return 'https://volta-rpc.energyweb.org'
-    default:
-      return ''
-  }
-}
-
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
-    ? new Web3.providers.HttpProvider(getRPCUrl(ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY))
+    ? new Web3.providers.HttpProvider(getRpcServiceUrl())
     : window.web3?.currentProvider || 'ws://localhost:8545',
 )
 

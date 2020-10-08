@@ -1,6 +1,5 @@
 import networks from 'src/config/networks'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures } from 'src/config/networks/network.d'
-import { checksumAddress } from 'src/utils/checksumAddress'
 import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 import memoize from 'lodash.memoize'
@@ -91,14 +90,6 @@ export const getAllTransactionsUriFrom = (safeAddress: string) => `safes/${safeA
 export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddress}/creation/`
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkId()]
-
-export const buildSafeCreationTxUrl = (safeAddress: string) => {
-  const host = getTxServiceUrl()
-  const address = checksumAddress(safeAddress)
-  const base = getSafeCreationTxUri(address)
-
-  return `${host}${base}`
-}
 
 const fetchContractABI = memoize(
   async (url: string, contractAddress: string, apiKey?: string) => {
