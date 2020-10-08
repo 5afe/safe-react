@@ -4,13 +4,9 @@ import { getTxServiceUrl } from 'src/config/index'
 
 const fetchTokenBalanceList = (safeAddress) => {
   const apiUrl = getTxServiceUrl()
-  const url = `${apiUrl}safes/${safeAddress}/balances/`
+  const url = `${apiUrl}/safes/${safeAddress}/balances/`
 
-  return axios.get(url, {
-    params: {
-      limit: 3000,
-    },
-  })
+  return axios.get(url)
 }
 
 export default fetchTokenBalanceList
