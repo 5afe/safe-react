@@ -102,7 +102,7 @@ export const fetchTokens = () => async (
 
     const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
 
-    if (currentSavedTokens && currentSavedTokens.size === erc20Tokens.length) {
+    if (currentSavedTokens?.size === erc20Tokens.length) {
       return
     }
 
