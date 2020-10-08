@@ -46,6 +46,12 @@ const notificationStyles = {
   info: {
     background: '#fff',
   },
+  receiveModal: {
+    height: 'auto',
+    maxWidth: 'calc(100% - 30px)',
+    minHeight: '544px',
+    overflow: 'hidden',
+  },
 }
 
 const Frame = styled.div`
@@ -139,6 +145,7 @@ const App: React.FC = ({ children }) => {
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
               open={safeActionsState.showReceive}
+              paperClassName={classes.receiveModal}
               title="Receive Tokens"
             >
               <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
