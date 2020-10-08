@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import NetworkLabel from '../NetworkLabel'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -95,7 +94,6 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
               identiconSize="xs"
               textColor={addressColor}
               textSize="sm"
-              network={ETHEREUM_NETWORK[network]}
             />
           ) : (
             <Text size="md" color={addressColor}>
