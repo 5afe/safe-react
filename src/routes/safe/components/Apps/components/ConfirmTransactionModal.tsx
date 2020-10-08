@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import { Transaction, SendTransactionParams } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
@@ -15,11 +16,11 @@ import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { useDispatch } from 'react-redux'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
+import { estimateSafeTxGas } from 'src/logic/safe/transactions/gasNew'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -87,6 +88,30 @@ const ConfirmTransactionModal = ({
   onClose,
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
+  const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+  const [estimatingGas, setEstimatingGas] = useState(false)
+
+  useEffect(() => {
+    const estimateGas = async () => {
+      try {
+        const safeTxGas = await estimateSafeTxGas(
+          undefined,
+          safeAddress,
+          encodeMultiSendCall(txs),
+          MULTI_SEND_ADDRESS,
+          '0',
+          DELEGATE_CALL,
+        )
+
+        setEstimatedSafeTxGas(safeTxGas)
+      } catch (err) {
+        setEstimatingGas(false)
+      }
+    }
+
+    estimateGas()
+  }, [safeAddress, txs])
+
   const dispatch = useDispatch()
   if (!isOpen) {
     return null
@@ -159,7 +184,9 @@ const ConfirmTransactionModal = ({
               {params?.safeTxGas && (
                 <div className="section">
                   <Heading tag="h3">SafeTxGas*</Heading>
-                  <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
+                  <StyledTextBox>
+                    {params?.safeTxGas} ({estimatedSafeTxGas})
+                  </StyledTextBox>
                 </div>
               )}
             </CollapseContent>
