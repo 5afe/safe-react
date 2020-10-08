@@ -8,7 +8,7 @@ import contract from 'truffle-contract'
 import saveTokens from './saveTokens'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { fetchTokenList } from 'src/logic/tokens/api'
+import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -98,7 +98,7 @@ export const fetchTokens = () => async (
 
     const {
       data: { results: tokenList },
-    } = await fetchTokenList()
+    } = await fetchErc20AndErc721AssetsList()
 
     const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
 
