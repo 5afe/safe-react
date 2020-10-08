@@ -26,6 +26,7 @@ export type NetworkSettings = {
   id: ETHEREUM_NETWORK,
   color: string,
   label: string,
+  isTestNet: boolean,
   nativeCoin: Token,
 }
 

@@ -22,6 +22,7 @@ const local: NetworkConfig = {
     id: ETHEREUM_NETWORK.LOCAL,
     color: '#E8673C',
     label: 'LocalRPC',
+    isTestNet: true,
     nativeCoin: {
       address: '0x000',
       name: 'Ether',

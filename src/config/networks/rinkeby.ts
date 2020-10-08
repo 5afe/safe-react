@@ -30,6 +30,7 @@ const rinkeby: NetworkConfig = {
     id: ETHEREUM_NETWORK.RINKEBY,
     color: '#E8673C',
     label: 'Rinkeby',
+    isTestNet: true,
     nativeCoin: {
       address: '0x000',
       name: 'Ether',

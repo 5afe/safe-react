@@ -30,6 +30,7 @@ const mainnet: NetworkConfig = {
     id: ETHEREUM_NETWORK.MAINNET,
     color: '#E8E7E6',
     label: 'Mainnet',
+    isTestNet: false,
     nativeCoin: {
       address: '0x000',
       name: 'Ether',
