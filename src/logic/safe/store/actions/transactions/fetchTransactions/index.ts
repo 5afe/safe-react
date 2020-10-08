@@ -22,6 +22,7 @@ export default (safeAddress: string): ThunkAction<Promise<void>, AppReduxState, 
 
     if (transactions) {
       const { cancel, outgoing } = transactions
+      console.log({ cancel: cancel.toJS(), outgoing: outgoing.toJS() })
       const updateCancellationTxs = cancel.size
         ? addOrUpdateCancellationTransactions({ safeAddress, transactions: cancel })
         : noFunc
