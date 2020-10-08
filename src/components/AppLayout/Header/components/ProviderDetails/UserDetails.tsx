@@ -1,4 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
@@ -16,11 +16,12 @@ import { background, connected as connectedBg, lg, md, sm, warning, xs } from 's
 import { upperFirst } from 'src/utils/css'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo } from 'src/config'
+import { createStyles } from '@material-ui/core'
 
 const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
 
-const styles = () => ({
+const styles = createStyles({
   container: {
     padding: `${md} 12px`,
     display: 'flex',
@@ -90,10 +91,30 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
+type Props = {
+  connected: boolean
+  network: ETHEREUM_NETWORK
+  onDisconnect: () => void
+  openDashboard: boolean
+  provider?: string
+  userAddress: string
+}
+
+const useStyles = makeStyles(styles)
+
+export const UserDetails = ({
+  connected,
+  network,
+  onDisconnect,
+  openDashboard,
+  provider,
+  userAddress,
+}: Props): React.ReactElement => {
   const status = connected ? 'Connected' : 'Connection error'
   const color = connected ? 'primary' : 'warning'
   const explorerUrl = getExplorerInfo(userAddress)
+  const classes = useStyles()
+
   return (
     <>
       <Block className={classes.container}>
@@ -172,5 +193,3 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
     </>
   )
 }
-
-export default withStyles(styles as any)(UserDetails)
