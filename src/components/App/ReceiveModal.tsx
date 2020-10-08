@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -87,7 +87,7 @@ type Props = {
   safeName: string
 }
 
-const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
+const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
   const classes = useStyles()
 
   return (

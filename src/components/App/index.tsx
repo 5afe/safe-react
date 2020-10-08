@@ -30,7 +30,7 @@ import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logi
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-import Receive from './ReceiveModal'
+import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
@@ -141,7 +141,7 @@ const App: React.FC = ({ children }) => {
               open={safeActionsState.showReceive}
               title="Receive Tokens"
             >
-              <Receive onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
             </Modal>
           )}
         </>
