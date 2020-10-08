@@ -101,20 +101,39 @@ describe('Networks config files test', () => {
   })
 
   networksFileNames.forEach((networkFileName) => {
-    it(`should have a valid CSS color defined for 'network.color'`, () => {
+    it(`should have a valid CSS color defined for 'network.backgroundColor'`, () => {
       // Given
       const networkConfig = networks[networkFileName]
 
       // When
-      const { color } = networkConfig.network
+      const { backgroundColor } = networkConfig.network
 
       // Then
       const s = new Option().style
-      s.color = color
+      s.color = backgroundColor
       const isValid = s.color !== ''
 
       if (!isValid) {
-        console.log(`Invalid value in "${networkFileName}" at network.color:`, color)
+        console.log(`Invalid value in "${networkFileName}" at network.backgroundColor:`, backgroundColor)
+      }
+
+      expect(isValid).toBeTruthy()
+    })
+
+    it(`should have a valid CSS color defined for 'network.textColor'`, () => {
+      // Given
+      const networkConfig = networks[networkFileName]
+
+      // When
+      const { textColor } = networkConfig.network
+
+      // Then
+      const s = new Option().style
+      s.color = textColor
+      const isValid = s.color !== ''
+
+      if (!isValid) {
+        console.log(`Invalid value in "${networkFileName}" at network.textColor:`, textColor)
       }
 
       expect(isValid).toBeTruthy()

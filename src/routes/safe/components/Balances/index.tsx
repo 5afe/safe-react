@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Receive from 'src/components/App/ReceiveModal'
+import ReceiveModal from 'src/components/App/ReceiveModal'
 import Tokens from './Tokens'
 import { styles } from './style'
 
@@ -53,7 +53,7 @@ const Balances = (): React.ReactElement => {
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeName = useSelector(safeNameSelector) ?? ''
 
   useFetchTokens(address as string)
 
@@ -229,7 +229,7 @@ const Balances = (): React.ReactElement => {
         paperClassName={receiveModal}
         title="Receive Tokens"
       >
-        <Receive safeAddress={address as string} safeName={safeName as string} onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )

@@ -1,6 +1,14 @@
 import { useState, useMemo } from 'react'
 
-const INITIAL_STATE = {
+type SafeActionsState = {
+  sendFunds: {
+    isOpen: boolean
+    selectedToken?: string
+  }
+  showReceive: boolean
+}
+
+const INITIAL_STATE: SafeActionsState = {
   sendFunds: {
     isOpen: false,
     selectedToken: undefined,
@@ -13,7 +21,7 @@ type Response = {
   onHide: (action: string) => void
   showSendFunds: (token: string) => void
   hideSendFunds: () => void
-  safeActionsState: Record<string, unknown>
+  safeActionsState: SafeActionsState
 }
 
 const useSafeActions = (): Response => {
