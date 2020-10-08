@@ -188,7 +188,7 @@ export const calculateTransactionStatus = (
     txStatus = TransactionStatus.AWAITING_EXECUTION
   } else if (tx.creationTx) {
     txStatus = TransactionStatus.SUCCESS
-  } else if (!tx.confirmations.size || !!tx.isPending) {
+  } else if (!!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
     const userConfirmed = tx.confirmations.filter((conf) => conf.owner === currentUser).size === 1
