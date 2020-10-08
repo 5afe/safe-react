@@ -13,7 +13,6 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -54,7 +53,7 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
                   {ownerAddress}
                 </Paragraph>
                 <CopyBtn content={ownerAddress} />
-                <EtherscanBtn type={ExplorerTypes.Address} value={ownerAddress} />
+                <EtherscanBtn value={ownerAddress} />
               </Block>
             </Block>
           </Col>

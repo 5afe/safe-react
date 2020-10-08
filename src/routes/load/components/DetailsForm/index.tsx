@@ -73,7 +73,7 @@ export const safeFieldsValidation = async (values): Promise<Record<string, strin
     `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
   )
   const safeMaster = await getSafeMasterContract()
-  const masterCopy = safeMaster.address
+  const masterCopy = safeMaster.options.address
   const sameMasterCopy =
     checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
   if (!sameMasterCopy) {

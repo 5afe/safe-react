@@ -21,7 +21,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { safeOwnersSelector } from 'src/logic/safe/store/selectors'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -95,7 +94,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                           {ownerAddress}
                         </Paragraph>
                         <CopyBtn content={ownerAddress} />
-                        <EtherscanBtn type={ExplorerTypes.Address} value={ownerAddress} />
+                        <EtherscanBtn value={ownerAddress} />
                       </Block>
                     </Block>
                   </Col>

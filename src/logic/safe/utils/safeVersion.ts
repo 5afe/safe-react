@@ -60,7 +60,7 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
   const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {
-    safeMasterVersion = await safeMaster.VERSION()
+    safeMasterVersion = await safeMaster.methods.VERSION().call()
   } catch (err) {
     // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an
     // env variable
