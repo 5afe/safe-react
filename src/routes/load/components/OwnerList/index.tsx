@@ -21,7 +21,6 @@ import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
@@ -113,7 +112,7 @@ const OwnerListComponent = (props) => {
                       {address}
                     </Paragraph>
                     <CopyBtn content={address} />
-                    <EtherscanBtn type={ExplorerTypes.Address} value={address} />
+                    <EtherscanBtn value={address} />
                   </Row>
                 </Col>
               </Row>

@@ -14,7 +14,6 @@ import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
@@ -39,7 +38,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
         return
       }
       const { nativeCoin } = getNetworkInfo()
-      const estimatedGasCosts = await (await estimateGasForDeployingSafe(addresses, numOwners, userAccount)).toString()
+      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       setGasCosts(formattedGasCosts)
@@ -118,7 +117,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />
-                        <EtherscanBtn type={ExplorerTypes.Address} value={addresses[index]} />
+                        <EtherscanBtn value={addresses[index]} />
                       </Block>
                     </Block>
                   </Col>

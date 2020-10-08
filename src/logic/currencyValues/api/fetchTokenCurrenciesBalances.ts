@@ -16,13 +16,9 @@ const fetchTokenCurrenciesBalances = (
   excludeSpamTokens = true,
 ): Promise<AxiosResponse<BalanceEndpoint[]>> => {
   const apiUrl = getTxServiceUrl()
-  const url = `${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`
+  const url = `${apiUrl}/safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`
 
-  return axios.get(url, {
-    params: {
-      limit: 3000,
-    },
-  })
+  return axios.get(url)
 }
 
 export default fetchTokenCurrenciesBalances

@@ -42,7 +42,7 @@ const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
-      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, EMPTY_DATA)).toString()
+      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress, safeAddress, EMPTY_DATA)).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {

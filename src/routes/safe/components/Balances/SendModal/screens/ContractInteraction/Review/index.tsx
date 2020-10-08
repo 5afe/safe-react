@@ -53,7 +53,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     const estimateGas = async (): Promise<void> => {
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await (
+      const estimatedGasCosts = (
         await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
       ).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)

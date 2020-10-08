@@ -24,7 +24,6 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -187,7 +186,7 @@ const SendFunds = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type={ExplorerTypes.Address} value={selectedEntry.address} />
+                          <EtherscanBtn value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>

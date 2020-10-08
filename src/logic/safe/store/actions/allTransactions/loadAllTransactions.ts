@@ -25,7 +25,7 @@ const getAllTransactionsUri = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
   const base = getAllTransactionsUriFrom(address)
 
-  return `${host}${base}`
+  return `${host}/${base}`
 }
 
 const fetchAllTransactions = async (

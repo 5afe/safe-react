@@ -1,12 +1,6 @@
 import networks from 'src/config/networks'
-import {
-  EnvironmentSettings,
-  ETHEREUM_NETWORK,
-  NetworkSettings,
-  SafeFeatures,
-} from 'src/config/networks/network.d'
-import { checksumAddress } from 'src/utils/checksumAddress'
-import { GOOGLE_ANALYTICS_ID, NETWORK, APP_ENV, NODE_ENV, ETHERSCAN_API_KEY } from 'src/utils/constants'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures } from 'src/config/networks/network.d'
+import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 import memoize from 'lodash.memoize'
 
@@ -67,7 +61,15 @@ export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
 export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
 
-export const getRpcServiceUrl = (): string => getConfig()?.rpcServiceUrl
+export const getRpcServiceUrl = (): string => {
+  const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+
+  if (usesInfuraRPC) {
+    return getConfig()?.rpcServiceUrl + INFURA_TOKEN
+  }
+
+  return getConfig()?.rpcServiceUrl
+}
 
 export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
   name: getConfig()?.networkExplorerName,
@@ -79,23 +81,15 @@ export const getNetworkConfigFeatures = (): SafeFeatures | undefined => getConfi
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 
-export const getTxServiceUriFrom = (safeAddress: string) => `safes/${safeAddress}/transactions/`
+export const getTxServiceUriFrom = (safeAddress: string) => `/safes/${safeAddress}/transactions/`
 
-export const getIncomingTxServiceUriTo = (safeAddress: string) => `safes/${safeAddress}/incoming-transfers/`
+export const getIncomingTxServiceUriTo = (safeAddress: string) => `/safes/${safeAddress}/incoming-transfers/`
 
-export const getAllTransactionsUriFrom = (safeAddress: string) => `safes/${safeAddress}/all-transactions/`
+export const getAllTransactionsUriFrom = (safeAddress: string) => `/safes/${safeAddress}/all-transactions/`
 
-export const getSafeCreationTxUri = (safeAddress: string) => `safes/${safeAddress}/creation/`
+export const getSafeCreationTxUri = (safeAddress: string) => `/safes/${safeAddress}/creation/`
 
-export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkName()]
-
-export const buildSafeCreationTxUrl = (safeAddress: string) => {
-  const host = getTxServiceUrl()
-  const address = checksumAddress(safeAddress)
-  const base = getSafeCreationTxUri(address)
-
-  return `${host}${base}`
-}
+export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkId()]
 
 const fetchContractABI = memoize(
   async (url: string, contractAddress: string, apiKey?: string) => {

@@ -28,7 +28,6 @@ import {
 } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
@@ -66,7 +65,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
       const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
-      const estimatedGasCosts = await (
+      const estimatedGasCosts = (
         await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
       ).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
@@ -137,7 +136,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type={ExplorerTypes.Address} value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>

@@ -32,7 +32,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     const estimateGasCosts = async () => {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.methods.changeThreshold('1').encodeABI()
-      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
       const gasCostsAsEth = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {

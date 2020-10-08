@@ -24,7 +24,6 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -46,7 +45,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
       const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
-      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
@@ -124,7 +123,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn type={ExplorerTypes.Address} value={owner.address} />
+                            <EtherscanBtn value={owner.address} />
                           </Block>
                         </Block>
                       </Col>
@@ -153,7 +152,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn type={ExplorerTypes.Address} value={ownerAddress} />
+                    <EtherscanBtn value={ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -178,7 +177,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn type={ExplorerTypes.Address} value={values.ownerAddress} />
+                    <EtherscanBtn value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>
