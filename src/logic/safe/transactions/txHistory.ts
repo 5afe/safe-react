@@ -48,7 +48,7 @@ export const buildTxServiceUrl = (safeAddress: string): string => {
   const host = getTxServiceHost()
   const address = checksumAddress(safeAddress)
   const base = getTxServiceUriFrom(address)
-  return `${host}${base}?has_confirmations=True`
+  return `${host}${base}`
 }
 
 const SUCCESS_STATUS = 201 // CREATED status
