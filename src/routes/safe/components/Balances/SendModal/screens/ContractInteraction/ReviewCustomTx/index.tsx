@@ -20,7 +20,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
@@ -122,7 +122,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 {tx.contractAddress}
               </Paragraph>
               <CopyBtn content={tx.contractAddress as string} />
-              <EtherscanBtn type={ExplorerTypes.Address} value={tx.contractAddress as string} />
+              <EtherscanBtn value={tx.contractAddress as string} />
             </Block>
           </Col>
         </Row>

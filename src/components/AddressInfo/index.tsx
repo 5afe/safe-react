@@ -6,7 +6,6 @@ import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { border, xs } from 'src/theme/variables'
 import styled from 'styled-components'
 
@@ -60,7 +59,7 @@ const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactE
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn type={ExplorerTypes.Address} value={safeAddress} />
+          <EtherscanBtn value={safeAddress} />
         </div>
         {ethBalance && (
           <StyledBlock>

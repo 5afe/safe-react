@@ -1,7 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -18,11 +17,10 @@ interface EtherscanLinkProps {
   className?: string
   cut?: number
   knownAddress?: boolean
-  type: ExplorerTypes
   value: string
 }
 
-const EtherscanLink = ({ className, cut, knownAddress, type, value }: EtherscanLinkProps): React.ReactElement => {
+const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkProps): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -31,7 +29,7 @@ const EtherscanLink = ({ className, cut, knownAddress, type, value }: EtherscanL
         {cut ? shortVersionOf(value, cut) : value}
       </Span>
       <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
-      <EtherscanBtn className={classes.button} type={type} value={value} />
+      <EtherscanBtn className={classes.button} value={value} />
       {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
     </Block>
   )

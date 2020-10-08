@@ -27,7 +27,7 @@ import {
 } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
@@ -135,7 +135,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type={ExplorerTypes.Address} value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>
