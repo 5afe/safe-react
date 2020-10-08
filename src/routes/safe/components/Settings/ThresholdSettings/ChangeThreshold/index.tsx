@@ -3,7 +3,8 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import { styles } from './style'
 
 import Field from 'src/components/forms/Field'
@@ -19,22 +20,20 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
 const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
+  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
     const estimateGasCosts = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.methods.changeThreshold('1').encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
+      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const gasCostsAsEth = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCostsAsEth)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -46,7 +45,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     return () => {
       isCurrent = false
     }
-  }, [safeAddress])
+  }, [nativeCoin.decimals, safeAddress])
 
   const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]

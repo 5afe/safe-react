@@ -9,7 +9,7 @@ import React, { memo } from 'react'
 import { styles } from './style'
 
 import Img from 'src/components/layout/Img'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
@@ -20,6 +20,7 @@ const AssetRow = memo(({ classes, data, index, style }: any) => {
   const asset = assets.get(index)
   const { address, image, name, symbol } = asset
   const isActive = activeAssetsAddresses.has(asset.address)
+  const { nativeCoin } = getNetworkInfo()
 
   return (
     <div style={style}>
@@ -28,7 +29,7 @@ const AssetRow = memo(({ classes, data, index, style }: any) => {
           <Img alt={name} height={28} onError={setImageToPlaceholder} src={image} />
         </ListItemIcon>
         <ListItemText primary={symbol} secondary={name} />
-        {address !== ETH_ADDRESS && (
+        {address !== nativeCoin.address && (
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}

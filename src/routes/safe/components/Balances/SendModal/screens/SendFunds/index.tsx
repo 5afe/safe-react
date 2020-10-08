@@ -2,6 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { getNetworkInfo } from 'src/config'
 import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
@@ -78,6 +79,7 @@ const SendFunds = ({
 
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
+  const { nativeCoin } = getNetworkInfo()
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -212,7 +214,7 @@ const SendFunds = ({
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
+                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== nativeCoin.name.toUpperCase()}
                       tokens={tokens}
                     />
                   </Col>

@@ -4,7 +4,8 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -18,7 +19,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -29,18 +30,17 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
+  const { nativeCoin } = getNetworkInfo()
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
       const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
 
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -51,7 +51,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, values.ownerAddress, values.threshold])
+  }, [nativeCoin.decimals, safeAddress, values.ownerAddress, values.threshold])
 
   const handleSubmit = () => {
     onSubmit()

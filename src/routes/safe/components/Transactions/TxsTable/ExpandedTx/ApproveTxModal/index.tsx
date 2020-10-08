@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -18,7 +20,6 @@ import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
@@ -80,23 +81,21 @@ const ApproveTxModal = ({
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
+  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
-
       const estimatedGasCosts = await estimateTxGasCosts(
         safeAddress,
         tx.recipient,
         tx.data as string,
         tx,
         approveAndExecute ? userAddress : undefined,
-      )
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      ).toString()
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -107,7 +106,7 @@ const ApproveTxModal = ({
     return () => {
       isCurrent = false
     }
-  }, [approveAndExecute, safeAddress, tx, userAddress])
+  }, [approveAndExecute, nativeCoin, safeAddress, tx, userAddress])
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 

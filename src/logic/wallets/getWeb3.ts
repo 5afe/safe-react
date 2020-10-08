@@ -1,7 +1,6 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
-
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { NETWORK } from 'src/utils/constants'

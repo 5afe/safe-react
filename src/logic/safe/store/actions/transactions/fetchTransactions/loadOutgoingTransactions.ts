@@ -1,5 +1,6 @@
 import { fromJS, List, Map } from 'immutable'
 
+import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -103,6 +104,7 @@ const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxService
  * @returns {Promise<[Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>]>}
  */
 const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
+  const { nativeCoin } = getNetworkInfo()
   if (!transactions || !Array.isArray(transactions)) {
     throw new Error('`transactions` must be provided in order to lookup information')
   }
@@ -115,7 +117,7 @@ const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
       address: tx.to,
       batch,
       context: tx,
-      methods: [{ method: 'getCode', type: 'eth', args: [tx.to] }],
+      methods: [{ method: 'getCode', type: nativeCoin.symbol.toLowerCase(), args: [tx.to] }],
     })
   })
 

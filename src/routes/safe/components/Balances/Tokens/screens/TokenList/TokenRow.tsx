@@ -5,12 +5,12 @@ import ListItemText from '@material-ui/core/ListItemText'
 import Switch from '@material-ui/core/Switch'
 import { withStyles } from '@material-ui/core/styles'
 import React, { memo } from 'react'
+import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
 import Img from 'src/components/layout/Img'
 
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
@@ -20,7 +20,7 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
   const { activeTokensAddresses, onSwitch, tokens } = data
   const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
-
+  const { nativeCoin } = getNetworkInfo()
   return (
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>
@@ -28,7 +28,7 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
           <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
         </ListItemIcon>
         <ListItemText primary={token.symbol} secondary={token.name} />
-        {token.address !== ETH_ADDRESS && (
+        {token.address !== nativeCoin.address && (
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}

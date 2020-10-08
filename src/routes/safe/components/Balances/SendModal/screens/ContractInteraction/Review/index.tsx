@@ -2,7 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -16,7 +17,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -46,17 +46,18 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState('< 0.001')
-
+  const { nativeCoin } = getNetworkInfo()
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async (): Promise<void> => {
-      const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const estimatedGasCosts = await (
+        await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
+      ).toString()
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -68,14 +69,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, tx.contractAddress, tx.data])
+  }, [nativeCoin.decimals, safeAddress, tx.contractAddress, tx.data])
 
   const submitTx = async () => {
-    const web3 = getWeb3()
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
-
+    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
     dispatch(
       createTransaction({
         safeAddress,

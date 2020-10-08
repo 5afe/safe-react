@@ -4,7 +4,8 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -23,7 +24,7 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ExplorerTypes, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 
 import { styles } from './style'
 
@@ -35,20 +36,19 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector)
+  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
       const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const estimatedGasCosts = await (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -58,7 +58,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     return () => {
       isCurrent = false
     }
-  }, [ownerAddress, safeAddress, values.ownerAddress])
+  }, [nativeCoin.decimals, ownerAddress, safeAddress, values.ownerAddress])
 
   return (
     <>
