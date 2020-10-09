@@ -1,12 +1,10 @@
 import axios from 'axios'
 
-import { getTxServiceUrl } from 'src/config/index'
+import { getTxServiceUrl } from 'src/config'
 
-const fetchTokenBalanceList = (safeAddress) => {
+export const fetchTokenBalanceList = (safeAddress) => {
   const apiUrl = getTxServiceUrl()
   const url = `${apiUrl}/safes/${safeAddress}/balances/`
 
   return axios.get(url)
 }
-
-export default fetchTokenBalanceList

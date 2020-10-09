@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceUrl } from 'src/config/index'
+import { getTxServiceUrl } from 'src/config'
 
 type TokenResult = {
   address: string
