@@ -50,9 +50,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     const estimateGas = async () => {
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = (
-        await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      ).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 

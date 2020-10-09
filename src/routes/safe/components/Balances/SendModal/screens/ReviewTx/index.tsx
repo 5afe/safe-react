@@ -68,7 +68,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
-      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress as string, txRecipient, txData)).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 

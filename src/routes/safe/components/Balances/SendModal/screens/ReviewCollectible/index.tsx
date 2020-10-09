@@ -65,9 +65,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const tokenInstance = await ERC721Token.at(tx.assetAddress)
       const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
-      const estimatedGasCosts = (
-        await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
-      ).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 

@@ -1,6 +1,7 @@
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import { getERC20DecimalsAndSymbol, isERC721Contract, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 describe('isTokenTransfer', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
@@ -170,5 +171,42 @@ describe('isERC721Contract', () => {
     // then
     expect(result).toEqual(expectedResult)
     expect(standardContractSpy).toHaveBeenCalled()
+  })
+  it('It should return the gas cost with right amount of decimals', () => {
+    // given
+    const decimals = Number(18)
+    const symbol = 'ETH'
+
+    const nativeCoin = {
+      decimals,
+      symbol,
+    }
+    const expectedResult = '0.0000000000000000003'
+    const ESTIMATED_GASCOSTS = 0.3
+
+    // when
+    const gasCosts = fromTokenUnit(ESTIMATED_GASCOSTS, nativeCoin.decimals)
+
+    // then
+    expect(gasCosts).toEqual(expectedResult)
+  })
+
+  it('It should return the tx value as a token unit', () => {
+    // given
+    const decimals = Number(18)
+    const symbol = 'ETH'
+
+    const nativeCoin = {
+      decimals,
+      symbol,
+    }
+    const expectedResult = '300000000000000000'
+    const VALUE = 0.3
+
+    // when
+    const txValue = toTokenUnit(VALUE, nativeCoin.decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
   })
 })

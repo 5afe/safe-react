@@ -1,5 +1,5 @@
 import React from 'react'
-
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -43,6 +43,7 @@ interface Props {
 }
 
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactElement => {
+  const { nativeCoin } = getNetworkInfo()
   return (
     <Wrapper>
       <div className="icon-section">
@@ -64,7 +65,7 @@ const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactE
         {ethBalance && (
           <StyledBlock>
             <Paragraph noMargin>
-              Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ETH`}</Bold>
+              Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ${nativeCoin.symbol}`}</Bold>
             </Paragraph>
           </StyledBlock>
         )}

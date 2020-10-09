@@ -36,7 +36,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
       const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
-      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
 
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)

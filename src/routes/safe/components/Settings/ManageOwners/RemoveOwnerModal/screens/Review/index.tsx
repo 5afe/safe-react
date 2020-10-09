@@ -40,7 +40,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
       const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, values.threshold).encodeABI()
-      const estimatedGasCosts = (await estimateTxGasCosts(safeAddress, safeAddress, txData)).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 

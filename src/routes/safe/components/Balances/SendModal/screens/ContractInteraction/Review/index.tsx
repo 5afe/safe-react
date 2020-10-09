@@ -40,22 +40,21 @@ type Props = {
   tx: TransactionReviewType
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const { nativeCoin } = getNetworkInfo()
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async (): Promise<void> => {
       const txData = tx.data ? tx.data.trim() : ''
 
-      const estimatedGasCosts = (
-        await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      ).toString()
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 
@@ -69,7 +68,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, safeAddress, tx.contractAddress, tx.data])
+  }, [safeAddress, tx.contractAddress, tx.data])
 
   const submitTx = async () => {
     const txRecipient = tx.contractAddress
