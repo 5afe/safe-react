@@ -2,7 +2,7 @@ import axios, { AxiosResponse } from 'axios'
 
 import { getTxServiceUrl } from 'src/config'
 
-type TokenResult = {
+export type TokenResult = {
   address: string
   decimals?: number
   logoUri: string
