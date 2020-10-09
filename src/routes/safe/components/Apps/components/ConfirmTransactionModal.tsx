@@ -22,6 +22,8 @@ import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transaction
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gasNew'
 
+import GasEstimationInfo from './GasEstimationInfo'
+
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
     return false
@@ -108,9 +110,10 @@ const ConfirmTransactionModal = ({
         setEstimatingGas(false)
       }
     }
-
-    estimateGas()
-  }, [safeAddress, txs])
+    if (params?.safeTxGas) {
+      estimateGas()
+    }
+  }, [params, safeAddress, txs])
 
   const dispatch = useDispatch()
   if (!isOpen) {
@@ -181,16 +184,21 @@ const ConfirmTransactionModal = ({
                 <Heading tag="h3">Data (hex encoded)*</Heading>
                 <StyledTextBox>{tx.data}</StyledTextBox>
               </div>
-              {params?.safeTxGas && (
-                <div className="section">
-                  <Heading tag="h3">SafeTxGas*</Heading>
-                  <StyledTextBox>
-                    {params?.safeTxGas} ({estimatedSafeTxGas})
-                  </StyledTextBox>
-                </div>
-              )}
             </CollapseContent>
           </Collapse>
+          {params?.safeTxGas && (
+            <div className="section">
+              <Heading tag="h3">SafeTxGas*</Heading>
+              <StyledTextBox>
+                {params?.safeTxGas} (Estimated: {estimatedSafeTxGas})
+              </StyledTextBox>
+              <GasEstimationInfo
+                appEstimation={params.safeTxGas}
+                internalEstimation={estimatedSafeTxGas}
+                loading={estimatingGas}
+              />
+            </div>
+          )}
         </Wrapper>
       ))}
     </>
