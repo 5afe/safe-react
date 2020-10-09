@@ -61,7 +61,7 @@ deploy:
     local_dir: build
     upload-dir: current/app
     region: $AWS_DEFAULT_REGION
-   on:
+    on:
       branch: master
 
     # Prepare production deployment
