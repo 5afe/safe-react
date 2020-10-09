@@ -49,8 +49,8 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
     const methods = [
       'symbol',
       'decimals',
-      { method: 'getTransaction', args: [tx.transactionHash], type: nativeCoin.symbol.toLowerCase() },
-      { method: 'getTransactionReceipt', args: [tx.transactionHash], type: nativeCoin.symbol.toLowerCase() },
+      { method: 'getTransaction', args: [tx.transactionHash], type: 'eth' },
+      { method: 'getTransactionReceipt', args: [tx.transactionHash], type: 'eth' },
     ]
 
     return generateBatchRequests({
