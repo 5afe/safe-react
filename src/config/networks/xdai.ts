@@ -2,7 +2,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
-  safeAppsUrl: 'http://safe-apps-xdai.staging.gnosisdev.com/',
+  safeAppsUrl: 'http://safe-apps-xdai.staging.gnosisdev.com',
   gasPrice: 1e9,
   rpcServiceUrl: 'https://rpc.xdaichain.com',
   networkExplorerName: 'Blockscout',
@@ -16,7 +16,9 @@ const xDai: NetworkConfig = {
       ...baseConfig
     },
     production: {
-      ...baseConfig
+      ...baseConfig,
+      safeAppsUrl: 'http://apps-xdai.gnosis-safe.io',
+
     },
   },
   network: {
