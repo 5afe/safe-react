@@ -49,28 +49,26 @@ class Gnosis {
     this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
   }
 
-  static extractAssets(assets: TokenResult[]): NFTAssets {
-    const extractNFTAsset = (asset: TokenResult): NFTAsset => ({
-      address: asset.address,
-      description: asset.name,
-      image: asset.logoUri || NFTIcon,
-      name: asset.name,
-      numberOfTokens: 1,
-      slug: `${asset.address}_${asset.name}`,
-      symbol: asset.symbol,
-    })
+  static extractAssets(assets: TokenResult[], nftTokens: NFTTokens): NFTAssets {
+    const extractNFTAsset = (asset: TokenResult): NFTAsset => {
+      const numberOfTokens = nftTokens.filter(({ assetAddress }) => assetAddress === asset.address).length
+
+      return {
+        address: asset.address,
+        description: asset.name,
+        image: asset.logoUri || NFTIcon,
+        name: asset.name,
+        numberOfTokens,
+        slug: `${asset.address}_${asset.name}`,
+        symbol: asset.symbol,
+      }
+    }
 
     return assets.reduce((acc, asset) => {
       const address = asset.address
 
       if (acc[address] === undefined) {
         acc[address] = extractNFTAsset(asset)
-      } else {
-        // By default, extractNFTAsset sets `numberOfTokens` to 1,
-        // counting the asset recently processed.
-        // If it happens to already exist the asset in the map,
-        // then we just increment the `numberOfTokens` value by 1.
-        acc[address].numberOfTokens = acc[address].numberOfTokens + 1
       }
 
       return acc
@@ -96,9 +94,11 @@ class Gnosis {
    */
   async fetchCollectibles(safeAddress: string): Promise<Collectibles> {
     const { erc721Assets, erc721Tokens } = await this._fetch(safeAddress)
+    const nftTokens = Gnosis.extractTokens(erc721Tokens)
+
     return {
-      nftAssets: Gnosis.extractAssets(erc721Assets),
-      nftTokens: Gnosis.extractTokens(erc721Tokens),
+      nftTokens,
+      nftAssets: Gnosis.extractAssets(erc721Assets, nftTokens),
     }
   }
 }
