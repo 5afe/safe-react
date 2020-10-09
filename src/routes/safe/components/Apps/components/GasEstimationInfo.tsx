@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import Img from 'src/components/layout/Img'
 import CheckIcon from 'src/assets/icons/check.svg'
 import AlertIcon from 'src/assets/icons/alert.svg'
@@ -9,33 +10,38 @@ type OwnProps = {
   loading: boolean
 }
 
+const Container = styled.div`
+  display: flex;
+  align-items: center;
+`
+
+const imgStyles = {
+  marginRight: '5px',
+}
+
 const GasEstimationInfo = ({ appEstimation, internalEstimation, loading }: OwnProps): React.ReactElement => {
   if (loading) {
     return <p>Loading...</p>
   }
 
+  let content: React.ReactElement | null = null
   if (appEstimation > internalEstimation) {
-    return (
-      <div>
-        <Img alt="Success" src={CheckIcon} /> The estimation is correct
-      </div>
+    content = (
+      <>
+        <Img alt="Success" src={CheckIcon} style={imgStyles} /> Gas estimation is OK
+      </>
     )
   }
 
-  if (internalEstimation > appEstimation) {
-    return (
-      <div>
-        <Img alt="Warning" src={AlertIcon} /> Gas estimation provided by developer is too low. The transaction most
-        likely will fail.
-      </div>
+  if (internalEstimation === 0) {
+    content = (
+      <>
+        <Img alt="Warning" src={AlertIcon} style={imgStyles} /> Error while estimating gas. The transaction may fail.
+      </>
     )
   }
 
-  return (
-    <div>
-      success: <Img alt="Success" src={CheckIcon} /> <Img alt="Warning" src={AlertIcon} />
-    </div>
-  )
+  return <Container>{content}</Container>
 }
 
 export default GasEstimationInfo

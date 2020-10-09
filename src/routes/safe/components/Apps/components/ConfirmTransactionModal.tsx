@@ -96,6 +96,7 @@ const ConfirmTransactionModal = ({
   useEffect(() => {
     const estimateGas = async () => {
       try {
+        setEstimatingGas(true)
         const safeTxGas = await estimateSafeTxGas(
           undefined,
           safeAddress,
@@ -107,6 +108,8 @@ const ConfirmTransactionModal = ({
 
         setEstimatedSafeTxGas(safeTxGas)
       } catch (err) {
+        console.error(err)
+      } finally {
         setEstimatingGas(false)
       }
     }
@@ -144,7 +147,7 @@ const ConfirmTransactionModal = ({
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
-          safeTxGas: params?.safeTxGas,
+          safeTxGas: Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
         },
         handleUserConfirmation,
         handleTxRejection,
@@ -186,21 +189,20 @@ const ConfirmTransactionModal = ({
               </div>
             </CollapseContent>
           </Collapse>
-          {params?.safeTxGas && (
-            <div className="section">
-              <Heading tag="h3">SafeTxGas*</Heading>
-              <StyledTextBox>
-                {params?.safeTxGas} (Estimated: {estimatedSafeTxGas})
-              </StyledTextBox>
-              <GasEstimationInfo
-                appEstimation={params.safeTxGas}
-                internalEstimation={estimatedSafeTxGas}
-                loading={estimatingGas}
-              />
-            </div>
-          )}
         </Wrapper>
       ))}
+      <DividerLine withArrow={false} />
+      {params?.safeTxGas && (
+        <div className="section">
+          <Heading tag="h3">SafeTxGas</Heading>
+          <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
+          <GasEstimationInfo
+            appEstimation={params.safeTxGas}
+            internalEstimation={estimatedSafeTxGas}
+            loading={estimatingGas}
+          />
+        </div>
+      )}
     </>
   )
 
