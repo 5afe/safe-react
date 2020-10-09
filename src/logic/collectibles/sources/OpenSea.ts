@@ -1,60 +1,9 @@
 import { RateLimit } from 'async-sema'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { Collectibles, NFTAssets, NFTTokens, OpenSeaAssets } from 'src/logic/collectibles/sources/collectibles'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from 'src/utils/constants'
-
-export interface OpenSeaAssetContract {
-  address: string
-  name: string
-  image_url: string
-  symbol: string
-}
-
-export interface OpenSeaCollection {
-  name: string
-  slug: string
-}
-
-export interface OpenSeaAsset {
-  asset_contract: OpenSeaAssetContract
-  background_color: string
-  collection: OpenSeaCollection
-  description: string
-  image_thumbnail_url: string
-  name: string
-  token_id: string
-}
-
-export type OpenSeaAssets = Array<OpenSeaAsset>
-
-export interface NFTAsset {
-  address: string
-  assetContract: OpenSeaAssetContract
-  collection: OpenSeaCollection
-  description: string
-  image: string
-  name: string
-  numberOfTokens: number
-  slug: string
-  symbol: string
-}
-export type NFTAssets = Record<string, NFTAsset>
-
-export interface NFTToken {
-  assetAddress: string
-  color: string
-  description: string
-  image: string
-  name: string
-  tokenId: number | string
-}
-export type NFTTokens = Array<NFTToken>
-
-export interface Collectibles {
-  nftAssets: NFTAssets
-  nftTokens: NFTTokens
-}
 
 class OpenSea {
   _rateLimit = async (): Promise<void> => {}
