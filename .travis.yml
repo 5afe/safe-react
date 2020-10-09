@@ -16,9 +16,6 @@ matrix:
     - env:
         - REACT_APP_NETWORK='rinkeby'
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
-    - env:
-        - REACT_APP_NETWORK='xdai'
-        - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
 cache:
   yarn: true
 before_script:
@@ -65,9 +62,7 @@ deploy:
     upload-dir: current/app
     region: $AWS_DEFAULT_REGION
    on:
-      # branch: master
-      all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(master|xdai-deploy-test)$
+      branch: master
 
     # Prepare production deployment
   - provider: s3
