@@ -1,6 +1,5 @@
 import { RateLimit } from 'async-sema'
 
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchErc20AndErc721AssetsList, fetchSafeCollectibles } from 'src/logic/tokens/api'
@@ -93,16 +92,10 @@ class Gnosis {
    * Fetches from OpenSea the list of collectibles, grouped by category,
    * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
-   * @param {string} network
    * @returns {Promise<Collectibles>}
    */
-  async fetchCollectibles(
-    safeAddress: string,
-    network: ETHEREUM_NETWORK = ETHEREUM_NETWORK.XDAI,
-  ): Promise<Collectibles> {
-    console.log({ network })
+  async fetchCollectibles(safeAddress: string): Promise<Collectibles> {
     const { erc721Assets, erc721Tokens } = await this._fetch(safeAddress)
-    console.log({ erc721Assets, erc721Tokens })
     return {
       nftAssets: Gnosis.extractAssets(erc721Assets),
       nftTokens: Gnosis.extractTokens(erc721Tokens),
