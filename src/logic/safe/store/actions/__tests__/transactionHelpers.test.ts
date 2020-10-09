@@ -572,18 +572,6 @@ describe('calculateTransactionStatus', () => {
     // then
     expect(result).toBe(TransactionStatus.PENDING)
   })
-  it('It should return PENDING if the tx has no confirmations', () => {
-    // given
-    const transaction = makeTransaction({ confirmations: List(), isPending: false })
-    const safe = makeSafe({ threshold: 3 })
-    const currentUser = safeAddress
-
-    // when
-    const result = calculateTransactionStatus(transaction, safe, currentUser)
-
-    // then
-    expect(result).toBe(TransactionStatus.PENDING)
-  })
   it('It should return AWAITING_CONFIRMATIONS if the tx has confirmations bellow the threshold, the user is owner and signed', () => {
     // given
     const userAddress = 'address1'
