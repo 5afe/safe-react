@@ -193,7 +193,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
 
   // Network
   TESTNET_VERSION_MSG: {
-    message: "Testnet Version: Don't send Production assets to this Safe",
+    message: "Testnet Version: Don't send production assets to this Safe",
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {
