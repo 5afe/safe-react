@@ -4,7 +4,9 @@ import * as React from 'react'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
-import { border, md, screenSm, sm, xs } from 'src/theme/variables'
+import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
+
+const networkInfo = getNetworkInfo()
 
 const useStyles = makeStyles({
   container: {
@@ -16,7 +18,8 @@ const useStyles = makeStyles({
     },
   },
   text: {
-    background: border,
+    backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
+    color: `${networkInfo?.textColor ?? fontColor}`,
     borderRadius: '3px',
     lineHeight: 'normal',
     margin: '0',
@@ -30,7 +33,6 @@ const useStyles = makeStyles({
 
 const NetworkLabel = (): React.ReactElement => {
   const classes = useStyles()
-  const networkInfo = getNetworkInfo()
 
   return (
     <Col className={classes.container} middle="xs" start="xs">

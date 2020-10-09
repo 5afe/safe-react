@@ -6,7 +6,6 @@ import EtherscanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import { lg, md } from 'src/theme/variables'
@@ -29,7 +28,7 @@ const TransferDescription = ({ from, txFromName, value = '' }) => (
     {txFromName ? (
       <OwnerAddressTableCell address={from} knownAddress showLinks userName={txFromName} />
     ) : (
-      <EtherscanLink knownAddress={false} type={ExplorerTypes.Address} value={from} />
+      <EtherscanLink knownAddress={false} value={from} />
     )}
   </Block>
 )

@@ -3,18 +3,19 @@ import { ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 const xDai: NetworkConfig = {
   environment: {
     production: {
-      txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1/',
-      safeAppsUrl: 'https://apps.gnosis-safe.io/',
+      txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
+      safeAppsUrl: 'https://apps.gnosis-safe.io',
       gasPrice: 1e9,
-      rpcServiceUrl: 'https://rpc.xdaichain.com/',
+      rpcServiceUrl: 'https://rpc.xdaichain.com',
       networkExplorerName: 'Blockscout',
-      networkExplorerUrl: 'https://blockscout.com/poa/xdai/',
+      networkExplorerUrl: 'https://blockscout.com/poa/xdai',
       networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
     },
   },
   network: {
     id: ETHEREUM_NETWORK.XDAI,
-    color: '#48A8A6',
+    backgroundColor: '#48A8A6',
+    textColor: '#ffffff',
     label: 'xDai',
     isTestNet: false,
     nativeCoin: {

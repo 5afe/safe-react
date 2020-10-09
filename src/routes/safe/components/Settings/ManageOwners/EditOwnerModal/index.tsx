@@ -23,7 +23,6 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { ExplorerTypes } from 'src/logic/wallets/getWeb3'
 import { sm } from 'src/theme/variables'
 
 import { styles } from './style'
@@ -94,7 +93,7 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
                     {ownerAddress}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
-                  <EtherscanBtn type={ExplorerTypes.Address} value={safeAddress} />
+                  <EtherscanBtn value={safeAddress} />
                 </Block>
               </Row>
             </Block>

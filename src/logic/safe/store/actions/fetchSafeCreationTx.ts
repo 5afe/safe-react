@@ -1,7 +1,7 @@
 import axios from 'axios'
 import { List } from 'immutable'
 
-import { buildSafeCreationTxUrl } from 'src/config'
+import { buildSafeCreationTxUrl } from 'src/logic/safe/utils/buildSafeCreationTxUrl'
 import { addOrUpdateTransactions } from './transactions/addOrUpdateTransactions'
 import { makeTransaction } from 'src/logic/safe/store/models/transaction'
 import { TransactionTypes, TransactionStatus } from 'src/logic/safe/store/models/types/transaction'

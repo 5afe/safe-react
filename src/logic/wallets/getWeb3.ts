@@ -2,12 +2,11 @@ import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
 
-import { getNetworkId } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { NETWORK } from 'src/utils/constants'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
+import { NODE_ENV } from 'src/utils/constants'
+import { getRpcServiceUrl } from 'src/config'
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -27,58 +26,11 @@ export const WALLET_PROVIDER = {
   TREZOR: 'TREZOR',
 }
 
-export enum ExplorerTypes {
-  Tx = 'tx',
-  Address = 'address',
-}
-
-export const getEtherScanLink = (network: ETHEREUM_NETWORK, type: ExplorerTypes, value: string): string =>
-  `https://${
-    network === ETHEREUM_NETWORK.MAINNET ? '' : `${ETHEREUM_NETWORK[network].toLowerCase()}.`
-  }etherscan.io/${type}/${value}`
-
-export const getExplorerLink = (type: ExplorerTypes, value: string): string => {
-  const network = getNetworkId()
-
-  switch (network) {
-    case ETHEREUM_NETWORK.MAINNET:
-      return getEtherScanLink(ETHEREUM_NETWORK.MAINNET, type, value)
-    case ETHEREUM_NETWORK.RINKEBY:
-      return getEtherScanLink(ETHEREUM_NETWORK.RINKEBY, type, value)
-    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
-      return `https://explorer.energyweb.org/${type}/${value}`
-    case ETHEREUM_NETWORK.VOLTA:
-      return `https://volta-explorer.energyweb.org/${type}/${value}`
-    default:
-      return getEtherScanLink(network, type, value)
-  }
-}
-
-export const getInfuraUrl = (network: ETHEREUM_NETWORK): string =>
-  `https://${network === ETHEREUM_NETWORK.MAINNET ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${
-    process.env.REACT_APP_INFURA_TOKEN
-  }`
-
-export const getRPCUrl = (network: ETHEREUM_NETWORK): string => {
-  switch (network) {
-    case ETHEREUM_NETWORK.MAINNET:
-      return getInfuraUrl(network)
-    case ETHEREUM_NETWORK.RINKEBY:
-      return getInfuraUrl(network)
-    case ETHEREUM_NETWORK.ENERGY_WEB_CHAIN:
-      return 'https://rpc.energyweb.org'
-    case ETHEREUM_NETWORK.VOLTA:
-      return 'https://volta-rpc.energyweb.org'
-    default:
-      return ''
-  }
-}
-
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
-    ? new Web3.providers.HttpProvider(getRPCUrl(ETHEREUM_NETWORK[NETWORK] ?? ETHEREUM_NETWORK.RINKEBY))
+    ? new Web3.providers.HttpProvider(getRpcServiceUrl())
     : window.web3?.currentProvider || 'ws://localhost:8545',
 )
 
@@ -92,7 +44,7 @@ export const resetWeb3 = (): void => {
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
-  if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
+  if (NODE_ENV === 'test' && window.testAccountIndex) {
     return accounts[window.testAccountIndex]
   }
 

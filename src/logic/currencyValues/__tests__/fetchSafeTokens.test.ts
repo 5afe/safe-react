@@ -49,8 +49,6 @@ describe('fetchTokenCurrenciesBalances', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`, {
-      params: { limit: 3000 },
-    })
+    expect(axios.get).toBeCalledWith(`${apiUrl}/safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`)
   })
 })

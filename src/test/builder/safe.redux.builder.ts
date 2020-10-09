@@ -89,9 +89,7 @@ export const aMinedSafe = async (
     form[getOwnerAddressBy(i)] = accounts[i]
   }
 
-  const openSafeProps = await createSafe(form, accounts[0])
-
-  return openSafeProps.safeAddress
+  return createSafe(form, accounts[0]).then((receipt) => receipt.events?.ProxyCreation.returnValues.proxy)
 }
 
 export default aSafe
