@@ -31,6 +31,7 @@ const rinkeby: NetworkConfig = {
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'Rinkeby',
+    isTestNet: true,
     nativeCoin: {
       address: '0x000',
       name: 'Ether',

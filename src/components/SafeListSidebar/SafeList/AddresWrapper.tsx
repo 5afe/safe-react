@@ -5,7 +5,6 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import DefaultBadge from './DefaultBadge'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { getExplorerInfo } from 'src/config'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
 import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeStyles } from '@material-ui/core/styles'
@@ -52,10 +51,10 @@ type Props = {
 export const AddressWrapper = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { safe, defaultSafe, setDefaultSafe } = props
-  const explorerUrl = getExplorerInfo(safe.address)
+
   return (
     <div className={classes.wrapper}>
-      <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} explorerUrl={explorerUrl} />
+      <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} />
 
       <div className={classes.addressDetails}>
         <Text size="xl">{`${formatAmount(safe.ethBalance)} ETH`}</Text>

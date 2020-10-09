@@ -2,10 +2,9 @@ import ReactGA from 'react-ga'
 
 import addProvider from './addProvider'
 
-import { getNetworkId } from 'src/config'
+import { getNetworkId, getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import { updateStoredTransactionsStatus } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -29,8 +28,9 @@ const handleProviderNotification = (provider, dispatch) => {
     dispatch(enqueueSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG))
     return
   }
-  if (ETHEREUM_NETWORK.RINKEBY === getNetworkId()) {
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.RINKEBY_VERSION_MSG)))
+
+  if (getNetworkInfo().isTestNet) {
+    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TESTNET_VERSION_MSG)))
   }
 
   if (available) {

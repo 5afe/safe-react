@@ -63,11 +63,10 @@ interface ProviderInfoProps {
   connected: boolean
   provider: string
   // TODO: [xDai] Review. This may cause some issues with EthHashInfo.
-  network: number
   userAddress: string
 }
 
-const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInfoProps): React.ReactElement => {
+const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
   const addressColor = connected ? 'text' : 'warning'
   return (
@@ -107,7 +106,7 @@ const ProviderInfo = ({ connected, provider, userAddress, network }: ProviderInf
         </div>
       </Col>
       <Col className={classes.networkLabel} layout="column" start="sm">
-        <NetworkLabel network={network} />
+        <NetworkLabel />
       </Col>
     </>
   )
