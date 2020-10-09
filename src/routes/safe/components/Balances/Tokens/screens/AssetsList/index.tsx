@@ -1,4 +1,3 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
@@ -6,6 +5,7 @@ import SearchBar from 'material-ui-search-bar'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
+import Paragraph from 'src/components/layout/Paragraph'
 
 import { useStyles } from './style'
 
@@ -128,7 +128,7 @@ const AssetsList = (props) => {
       </Block>
       {!nftAssetsList.length && (
         <Block className={classes.progressContainer} justify="center">
-          <CircularProgress />
+          <Paragraph>No collectibles available</Paragraph>
         </Block>
       )}
       {nftAssetsList.length > 0 && (
