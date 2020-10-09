@@ -17,9 +17,9 @@ export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 // eslint-disable-next-line react/display-name
 const AssetRow = memo(({ classes, data, index, style }: any) => {
   const { activeAssetsAddresses, assets, onSwitch } = data
-  const asset = assets.get(index)
+  const asset = assets[index]
   const { address, image, name, symbol } = asset
-  const isActive = activeAssetsAddresses.has(asset.address)
+  const isActive = activeAssetsAddresses.includes(asset.address)
 
   return (
     <div style={style}>

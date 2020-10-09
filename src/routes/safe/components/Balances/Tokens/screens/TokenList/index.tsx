@@ -1,6 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
-import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import { List, Set } from 'immutable'
@@ -9,7 +8,7 @@ import React, { useState } from 'react'
 import { FixedSizeList } from 'react-window'
 
 import TokenRow from './TokenRow'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -31,8 +30,6 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
       token.symbol.toLowerCase().includes(filter.toLowerCase()) ||
       token.name.toLowerCase().includes(filter.toLowerCase()),
   )
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   setActiveScreen: (newScreen: string) => void
