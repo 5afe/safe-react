@@ -1,4 +1,5 @@
 import { RateLimit } from 'async-sema'
+import { getNetworkId } from 'src/config'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { Collectibles, NFTAssets, NFTTokens, OpenSeaAssets } from 'src/logic/collectibles/sources/collectibles'
@@ -82,14 +83,11 @@ class OpenSea {
    * Fetches from OpenSea the list of collectibles, grouped by category,
    * for the provided Safe Address in the specified Network
    * @param {string} safeAddress
-   * @param {string} network
    * @returns {Promise<Collectibles>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: ETHEREUM_NETWORK): Promise<Collectibles> {
-    // eslint-disable-next-line no-underscore-dangle
-    const metadataSourceUrl = this._endpointsUrls[network]
+  async fetchCollectibles(safeAddress: string): Promise<Collectibles> {
+    const metadataSourceUrl = this._endpointsUrls[getNetworkId()]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`
-    // eslint-disable-next-line no-underscore-dangle
     const assetsResponse = await this._fetch(url)
     const assetsResponseJson = await assetsResponse.json()
     return OpenSea.extractCollectiblesInfo(assetsResponseJson)
