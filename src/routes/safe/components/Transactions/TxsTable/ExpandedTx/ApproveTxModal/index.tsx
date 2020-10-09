@@ -62,6 +62,7 @@ type Props = {
   thresholdReached: boolean
   tx: Transaction
 }
+const { nativeCoin } = getNetworkInfo()
 
 const ApproveTxModal = ({
   canExecute,
@@ -81,7 +82,6 @@ const ApproveTxModal = ({
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
-  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
@@ -106,7 +106,7 @@ const ApproveTxModal = ({
     return () => {
       isCurrent = false
     }
-  }, [approveAndExecute, nativeCoin, safeAddress, tx, userAddress])
+  }, [approveAndExecute, safeAddress, tx, userAddress])
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 

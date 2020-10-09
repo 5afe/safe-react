@@ -38,12 +38,13 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  const { nativeCoin } = getNetworkInfo()
   useEffect(() => {
     let isCurrent = true
 
@@ -64,7 +65,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, tx.data, tx.contractAddress, nativeCoin.decimals])
+  }, [safeAddress, tx.data, tx.contractAddress])
 
   const submitTx = async (): Promise<void> => {
     const txRecipient = tx.contractAddress
