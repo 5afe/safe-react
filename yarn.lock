@@ -1501,9 +1501,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#1bf397f":
-  version "0.2.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#1bf397f2bc48ba48906824137943f0bb5804c99c"
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#70e57bdd1e0fd5dfdf5768076577c1e000b5fe28":
+  version "0.4.0"
+  resolved "https://github.com/gnosis/safe-react-components.git#70e57bdd1e0fd5dfdf5768076577c1e000b5fe28"
   dependencies:
     classnames "^2.2.6"
     polished "3.6.5"
@@ -2878,12 +2878,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/node@*":
-  version "14.0.27"
-  resolved "https://registry.yarnpkg.com/@types/node/-/node-14.0.27.tgz#a151873af5a5e851b51b3b065c9e63390a9e0eb1"
-  integrity sha512-kVrqXhbclHNHGu9ztnAwSncIgJv/FaxmzXJvGXNdcCpV1b8u1/Mi6z6m0vwy0LzKeXFTPLH0NzwmoJ3fNCIq0g==
-
-"@types/node@14.11.2":
+"@types/node@*", "@types/node@14.11.2":
   version "14.11.2"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-14.11.2.tgz#2de1ed6670439387da1c9f549a2ade2b0a799256"
   integrity sha512-jiE3QIxJ8JLNcb1Ps6rDbysDhN4xa8DJJvuC9prr6w+1tIh+QAbYyNF3tyiZNLDBIuBCf4KEcV2UvQm/V60xfA==
@@ -7779,10 +7774,10 @@ electron-updater@4.3.4:
     lodash.isequal "^4.5.0"
     semver "^7.3.2"
 
-electron@9.3.0:
-  version "9.3.0"
-  resolved "https://registry.yarnpkg.com/electron/-/electron-9.3.0.tgz#a4f3dc17f31acc6797eb4c2c4bd0d0e25efb939b"
-  integrity sha512-7zPLEZ+kOjVJqfawMQ0vVuZZRqvZIeiID3tbjjbVybbxXIlFMpZ2jogoh7PV3rLrtm+dKRfu7Qc4E7ob1d0FqQ==
+electron@9.3.1:
+  version "9.3.1"
+  resolved "https://registry.yarnpkg.com/electron/-/electron-9.3.1.tgz#e301932c5c0537d8c9a8850d216d3ba454dbf55c"
+  integrity sha512-DScrhqBT4a54KfdF0EoipALpHmdQTn3m7SSCtbpTcEcG+UDUiXad2cOfW6DHeVH7N+CVDKDG12q2PhVJjXkFAA==
   dependencies:
     "@electron/get" "^1.0.1"
     "@types/node" "^12.0.12"

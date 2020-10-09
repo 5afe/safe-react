@@ -6,18 +6,13 @@ import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minValue, maxValue, mustBeFloat, required } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -25,6 +20,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
@@ -33,6 +29,10 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -184,7 +184,7 @@ const SendFunds = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <EtherscanBtn value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>

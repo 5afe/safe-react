@@ -1,7 +1,6 @@
 import { OptionsObject } from 'notistack'
 
-import { getNetwork } from 'src/config'
-import { capitalize } from 'src/utils/css'
+import { getNetworkName } from 'src/config'
 
 export const SUCCESS = 'success'
 export const ERROR = 'error'
@@ -198,7 +197,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${capitalize(getNetwork())}`,
+    message: `Wrong network: Please use ${getNetworkName()}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 

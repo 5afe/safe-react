@@ -1,6 +1,6 @@
 import { RateLimit } from 'async-sema'
 
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from 'src/utils/constants'
 
@@ -136,7 +136,7 @@ class OpenSea {
    * @param {string} network
    * @returns {Promise<Collectibles>}
    */
-  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: string): Promise<Collectibles> {
+  async fetchAllUserCollectiblesByCategoryAsync(safeAddress: string, network: ETHEREUM_NETWORK): Promise<Collectibles> {
     // eslint-disable-next-line no-underscore-dangle
     const metadataSourceUrl = this._endpointsUrls[network]
     const url = `${metadataSourceUrl}/assets/?owner=${safeAddress}`

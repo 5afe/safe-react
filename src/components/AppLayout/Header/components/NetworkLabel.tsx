@@ -3,11 +3,15 @@ import * as React from 'react'
 
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { getNetwork } from 'src/config'
-import { border, md, screenSm, sm, xs } from 'src/theme/variables'
+import { getNetworkId, getNetworkInfo } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
 
-const interfaceNetwork = getNetwork()
-const formatNetwork = (network: string): string => network[0].toUpperCase() + network.substring(1).toLowerCase()
+const interfaceNetwork = getNetworkId()
+const formatNetwork = (network: number): string =>
+  ETHEREUM_NETWORK[network][0].toUpperCase() + ETHEREUM_NETWORK[network].substring(1).toLowerCase()
+
+const networkInfo = getNetworkInfo()
 
 const useStyles = makeStyles({
   container: {
@@ -19,7 +23,8 @@ const useStyles = makeStyles({
     },
   },
   text: {
-    background: border,
+    backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
+    color: `${networkInfo?.textColor ?? fontColor}`,
     borderRadius: '3px',
     lineHeight: 'normal',
     margin: '0',
@@ -32,7 +37,7 @@ const useStyles = makeStyles({
 })
 
 interface NetworkLabelProps {
-  network?: string
+  network?: number
 }
 
 const NetworkLabel = ({ network = interfaceNetwork }: NetworkLabelProps): React.ReactElement => {

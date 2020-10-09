@@ -3,8 +3,8 @@ import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
-import { getSafeLastVersion } from 'src/config'
 import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
+import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 
 export const FEATURES = [
   { name: 'ERC721', validVersion: '>=1.1.1' },
@@ -60,11 +60,11 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
   const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {
-    safeMasterVersion = await safeMaster.VERSION()
+    safeMasterVersion = await safeMaster.methods.VERSION().call()
   } catch (err) {
     // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an
     // env variable
-    safeMasterVersion = getSafeLastVersion()
+    safeMasterVersion = LATEST_SAFE_VERSION
   }
   return safeMasterVersion
 }

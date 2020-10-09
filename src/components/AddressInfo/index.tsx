@@ -1,5 +1,4 @@
 import React from 'react'
-import styled from 'styled-components'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -8,6 +7,7 @@ import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import { border, xs } from 'src/theme/variables'
+import styled from 'styled-components'
 
 const Wrapper = styled.div`
   display: flex;
@@ -59,7 +59,7 @@ const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactE
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn type="address" value={safeAddress} />
+          <EtherscanBtn value={safeAddress} />
         </div>
         {ethBalance && (
           <StyledBlock>

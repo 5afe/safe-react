@@ -1,28 +1,28 @@
-import TableContainer from '@material-ui/core/TableContainer'
 import { makeStyles } from '@material-ui/core/styles'
+import TableContainer from '@material-ui/core/TableContainer'
 import React, { useEffect, useState } from 'react'
+
+import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
-import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
-
-import { useSelector } from 'react-redux'
+import OpenPaper from 'src/components/Stepper/OpenPaper'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
-import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
+import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
 
 const calculateSafeValues = (owners, threshold, values) => {
@@ -112,7 +112,7 @@ const OwnerListComponent = (props) => {
                       {address}
                     </Paragraph>
                     <CopyBtn content={address} />
-                    <EtherscanBtn type="address" value={address} />
+                    <EtherscanBtn value={address} />
                   </Row>
                 </Col>
               </Row>

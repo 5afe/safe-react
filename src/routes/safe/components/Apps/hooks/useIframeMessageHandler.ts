@@ -12,7 +12,8 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { getTxServiceHost } from 'src/config/'
+import { getTxServiceUrl } from 'src/config/'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
@@ -90,14 +91,14 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: network.toLowerCase() as LowercaseNetworks,
+              network: ETHEREUM_NETWORK[network].toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
           const envInfoMessage = {
             messageId: INTERFACE_MESSAGES.ENV_INFO,
             data: {
-              txServiceUrl: getTxServiceHost(),
+              txServiceUrl: getTxServiceUrl(),
             },
           }
 

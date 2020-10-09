@@ -5,8 +5,6 @@ import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -16,11 +14,13 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+
+import { styles } from './style'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -120,7 +120,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn type="address" value={owner.address} />
+                            <EtherscanBtn value={owner.address} />
                           </Block>
                         </Block>
                       </Col>
@@ -149,7 +149,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn type="address" value={ownerAddress} />
+                    <EtherscanBtn value={ownerAddress} />
                   </Block>
                 </Block>
               </Col>

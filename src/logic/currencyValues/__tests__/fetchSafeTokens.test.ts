@@ -1,7 +1,7 @@
 import { aNewStore } from 'src/store'
 import fetchTokenCurrenciesBalances from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import axios from 'axios'
-import { getTxServiceHost } from 'src/config'
+import { getTxServiceUrl } from 'src/config'
 
 jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
@@ -38,7 +38,7 @@ describe('fetchTokenCurrenciesBalances', () => {
         usdConversion: '1.188',
       },
     ]
-    const apiUrl = getTxServiceHost()
+    const apiUrl = getTxServiceUrl()
 
     // @ts-ignore
     axios.get.mockImplementationOnce(() => Promise.resolve(expectedResult))
@@ -49,8 +49,6 @@ describe('fetchTokenCurrenciesBalances', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`, {
-      params: { limit: 3000 },
-    })
+    expect(axios.get).toBeCalledWith(`${apiUrl}/safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`)
   })
 })
