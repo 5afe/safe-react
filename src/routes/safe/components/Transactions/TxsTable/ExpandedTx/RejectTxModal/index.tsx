@@ -32,11 +32,12 @@ type Props = {
   tx: Transaction
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
-  const { nativeCoin } = getNetworkInfo()
   const classes = useStyles()
 
   useEffect(() => {
@@ -55,7 +56,7 @@ const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, safeAddress])
+  }, [safeAddress])
 
   const sendReplacementTransaction = () => {
     dispatch(

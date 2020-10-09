@@ -24,12 +24,13 @@ import { styles } from './style'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
-  const { nativeCoin } = getNetworkInfo()
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
@@ -50,7 +51,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, safeAddress, values.ownerAddress, values.threshold])
+  }, [safeAddress, values.ownerAddress, values.threshold])
 
   const handleSubmit = () => {
     onSubmit()

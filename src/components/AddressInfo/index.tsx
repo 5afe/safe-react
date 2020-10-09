@@ -42,8 +42,9 @@ interface Props {
   ethBalance?: string
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactElement => {
-  const { nativeCoin } = getNetworkInfo()
   return (
     <Wrapper>
       <div className="icon-section">

@@ -23,9 +23,10 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
+const { nativeCoin } = getNetworkInfo()
+
 const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
@@ -45,7 +46,7 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, safeAddress])
+  }, [safeAddress])
 
   const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]

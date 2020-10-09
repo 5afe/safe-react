@@ -29,13 +29,14 @@ import { styles } from './style'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector)
-  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     let isCurrent = true
@@ -57,7 +58,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, ownerAddress, safeAddress, values.ownerAddress])
+  }, [ownerAddress, safeAddress, values.ownerAddress])
 
   return (
     <>

@@ -37,6 +37,8 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
+const { nativeCoin } = getNetworkInfo()
+
 const useStyles = makeStyles(styles as any)
 
 const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
@@ -46,7 +48,6 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const nftTokens = useSelector(nftTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const { nativeCoin } = getNetworkInfo()
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
@@ -80,7 +81,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, safeAddress, tx.assetAddress, tx.nftTokenId, tx.recipientAddress])
+  }, [safeAddress, tx.assetAddress, tx.nftTokenId, tx.recipientAddress])
 
   const submitTx = async () => {
     dispatch(

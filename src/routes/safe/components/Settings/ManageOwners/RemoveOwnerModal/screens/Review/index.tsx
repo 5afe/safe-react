@@ -24,13 +24,13 @@ import { styles } from './style'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
-  const { nativeCoin } = getNetworkInfo()
-
   useEffect(() => {
     let isCurrent = true
 
@@ -53,7 +53,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     return () => {
       isCurrent = false
     }
-  }, [nativeCoin.decimals, ownerAddress, safeAddress, values.threshold])
+  }, [ownerAddress, safeAddress, values.threshold])
 
   return (
     <>
