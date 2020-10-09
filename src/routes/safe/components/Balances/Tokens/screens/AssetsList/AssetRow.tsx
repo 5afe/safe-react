@@ -8,7 +8,7 @@ import React, { memo } from 'react'
 import { useStyles } from 'src/routes/safe/components/Balances/Tokens/screens/TokenList/style'
 import Img from 'src/components/layout/Img'
 import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { setCollectibleImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
@@ -24,7 +24,7 @@ const AssetRow = memo(({ data, index, style }: any) => {
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>
         <ListItemIcon className={classes.tokenIcon}>
-          <Img alt={name} height={28} onError={setImageToPlaceholder} src={image} />
+          <Img alt={name} height={28} onError={setCollectibleImageToPlaceholder} src={image} />
         </ListItemIcon>
         <ListItemText primary={symbol} secondary={name} />
         {address !== ETH_ADDRESS && (
