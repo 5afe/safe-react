@@ -1,6 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
-import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import SearchBar from 'material-ui-search-bar'
@@ -8,7 +7,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -25,7 +24,6 @@ import {
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-const useStyles = makeStyles(styles as any)
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 
@@ -137,7 +135,7 @@ const AssetsList = (props) => {
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}
-            itemCount={nftAssetsFilteredList.size}
+            itemCount={nftAssetsFilteredList.length}
             itemData={itemData}
             itemKey={getItemKey}
             itemSize={51}

@@ -3,10 +3,9 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Switch from '@material-ui/core/Switch'
-import { withStyles } from '@material-ui/core/styles'
 import React, { memo } from 'react'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Img from 'src/components/layout/Img'
 
@@ -16,7 +15,8 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
 // eslint-disable-next-line react/display-name
-const TokenRow = memo(({ classes, data, index, style }: any) => {
+const TokenRow = memo(({ data, index, style }: any) => {
+  const classes = useStyles()
   const { activeTokensAddresses, onSwitch, tokens } = data
   const token = tokens.get(index)
   const isActive = activeTokensAddresses.has(token.address)
@@ -42,4 +42,4 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
   )
 })
 
-export default withStyles(styles as any)(TokenRow)
+export default TokenRow
