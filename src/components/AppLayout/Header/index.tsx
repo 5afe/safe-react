@@ -67,7 +67,7 @@ const HeaderComponent = (): React.ReactElement => {
         connected={available}
         network={network}
         onDisconnect={onDisconnect}
-        openDashboard={!!openDashboard()}
+        openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
       />
