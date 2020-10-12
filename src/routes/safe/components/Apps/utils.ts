@@ -76,7 +76,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
       ETHEREUM_NETWORK.RINKEBY,
       ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
       ETHEREUM_NETWORK.VOLTA,
-      ETHEREUM_NETWORK.XDAI,
+      // ETHEREUM_NETWORK.XDAI,
     ],
   },
   // TX-Builder
