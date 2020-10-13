@@ -7,18 +7,18 @@ import React, { memo } from 'react'
 
 import { useStyles } from 'src/routes/safe/components/Balances/Tokens/screens/TokenList/style'
 import Img from 'src/components/layout/Img'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
 import { setCollectibleImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
-// eslint-disable-next-line react/display-name
 const AssetRow = memo(({ data, index, style }: any) => {
   const classes = useStyles()
   const { activeAssetsAddresses, assets, onSwitch } = data
   const asset = assets[index]
   const { address, image, name, symbol } = asset
   const isActive = activeAssetsAddresses.includes(asset.address)
+  const { nativeCoin } = getNetworkInfo()
 
   return (
     <div style={style}>
@@ -27,7 +27,7 @@ const AssetRow = memo(({ data, index, style }: any) => {
           <Img alt={name} height={28} onError={setCollectibleImageToPlaceholder} src={image} />
         </ListItemIcon>
         <ListItemText primary={symbol} secondary={name} />
-        {address !== ETH_ADDRESS && (
+        {address !== nativeCoin.address && (
           <ListItemSecondaryAction>
             <Switch
               checked={isActive}
@@ -40,5 +40,7 @@ const AssetRow = memo(({ data, index, style }: any) => {
     </div>
   )
 })
+
+AssetRow.displayName = 'AssetRow'
 
 export default AssetRow

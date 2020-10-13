@@ -6,10 +6,8 @@ import Switch from '@material-ui/core/Switch'
 import React, { CSSProperties, memo, ReactElement } from 'react'
 
 import { useStyles } from './style'
-
 import Img from 'src/components/layout/Img'
-
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { ItemData } from 'src/routes/safe/components/Balances/Tokens/screens/TokenList/index'
 
@@ -31,7 +29,7 @@ const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | nu
   }
 
   const isActive = activeTokensAddresses.has(token.address)
-
+  const { nativeCoin } = getNetworkInfo()
   return (
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>
@@ -39,7 +37,7 @@ const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | nu
           <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
         </ListItemIcon>
         <ListItemText primary={token.symbol} secondary={token.name} />
-        {token.address !== ETH_ADDRESS && (
+        {token.address !== nativeCoin.address && (
           <ListItemSecondaryAction data-testid={`${token.symbol}_${TOGGLE_TOKEN_TEST_ID}`}>
             <Switch checked={isActive} onChange={onSwitch(token)} />
           </ListItemSecondaryAction>

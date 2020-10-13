@@ -1,7 +1,8 @@
 import TableContainer from '@material-ui/core/TableContainer'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -13,7 +14,6 @@ import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
@@ -37,11 +37,10 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
       if (!addresses.length || !numOwners || !userAccount) {
         return
       }
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
-      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const { nativeCoin } = getNetworkInfo()
+      const estimatedGasCosts = (await estimateGasForDeployingSafe(addresses, numOwners, userAccount)).toString()
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       setGasCosts(formattedGasCosts)
     }
 

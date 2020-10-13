@@ -13,7 +13,7 @@ import {
 
 import FlexSpacer from 'src/components/FlexSpacer'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { NetworkSettings } from 'src/config/networks/network'
+import { NetworkSettings } from 'src/config/networks/network.d'
 import { border, fontColor } from 'src/theme/variables'
 
 export const TOGGLE_SIDEBAR_BTN_TESTID = 'TOGGLE_SIDEBAR_BTN'
