@@ -123,6 +123,9 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
       modules: buildModulesLinkedList(modules?.array, modules?.next),
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),
+      featuresEnabled: localSafe?.currentVersion
+        ? enabledFeatures(localSafe?.currentVersion)
+        : localSafe?.featuresEnabled,
     }),
   )
 

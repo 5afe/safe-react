@@ -17,13 +17,14 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import CurrencyDropdown from 'src/routes/safe/components/CurrencyDropdown'
 import {
   safeFeaturesEnabledSelector,
-  safeParamAddressFromStateSelector,
   safeNameSelector,
+  safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
-import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
+import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -58,7 +59,7 @@ const Balances = (): React.ReactElement => {
   useFetchTokens(address as string)
 
   useEffect(() => {
-    const erc721Enabled = Boolean(featuresEnabled?.includes('ERC721'))
+    const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
 
     setState((prevState) => ({
       ...prevState,
