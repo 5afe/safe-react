@@ -93,7 +93,7 @@ export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[ge
 
 const fetchContractABI = memoize(
   async (url: string, contractAddress: string, apiKey?: string) => {
-    let params: any = {
+    let params: Record<string, string> = {
       module: 'contract',
       action: 'getAbi',
       address: contractAddress,
