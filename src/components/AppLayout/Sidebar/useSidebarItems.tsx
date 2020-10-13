@@ -23,6 +23,13 @@ const useSidebarItems = (): ListItemType[] => {
       return []
     }
 
+    const settingsItem = {
+      label: 'Settings',
+      icon: <ListIcon type="settings" />,
+      selected: matchSafeWithAction?.params.safeAction === 'settings',
+      href: `${matchSafeWithAddress?.url}/settings`,
+    }
+
     const safeSidebar = safeAppsEnabled
       ? [
           {
@@ -31,21 +38,9 @@ const useSidebarItems = (): ListItemType[] => {
             selected: matchSafeWithAction?.params.safeAction === 'apps',
             href: `${matchSafeWithAddress?.url}/apps`,
           },
-          {
-            label: 'Settings',
-            icon: <ListIcon type="settings" />,
-            selected: matchSafeWithAction?.params.safeAction === 'settings',
-            href: `${matchSafeWithAddress?.url}/settings`,
-          },
+          settingsItem,
         ]
-      : [
-          {
-            label: 'Settings',
-            icon: <ListIcon type="settings" />,
-            selected: matchSafeWithAction?.params.safeAction === 'settings',
-            href: `${matchSafeWithAddress?.url}/settings`,
-          },
-        ]
+      : [settingsItem]
 
     return [
       {
