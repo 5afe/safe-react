@@ -5,13 +5,15 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
+import { getNetworkConfigDisabledFeatures } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 
-export const FEATURES = [
-  { name: 'ERC721', validVersion: '>=1.1.1' },
-  { name: 'ERC1155', validVersion: '>=1.1.1' },
+const FEATURES_BY_VERSION = [
+  { name: FEATURES.ERC721, validVersion: '>=1.1.1' },
+  { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
 ]
 
-type Feature = typeof FEATURES[number]
+type Feature = typeof FEATURES_BY_VERSION[number]
 
 export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string): boolean => {
   if (!currentVersion || !latestVersion) {
@@ -27,13 +29,15 @@ export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string)
 export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<string> =>
   gnosisSafeInstance.methods.VERSION().call()
 
-export const enabledFeatures = (version: string): string[] =>
-  FEATURES.reduce((acc: string[], feature: Feature) => {
-    if (semverSatisfies(version, feature.validVersion)) {
+export const enabledFeatures = (version: string): FEATURES[] => {
+  const disabledFeatures = getNetworkConfigDisabledFeatures()
+  return FEATURES_BY_VERSION.reduce((acc: FEATURES[], feature: Feature) => {
+    if (semverSatisfies(version, feature.validVersion) && !disabledFeatures.includes(feature.name)) {
       acc.push(feature.name)
     }
     return acc
   }, [])
+}
 
 interface SafeVersionInfo {
   current: string
