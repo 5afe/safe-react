@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import Layout from './components/Layout'
 import ConnectDetails from './components/ProviderDetails/ConnectDetails'
-import UserDetails from './components/ProviderDetails/UserDetails'
+import { UserDetails } from './components/ProviderDetails/UserDetails'
 import ProviderAccessible from './components/ProviderInfo/ProviderAccessible'
 import ProviderDisconnected from './components/ProviderInfo/ProviderDisconnected'
 import {
@@ -54,7 +54,7 @@ const HeaderComponent = (): React.ReactElement => {
       return <ProviderDisconnected />
     }
 
-    return <ProviderAccessible connected={available} provider={provider} network={network} userAddress={userAddress} />
+    return <ProviderAccessible connected={available} provider={provider} userAddress={userAddress} />
   }
 
   const getProviderDetailsBased = () => {

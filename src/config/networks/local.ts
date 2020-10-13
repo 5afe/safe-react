@@ -23,6 +23,7 @@ const local: NetworkConfig = {
     backgroundColor: '#E8673C',
     textColor: '#ffffff',
     label: 'LocalRPC',
+    isTestNet: true,
     nativeCoin: {
       address: '0x000',
       name: 'Ether',

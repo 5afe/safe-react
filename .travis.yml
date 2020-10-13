@@ -1,4 +1,4 @@
-if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
+if: (branch = development) OR (branch = master) OR (feature/#1353-xDai-compatibility) OR (type = pull_request) OR (tag IS present)
 sudo: required
 dist: bionic
 language: node_js
@@ -16,6 +16,10 @@ matrix:
     - env:
         - REACT_APP_NETWORK='rinkeby'
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+    - env:
+        - REACT_APP_NETWORK='xdai'
+        - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
+      if: ((branch = master OR branch = feature/#1353-xDai-compatibility) AND NOT type = pull_request) OR tag IS present
 cache:
   yarn: true
 before_script:
@@ -62,7 +66,9 @@ deploy:
     upload-dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
-      branch: master
+      # branch: master
+      all_branches: true
+      condition: $TRAVIS_BRANCH =~ ^(master|feature/#1353-xDai-compatibility)$
 
     # Prepare production deployment
   - provider: s3
