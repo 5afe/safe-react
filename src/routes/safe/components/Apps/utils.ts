@@ -31,7 +31,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
   // request
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
   // Sablier
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmeHa5CS6eAMRvQfTBwWfcXKrXZ7itZTpWSM6625ZZ522N`, disabled: false },
+  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVmBWNY6fPrt6SwYynJoCrU7ZWydo3Zr9rDNQR5bcKsFb`, disabled: false },
   // Synthetix
   { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
   // OpenZeppelin
