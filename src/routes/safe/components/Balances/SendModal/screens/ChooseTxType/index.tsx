@@ -31,6 +31,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
   const classes = useStyles()
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
+  const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
 
   React.useEffect(() => {
@@ -100,22 +101,24 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
               Send collectible
             </Button>
           )}
-          <Button
-            color="primary"
-            disabled={disableContractInteraction}
-            minHeight={52}
-            minWidth={260}
-            onClick={() => setActiveScreen('contractInteraction')}
-            variant="outlined"
-            testId="modal-contract-interaction-btn"
-          >
-            <Img
-              alt="Contract Interaction"
-              className={classNames(classes.leftIcon, classes.iconSmall)}
-              src={ContractInteractionIcon}
-            />
-            Contract Interaction
-          </Button>
+          {contractInteractionEnabled && (
+            <Button
+              color="primary"
+              disabled={disableContractInteraction}
+              minHeight={52}
+              minWidth={260}
+              onClick={() => setActiveScreen('contractInteraction')}
+              variant="outlined"
+              testId="modal-contract-interaction-btn"
+            >
+              <Img
+                alt="Contract Interaction"
+                className={classNames(classes.leftIcon, classes.iconSmall)}
+                src={ContractInteractionIcon}
+              />
+              Contract Interaction
+            </Button>
+          )}
         </Col>
       </Row>
     </>
