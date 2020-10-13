@@ -7,6 +7,9 @@ import { saveAddressBook } from 'src/logic/addressBook/utils'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { safesListSelector } from 'src/logic/safe/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 
 const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY, ADD_OR_UPDATE_ENTRY]
 
@@ -17,6 +20,7 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
     const state = store.getState()
     const { dispatch } = store
     const addressBook = addressBookSelector(state)
+    const safes = safesListSelector(state)
     if (addressBook.length) {
       await saveAddressBook(addressBook)
     }
@@ -36,8 +40,13 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
         break
       }
       case UPDATE_ENTRY: {
+        const { entry } = action.payload
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY)
         dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
+        const safeFound = safes.find((safe) => sameAddress(safe.address, entry.address))
+        if (safeFound) {
+          dispatch(updateSafe({ address: safeFound.address, name: entry.name }))
+        }
         break
       }
       default:
