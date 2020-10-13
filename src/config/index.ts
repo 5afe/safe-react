@@ -24,7 +24,7 @@ const getCurrentEnvironment = (): string => {
 
 type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings,
-  features?: SafeFeatures,
+  disabledFeatures?: SafeFeatures,
 }
 
 const configuration = (): NetworkSpecificConfiguration => {
@@ -37,7 +37,7 @@ const configuration = (): NetworkSpecificConfiguration => {
     return {
       ...configFile.environment.production,
       network: configFile.network,
-      features: configFile.features,
+      disabledFeatures: configFile.disabledFeatures,
     }
   }
 
@@ -49,7 +49,7 @@ const configuration = (): NetworkSpecificConfiguration => {
   return {
     ...networkBaseConfig,
     network: configFile.network,
-    features: configFile.features,
+    disabledFeatures: configFile.disabledFeatures,
   }
 }
 
@@ -77,7 +77,7 @@ export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: s
   apiUrl: getConfig()?.networkExplorerApiUrl,
 })
 
-export const getNetworkConfigFeatures = (): SafeFeatures | undefined => getConfig()?.features
+export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig()?.disabledFeatures || []
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 

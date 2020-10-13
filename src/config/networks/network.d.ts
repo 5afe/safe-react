@@ -1,4 +1,10 @@
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
+
+export enum FEATURES {
+  ERC721 = 'ERC721',
+  ERC1155 = 'ERC1155',
+}
+
 type Token = {
   address: string
   name: string
@@ -33,11 +39,7 @@ export type NetworkSettings = {
 // something around this to display or not some critical sections in the app, depending on the network support
 // I listed the ones that may conflict with the network.
 // If non is present, all the sections are available.
-export type SafeFeatures = {
-  safeApps?: boolean,
-  collectibles?: boolean,
-  contractInteraction?: boolean
-}
+export type SafeFeatures = FEATURES[]
 
 type GasPrice = {
   gasPrice: number
@@ -67,6 +69,6 @@ type SafeEnvironments = {
 
 export interface NetworkConfig {
   network: NetworkSettings
-  features?: SafeFeatures
+  disabledFeatures?: SafeFeatures
   environment: SafeEnvironments
 }
