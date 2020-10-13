@@ -27,6 +27,7 @@ export type NetworkSettings = {
   backgroundColor: string,
   textColor: string,
   label: string,
+  isTestNet: boolean,
   nativeCoin: Token,
 }
 

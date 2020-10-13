@@ -42,7 +42,7 @@ const StyledCard = styled(Card)`
 
 const CenteredMT = styled.div`
   ${centerCSS};
-  margin-top: 5px;
+  margin-top: 16px;
 `
 
 type ConfirmTransactionModalState = {
