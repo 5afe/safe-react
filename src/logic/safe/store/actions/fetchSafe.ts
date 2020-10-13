@@ -129,7 +129,6 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     }),
   )
 
-  if (!remoteOwners) return
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
     const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
