@@ -39,6 +39,12 @@ type Props = {
   safeAddress: string
 }
 
+export type ItemData = {
+  tokens: List<Token>
+  activeTokensAddresses: Set<string>
+  onSwitch: (token: Token) => () => void
+}
+
 export const TokenList = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { setActiveScreen, tokens, activeTokens, blacklistedTokens, safeAddress } = props
@@ -82,16 +88,11 @@ export const TokenList = (props: Props): React.ReactElement => {
     dispatch(updateBlacklistedTokens(safeAddress, newBlacklistedTokensAddresses))
   }
 
-  const createItemData = (
-    tokens: List<Token>,
-    activeTokensAddresses: Set<string>,
-  ): { tokens: List<Token>; activeTokensAddresses: Set<string>; onSwitch: (token: Token) => void } => {
-    return {
-      tokens,
-      activeTokensAddresses,
-      onSwitch: onSwitch,
-    }
-  }
+  const createItemData = (tokens: List<Token>, activeTokensAddresses: Set<string>): ItemData => ({
+    tokens,
+    activeTokensAddresses,
+    onSwitch,
+  })
 
   const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
 
