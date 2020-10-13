@@ -172,39 +172,29 @@ describe('isERC721Contract', () => {
     expect(result).toEqual(expectedResult)
     expect(standardContractSpy).toHaveBeenCalled()
   })
-  it('It should return the gas cost with right amount of decimals', () => {
+  it('It should return the right conversion from unit to token', () => {
     // given
     const decimals = Number(18)
-    const symbol = 'ETH'
 
-    const nativeCoin = {
-      decimals,
-      symbol,
-    }
-    const expectedResult = '0.0000000000000000003'
-    const ESTIMATED_GASCOSTS = 0.3
+    const expectedResult = '0.000000003'
+    const ESTIMATED_GAS_COST = 3e9 // 3 Gwei
 
     // when
-    const gasCosts = fromTokenUnit(ESTIMATED_GASCOSTS, nativeCoin.decimals)
+    const gasCosts = fromTokenUnit(ESTIMATED_GAS_COST, decimals)
 
     // then
     expect(gasCosts).toEqual(expectedResult)
   })
 
-  it('It should return the tx value as a token unit', () => {
+  it('It should return the right conversion from token to unit', () => {
     // given
     const decimals = Number(18)
-    const symbol = 'ETH'
 
-    const nativeCoin = {
-      decimals,
-      symbol,
-    }
     const expectedResult = '300000000000000000'
     const VALUE = 0.3
 
     // when
-    const txValue = toTokenUnit(VALUE, nativeCoin.decimals)
+    const txValue = toTokenUnit(VALUE, decimals)
 
     // then
     expect(txValue).toEqual(expectedResult)
