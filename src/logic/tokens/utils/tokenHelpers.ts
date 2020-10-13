@@ -1,4 +1,4 @@
-import logo from 'src/assets/icons/icon_etherTokens.svg'
+import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import {
   getStandardTokenContract,
@@ -12,16 +12,12 @@ import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/tra
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { Map } from 'immutable'
 
-export const ETH_ADDRESS = '0x000'
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
 export const getEthAsToken = (balance: string | number): Token => {
+  const { nativeCoin } = getNetworkInfo()
   return makeToken({
-    address: ETH_ADDRESS,
-    name: 'Ether',
-    symbol: 'ETH',
-    decimals: 18,
-    logoUri: logo,
+    ...nativeCoin,
     balance,
   })
 }

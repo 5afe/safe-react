@@ -1,6 +1,6 @@
 import bn from 'bignumber.js'
 import { List, Map } from 'immutable'
-
+import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -43,6 +43,7 @@ const buildIncomingTransactionFrom = ([tx, symbol, decimals, fee]: [
 
 const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   const batch = new web3ReadOnly.BatchRequest()
+  const { nativeCoin } = getNetworkInfo()
 
   const whenTxsValues = txs.map((tx) => {
     const methods = [
@@ -66,8 +67,8 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   return Promise.all(whenTxsValues).then((txsValues) =>
     txsValues.map(([tx, symbol, decimals, { gasPrice }, { gasUsed }]) => [
       tx,
-      symbol === null ? 'ETH' : symbol,
-      decimals === null ? '18' : decimals,
+      symbol === null ? nativeCoin.symbol : symbol,
+      decimals === null ? nativeCoin.decimals : decimals,
       new bn(gasPrice).times(gasUsed),
     ]),
   )

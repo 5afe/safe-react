@@ -1,5 +1,5 @@
 import { List, Map } from 'immutable'
-
+import { getNetworkInfo } from 'src/config'
 import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
@@ -100,12 +100,13 @@ export const getRefundParams = async (
   tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
 ): Promise<RefundParams | null> => {
+  const { nativeCoin } = getNetworkInfo()
   const txGasPrice = Number(tx.gasPrice)
   let refundParams: RefundParams | null = null
 
   if (txGasPrice > 0) {
-    let refundSymbol = 'ETH'
-    let refundDecimals = 18
+    let refundSymbol = nativeCoin.symbol
+    let refundDecimals = nativeCoin.decimals
 
     if (tx.gasToken !== ZERO_ADDRESS) {
       const gasToken = await tokenInfo(tx.gasToken)
@@ -243,6 +244,7 @@ export const buildTx = async ({
   txCode,
 }: BuildTx): Promise<Transaction> => {
   const safeAddress = safe.address
+  const { nativeCoin } = getNetworkInfo()
   const isModifySettingsTx = isModifySettingsTransaction(tx, safeAddress)
   const isTxCancelled = isTransactionCancelled(tx, outgoingTxs, cancellationTxs)
   const isSendERC721Tx = isSendERC721Transaction(tx, txCode, knownTokens)
@@ -255,8 +257,8 @@ export const buildTx = async ({
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
 
-  let tokenDecimals = 18
-  let tokenSymbol = 'ETH'
+  let tokenDecimals = nativeCoin.decimals
+  let tokenSymbol = nativeCoin.symbol
   try {
     if (isSendERC20Tx) {
       const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)

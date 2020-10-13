@@ -1,9 +1,8 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
-
+import { getNetworkInfo } from 'src/config'
 import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { TableColumn } from 'src/components/Table/types.d'
 import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -23,7 +22,8 @@ const getTokenPriceInCurrency = (
   }
 
   const currencyValue = currencyValues?.find(({ tokenAddress }) => {
-    if (token.address === ETH_ADDRESS && !tokenAddress) {
+    const { nativeCoin } = getNetworkInfo()
+    if (token.address === nativeCoin.address && !tokenAddress) {
       return true
     }
 
@@ -54,8 +54,9 @@ export const getBalanceData = (
   currencySelected?: AVAILABLE_CURRENCIES,
   currencyValues?: BalanceCurrencyList,
   currencyRate?: number,
-): List<BalanceData> =>
-  activeTokens.map((token) => ({
+): List<BalanceData> => {
+  const { nativeCoin } = getNetworkInfo()
+  return activeTokens.map((token) => ({
     [BALANCE_TABLE_ASSET_ID]: {
       name: token.name,
       logoUri: token.logoUri,
@@ -65,9 +66,10 @@ export const getBalanceData = (
     assetOrder: token.name,
     [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance?.toString() || '0')} ${token.symbol}`,
     balanceOrder: Number(token.balance),
-    [FIXED]: token.symbol === 'ETH',
+    [FIXED]: token.symbol === nativeCoin.symbol,
     [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
   }))
+}
 
 export const generateColumns = (): List<TableColumn> => {
   const assetColumn: TableColumn = {
