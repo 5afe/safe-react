@@ -151,15 +151,15 @@ export type BlockScanInfo = () => {
 
 export const getExplorerInfo = (hash: string): BlockScanInfo => {
   const { name, url } = getNetworkExplorerInfo()
+  const networkInfo = getNetworkInfo()
 
-  const blockScanInfo = () => {
-    const type = hash.length > 42 ? 'tx' : 'address'
-
-    return  {
-      url: `${url}${type}/${hash}`,
-      alt:  name || '',
-    }
+  switch (networkInfo.id) {
+    default: {
+      const type = hash.length > 42 ? 'tx' : 'address'  
+      return () => ({
+        url: `${url}${type}/${hash}`,
+        alt:  name || '',
+      })
+    }      
   }
-
-  return blockScanInfo
 }
