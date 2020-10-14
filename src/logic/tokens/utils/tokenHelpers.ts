@@ -75,7 +75,7 @@ export const getERC20DecimalsAndSymbol = async (
     const storedTokenInfo = await getTokenInfos(tokenAddress)
 
     if (!storedTokenInfo) {
-      const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
+      const [, tokenDecimals, tokenSymbol] = await generateBatchRequests<[undefined, string, string]>({
         abi: ALTERNATIVE_TOKEN_ABI,
         address: tokenAddress,
         methods: ['decimals', 'symbol'],

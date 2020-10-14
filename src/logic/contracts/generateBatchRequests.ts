@@ -1,4 +1,6 @@
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { BatchRequest } from 'web3-core'
+import { AbiItem } from 'web3-utils'
 
 /**
  * Generates a batch request for grouping RPC calls
@@ -10,17 +12,27 @@ import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
  * @param {array<{ args: [any], method: string, type: 'eth'|undefined } | string>} args.methods - methods to be called
  * @returns {Promise<[*]>}
  */
-const generateBatchRequests = ({ abi, address, batch, context, methods }: any): any => {
-  const contractInstance: any = new web3.eth.Contract(abi, address)
+type MethodsArgsType = Array<string | number>
+
+ interface Props {
+  abi: unknown
+  address: string
+  batch?: BatchRequest
+  context?: unknown
+  methods: Array<string | {method: string, type?: string, args: MethodsArgsType }>
+ }
+
+const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, methods }: Props): Promise<ReturnValues> => {
+  const contractInstance: any = new web3.eth.Contract(abi as AbiItem, address)
   const localBatch = new web3.BatchRequest()
 
   const values = methods.map((methodObject) => {
-    let method, type, args = []
+    let method, type, args: MethodsArgsType = []
 
     if (typeof methodObject === 'string') {
       method = methodObject
     } else {
-      ({ method, type, args = [] } = methodObject)
+      ({ method, type, args } = methodObject)
     }
 
     return new Promise((resolve) => {
@@ -54,10 +66,9 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }: any): 
   // If batch was provided we should execute once we finish to generate the batch,
   // in the outside function where the batch object is created.
   !batch && localBatch.execute()
-
-  const returnValues = context ? [context, ...values] : values
-
-  return Promise.all(returnValues)
+  
+  // @ts-ignore
+  return Promise.all([context, ...values])
 }
 
 export default generateBatchRequests

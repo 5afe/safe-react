@@ -53,7 +53,7 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
       { method: 'getTransactionReceipt', args: [tx.transactionHash], type: 'eth' },
     ]
 
-    return generateBatchRequests({
+    return generateBatchRequests<[IncomingTxServiceModel, string, string, { gasPrice: string }, { gasUsed: string }]>({
       abi: ALTERNATIVE_TOKEN_ABI,
       address: tx.tokenAddress,
       batch,

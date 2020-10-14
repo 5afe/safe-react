@@ -53,7 +53,7 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
 }
 
 const getTokenValues = (tokenAddress) =>
-  generateBatchRequests({
+  generateBatchRequests<[undefined, string, string, string]>({
     abi: ERC20Detailed.abi,
     address: tokenAddress,
     methods: ['decimals', 'name', 'symbol'],
@@ -69,7 +69,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token | undef
   }
 
   // Otherwise we fetch it, save it to the store and return it
-  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+  const [, tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
     return undefined

@@ -110,7 +110,7 @@ const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
   const whenTxsValues = transactions.map((tx) => {
-    return generateBatchRequests({
+    return generateBatchRequests<[Transaction, string]>({
       abi: [],
       address: tx.to,
       batch,

@@ -58,8 +58,8 @@ export const buildSafe = async (
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
-    generateBatchRequests({
+  const [[, thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
+    generateBatchRequests<[undefined, string, string, string, string[]]>({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,
@@ -104,8 +104,19 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
     { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
   ]
-  const [[remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
-    generateBatchRequests({
+  const [[, remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
+    generateBatchRequests<
+      [
+        undefined,
+        string,
+        string,
+        string[],
+        {
+          array?: string[] | undefined
+          next: string
+        },
+      ]
+    >({
       abi: GnosisSafeSol.abi,
       address: safeAddress,
       methods: safeParams,

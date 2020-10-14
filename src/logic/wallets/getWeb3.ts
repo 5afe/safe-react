@@ -29,8 +29,7 @@ export const WALLET_PROVIDER = {
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
 const httpProviderOptions = {
-  keepAlive: true,
-  timeout: 1000 * 10,
+  timeout: 10_000,
 }
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
