@@ -79,7 +79,7 @@ deploy:
     region: $AWS_DEFAULT_REGION
     on:
       branch: feature/#1353-xDai-compatibility
-      condition: $REACT_APP_NETWORK=xdai
+      condition: $REACT_APP_NETWORK = xdai
 
   # Prepare production deployment
   - provider: s3
