@@ -51,7 +51,7 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     skip_cleanup: true
     local_dir: build
-    upload-dir: app
+    upload_dir: app
     region: $AWS_DEFAULT_REGION
     on:
       branch: development
@@ -63,7 +63,7 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     skip_cleanup: true
     local_dir: build
-    upload-dir: current/app
+    upload_dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
       branch: master
@@ -75,12 +75,12 @@ deploy:
     secret_access_key: $AWS_SECRET_ACCESS_KEY
     skip_cleanup: true
     local_dir: build
-    upload-dir: current/app
+    upload_dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
       # branch: master
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(feature/#1353-xDai-compatibility)$ AND REACT_APP_NETWORK='xdai'
+      condition: ($TRAVIS_BRANCH =~ ^(feature/#1353-xDai-compatibility)$) AND REACT_APP_NETWORK='xdai'
 
   # Prepare production deployment
   - provider: s3
@@ -89,7 +89,7 @@ deploy:
     access_key_id: $AWS_ACCESS_KEY_ID
     skip_cleanup: true
     local_dir: build
-    upload-dir: releases/$TRAVIS_TAG
+    upload_dir: releases/$TRAVIS_TAG
     region: $AWS_DEFAULT_REGION
     on:
       tags: true
