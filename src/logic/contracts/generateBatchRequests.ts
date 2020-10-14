@@ -15,7 +15,7 @@ import { AbiItem } from 'web3-utils'
 type MethodsArgsType = Array<string | number>
 
  interface Props {
-  abi: unknown
+  abi: AbiItem[]
   address: string
   batch?: BatchRequest
   context?: unknown
@@ -23,7 +23,7 @@ type MethodsArgsType = Array<string | number>
  }
 
 const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, methods }: Props): Promise<ReturnValues> => {
-  const contractInstance: any = new web3.eth.Contract(abi as AbiItem, address)
+  const contractInstance = new web3.eth.Contract(abi, address)
   const localBatch = new web3.BatchRequest()
 
   const values = methods.map((methodObject) => {
@@ -38,7 +38,7 @@ const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, met
     return new Promise((resolve) => {
       const resolver = (error, result) => {
         if (error) {
-          resolve(null)
+          resolve()
         } else {
           resolve(result)
         }
@@ -56,7 +56,7 @@ const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, met
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
         console.error('There was an error trying to batch request from web3.', e)
-        resolve(null)
+        resolve()
       }
     })
   })
@@ -66,7 +66,7 @@ const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, met
   // If batch was provided we should execute once we finish to generate the batch,
   // in the outside function where the batch object is created.
   !batch && localBatch.execute()
-  
+
   // @ts-ignore
   return Promise.all([context, ...values])
 }
