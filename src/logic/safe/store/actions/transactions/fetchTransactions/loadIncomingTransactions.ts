@@ -1,5 +1,8 @@
 import bn from 'bignumber.js'
 import { List, Map } from 'immutable'
+import { Transaction, TransactionReceipt } from 'web3-core'
+import { AbiItem } from 'web3-utils'
+
 import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
@@ -53,8 +56,16 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
       { method: 'getTransactionReceipt', args: [tx.transactionHash], type: 'eth' },
     ]
 
-    return generateBatchRequests<[IncomingTxServiceModel, string, string, { gasPrice: string }, { gasUsed: string }]>({
-      abi: ALTERNATIVE_TOKEN_ABI,
+    return generateBatchRequests<
+      [
+        IncomingTxServiceModel,
+        string | undefined,
+        string | undefined,
+        Transaction | undefined,
+        TransactionReceipt | undefined,
+      ]
+    >({
+      abi: ALTERNATIVE_TOKEN_ABI as AbiItem[],
       address: tx.tokenAddress,
       batch,
       context: tx,
@@ -65,11 +76,11 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   batch.execute()
 
   return Promise.all(whenTxsValues).then((txsValues) =>
-    txsValues.map(([tx, symbol, decimals, { gasPrice }, { gasUsed }]) => [
+    txsValues.map(([tx, symbol, decimals, ethTx, ethTxReceipt]) => [
       tx,
-      symbol === null ? nativeCoin.symbol : symbol,
-      decimals === null ? nativeCoin.decimals : decimals,
-      new bn(gasPrice).times(gasUsed),
+      symbol ? symbol : nativeCoin.symbol,
+      decimals ? decimals : nativeCoin.decimals,
+      new bn(ethTx?.gasPrice ?? 0).times(ethTxReceipt?.gasUsed ?? 0),
     ]),
   )
 }

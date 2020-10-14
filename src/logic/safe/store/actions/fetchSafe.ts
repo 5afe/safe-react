@@ -1,5 +1,7 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List, Set, Map } from 'immutable'
+import { Action, Dispatch } from 'redux'
+import { AbiItem } from 'web3-utils'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
@@ -10,10 +12,8 @@ import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ModulePair, SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { Action, Dispatch } from 'redux'
 import { SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
 import { latestMasterContractVersionSelector } from '../selectors'
@@ -40,8 +40,8 @@ const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): Lis
   return List(ownersList)
 }
 
-const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
-  if (modules?.length) {
+const buildModulesLinkedList = (modules?: string[], nextModule?: string): Array<ModulePair> | null => {
+  if (modules?.length && nextModule) {
     return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]
       return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
@@ -58,9 +58,9 @@ export const buildSafe = async (
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [[, thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
-    generateBatchRequests<[undefined, string, string, string, string[]]>({
-      abi: GnosisSafeSol.abi,
+  const [[, thresholdStr, nonceStr, currentVersion, remoteOwners = []], localSafe, ethBalance] = await Promise.all([
+    generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined, string[]]>({
+      abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),
@@ -81,7 +81,7 @@ export const buildSafe = async (
     owners,
     ethBalance,
     nonce,
-    currentVersion,
+    currentVersion: currentVersion ?? '',
     needsUpdate,
     featuresEnabled,
     balances: Map(),
@@ -108,16 +108,19 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     generateBatchRequests<
       [
         undefined,
-        string,
-        string,
+        string | undefined,
+        string | undefined,
         string[],
-        {
-          array?: string[] | undefined
-          next: string
-        },
+        (
+          | {
+              array: string[]
+              next: string
+            }
+          | undefined
+        ),
       ]
     >({
-      abi: GnosisSafeSol.abi,
+      abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),

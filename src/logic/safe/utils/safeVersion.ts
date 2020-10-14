@@ -40,10 +40,10 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
   return featureConfig.validVersion ? semverSatisfies(version, featureConfig.validVersion) : true
 }
 
-export const enabledFeatures = (version: string): FEATURES[] => {
+export const enabledFeatures = (version?: string): FEATURES[] => {
   const disabledFeatures = getNetworkConfigDisabledFeatures()
   return FEATURES_BY_VERSION.reduce((acc: FEATURES[], feature: Feature) => {
-    if (!disabledFeatures.includes(feature.name) && checkFeatureEnabledByVersion(feature, version)) {
+    if (!disabledFeatures.includes(feature.name) && version && checkFeatureEnabledByVersion(feature, version)) {
       acc.push(feature.name)
     }
     return acc

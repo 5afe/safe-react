@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
 import { getNetworkInfo } from 'src/config'
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
   getERC721Symbol,
@@ -78,15 +78,15 @@ export const isUpgradeTransaction = (tx: TxServiceModel): boolean => {
   )
 }
 
-export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
+export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress?: string): boolean => {
   return !sameAddress(tx.to, safeAddress) && !isEmptyData(tx.data)
 }
 
 export const isCustomTransaction = async (
   tx: TxServiceModel,
-  txCode: string | null,
-  safeAddress: string,
-  knownTokens: Map<string, Token>,
+  txCode?: string,
+  safeAddress?: string,
+  knownTokens?: TokenState,
 ): Promise<boolean> => {
   const isOutgoing = isOutgoingTransaction(tx, safeAddress)
   const isErc20 = await isSendERC20Transaction(tx, txCode, knownTokens)
@@ -162,7 +162,7 @@ export const getConfirmations = (tx: TxServiceModel): List<Confirmation> => {
 export const isTransactionCancelled = (
   tx: TxServiceModel,
   outgoingTxs: Array<TxServiceModel>,
-  cancellationTxs: { number: TxServiceModel },
+  cancellationTxs: Record<string, TxServiceModel>,
 ): boolean => {
   return (
     // not executed
@@ -231,7 +231,7 @@ export const calculateTransactionType = (tx: Transaction): TransactionTypeValues
 
 export type BuildTx = BatchProcessTxsProps & {
   tx: TxServiceModel
-  txCode: string | null
+  txCode?: string
 }
 
 export const buildTx = async ({
