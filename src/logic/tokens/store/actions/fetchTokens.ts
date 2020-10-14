@@ -4,6 +4,7 @@ import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
 import contract from 'truffle-contract'
+import { AbiItem } from 'web3-utils'
 
 import saveTokens from './saveTokens'
 
@@ -53,8 +54,8 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
 }
 
 const getTokenValues = (tokenAddress) =>
-  generateBatchRequests<[undefined, string, string, string]>({
-    abi: ERC20Detailed.abi,
+  generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined]>({
+    abi: ERC20Detailed.abi as AbiItem[],
     address: tokenAddress,
     methods: ['decimals', 'name', 'symbol'],
   })
