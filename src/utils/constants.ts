@@ -36,7 +36,7 @@ export const INFURA_TOKEN = process.env.REACT_APP_INFURA_TOKEN || ''
 export const LATEST_SAFE_VERSION = process.env.REACT_APP_LATEST_SAFE_VERSION || '1.1.1'
 export const APP_VERSION = process.env.REACT_APP_APP_VERSION || 'not-defined'
 export const OPENSEA_API_KEY = process.env.REACT_APP_OPENSEA_API_KEY || ''
-export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 'OpenSea'
+export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 'Gnosis'
 export const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY
 export const EXCHANGE_RATE_URL = 'https://api.exchangeratesapi.io/latest'

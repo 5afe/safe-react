@@ -3,22 +3,31 @@ import ListItemIcon from '@material-ui/core/ListItemIcon'
 import ListItemSecondaryAction from '@material-ui/core/ListItemSecondaryAction'
 import ListItemText from '@material-ui/core/ListItemText'
 import Switch from '@material-ui/core/Switch'
-import { withStyles } from '@material-ui/core/styles'
-import React, { memo } from 'react'
-import { getNetworkInfo } from 'src/config'
+import React, { CSSProperties, memo, ReactElement } from 'react'
 
-import { styles } from './style'
-
+import { useStyles } from './style'
 import Img from 'src/components/layout/Img'
-
+import { getNetworkInfo } from 'src/config'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
+import { ItemData } from 'src/routes/safe/components/Balances/Tokens/screens/TokenList/index'
 
 export const TOGGLE_TOKEN_TEST_ID = 'toggle-token-btn'
 
-// eslint-disable-next-line react/display-name
-const TokenRow = memo(({ classes, data, index, style }: any) => {
+interface TokenRowProps {
+  data: ItemData
+  index: number
+  style: CSSProperties
+}
+
+const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | null => {
+  const classes = useStyles()
   const { activeTokensAddresses, onSwitch, tokens } = data
   const token = tokens.get(index)
+
+  if (!token) {
+    return null
+  }
+
   const isActive = activeTokensAddresses.has(token.address)
   const { nativeCoin } = getNetworkInfo()
   return (
@@ -29,12 +38,8 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
         </ListItemIcon>
         <ListItemText primary={token.symbol} secondary={token.name} />
         {token.address !== nativeCoin.address && (
-          <ListItemSecondaryAction>
-            <Switch
-              checked={isActive}
-              inputProps={{ 'data-testid': `${token.symbol}_${TOGGLE_TOKEN_TEST_ID}` } as any}
-              onChange={onSwitch(token)}
-            />
+          <ListItemSecondaryAction data-testid={`${token.symbol}_${TOGGLE_TOKEN_TEST_ID}`}>
+            <Switch checked={isActive} onChange={onSwitch(token)} />
           </ListItemSecondaryAction>
         )}
       </ListItem>
@@ -42,4 +47,6 @@ const TokenRow = memo(({ classes, data, index, style }: any) => {
   )
 })
 
-export default withStyles(styles as any)(TokenRow)
+TokenRow.displayName = 'TokenRow'
+
+export default TokenRow

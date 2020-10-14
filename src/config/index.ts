@@ -65,7 +65,7 @@ export const getRpcServiceUrl = (): string => {
   const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
 
   if (usesInfuraRPC) {
-    return getConfig()?.rpcServiceUrl + INFURA_TOKEN
+    return `${getConfig()?.rpcServiceUrl}/${INFURA_TOKEN}`
   }
 
   return getConfig()?.rpcServiceUrl
