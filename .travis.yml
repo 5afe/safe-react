@@ -56,7 +56,19 @@ deploy:
     on:
       branch: development
 
-    # Staging environment
+  # Staging environment
+  - provider: s3
+    bucket: $STAGING_BUCKET_NAME
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    skip_cleanup: true
+    local_dir: build
+    upload-dir: current/app
+    region: $AWS_DEFAULT_REGION
+    on:
+      branch: master
+  
+  # xDai testing on staging
   - provider: s3
     bucket: $STAGING_BUCKET_NAME
     access_key_id: $AWS_ACCESS_KEY_ID
@@ -68,9 +80,9 @@ deploy:
     on:
       # branch: master
       all_branches: true
-      condition: $TRAVIS_BRANCH =~ ^(master|feature/#1353-xDai-compatibility)$
+      condition: $TRAVIS_BRANCH =~ ^(feature/#1353-xDai-compatibility)$ AND REACT_APP_NETWORK='xdai'
 
-    # Prepare production deployment
+  # Prepare production deployment
   - provider: s3
     bucket: $STAGING_BUCKET_NAME
     secret_access_key: $AWS_SECRET_ACCESS_KEY
