@@ -20,7 +20,7 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }: any): 
     if (typeof methodObject === 'string') {
       method = methodObject
     } else {
-      ;({ method, type, args = [] } = methodObject)
+      ({ method, type, args = [] } = methodObject)
     }
 
     return new Promise((resolve) => {
@@ -43,6 +43,7 @@ const generateBatchRequests = ({ abi, address, batch, context, methods }: any): 
         // If batch was provided add to external batch
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
+        console.error('There was an error trying to batch request from web3.', e)
         resolve(null)
       }
     })
