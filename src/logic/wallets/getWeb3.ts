@@ -28,9 +28,13 @@ export const WALLET_PROVIDER = {
 
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
+const httpProviderOptions = {
+  keepAlive: true,
+  timeout: 1000 * 10,
+}
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
-    ? new Web3.providers.HttpProvider(getRpcServiceUrl())
+    ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
     : window.web3?.currentProvider || 'ws://localhost:8545',
 )
 
