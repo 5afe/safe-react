@@ -24,6 +24,14 @@ const Balances = React.lazy(() => import('../components/Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
+const featuresEqualityFn = (left, right) => {
+  if (Array.isArray(left) && Array.isArray(right)) {
+    return JSON.stringify(left) === JSON.stringify(right)
+  }
+
+  return left === right
+}
+
 const Container = (): React.ReactElement => {
   const [modal, setModal] = useState({
     isOpen: false,
@@ -35,7 +43,7 @@ const Container = (): React.ReactElement => {
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector, featuresEqualityFn)
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAppsEnabled = Boolean(featuresEnabled?.includes(FEATURES.SAFE_APPS))
 
