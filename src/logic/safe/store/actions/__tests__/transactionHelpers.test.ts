@@ -762,7 +762,36 @@ describe('calculateTransactionType', () => {
 describe('buildTx', () => {
   it('Returns a valid transaction', async () => {
     // given
-    const cancelTx1 = makeTransaction()
+    const cancelTx1 = {
+      baseGas: 0,
+      blockNumber: 0,
+      confirmations: [],
+      confirmationsRequired: 2,
+      data: null,
+      dataDecoded: undefined,
+      ethGasPrice: '0',
+      executionDate: null,
+      executor: '',
+      fee: '',
+      gasPrice: '',
+      gasToken: '',
+      gasUsed: 0,
+      isExecuted: false,
+      isSuccessful: true,
+      modified: '',
+      nonce: 0,
+      operation: 0,
+      origin: null,
+      refundReceiver: '',
+      safe: '',
+      safeTxGas: 0,
+      safeTxHash: '',
+      signatures: '',
+      submissionDate: null,
+      to: '',
+      transactionHash: null,
+      value: '',
+    }
     const transaction = getMockedTxServiceModel({ to: safeAddress2, value: '0' })
     const userAddress = 'address1'
     const cancellationTxs = List([cancelTx1])
@@ -776,7 +805,7 @@ describe('buildTx', () => {
     })
     const knownTokens = Map<string, Record<TokenProps> & Readonly<TokenProps>>()
     knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
-    const outgoingTxs = List([cancelTx1])
+    const outgoingTxs = [cancelTx1]
     const safeInstance = makeSafe({ name: 'LOADED SAFE', address: safeAddress })
     const expectedTx = makeTransaction({
       baseGas: 0,
@@ -826,7 +855,7 @@ describe('buildTx', () => {
       outgoingTxs,
       safe: safeInstance,
       tx: transaction,
-      txCode: null,
+      txCode: undefined,
     })
 
     // then
