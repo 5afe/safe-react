@@ -40,7 +40,6 @@ import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/saf
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { getValidAddressBookName } from 'src/logic/addressBook/utils'
 
 const useStyles = makeStyles(styles)
 
@@ -167,7 +166,7 @@ const AddressBookTable = (): React.ReactElement => {
                           {column.id === AB_ADDRESS_ID ? (
                             <OwnerAddressTableCell address={row[column.id]} showLinks />
                           ) : (
-                            getValidAddressBookName(row[column.id])
+                            row[column.id]
                           )}
                         </TableCell>
                       )
