@@ -32,6 +32,13 @@ const wallets = [
     rpcUrl: infuraUrl,
     LedgerTransport: (window as any).TransportNodeHid,
   },
+  {
+    walletName: 'lattice',
+    desktop: true,
+    preferred: true,
+    rpcUrl: infuraUrl,
+    appName: 'Gnosis Safe',
+  },
   { walletName: 'trust', preferred: true, desktop: false },
   { walletName: 'dapper', desktop: false },
   {
