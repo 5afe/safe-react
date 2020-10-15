@@ -5,7 +5,7 @@ module.exports = function override(config) {
     config.plugins = []
   }
   config.plugins.push(
-    new webpack.ContextReplacementPlugin(/truffle-(contract|interface-adapter)/, (data) => {
+    new webpack.ContextReplacementPlugin(/@truffle\/(contract|interface-adapter)/, (data) => {
       delete data.dependencies[0].critical
       return data
     }),

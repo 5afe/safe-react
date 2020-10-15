@@ -1,5 +1,5 @@
 import { AbiItem } from 'web3-utils'
-import contract from 'truffle-contract'
+import contract from '@truffle/contract/index.js'
 import Web3 from 'web3'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
