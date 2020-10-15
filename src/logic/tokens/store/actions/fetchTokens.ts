@@ -3,7 +3,7 @@ import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanF
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import contract from 'truffle-contract'
+import contract from '@truffle/contract/index.js'
 
 import saveTokens from './saveTokens'
 

@@ -1,6 +1,5 @@
 const electron = require('electron')
 const express = require('express')
-const open = require('open')
 const log = require('electron-log')
 const fs = require('fs')
 const Menu = electron.Menu
@@ -8,9 +7,7 @@ const https = require('https')
 const detect = require('detect-port')
 const autoUpdater = require('./auto-updater')
 
-const app = electron.app
-const session = electron.session
-const BrowserWindow = electron.BrowserWindow
+const { app, session, BrowserWindow, shell } = electron
 
 const path = require('path')
 const isDev = require('electron-is-dev')
@@ -72,7 +69,7 @@ function getOpenedWindow(url, options) {
       show: false,
     })
     win.webContents.on('new-window', function (event, url) {
-      if (url.includes('trezor') && url.includes('bridge')) open(url)
+      if (url.includes('trezor') && url.includes('bridge')) shell.openExternal(url)
     })
     win.once('ready-to-show', () => win.show())
 
@@ -124,7 +121,7 @@ function createWindow(port = DEFAULT_PORT) {
       }
 
       event.newGuest = win
-    } else open(url)
+    } else shell.openExternal(url)
   })
 
   mainWindow.webContents.on('did-finish-load', () => {
