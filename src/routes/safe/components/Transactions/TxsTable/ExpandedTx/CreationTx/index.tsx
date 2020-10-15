@@ -26,19 +26,19 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  tx: Transaction
+  tx?: Transaction
 }
 
 export const CreationTx = ({ tx }: Props): React.ReactElement | null => {
   const classes = useStyles()
-  if (!tx) {
+  const isCreationTx = tx?.type === TransactionTypes.CREATION
+
+  if (!tx || !isCreationTx) {
     return null
   }
   const explorerUrl = getExplorerInfo(tx.creator)
   const scanBlockFactoryAddressUrl = getExplorerInfo(tx.factoryAddress)
   const scanBlockMasterCopyUrl = getExplorerInfo(tx.masterCopy)
-
-  const isCreationTx = tx.type === TransactionTypes.CREATION
 
   return isCreationTx ? (
     <>
