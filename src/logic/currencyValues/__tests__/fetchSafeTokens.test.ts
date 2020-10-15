@@ -1,5 +1,5 @@
 import { aNewStore } from 'src/store'
-import fetchTokenCurrenciesBalances from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import axios from 'axios'
 import { getTxServiceHost } from 'src/config'
 
