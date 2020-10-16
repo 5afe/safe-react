@@ -4,7 +4,7 @@ const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
   safeAppsUrl: 'https://safe-apps-xdai.staging.gnosisdev.com',
   gasPrice: 1e9,
-  rpcServiceUrl: 'https://rpc.xdaichain.com',
+  rpcServiceUrl: 'https://dai.poa.network/',
   networkExplorerName: 'Blockscout',
   networkExplorerUrl: 'https://blockscout.com/poa/xdai',
   networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
