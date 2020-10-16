@@ -227,7 +227,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">${nativeCoin.name}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{nativeCoin.name}</InputAdornment>,
                       }}
                       name="value"
                       placeholder="Value*"
