@@ -21,7 +21,7 @@ export default handleActions(
         if (stateTransactionsList) {
           const txsToStore = stateTransactionsList.withMutations((txsList) => {
             transactions.forEach((updateTx) => {
-              const storedTxIndex = txsList.findIndex((txIterator) => txIterator.nonce === updateTx.nonce)
+              const storedTxIndex = txsList.findIndex((txIterator) => txIterator.safeTxHash === updateTx.safeTxHash)
 
               if (storedTxIndex !== -1) {
                 // Update
