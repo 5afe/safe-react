@@ -31,13 +31,13 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
+  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!addresses.length || !numOwners || !userAccount) {
         return
       }
-      const { nativeCoin } = getNetworkInfo()
       const estimatedGasCosts = (await estimateGasForDeployingSafe(addresses, numOwners, userAccount)).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
@@ -45,7 +45,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
     }
 
     estimateGas()
-  }, [addresses, numOwners, userAccount])
+  }, [addresses, nativeCoin.decimals, numOwners, userAccount])
 
   return (
     <>
@@ -131,8 +131,8 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
       <Row align="center" className={classes.info}>
         <Paragraph color="primary" noMargin size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately {gasCosts} ETH. The exact amount will be determined by your
-          wallet.
+          wallet. The creation will cost approximately {gasCosts} {nativeCoin.name}. The exact amount will be determined
+          by your wallet.
         </Paragraph>
       </Row>
     </>
