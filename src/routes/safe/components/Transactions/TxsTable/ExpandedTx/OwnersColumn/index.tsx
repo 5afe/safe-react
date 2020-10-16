@@ -114,7 +114,6 @@ const OwnersColumn = ({
 }: ownersColumnProps): React.ReactElement => {
   const classes = useStyles()
   let showOlderTxAnnotation
-
   if (tx.isExecuted || cancelTx.isExecuted) {
     showOlderTxAnnotation = false
   } else {

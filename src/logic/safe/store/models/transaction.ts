@@ -31,6 +31,7 @@ export const makeTransaction = Record<TransactionProps>({
   isCancellationTx: false,
   isCollectibleTransfer: false,
   isExecuted: false,
+  isPending: false,
   isSuccessful: true,
   isTokenTransfer: false,
   masterCopy: '',
