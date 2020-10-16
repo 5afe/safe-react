@@ -57,6 +57,8 @@ const StyledMethodName = styled(Text)`
   white-space: nowrap;
 `
 
+const { nativeCoin } = getNetworkInfo()
+
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
     <TxDetailsMethodName size="lg" strong>
@@ -78,7 +80,6 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
   const explorerUrl = getExplorerInfo(tx.to)
-  const { nativeCoin } = getNetworkInfo()
   return (
     <Collapse
       collapseClassName={classes.collapse}

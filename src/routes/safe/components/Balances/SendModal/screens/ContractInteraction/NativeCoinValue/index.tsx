@@ -21,10 +21,12 @@ const useStyles = makeStyles(styles)
 interface NativeCoinValueProps {
   onSetMax: (nativeCoinBalance: string) => void
 }
+
+const { nativeCoin } = getNetworkInfo()
+
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
-  const { nativeCoin } = getNetworkInfo()
 
   const {
     input: { value: method },

@@ -75,6 +75,8 @@ type OwnProps = {
   onClose: () => void
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ConfirmTransactionModal = ({
   isOpen,
   app,
@@ -86,7 +88,6 @@ const ConfirmTransactionModal = ({
   onClose,
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
-  const { nativeCoin } = getNetworkInfo()
   const dispatch = useDispatch()
   if (!isOpen) {
     return null

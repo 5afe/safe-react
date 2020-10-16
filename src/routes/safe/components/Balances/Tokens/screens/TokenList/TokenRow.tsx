@@ -19,6 +19,8 @@ interface TokenRowProps {
   style: CSSProperties
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | null => {
   const classes = useStyles()
   const { activeTokensAddresses, onSwitch, tokens } = data
@@ -29,7 +31,7 @@ const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | nu
   }
 
   const isActive = activeTokensAddresses.has(token.address)
-  const { nativeCoin } = getNetworkInfo()
+
   return (
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>

@@ -51,6 +51,8 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
+const { nativeCoin } = getNetworkInfo()
+
 const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
@@ -60,7 +62,6 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
     name: '',
   })
   const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
-  const { nativeCoin } = getNetworkInfo()
 
   const saveForm = async (values) => {
     await handleSubmit(values, false)

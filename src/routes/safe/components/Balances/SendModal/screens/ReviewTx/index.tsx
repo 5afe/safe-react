@@ -36,11 +36,12 @@ import { styles } from './style'
 
 const useStyles = makeStyles(styles as any)
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
-  const { nativeCoin } = getNetworkInfo()
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
@@ -83,7 +84,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, nativeCoin.decimals, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
     // txAmount should be 0 if we send tokens

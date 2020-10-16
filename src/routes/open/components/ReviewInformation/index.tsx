@@ -24,6 +24,8 @@ type ReviewComponentProps = {
   values: any
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   const classes = useStyles()
 
@@ -31,7 +33,6 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
-  const { nativeCoin } = getNetworkInfo()
 
   useEffect(() => {
     const estimateGas = async () => {
@@ -45,7 +46,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
     }
 
     estimateGas()
-  }, [addresses, nativeCoin.decimals, numOwners, userAccount])
+  }, [addresses, numOwners, userAccount])
 
   return (
     <>

@@ -49,10 +49,11 @@ type Props = {
   setDefaultSafe: SetDefaultSafe
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 export const AddressWrapper = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { safe, defaultSafe, setDefaultSafe } = props
-  const { nativeCoin } = getNetworkInfo()
 
   return (
     <div className={classes.wrapper}>

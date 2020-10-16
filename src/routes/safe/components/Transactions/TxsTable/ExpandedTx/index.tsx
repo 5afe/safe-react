@@ -34,6 +34,8 @@ interface ExpandedTxProps {
   tx: Transaction
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const { fromWei, toBN } = getWeb3().utils
 
@@ -50,7 +52,6 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const canExecute = !isIncomingTx && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
   const canExecuteCancel = nonce === tx.nonce
-  const { nativeCoin } = getNetworkInfo()
 
   const openRejectModal = () => {
     if (!!cancelTx && nonce === cancelTx.nonce) {
