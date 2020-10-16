@@ -25,7 +25,7 @@ import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -78,6 +78,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
   const explorerUrl = getExplorerInfo(tx.to)
+  const { nativeCoin } = getNetworkInfo()
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -86,7 +87,9 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
     >
       <TxDetailsContent>
         <TxInfo>
-          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+          <Bold>
+            Send {humanReadableValue(tx.value)} {nativeCoin.name} to:
+          </Bold>
           <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
         </TxInfo>
 

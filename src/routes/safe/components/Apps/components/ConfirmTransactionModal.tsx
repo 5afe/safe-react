@@ -20,6 +20,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
+import { getNetworkInfo } from 'src/config'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -85,6 +86,7 @@ const ConfirmTransactionModal = ({
   onClose,
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
+  const { nativeCoin } = getNetworkInfo()
   const dispatch = useDispatch()
   if (!isOpen) {
     return null
@@ -146,7 +148,9 @@ const ConfirmTransactionModal = ({
                 <Heading tag="h3">Value</Heading>
                 <div className="value-section">
                   <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                  <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
+                  <Bold>
+                    {humanReadableValue(tx.value, 18)} {nativeCoin.name}
+                  </Bold>
                 </div>
               </div>
               <div className="section">

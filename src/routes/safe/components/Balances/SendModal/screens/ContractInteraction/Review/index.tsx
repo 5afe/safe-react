@@ -115,7 +115,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             <Block justify="left">
               <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                 {tx.value || 0}
-                {' ETH'}
+                {' ' + nativeCoin.name}
               </Paragraph>
             </Block>
           </Col>
