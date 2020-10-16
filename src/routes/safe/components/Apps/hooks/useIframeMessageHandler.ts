@@ -12,14 +12,12 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { getTxServiceUrl } from 'src/config/'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getNetworkName, getTxServiceUrl } from 'src/config/'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
@@ -43,6 +41,8 @@ interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessage
   requestId: number | string
 }
 
+const NETWORK_NAME = getNetworkName()
+
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
   openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
@@ -53,7 +53,6 @@ const useIframeMessageHandler = (
   const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const network = useSelector(networkSelector)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -91,7 +90,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: ETHEREUM_NETWORK[network].toLowerCase() as LowercaseNetworks,
+              network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
@@ -133,7 +132,6 @@ const useIframeMessageHandler = (
     dispatch,
     enqueueSnackbar,
     ethBalance,
-    network,
     openConfirmationModal,
     safeAddress,
     safeName,
