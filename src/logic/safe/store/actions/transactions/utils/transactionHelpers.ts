@@ -176,20 +176,20 @@ export const isTransactionCancelled = (
 
 export const calculateTransactionStatus = (
   tx: Transaction,
-  { owners, threshold }: SafeRecord,
+  { owners, threshold, nonce }: SafeRecord,
   currentUser?: string | null,
 ): TransactionStatusValues => {
   let txStatus
 
   if (tx.isExecuted && tx.isSuccessful) {
     txStatus = TransactionStatus.SUCCESS
-  } else if (tx.cancelled) {
+  } else if (tx.cancelled || nonce > tx.nonce) {
     txStatus = TransactionStatus.CANCELLED
   } else if (tx.confirmations.size === threshold) {
     txStatus = TransactionStatus.AWAITING_EXECUTION
   } else if (tx.creationTx) {
     txStatus = TransactionStatus.SUCCESS
-  } else if (!tx.confirmations.size || !!tx.isPending) {
+  } else if (!!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
     const userConfirmed = tx.confirmations.filter((conf) => conf.owner === currentUser).size === 1
