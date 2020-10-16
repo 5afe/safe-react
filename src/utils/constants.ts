@@ -4,11 +4,7 @@ export const APP_ENV = process.env.REACT_APP_ENV
 export const NODE_ENV = process.env.NODE_ENV
 export const NETWORK = process.env.REACT_APP_NETWORK?.toUpperCase() || 'RINKEBY'
 export const INTERCOM_ID = APP_ENV === 'production' ? process.env.REACT_APP_INTERCOM_ID : 'plssl1fl'
-export const GOOGLE_ANALYTICS_ID = {
-  [ETHEREUM_NETWORK.RINKEBY]: process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY,
-  [ETHEREUM_NETWORK.MAINNET]: process.env.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET,
-  [ETHEREUM_NETWORK.XDAI]: process.env.REACT_APP_GOOGLE_ANALYTICS_ID_XDAI,
-}
+export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const PORTIS_ID = {
   [ETHEREUM_NETWORK.RINKEBY]: '852b763d-f28b-4463-80cb-846d7ec5806b',
   [ETHEREUM_NETWORK.MAINNET]: process.env.REACT_APP_PORTIS_ID,
