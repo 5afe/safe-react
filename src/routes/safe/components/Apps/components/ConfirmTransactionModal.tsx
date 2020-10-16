@@ -14,7 +14,7 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { useDispatch } from 'react-redux'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
@@ -150,7 +150,7 @@ const ConfirmTransactionModal = ({
                 <div className="value-section">
                   <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
                   <Bold>
-                    {humanReadableValue(tx.value, 18)} {nativeCoin.name}
+                    {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name}
                   </Bold>
                 </div>
               </div>

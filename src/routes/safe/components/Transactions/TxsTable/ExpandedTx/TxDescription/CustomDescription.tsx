@@ -13,7 +13,7 @@ import {
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -89,7 +89,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       <TxDetailsContent>
         <TxInfo>
           <Bold>
-            Send {humanReadableValue(tx.value)} {nativeCoin.name} to:
+            Send {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name} to:
           </Bold>
           <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
         </TxInfo>
