@@ -105,8 +105,8 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
         {networkInfo.label} Network only send {networkInfo.label} assets to this Safe.
       </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
-        This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
-        ETH and ERC-20 tokens to this address!
+        This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}
+        {networkInfo.nativeCoin.name} and ERC-20 tokens to this address!
       </Paragraph>
       <Col layout="column" middle="xs">
         <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">

@@ -14,15 +14,20 @@ import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { safeSelector } from 'src/logic/safe/store/selectors'
+import { getNetworkInfo } from 'src/config'
 
 const useStyles = makeStyles(styles)
 
-interface EthValueProps {
-  onSetMax: (ethBalance: string) => void
+interface NativeCoinValueProps {
+  onSetMax: (nativeCoinBalance: string) => void
 }
-const EthValue = ({ onSetMax }: EthValueProps): React.ReactElement | null => {
+
+const { nativeCoin } = getNetworkInfo()
+
+export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
+
   const {
     input: { value: method },
   } = useField('selectedMethod', { subscription: { value: true } })
@@ -52,7 +57,7 @@ const EthValue = ({ onSetMax }: EthValueProps): React.ReactElement | null => {
             component={TextField}
             disabled={disabled}
             inputAdornment={{
-              endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+              endAdornment: <InputAdornment position="end">{nativeCoin.name}</InputAdornment>,
               disabled,
             }}
             name="value"
@@ -66,5 +71,3 @@ const EthValue = ({ onSetMax }: EthValueProps): React.ReactElement | null => {
     </>
   )
 }
-
-export default EthValue

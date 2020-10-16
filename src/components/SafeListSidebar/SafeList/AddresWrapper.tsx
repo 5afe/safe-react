@@ -8,6 +8,7 @@ import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
 import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeStyles } from '@material-ui/core/styles'
+import { getNetworkInfo } from 'src/config'
 
 const StyledButtonLink = styled(ButtonLink)`
   visibility: hidden;
@@ -48,6 +49,8 @@ type Props = {
   setDefaultSafe: SetDefaultSafe
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 export const AddressWrapper = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const { safe, defaultSafe, setDefaultSafe } = props
@@ -57,7 +60,7 @@ export const AddressWrapper = (props: Props): React.ReactElement => {
       <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} />
 
       <div className={classes.addressDetails}>
-        <Text size="xl">{`${formatAmount(safe.ethBalance)} ETH`}</Text>
+        <Text size="xl">{`${formatAmount(safe.ethBalance)} ${nativeCoin.name}`}</Text>
         {sameAddress(defaultSafe, safe.address) ? (
           <DefaultBadge />
         ) : (

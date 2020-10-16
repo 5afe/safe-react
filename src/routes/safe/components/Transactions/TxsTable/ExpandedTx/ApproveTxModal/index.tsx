@@ -163,7 +163,9 @@ const ApproveTxModal = ({
           <Paragraph>
             {`You're about to ${
               approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${
+              nativeCoin.name
+            } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

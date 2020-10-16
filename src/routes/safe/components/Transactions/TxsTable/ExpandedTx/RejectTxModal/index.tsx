@@ -96,7 +96,7 @@ const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>
