@@ -114,7 +114,11 @@ describe('getERC20DecimalsAndSymbol', () => {
     const generateBatchRequests = require('src/logic/contracts/generateBatchRequests')
     const spyTokenInfos = fetchTokens.getTokenInfos.mockImplementationOnce(() => null)
 
-    const spyGenerateBatchRequest = generateBatchRequests.default.mockImplementationOnce(() => [decimals, symbol])
+    const spyGenerateBatchRequest = generateBatchRequests.default.mockImplementationOnce(() => [
+      undefined,
+      decimals,
+      symbol,
+    ])
 
     // when
     const result = await getERC20DecimalsAndSymbol(tokenAddress)

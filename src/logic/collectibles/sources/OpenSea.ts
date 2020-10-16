@@ -2,7 +2,7 @@ import { RateLimit } from 'async-sema'
 import { getNetworkId } from 'src/config'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { Collectibles, NFTAssets, NFTTokens, OpenSeaAssets } from 'src/logic/collectibles/sources/collectibles'
+import { Collectibles, NFTAssets, NFTTokens, OpenSeaAssets } from 'src/logic/collectibles/sources/collectibles.d'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { OPENSEA_API_KEY } from 'src/utils/constants'
 

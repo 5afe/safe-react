@@ -1,5 +1,5 @@
 import { createSelector } from 'reselect'
-import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
+import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 
 import { AppReduxState } from 'src/store'
 import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
