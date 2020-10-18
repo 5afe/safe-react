@@ -88,7 +88,7 @@ function createWindow() {
       allowRunningInsecureContent: true,
       nativeWindowOpen: true, // need to be set in order to display modal
     },
-    icon: path.join(__dirname, './build/safe.png'),
+    icon: electron.nativeImage.createFromPath(path.join(__dirname, './build/safe.png')),
   });
 
   mainWindow.once('ready-to-show', () => {
