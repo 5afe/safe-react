@@ -1,16 +1,17 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceHost } from 'src/config/index'
+import { getTxServiceUrl } from 'src/config'
+import { TokenProps } from 'src/logic/tokens/store/model/token'
 
-const fetchTokenBalanceList = (safeAddress) => {
-  const apiUrl = getTxServiceHost()
-  const url = `${apiUrl}safes/${safeAddress}/balances/`
-
-  return axios.get(url, {
-    params: {
-      limit: 3000,
-    },
-  })
+type BalanceResult = {
+  tokenAddress: string
+  token: TokenProps
+  balance: string
 }
 
-export default fetchTokenBalanceList
+export const fetchTokenBalanceList = (safeAddress: string): Promise<AxiosResponse<{ results: BalanceResult[] }>> => {
+  const apiUrl = getTxServiceUrl()
+  const url = `${apiUrl}/safes/${safeAddress}/balances/`
+
+  return axios.get(url)
+}

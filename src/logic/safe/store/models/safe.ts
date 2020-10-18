@@ -1,4 +1,5 @@
 import { List, Map, Record, RecordOf, Set } from 'immutable'
+import { FEATURES } from 'src/config/networks/network.d'
 
 export type SafeOwner = {
   name: string
@@ -24,7 +25,7 @@ export type SafeRecordProps = {
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
-  featuresEnabled: Array<string>
+  featuresEnabled: Array<FEATURES>
 }
 
 const makeSafe = Record<SafeRecordProps>({

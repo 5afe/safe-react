@@ -3,12 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
 import { withSnackbar } from 'notistack'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
+import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -20,21 +18,25 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
 const useStyles = makeStyles(styles as any)
+
+const { nativeCoin } = getNetworkInfo()
 
 const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const classes = useStyles()
@@ -45,15 +47,13 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   const [data, setData] = useState('')
 
   const txToken = useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
-  const isSendingETH = txToken?.address === ETH_ADDRESS
+  const isSendingETH = txToken?.address === nativeCoin.address
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async () => {
-      const { fromWei, toBN } = getWeb3().utils
-
       if (!txToken) {
         return
       }
@@ -70,8 +70,8 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -87,11 +87,10 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
-    const web3 = getWeb3()
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether') : '0'
+    const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     dispatch(
       createTransaction({
@@ -149,7 +148,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type="address" value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>
@@ -171,7 +170,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         </Row>
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

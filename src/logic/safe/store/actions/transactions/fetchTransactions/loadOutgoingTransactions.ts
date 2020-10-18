@@ -1,7 +1,7 @@
 import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -59,8 +59,8 @@ export type SafeTransactionsType = {
 }
 
 export type OutgoingTxs = {
-  cancellationTxs: any
-  outgoingTxs: any
+  cancellationTxs: Record<number, TxServiceModel>
+  outgoingTxs: TxServiceModel[]
 }
 
 export type BatchProcessTxsProps = OutgoingTxs & {
@@ -97,12 +97,14 @@ const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxService
   )
 }
 
+type BatchRequestReturnValues = [TxServiceModel, string | undefined]
+
 /**
  * Requests Contract's code for all the Contracts the Safe has interacted with
  * @param transactions
  * @returns {Promise<[Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>]>}
  */
-const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
+const batchRequestContractCode = (transactions: TxServiceModel[]): Promise<BatchRequestReturnValues[]> => {
   if (!transactions || !Array.isArray(transactions)) {
     throw new Error('`transactions` must be provided in order to lookup information')
   }
@@ -110,7 +112,7 @@ const batchRequestContractCode = (transactions: any[]): Promise<any[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
   const whenTxsValues = transactions.map((tx) => {
-    return generateBatchRequests({
+    return generateBatchRequests<BatchRequestReturnValues>({
       abi: [],
       address: tx.to,
       batch,
@@ -141,7 +143,7 @@ const batchProcessOutgoingTransactions = async ({
   safe,
 }: BatchProcessTxsProps): Promise<{
   cancel: Record<string, Transaction>
-  outgoing: Array<Transaction>
+  outgoing: Transaction[]
 }> => {
   // cancellation transactions
   const cancelTxsValues = Object.values(cancellationTxs)
@@ -193,9 +195,9 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
     return defaultResponse
   }
 
-  const knownTokens = state[TOKEN_REDUCER_ID]
-  const currentUser = state[PROVIDER_REDUCER_ID].get('account')
-  const safe = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
+  const knownTokens: TokenState = state[TOKEN_REDUCER_ID]
+  const currentUser: string = state[PROVIDER_REDUCER_ID].get('account')
+  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
 
   if (!safe) {
     return defaultResponse

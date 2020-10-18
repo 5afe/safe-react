@@ -2,10 +2,10 @@ import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
 import Button from 'src/components/layout/Button'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { connected } from 'src/theme/variables'
+import { getExplorerInfo } from 'src/config'
 
-const EtherScanLink = styled.a`
+const ExplorerLink = styled.a`
   color: ${connected};
 `
 
@@ -13,24 +13,31 @@ const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
 `
 
-export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }) => (
-  <span>
-    <p>This process should take a couple of minutes.</p>
-    <p>
-      Follow the progress on{' '}
-      <EtherScanLink
-        aria-label="Show details on Etherscan"
-        href={getEtherScanLink('tx', safeCreationTxHash)}
-        rel="noopener noreferrer"
-        target="_blank"
-        data-testid="safe-create-etherscan-link"
-      >
-        Etherscan.io
-      </EtherScanLink>
-      .
-    </p>
-  </span>
-)
+export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }) => {
+  const explorerInfo = getExplorerInfo(safeCreationTxHash)
+  const { url, alt } = explorerInfo()
+  const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
+  const explorerDomain = match !== null ? match[2] : 'Network Explorer'
+
+  return (
+    <span>
+      <p>This process should take a couple of minutes.</p>
+      <p>
+        Follow the progress on{' '}
+        <ExplorerLink
+          aria-label={alt}
+          href={url}
+          rel="noopener noreferrer"
+          target="_blank"
+          data-testid="safe-create-explorer-link"
+        >
+          {explorerDomain}
+        </ExplorerLink>
+        .
+      </p>
+    </span>
+  )
+}
 
 export const ContinueFooter = ({
   continueButtonDisabled,

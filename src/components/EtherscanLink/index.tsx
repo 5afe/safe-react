@@ -17,11 +17,10 @@ interface EtherscanLinkProps {
   className?: string
   cut?: number
   knownAddress?: boolean
-  type: 'tx' | 'address'
   value: string
 }
 
-const EtherscanLink = ({ className, cut, knownAddress, type, value }: EtherscanLinkProps): React.ReactElement => {
+const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkProps): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -30,7 +29,7 @@ const EtherscanLink = ({ className, cut, knownAddress, type, value }: EtherscanL
         {cut ? shortVersionOf(value, cut) : value}
       </Span>
       <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
-      <EtherscanBtn className={classes.button} type={type} value={value} />
+      <EtherscanBtn className={classes.button} value={value} />
       {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
     </Block>
   )
