@@ -19,6 +19,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
@@ -71,7 +72,7 @@ const useIframeMessageHandler = (
   )
 
   useEffect(() => {
-    const handleIframeMessage = (
+    const handleIframeMessage = async (
       messageId: SDKMessageIds,
       messagePayload: SDKMessageToPayload[typeof messageId],
       requestId: RequestId,
@@ -96,6 +97,30 @@ const useIframeMessageHandler = (
           const payload = messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS_V2']
           if (payload) {
             openConfirmationModal(payload.txs, payload.params, requestId)
+          }
+          break
+        }
+
+        case SDK_MESSAGES.RPC_CALL: {
+          const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
+
+          if (
+            web3ReadOnly &&
+            web3ReadOnly.currentProvider != null &&
+            typeof web3ReadOnly.currentProvider !== 'string' &&
+            'request' in web3ReadOnly.currentProvider
+          ) {
+            const response = await web3ReadOnly.currentProvider?.request?.({
+              method: payload?.call,
+              params: payload?.params,
+            })
+
+            const rpcCallMsg = {
+              messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
+              data: response,
+            }
+
+            sendMessageToIframe(rpcCallMsg, requestId)
           }
           break
         }
