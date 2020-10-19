@@ -5,6 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -18,7 +20,6 @@ import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
@@ -61,6 +62,7 @@ type Props = {
   thresholdReached: boolean
   tx: Transaction
 }
+const { nativeCoin } = getNetworkInfo()
 
 const ApproveTxModal = ({
   canExecute,
@@ -85,9 +87,6 @@ const ApproveTxModal = ({
     let isCurrent = true
 
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
-
       const estimatedGasCosts = await estimateTxGasCosts(
         safeAddress,
         tx.recipient,
@@ -95,8 +94,8 @@ const ApproveTxModal = ({
         tx,
         approveAndExecute ? userAddress : undefined,
       )
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -164,7 +163,9 @@ const ApproveTxModal = ({
           <Paragraph>
             {`You're about to ${
               approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${
+              nativeCoin.name
+            } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

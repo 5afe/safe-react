@@ -4,22 +4,18 @@ import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import GnoForm from 'src/components/forms/GnoForm'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
@@ -28,6 +24,10 @@ import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/scre
 import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
 import { sm } from 'src/theme/variables'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -171,7 +171,7 @@ const SendCollectible = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <EtherscanBtn value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>

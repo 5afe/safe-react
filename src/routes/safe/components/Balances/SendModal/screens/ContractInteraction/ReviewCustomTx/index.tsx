@@ -3,10 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import ArrowDown from '../../assets/arrow-down.svg'
-
-import { styles } from './style'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -18,16 +16,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+
+import ArrowDown from '../../assets/arrow-down.svg'
+
+import { styles } from './style'
 
 type Props = {
   onClose: () => void
@@ -37,22 +38,22 @@ type Props = {
 
 const useStyles = makeStyles(styles)
 
+const { nativeCoin } = getNetworkInfo()
+
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async () => {
-      const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -67,10 +68,9 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   }, [safeAddress, tx.data, tx.contractAddress])
 
   const submitTx = async (): Promise<void> => {
-    const web3 = getWeb3()
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
+    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
 
     dispatch(
       createTransaction({
@@ -122,7 +122,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 {tx.contractAddress}
               </Paragraph>
               <CopyBtn content={tx.contractAddress as string} />
-              <EtherscanBtn type="address" value={tx.contractAddress as string} />
+              <EtherscanBtn value={tx.contractAddress as string} />
             </Block>
           </Col>
         </Row>
@@ -135,7 +135,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
           <Paragraph className={classes.value} noMargin size="md">
             {tx.value || 0}
-            {' ETH'}
+            {' ' + nativeCoin.name}
           </Paragraph>
         </Row>
         <Row margin="xs">
@@ -152,7 +152,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

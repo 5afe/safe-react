@@ -4,9 +4,8 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-
-import { styles } from './style'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -17,12 +16,15 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+
+import { styles } from './style'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
+
+const { nativeCoin } = getNetworkInfo()
 
 const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
@@ -32,15 +34,13 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
       const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
 
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
       }
@@ -118,7 +118,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
                           {owner.address}
                         </Paragraph>
                         <CopyBtn content={owner.address} />
-                        <EtherscanBtn type="address" value={owner.address} />
+                        <EtherscanBtn value={owner.address} />
                       </Block>
                     </Block>
                   </Col>
@@ -146,7 +146,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn type="address" value={values.ownerAddress} />
+                    <EtherscanBtn value={values.ownerAddress} />
                   </Block>
                 </Block>
               </Col>
@@ -160,7 +160,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
           <br />
-          {`Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+          {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
       </Block>
       <Hairline />

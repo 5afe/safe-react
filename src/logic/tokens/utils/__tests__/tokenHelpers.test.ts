@@ -1,6 +1,7 @@
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import { getERC20DecimalsAndSymbol, isERC721Contract, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 describe('isTokenTransfer', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
@@ -113,7 +114,11 @@ describe('getERC20DecimalsAndSymbol', () => {
     const generateBatchRequests = require('src/logic/contracts/generateBatchRequests')
     const spyTokenInfos = fetchTokens.getTokenInfos.mockImplementationOnce(() => null)
 
-    const spyGenerateBatchRequest = generateBatchRequests.default.mockImplementationOnce(() => [decimals, symbol])
+    const spyGenerateBatchRequest = generateBatchRequests.default.mockImplementationOnce(() => [
+      undefined,
+      decimals,
+      symbol,
+    ])
 
     // when
     const result = await getERC20DecimalsAndSymbol(tokenAddress)
@@ -170,5 +175,32 @@ describe('isERC721Contract', () => {
     // then
     expect(result).toEqual(expectedResult)
     expect(standardContractSpy).toHaveBeenCalled()
+  })
+  it('It should return the right conversion from unit to token', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '0.000000003'
+    const ESTIMATED_GAS_COST = 3e9 // 3 Gwei
+
+    // when
+    const gasCosts = fromTokenUnit(ESTIMATED_GAS_COST, decimals)
+
+    // then
+    expect(gasCosts).toEqual(expectedResult)
+  })
+
+  it('It should return the right conversion from token to unit', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '300000000000000000'
+    const VALUE = 0.3
+
+    // when
+    const txValue = toTokenUnit(VALUE, decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
   })
 })

@@ -1,6 +1,7 @@
 import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+
 import styled from 'styled-components'
 
 import { styles } from './styles'
@@ -12,7 +13,7 @@ import {
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -23,7 +24,8 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { getNetwork } from 'src/config'
+
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -55,6 +57,8 @@ const StyledMethodName = styled(Text)`
   white-space: nowrap;
 `
 
+const { nativeCoin } = getNetworkInfo()
+
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
     <TxDetailsMethodName size="lg" strong>
@@ -75,7 +79,7 @@ const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.data?.method ? ` (${tx.data.method})` : ''
-
+  const explorerUrl = getExplorerInfo(tx.to)
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -84,8 +88,10 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
     >
       <TxDetailsContent>
         <TxInfo>
-          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetwork()} />
+          <Bold>
+            Send {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name} to:
+          </Bold>
+          <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
         </TxInfo>
 
         {!!tx.data && <TxInfoDetails data={tx.data} />}
@@ -177,7 +183,7 @@ interface GenericCustomDataProps {
 const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericCustomDataProps): React.ReactElement => {
   const classes = useStyles()
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
-
+  const explorerUrl = getExplorerInfo(recipient)
   return (
     <Block>
       <Block data-testid={TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID}>
@@ -188,8 +194,7 @@ const GenericCustomData = ({ amount = '0', data, recipient, storedTx }: GenericC
           name={recipientName === 'UNKNOWN' ? undefined : recipientName}
           showIdenticon
           showCopyBtn
-          showEtherscanBtn
-          network={getNetwork()}
+          explorerUrl={explorerUrl}
         />
       </Block>
 

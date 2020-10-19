@@ -1,12 +1,12 @@
-import { useSelector } from 'react-redux'
 import React from 'react'
-
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { useSelector } from 'react-redux'
+import EtherscanLink from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import EtherscanLink from 'src/components/EtherscanLink'
 import Paragraph from 'src/components/layout/Paragraph'
+
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import { SAFE_METHODS_NAMES, SafeMethods } from 'src/routes/safe/store/models/types/transactions.d'
 
 export const TRANSACTIONS_DESC_ADD_OWNER_TEST_ID = 'tx-description-add-owner'
@@ -29,7 +29,7 @@ const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): React.ReactElement =
       {ownerChangedName ? (
         <OwnerAddressTableCell address={removedOwner} knownAddress showLinks userName={ownerChangedName} />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={removedOwner} />
+        <EtherscanLink knownAddress={false} value={removedOwner} />
       )}
     </Block>
   )
@@ -48,7 +48,7 @@ const AddedOwner = ({ addedOwner }: AddedOwnerProps): React.ReactElement => {
       {ownerChangedName ? (
         <OwnerAddressTableCell address={addedOwner} knownAddress showLinks userName={ownerChangedName} />
       ) : (
-        <EtherscanLink knownAddress={false} type="address" value={addedOwner} />
+        <EtherscanLink knownAddress={false} value={addedOwner} />
       )}
     </Block>
   )
@@ -74,7 +74,7 @@ interface AddModuleProps {
 const AddModule = ({ module }: AddModuleProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
     <Bold>Add module:</Bold>
-    <EtherscanLink value={module} knownAddress={false} type="address" />
+    <EtherscanLink value={module} knownAddress={false} />
   </Block>
 )
 
@@ -85,7 +85,7 @@ interface RemoveModuleProps {
 const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
     <Bold>Remove module:</Bold>
-    <EtherscanLink value={module} knownAddress={false} type="address" />
+    <EtherscanLink value={module} knownAddress={false} />
   </Block>
 )
 

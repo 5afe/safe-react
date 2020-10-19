@@ -61,8 +61,7 @@
       "src/**/*.{js,jsx,ts,tsx}",
       "!src/**/*.{.test.*}",
       "!src/**/test/**/*",
-      "!src/**/assets/**",
-      "!src/config/**/*"
+      "!src/**/assets/**"
     ]
   },
   "productName": "Safe Multisig",
@@ -166,7 +165,7 @@
   "dependencies": {
     "@gnosis.pm/safe-apps-sdk": "https://github.com/gnosis/safe-apps-sdk#a6c168b",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#1bf397f",
+    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#70e57bdd1e0fd5dfdf5768076577c1e000b5fe28",
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid": "5.26.0",
     "@material-ui/core": "4.11.0",
