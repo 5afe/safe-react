@@ -1,13 +1,15 @@
+import { GenericModal } from '@gnosis.pm/safe-react-components'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
-import { GenericModal } from '@gnosis.pm/safe-react-components'
 
 import NoSafe from 'src/components/NoSafe'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { AppReduxState } from 'src/store'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { FEATURES } from 'src/config/networks/network.d'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -34,7 +36,18 @@ const Container = (): React.ReactElement => {
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
+  const featuresEnabled = useSelector<AppReduxState, FEATURES[] | undefined>(
+    safeFeaturesEnabledSelector,
+    (left, right) => {
+      if (Array.isArray(left) && Array.isArray(right)) {
+        return JSON.stringify(left) === JSON.stringify(right)
+      }
+
+      return left === right
+    },
+  )
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const safeAppsEnabled = Boolean(featuresEnabled?.includes(FEATURES.SAFE_APPS))
 
   if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
@@ -67,7 +80,17 @@ const Container = (): React.ReactElement => {
           path={`${matchSafeWithAddress?.path}/transactions`}
           render={() => wrapInSuspense(<TxsTable />, null)}
         />
-        <Route exact path={`${matchSafeWithAddress?.path}/apps`} render={() => wrapInSuspense(<Apps />, null)} />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/apps`}
+          render={({ history }) => {
+            if (!safeAppsEnabled) {
+              history.push(`${matchSafeWithAddress?.url}/balances`)
+            }
+            return wrapInSuspense(<Apps />, null)
+          }}
+        />
+
         <Route
           exact
           path={`${matchSafeWithAddress?.path}/settings`}

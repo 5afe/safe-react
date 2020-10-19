@@ -13,13 +13,12 @@ import {
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { getTxServiceHost } from 'src/config/'
+import { getNetworkName, getTxServiceUrl } from 'src/config/'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
@@ -43,6 +42,8 @@ interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessage
   requestId: number | string
 }
 
+const NETWORK_NAME = getNetworkName()
+
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
   openConfirmationModal: (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) => void,
@@ -53,7 +54,6 @@ const useIframeMessageHandler = (
   const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const network = useSelector(networkSelector)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -105,14 +105,14 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: network.toLowerCase() as LowercaseNetworks,
+              network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
           const envInfoMessage = {
             messageId: INTERFACE_MESSAGES.ENV_INFO,
             data: {
-              txServiceUrl: getTxServiceHost(),
+              txServiceUrl: getTxServiceUrl(),
             },
           }
 
@@ -147,7 +147,6 @@ const useIframeMessageHandler = (
     dispatch,
     enqueueSnackbar,
     ethBalance,
-    network,
     openConfirmationModal,
     safeAddress,
     safeName,

@@ -2,6 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { getAppInfoFromUrl, staticAppsList } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types'
+import { getNetworkId } from 'src/config'
 
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -28,18 +29,29 @@ const useAppList = (): UseAppListReturnType => {
       // * third-party apps added by the user
       // * disabled status for both static and third-party apps
       const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      const list: (StoredSafeApp & { isDeletable?: boolean })[] = persistedAppList.map((a) => ({
+      let list: (StoredSafeApp & { isDeletable: boolean; networks?: number[] })[] = persistedAppList.map((a) => ({
         ...a,
         isDeletable: true,
       }))
 
+      // merge stored apps with static apps (apps added manually can be deleted by the user)
       staticAppsList.forEach((staticApp) => {
         const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
-        if (!app) {
-          list.push({ ...staticApp, isDeletable: false })
-        } else {
+        if (app) {
           app.isDeletable = false
+          app.networks = staticApp.networks
+        } else {
+          list.push({ ...staticApp, isDeletable: false })
         }
+      })
+
+      // filter app by network
+      list = list.filter((app) => {
+        // if the app does not expose supported networks, include them. (backward compatible)
+        if (!app.networks) {
+          return true
+        }
+        return app.networks.includes(getNetworkId())
       })
 
       let apps: SafeApp[] = []

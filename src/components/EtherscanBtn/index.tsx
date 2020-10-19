@@ -6,8 +6,8 @@ import React from 'react'
 import EtherscanOpenIcon from './img/etherscan-open.svg'
 
 import Img from 'src/components/layout/Img'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { xs } from 'src/theme/variables'
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles({
   container: {
@@ -30,18 +30,15 @@ const useStyles = makeStyles({
 interface EtherscanBtnProps {
   className?: string
   increaseZindex?: boolean
-  type: 'tx' | 'address'
   value: string
 }
 
-const EtherscanBtn = ({
-  className = '',
-  increaseZindex = false,
-  type,
-  value,
-}: EtherscanBtnProps): React.ReactElement => {
+const EtherscanBtn = ({ className = '', increaseZindex = false, value }: EtherscanBtnProps): React.ReactElement => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
+
+  const explorerInfo = getExplorerInfo(value)
+  const { url } = explorerInfo()
 
   return (
     <Tooltip classes={customClasses} placement="top" title="Show details on Etherscan">
@@ -49,7 +46,7 @@ const EtherscanBtn = ({
         aria-label="Show details on Etherscan"
         className={cn(classes.container, className)}
         onClick={(event) => event.stopPropagation()}
-        href={getEtherScanLink(type, value)}
+        href={url}
         rel="noopener noreferrer"
         target="_blank"
       >
