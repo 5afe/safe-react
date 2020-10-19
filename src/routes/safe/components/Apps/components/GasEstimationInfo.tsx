@@ -25,7 +25,7 @@ const GasEstimationInfo = ({ appEstimation, internalEstimation, loading }: OwnPr
   }
 
   let content: React.ReactElement | null = null
-  if (appEstimation > internalEstimation) {
+  if (appEstimation >= internalEstimation) {
     content = (
       <>
         <Img alt="Success" src={CheckIcon} style={imgStyles} /> Gas estimation is OK
