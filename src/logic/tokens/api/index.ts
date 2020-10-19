@@ -1,2 +1,3 @@
-export { default as fetchTokenList } from './fetchTokenList'
-export { default as fetchToken } from './fetchToken'
+export { fetchErc20AndErc721AssetsList } from './fetchErc20AndErc721AssetsList'
+export { fetchSafeCollectibles } from './fetchSafeCollectibles'
+export { fetchTokenBalanceList } from './fetchTokenBalanceList'

@@ -29,9 +29,7 @@ export default handleActions(
 
       const entryFound = state.find((oldEntry) => oldEntry.address === entry.address)
 
-      // Only adds entries with valid names
-      const validName = getValidAddressBookName(entry.name)
-      if (!entryFound && validName) {
+      if (!entryFound) {
         state.push(entry)
       }
       return state

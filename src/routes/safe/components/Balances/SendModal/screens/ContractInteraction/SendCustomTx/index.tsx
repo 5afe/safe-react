@@ -1,25 +1,20 @@
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
-import Switch from '@material-ui/core/Switch'
 import { makeStyles } from '@material-ui/core/styles'
+import Switch from '@material-ui/core/Switch'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../../assets/arrow-down.svg'
-
-import { styles } from './style'
-
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import ScanQRModal from 'src/components/ScanQRModal'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
-import TextField from 'src/components/forms/TextField'
 import TextareaField from 'src/components/forms/TextareaField'
-import { composeValidators, maxValue, mustBeFloat, minValue } from 'src/components/forms/validator'
+import TextField from 'src/components/forms/TextField'
+import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -28,10 +23,16 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import ScanQRModal from 'src/components/ScanQRModal'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+
+import ArrowDown from '../../assets/arrow-down.svg'
+
+import { styles } from './style'
+import { getNetworkInfo } from 'src/config'
 
 export interface CreatedTx {
   contractAddress: string
@@ -49,6 +50,8 @@ type Props = {
 }
 
 const useStyles = makeStyles(styles)
+
+const { nativeCoin } = getNetworkInfo()
 
 const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
@@ -177,7 +180,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <EtherscanBtn value={selectedEntry.address} />
                         </Block>
                       </Col>
                     </Row>
@@ -224,7 +227,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{nativeCoin.name}</InputAdornment>,
                       }}
                       name="value"
                       placeholder="Value*"

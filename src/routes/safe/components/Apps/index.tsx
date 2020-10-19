@@ -10,7 +10,6 @@ import { useAppList } from './hooks/useAppList'
 import { SafeApp } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
   safeEthBalanceSelector,
@@ -21,6 +20,7 @@ import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { getNetworkName } from 'src/config'
 
 const centerCSS = css`
   display: flex;
@@ -41,7 +41,7 @@ const StyledCard = styled(Card)`
 
 const CenteredMT = styled.div`
   ${centerCSS};
-  margin-top: 5px;
+  margin-top: 16px;
 `
 
 type ConfirmTransactionModalState = {
@@ -55,6 +55,8 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   txs: [],
   requestId: undefined,
 }
+
+const NETWORK_NAME = getNetworkName()
 
 const Apps = (): React.ReactElement => {
   const { appList, loadingAppList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
@@ -70,7 +72,6 @@ const Apps = (): React.ReactElement => {
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
-  const network = useSelector(networkSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
 
   const openConfirmationModal = useCallback(
@@ -155,11 +156,11 @@ const Apps = (): React.ReactElement => {
       messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
       data: {
         safeAddress: safeAddress as string,
-        network: network.toLowerCase() as LowercaseNetworks,
+        network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, network, safeAddress, selectedApp, sendMessageToIframe])
+  }, [ethBalance, safeAddress, selectedApp, sendMessageToIframe])
 
   if (loadingAppList || !appList.length || !safeAddress) {
     return (
@@ -185,7 +186,7 @@ const Apps = (): React.ReactElement => {
               granted={granted}
               selectedApp={selectedApp}
               safeAddress={safeAddress}
-              network={network}
+              network={NETWORK_NAME}
               appIsLoading={appIsLoading}
               onIframeLoad={handleIframeLoad}
             />

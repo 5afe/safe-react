@@ -5,6 +5,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import classNames from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getExplorerInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -17,7 +18,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
@@ -34,7 +34,8 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()
-  const etherScanLink = getEtherScanLink('address', safeAddress)
+  const explorerInfo = getExplorerInfo(safeAddress)
+  const { url } = explorerInfo()
 
   return (
     <Modal
@@ -67,7 +68,7 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
                 <Paragraph color="disabled" noMargin size="md">
                   {safeAddress}
                 </Paragraph>
-                <Link className={classes.open} target="_blank" to={etherScanLink}>
+                <Link className={classes.open} target="_blank" to={url}>
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>

@@ -1,5 +1,5 @@
 import makeSafe from 'src/logic/safe/store/models/safe'
-import { buildOwnersFrom } from 'src/logic/safe/store/actions/addSafe'
+import { buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import {
   FIELD_NAME,
   FIELD_CONFIRMATIONS,
@@ -89,9 +89,7 @@ export const aMinedSafe = async (
     form[getOwnerAddressBy(i)] = accounts[i]
   }
 
-  const openSafeProps = await createSafe(form, accounts[0])
-
-  return openSafeProps.safeAddress
+  return createSafe(form, accounts[0]).then((receipt) => receipt.events?.ProxyCreation.returnValues.proxy)
 }
 
 export default aSafe

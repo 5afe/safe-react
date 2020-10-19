@@ -43,7 +43,7 @@ const useStyles = makeStyles({
 })
 
 export const SAFE_INSTANCE_ERROR = 'Address given is not a Safe instance'
-export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this Safe is not the same'
+export const SAFE_MASTERCOPY_ERROR = 'Address is not a Safe or mastercopy is not supported'
 
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
@@ -73,7 +73,7 @@ export const safeFieldsValidation = async (values): Promise<Record<string, strin
     `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
   )
   const safeMaster = await getSafeMasterContract()
-  const masterCopy = safeMaster.address
+  const masterCopy = safeMaster.options.address
   const sameMasterCopy =
     checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
   if (!sameMasterCopy) {

@@ -4,11 +4,8 @@ import Close from '@material-ui/icons/Close'
 import { withSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -20,6 +17,8 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import {
@@ -29,13 +28,16 @@ import {
 } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+
+const { nativeCoin } = getNetworkInfo()
 
 const useStyles = makeStyles(styles as any)
 
@@ -55,8 +57,6 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
     let isCurrent = true
 
     const estimateGas = async () => {
-      const { fromWei, toBN } = getWeb3().utils
-
       const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
       const methodToCall = supportsSafeTransfer ? `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}` : 'transfer'
       const transferParams = [tx.recipientAddress, tx.nftTokenId]
@@ -67,8 +67,8 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
       const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -135,7 +135,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type="address" value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>
@@ -154,7 +154,7 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
         )}
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

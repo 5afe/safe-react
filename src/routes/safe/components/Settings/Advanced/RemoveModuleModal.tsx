@@ -6,25 +6,25 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import cn from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
-
-import { styles } from './style'
+import Identicon from 'src/components/Identicon'
+import Block from 'src/components/layout/Block'
+import Col from 'src/components/layout/Col'
+import Hairline from 'src/components/layout/Hairline'
+import Link from 'src/components/layout/Link'
+import Paragraph from 'src/components/layout/Paragraph'
+import Row from 'src/components/layout/Row'
+import Modal from 'src/components/Modal'
+import { getExplorerInfo } from 'src/config'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import Modal from 'src/components/Modal'
-import Row from 'src/components/layout/Row'
-import Paragraph from 'src/components/layout/Paragraph'
-import Hairline from 'src/components/layout/Hairline'
-import Block from 'src/components/layout/Block'
-import Col from 'src/components/layout/Col'
-import Identicon from 'src/components/Identicon'
-import Link from 'src/components/layout/Link'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
 import { md, secondary } from 'src/theme/variables'
+import styled from 'styled-components'
+
+import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
@@ -48,6 +48,9 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const dispatch = useDispatch()
+
+  const explorerInfo = getExplorerInfo(selectedModule[0])
+  const { url } = explorerInfo()
 
   const removeSelectedModule = async (): Promise<void> => {
     try {
@@ -101,11 +104,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
                   <Paragraph color="disabled" noMargin size="md">
                     {selectedModule[0]}
                   </Paragraph>
-                  <Link
-                    className={classes.modalOpen}
-                    target="_blank"
-                    to={getEtherScanLink('address', selectedModule[0])}
-                  >
+                  <Link className={classes.modalOpen} target="_blank" to={url}>
                     <OpenInNew style={openIconStyle} />
                   </Link>
                 </Block>

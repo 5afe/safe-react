@@ -1,6 +1,6 @@
 import { ImmortalStorage, IndexedDbStore, LocalStorageStore } from 'immortal-db'
 
-import { getNetwork } from 'src/config'
+import { getNetworkName } from 'src/config'
 
 // Don't use sessionStorage and cookieStorage
 // https://github.com/gruns/ImmortalDB/issues/22
@@ -8,7 +8,7 @@ import { getNetwork } from 'src/config'
 const stores = [IndexedDbStore, LocalStorageStore]
 export const storage = new ImmortalStorage(stores)
 
-const PREFIX = `v2_${getNetwork()}`
+const PREFIX = `v2_${getNetworkName()}`
 
 export const loadFromStorage = async <T = unknown>(key: string): Promise<T | undefined> => {
   try {
