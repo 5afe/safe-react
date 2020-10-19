@@ -1,24 +1,12 @@
 import Web3 from 'web3'
+import { provider as Provider } from 'web3-core'
+import { ContentHash } from 'web3-eth-ens'
 
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
-
-import { getNetwork } from '../../config'
-import { ContentHash } from 'web3-eth-ens'
-import { provider as Provider } from 'web3-core'
 import { ProviderProps } from './store/model/provider'
-
-export const ETHEREUM_NETWORK = {
-  MAINNET: 'MAINNET' as const,
-  MORDEN: 'MORDEN' as const,
-  ROPSTEN: 'ROPSTEN' as const,
-  RINKEBY: 'RINKEBY' as const,
-  GOERLI: 'GOERLI' as const,
-  KOVAN: 'KOVAN' as const,
-  UNKNOWN: 'UNKNOWN' as const,
-}
-
-export type EthereumNetworks = typeof ETHEREUM_NETWORK[keyof typeof ETHEREUM_NETWORK]
+import { NODE_ENV } from 'src/utils/constants'
+import { getRpcServiceUrl } from 'src/config'
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -38,34 +26,16 @@ export const WALLET_PROVIDER = {
   TREZOR: 'TREZOR',
 }
 
-export const ETHEREUM_NETWORK_IDS = {
-  1: ETHEREUM_NETWORK.MAINNET,
-  2: ETHEREUM_NETWORK.MORDEN,
-  3: ETHEREUM_NETWORK.ROPSTEN,
-  4: ETHEREUM_NETWORK.RINKEBY,
-  5: ETHEREUM_NETWORK.GOERLI,
-  42: ETHEREUM_NETWORK.KOVAN,
-}
-
-export const getEtherScanLink = (type: string, value: string): string => {
-  const network = getNetwork()
-  return `https://${
-    network.toLowerCase() === 'mainnet' ? '' : `${network.toLowerCase()}.`
-  }etherscan.io/${type}/${value}`
-}
-
-export const getInfuraUrl = (): string => {
-  const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
-
-  return `https://${isMainnet ? 'mainnet' : 'rinkeby'}.infura.io:443/v3/${process.env.REACT_APP_INFURA_TOKEN}`
-}
-
 // With some wallets from web3connect you have to use their provider instance only for signing
 // And our own one to fetch data
-export const web3ReadOnly =
+const httpProviderOptions = {
+  timeout: 10_000,
+}
+export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
-    ? new Web3(new Web3.providers.HttpProvider(getInfuraUrl()))
-    : new Web3(window.web3?.currentProvider || 'ws://localhost:8545')
+    ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
+    : window.web3?.currentProvider || 'ws://localhost:8545',
+)
 
 let web3 = web3ReadOnly
 export const getWeb3 = (): Web3 => web3
@@ -77,7 +47,7 @@ export const resetWeb3 = (): void => {
 export const getAccountFrom = async (web3Provider: Web3): Promise<string | null> => {
   const accounts = await web3Provider.eth.getAccounts()
 
-  if (process.env.NODE_ENV === 'test' && window.testAccountIndex) {
+  if (NODE_ENV === 'test' && window.testAccountIndex) {
     return accounts[window.testAccountIndex]
   }
 

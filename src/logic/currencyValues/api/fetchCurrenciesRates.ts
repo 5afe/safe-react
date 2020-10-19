@@ -1,8 +1,8 @@
 import axios from 'axios'
 
-import { getExchangeRatesUrl } from 'src/config'
+import { EXCHANGE_RATE_URL } from 'src/utils/constants'
 import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
-import fetchTokenCurrenciesBalances from './fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
 import BigNumber from 'bignumber.js'
 
 const fetchCurrenciesRates = async (
@@ -16,7 +16,7 @@ const fetchCurrenciesRates = async (
     try {
       const result = await fetchTokenCurrenciesBalances(safeAddress)
       if (result?.data?.length) {
-        rate = new BigNumber(1).div(result.data[0].usdConversion).toNumber()
+        rate = new BigNumber(1).div(result.data[0].fiatConversion).toNumber()
       }
     } catch (error) {
       console.error('Fetching ETH data from the relayer errored', error)
@@ -25,7 +25,7 @@ const fetchCurrenciesRates = async (
   }
 
   try {
-    const url = `${getExchangeRatesUrl()}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
+    const url = `${EXCHANGE_RATE_URL}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
     const result = await axios.get(url)
     if (result?.data) {
       const { rates } = result.data

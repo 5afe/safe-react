@@ -2,7 +2,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -16,7 +17,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -40,23 +40,23 @@ type Props = {
   tx: TransactionReviewType
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState('< 0.001')
-
   useEffect(() => {
     let isCurrent = true
 
     const estimateGas = async (): Promise<void> => {
-      const { fromWei, toBN } = getWeb3().utils
       const txData = tx.data ? tx.data.trim() : ''
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -71,11 +71,9 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }, [safeAddress, tx.contractAddress, tx.data])
 
   const submitTx = async () => {
-    const web3 = getWeb3()
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? web3.utils.toWei(tx.value, 'ether') : '0'
-
+    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
     dispatch(
       createTransaction({
         safeAddress,
@@ -117,7 +115,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             <Block justify="left">
               <Paragraph className={classes.value} noMargin size="md" style={{ margin: 0 }}>
                 {tx.value || 0}
-                {' ETH'}
+                {' ' + nativeCoin.name}
               </Paragraph>
             </Block>
           </Col>
@@ -165,7 +163,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

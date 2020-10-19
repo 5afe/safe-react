@@ -10,7 +10,6 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from 'src/logic/safe/store/actions/addIncomingTransactions'
-import { ADD_SAFE } from 'src/logic/safe/store/actions/addSafe'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import {
@@ -20,8 +19,9 @@ import {
 } from 'src/logic/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 
-const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_SAFE]
+const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_INCOMING_TRANSACTIONS, ADD_OR_UPDATE_SAFE]
 
 const sendAwaitingTransactionNotification = async (
   dispatch,
@@ -146,7 +146,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         })
         break
       }
-      case ADD_SAFE: {
+      case ADD_OR_UPDATE_SAFE: {
         const state = store.getState()
         const { safe } = action.payload
         const currentSafeAddress = safeParamAddressFromStateSelector(state) || safe.address

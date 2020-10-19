@@ -1,8 +1,8 @@
-import { getIntercomId } from 'src/config'
+import { INTERCOM_ID } from 'src/utils/constants'
 
 // eslint-disable-next-line consistent-return
 export const loadIntercom = () => {
-  const APP_ID = getIntercomId()
+  const APP_ID = INTERCOM_ID
   if (!APP_ID) {
     console.error('[Intercom] - In order to use Intercom you need to add an appID')
     return null

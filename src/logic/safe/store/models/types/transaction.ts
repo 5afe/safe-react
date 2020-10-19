@@ -1,10 +1,11 @@
 import { List, Map, RecordOf } from 'immutable'
+
 import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { Confirmation } from './confirmation'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { DataDecoded, Transfer } from './transactions'
-import { DecodedParams } from 'src/logic/safe/store/models/types/transactions'
+import { DecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 
 export enum TransactionTypes {
   INCOMING = 'incoming',

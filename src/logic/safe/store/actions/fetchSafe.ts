@@ -1,5 +1,7 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List, Set, Map } from 'immutable'
+import { Action, Dispatch } from 'redux'
+import { AbiItem } from 'web3-utils'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
@@ -14,10 +16,8 @@ import {
   requestAllowancesByDelegatesAndTokens,
   requestTokensByDelegate,
 } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { Action, Dispatch } from 'redux'
 import { getSpendingLimitContract, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { AppReduxState } from 'src/store'
 import { latestMasterContractVersionSelector } from '../selectors'
@@ -45,8 +45,8 @@ const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): Lis
   return List(ownersList)
 }
 
-const buildModulesLinkedList = (modules: string[] | undefined, nextModule: string): Array<ModulePair> | null => {
-  if (modules?.length) {
+const buildModulesLinkedList = (modules?: string[], nextModule?: string): Array<ModulePair> | null => {
+  if (modules?.length && nextModule) {
     return modules.map((moduleAddress, index, modules) => {
       const prevModule = modules[index + 1]
       return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
@@ -63,9 +63,9 @@ export const buildSafe = async (
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [[thresholdStr, nonceStr, currentVersion, remoteOwners], localSafe, ethBalance] = await Promise.all([
-    generateBatchRequests({
-      abi: GnosisSafeSol.abi,
+  const [[, thresholdStr, nonceStr, currentVersion, remoteOwners = []], localSafe, ethBalance] = await Promise.all([
+    generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined, string[]]>({
+      abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),
@@ -86,7 +86,7 @@ export const buildSafe = async (
     owners,
     ethBalance,
     nonce,
-    currentVersion,
+    currentVersion: currentVersion ?? '',
     needsUpdate,
     featuresEnabled,
     balances: Map(),
@@ -123,15 +123,26 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
     { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
   ]
-
-  const safeInfo = generateBatchRequests({
-    abi: GnosisSafeSol.abi,
-    address: safeAddress,
-    methods: safeParams,
-  })
-
-  const [[remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
-    safeInfo,
+  const [[, remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
+    generateBatchRequests<
+      [
+        undefined,
+        string | undefined,
+        string | undefined,
+        string[],
+        (
+          | {
+              array: string[]
+              next: string
+            }
+          | undefined
+        ),
+      ]
+    >({
+      abi: GnosisSafeSol.abi as AbiItem[],
+      address: safeAddress,
+      methods: safeParams,
+    }),
     getLocalSafe(safeAddress),
   ])
 
@@ -149,6 +160,9 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
       spendingLimits,
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),
+      featuresEnabled: localSafe?.currentVersion
+        ? enabledFeatures(localSafe?.currentVersion)
+        : localSafe?.featuresEnabled,
     }),
   )
 

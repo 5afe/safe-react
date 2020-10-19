@@ -1,6 +1,6 @@
 import { List, Map } from 'immutable'
-
-import { TOKEN_REDUCER_ID } from 'src/logic/tokens/store/reducer/tokens'
+import { getNetworkInfo } from 'src/config'
+import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import {
   getERC20DecimalsAndSymbol,
   getERC721Symbol,
@@ -78,15 +78,15 @@ export const isUpgradeTransaction = (tx: TxServiceModel): boolean => {
   )
 }
 
-export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
+export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress?: string): boolean => {
   return !sameAddress(tx.to, safeAddress) && !isEmptyData(tx.data)
 }
 
 export const isCustomTransaction = async (
   tx: TxServiceModel,
-  txCode: string | null,
-  safeAddress: string,
-  knownTokens: Map<string, Token>,
+  txCode?: string,
+  safeAddress?: string,
+  knownTokens?: TokenState,
 ): Promise<boolean> => {
   const isOutgoing = isOutgoingTransaction(tx, safeAddress)
   const isErc20 = await isSendERC20Transaction(tx, txCode, knownTokens)
@@ -100,12 +100,13 @@ export const getRefundParams = async (
   tx: TxServiceModel,
   tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
 ): Promise<RefundParams | null> => {
+  const { nativeCoin } = getNetworkInfo()
   const txGasPrice = Number(tx.gasPrice)
   let refundParams: RefundParams | null = null
 
   if (txGasPrice > 0) {
-    let refundSymbol = 'ETH'
-    let refundDecimals = 18
+    let refundSymbol = nativeCoin.symbol
+    let refundDecimals = nativeCoin.decimals
 
     if (tx.gasToken !== ZERO_ADDRESS) {
       const gasToken = await tokenInfo(tx.gasToken)
@@ -161,7 +162,7 @@ export const getConfirmations = (tx: TxServiceModel): List<Confirmation> => {
 export const isTransactionCancelled = (
   tx: TxServiceModel,
   outgoingTxs: Array<TxServiceModel>,
-  cancellationTxs: { number: TxServiceModel },
+  cancellationTxs: Record<string, TxServiceModel>,
 ): boolean => {
   return (
     // not executed
@@ -175,20 +176,20 @@ export const isTransactionCancelled = (
 
 export const calculateTransactionStatus = (
   tx: Transaction,
-  { owners, threshold }: SafeRecord,
+  { owners, threshold, nonce }: SafeRecord,
   currentUser?: string | null,
 ): TransactionStatusValues => {
   let txStatus
 
   if (tx.isExecuted && tx.isSuccessful) {
     txStatus = TransactionStatus.SUCCESS
-  } else if (tx.cancelled) {
+  } else if (tx.cancelled || nonce > tx.nonce) {
     txStatus = TransactionStatus.CANCELLED
   } else if (tx.confirmations.size === threshold) {
     txStatus = TransactionStatus.AWAITING_EXECUTION
   } else if (tx.creationTx) {
     txStatus = TransactionStatus.SUCCESS
-  } else if (!tx.confirmations.size || !!tx.isPending) {
+  } else if (!!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
     const userConfirmed = tx.confirmations.filter((conf) => conf.owner === currentUser).size === 1
@@ -230,7 +231,7 @@ export const calculateTransactionType = (tx: Transaction): TransactionTypeValues
 
 export type BuildTx = BatchProcessTxsProps & {
   tx: TxServiceModel
-  txCode: string | null
+  txCode?: string
 }
 
 export const buildTx = async ({
@@ -243,6 +244,7 @@ export const buildTx = async ({
   txCode,
 }: BuildTx): Promise<Transaction> => {
   const safeAddress = safe.address
+  const { nativeCoin } = getNetworkInfo()
   const isModifySettingsTx = isModifySettingsTransaction(tx, safeAddress)
   const isTxCancelled = isTransactionCancelled(tx, outgoingTxs, cancellationTxs)
   const isSendERC721Tx = isSendERC721Transaction(tx, txCode, knownTokens)
@@ -255,8 +257,8 @@ export const buildTx = async ({
   const decodedParams = getDecodedParams(tx)
   const confirmations = getConfirmations(tx)
 
-  let tokenDecimals = 18
-  let tokenSymbol = 'ETH'
+  let tokenDecimals = nativeCoin.decimals
+  let tokenSymbol = nativeCoin.symbol
   try {
     if (isSendERC20Tx) {
       const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)

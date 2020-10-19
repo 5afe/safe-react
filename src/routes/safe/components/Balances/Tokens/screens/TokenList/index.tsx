@@ -1,15 +1,14 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
-import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import { List, Set } from 'immutable'
 import SearchBar from 'material-ui-search-bar'
-import * as React from 'react'
+import React, { useState } from 'react'
 import { FixedSizeList } from 'react-window'
 
 import TokenRow from './TokenRow'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -17,7 +16,6 @@ import Button from 'src/components/layout/Button'
 import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
-import { useEffect, useState } from 'react'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { useDispatch } from 'react-redux'
 import updateBlacklistedTokens from 'src/logic/safe/store/actions/updateBlacklistedTokens'
@@ -33,14 +31,18 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
       token.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const useStyles = makeStyles(styles)
-
 type Props = {
   setActiveScreen: (newScreen: string) => void
   tokens: List<Token>
   activeTokens: List<Token>
   blacklistedTokens: Set<string>
   safeAddress: string
+}
+
+export type ItemData = {
+  tokens: List<Token>
+  activeTokensAddresses: Set<string>
+  onSwitch: (token: Token) => () => void
 }
 
 export const TokenList = (props: Props): React.ReactElement => {
@@ -50,13 +52,6 @@ export const TokenList = (props: Props): React.ReactElement => {
   const [blacklistedTokensAddresses, setBlacklistedTokensAddresses] = useState<Set<string>>(blacklistedTokens)
   const [filter, setFilter] = useState('')
   const dispatch = useDispatch()
-
-  useEffect(() => {
-    return () => {
-      dispatch(updateActiveTokens(safeAddress, activeTokensAddresses))
-      dispatch(updateBlacklistedTokens(safeAddress, blacklistedTokensAddresses))
-    }
-  }, [dispatch, safeAddress, activeTokensAddresses, blacklistedTokensAddresses])
 
   const searchClasses = {
     input: classes.searchInput,
@@ -75,26 +70,29 @@ export const TokenList = (props: Props): React.ReactElement => {
   }
 
   const onSwitch = (token: Token) => () => {
+    let newActiveTokensAddresses
+    let newBlacklistedTokensAddresses
     if (activeTokensAddresses.has(token.address)) {
-      const newTokens = activeTokensAddresses.remove(token.address)
-      setActiveTokensAddresses(newTokens)
-      setBlacklistedTokensAddresses(blacklistedTokensAddresses.add(token.address))
+      newActiveTokensAddresses = activeTokensAddresses.delete(token.address)
+      newBlacklistedTokensAddresses = blacklistedTokensAddresses.add(token.address)
     } else {
-      setActiveTokensAddresses(activeTokensAddresses.add(token.address))
-      setBlacklistedTokensAddresses(blacklistedTokensAddresses.remove(token.address))
+      newActiveTokensAddresses = activeTokensAddresses.add(token.address)
+      newBlacklistedTokensAddresses = blacklistedTokensAddresses.delete(token.address)
     }
+
+    // Set local state
+    setActiveTokensAddresses(newActiveTokensAddresses)
+    setBlacklistedTokensAddresses(newBlacklistedTokensAddresses)
+    // Dispatch to global state
+    dispatch(updateActiveTokens(safeAddress, newActiveTokensAddresses))
+    dispatch(updateBlacklistedTokens(safeAddress, newBlacklistedTokensAddresses))
   }
 
-  const createItemData = (
-    tokens: List<Token>,
-    activeTokensAddresses: Set<string>,
-  ): { tokens: List<Token>; activeTokensAddresses: Set<string>; onSwitch: (token: Token) => void } => {
-    return {
-      tokens,
-      activeTokensAddresses,
-      onSwitch: onSwitch,
-    }
-  }
+  const createItemData = (tokens: List<Token>, activeTokensAddresses: Set<string>): ItemData => ({
+    tokens,
+    activeTokensAddresses,
+    onSwitch,
+  })
 
   const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
 

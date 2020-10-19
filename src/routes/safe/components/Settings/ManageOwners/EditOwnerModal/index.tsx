@@ -4,28 +4,28 @@ import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import Modal from 'src/components/Modal'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import Modal from 'src/components/Modal'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { NOTIFICATIONS } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+
+import { styles } from './style'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -93,7 +93,7 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
                     {ownerAddress}
                   </Paragraph>
                   <CopyBtn content={safeAddress} />
-                  <EtherscanBtn type="address" value={safeAddress} />
+                  <EtherscanBtn value={safeAddress} />
                 </Block>
               </Row>
             </Block>

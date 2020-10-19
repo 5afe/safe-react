@@ -1,10 +1,10 @@
-import { getModuleTxServiceUriFrom, getTxServiceHost } from 'src/config'
+import { getModuleTxServiceUriFrom, getTxServiceUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const buildModuleTxServiceUrl = (safeAddress: string): string => {
-  const host = getTxServiceHost()
+  const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
   const base = getModuleTxServiceUriFrom(address)
 
-  return `${host}${base}`
+  return `${host}/${base}`
 }

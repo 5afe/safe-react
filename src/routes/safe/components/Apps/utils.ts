@@ -3,9 +3,10 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config/index'
+import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
@@ -15,33 +16,99 @@ const removeLastTrailingSlash = (url) => {
 }
 
 const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
-export const staticAppsList: Array<{ url: string; disabled: boolean }> = [
+export const staticAppsList: Array<{ url: string; disabled: boolean; networks: number[] }> = [
   // 1inch
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
   // Aave
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
   //Balancer Exchange
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
   //Balancer Pool
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaTucdZYLKTqaewwJduVMM8qfCDhyaEqjd8tBNae26K1J`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaTucdZYLKTqaewwJduVMM8qfCDhyaEqjd8tBNae26K1J`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
   // Compound
-  { url: `${gnosisAppsUrl}/compound`, disabled: false },
+  { url: `${gnosisAppsUrl}/compound`, disabled: false, networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY] },
   // Idle
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZ3oug89a3BaVqdJrJEA8CKmLF4M8snuAnphR6z1yq8V8`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZ3oug89a3BaVqdJrJEA8CKmLF4M8snuAnphR6z1yq8V8`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // request
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // Sablier
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmeHa5CS6eAMRvQfTBwWfcXKrXZ7itZTpWSM6625ZZ522N`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVmBWNY6fPrt6SwYynJoCrU7ZWydo3Zr9rDNQR5bcKsFb`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // Synthetix
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // OpenZeppelin
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQovvfYYMUXjZfNbysQDUEXR8nr55iJRwcYgJQGJR7KEA`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQovvfYYMUXjZfNbysQDUEXR8nr55iJRwcYgJQGJR7KEA`,
+    disabled: false,
+    networks: [
+      ETHEREUM_NETWORK.MAINNET,
+      ETHEREUM_NETWORK.RINKEBY,
+      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+      ETHEREUM_NETWORK.VOLTA,
+      // ETHEREUM_NETWORK.XDAI,
+    ],
+  },
   // TX-Builder
-  { url: `${gnosisAppsUrl}/tx-builder`, disabled: false },
+  {
+    url: `${gnosisAppsUrl}/tx-builder`,
+    disabled: false,
+    networks: [
+      ETHEREUM_NETWORK.MAINNET,
+      ETHEREUM_NETWORK.RINKEBY,
+      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+      ETHEREUM_NETWORK.VOLTA,
+      ETHEREUM_NETWORK.XDAI,
+    ],
+  },
   // Wallet-Connect
-  { url: `${gnosisAppsUrl}/walletConnect`, disabled: false },
+  {
+    url: `${gnosisAppsUrl}/walletConnect`,
+    disabled: false,
+    networks: [
+      ETHEREUM_NETWORK.MAINNET,
+      ETHEREUM_NETWORK.RINKEBY,
+      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+      ETHEREUM_NETWORK.VOLTA,
+      ETHEREUM_NETWORK.XDAI,
+    ],
+  },
   // Yearn Vaults
-  { url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`, disabled: false },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {

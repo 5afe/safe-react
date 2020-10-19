@@ -2,9 +2,12 @@ import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStand
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState, useMemo } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { AbiItem } from 'web3-utils'
 
+import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -21,22 +24,19 @@ import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { toTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
-import { AbiItem } from 'web3-utils'
-
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import ArrowDown from '../assets/arrow-down.svg'
-
 import { styles } from './style'
 
 const useStyles = makeStyles(styles)
+
+const { nativeCoin } = getNetworkInfo()
 
 const ReviewTx = ({ onClose, onPrev, tx }) => {
   const classes = useStyles()
@@ -47,7 +47,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
   const [data, setData] = useState('')
 
   const txToken = useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
-  const isSendingETH = txToken?.address === ETH_ADDRESS
+  const isSendingETH = txToken?.address === nativeCoin.address
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
@@ -55,7 +55,6 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
 
     const estimateGas = async () => {
       const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
 
       if (!txToken) {
         return
@@ -71,8 +70,8 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
       }
 
       const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
 
       if (isCurrent) {
         setGasCosts(formattedGasCosts)
@@ -89,11 +88,10 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
 
   const submitTx = async () => {
     const isSpendingLimit = tx.txType === 'spendingLimit'
-    const web3 = getWeb3()
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? web3.utils.toWei(tx.amount, 'ether').toString() : '0'
+    const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     if (safeAddress) {
       if (isSpendingLimit && txToken) {
@@ -101,7 +99,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
         spendingLimit.methods
           .executeAllowanceTransfer(
             safeAddress,
-            txToken.address === ETH_ADDRESS ? ZERO_ADDRESS : txToken.address,
+            txToken.address === nativeCoin.address ? ZERO_ADDRESS : txToken.address,
             tx.recipientAddress,
             toTokenUnit(tx.amount, txToken.decimals),
             ZERO_ADDRESS,
@@ -169,7 +167,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn type="address" value={tx.recipientAddress} />
+              <EtherscanBtn value={tx.recipientAddress} />
             </Block>
           </Col>
         </Row>
@@ -191,7 +189,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
         </Row>
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>

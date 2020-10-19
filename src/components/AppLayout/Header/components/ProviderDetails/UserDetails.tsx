@@ -1,10 +1,9 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
 import { EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
 
-import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -14,11 +13,15 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { upperFirst } from 'src/utils/css'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getExplorerInfo } from 'src/config'
+import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
+import { CircleDot } from '../CircleDot'
+import { createStyles } from '@material-ui/core'
 
-const dot = require('../../assets/dotRinkeby.svg')
 const walletIcon = require('../../assets/wallet.svg')
 
-const styles = () => ({
+const styles = createStyles({
   container: {
     padding: `${md} 12px`,
     display: 'flex',
@@ -88,9 +91,29 @@ const styles = () => ({
   },
 })
 
-const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard, provider, userAddress }) => {
+type Props = {
+  connected: boolean
+  network: ETHEREUM_NETWORK
+  onDisconnect: () => void
+  openDashboard?: (() => void | null) | boolean
+  provider?: string
+  userAddress: string
+}
+
+const useStyles = makeStyles(styles)
+
+export const UserDetails = ({
+  connected,
+  network,
+  onDisconnect,
+  openDashboard,
+  provider,
+  userAddress,
+}: Props): React.ReactElement => {
   const status = connected ? 'Connected' : 'Connection error'
   const color = connected ? 'primary' : 'warning'
+  const explorerUrl = getExplorerInfo(userAddress)
+  const classes = useStyles()
 
   return (
     <>
@@ -99,12 +122,12 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
           {connected ? (
             <Identicon address={userAddress || 'random'} size="lg" />
           ) : (
-            <CircleDot circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
+            <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
         </Row>
         <Block className={classes.user} justify="center">
           {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn showEtherscanBtn shortenHash={4} network={network} />
+            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
           ) : (
             'Address not available'
           )}
@@ -138,9 +161,9 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
           Network
         </Paragraph>
         <Spacer />
-        <Img alt="Network" className={classes.logo} height={14} src={dot} />
+        <CircleDot className={classes.logo} />
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(network)}
+          {upperFirst(ETHEREUM_NETWORK[network])}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
@@ -170,5 +193,3 @@ const UserDetails = ({ classes, connected, network, onDisconnect, openDashboard,
     </>
   )
 }
-
-export default withStyles(styles as any)(UserDetails)

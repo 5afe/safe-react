@@ -4,11 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
+import { getNetworkInfo } from 'src/config'
 import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
@@ -20,6 +20,8 @@ import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import Modal from './Modal'
 import { useStyles } from './style'
 import { fromTokenUnit } from './utils'
+
+const { nativeCoin } = getNetworkInfo()
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -48,7 +50,7 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
       //  as we don't have a current way to remove an allowance, we tweak it by setting its `amount` and `resetTimeMin` to 0
       //  This is directly related to `discardZeroAllowance`
       const txData = spendingLimitContract.methods
-        .setAllowance(beneficiary, tokenAddress === ETH_ADDRESS ? ZERO_ADDRESS : tokenAddress, 0, 0, 0)
+        .setAllowance(beneficiary, tokenAddress === nativeCoin.address ? ZERO_ADDRESS : tokenAddress, 0, 0, 0)
         .encodeABI()
 
       dispatch(

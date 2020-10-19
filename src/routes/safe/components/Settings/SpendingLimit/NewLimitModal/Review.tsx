@@ -5,6 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import { getNetworkInfo } from 'src/config'
 import {
   getGnosisSafeInstanceAt,
   getSpendingLimitContract,
@@ -16,7 +17,6 @@ import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 's
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEncodedMultiSendCallData, MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
 import { Token, makeToken } from 'src/logic/tokens/store/model/token'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
@@ -33,6 +33,8 @@ import {
   SpendingLimitRow,
   toTokenUnit,
 } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+
+const { nativeCoin } = getNetworkInfo()
 
 interface ReviewSpendingLimitProps {
   onBack: ActionCallback
@@ -60,7 +62,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
       const currentDelegate = spendingLimits?.find(
         ({ delegate, token }) =>
           delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
-          token.toLowerCase() === (values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token.toLowerCase()),
+          token.toLowerCase() === (values.token === nativeCoin.address ? ZERO_ADDRESS : values.token.toLowerCase()),
       )
 
       // let the user know that is about to replace an existent allowance
@@ -117,7 +119,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
       data: spendingLimitContract.methods
         .setAllowance(
           values.beneficiary,
-          values.token === ETH_ADDRESS ? ZERO_ADDRESS : values.token,
+          values.token === nativeCoin.address ? ZERO_ADDRESS : values.token,
           toTokenUnit(values.amount, txToken.decimals),
           values.withResetTime ? +values.resetTime * 60 * 24 : 0,
           values.withResetTime ? startTime : 0,

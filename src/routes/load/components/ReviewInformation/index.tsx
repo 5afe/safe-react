@@ -5,12 +5,12 @@ import React from 'react'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
-import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME, THRESHOLD } from 'src/routes/load/components/fields'
 import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
@@ -76,7 +76,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                   {shortVersionOf(safeAddress, 4)}
                 </Paragraph>
                 <CopyBtn content={safeAddress} />
-                <EtherscanBtn type="address" value={safeAddress} />
+                <EtherscanBtn value={safeAddress} />
               </Row>
             </Block>
             <Block margin="lg">
@@ -121,7 +121,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                           {address}
                         </Paragraph>
                         <CopyBtn content={address} />
-                        <EtherscanBtn type="address" value={address} />
+                        <EtherscanBtn value={address} />
                       </Block>
                     </Block>
                   </Col>
@@ -136,15 +136,15 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
   )
 }
 
-const Review = ({ userAddress }: { userAddress: string }) => (
-  controls: React.ReactNode,
-  { values }: { values: Record<string, string> },
-): React.ReactElement => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <ReviewComponent userAddress={userAddress} values={values} />
-    </OpenPaper>
-  </>
-)
+const Review = ({ userAddress }: { userAddress: string }) =>
+  function ReviewPage(controls: React.ReactNode, { values }: { values: Record<string, string> }): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <ReviewComponent userAddress={userAddress} values={values} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default Review

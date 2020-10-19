@@ -1,25 +1,24 @@
 import { IconText, Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
+import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import Col from 'src/components/layout/Col'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import styled from 'styled-components'
 
 import { styles } from './styles'
 import Value from './Value'
-
 import Block from 'src/components/layout/Block'
 import {
   extractMultiSendDataDecoded,
   MultiSendDetails,
 } from 'src/logic/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
-import { useSelector } from 'react-redux'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
@@ -28,7 +27,7 @@ import { Transaction, SafeModuleTransaction } from 'src/logic/safe/store/models/
 import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import { getNetwork } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
@@ -61,6 +60,8 @@ const TxInfo = styled.div`
 const StyledMethodName = styled(Text)`
   white-space: nowrap;
 `
+
+const { nativeCoin } = getNetworkInfo()
 
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
@@ -127,7 +128,7 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
   const methodName = tx.dataDecoded?.method ? ` (${tx.dataDecoded.method})` : ''
   const data = tx.dataDecoded ?? decodeMethods(tx.data)
   const isNewSpendingLimit = isSetAllowanceMethod(tx.data || '')
-
+  const explorerUrl = getExplorerInfo(tx.to)
   return (
     <Collapse
       collapseClassName={classes.collapse}
@@ -141,8 +142,10 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
       ) : (
         <TxDetailsContent>
           <TxInfo>
-            <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
-            <EthHashInfo hash={tx.to} showIdenticon showCopyBtn showEtherscanBtn network={getNetwork()} />
+            <Bold>
+              Send {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name} to:
+            </Bold>
+            <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
           </TxInfo>
 
           {!!data ? <TxInfoDetails data={data} /> : tx.data && <HexEncodedData data={tx.data} />}
@@ -254,6 +257,7 @@ export const GenericCustomData = ({
   storedTx,
 }: GenericCustomDataProps): React.ReactElement => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
+  const explorerUrl = recipient ? getExplorerInfo(recipient) : ''
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
   const isNewSpendingLimit = isSetAllowanceMethod(data || '')
 
@@ -270,8 +274,7 @@ export const GenericCustomData = ({
             name={recipientName === 'UNKNOWN' ? undefined : recipientName}
             showIdenticon
             showCopyBtn
-            showEtherscanBtn
-            network={getNetwork()}
+            explorerUrl={explorerUrl}
           />
         </Block>
       )}

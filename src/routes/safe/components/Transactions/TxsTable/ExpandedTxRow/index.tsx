@@ -18,7 +18,6 @@ import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
 import useStyles from './style'
 
-import { getNetwork } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Col from 'src/components/layout/Col'
@@ -31,6 +30,7 @@ import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransacti
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 import IncomingTxDescription from './IncomingTxDescription'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import TransferDescription from './TxDescription/TransferDescription'
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
@@ -58,10 +58,9 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
               {tx.executionTxHash ? (
                 <EthHashInfo
                   hash={tx.executionTxHash}
-                  shortenHash={4}
                   showCopyBtn
-                  showEtherscanBtn
-                  network={getNetwork()}
+                  explorerUrl={getExplorerInfo(tx.executionTxHash)}
+                  shortenHash={4}
                 />
               ) : (
                 'n/a'
@@ -82,6 +81,8 @@ interface ExpandedTxProps {
   cancelTx?: Transaction
   tx: Transaction
 }
+
+const { nativeCoin } = getNetworkInfo()
 
 const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const { fromWei, toBN } = getWeb3().utils
@@ -108,6 +109,8 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
     }
   }
 
+  const explorerUrl = tx.executionTxHash ? getExplorerInfo(tx.executionTxHash) : null
+
   return (
     <>
       <Block className={classes.expandedTxBlock}>
@@ -117,13 +120,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               <div style={{ display: 'flex' }}>
                 <Bold className={classes.txHash}>Hash:</Bold>
                 {tx.executionTxHash ? (
-                  <EthHashInfo
-                    hash={tx.executionTxHash}
-                    shortenHash={4}
-                    showCopyBtn
-                    showEtherscanBtn
-                    network={getNetwork()}
-                  />
+                  <EthHashInfo hash={tx.executionTxHash} shortenHash={4} showCopyBtn explorerUrl={explorerUrl} />
                 ) : (
                   'n/a'
                 )}
@@ -137,7 +134,7 @@ const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
               {!isCreationTx ? (
                 <Paragraph noMargin>
                   <Bold>Fee: </Bold>
-                  {tx.fee ? fromWei(toBN(tx.fee)) + ' ETH' : 'n/a'}
+                  {tx.fee ? fromWei(toBN(tx.fee)) + ` ${nativeCoin.name}` : 'n/a'}
                 </Paragraph>
               ) : null}
               <CreationTx tx={tx} />

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { getNetwork } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -81,10 +81,10 @@ const Beneficiary = (): React.ReactElement => {
         hash={selectedEntry.address}
         name={selectedEntry.name}
         showCopyBtn
-        showEtherscanBtn
         showIdenticon
         textSize="lg"
-        network={getNetwork()}
+        shortenHash={4}
+        explorerUrl={getExplorerInfo(selectedEntry.address)}
       />
     </BeneficiaryInput>
   ) : (
