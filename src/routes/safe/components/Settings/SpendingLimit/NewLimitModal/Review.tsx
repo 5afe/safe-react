@@ -29,10 +29,9 @@ import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/sty
 import {
   adjustAmountToToken,
   currentMinutes,
-  fromTokenUnit,
   SpendingLimitRow,
-  toTokenUnit,
 } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 const { nativeCoin } = getNetworkInfo()
 

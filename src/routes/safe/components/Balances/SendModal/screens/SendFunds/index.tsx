@@ -33,7 +33,7 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
-import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
 

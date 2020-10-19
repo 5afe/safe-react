@@ -19,7 +19,7 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import Modal from './Modal'
 import { useStyles } from './style'
-import { fromTokenUnit } from './utils'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 const { nativeCoin } = getNetworkInfo()
 

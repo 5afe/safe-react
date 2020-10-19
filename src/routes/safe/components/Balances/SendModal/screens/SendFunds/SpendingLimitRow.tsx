@@ -8,7 +8,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { Token } from 'src/logic/tokens/store/model/token'
-import { fromTokenUnit } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 // TODO: propose refactor in safe-react-components based on this requirements
 const SpendingLimitRadioButtons = styled(RadioButtons)`
