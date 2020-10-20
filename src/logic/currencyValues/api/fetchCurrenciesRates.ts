@@ -29,7 +29,6 @@ const fetchCurrenciesRates = async (
   // National currencies
   try {
     const url = `${EXCHANGE_RATE_URL}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
-    debugger
     const result = await axios.get(url)
     if (result?.data) {
       const { rates } = result.data
