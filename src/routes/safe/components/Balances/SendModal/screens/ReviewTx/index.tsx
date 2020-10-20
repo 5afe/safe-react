@@ -2,7 +2,6 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import { withSnackbar } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -38,7 +37,7 @@ const useStyles = makeStyles(styles as any)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+const ReviewTx = ({ onClose, onPrev, tx }) => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -94,14 +93,12 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
 
     dispatch(
       createTransaction({
-        safeAddress,
+        safeAddress: safeAddress as string,
         to: txRecipient,
         valueInWei: txAmount,
         txData: data,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
+      }),
     )
     onClose()
   }
@@ -196,4 +193,4 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   )
 }
 
-export default withSnackbar(ReviewTx)
+export default ReviewTx

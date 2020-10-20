@@ -1,5 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -16,7 +15,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 
-const styles = () => ({
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
@@ -24,15 +23,9 @@ const styles = () => ({
   },
 })
 
-export const sendReplaceOwner = async (
-  values,
-  safeAddress,
-  ownerAddressToRemove,
-  enqueueSnackbar,
-  closeSnackbar,
-  threshold,
-  dispatch,
-) => {
+const useStyles = makeStyles(styles)
+
+export const sendReplaceOwner = async (values, safeAddress, ownerAddressToRemove, threshold, dispatch) => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
@@ -48,9 +41,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash && threshold === 1) {
@@ -65,7 +56,15 @@ export const sendReplaceOwner = async (
   }
 }
 
-const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+type ReplaceOwnerProps = {
+  isOpen: boolean
+  onClose: () => void
+  ownerAddress: string
+  ownerName: string
+}
+
+const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwnerProps): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
@@ -94,7 +93,7 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   const onReplaceOwner = async () => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, enqueueSnackbar, closeSnackbar, threshold, dispatch)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, threshold, dispatch)
 
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })),
@@ -131,4 +130,4 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(ReplaceOwner))
+export default ReplaceOwner
