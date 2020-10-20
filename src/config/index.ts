@@ -157,7 +157,7 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
     default: {
       const type = hash.length > 42 ? 'tx' : 'address'  
       return () => ({
-        url: `${url}${type}/${hash}`,
+        url: `${url}/${type}/${hash}`,
         alt:  name || '',
       })
     }      
