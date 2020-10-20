@@ -1,5 +1,4 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -43,7 +42,6 @@ type Props = {
 const { nativeCoin } = getNetworkInfo()
 
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -76,14 +74,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
     dispatch(
       createTransaction({
-        safeAddress,
-        to: txRecipient,
+        safeAddress: safeAddress as string,
+        to: txRecipient as string,
         valueInWei: txValue,
         txData,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
+      }),
     )
 
     onClose()
