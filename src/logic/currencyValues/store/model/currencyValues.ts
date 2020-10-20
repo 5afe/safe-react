@@ -41,9 +41,6 @@ export const AVAILABLE_CURRENCIES = {
   ZAR: 'ZAR',
 } as const
 
-//export type AVAILABLE_CURRENCIES_KEYS = keyof typeof AVAILABLE_CURRENCIES
-//export type AVAILABLE_CURRENCIES_VALUES = typeof AVAILABLE_CURRENCIES[AVAILABLE_CURRENCIES_KEYS]
-
 export type BalanceCurrencyRecord = {
   currencyName?: string
   tokenAddress?: string

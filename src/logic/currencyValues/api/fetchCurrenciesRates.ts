@@ -1,9 +1,10 @@
 import axios from 'axios'
+import BigNumber from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
 import { EXCHANGE_RATE_URL } from 'src/utils/constants'
 import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
-import BigNumber from 'bignumber.js'
+import { sameString } from 'src/utils/strings'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -14,7 +15,7 @@ const fetchCurrenciesRates = async (
 ): Promise<number> => {
   let rate = 0
 
-  if (targetCurrencyValue === nativeCoin.symbol.toUpperCase()) {
+  if (sameString(targetCurrencyValue, nativeCoin.symbol)) {
     try {
       const result = await fetchTokenCurrenciesBalances(safeAddress)
       if (result?.data?.length) {

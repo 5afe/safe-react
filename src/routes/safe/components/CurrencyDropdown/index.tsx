@@ -21,6 +21,7 @@ import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from '../Balances/utils'
 import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -106,7 +107,7 @@ const CurrencyDropdown = (): React.ReactElement | null => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  {currencyName.toLocaleLowerCase() === nativeCoin.symbol.toLocaleLowerCase() ? (
+                  {sameString(currencyName, nativeCoin.symbol) ? (
                     <Img
                       alt={nativeCoin.symbol.toLocaleLowerCase()}
                       onError={setImageToPlaceholder}
