@@ -9,6 +9,7 @@ import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
 import { SendFundsTx } from './screens/SendFunds'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
+import { ReviewTxProp } from './screens/ReviewTx'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -124,7 +125,7 @@ const SendModal = ({
           />
         )}
         {activeScreen === 'reviewTx' && (
-          <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx} />
+          <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx as ReviewTxProp} />
         )}
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction

@@ -33,11 +33,24 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewTx = ({ onClose, onPrev, tx }) => {
+export type ReviewTxProp = {
+  recipientAddress: string
+  amount: string
+  txRecipient: string
+  token: string
+}
+
+type ReviewTxProps = {
+  onClose: () => void
+  onPrev: () => void
+  tx: ReviewTxProp
+}
+
+const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -68,7 +81,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 
@@ -94,7 +107,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
     dispatch(
       createTransaction({
         safeAddress: safeAddress as string,
-        to: txRecipient,
+        to: txRecipient as string,
         valueInWei: txAmount,
         txData: data,
         notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
