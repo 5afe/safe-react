@@ -1,7 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -52,7 +51,6 @@ type Props = {
 
 const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
-  const { closeSnackbar, enqueueSnackbar } = useSnackbar()
   const shortener = textShortener()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -96,18 +94,21 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }, [safeAddress, tx.assetAddress, tx.nftTokenId, tx.recipientAddress])
 
   const submitTx = async () => {
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: tx.assetAddress,
-        valueInWei: '0',
-        txData: data,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
-    onClose()
+    try {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress as string,
+          to: tx.assetAddress,
+          valueInWei: '0',
+          txData: data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    } catch (error) {
+      console.error('Error creating sendCollectible Tx:', error)
+    } finally {
+      onClose()
+    }
   }
 
   return (
