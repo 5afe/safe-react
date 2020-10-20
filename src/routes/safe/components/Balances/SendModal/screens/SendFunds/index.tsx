@@ -59,8 +59,8 @@ type SendFundsProps = {
   initialValues: SendFundsTx
   onClose: () => void
   onNext: (txInfo: unknown) => void
-  recipientAddress: string
-  selectedToken: string
+  recipientAddress?: string
+  selectedToken?: string
 }
 
 const { nativeCoin } = getNetworkInfo()

@@ -44,7 +44,21 @@ const useStyles = makeStyles({
   },
 })
 
-const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: any) => {
+type Props = {
+  activeScreenType: string
+  isOpen: boolean
+  onClose: () => void
+  recipientAddress?: string
+  selectedToken?: string
+}
+
+const SendModal = ({
+  activeScreenType,
+  isOpen,
+  onClose,
+  recipientAddress,
+  selectedToken,
+}: Props): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})

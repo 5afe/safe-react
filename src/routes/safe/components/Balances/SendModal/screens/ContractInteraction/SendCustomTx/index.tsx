@@ -50,7 +50,7 @@ type Props = {
   onNext: (tx: CreatedTx, submit: boolean) => void
   isABI: boolean
   switchMethod: () => void
-  contractAddress: string
+  contractAddress?: string
 }
 
 const useStyles = makeStyles(styles)
