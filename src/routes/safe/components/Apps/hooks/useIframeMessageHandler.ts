@@ -103,24 +103,29 @@ const useIframeMessageHandler = (
 
         case SDK_MESSAGES.RPC_CALL: {
           const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
-
           if (
             web3ReadOnly &&
             web3ReadOnly.currentProvider != null &&
             typeof web3ReadOnly.currentProvider !== 'string' &&
-            'request' in web3ReadOnly.currentProvider
+            'send' in web3ReadOnly.currentProvider
           ) {
-            const response = await web3ReadOnly.currentProvider?.request?.({
-              method: payload?.call,
-              params: payload?.params,
-            })
-
-            const rpcCallMsg = {
-              messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
-              data: response,
-            }
-
-            sendMessageToIframe(rpcCallMsg, requestId)
+            web3ReadOnly.currentProvider?.send?.(
+              {
+                jsonrpc: '2.0',
+                method: payload?.call,
+                params: [payload?.params, 'latest'],
+                id: '1',
+              },
+              (err, res) => {
+                if (!err) {
+                  const rpcCallMsg = {
+                    messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
+                    data: res,
+                  }
+                  sendMessageToIframe(rpcCallMsg, requestId)
+                }
+              },
+            )
           }
           break
         }
