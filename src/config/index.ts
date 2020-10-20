@@ -89,7 +89,7 @@ export const getAllTransactionsUriFrom = (safeAddress: string) => `/safes/${safe
 
 export const getSafeCreationTxUri = (safeAddress: string) => `/safes/${safeAddress}/creation/`
 
-export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID[getNetworkId()]
+export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID
 
 const fetchContractABI = memoize(
   async (url: string, contractAddress: string, apiKey?: string) => {
