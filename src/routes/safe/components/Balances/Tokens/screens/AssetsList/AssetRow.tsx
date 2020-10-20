@@ -12,13 +12,14 @@ import { setCollectibleImageToPlaceholder } from 'src/routes/safe/components/Bal
 
 export const TOGGLE_ASSET_TEST_ID = 'toggle-asset-btn'
 
+const { nativeCoin } = getNetworkInfo()
+
 const AssetRow = memo(({ data, index, style }: any) => {
   const classes = useStyles()
   const { activeAssetsAddresses, assets, onSwitch } = data
   const asset = assets[index]
   const { address, image, name, symbol } = asset
   const isActive = activeAssetsAddresses.includes(asset.address)
-  const { nativeCoin } = getNetworkInfo()
 
   return (
     <div style={style}>

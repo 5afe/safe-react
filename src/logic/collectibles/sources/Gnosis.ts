@@ -1,6 +1,6 @@
 import { RateLimit } from 'async-sema'
 
-import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles'
+import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchErc20AndErc721AssetsList, fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'

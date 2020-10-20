@@ -12,7 +12,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import EthAddressInput from './EthAddressInput'
-import EthValue from './EthValue'
 import FormDivisor from './FormDivisor'
 import FormErrorMessage from './FormErrorMessage'
 import Header from './Header'
@@ -21,6 +20,7 @@ import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
 import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
+import { NativeCoinValue } from './NativeCoinValue'
 
 const useStyles = makeStyles(styles)
 
@@ -112,7 +112,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
-                <EthValue onSetMax={mutators.setMax} />
+                <NativeCoinValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />

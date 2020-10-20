@@ -13,7 +13,7 @@ import {
   MultiSendDetails,
 } from 'src/routes/safe/store/actions/transactions/utils/multiSendDecodedDetails'
 import Bold from 'src/components/layout/Bold'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Collapse from 'src/components/Collapse'
 import { useSelector } from 'react-redux'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -25,7 +25,7 @@ import { DataDecoded } from 'src/routes/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -57,6 +57,8 @@ const StyledMethodName = styled(Text)`
   white-space: nowrap;
 `
 
+const { nativeCoin } = getNetworkInfo()
+
 const TxInfoDetails = ({ data }: { data: DataDecoded }): React.ReactElement => (
   <TxInfo>
     <TxDetailsMethodName size="lg" strong>
@@ -86,7 +88,9 @@ const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order:
     >
       <TxDetailsContent>
         <TxInfo>
-          <Bold>Send {humanReadableValue(tx.value)} ETH to:</Bold>
+          <Bold>
+            Send {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name} to:
+          </Bold>
           <EthHashInfo hash={tx.to} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
         </TxInfo>
 

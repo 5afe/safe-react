@@ -61,6 +61,8 @@ type SendFundsProps = {
   selectedToken: string
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const SendFunds = ({
   initialValues,
   onClose,
@@ -78,7 +80,6 @@ const SendFunds = ({
 
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
-  const { nativeCoin } = getNetworkInfo()
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {

@@ -32,6 +32,7 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { getNetworkInfo } from 'src/config'
 
 export interface CreatedTx {
   contractAddress: string
@@ -49,6 +50,8 @@ type Props = {
 }
 
 const useStyles = makeStyles(styles)
+
+const { nativeCoin } = getNetworkInfo()
 
 const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
@@ -224,7 +227,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">ETH</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{nativeCoin.name}</InputAdornment>,
                       }}
                       name="value"
                       placeholder="Value*"

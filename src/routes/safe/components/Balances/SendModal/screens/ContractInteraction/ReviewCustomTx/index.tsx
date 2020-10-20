@@ -135,7 +135,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
           <Paragraph className={classes.value} noMargin size="md">
             {tx.value || 0}
-            {' ETH'}
+            {' ' + nativeCoin.name}
           </Paragraph>
         </Row>
         <Row margin="xs">
@@ -152,7 +152,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ETH in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>
