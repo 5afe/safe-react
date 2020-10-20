@@ -10,6 +10,7 @@ import { activeNftAssetsListSelector, nftTokensSelector } from 'src/logic/collec
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
 
 const useStyles = makeStyles(
   createStyles({
@@ -78,7 +79,7 @@ const useStyles = makeStyles(
 
 const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
-  const [selectedToken, setSelectedToken] = React.useState(undefined)
+  const [selectedToken, setSelectedToken] = React.useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
   const nftTokens = useSelector(nftTokensSelector)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
@@ -88,7 +89,7 @@ const Collectibles = (): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Collectibles' })
   }, [trackEvent])
 
-  const handleItemSend = (nftToken) => {
+  const handleItemSend = (nftToken: NFTToken) => {
     setSelectedToken(nftToken)
     setSendNFTsModalOpen(true)
   }

@@ -10,6 +10,8 @@ import { SendFundsTx } from './screens/SendFunds'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewTx'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { SendCollectibleTxInfo } from './screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -50,7 +52,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
-  selectedToken?: string
+  selectedToken?: string | NFTToken
 }
 
 const SendModal = ({
@@ -73,7 +75,7 @@ const SendModal = ({
 
   const scalableModalSize = activeScreen === 'chooseTxType'
 
-  const handleTxCreation = (txInfo) => {
+  const handleTxCreation = (txInfo: SendCollectibleTxInfo) => {
     setActiveScreen('reviewTx')
     setTx(txInfo)
   }
@@ -89,6 +91,7 @@ const SendModal = ({
   }
 
   const handleSendCollectible = (txInfo) => {
+    console.log('review tx info', txInfo)
     setActiveScreen('reviewCollectible')
     setTx(txInfo)
   }
@@ -121,7 +124,7 @@ const SendModal = ({
             onClose={onClose}
             onNext={handleTxCreation}
             recipientAddress={recipientAddress}
-            selectedToken={selectedToken}
+            selectedToken={selectedToken as string}
           />
         )}
         {activeScreen === 'reviewTx' && (
@@ -159,7 +162,7 @@ const SendModal = ({
             onClose={onClose}
             onNext={handleSendCollectible}
             recipientAddress={recipientAddress}
-            selectedToken={selectedToken}
+            selectedToken={selectedToken as NFTToken}
           />
         )}
         {activeScreen === 'reviewCollectible' && (
