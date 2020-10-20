@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
+import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -35,10 +35,24 @@ import { styles } from './style'
 
 const { nativeCoin } = getNetworkInfo()
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+export type CollectibleTx = {
+  recipientAddress: string
+  assetAddress: string
+  assetName: string
+  nftTokenId: string
+}
+
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: CollectibleTx
+}
+
+const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
+  const { closeSnackbar, enqueueSnackbar } = useSnackbar()
   const shortener = textShortener()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -174,4 +188,4 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   )
 }
 
-export default withSnackbar(ReviewCollectible)
+export default ReviewCollectible

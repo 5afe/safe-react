@@ -4,6 +4,11 @@ import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
+import { CollectibleTx } from './screens/ReviewCollectible'
+import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
+import { SendFundsTx } from './screens/SendFunds'
+import { ContractInteractionTx } from './screens/ContractInteraction'
+import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -42,7 +47,7 @@ const useStyles = makeStyles({
 const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, selectedToken }: any) => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
-  const [tx, setTx] = useState({})
+  const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
 
   useEffect(() => {
@@ -97,7 +102,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
         )}
         {activeScreen === 'sendFunds' && (
           <SendFunds
-            initialValues={tx}
+            initialValues={tx as SendFundsTx}
             onClose={onClose}
             onNext={handleTxCreation}
             recipientAddress={recipientAddress}
@@ -112,7 +117,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
             isABI={isABI}
             switchMethod={handleSwitchMethod}
             contractAddress={recipientAddress}
-            initialValues={tx}
+            initialValues={tx as ContractInteractionTx}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
           />
@@ -122,7 +127,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
         )}
         {activeScreen === 'contractInteraction' && !isABI && (
           <SendCustomTx
-            initialValues={tx}
+            initialValues={tx as CustomTxProps}
             isABI={isABI}
             switchMethod={handleSwitchMethod}
             onClose={onClose}
@@ -131,7 +136,7 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
           />
         )}
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
+          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
         )}
         {activeScreen === 'sendCollectible' && (
           <SendCollectible
@@ -143,7 +148,11 @@ const SendModal = ({ activeScreenType, isOpen, onClose, recipientAddress, select
           />
         )}
         {activeScreen === 'reviewCollectible' && (
-          <ReviewCollectible onClose={onClose} onPrev={() => setActiveScreen('sendCollectible')} tx={tx} />
+          <ReviewCollectible
+            onClose={onClose}
+            onPrev={() => setActiveScreen('sendCollectible')}
+            tx={tx as CollectibleTx}
+          />
         )}
       </Suspense>
     </Modal>

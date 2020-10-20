@@ -30,10 +30,16 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 
+export type CustomTx = {
+  contractAddress?: string
+  data?: string
+  value?: string
+}
+
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: { contractAddress?: string; data?: string; value?: string }
+  tx: CustomTx
 }
 
 const useStyles = makeStyles(styles)

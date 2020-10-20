@@ -40,8 +40,12 @@ export interface CreatedTx {
   value: string | number
 }
 
+export type CustomTxProps = {
+  contractAddress?: string
+}
+
 type Props = {
-  initialValues: { contractAddress?: string }
+  initialValues: CustomTxProps
   onClose: () => void
   onNext: (tx: CreatedTx, submit: boolean) => void
   isABI: boolean

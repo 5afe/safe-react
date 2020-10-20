@@ -31,9 +31,13 @@ export interface CreatedTx {
   value: string | number
 }
 
+export type ContractInteractionTx = {
+  contractAddress?: string
+}
+
 export interface ContractInteractionProps {
   contractAddress: string
-  initialValues: { contractAddress?: string }
+  initialValues: ContractInteractionTx
   isABI: boolean
   onClose: () => void
   switchMethod: () => void

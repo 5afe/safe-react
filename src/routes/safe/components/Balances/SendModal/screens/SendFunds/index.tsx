@@ -47,14 +47,16 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
+
+export type SendFundsTx = {
+  amount?: string
+  recipientAddress?: string
+  token?: string
+}
 
 type SendFundsProps = {
-  initialValues: {
-    amount?: string
-    recipientAddress?: string
-    token?: string
-  }
+  initialValues: SendFundsTx
   onClose: () => void
   onNext: (txInfo: unknown) => void
   recipientAddress: string
