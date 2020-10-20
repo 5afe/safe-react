@@ -14,6 +14,8 @@ import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { Dispatch } from 'redux'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -25,12 +27,22 @@ const styles = createStyles({
 
 const useStyles = makeStyles(styles)
 
-export const sendReplaceOwner = async (values, safeAddress, ownerAddressToRemove, threshold, dispatch) => {
+type OwnerValues = {
+  ownerAddress: string
+  ownerName: string
+  threshold: string
+}
+
+export const sendReplaceOwner = async (
+  values: OwnerValues,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  dispatch: Dispatch<any>,
+  threshold?: number,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
-  const index = safeOwners.findIndex(
-    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
-  )
+  const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress).encodeABI()
 
@@ -93,7 +105,7 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
   const onReplaceOwner = async () => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, threshold, dispatch)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, threshold)
 
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })),

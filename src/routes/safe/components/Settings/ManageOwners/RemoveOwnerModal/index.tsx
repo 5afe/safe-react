@@ -1,5 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -13,13 +12,10 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
-import {
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Dispatch } from 'redux'
 
-const styles = () => ({
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
@@ -27,17 +23,22 @@ const styles = () => ({
   },
 })
 
+const useStyles = makeStyles(styles)
+
+type OwnerValues = {
+  ownerAddress: string
+  ownerName: string
+  threshold: string
+}
+
 export const sendRemoveOwner = async (
-  values,
-  safeAddress,
-  ownerAddressToRemove,
-  ownerNameToRemove,
-  ownersOld,
-  enqueueSnackbar,
-  closeSnackbar,
-  threshold,
-  dispatch,
-) => {
+  values: OwnerValues,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  ownerNameToRemove: string,
+  dispatch: Dispatch<any>,
+  threshold?: number,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
@@ -53,9 +54,7 @@ export const sendRemoveOwner = async (
       valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash && threshold === 1) {
@@ -63,11 +62,18 @@ export const sendRemoveOwner = async (
   }
 }
 
-const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+type RemoveOwnerProps = {
+  isOpen: boolean
+  onClose: () => void
+  ownerAddress: string
+  ownerName: string
+}
+
+const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerProps): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
-  const owners = useSelector(safeOwnersSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
 
@@ -99,17 +105,7 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
 
   const onRemoveOwner = () => {
     onClose()
-    sendRemoveOwner(
-      values,
-      safeAddress,
-      ownerAddress,
-      ownerName,
-      owners,
-      enqueueSnackbar,
-      closeSnackbar,
-      threshold,
-      dispatch,
-    )
+    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
   }
 
   return (
@@ -142,4 +138,4 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(RemoveOwner))
+export default RemoveOwner
