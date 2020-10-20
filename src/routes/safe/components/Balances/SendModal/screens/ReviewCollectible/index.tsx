@@ -67,20 +67,24 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     let isCurrent = true
 
     const estimateGas = async () => {
-      const methodToCall = `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}`
-      const transferParams = [tx.recipientAddress, tx.nftTokenId]
-      const params = [safeAddress, ...transferParams]
-      const ERC721Token = await getERC721TokenContract()
-      const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
+      try {
+        const methodToCall = `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}`
+        const transferParams = [tx.recipientAddress, tx.nftTokenId]
+        const params = [safeAddress, ...transferParams]
+        const ERC721Token = await getERC721TokenContract()
+        const tokenInstance = await ERC721Token.at(tx.assetAddress)
+        const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
+        const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
+        const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const formattedGasCosts = formatAmount(gasCosts)
 
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-        setData(txData)
+        if (isCurrent) {
+          setGasCosts(formattedGasCosts)
+          setData(txData)
+        }
+      } catch (error) {
+        console.error('Error while calculating estimated gas:', error)
       }
     }
 
