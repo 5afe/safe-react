@@ -2,7 +2,7 @@ import semverLessThan from 'semver/functions/lt'
 
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 type ModulesPaginated = {
   array: string[]
@@ -34,12 +34,10 @@ const buildModulesLinkedList = (modules: string[], nextModule: string = SENTINEL
  *
  * @todo: Implement pagination for `getModulesPaginated`. We're passing an arbitrary large number to avoid pagination.
  *
- * @param {String} safeAddress
+ * @param {SafeInfo | undefined } safeInfo
  * @returns Array<ModulePair> | null | undefined
  */
-export const getModules = async (safeAddress: string): Promise<Array<ModulePair> | null | undefined> => {
-  const safeInfo = await getSafeInfo(safeAddress)
-
+export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<ModulePair> | null | undefined> => {
   if (safeInfo) {
     if (semverLessThan(safeInfo.version, '1.1.1')) {
       // we can use the `safeInfo.modules`, as versions previous to 1.1.1 return the whole list of modules
@@ -55,7 +53,7 @@ export const getModules = async (safeAddress: string): Promise<Array<ModulePair>
         // lastly, if `safeInfo.modules` have 10 items,
         // we'll fallback to `getModulesPaginated` RPC call
         // as we're not sure if there are more than 10 modules enabled for the current Safe
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeInfo.address)
 
         // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
         const modules: ModulesPaginated = await safeInstance.methods.getModulesPaginated(SENTINEL_ADDRESS, 100).call()

@@ -16,6 +16,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
 import { latestMasterContractVersionSelector } from 'src/logic/safe/store/selectors'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
@@ -50,7 +51,7 @@ export const buildSafe = async (
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
   const [
     [, thresholdStr, nonceStr, currentVersion, remoteOwners = []],
-    modules,
+    safeInfo,
     localSafe,
     ethBalance,
   ] = await Promise.all([
@@ -59,7 +60,7 @@ export const buildSafe = async (
       address: safeAddress,
       methods: safeParams,
     }),
-    getModules(safeAddress),
+    getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
     getBalanceInEtherOf(safeAddress),
   ])
@@ -69,6 +70,7 @@ export const buildSafe = async (
   const owners = buildOwnersFrom(remoteOwners, localSafe)
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
+  const modules = await getModules(safeInfo)
 
   return {
     address: safeAddress,
@@ -94,18 +96,20 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
   const safeParams = ['getThreshold', 'nonce', 'getOwners']
-  const [[, remoteThreshold, remoteNonce, remoteOwners = []], modules, localSafe] = await Promise.all([
+  const [[, remoteThreshold, remoteNonce, remoteOwners = []], safeInfo, localSafe] = await Promise.all([
     generateBatchRequests<[undefined, string | undefined, string | undefined, string[]]>({
       abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),
-    getModules(safeAddress),
+    getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
   ])
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
+
+  const modules = await getModules(safeInfo)
 
   dispatch(
     updateSafe({
