@@ -83,7 +83,7 @@ const Advanced = (): React.ReactElement => {
           .
         </InfoText>
 
-        {moduleData === null ? (
+        {!moduleData ? (
           <NoModuleLegend />
         ) : moduleData?.length === 0 ? (
           <LoadingModules />
