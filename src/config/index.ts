@@ -81,13 +81,15 @@ export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig()?
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 
-export const getTxServiceUriFrom = (safeAddress: string) => `/safes/${safeAddress}/transactions/`
+export const getSafeServiceUri = (safeAddress: string) => `safes/${safeAddress}`
 
-export const getIncomingTxServiceUriTo = (safeAddress: string) => `/safes/${safeAddress}/incoming-transfers/`
+export const getTxServiceUriFrom = (safeAddress: string) => `${getSafeServiceUri(safeAddress)}/transactions`
 
-export const getAllTransactionsUriFrom = (safeAddress: string) => `/safes/${safeAddress}/all-transactions/`
+export const getIncomingTxServiceUriTo = (safeAddress: string) => `${getSafeServiceUri(safeAddress)}/incoming-transfers`
 
-export const getSafeCreationTxUri = (safeAddress: string) => `/safes/${safeAddress}/creation/`
+export const getAllTransactionsUriFrom = (safeAddress: string) => `${getSafeServiceUri(safeAddress)}/all-transactions`
+
+export const getSafeCreationTxUri = (safeAddress: string) => `${getSafeServiceUri(safeAddress)}/creation`
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID
 
@@ -155,11 +157,11 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
 
   switch (networkInfo.id) {
     default: {
-      const type = hash.length > 42 ? 'tx' : 'address'  
+      const type = hash.length > 42 ? 'tx' : 'address'
       return () => ({
         url: `${url}/${type}/${hash}`,
         alt:  name || '',
       })
-    }      
+    }
   }
 }
