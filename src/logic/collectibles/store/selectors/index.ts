@@ -16,11 +16,18 @@ export const nftAssetsListSelector = createSelector(nftAssets, (assets): NFTAsse
   return assets ? Object.values(assets) : []
 })
 
+export const availableNftAssetsAddresses = createSelector(nftTokensSelector, (userNftTokens): string[] => {
+  return userNftTokens.map((nftToken) => nftToken.assetAddress)
+})
+
 export const activeNftAssetsListSelector = createSelector(
   nftAssetsListSelector,
   safeActiveAssetsSelector,
-  (assets, activeAssetsList): NFTAsset[] => {
-    return assets.filter(({ address }) => activeAssetsList.has(address))
+  availableNftAssetsAddresses,
+  (assets, activeAssetsList, availableNftAssetsAddresses): NFTAsset[] => {
+    return assets
+      .filter(({ address }) => activeAssetsList.has(address))
+      .filter((asset) => availableNftAssetsAddresses.includes(asset.address))
   },
 )
 
