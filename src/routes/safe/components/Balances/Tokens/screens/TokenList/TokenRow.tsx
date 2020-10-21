@@ -32,10 +32,6 @@ const TokenRow = memo(({ data, index, style }: TokenRowProps): ReactElement | nu
 
   const isActive = activeTokensAddresses.has(token.address)
 
-  if (!token) {
-    return null
-  }
-
   return (
     <div style={style}>
       <ListItem classes={{ root: classes.tokenRoot }} className={classes.token}>

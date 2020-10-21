@@ -39,7 +39,6 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
       if (!addresses.length || !numOwners || !userAccount) {
         return
       }
-      const { nativeCoin } = getNetworkInfo()
       const estimatedGasCosts = (await estimateGasForDeployingSafe(addresses, numOwners, userAccount)).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
