@@ -4,7 +4,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
-  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
+  gasPriceOracleUrl: 'https://station.energyweb.org',
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
   networkExplorerUrl: 'https://volta-explorer.energyweb.org',
