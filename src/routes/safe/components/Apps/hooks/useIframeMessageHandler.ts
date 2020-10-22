@@ -39,10 +39,6 @@ interface CustomMessageEvent extends MessageEvent {
   }
 }
 
-interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessageIds> {
-  requestId: number | string
-}
-
 const NETWORK_NAME = getNetworkName()
 
 const useIframeMessageHandler = (
@@ -127,7 +123,7 @@ const useIframeMessageHandler = (
                     messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
                     data: res,
                   }
-                  console.log(res)
+
                   sendMessageToIframe(rpcCallMsg, requestId)
                 }
               },
