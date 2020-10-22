@@ -29,8 +29,9 @@ matrix:
     - env:
         - REACT_APP_NETWORK='energy_web_chain'
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
-        - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}
-      if: (branch = master AND NOT type = pull_request) OR tag IS present
+        - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
+      if: ((branch = master OR branch = release/v2.14.0) AND NOT type = pull_request) OR tag IS present
+
 cache:
   yarn: true
 before_script:
