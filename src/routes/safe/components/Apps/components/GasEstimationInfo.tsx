@@ -21,11 +21,11 @@ const imgStyles = {
 
 const GasEstimationInfo = ({ appEstimation, internalEstimation, loading }: OwnProps): React.ReactElement => {
   if (loading) {
-    return <p>Loading...</p>
+    return <p>Checking transaction parameters...</p>
   }
 
   let content: React.ReactElement | null = null
-  if (appEstimation > internalEstimation) {
+  if (appEstimation >= internalEstimation) {
     content = (
       <>
         <Img alt="Success" src={CheckIcon} style={imgStyles} /> Gas estimation is OK

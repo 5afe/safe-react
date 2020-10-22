@@ -88,13 +88,17 @@ const useIframeMessageHandler = (
         // possible solution: https://stackoverflow.com/a/43879897/7820085
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
           if (messagePayload) {
-            openConfirmationModal(messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS'], undefined, requestId)
+            openConfirmationModal(
+              messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS],
+              undefined,
+              requestId,
+            )
           }
           break
         }
 
         case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
-          const payload = messagePayload as SDKMessageToPayload['SEND_TRANSACTIONS_V2']
+          const payload = messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS_V2]
           if (payload) {
             openConfirmationModal(payload.txs, payload.params, requestId)
           }
@@ -103,7 +107,7 @@ const useIframeMessageHandler = (
 
         case SDK_MESSAGES.RPC_CALL: {
           const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
-          console.log(payload)
+
           if (
             web3ReadOnly &&
             web3ReadOnly.currentProvider != null &&
@@ -128,8 +132,8 @@ const useIframeMessageHandler = (
                 }
               },
             )
+            break
           }
-          break
         }
 
         case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
