@@ -7,7 +7,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { Skeleton } from '@material-ui/lab'
 
-import InfoIcon from 'src/assets/icons/info.svg'
+import InfoIcon from 'src/assets/icons/info_red.svg'
 
 import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
