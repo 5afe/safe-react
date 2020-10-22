@@ -55,7 +55,7 @@ const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, met
         // If batch was provided add to external batch
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
-        console.error('There was an error trying to batch request from web3.', e)
+        console.warn('There was an error trying to batch request from web3.', e)
         resolve()
       }
     })
