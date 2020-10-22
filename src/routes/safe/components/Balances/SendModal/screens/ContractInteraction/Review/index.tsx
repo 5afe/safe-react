@@ -72,16 +72,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
-        valueInWei: txValue,
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
-    )
-
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    }
     onClose()
   }
 

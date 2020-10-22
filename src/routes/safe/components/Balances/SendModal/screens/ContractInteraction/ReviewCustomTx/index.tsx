@@ -78,15 +78,17 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
-        valueInWei: txValue,
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
-    )
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    }
 
     onClose()
   }

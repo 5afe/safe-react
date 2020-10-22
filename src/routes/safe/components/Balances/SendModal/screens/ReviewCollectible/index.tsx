@@ -95,15 +95,17 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   const submitTx = async () => {
     try {
-      dispatch(
-        createTransaction({
-          safeAddress: safeAddress as string,
-          to: tx.assetAddress,
-          valueInWei: '0',
-          txData: data,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        }),
-      )
+      if (safeAddress) {
+        dispatch(
+          createTransaction({
+            safeAddress,
+            to: tx.assetAddress,
+            valueInWei: '0',
+            txData: data,
+            notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          }),
+        )
+      }
     } catch (error) {
       console.error('Error creating sendCollectible Tx:', error)
     } finally {

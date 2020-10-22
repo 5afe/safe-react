@@ -104,15 +104,17 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
-        valueInWei: txAmount,
-        txData: data,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
-    )
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txAmount,
+          txData: data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    }
     onClose()
   }
 
