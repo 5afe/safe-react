@@ -2,7 +2,7 @@ import local from './local'
 import mainnet from './mainnet'
 import rinkeby from './rinkeby'
 import xdai from './xdai'
-import energyWebChain from './energyWebChain'
+import energy_web_chain from './energy_web_chain'
 import volta from './volta'
 
 export default {
@@ -10,6 +10,6 @@ export default {
   mainnet,
   rinkeby,
   xdai,
-  energy_web_chain: energyWebChain,
+  energy_web_chain,
   volta
 }
