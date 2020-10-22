@@ -61,6 +61,10 @@ export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
 export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
 
+export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
+
+export const getGasPriceOracleUrl = (): string | undefined => getConfig()?.gasPriceOracleUrl
+
 export const getRpcServiceUrl = (): string => {
   const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
 
