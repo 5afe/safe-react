@@ -1,5 +1,5 @@
 import networks from 'src/config/networks'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, GasPriceOracle } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, Wallets, GasPriceOracle } from 'src/config/networks/network.d'
 import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 import memoize from 'lodash.memoize'
@@ -25,6 +25,7 @@ const getCurrentEnvironment = (): string => {
 type NetworkSpecificConfiguration = EnvironmentSettings & {
   network: NetworkSettings,
   disabledFeatures?: SafeFeatures,
+  disabledWallets?: Wallets,
 }
 
 const configuration = (): NetworkSpecificConfiguration => {
@@ -50,6 +51,7 @@ const configuration = (): NetworkSpecificConfiguration => {
     ...networkBaseConfig,
     network: configFile.network,
     disabledFeatures: configFile.disabledFeatures,
+    disabledWallets: configFile.disabledWallets
   }
 }
 
@@ -82,6 +84,8 @@ export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: s
 })
 
 export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig()?.disabledFeatures || []
+
+export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 
 export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
 

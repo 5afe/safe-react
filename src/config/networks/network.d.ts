@@ -1,5 +1,23 @@
 // matches src/logic/tokens/store/model/token.ts `TokenProps` type
 
+export enum WALLETS {
+  METAMASK = 'metamask',
+  WALLET_CONNECT = 'walletConnect',
+  TREZOR = 'trezor',
+  LEDGER = 'ledger',
+  TRUST = 'trust',
+  DAPPER = 'dapper',
+  FORTMATIC = 'fortmatic',
+  PORTIS = 'portis',
+  AUTHEREUM = 'authereum',
+  TORUS = 'torus',
+  UNILOGIN = 'unilogin',
+  COINBASE = 'coinbase',
+  WALLET_LINK = 'walletLink',
+  OPERA = 'opera',
+  OPERA_TOUCH = 'operaTouch'
+}
+
 export enum FEATURES {
   ERC721 = 'ERC721',
   ERC1155 = 'ERC1155',
@@ -44,6 +62,8 @@ export type NetworkSettings = {
 // If non is present, all the sections are available.
 export type SafeFeatures = FEATURES[]
 
+export type Wallets = WALLETS[]
+
 export type GasPriceOracle = {
   url: string
   // Different gas api providers can use a different name to reflect different gas levels based on tx speed
@@ -80,5 +100,6 @@ type SafeEnvironments = {
 export interface NetworkConfig {
   network: NetworkSettings
   disabledFeatures?: SafeFeatures
+  disabledWallets?: Wallets
   environment: SafeEnvironments
 }

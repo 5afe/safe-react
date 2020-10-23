@@ -1,4 +1,4 @@
-import EtherLogo from 'src/assets/icons/icon_etherTokens.svg'
+import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
