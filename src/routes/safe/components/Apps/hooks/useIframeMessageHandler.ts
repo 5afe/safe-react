@@ -68,11 +68,11 @@ const useIframeMessageHandler = (
   )
 
   useEffect(() => {
-    const handleIframeMessage = async (
+    const handleIframeMessage = (
       messageId: SDKMessageIds,
       messagePayload: SDKMessageToPayload[typeof messageId],
       requestId: RequestId,
-    ) => {
+    ): void => {
       if (!messageId) {
         console.error('ThirdPartyApp: A message was received without message id.')
         return
@@ -105,8 +105,7 @@ const useIframeMessageHandler = (
           const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
 
           if (
-            web3ReadOnly &&
-            web3ReadOnly.currentProvider != null &&
+            web3ReadOnly.currentProvider !== null &&
             typeof web3ReadOnly.currentProvider !== 'string' &&
             'send' in web3ReadOnly.currentProvider
           ) {
@@ -128,8 +127,8 @@ const useIframeMessageHandler = (
                 }
               },
             )
-            break
           }
+          break
         }
 
         case SDK_MESSAGES.SAFE_APP_SDK_INITIALIZED: {
