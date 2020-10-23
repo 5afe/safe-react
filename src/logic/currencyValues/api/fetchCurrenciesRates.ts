@@ -1,12 +1,10 @@
 import axios from 'axios'
 import BigNumber from 'bignumber.js'
 
-import { getNetworkInfo } from 'src/config'
 import { EXCHANGE_RATE_URL } from 'src/utils/constants'
 import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
 import { sameString } from 'src/utils/strings'
-
-const { nativeCoin } = getNetworkInfo()
+import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
 
 const fetchCurrenciesRates = async (
   baseCurrency: string,
@@ -14,15 +12,14 @@ const fetchCurrenciesRates = async (
   safeAddress: string,
 ): Promise<number> => {
   let rate = 0
-
-  if (sameString(targetCurrencyValue, nativeCoin.symbol)) {
+  if (sameString(targetCurrencyValue, AVAILABLE_CURRENCIES.NETWORK)) {
     try {
       const result = await fetchTokenCurrenciesBalances(safeAddress)
       if (result?.data?.length) {
         rate = new BigNumber(1).div(result.data[0].fiatConversion).toNumber()
       }
     } catch (error) {
-      console.error(`Fetching ${nativeCoin.symbol} data from the relayer errored`, error)
+      console.error(`Fetching ${AVAILABLE_CURRENCIES.NETWORK} data from the relayer errored`, error)
     }
     return rate
   }
