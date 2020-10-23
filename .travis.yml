@@ -1,4 +1,4 @@
-if: (branch = development) OR (branch = master) OR (release/v2.13.0) OR (type = pull_request) OR (tag IS present)
+if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 sudo: required
 dist: bionic
 language: node_js
@@ -22,7 +22,7 @@ matrix:
         - REACT_APP_NETWORK='xdai'
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
         - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
-      if: ((branch = master OR branch = release/v2.13.0) AND NOT type = pull_request) OR tag IS present
+      if: (branch = master AND NOT type = pull_request) OR tag IS present
 cache:
   yarn: true
 before_script:
@@ -30,7 +30,7 @@ before_script:
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
-  - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev
+  - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev libudev-dev
   - pip install awscli --upgrade --user
 script:
   - yarn lint:check

@@ -107,6 +107,7 @@ interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
+  safeTxGas?: number
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
@@ -124,6 +125,7 @@ const createTransaction = (
     operation = CALL,
     navigateToTransactionsTab = true,
     origin = null,
+    safeTxGas: safeTxGasArg,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
   onError?: ErrorEventHandler,
@@ -143,7 +145,8 @@ const createTransaction = (
   const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
+  const safeTxGas =
+    safeTxGasArg || (await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation))
 
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(

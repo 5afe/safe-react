@@ -9,6 +9,7 @@ import {
   RequestId,
   Transaction,
   LowercaseNetworks,
+  SendTransactionParams,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
@@ -45,7 +46,7 @@ const NETWORK_NAME = getNetworkName()
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
+  openConfirmationModal: (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
@@ -70,17 +71,35 @@ const useIframeMessageHandler = (
   )
 
   useEffect(() => {
-    const handleIframeMessage = (msg: CustomMessageEvent) => {
-      if (!msg?.data.messageId) {
+    const handleIframeMessage = (
+      messageId: SDKMessageIds,
+      messagePayload: SDKMessageToPayload[typeof messageId],
+      requestId: RequestId,
+    ) => {
+      if (!messageId) {
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
-      const { requestId } = msg.data
 
-      switch (msg.data.messageId) {
+      switch (messageId) {
+        // typescript doesn't narrow type in switch/case statements
+        // issue: https://github.com/microsoft/TypeScript/issues/20375
+        // possible solution: https://stackoverflow.com/a/43879897/7820085
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          if (msg.data.data) {
-            openConfirmationModal(msg.data.data, requestId)
+          if (messagePayload) {
+            openConfirmationModal(
+              messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS],
+              undefined,
+              requestId,
+            )
+          }
+          break
+        }
+
+        case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
+          const payload = messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS_V2]
+          if (payload) {
+            openConfirmationModal(payload.txs, payload.params, requestId)
           }
           break
         }
@@ -106,7 +125,7 @@ const useIframeMessageHandler = (
           break
         }
         default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${msg.data.messageId}.`)
+          console.error(`ThirdPartyApp: A message was received with an unknown message id ${messageId}.`)
           break
         }
       }
@@ -119,7 +138,7 @@ const useIframeMessageHandler = (
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
       }
-      handleIframeMessage(message)
+      handleIframeMessage(message.data.messageId, message.data.data, message.data.requestId)
     }
 
     window.addEventListener('message', onIframeMessage)
