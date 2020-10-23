@@ -91,7 +91,6 @@ const SendModal = ({
   }
 
   const handleSendCollectible = (txInfo) => {
-    console.log('review tx info', txInfo)
     setActiveScreen('reviewCollectible')
     setTx(txInfo)
   }
