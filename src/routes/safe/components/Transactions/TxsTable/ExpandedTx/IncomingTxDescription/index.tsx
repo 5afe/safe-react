@@ -28,7 +28,7 @@ const TransferDescription = ({ from, txFromName, value = '' }) => (
     {txFromName ? (
       <OwnerAddressTableCell address={from} knownAddress showLinks userName={txFromName} />
     ) : (
-      <EtherscanLink knownAddress={false} type="address" value={from} />
+      <EtherscanLink knownAddress={false} value={from} />
     )}
   </Block>
 )

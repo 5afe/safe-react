@@ -1,8 +1,8 @@
 import Cookies from 'js-cookie'
 
-import { getNetwork } from 'src/config'
+import { getNetworkName } from 'src/config'
 
-const PREFIX = `v1_${getNetwork()}`
+const PREFIX = `v1_${getNetworkName()}`
 
 export const loadFromCookie = async (key) => {
   try {

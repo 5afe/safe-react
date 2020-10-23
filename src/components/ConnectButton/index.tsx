@@ -3,15 +3,16 @@ import React from 'react'
 
 import Button from 'src/components/layout/Button'
 import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
+import { BLOCKNATIVE_KEY } from 'src/utils/constants'
 
-const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
-
-const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
+const networkId = getNetworkId()
+const BLOCKNATIVE_API_KEY = BLOCKNATIVE_KEY[networkId] ?? BLOCKNATIVE_KEY[ETHEREUM_NETWORK.RINKEBY]
 
 let lastUsedAddress = ''
 let providerName
@@ -20,7 +21,7 @@ const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
   dappId: BLOCKNATIVE_API_KEY,
-  networkId: getNetworkId(),
+  networkId: networkId,
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {

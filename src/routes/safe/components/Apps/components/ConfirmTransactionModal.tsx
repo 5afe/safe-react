@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
-import { Transaction } from '@gnosis.pm/safe-apps-sdk'
+import { Transaction, SendTransactionParams } from '@gnosis.pm/safe-apps-sdk'
 import styled from 'styled-components'
+import { useDispatch } from 'react-redux'
 
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
@@ -14,12 +15,15 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { useDispatch } from 'react-redux'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
+import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
+
+import GasEstimationInfo from './GasEstimationInfo'
+import { getNetworkInfo } from 'src/config'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -66,6 +70,7 @@ type OwnProps = {
   isOpen: boolean
   app: SafeApp
   txs: Transaction[]
+  params?: SendTransactionParams
   safeAddress: string
   safeName: string
   ethBalance: string
@@ -74,6 +79,8 @@ type OwnProps = {
   onClose: () => void
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const ConfirmTransactionModal = ({
   isOpen,
   app,
@@ -81,10 +88,39 @@ const ConfirmTransactionModal = ({
   safeAddress,
   ethBalance,
   safeName,
+  params,
   onUserConfirm,
   onClose,
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
+  const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+  const [estimatingGas, setEstimatingGas] = useState(false)
+
+  useEffect(() => {
+    const estimateGas = async () => {
+      try {
+        setEstimatingGas(true)
+        const safeTxGas = await estimateSafeTxGas(
+          undefined,
+          safeAddress,
+          encodeMultiSendCall(txs),
+          MULTI_SEND_ADDRESS,
+          '0',
+          DELEGATE_CALL,
+        )
+
+        setEstimatedSafeTxGas(safeTxGas)
+      } catch (err) {
+        console.error(err)
+      } finally {
+        setEstimatingGas(false)
+      }
+    }
+    if (params?.safeTxGas) {
+      estimateGas()
+    }
+  }, [params, safeAddress, txs])
+
   const dispatch = useDispatch()
   if (!isOpen) {
     return null
@@ -114,6 +150,7 @@ const ConfirmTransactionModal = ({
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
+          safeTxGas: Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
         },
         handleUserConfirmation,
         handleTxRejection,
@@ -146,7 +183,9 @@ const ConfirmTransactionModal = ({
                 <Heading tag="h3">Value</Heading>
                 <div className="value-section">
                   <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                  <Bold>{humanReadableValue(tx.value, 18)} ETH</Bold>
+                  <Bold>
+                    {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name}
+                  </Bold>
                 </div>
               </div>
               <div className="section">
@@ -157,6 +196,18 @@ const ConfirmTransactionModal = ({
           </Collapse>
         </Wrapper>
       ))}
+      <DividerLine withArrow={false} />
+      {params?.safeTxGas && (
+        <div className="section">
+          <Heading tag="h3">SafeTxGas</Heading>
+          <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
+          <GasEstimationInfo
+            appEstimation={params.safeTxGas}
+            internalEstimation={estimatedSafeTxGas}
+            loading={estimatingGas}
+          />
+        </div>
+      )}
     </>
   )
 

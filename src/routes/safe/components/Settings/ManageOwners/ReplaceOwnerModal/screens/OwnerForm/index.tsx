@@ -5,24 +5,24 @@ import classNames from 'classnames/bind'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required, uniqueAddress } from 'src/components/forms/validator'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { safeOwnersSelector } from 'src/logic/safe/store/selectors'
+
+import { styles } from './style'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -94,7 +94,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                           {ownerAddress}
                         </Paragraph>
                         <CopyBtn content={ownerAddress} />
-                        <EtherscanBtn type="address" value={ownerAddress} />
+                        <EtherscanBtn value={ownerAddress} />
                       </Block>
                     </Block>
                   </Col>

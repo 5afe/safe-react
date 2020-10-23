@@ -1,7 +1,6 @@
 import { OptionsObject } from 'notistack'
 
-import { getNetwork } from 'src/config'
-import { capitalize } from 'src/utils/css'
+import { getNetworkName } from 'src/config'
 
 export const SUCCESS = 'success'
 export const ERROR = 'error'
@@ -46,7 +45,7 @@ const NOTIFICATION_IDS = {
   SETTINGS_CHANGE_EXECUTED_MSG: 'SETTINGS_CHANGE_EXECUTED_MSG',
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: 'SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG',
   SETTINGS_CHANGE_FAILED_MSG: 'SETTINGS_CHANGE_FAILED_MSG',
-  RINKEBY_VERSION_MSG: 'RINKEBY_VERSION_MSG',
+  TESTNET_VERSION_MSG: 'TESTNET_VERSION_MSG',
   WRONG_NETWORK_MSG: 'WRONG_NETWORK_MSG',
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: 'ADDRESS_BOOK_NEW_ENTRY_SUCCESS',
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: 'ADDRESS_BOOK_EDIT_ENTRY_SUCCESS',
@@ -193,12 +192,12 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
 
   // Network
-  RINKEBY_VERSION_MSG: {
-    message: "Rinkeby Version: Don't send Mainnet assets to this Safe",
+  TESTNET_VERSION_MSG: {
+    message: "Testnet Version: Don't send production assets to this Safe",
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
   WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${capitalize(getNetwork())}`,
+    message: `Wrong network: Please use ${getNetworkName()}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 

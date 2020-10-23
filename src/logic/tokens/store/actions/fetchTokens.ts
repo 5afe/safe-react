@@ -3,12 +3,13 @@ import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanF
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import contract from 'truffle-contract'
+import contract from '@truffle/contract/index.js'
+import { AbiItem } from 'web3-utils'
 
 import saveTokens from './saveTokens'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { fetchTokenList } from 'src/logic/tokens/api'
+import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -53,8 +54,8 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
 }
 
 const getTokenValues = (tokenAddress) =>
-  generateBatchRequests({
-    abi: ERC20Detailed.abi,
+  generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined]>({
+    abi: ERC20Detailed.abi as AbiItem[],
     address: tokenAddress,
     methods: ['decimals', 'name', 'symbol'],
   })
@@ -69,7 +70,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token | undef
   }
 
   // Otherwise we fetch it, save it to the store and return it
-  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+  const [, tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
     return undefined
@@ -98,13 +99,15 @@ export const fetchTokens = () => async (
 
     const {
       data: { results: tokenList },
-    } = await fetchTokenList()
+    } = await fetchErc20AndErc721AssetsList()
 
-    if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
+    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+    if (currentSavedTokens?.size === erc20Tokens.length) {
       return
     }
 
-    const tokens = List(tokenList.map((token) => makeToken(token)))
+    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
 
     dispatch(saveTokens(tokens))
   } catch (err) {

@@ -12,15 +12,15 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import EthAddressInput from './EthAddressInput'
-import EthValue from './EthValue'
 import FormDivisor from './FormDivisor'
 import FormErrorMessage from './FormErrorMessage'
 import Header from './Header'
 import MethodsDropdown from './MethodsDropdown'
 import RenderInputParams from './RenderInputParams'
 import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
+import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
+import { NativeCoinValue } from './NativeCoinValue'
 
 const useStyles = makeStyles(styles)
 
@@ -92,7 +92,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
       <Hairline />
       <GnoForm
-        decorators={[abiExtractor, ensResolver]}
+        decorators={[ensResolver]}
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -112,7 +112,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
-                <EthValue onSetMax={mutators.setMax} />
+                <NativeCoinValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />

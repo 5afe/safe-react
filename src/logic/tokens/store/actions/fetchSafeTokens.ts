@@ -3,15 +3,12 @@ import { List, Map } from 'immutable'
 import { batch } from 'react-redux'
 import { Dispatch } from 'redux'
 
-import fetchTokenCurrenciesBalances, {
+import {
+  fetchTokenCurrenciesBalances,
   BalanceEndpoint,
 } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
-import {
-  AVAILABLE_CURRENCIES,
-  CurrencyRateValueRecord,
-  makeBalanceCurrency,
-} from 'src/logic/currencyValues/store/model/currencyValues'
+import { CurrencyRateValueRecord, makeBalanceCurrency } from 'src/logic/currencyValues/store/model/currencyValues'
 import addTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
@@ -43,7 +40,7 @@ interface ExtractedData {
 
 const extractDataFromResult = (currentTokens: TokenState) => (
   acc: ExtractedData,
-  { balance, balanceUsd, token, tokenAddress }: BalanceEndpoint,
+  { balance, fiatBalance, fiatCode, token, tokenAddress }: BalanceEndpoint,
 ): ExtractedData => {
   if (tokenAddress === null) {
     acc.ethBalance = humanReadableValue(balance, 18)
@@ -57,10 +54,10 @@ const extractDataFromResult = (currentTokens: TokenState) => (
 
   acc.currencyList = acc.currencyList.push(
     makeBalanceCurrency({
-      currencyName: balanceUsd ? AVAILABLE_CURRENCIES.USD : undefined,
+      currencyName: fiatCode,
       tokenAddress,
-      balanceInBaseCurrency: balanceUsd,
-      balanceInSelectedCurrency: balanceUsd,
+      balanceInBaseCurrency: fiatBalance,
+      balanceInSelectedCurrency: fiatBalance,
     }),
   )
 
