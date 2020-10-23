@@ -10,7 +10,7 @@ import { activeNftAssetsListSelector, nftTokensSelector } from 'src/logic/collec
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 
 const useStyles = makeStyles(
   createStyles({
