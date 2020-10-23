@@ -44,3 +44,17 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
  * @returns {string} string without side whitespaces
  */
 export const trimSpaces = (value: string): string => (value === undefined ? '' : value.trim())
+
+/**
+ * Util to compare two strings, comparison is case insensitive
+ * @param str1
+ * @param str2
+ * @returns {boolean}
+ */
+export const sameString = (str1: string | undefined, str2: string | undefined): boolean => {
+  if (!str1 || !str2) {
+    return false
+  }
+
+  return str1.toLowerCase() === str2.toLowerCase()
+}

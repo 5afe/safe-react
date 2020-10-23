@@ -3,7 +3,7 @@ import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurre
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Dispatch } from 'redux'
 
-const fetchCurrencyRate = (safeAddress: string, selectedCurrency: AVAILABLE_CURRENCIES) => async (
+const fetchCurrencyRate = (safeAddress: string, selectedCurrency: string) => async (
   dispatch: Dispatch<typeof setCurrencyRate>,
 ): Promise<void> => {
   if (AVAILABLE_CURRENCIES.USD === selectedCurrency) {
