@@ -8,7 +8,7 @@ const baseConfig: EnvironmentSettings = {
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
   networkExplorerUrl: 'https://volta-explorer.energyweb.org',
-  networkExplorerApiUrl: 'http://volta-explorer.energyweb.org/api',
+  networkExplorerApiUrl: 'https://volta-explorer.energyweb.org/api',
 }
 
 const mainnet: NetworkConfig = {

@@ -8,7 +8,7 @@ const baseConfig: EnvironmentSettings = {
   rpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
-  networkExplorerApiUrl: 'http://explorer.energyweb.org/api',
+  networkExplorerApiUrl: 'https://explorer.energyweb.org/api',
 }
 
 const mainnet: NetworkConfig = {
