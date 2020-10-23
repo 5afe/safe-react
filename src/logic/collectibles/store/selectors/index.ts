@@ -17,7 +17,7 @@ export const nftAssetsListSelector = createSelector(nftAssets, (assets): NFTAsse
 })
 
 export const availableNftAssetsAddresses = createSelector(nftTokensSelector, (userNftTokens): string[] => {
-  return userNftTokens.map((nftToken) => nftToken.assetAddress)
+  return Array.from(new Set(userNftTokens.map((nftToken) => nftToken.assetAddress)))
 })
 
 export const activeNftAssetsListSelector = createSelector(
