@@ -20,16 +20,20 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from '../Balances/utils'
 import Img from 'src/components/layout/Img/index'
-import etherIcon from 'src/assets/icons/icon_etherTokens.svg'
+import { getNetworkInfo } from 'src/config'
+import { sameString } from 'src/utils/strings'
+
+const { nativeCoin } = getNetworkInfo()
 
 const CurrencyDropdown = (): React.ReactElement | null => {
-  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
-
   const [searchParams, setSearchParams] = useState('')
+
+  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+  const tokenImage = nativeCoin.logoUri
   const classes = useDropdownStyles()
   const currenciesListFiltered = currenciesList.filter((currency) =>
     currency.toLowerCase().includes(searchParams.toLowerCase()),
@@ -103,11 +107,11 @@ const CurrencyDropdown = (): React.ReactElement | null => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  {currencyName === AVAILABLE_CURRENCIES.ETH ? (
+                  {sameString(currencyName, nativeCoin.symbol) ? (
                     <Img
-                      alt="ether"
+                      alt={nativeCoin.symbol.toLocaleLowerCase()}
                       onError={setImageToPlaceholder}
-                      src={etherIcon}
+                      src={tokenImage}
                       className={classNames(classes.etherFlag)}
                     />
                   ) : (

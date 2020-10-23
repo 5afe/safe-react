@@ -1,29 +1,30 @@
 import axios from 'axios'
-
-import { EXCHANGE_RATE_URL } from 'src/utils/constants'
-import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
-import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
 import BigNumber from 'bignumber.js'
 
+import { EXCHANGE_RATE_URL } from 'src/utils/constants'
+import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
+import { sameString } from 'src/utils/strings'
+import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
+
 const fetchCurrenciesRates = async (
-  baseCurrency: AVAILABLE_CURRENCIES,
-  targetCurrencyValue: AVAILABLE_CURRENCIES,
+  baseCurrency: string,
+  targetCurrencyValue: string,
   safeAddress: string,
 ): Promise<number> => {
   let rate = 0
-
-  if (targetCurrencyValue === AVAILABLE_CURRENCIES.ETH) {
+  if (sameString(targetCurrencyValue, AVAILABLE_CURRENCIES.NETWORK)) {
     try {
       const result = await fetchTokenCurrenciesBalances(safeAddress)
       if (result?.data?.length) {
         rate = new BigNumber(1).div(result.data[0].fiatConversion).toNumber()
       }
     } catch (error) {
-      console.error('Fetching ETH data from the relayer errored', error)
+      console.error(`Fetching ${AVAILABLE_CURRENCIES.NETWORK} data from the relayer errored`, error)
     }
     return rate
   }
 
+  // National currencies
   try {
     const url = `${EXCHANGE_RATE_URL}?base=${baseCurrency}&symbols=${targetCurrencyValue}`
     const result = await axios.get(url)
