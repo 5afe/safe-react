@@ -1,4 +1,4 @@
-if: (branch = development) OR (branch = master) OR (feature/#1353-xDai-compatibility) OR (type = pull_request) OR (tag IS present)
+if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
 sudo: required
 dist: bionic
 language: node_js
@@ -10,16 +10,19 @@ matrix:
   include:
     - env:
         - REACT_APP_NETWORK='mainnet'
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
         - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
       if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='rinkeby'
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
     - env:
         - REACT_APP_NETWORK='xdai'
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
         - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
-      if: ((branch = master OR branch = feature/#1353-xDai-compatibility) AND NOT type = pull_request) OR tag IS present
+      if: (branch = master AND NOT type = pull_request) OR tag IS present
 cache:
   yarn: true
 before_script:
@@ -27,7 +30,7 @@ before_script:
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
-  - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev
+  - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev libudev-dev
   - pip install awscli --upgrade --user
 script:
   - yarn lint:check
@@ -78,7 +81,7 @@ deploy:
     upload_dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
-      branch: feature/#1353-xDai-compatibility
+      branch: release/v2.13.0
       condition: $REACT_APP_NETWORK = xdai
 
   # Prepare production deployment

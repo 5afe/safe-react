@@ -86,7 +86,6 @@ const { nativeCoin } = getNetworkInfo()
 
 const ExpandedTx = ({ cancelTx, tx }: ExpandedTxProps): React.ReactElement => {
   const { fromWei, toBN } = getWeb3().utils
-
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector) as number
