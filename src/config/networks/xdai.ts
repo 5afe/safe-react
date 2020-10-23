@@ -1,4 +1,4 @@
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, WALLETS, NetworkConfig } from 'src/config/networks/network.d'
 import xDaiLogo from 'src/config/assets/token_xdai.svg'
 
 const baseConfig: EnvironmentSettings = {
@@ -35,7 +35,11 @@ const xDai: NetworkConfig = {
       decimals: 18,
       logoUri: xDaiLogo,
     },
-  }
+  },
+  disabledWallets:[
+    WALLETS.TREZOR,
+    WALLETS.LEDGER
+  ]
 }
 
 export default xDai
