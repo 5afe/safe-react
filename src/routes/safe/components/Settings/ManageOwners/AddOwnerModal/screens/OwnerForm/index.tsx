@@ -70,7 +70,7 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
                   <Paragraph>Add a new owner to the active Safe</Paragraph>
                 </Row>
                 <Row margin="md">
-                  <Col xs={8}>
+                  <Col xs={11}>
                     <Field
                       className={classes.addressInput}
                       component={TextField}
@@ -84,7 +84,7 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
                   </Col>
                 </Row>
                 <Row margin="md">
-                  <Col xs={8}>
+                  <Col xs={11}>
                     <AddressInput
                       className={classes.addressInput}
                       fieldMutator={mutators.setOwnerAddress}

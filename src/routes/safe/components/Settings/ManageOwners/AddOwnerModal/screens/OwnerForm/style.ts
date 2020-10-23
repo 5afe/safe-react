@@ -23,6 +23,7 @@ export const styles = () => ({
   formContainer: {
     padding: `${md} ${lg}`,
     minHeight: '340px',
+    maxWidth: '460px',
   },
   buttonRow: {
     height: '84px',
