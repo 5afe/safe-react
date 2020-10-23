@@ -37,7 +37,7 @@ cache:
   yarn: true
 before_script:
   - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi;
-  - if [ $TRAVIS_PULL_REQUEST != "false" ]; then export PUBLIC_URL="/"; fi;
+  - if [ $TRAVIS_PULL_REQUEST != "false" ]; then export PUBLIC_URL="/${REACT_APP_NETWORK}/app"; fi;
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
