@@ -5,7 +5,10 @@ const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'http://localhost:8000/api/v1',
   relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'http://localhost:3002',
-  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
+  gasPriceOracle: {
+    url: 'https://ethgasstation.info/json/ethgasAPI.json',
+    gasParameter: 'average',
+  },
   rpcServiceUrl: 'http://localhost:4447',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io',
