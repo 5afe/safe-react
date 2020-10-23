@@ -1,5 +1,5 @@
 import networks from 'src/config/networks'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, Wallets } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, Wallets, GasPriceOracle } from 'src/config/networks/network.d'
 import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 import memoize from 'lodash.memoize'
@@ -62,6 +62,10 @@ export const getTxServiceUrl = (): string => getConfig()?.txServiceUrl
 export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
 
 export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
+
+export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
+
+export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
 
 export const getRpcServiceUrl = (): string => {
   const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())

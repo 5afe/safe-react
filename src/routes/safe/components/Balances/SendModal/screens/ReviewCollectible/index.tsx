@@ -20,7 +20,7 @@ import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import {
   containsMethodByHash,
   getERC721TokenContract,
