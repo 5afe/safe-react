@@ -38,30 +38,32 @@ const buildModulesLinkedList = (modules: string[], nextModule: string = SENTINEL
  * @returns Array<ModulePair> | null | undefined
  */
 export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<ModulePair> | null | undefined> => {
-  if (safeInfo) {
-    if (semverLessThan(safeInfo.version, '1.1.1')) {
-      // we can use the `safeInfo.modules`, as versions previous to 1.1.1 return the whole list of modules
+  if (!safeInfo) {
+    return
+  }
+
+  if (semverLessThan(safeInfo.version, '1.1.1')) {
+    // we can use the `safeInfo.modules`, as versions previous to 1.1.1 return the whole list of modules
+    return buildModulesLinkedList(safeInfo.modules)
+  } else {
+    // newer versions `getModules` call returns up to 10 modules
+    if (safeInfo.modules.length < 10) {
+      // we're sure that we got all the modules
       return buildModulesLinkedList(safeInfo.modules)
-    } else {
-      // newer versions `getModules` call returns up to 10 modules
-      if (safeInfo.modules.length < 10) {
-        // we're sure that we got all the modules
-        return buildModulesLinkedList(safeInfo.modules)
-      }
+    }
 
-      try {
-        // lastly, if `safeInfo.modules` have 10 items,
-        // we'll fallback to `getModulesPaginated` RPC call
-        // as we're not sure if there are more than 10 modules enabled for the current Safe
-        const safeInstance = getGnosisSafeInstanceAt(safeInfo.address)
+    try {
+      // lastly, if `safeInfo.modules` have 10 items,
+      // we'll fallback to `getModulesPaginated` RPC call
+      // as we're not sure if there are more than 10 modules enabled for the current Safe
+      const safeInstance = getGnosisSafeInstanceAt(safeInfo.address)
 
-        // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
-        const modules: ModulesPaginated = await safeInstance.methods.getModulesPaginated(SENTINEL_ADDRESS, 100).call()
+      // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
+      const modules: ModulesPaginated = await safeInstance.methods.getModulesPaginated(SENTINEL_ADDRESS, 100).call()
 
-        return buildModulesLinkedList(modules.array, modules.next)
-      } catch (e) {
-        console.error('Failed to retrieve Safe modules', e)
-      }
+      return buildModulesLinkedList(modules.array, modules.next)
+    } catch (e) {
+      console.error('Failed to retrieve Safe modules', e)
     }
   }
 }
