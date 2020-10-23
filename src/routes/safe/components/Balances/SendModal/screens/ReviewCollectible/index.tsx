@@ -106,6 +106,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           }),
         )
+      } else {
+        console.error('There was an error trying to submit the transaction, the safeAddress was not found')
       }
     } catch (error) {
       console.error('Error creating sendCollectible Tx:', error)

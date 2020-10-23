@@ -83,6 +83,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
+    } else {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
     }
     onClose()
   }
