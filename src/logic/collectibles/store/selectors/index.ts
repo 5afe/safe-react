@@ -27,7 +27,7 @@ export const activeNftAssetsListSelector = createSelector(
   (assets, activeAssetsList, availableNftAssetsAddresses): NFTAsset[] => {
     return assets
       .filter(({ address }) => activeAssetsList.has(address))
-      .filter((asset) => availableNftAssetsAddresses.includes(asset.address))
+      .filter(({ address }) => availableNftAssetsAddresses.includes(address))
   },
 )
 
