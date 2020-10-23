@@ -13,7 +13,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { Dispatch } from 'redux'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -36,7 +36,7 @@ export const sendRemoveOwner = async (
   safeAddress: string,
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
-  dispatch: Dispatch<any>,
+  dispatch: Dispatch,
   threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)

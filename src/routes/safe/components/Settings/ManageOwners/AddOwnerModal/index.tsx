@@ -16,7 +16,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { Dispatch } from 'redux'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -34,11 +34,7 @@ type OwnerValues = {
   threshold: string
 }
 
-export const sendAddOwner = async (
-  values: OwnerValues,
-  safeAddress: string,
-  dispatch: Dispatch<any>,
-): Promise<void> => {
+export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dispatch: Dispatch): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
@@ -52,7 +48,7 @@ export const sendAddOwner = async (
     }),
   )
 
-  if (!!txHash) {
+  if (txHash) {
     dispatch(addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress }))
   }
 }

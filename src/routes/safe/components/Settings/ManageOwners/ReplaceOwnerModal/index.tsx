@@ -15,7 +15,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { Dispatch } from 'redux'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -37,7 +37,7 @@ export const sendReplaceOwner = async (
   values: OwnerValues,
   safeAddress: string,
   ownerAddressToRemove: string,
-  dispatch: Dispatch<any>,
+  dispatch: Dispatch,
   threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
