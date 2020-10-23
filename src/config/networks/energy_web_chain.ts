@@ -4,7 +4,10 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',  
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
-  gasPriceOracleUrl: 'https://station.energyweb.org',
+  gasPriceOracle: {
+    url: 'https://station.energyweb.org',
+    gasParameter: 'standard',
+  },
   rpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
