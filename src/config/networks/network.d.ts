@@ -64,14 +64,20 @@ export type SafeFeatures = FEATURES[]
 
 export type Wallets = WALLETS[]
 
+export type GasPriceOracle = {
+  url: string
+  // Different gas api providers can use a different name to reflect different gas levels based on tx speed
+  // For example in ethGasStation for ETHEREUM_MAINNET = safeLow | average | fast
+  gasParameter: string
+}
 
 type GasPrice = {
   gasPrice: number
-  gasPriceOracleUrl?: string
+  gasPriceOracle?: GasPriceOracle
 } | {
   gasPrice?: number
   // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-  gasPriceOracleUrl: string
+  gasPriceOracle: GasPriceOracle
 }
 
 export type EnvironmentSettings = GasPrice & {

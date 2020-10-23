@@ -4,7 +4,10 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
-  gasPriceOracleUrl: 'https://ethgasstation.info/json/ethgasAPI.json',
+  gasPriceOracle: {
+    url: 'https://ethgasstation.info/json/ethgasAPI.json',
+    gasParameter: 'average',
+  },
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io',
