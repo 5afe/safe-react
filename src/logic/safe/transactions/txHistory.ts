@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { getTxServiceUrl, getTxServiceUriFrom } from 'src/config'
+import { getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const calculateBodyFrom = async (
@@ -45,10 +45,8 @@ const calculateBodyFrom = async (
 }
 
 export const buildTxServiceUrl = (safeAddress: string): string => {
-  const host = getTxServiceUrl()
   const address = checksumAddress(safeAddress)
-  const base = getTxServiceUriFrom(address)
-  return `${host}/${base}?has_confirmations=True`
+  return `${getSafeServiceBaseUrl(address)}/transactions?has_confirmations=True`
 }
 
 const SUCCESS_STATUS = 201 // CREATED status

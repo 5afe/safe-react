@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceUrl } from 'src/config'
+import { getTokensServiceBaseUrl } from 'src/config'
 
 export type TokenResult = {
   address: string
@@ -12,9 +12,7 @@ export type TokenResult = {
 }
 
 export const fetchErc20AndErc721AssetsList = async (): Promise<AxiosResponse<{ results: TokenResult[] }>> => {
-  const apiUrl = getTxServiceUrl()
-
-  const url = `${apiUrl}/tokens/`
+  const url = getTokensServiceBaseUrl()
 
   return axios.get<{ results: TokenResult[] }>(url, {
     params: {

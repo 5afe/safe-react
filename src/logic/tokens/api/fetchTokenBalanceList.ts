@@ -1,7 +1,8 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceUrl } from 'src/config'
+import { getSafeServiceBaseUrl } from 'src/config'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 type BalanceResult = {
   tokenAddress: string
@@ -10,8 +11,8 @@ type BalanceResult = {
 }
 
 export const fetchTokenBalanceList = (safeAddress: string): Promise<AxiosResponse<{ results: BalanceResult[] }>> => {
-  const apiUrl = getTxServiceUrl()
-  const url = `${apiUrl}/safes/${safeAddress}/balances/`
+  const address = checksumAddress(safeAddress)
+  const url = `${getSafeServiceBaseUrl(address)}/balances/`
 
   return axios.get(url)
 }
