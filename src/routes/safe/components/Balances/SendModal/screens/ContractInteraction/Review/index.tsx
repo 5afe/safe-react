@@ -1,9 +1,9 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { useSnackbar } from 'notistack'
 import React, { useEffect, useState } from 'react'
+import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+
 import { getNetworkInfo } from 'src/config'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -43,7 +43,6 @@ type Props = {
 const { nativeCoin } = getNetworkInfo()
 
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
-  const { enqueueSnackbar, closeSnackbar } = useSnackbar()
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -74,18 +73,19 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: txRecipient,
-        valueInWei: txValue,
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
-
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    } else {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+    }
     onClose()
   }
 
