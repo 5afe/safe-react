@@ -93,7 +93,7 @@ export const estimateTxGasCosts = async (
   }
 }
 
-const getNonGethErrorDataResult = (errorMessage: string): string | undefined => {
+const getOpenEthereumErrorDataResult = (errorMessage: string): string | undefined => {
   // Extracts JSON object from the error message
   const [, ...error] = errorMessage.split('\n')
   const errorAsJSON = JSON.parse(error.join(''))
@@ -108,13 +108,13 @@ const getGasEstimationTxResponse = (txConfig: {
   to: string
   from: string
   data: string
-}): Promise<{ gasEstimationResponse: string; isGethNode: boolean }> => {
+}): Promise<{ gasEstimationResponse: string; isOpenEthereumNode: boolean }> => {
   const web3 = getWeb3()
   return web3.eth
     .call(txConfig)
     .then((result) => {
-      // GETH Nodes
-      // When we calculate the gas we always got the result as response for GETH Nodes
+      // GETH/Nethermind Nodes
+      // When we calculate the gas we always got the result as response for GETH/Nethermind Nodes
       // In case that the gas is not enough we will receive an EMPTY data
       // Otherwise we will receive the gas amount
 
@@ -124,15 +124,15 @@ const getGasEstimationTxResponse = (txConfig: {
       }
       return {
         gasEstimationResponse: result,
-        isGethNode: true,
+        isOpenEthereumNode: true,
       }
     })
     .catch((error) => {
-      // Non geth nodes
-      // When we calculate the gas for Non GETH nodes we will always receive the response as error
+      // OpenEthereum/Parity nodes
+      // When we calculate the gas for OpenEthereum/Parity nodes we will always receive the response as error
       // In that case we check if there is empty data (which means an error)
       // Or if there is a valid estimation amount
-      const estimationData = getNonGethErrorDataResult(error.message)
+      const estimationData = getOpenEthereumErrorDataResult(error.message)
 
       if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
         throw error
@@ -140,12 +140,12 @@ const getGasEstimationTxResponse = (txConfig: {
 
       return {
         gasEstimationResponse: estimationData,
-        isGethNode: false,
+        isOpenEthereumNode: true,
       }
     })
 }
 
-const calculateGasForGethNodes = async (
+const calculateGasForGethAndNethermindNodes = async (
   additionalGasBatches: number[],
   safeAddress: string,
   estimateData: string,
@@ -198,7 +198,7 @@ const calculateGasForGethNodes = async (
   return 0
 }
 
-const calculateGasForNonGethNodes = async (
+const calculateGasForOpenEthereumNodes = async (
   additionalGasBatches: number[],
   safeAddress: string,
   estimateData: string,
@@ -213,12 +213,12 @@ const calculateGasForNonGethNodes = async (
         from: safeAddress,
         data: estimateData,
         gasPrice: 0,
-        // `gasLimit` is not recognised on NON-GETH nodes, so we use json-rpc standard  `gas` instead
+        // `gasLimit` is not recognised on Parity/OpenEthereum nodes, so we use json-rpc standard  `gas` instead
         gas: txGasEstimation + dataGasEstimation + additionalGasIterator,
       })
     } catch (error) {
-      // NON-GETH nodes will always fail for this call, so we extract the return data from within the error
-      const dataResult = getNonGethErrorDataResult(error.message)
+      // Parity/OpenEthereum nodes will always fail for this call, so we extract the return data from within the error
+      const dataResult = getOpenEthereumErrorDataResult(error.message)
 
       if (sameString(dataResult, EMPTY_DATA)) {
         throw error
@@ -243,7 +243,7 @@ export const estimateSafeTxGas = async (
     }
 
     const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const { isGethNode, gasEstimationResponse } = await getGasEstimationTxResponse({
+    const { isOpenEthereumNode, gasEstimationResponse } = await getGasEstimationTxResponse({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
@@ -255,8 +255,8 @@ export const estimateSafeTxGas = async (
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
-    if (isGethNode) {
-      return await calculateGasForGethNodes(
+    if (!isOpenEthereumNode) {
+      return await calculateGasForGethAndNethermindNodes(
         additionalGasBatches,
         safeAddress,
         estimateData,
@@ -264,7 +264,7 @@ export const estimateSafeTxGas = async (
         dataGasEstimation,
       )
     } else {
-      return await calculateGasForNonGethNodes(
+      return await calculateGasForOpenEthereumNodes(
         additionalGasBatches,
         safeAddress,
         estimateData,
