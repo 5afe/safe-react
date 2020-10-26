@@ -93,35 +93,37 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
-    if (safeAddress) {
-      if (isSpendingLimit && txToken) {
-        const spendingLimit = getSpendingLimitContract()
-        spendingLimit.methods
-          .executeAllowanceTransfer(
-            safeAddress,
-            txToken.address === nativeCoin.address ? ZERO_ADDRESS : txToken.address,
-            tx.recipientAddress,
-            toTokenUnit(tx.amount, txToken.decimals),
-            ZERO_ADDRESS,
-            0,
-            tx.tokenSpendingLimit.delegate,
-            EMPTY_DATA,
-          )
-          .send({ from: tx.tokenSpendingLimit.delegate })
-          .on('transactionHash', () => onClose())
-          .catch(console.error)
-      } else {
-        dispatch(
-          createTransaction({
-            safeAddress,
-            to: txRecipient,
-            valueInWei: txAmount,
-            txData: data,
-            notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-          }),
+    if (!safeAddress) {
+      return
+    }
+
+    if (isSpendingLimit && txToken) {
+      const spendingLimit = getSpendingLimitContract()
+      spendingLimit.methods
+        .executeAllowanceTransfer(
+          safeAddress,
+          txToken.address === nativeCoin.address ? ZERO_ADDRESS : txToken.address,
+          tx.recipientAddress,
+          toTokenUnit(tx.amount, txToken.decimals),
+          ZERO_ADDRESS,
+          0,
+          tx.tokenSpendingLimit.delegate,
+          EMPTY_DATA,
         )
-        onClose()
-      }
+        .send({ from: tx.tokenSpendingLimit.delegate })
+        .on('transactionHash', () => onClose())
+        .catch(console.error)
+    } else {
+      dispatch(
+        createTransaction({
+          safeAddress,
+          to: txRecipient,
+          valueInWei: txAmount,
+          txData: data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+      onClose()
     }
   }
 
