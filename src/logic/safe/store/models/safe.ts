@@ -39,7 +39,7 @@ const makeSafe = Record<SafeRecordProps>({
   activeAssets: Set(),
   blacklistedTokens: Set(),
   blacklistedAssets: Set(),
-  balances: Map({}),
+  balances: Map(),
   nonce: 0,
   latestIncomingTxBlock: 0,
   recurringUser: undefined,
