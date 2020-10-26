@@ -16,7 +16,7 @@ import {
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas } from 'src/logic/safe/transactions/gasNew'
+import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -107,6 +107,7 @@ interface CreateTransactionArgs {
   txData?: string
   txNonce?: number | string
   valueInWei: string
+  safeTxGas?: number
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
@@ -124,6 +125,7 @@ const createTransaction = (
     operation = CALL,
     navigateToTransactionsTab = true,
     origin = null,
+    safeTxGas: safeTxGasArg,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
   onError?: ErrorEventHandler,
@@ -143,7 +145,8 @@ const createTransaction = (
   const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas = await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation)
+  const safeTxGas =
+    safeTxGasArg || (await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation))
 
   // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
   const sigs = `0x000000000000000000000000${from.replace(
