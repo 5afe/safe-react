@@ -24,6 +24,7 @@ import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -125,17 +126,24 @@ export const safeIncomingTransactionsSelector = createSelector(
   },
 )
 
-export const safeModuleTransactionsSelector = createSelector(
-  tokenListSelector,
+export const modulesTransactionsBySafeSelector = createSelector(
   moduleTransactionsSelector,
   safeParamAddressFromStateSelector,
-  (tokens, moduleTransactions, safeAddress): SafeModuleTransaction[] => {
+  (moduleTransactions, safeAddress): ModuleTxServiceModel[] => {
     // no module tx for the current safe so far
     if (!moduleTransactions || !safeAddress || !moduleTransactions[safeAddress]) {
       return []
     }
 
-    return moduleTransactions[safeAddress]?.map((moduleTx) => {
+    return moduleTransactions[safeAddress]
+  },
+)
+
+export const safeModuleTransactionsSelector = createSelector(
+  tokenListSelector,
+  modulesTransactionsBySafeSelector,
+  (tokens, safeModuleTransactions): SafeModuleTransaction[] => {
+    return safeModuleTransactions.map((moduleTx) => {
       // if not spendingLimit module tx, then it's an generic module tx
       const type = sameAddress(moduleTx.module, SPENDING_LIMIT_MODULE_ADDRESS)
         ? TransactionTypes.SPENDING_LIMIT
