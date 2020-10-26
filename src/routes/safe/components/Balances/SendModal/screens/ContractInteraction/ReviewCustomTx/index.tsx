@@ -1,11 +1,11 @@
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
 
+import { getNetworkInfo } from 'src/config'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
@@ -30,10 +30,16 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 
+export type CustomTx = {
+  contractAddress?: string
+  data?: string
+  value?: string
+}
+
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: { contractAddress?: string; data?: string; value?: string }
+  tx: CustomTx
 }
 
 const useStyles = makeStyles(styles)
@@ -72,15 +78,19 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
-        valueInWei: txValue,
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
-    )
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    } else {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+    }
 
     onClose()
   }
