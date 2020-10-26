@@ -3,7 +3,7 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import React, { useState } from 'react'
+import React, { ReactElement, useState, useEffect } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
@@ -78,7 +78,7 @@ const SendFunds = ({
   onNext,
   recipientAddress,
   selectedToken = '',
-}: SendFundsProps): React.ReactElement => {
+}: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
@@ -90,7 +90,7 @@ const SendFunds = ({
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  React.useEffect(() => {
+  useEffect(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
