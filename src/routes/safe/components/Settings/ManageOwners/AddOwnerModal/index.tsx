@@ -1,5 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,11 +13,12 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
-const styles = () => ({
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
@@ -26,7 +26,15 @@ const styles = () => ({
   },
 })
 
-export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackbar, closeSnackbar, dispatch) => {
+const useStyles = makeStyles(styles)
+
+type OwnerValues = {
+  ownerAddress: string
+  ownerName: string
+  threshold: string
+}
+
+export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dispatch: Dispatch): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
@@ -37,9 +45,7 @@ export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackb
       valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash) {
@@ -47,12 +53,17 @@ export const sendAddOwner = async (values, safeAddress, ownersOld, enqueueSnackb
   }
 }
 
-const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) => {
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const owners = useSelector(safeOwnersSelector)
 
   useEffect(
     () => () => {
@@ -91,7 +102,7 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) 
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, owners, enqueueSnackbar, closeSnackbar, dispatch)
+      await sendAddOwner(values, safeAddress, dispatch)
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
       )
@@ -121,4 +132,4 @@ const AddOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose }) 
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(AddOwner))
+export default AddOwner

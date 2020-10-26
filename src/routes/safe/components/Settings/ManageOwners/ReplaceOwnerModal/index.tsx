@@ -1,5 +1,4 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -15,8 +14,10 @@ import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { Dispatch } from 'src/logic/safe/store/actions/types'
 
-const styles = () => ({
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
     minHeight: '500px',
@@ -24,20 +25,24 @@ const styles = () => ({
   },
 })
 
+const useStyles = makeStyles(styles)
+
+type OwnerValues = {
+  ownerAddress: string
+  ownerName: string
+  threshold: string
+}
+
 export const sendReplaceOwner = async (
-  values,
-  safeAddress,
-  ownerAddressToRemove,
-  enqueueSnackbar,
-  closeSnackbar,
-  threshold,
-  dispatch,
-) => {
+  values: OwnerValues,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  dispatch: Dispatch,
+  threshold?: number,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
-  const index = safeOwners.findIndex(
-    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
-  )
+  const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
   const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress).encodeABI()
 
@@ -48,9 +53,7 @@ export const sendReplaceOwner = async (
       valueInWei: '0',
       txData,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash && threshold === 1) {
@@ -65,7 +68,15 @@ export const sendReplaceOwner = async (
   }
 }
 
-const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+type ReplaceOwnerProps = {
+  isOpen: boolean
+  onClose: () => void
+  ownerAddress: string
+  ownerName: string
+}
+
+const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwnerProps): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
@@ -94,7 +105,7 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   const onReplaceOwner = async () => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, enqueueSnackbar, closeSnackbar, threshold, dispatch)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, threshold)
 
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })),
@@ -131,4 +142,4 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(ReplaceOwner))
+export default ReplaceOwner
