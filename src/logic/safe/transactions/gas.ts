@@ -93,6 +93,17 @@ export const estimateTxGasCosts = async (
   }
 }
 
+const getNonGethErrorDataResult = (errorMessage: string): string | undefined => {
+  // Extracts JSON object from the error message
+  const [, ...error] = errorMessage.split('\n')
+  const errorAsJSON = JSON.parse(error.join(''))
+
+  if (errorAsJSON?.data) {
+    const [, dataResult] = errorAsJSON.data.split('Reverted ')
+    return dataResult
+  }
+}
+
 const getGasEstimationTxResponse = (txConfig: {
   to: string
   from: string
@@ -185,17 +196,6 @@ const calculateGasForGethNodes = async (
     return firstSuccessfulRequest.estimation
   }
   return 0
-}
-
-const getNonGethErrorDataResult = (errorMessage: string): string | undefined => {
-  // Extracts JSON object from the error message
-  const [, ...error] = errorMessage.split('\n')
-  const errorAsJSON = JSON.parse(error.join(''))
-
-  if (errorAsJSON?.data) {
-    const [, dataResult] = errorAsJSON.data.split('Reverted ')
-    return dataResult
-  }
 }
 
 const calculateGasForNonGethNodes = async (
