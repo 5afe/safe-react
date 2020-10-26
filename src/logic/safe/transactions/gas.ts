@@ -256,25 +256,21 @@ export const estimateSafeTxGas = async (
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     if (isGethNode) {
-      return calculateGasForGethNodes(
+      return await calculateGasForGethNodes(
         additionalGasBatches,
         safeAddress,
         estimateData,
         txGasEstimation,
         dataGasEstimation,
-      ).catch((err) => {
-        throw err
-      })
+      )
     } else {
-      return calculateGasForNonGethNodes(
+      return await calculateGasForNonGethNodes(
         additionalGasBatches,
         safeAddress,
         estimateData,
         txGasEstimation,
         dataGasEstimation,
-      ).catch((err) => {
-        throw err
-      })
+      )
     }
   } catch (error) {
     console.error('Error calculating tx gas estimation', error)
