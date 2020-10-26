@@ -42,7 +42,8 @@
     "test:coverage": "yarn test --coverage --watchAll=false",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/"
   },
   "husky": {
     "hooks": {
@@ -172,6 +173,8 @@
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@openzeppelin/contracts": "3.1.0",
+    "@sentry/react": "^5.27.1",
+    "@sentry/tracing": "^5.27.1",
     "@truffle/contract": "4.2.25",
     "async-sema": "^3.1.0",
     "axios": "0.20.0",
@@ -230,6 +233,7 @@
     "web3-utils": "^1.2.11"
   },
   "devDependencies": {
+    "@sentry/cli": "^1.58.0",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
     "@storybook/addons": "^5.3.19",

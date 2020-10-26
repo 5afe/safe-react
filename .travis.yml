@@ -37,6 +37,7 @@ script:
   - yarn prettier:check
   - yarn test:coverage
   - yarn build
+  - yarn sentry-upload-sourcemaps  
   #- bash ./config/travis/build.sh
 after_success:
   # Pull Request - Deploy it to a review environment
