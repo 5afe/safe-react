@@ -4,6 +4,7 @@ import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
 import { List } from 'immutable'
 import React from 'react'
+import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 
 import TxType from './TxType'
 
@@ -58,7 +59,18 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
 
 export const getTxAmount = (tx: Transaction, formatted = true): string => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
+
+  let value: string | number = 0
+
+  if (isTokenTransfer) {
+    const transferValue = (decodedParams as TokenDecodedParams).transfer?.value
+
+    if (transferValue) {
+      value = transferValue
+    }
+  } else {
+    value = tx.value
+  }
 
   if (tx.isCollectibleTransfer) {
     return `1 ${tx.symbol}`

@@ -1,5 +1,5 @@
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { SAFE_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
+import { SAFE_METHODS_NAMES, SafeMethods, TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()
@@ -15,7 +15,7 @@ interface TxData {
   data?: string | null
   recipient?: string
   module?: string
-  action?: string
+  action?: SafeMethods
   addedOwner?: string
   removedOwner?: string
   newThreshold?: string
@@ -34,11 +34,11 @@ export const getTxData = (tx: Transaction): TxData => {
 
   if (tx.decodedParams) {
     if (tx.isTokenTransfer) {
-      const { to } = tx.decodedParams.transfer || {}
+      const { to } = (tx.decodedParams as TokenDecodedParams).transfer || {}
       txData.recipient = to
       txData.isTokenTransfer = true
     } else if (tx.isCollectibleTransfer) {
-      const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
+      const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams as TokenDecodedParams
       const { to, value } = safeTransferFrom || transferFrom || transfer || {}
       txData.recipient = to
       txData.tokenId = value

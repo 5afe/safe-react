@@ -211,7 +211,7 @@ const TxData = ({ data }: { data: string }): React.ReactElement => {
   )
 }
 
-export const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.ReactElement => {
+const TxActionData = ({ dataDecoded }: { dataDecoded: DataDecoded }): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -250,7 +250,7 @@ interface GenericCustomDataProps {
   storedTx: Transaction | SafeModuleTransaction
 }
 
-export const GenericCustomData = ({
+const GenericCustomData = ({
   amount = '0',
   data = null,
   recipient,

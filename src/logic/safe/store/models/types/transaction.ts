@@ -52,7 +52,7 @@ export type TransactionProps = {
   data: string | null
   dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
-  decodedParams: DecodedParams | null
+  decodedParams: DecodedParams
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string
