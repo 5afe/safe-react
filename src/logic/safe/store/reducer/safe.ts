@@ -53,8 +53,9 @@ const updateSafeProps = (prevSafe, safe) => {
     // We check each safe property sent in action.payload
     safeProperties.forEach((key) => {
       if (safe[key] && typeof safe[key] === 'object') {
-        if (safe[key].length >= 0) {
-          // If type is array we update the array
+        if (safe[key].length >= 0 || Map.isMap(safe[key])) {
+          // If type is array we replace it
+          // If type is Immutable Map we replace it
           record.update(key, () => safe[key])
         } else if (safe[key].size >= 0) {
           // If type is Immutable List we replace current List
@@ -108,7 +109,7 @@ export default handleActions(
 
       return state.updateIn(
         ['safes', safe.address],
-        makeSafe({ name: 'LOADED SAFE', address: safe.address }),
+        makeSafe({ name: safe?.name || 'LOADED SAFE', address: safe.address }),
         (prevSafe) => updateSafeProps(prevSafe, safe),
       )
     },
