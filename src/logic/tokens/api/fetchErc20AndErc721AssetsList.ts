@@ -14,7 +14,7 @@ export type TokenResult = {
 export const fetchErc20AndErc721AssetsList = async (): Promise<AxiosResponse<{ results: TokenResult[] }>> => {
   const url = getTokensServiceBaseUrl()
 
-  return axios.get<{ results: TokenResult[] }>(url, {
+  return axios.get<{ results: TokenResult[] }>(`${url}/`, {
     params: {
       limit: 3000,
     },

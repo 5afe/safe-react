@@ -3,5 +3,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const buildSafeInformationUrl = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
-  return getSafeServiceBaseUrl(address)
+  const url = getSafeServiceBaseUrl(address)
+  return `${url}/`
 }

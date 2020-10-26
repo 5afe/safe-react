@@ -22,7 +22,7 @@ type TransactionDTO = {
 
 const getAllTransactionsUri = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
-  return `${getSafeServiceBaseUrl(address)}/all-transactions`
+  return `${getSafeServiceBaseUrl(address)}/all-transactions/`
 }
 
 const fetchAllTransactions = async (
