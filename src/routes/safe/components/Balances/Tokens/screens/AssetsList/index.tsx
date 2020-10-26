@@ -28,6 +28,10 @@ import {
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 
+type Props = {
+  setActiveScreen: (newScreen: string) => void
+}
+
 const filterBy = (filter, nfts) =>
   nfts.filter(
     (asset) =>
@@ -37,7 +41,7 @@ const filterBy = (filter, nfts) =>
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props) => {
+const AssetsList = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -127,12 +131,11 @@ const AssetsList = (props) => {
         </Row>
         <Hairline />
       </Block>
-      {!nftAssetsList.length ||
-        (!nftAssetsList && (
-          <Block className={classes.progressContainer} justify="center">
-            {!nftAssetsList ? <CircularProgress /> : <Paragraph>No collectibles available</Paragraph>}
-          </Block>
-        ))}
+      {!nftAssetsList?.length && (
+        <Block className={classes.progressContainer} justify="center">
+          {!nftAssetsList ? <CircularProgress /> : <Paragraph>No collectibles available</Paragraph>}
+        </Block>
+      )}
       {nftAssetsFilteredList.length > 0 && (
         <MuiList className={classes.list}>
           <FixedSizeList
