@@ -1,9 +1,9 @@
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { withSnackbar } from 'notistack'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
@@ -21,11 +21,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import {
-  containsMethodByHash,
-  getERC721TokenContract,
-  getHumanFriendlyToken,
-} from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC721TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -39,9 +35,22 @@ import { styles } from './style'
 
 const { nativeCoin } = getNetworkInfo()
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+export type CollectibleTx = {
+  recipientAddress: string
+  assetAddress: string
+  assetName: string
+  nftTokenId: string
+}
+
+type Props = {
+  onClose: () => void
+  onPrev: () => void
+  tx: CollectibleTx
+}
+
+const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
@@ -57,22 +66,24 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
     let isCurrent = true
 
     const estimateGas = async () => {
-      const supportsSafeTransfer = await containsMethodByHash(tx.assetAddress, SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)
-      const methodToCall = supportsSafeTransfer ? `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}` : 'transfer'
-      const transferParams = [tx.recipientAddress, tx.nftTokenId]
-      const params = methodToCall === 'transfer' ? transferParams : [safeAddress, ...transferParams]
+      try {
+        const methodToCall = `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}`
+        const transferParams = [tx.recipientAddress, tx.nftTokenId]
+        const params = [safeAddress, ...transferParams]
+        const ERC721Token = await getERC721TokenContract()
+        const tokenInstance = await ERC721Token.at(tx.assetAddress)
+        const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
 
-      const ERC721Token = methodToCall === 'transfer' ? await getHumanFriendlyToken() : await getERC721TokenContract()
-      const tokenInstance = await ERC721Token.at(tx.assetAddress)
-      const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
+        const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
+        const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const formattedGasCosts = formatAmount(gasCosts)
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-        setData(txData)
+        if (isCurrent) {
+          setGasCosts(formattedGasCosts)
+          setData(txData)
+        }
+      } catch (error) {
+        console.error('Error while calculating estimated gas:', error)
       }
     }
 
@@ -84,18 +95,25 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   }, [safeAddress, tx.assetAddress, tx.nftTokenId, tx.recipientAddress])
 
   const submitTx = async () => {
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: tx.assetAddress,
-        valueInWei: '0',
-        txData: data,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
-    onClose()
+    try {
+      if (safeAddress) {
+        dispatch(
+          createTransaction({
+            safeAddress,
+            to: tx.assetAddress,
+            valueInWei: '0',
+            txData: data,
+            notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          }),
+        )
+      } else {
+        console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+      }
+    } catch (error) {
+      console.error('Error creating sendCollectible Tx:', error)
+    } finally {
+      onClose()
+    }
   }
 
   return (
@@ -180,4 +198,4 @@ const ReviewCollectible = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx
   )
 }
 
-export default withSnackbar(ReviewCollectible)
+export default ReviewCollectible
