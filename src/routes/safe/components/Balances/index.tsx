@@ -56,6 +56,10 @@ const Balances = (): React.ReactElement => {
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const safeName = useSelector(safeNameSelector) ?? ''
 
+  if (true) {
+    throw Error('Sentry test')
+  }
+
   useFetchTokens(address as string)
 
   useEffect(() => {
