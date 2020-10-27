@@ -93,15 +93,15 @@ export const estimateTxGasCosts = async (
   }
 }
 
-// @todo (agustin) refactor for nethermind
-export const getOpenEthereumErrorDataResult = (errorMessage: string): string | undefined => {
+// Parses the result of OpenEthereum/Parity and Nethermind error messages and returns the value
+export const getNonGETHErrorDataResult = (errorMessage: string): string | undefined => {
   // Extracts JSON object from the error message
   const [, ...error] = errorMessage.split('\n')
   try {
     const errorAsJSON = JSON.parse(error.join(''))
 
     if (errorAsJSON?.data) {
-      const [, dataResult] = errorAsJSON.data.split('Reverted ')
+      const [, dataResult] = errorAsJSON.data.split(' ')
       return dataResult
     }
   } catch (error) {
@@ -131,7 +131,7 @@ const getGasEstimationTxResponse = async (txConfig: {
     // OpenEthereum/Parity nodes
     // Parity/OpenEthereum nodes always returns the response as an error
     // So we try to extract the estimation result within the error in case is possible
-    const estimationData = getOpenEthereumErrorDataResult(error.message)
+    const estimationData = getNonGETHErrorDataResult(error.message)
 
     if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
       throw error
