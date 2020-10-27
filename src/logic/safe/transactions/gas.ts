@@ -120,7 +120,7 @@ const getGasEstimationTxResponse = async (txConfig: {
   try {
     const result = await web3.eth.call(txConfig)
 
-    // GETH/Nethermind Nodes
+    // GETH Nodes
     // In case that the gas is not enough we will receive an EMPTY data
     // Otherwise we will receive the gas amount as hash data
 
@@ -140,6 +140,8 @@ const getGasEstimationTxResponse = async (txConfig: {
     return new BigNumber(estimationData.substring(138), 16).toNumber()
   }
 
+  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation
+  // We cannot throw this error above because it will be captured again on the OpenEthereum code bellow
   throw new Error('Error while estimating the gas required for tx')
 }
 
