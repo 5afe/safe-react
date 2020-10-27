@@ -98,9 +98,11 @@ export const buildSafe = async (
   }
 }
 
-const getSpendingLimits = async (modules, safeAddress: string): Promise<SpendingLimit[] | null> => {
-  const isSpendingLimitEnabled =
-    modules?.array?.some((module) => module.toLowerCase() === SPENDING_LIMIT_MODULE_ADDRESS.toLowerCase()) ?? false
+const getSpendingLimits = async (
+  modules: string[] | undefined,
+  safeAddress: string,
+): Promise<SpendingLimit[] | null> => {
+  const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
 
   if (isSpendingLimitEnabled) {
     const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
@@ -127,7 +129,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   ])
 
   // request SpendingLimit info
-  const spendingLimits = await getSpendingLimits(modules, safeAddress)
+  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
 
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
