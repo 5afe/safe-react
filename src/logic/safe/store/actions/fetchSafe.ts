@@ -17,11 +17,13 @@ import {
   requestTokensByDelegate,
 } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { getSpendingLimitContract, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { AppReduxState } from 'src/store'
 import { latestMasterContractVersionSelector } from '../selectors'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { getModules } from 'src/logic/safe/utils/modules'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -45,16 +47,6 @@ const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): Lis
   return List(ownersList)
 }
 
-const buildModulesLinkedList = (modules?: string[], nextModule?: string): Array<ModulePair> | null => {
-  if (modules?.length && nextModule) {
-    return modules.map((moduleAddress, index, modules) => {
-      const prevModule = modules[index + 1]
-      return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
-    })
-  }
-  return null
-}
-
 export const buildSafe = async (
   safeAdd: string,
   safeName: string,
@@ -63,12 +55,18 @@ export const buildSafe = async (
   const safeAddress = checksumAddress(safeAdd)
 
   const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [[, thresholdStr, nonceStr, currentVersion, remoteOwners = []], localSafe, ethBalance] = await Promise.all([
+  const [
+    [, thresholdStr, nonceStr, currentVersion, remoteOwners = []],
+    safeInfo,
+    localSafe,
+    ethBalance,
+  ] = await Promise.all([
     generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined, string[]]>({
       abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),
+    getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
     getBalanceInEtherOf(safeAddress),
   ])
@@ -78,6 +76,7 @@ export const buildSafe = async (
   const owners = buildOwnersFrom(remoteOwners, localSafe)
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
+  const modules = await getModules(safeInfo)
 
   return {
     address: safeAddress,
@@ -95,7 +94,7 @@ export const buildSafe = async (
     activeTokens: Set(),
     blacklistedAssets: Set(),
     blacklistedTokens: Set(),
-    modules: null,
+    modules,
   }
 }
 
@@ -116,33 +115,14 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   const safeAddress = checksumAddress(safeAdd)
 
   // Check if the owner's safe did change and update them
-  const safeParams = [
-    'getThreshold',
-    'nonce',
-    'getOwners',
-    // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
-    { method: 'getModulesPaginated', args: [SENTINEL_ADDRESS, 100] },
-  ]
-  const [[, remoteThreshold, remoteNonce, remoteOwners, modules], localSafe] = await Promise.all([
-    generateBatchRequests<
-      [
-        undefined,
-        string | undefined,
-        string | undefined,
-        string[],
-        (
-          | {
-              array: string[]
-              next: string
-            }
-          | undefined
-        ),
-      ]
-    >({
+  const safeParams = ['getThreshold', 'nonce', 'getOwners']
+  const [[, remoteThreshold, remoteNonce, remoteOwners = []], safeInfo, localSafe] = await Promise.all([
+    generateBatchRequests<[undefined, string | undefined, string | undefined, string[]]>({
       abi: GnosisSafeSol.abi as AbiItem[],
       address: safeAddress,
       methods: safeParams,
     }),
+    getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
   ])
 
@@ -152,11 +132,13 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
 
+  const modules = await getModules(safeInfo)
+
   dispatch(
     updateSafe({
       address: safeAddress,
       name: localSafe?.name,
-      modules: buildModulesLinkedList(modules?.array, modules?.next),
+      modules,
       spendingLimits,
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),
