@@ -1,5 +1,5 @@
 import { Button } from '@gnosis.pm/safe-react-components'
-import { Mutator } from 'final-form'
+import { FormState, Mutator } from 'final-form'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -50,7 +50,8 @@ const canReview = ({
   submitting,
   dirtyFieldsSinceLastSubmit,
   values: { beneficiary, token, amount },
-}): boolean => !(submitting || invalid || !beneficiary || !token || !amount || !dirtyFieldsSinceLastSubmit)
+}: FormState<{ beneficiary: string; token: string; amount: string }>): boolean =>
+  !(submitting || invalid || !beneficiary || !token || !amount || !dirtyFieldsSinceLastSubmit)
 
 const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): React.ReactElement => {
   return (
