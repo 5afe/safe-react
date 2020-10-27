@@ -1,5 +1,5 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import React from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -43,7 +43,7 @@ interface ReviewSpendingLimitProps {
   existentSpendingLimit?: SpendingLimitRow
 }
 
-const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): React.ReactElement => {
+const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
@@ -54,8 +54,8 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
   // undefined: before setting a value
   // null: if no previous value
   // SpendingLimit: if previous value exists
-  const [existentSpendingLimit, setExistentSpendingLimit] = React.useState<SpendingLimit | null>(null)
-  React.useEffect(() => {
+  const [existentSpendingLimit, setExistentSpendingLimit] = useState<SpendingLimit | null>(null)
+  useEffect(() => {
     const checkExistence = async () => {
       // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
       const currentDelegate = spendingLimits?.find(
@@ -156,7 +156,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     }
   }
 
-  const resetTimeLabel = React.useMemo(
+  const resetTimeLabel = useMemo(
     () => (values.withResetTime ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime)?.label : ''),
     [values.resetTime, values.withResetTime],
   )
