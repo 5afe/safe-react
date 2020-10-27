@@ -39,4 +39,4 @@ export const EXCHANGE_RATE_URL = 'https://api.exchangeratesapi.io/latest'
 export const EXCHANGE_RATE_URL_FALLBACK = 'https://api.coinbase.com/v2/exchange-rates'
 export const IPFS_GATEWAY = process.env.REACT_APP_IPFS_GATEWAY
 export const SPENDING_LIMIT_MODULE_ADDRESS =
-  process.env.REACT_APP_SPENDING_LIMIT_MODULE_ADDRESS || '0x9e9Bf12b5a66c0f0A7435835e0365477E121B110'
+  process.env.REACT_APP_SPENDING_LIMIT_MODULE_ADDRESS || '0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134'
