@@ -17,7 +17,7 @@ import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 's
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEncodedMultiSendCallData, MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
 import { Token, makeToken } from 'src/logic/tokens/store/model/token'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
@@ -60,8 +60,8 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
       // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
       const currentDelegate = spendingLimits?.find(
         ({ delegate, token }) =>
-          delegate.toLowerCase() === values.beneficiary.toLowerCase() &&
-          token.toLowerCase() === (values.token === nativeCoin.address ? ZERO_ADDRESS : values.token.toLowerCase()),
+          sameAddress(delegate, values.beneficiary) &&
+          sameAddress(token, values.token === nativeCoin.address ? ZERO_ADDRESS : values.token),
       )
 
       // let the user know that is about to replace an existent allowance
@@ -98,7 +98,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
     //                                  ^ - shall we rely on this or query the list of delegates once again?
     const isDelegateAlreadyAdded =
-      spendingLimits?.some(({ delegate }) => delegate.toLowerCase() === values?.beneficiary.toLowerCase()) ?? false
+      spendingLimits?.some(({ delegate }) => sameAddress(delegate, values?.beneficiary)) ?? false
 
     // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
     if (!isDelegateAlreadyAdded && values?.beneficiary) {

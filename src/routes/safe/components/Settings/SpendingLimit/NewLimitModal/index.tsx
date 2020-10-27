@@ -8,6 +8,7 @@ import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
 import Review from './Review'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const CREATE = 'CREATE' as const
 export const REVIEW = 'REVIEW' as const
@@ -42,7 +43,7 @@ const newLimitModalReducer = (state: State, action: Action): State => {
         ...state,
         ...newState,
         // we lookup into the list of tokens for the selected token info
-        txToken: tokens.find((token) => token.address === newState.values.token) ?? state.txToken,
+        txToken: tokens.find((token) => sameAddress(token.address, newState.values.token)) ?? state.txToken,
         step: REVIEW,
       }
     }
