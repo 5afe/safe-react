@@ -1,6 +1,7 @@
 import { Button } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { AbiItem } from 'web3-utils'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -9,17 +10,17 @@ import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.j
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 import { RESET_TIME_OPTIONS } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import Modal from './Modal'
 import { useStyles } from './style'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -40,17 +41,17 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
   const removeSelectedSpendingLimit = async (): Promise<void> => {
     try {
       const web3 = getWeb3()
-      const spendingLimitContract = new web3.eth.Contract(SpendingLimitModule.abi as any, SPENDING_LIMIT_MODULE_ADDRESS)
+      const spendingLimitContract = new web3.eth.Contract(
+        SpendingLimitModule.abi as AbiItem[],
+        SPENDING_LIMIT_MODULE_ADDRESS,
+      )
       const {
         beneficiary,
         spent: { tokenAddress },
       } = spendingLimit
 
-      // TODO: replace with a proper way to remove allowances.
-      //  as we don't have a current way to remove an allowance, we tweak it by setting its `amount` and `resetTimeMin` to 0
-      //  This is directly related to `discardZeroAllowance`
       const txData = spendingLimitContract.methods
-        .setAllowance(beneficiary, tokenAddress === nativeCoin.address ? ZERO_ADDRESS : tokenAddress, 0, 0, 0)
+        .deleteAllowance(beneficiary, sameAddress(tokenAddress, nativeCoin.address) ? ZERO_ADDRESS : tokenAddress)
         .encodeABI()
 
       dispatch(
