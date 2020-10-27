@@ -56,10 +56,6 @@ const Balances = (): React.ReactElement => {
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const safeName = useSelector(safeNameSelector) ?? ''
 
-  if (true) {
-    throw Error('Sentry test')
-  }
-
   useFetchTokens(address as string)
 
   useEffect(() => {
@@ -99,6 +95,10 @@ const Balances = (): React.ReactElement => {
     }))
   }
 
+  const fail = () => {
+    throw Error('Sentry test')
+  }
+
   const {
     assetDivider,
     assetTab,
@@ -114,6 +114,7 @@ const Balances = (): React.ReactElement => {
   return (
     <>
       <Row align="center" className={controls}>
+        <button onClick={fail}>fail</button>
         <Col className={assetTabs} sm={6} start="sm" xs={12}>
           <NavLink
             to={`${SAFELIST_ADDRESS}/${address}/balances`}
