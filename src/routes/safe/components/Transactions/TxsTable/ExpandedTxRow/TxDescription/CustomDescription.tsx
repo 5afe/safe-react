@@ -28,7 +28,7 @@ import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 import DividerLine from 'src/components/DividerLine'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { decodeMethods, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
+import { decodeMethods, isDeleteAllowanceMethod, isSetAllowanceMethod } from 'src/logic/contracts/methodIds'
 
 export const TRANSACTIONS_DESC_CUSTOM_VALUE_TEST_ID = 'tx-description-custom-value'
 export const TRANSACTIONS_DESC_CUSTOM_DATA_TEST_ID = 'tx-description-custom-data'
@@ -84,6 +84,11 @@ const SpendingLimitDetailsContainer = styled.div`
   padding-left: 24px;
 `
 
+const spendingLimitTxType = (data: string | null): { isSetSpendingLimit: boolean; isDeleteSpendingLimit: boolean } => ({
+  isSetSpendingLimit: !!data && isSetAllowanceMethod(data),
+  isDeleteSpendingLimit: !!data && isDeleteAllowanceMethod(data),
+})
+
 interface NewSpendingLimitDetailsProps {
   data: DataDecoded
 }
@@ -123,21 +128,42 @@ const ModifySpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): Rea
   )
 }
 
+const DeleteSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
+  const [beneficiary, tokenAddress] = React.useMemo(() => data.parameters.map(({ value }) => value), [data.parameters])
+  const tokenInfo = useToken(tokenAddress)
+
+  return (
+    <>
+      <TxInfo>
+        <Bold>Delete Spending Limit:</Bold>
+      </TxInfo>
+      <SpendingLimitDetailsContainer>
+        <Col margin="lg">
+          <AddressInfo title="Beneficiary" address={beneficiary} />
+        </Col>
+        <Col margin="lg">{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</Col>
+      </SpendingLimitDetailsContainer>
+    </>
+  )
+}
+
 const MultiSendCustomDataAction = ({ tx, order }: { tx: MultiSendDetails; order: number }): React.ReactElement => {
   const classes = useStyles()
   const methodName = tx.dataDecoded?.method ? ` (${tx.dataDecoded.method})` : ''
   const data = tx.dataDecoded ?? decodeMethods(tx.data)
-  const isNewSpendingLimit = isSetAllowanceMethod(tx.data || '')
   const explorerUrl = getExplorerInfo(tx.to)
+  const { isSetSpendingLimit, isDeleteSpendingLimit } = spendingLimitTxType(tx.data)
+
   return (
     <Collapse
       collapseClassName={classes.collapse}
       headerWrapperClassName={classes.collapseHeaderWrapper}
       title={<IconText iconSize="sm" iconType="code" text={`Action ${order + 1}${methodName}`} textSize="lg" />}
     >
-      {isNewSpendingLimit && data ? (
+      {isSetSpendingLimit || isDeleteSpendingLimit ? (
         <TxDetailsContent>
-          <ModifySpendingLimitDetails data={data} />
+          {isSetSpendingLimit && <ModifySpendingLimitDetails data={data as DataDecoded} />}
+          {isDeleteSpendingLimit && <DeleteSpendingLimitDetails data={data as DataDecoded} />}
         </TxDetailsContent>
       ) : (
         <TxDetailsContent>
@@ -259,10 +285,13 @@ const GenericCustomData = ({
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
   const explorerUrl = recipient ? getExplorerInfo(recipient) : ''
   const txData = storedTx?.dataDecoded ?? decodeMethods(data)
-  const isNewSpendingLimit = isSetAllowanceMethod(data || '')
+  const { isSetSpendingLimit, isDeleteSpendingLimit } = spendingLimitTxType(data)
 
-  return isNewSpendingLimit && txData ? (
-    <ModifySpendingLimitDetails data={txData} />
+  return isSetSpendingLimit || isDeleteSpendingLimit ? (
+    <>
+      {isSetSpendingLimit && <ModifySpendingLimitDetails data={txData as DataDecoded} />}
+      {isDeleteSpendingLimit && <DeleteSpendingLimitDetails data={txData as DataDecoded} />}
+    </>
   ) : (
     <Block>
       {recipient && (
