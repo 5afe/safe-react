@@ -6,6 +6,8 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import cn from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -15,14 +17,13 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { md, secondary } from 'src/theme/variables'
-import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -46,7 +47,7 @@ interface RemoveModuleModal {
 const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): React.ReactElement => {
   const classes = useStyles()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
   const explorerInfo = getExplorerInfo(selectedModule[0])
@@ -54,9 +55,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): Reac
 
   const removeSelectedModule = async (): Promise<void> => {
     try {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      const [module, prevModule] = selectedModule
-      const txData = safeInstance.methods.disableModule(prevModule, module).encodeABI()
+      const txData = getDisableModuleTxData(selectedModule, safeAddress)
 
       dispatch(
         createTransaction({
