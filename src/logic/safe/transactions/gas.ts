@@ -93,141 +93,82 @@ export const estimateTxGasCosts = async (
   }
 }
 
-const getOpenEthereumErrorDataResult = (errorMessage: string): string | undefined => {
+// @todo (agustin) refactor for nethermind
+export const getOpenEthereumErrorDataResult = (errorMessage: string): string | undefined => {
   // Extracts JSON object from the error message
   const [, ...error] = errorMessage.split('\n')
-  const errorAsJSON = JSON.parse(error.join(''))
+  try {
+    const errorAsJSON = JSON.parse(error.join(''))
 
-  if (errorAsJSON?.data) {
-    const [, dataResult] = errorAsJSON.data.split('Reverted ')
-    return dataResult
+    if (errorAsJSON?.data) {
+      const [, dataResult] = errorAsJSON.data.split('Reverted ')
+      return dataResult
+    }
+  } catch (error) {
+    console.error(`Error trying to extract data from openEthereum/Nethermind error message: ${errorMessage}`)
   }
 }
 
-const getGasEstimationTxResponse = (txConfig: {
+const getGasEstimationTxResponse = async (txConfig: {
   to: string
   from: string
   data: string
-}): Promise<{ gasEstimationResponse: string; isOpenEthereumNode: boolean }> => {
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
   const web3 = getWeb3()
-  return web3.eth
-    .call(txConfig)
-    .then((result) => {
-      // GETH/Nethermind Nodes
-      // When we calculate the gas we always got the result as response for GETH/Nethermind Nodes
-      // In case that the gas is not enough we will receive an EMPTY data
-      // Otherwise we will receive the gas amount
+  try {
+    const result = await web3.eth.call(txConfig)
 
-      if (sameString(result, EMPTY_DATA)) {
-        // We throw if there is an error
-        throw new Error('There was an error retrieving the gas estimation')
-      }
-      return {
-        gasEstimationResponse: result,
-        isOpenEthereumNode: true,
-      }
-    })
-    .catch((error) => {
-      // OpenEthereum/Parity nodes
-      // When we calculate the gas for OpenEthereum/Parity nodes we will always receive the response as error
-      // In that case we check if there is empty data (which means an error)
-      // Or if there is a valid estimation amount
-      const estimationData = getOpenEthereumErrorDataResult(error.message)
+    // GETH/Nethermind Nodes
+    // In case that the gas is not enough we will receive an EMPTY data
+    // Otherwise we will receive the gas amount as hash data
 
-      if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
-        throw error
-      }
+    if (!sameString(result, EMPTY_DATA)) {
+      return new BigNumber(result.substring(138), 16).toNumber()
+    }
+  } catch (error) {
+    // OpenEthereum/Parity nodes
+    // Parity/OpenEthereum nodes always returns the response as an error
+    // So we try to extract the estimation result within the error in case is possible
+    const estimationData = getOpenEthereumErrorDataResult(error.message)
 
-      return {
-        gasEstimationResponse: estimationData,
-        isOpenEthereumNode: true,
-      }
-    })
-}
+    if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
+      throw error
+    }
 
-const calculateGasForGethAndNethermindNodes = async (
-  additionalGasBatches: number[],
-  safeAddress: string,
-  estimateData: string,
-  txGasEstimation: number,
-  dataGasEstimation: number,
-): Promise<number> => {
-  const web3 = getWeb3()
-  const batch = new web3.BatchRequest()
-  const estimationRequests = additionalGasBatches.map(
-    (additionalGas) =>
-      new Promise((resolve) => {
-        // there are no type definitions for .request, so for now ts-ignore is there
-        // Issue link: https://github.com/ethereum/web3.js/issues/3144
-        // eslint-disable-next-line
-        // @ts-ignore
-        const request = web3.eth.call.request(
-          {
-            to: safeAddress,
-            from: safeAddress,
-            data: estimateData,
-            gasPrice: 0,
-            gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
-          },
-          (error, res) => {
-            // res.data check is for OpenEthereum/Parity revert messages format
-            const isOpenEthereumRevertMsg = res && typeof res.data === 'string'
-            const isEstimationSuccessful =
-              !error &&
-              ((typeof res === 'string' && res !== EMPTY_DATA) ||
-                (isOpenEthereumRevertMsg && res.data.slice(9) !== EMPTY_DATA))
-
-            resolve({
-              success: isEstimationSuccessful,
-              estimation: txGasEstimation + additionalGas,
-            })
-          },
-        )
-
-        batch.add(request)
-      }),
-  )
-  batch.execute()
-
-  const estimationResponses = await Promise.all(estimationRequests)
-  const firstSuccessfulRequest: any = estimationResponses.find((res: any) => res.success)
-
-  if (firstSuccessfulRequest) {
-    return firstSuccessfulRequest.estimation
+    return new BigNumber(estimationData.substring(138), 16).toNumber()
   }
-  return 0
+
+  throw new Error('Error while estimating the gas required for tx')
 }
 
-const calculateGasForOpenEthereumNodes = async (
+const calculateMinimumGasForTransaction = async (
   additionalGasBatches: number[],
   safeAddress: string,
   estimateData: string,
   txGasEstimation: number,
   dataGasEstimation: number,
 ): Promise<number> => {
-  const web3 = getWeb3()
-  for (const additionalGasIterator of additionalGasBatches) {
+  for (const additionalGas of additionalGasBatches) {
+    const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
     try {
-      await web3.eth.call({
+      await getGasEstimationTxResponse({
         to: safeAddress,
         from: safeAddress,
         data: estimateData,
         gasPrice: 0,
-        // `gasLimit` is not recognised on Parity/OpenEthereum nodes, so we use json-rpc standard  `gas` instead
-        gas: txGasEstimation + dataGasEstimation + additionalGasIterator,
+        gas: amountOfGasToTryTx,
       })
+      return txGasEstimation + additionalGas
     } catch (error) {
-      // Parity/OpenEthereum nodes will always fail for this call, so we extract the return data from within the error
-      const dataResult = getOpenEthereumErrorDataResult(error.message)
-
-      if (sameString(dataResult, EMPTY_DATA)) {
-        throw error
-      }
-      return txGasEstimation + additionalGasIterator
+      console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
     }
   }
+
   return 0
 }
+
 export const estimateSafeTxGas = async (
   safe: GnosisSafe | undefined,
   safeAddress: string,
@@ -243,35 +184,25 @@ export const estimateSafeTxGas = async (
     }
 
     const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const { isOpenEthereumNode, gasEstimationResponse } = await getGasEstimationTxResponse({
+    const gasEstimationResponse = await getGasEstimationTxResponse({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
     })
 
-    const txGasEstimation = new BigNumber(gasEstimationResponse.substring(138), 16).toNumber() + 10000
+    const txGasEstimation = gasEstimationResponse + 10000
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
-    if (!isOpenEthereumNode) {
-      return await calculateGasForGethAndNethermindNodes(
-        additionalGasBatches,
-        safeAddress,
-        estimateData,
-        txGasEstimation,
-        dataGasEstimation,
-      )
-    } else {
-      return await calculateGasForOpenEthereumNodes(
-        additionalGasBatches,
-        safeAddress,
-        estimateData,
-        txGasEstimation,
-        dataGasEstimation,
-      )
-    }
+    return await calculateMinimumGasForTransaction(
+      additionalGasBatches,
+      safeAddress,
+      estimateData,
+      txGasEstimation,
+      dataGasEstimation,
+    )
   } catch (error) {
     console.error('Error calculating tx gas estimation', error)
     return 0
