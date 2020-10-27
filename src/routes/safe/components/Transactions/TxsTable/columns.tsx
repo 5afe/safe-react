@@ -4,16 +4,16 @@ import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
 import { List } from 'immutable'
 import React from 'react'
-import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
-
-import TxType from './TxType'
 
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
-import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
+import { SafeModuleTransaction, Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+
+import TxType from './TxType'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -135,13 +135,20 @@ const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
+// This follows the approach of calculating the tx information closest to the presentation components.
+// Instead of populating tx in the store with another flag, Spending Limit tx is inferred here.
+const getTxType = (tx: Transaction): TransactionTypes => {
+  const SET_ALLOWANCE_HASH = 'beaeb388'
+  const DELETE_ALLOWANCE_HASH = '885133e3'
+
+  return tx.data?.includes(SET_ALLOWANCE_HASH) || tx.data?.includes(DELETE_ALLOWANCE_HASH)
+    ? TransactionTypes.SPENDING_LIMIT
+    : tx.type
+}
+
 const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): TableData => {
   const txDate = tx.submissionDate
-  // given that setAllowance will always be part of
-  // a spendingLimit related tx (as of now, until removeDelegate is implemented)
-  // we can use this method to identify an SpendingLimit tx
-  const setAllowanceHash = 'beaeb388'
-  const txType = tx.data?.includes(setAllowanceHash) ? TransactionTypes.SPENDING_LIMIT : tx.type
+  const txType = getTxType(tx)
 
   return {
     [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',

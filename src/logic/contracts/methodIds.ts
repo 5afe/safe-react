@@ -107,6 +107,11 @@ export const isSetAllowanceMethod = (data: string): boolean => {
   return SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId] === SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE
 }
 
+export const isDeleteAllowanceMethod = (data: string): boolean => {
+  const methodId = data.slice(0, 10)
+  return SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId] === SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE
+}
+
 export const decodeParamsFromSpendingLimit = (data: string): DataDecoded | null => {
   const [methodId, paramsHash] = [data.slice(0, 10), data.slice(10)]
   const method = SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId]
@@ -146,6 +151,17 @@ export const decodeParamsFromSpendingLimit = (data: string): DataDecoded | null 
         payment: 'uint96',
         delegate: 'address',
         signature: 'bytes',
+      }
+
+      const parameters = decodeInfo({ paramsHash, params })
+
+      return { method, parameters }
+    }
+
+    case SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE: {
+      const params = {
+        delegate: 'address',
+        token: 'address',
       }
 
       const parameters = decodeInfo({ paramsHash, params })
