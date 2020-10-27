@@ -91,19 +91,28 @@ export type SpendingLimitRow = {
 const discardZeroAllowance = ({ amount, resetTimeMin }: SpendingLimitRow): boolean =>
   !(amount === '0' && resetTimeMin === '0')
 
+type TokenSpendingLimit = [string, string, string, string, string]
+
+type TokenSpendingLimitContext = {
+  delegate: string
+  token: string
+}
+
+type TokenSpendingLimitRequest = [TokenSpendingLimitContext, TokenSpendingLimit | undefined]
+
 export const requestAllowancesByDelegatesAndTokens = async (
   safeAddress: string,
   tokensByDelegate: [string, string[] | undefined][],
 ): Promise<SpendingLimitRow[]> => {
   const batch = new web3ReadOnly.BatchRequest()
 
-  const whenRequestValues: any[] = []
+  const whenRequestValues: Promise<TokenSpendingLimitRequest>[] = []
 
   for (const [delegate, tokens] of tokensByDelegate) {
     if (tokens) {
       for (const token of tokens) {
         whenRequestValues.push(
-          generateBatchRequests<[{ delegate: string; token: string }, SpendingLimitRow | undefined]>({
+          generateBatchRequests<[TokenSpendingLimitContext, TokenSpendingLimit]>({
             abi: SpendingLimitModule.abi as AbiItem[],
             address: SPENDING_LIMIT_MODULE_ADDRESS,
             methods: [{ method: 'getTokenAllowance', args: [safeAddress, delegate, token] }],
@@ -119,15 +128,22 @@ export const requestAllowancesByDelegatesAndTokens = async (
 
   return Promise.all(whenRequestValues).then((allowances) =>
     allowances
-      .map(([{ delegate, token }, [amount, spent, resetTimeMin, lastResetMin, nonce]]) => ({
-        delegate,
-        token,
-        amount,
-        spent,
-        resetTimeMin,
-        lastResetMin,
-        nonce,
-      }))
+      // first, we filter out those records whose tokenSpendingLimit is undefined
+      .filter(([, tokenSpendingLimit]) => tokenSpendingLimit)
+      // then, we build the SpendingLimitRow object
+      .map(([{ delegate, token }, tokenSpendingLimit]) => {
+        const [amount, spent, resetTimeMin, lastResetMin, nonce] = tokenSpendingLimit as TokenSpendingLimit
+
+        return {
+          delegate,
+          token,
+          amount,
+          spent,
+          resetTimeMin,
+          lastResetMin,
+          nonce,
+        }
+      })
       .filter(discardZeroAllowance),
   )
 }
