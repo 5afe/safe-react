@@ -3253,14 +3253,6 @@
     "@typescript-eslint/typescript-estree" "2.34.0"
     eslint-visitor-keys "^1.1.0"
 
-"@typescript-eslint/scope-manager@3.10.1":
-  version "3.10.1"
-  resolved "https://registry.yarnpkg.com/@typescript-eslint/scope-manager/-/scope-manager-3.10.1.tgz#aa8455f6d53b0c506f093c378671a695eddca32a"
-  integrity sha512-W/leMDphojcZXgpr2L1Lh3OvFfJQtT/9fAQBVx9nAbgW4lYQE6s7GzniAEFI1ThTLe3XbJuL8DcqC32zO8LdGg==
-  dependencies:
-    "@typescript-eslint/types" "3.10.1"
-    "@typescript-eslint/visitor-keys" "3.10.1"
-
 "@typescript-eslint/types@3.10.1":
   version "3.10.1"
   resolved "https://registry.yarnpkg.com/@typescript-eslint/types/-/types-3.10.1.tgz#1d7463fa7c32d8a23ab508a803ca2fe26e758727"

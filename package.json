@@ -249,7 +249,6 @@
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "3.10.1",
     "@typescript-eslint/parser": "3.10.1",
-    "@typescript-eslint/scope-manager": "3.10.1",
     "autoprefixer": "9.8.6",
     "cross-env": "^7.0.2",
     "dotenv": "^8.2.0",
