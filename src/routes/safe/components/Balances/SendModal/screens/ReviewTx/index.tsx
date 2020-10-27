@@ -24,11 +24,12 @@ import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import ArrowDown from '../assets/arrow-down.svg'
@@ -43,6 +44,8 @@ export type ReviewTxProp = {
   amount: string
   txRecipient: string
   token: string
+  txType?: string
+  tokenSpendingLimit?: SpendingLimit
 }
 
 type ReviewTxProps = {
@@ -111,12 +114,12 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
       return
     }
 
-    if (isSpendingLimit && txToken) {
+    if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
       const spendingLimit = getSpendingLimitContract()
       spendingLimit.methods
         .executeAllowanceTransfer(
           safeAddress,
-          txToken.address === nativeCoin.address ? ZERO_ADDRESS : txToken.address,
+          sameAddress(txToken.address, nativeCoin.address) ? ZERO_ADDRESS : txToken.address,
           tx.recipientAddress,
           toTokenUnit(tx.amount, txToken.decimals),
           ZERO_ADDRESS,

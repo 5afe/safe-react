@@ -25,6 +25,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -62,6 +63,8 @@ export type SendFundsTx = {
   amount?: string
   recipientAddress?: string
   token?: string
+  txType?: string
+  tokenSpendingLimit?: SpendingLimit
 }
 
 type SendFundsProps = {
