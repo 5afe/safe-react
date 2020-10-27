@@ -10,7 +10,7 @@ import loadActiveTokens from 'src/logic/tokens/store/actions/loadActiveTokens'
 import loadDefaultSafe from 'src/logic/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { store } from 'src/store'
-import { SENTRY_DNS } from './utils/constants'
+import { SENTRY_DSN } from './utils/constants'
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
@@ -20,7 +20,7 @@ store.dispatch(loadDefaultSafe())
 store.dispatch(loadCurrentSessionFromStorage())
 
 Sentry.init({
-  dsn: SENTRY_DNS,
+  dsn: SENTRY_DSN,
   release: `safe-react@${process.env.REACT_APP_APP_VERSION}`,
   integrations: [new Integrations.BrowserTracing()],
   sampleRate: 1,
