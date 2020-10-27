@@ -38,7 +38,20 @@ const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewTx = ({ onClose, onPrev, tx }) => {
+export type ReviewTxProp = {
+  recipientAddress: string
+  amount: string
+  txRecipient: string
+  token: string
+}
+
+type ReviewTxProps = {
+  onClose: () => void
+  onPrev: () => void
+  tx: ReviewTxProp
+}
+
+const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -69,7 +82,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
           .encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 
@@ -94,6 +107,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
     const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     if (!safeAddress) {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
       return
     }
 
@@ -117,7 +131,7 @@ const ReviewTx = ({ onClose, onPrev, tx }) => {
       dispatch(
         createTransaction({
           safeAddress,
-          to: txRecipient,
+          to: txRecipient as string,
           valueInWei: txAmount,
           txData: data,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,

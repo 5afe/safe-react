@@ -42,7 +42,7 @@ import { Transaction, TransactionStatus, TxArgs } from 'src/logic/safe/store/mod
 import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
-import { Dispatch } from './types'
+import { Dispatch, DispatchReturn } from './types'
 
 export const removeTxFromStore = (
   tx: Transaction,
@@ -110,7 +110,7 @@ interface CreateTransactionArgs {
   safeTxGas?: number
 }
 
-type CreateTransactionAction = ThunkAction<Promise<void>, AppReduxState, undefined, AnyAction>
+type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 
@@ -129,7 +129,7 @@ const createTransaction = (
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
   onError?: ErrorEventHandler,
-): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
   const state = getState()
 
   if (navigateToTransactionsTab) {

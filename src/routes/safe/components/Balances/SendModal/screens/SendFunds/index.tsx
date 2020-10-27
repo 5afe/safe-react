@@ -58,16 +58,18 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
+export type SendFundsTx = {
+  amount?: string
+  recipientAddress?: string
+  token?: string
+}
+
 type SendFundsProps = {
-  initialValues: {
-    amount?: string
-    recipientAddress?: string
-    token?: string
-  }
+  initialValues: SendFundsTx
   onClose: () => void
   onNext: (txInfo: unknown) => void
-  recipientAddress: string
-  selectedToken: string
+  recipientAddress?: string
+  selectedToken?: string
 }
 
 const { nativeCoin } = getNetworkInfo()

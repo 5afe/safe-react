@@ -1,7 +1,7 @@
 import { useEffect, useRef } from 'react'
 import { batch, useDispatch } from 'react-redux'
 
-import fetchCollectibles from 'src/logic/collectibles/store/actions/fetchCollectibles'
+import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import fetchSafeTokens from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchEtherBalance from 'src/logic/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
