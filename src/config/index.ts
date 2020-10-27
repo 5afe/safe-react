@@ -1,8 +1,9 @@
+import memoize from 'lodash.memoize'
+
 import networks from 'src/config/networks'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, Wallets, GasPriceOracle } from 'src/config/networks/network.d'
 import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
-import memoize from 'lodash.memoize'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
@@ -57,11 +58,11 @@ const configuration = (): NetworkSpecificConfiguration => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-export const getTxServiceUrl = (): string => getConfig()?.txServiceUrl
+export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
-export const getRelayUrl = (): string | undefined => getConfig()?.relayApiUrl
+export const getRelayUrl = (): string | undefined => getConfig().relayApiUrl
 
-export const getGnosisSafeAppsUrl = (): string => getConfig()?.safeAppsUrl
+export const getGnosisSafeAppsUrl = (): string => getConfig().safeAppsUrl
 
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
@@ -71,31 +72,27 @@ export const getRpcServiceUrl = (): string => {
   const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
 
   if (usesInfuraRPC) {
-    return `${getConfig()?.rpcServiceUrl}/${INFURA_TOKEN}`
+    return `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}`
   }
 
-  return getConfig()?.rpcServiceUrl
+  return getConfig().rpcServiceUrl
 }
 
+export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
+
+export const getTokensServiceBaseUrl = () => `${getTxServiceUrl()}/tokens`
+
 export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: string } => ({
-  name: getConfig()?.networkExplorerName,
-  url: getConfig()?.networkExplorerUrl,
-  apiUrl: getConfig()?.networkExplorerApiUrl,
+  name: getConfig().networkExplorerName,
+  url: getConfig().networkExplorerUrl,
+  apiUrl: getConfig().networkExplorerApiUrl,
 })
 
-export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig()?.disabledFeatures || []
+export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig().disabledFeatures || []
 
 export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 
-export const getNetworkInfo = (): NetworkSettings => getConfig()?.network
-
-export const getTxServiceUriFrom = (safeAddress: string) => `/safes/${safeAddress}/transactions/`
-
-export const getIncomingTxServiceUriTo = (safeAddress: string) => `/safes/${safeAddress}/incoming-transfers/`
-
-export const getAllTransactionsUriFrom = (safeAddress: string) => `/safes/${safeAddress}/all-transactions/`
-
-export const getSafeCreationTxUri = (safeAddress: string) => `/safes/${safeAddress}/creation/`
+export const getNetworkInfo = (): NetworkSettings => getConfig().network
 
 export const getGoogleAnalyticsTrackingID = (): string => GOOGLE_ANALYTICS_ID
 
@@ -163,11 +160,11 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
 
   switch (networkInfo.id) {
     default: {
-      const type = hash.length > 42 ? 'tx' : 'address'  
+      const type = hash.length > 42 ? 'tx' : 'address'
       return () => ({
         url: `${url}/${type}/${hash}`,
         alt:  name || '',
       })
-    }      
+    }
   }
 }

@@ -14,7 +14,7 @@ export type SafeRecordProps = {
   threshold: number
   ethBalance: string
   owners: List<SafeOwner>
-  modules: ModulePair[] | null
+  modules?: ModulePair[] | null
   activeTokens: Set<string>
   activeAssets: Set<string>
   blacklistedTokens: Set<string>
