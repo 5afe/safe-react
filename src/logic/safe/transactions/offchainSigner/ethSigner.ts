@@ -10,7 +10,7 @@ type EthSignerArgs = {
 }
 
 export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<string> => {
-  const web3 = await getWeb3()
+  const web3 = getWeb3()
 
   return new Promise(function (resolve, reject) {
     const provider = web3.currentProvider as AbstractProvider
