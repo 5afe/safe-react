@@ -1,4 +1,4 @@
-import Onboard from 'bnc-onboard'
+import Onboard from '@nicosampler/bnc-onboard'
 import React from 'react'
 
 import Button from 'src/components/layout/Button'

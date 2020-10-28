@@ -1,4 +1,4 @@
-import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
+import { WalletInitOptions } from '@nicosampler/bnc-onboard/dist/src/interfaces'
 
 import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
 import { WALLETS } from 'src/config/networks/network.d'
