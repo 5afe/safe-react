@@ -67,8 +67,6 @@ const Balances = (): React.ReactElement => {
     }))
   }, [featuresEnabled])
 
-  throw Error('A test error for ErrorBoundary')
-
   const onShow = (action) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
   }
