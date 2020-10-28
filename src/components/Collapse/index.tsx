@@ -16,14 +16,14 @@ const Header = styled.div`
   align-items: center;
 `
 
-interface Collapse {
+interface CollapseProps {
   title: React.ReactElement | string
   description?: React.ReactElement | string
   collapseClassName?: string
   headerWrapperClassName?: string
 }
 
-const Collapse: React.FC<Collapse> = ({
+const Collapse: React.FC<CollapseProps> = ({
   children,
   description = null,
   title,
