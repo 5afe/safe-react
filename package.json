@@ -148,9 +148,9 @@
     }
   },
   "resolutions": {
-    "node-gyp": "^5.1.0",
     "@typescript-eslint/eslint-plugin": "^4.5.0",
-    "@typescript-eslint/parser": "^4.5.0"
+    "@typescript-eslint/parser": "^4.5.0",
+    "node-gyp": "^5.1.0"
   },
   "browserslist": {
     "production": [
@@ -244,8 +244,8 @@
     "@types/jest": "^26.0.15",
     "@types/lodash.memoize": "^4.1.6",
     "@types/node": "^14.14.5",
-    "@types/react": "^16.9.53",
-    "@types/react-dom": "^16.9.8",
+    "@types/react": "^16.9.54",
+    "@types/react-dom": "^16.9.9",
     "@types/react-redux": "^7.1.9",
     "@types/react-router-dom": "^5.1.6",
     "@types/styled-components": "^5.1.4",
