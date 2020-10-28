@@ -1,63 +1,70 @@
-import { getInfuraUrl } from '../getWeb3'
+import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
-const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
+import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
+import { WALLETS } from 'src/config/networks/network.d'
+import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
-const PORTIS_DAPP_ID = isMainnet ? process.env.REACT_APP_PORTIS_ID : '852b763d-f28b-4463-80cb-846d7ec5806b'
-// const SQUARELINK_CLIENT_ID = isMainnet ? process.env.REACT_APP_SQUARELINK_ID : '46ce08fe50913cfa1b78'
-const FORTMATIC_API_KEY = isMainnet ? process.env.REACT_APP_FORTMATIC_KEY : 'pk_test_CAD437AA29BE0A40'
+const networkId = getNetworkId()
+const disabledWallets = getNetworkConfigDisabledWallets()
 
-const infuraUrl = getInfuraUrl()
+type Wallet = WalletInitOptions & {
+  desktop: boolean
+  walletName: WALLETS
+}
 
-const wallets = [
-  { walletName: 'metamask', preferred: true, desktop: false },
+const rpcUrl = getRpcServiceUrl()
+const wallets: Wallet[] = [
+  { walletName: WALLETS.METAMASK, preferred: true, desktop: false },
   {
-    walletName: 'walletConnect',
+    walletName: WALLETS.WALLET_CONNECT,
     preferred: true,
-    infuraKey: process.env.REACT_APP_INFURA_TOKEN,
+    // as stated in the documentation, `infuraKey` is not mandatory if rpc is provided
+    rpc: { [networkId]: rpcUrl },
     desktop: true,
     bridge: 'https://safe-walletconnect.gnosis.io/',
   },
   {
-    walletName: 'trezor',
+    walletName: WALLETS.TREZOR,
     appUrl: 'gnosis-safe.io',
     preferred: true,
     email: 'safe@gnosis.io',
     desktop: true,
-    rpcUrl: infuraUrl,
+    rpcUrl,
   },
   {
-    walletName: 'ledger',
+    walletName: WALLETS.LEDGER,
     desktop: true,
     preferred: true,
-    rpcUrl: infuraUrl,
+    rpcUrl,
     LedgerTransport: (window as any).TransportNodeHid,
   },
-  { walletName: 'trust', preferred: true, desktop: false },
-  { walletName: 'dapper', desktop: false },
+  { walletName: WALLETS.TRUST, preferred: true, desktop: false },
+  { walletName: WALLETS.DAPPER, desktop: false },
   {
-    walletName: 'fortmatic',
-    apiKey: FORTMATIC_API_KEY,
+    walletName: WALLETS.FORTMATIC,
+    apiKey: FORTMATIC_KEY,
     desktop: true,
   },
   {
-    walletName: 'portis',
-    apiKey: PORTIS_DAPP_ID,
+    walletName: WALLETS.PORTIS,
+    apiKey: PORTIS_ID,
     desktop: true,
   },
-  { walletName: 'authereum', desktop: false },
-  { walletName: 'torus', desktop: true },
-  { walletName: 'unilogin', desktop: true },
-  { walletName: 'coinbase', desktop: false },
-  { walletName: 'walletLink', rpcUrl: infuraUrl, desktop: false },
-  { walletName: 'opera', desktop: false },
-  { walletName: 'operaTouch', desktop: false },
+  { walletName: WALLETS.AUTHEREUM, desktop: false },
+  { walletName: WALLETS.TORUS, desktop: true },
+  { walletName: WALLETS.UNILOGIN, desktop: true },
+  { walletName: WALLETS.COINBASE, desktop: false },
+  { walletName: WALLETS.WALLET_LINK, rpcUrl, desktop: false },
+  { walletName: WALLETS.OPERA, desktop: false },
+  { walletName: WALLETS.OPERA_TOUCH, desktop: false },
 ]
 
-export const getSupportedWallets = () => {
+export const getSupportedWallets = (): WalletInitOptions[] => {
   const { isDesktop } = window as any
   /* eslint-disable no-unused-vars */
+  if (isDesktop) {
+    return wallets.filter((wallet) => wallet.desktop).map(({ desktop, ...rest }) => rest)
+  }
 
-  if (isDesktop) return wallets.filter((wallet) => wallet.desktop).map(({ desktop, ...rest }) => rest)
-
-  return wallets.map(({ desktop, ...rest }) => rest)
+  return wallets.map(({ desktop, ...rest }) => rest).filter((w) => !disabledWallets.includes(w.walletName))
 }

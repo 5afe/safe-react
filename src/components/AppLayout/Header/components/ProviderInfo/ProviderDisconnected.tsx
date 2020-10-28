@@ -1,11 +1,10 @@
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 
-import CircleDot from 'src/components/AppLayout/Header/components/CircleDot'
-
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { sm } from 'src/theme/variables'
+import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const styles = () => ({
   network: {
@@ -27,7 +26,7 @@ const styles = () => ({
 
 const ProviderDisconnected = ({ classes }) => (
   <>
-    <CircleDot circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={17} mode="error" />
+    <KeyRing circleSize={35} dotRight={11} dotSize={16} dotTop={24} keySize={17} mode="error" />
     <Col className={classes.account} end="sm" layout="column" middle="xs">
       <Paragraph
         className={classes.network}

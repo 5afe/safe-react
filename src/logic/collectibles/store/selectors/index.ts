@@ -1,22 +1,33 @@
 import { createSelector } from 'reselect'
-import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/OpenSea'
+import { NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 
 import { AppReduxState } from 'src/store'
 import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
 import { safeActiveAssetsSelector } from 'src/logic/safe/store/selectors'
 
-export const nftAssetsSelector = (state: AppReduxState): NFTAssets => state[NFT_ASSETS_REDUCER_ID]
-export const nftTokensSelector = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_REDUCER_ID]
+export const nftAssets = (state: AppReduxState): NFTAssets => state[NFT_ASSETS_REDUCER_ID]
+export const nftTokens = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_REDUCER_ID]
 
-export const nftAssetsListSelector = createSelector(nftAssetsSelector, (assets): NFTAsset[] => {
+export const nftAssetsSelector = createSelector(nftAssets, (assets) => assets)
+
+export const nftTokensSelector = createSelector(nftTokens, (tokens) => tokens)
+
+export const nftAssetsListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
   return assets ? Object.values(assets) : []
+})
+
+export const availableNftAssetsAddresses = createSelector(nftTokensSelector, (userNftTokens): string[] => {
+  return Array.from(new Set(userNftTokens.map((nftToken) => nftToken.assetAddress)))
 })
 
 export const activeNftAssetsListSelector = createSelector(
   nftAssetsListSelector,
   safeActiveAssetsSelector,
-  (assets, activeAssetsList): NFTAsset[] => {
-    return assets.filter(({ address }) => activeAssetsList.has(address))
+  availableNftAssetsAddresses,
+  (assets, activeAssetsList, availableNftAssetsAddresses): NFTAsset[] => {
+    return assets
+      .filter(({ address }) => activeAssetsList.has(address))
+      .filter(({ address }) => availableNftAssetsAddresses.includes(address))
   },
 )
 

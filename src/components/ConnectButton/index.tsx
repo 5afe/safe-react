@@ -8,10 +8,9 @@ import { fetchProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
+import { BLOCKNATIVE_KEY } from 'src/utils/constants'
 
-const isMainnet = process.env.REACT_APP_NETWORK === 'mainnet'
-
-const BLOCKNATIVE_API_KEY = isMainnet ? process.env.REACT_APP_BLOCKNATIVE_KEY : '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
+const networkId = getNetworkId()
 
 let lastUsedAddress = ''
 let providerName
@@ -19,8 +18,8 @@ let providerName
 const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
-  dappId: BLOCKNATIVE_API_KEY,
-  networkId: getNetworkId(),
+  dappId: BLOCKNATIVE_KEY,
+  networkId: networkId,
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {

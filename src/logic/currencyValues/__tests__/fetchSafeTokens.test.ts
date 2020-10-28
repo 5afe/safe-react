@@ -1,7 +1,8 @@
-import { aNewStore } from 'src/store'
-import fetchTokenCurrenciesBalances from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import axios from 'axios'
-import { getTxServiceHost } from 'src/config'
+
+import { getSafeServiceBaseUrl } from 'src/config'
+import { fetchTokenCurrenciesBalances } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { aNewStore } from 'src/store'
 
 jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
@@ -19,26 +20,28 @@ describe('fetchTokenCurrenciesBalances', () => {
     // given
     const expectedResult = [
       {
-        balance: '849890000000000000',
-        balanceUsd: '337.2449',
-        token: null,
         tokenAddress: null,
-        usdConversion: '396.81',
+        token: null,
+        balance: '849890000000000000',
+        fiatBalance: '337.2449',
+        fiatConversion: '396.81',
+        fiatCode: 'USD',
       },
       {
-        balance: '24698677800000000000',
-        balanceUsd: '29.3432',
+        tokenAddress: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
         token: {
           name: 'Dai',
           symbol: 'DAI',
           decimals: 18,
           logoUri: 'https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png',
         },
-        tokenAddress: '0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa',
-        usdConversion: '1.188',
+        balance: '24698677800000000000',
+        fiatBalance: '29.3432',
+        fiatConversion: '1.188',
+        fiatCode: 'USD',
       },
     ]
-    const apiUrl = getTxServiceHost()
+    const apiUrl = getSafeServiceBaseUrl(safeAddress)
 
     // @ts-ignore
     axios.get.mockImplementationOnce(() => Promise.resolve(expectedResult))
@@ -49,8 +52,6 @@ describe('fetchTokenCurrenciesBalances', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`, {
-      params: { limit: 3000 },
-    })
+    expect(axios.get).toBeCalledWith(`${apiUrl}/balances/usd/?exclude_spam=${excludeSpamTokens}`)
   })
 })

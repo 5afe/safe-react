@@ -1,4 +1,5 @@
 import { List, Map, Record, RecordOf, Set } from 'immutable'
+import { FEATURES } from 'src/config/networks/network.d'
 
 export type SafeOwner = {
   name: string
@@ -13,7 +14,7 @@ export type SafeRecordProps = {
   threshold: number
   ethBalance: string
   owners: List<SafeOwner>
-  modules: ModulePair[] | null
+  modules?: ModulePair[] | null
   activeTokens: Set<string>
   activeAssets: Set<string>
   blacklistedTokens: Set<string>
@@ -24,7 +25,7 @@ export type SafeRecordProps = {
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
-  featuresEnabled: Array<string>
+  featuresEnabled: Array<FEATURES>
 }
 
 const makeSafe = Record<SafeRecordProps>({
@@ -38,7 +39,7 @@ const makeSafe = Record<SafeRecordProps>({
   activeAssets: Set(),
   blacklistedTokens: Set(),
   blacklistedAssets: Set(),
-  balances: Map({}),
+  balances: Map(),
   nonce: 0,
   latestIncomingTxBlock: 0,
   recurringUser: undefined,

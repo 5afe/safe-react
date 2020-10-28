@@ -9,16 +9,17 @@ import {
   RequestId,
   Transaction,
   LowercaseNetworks,
+  SendTransactionParams,
 } from '@gnosis.pm/safe-apps-sdk'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
-import { getTxServiceHost } from 'src/config/'
+import { getNetworkName, getTxServiceUrl } from 'src/config/'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
@@ -38,13 +39,11 @@ interface CustomMessageEvent extends MessageEvent {
   }
 }
 
-interface InterfaceMessageRequest extends InterfaceMessageProps<InterfaceMessageIds> {
-  requestId: number | string
-}
+const NETWORK_NAME = getNetworkName()
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openConfirmationModal: (txs: Transaction[], requestId: RequestId) => void,
+  openConfirmationModal: (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
@@ -52,7 +51,6 @@ const useIframeMessageHandler = (
   const safeName = useSelector(safeNameSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const network = useSelector(networkSelector)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -70,17 +68,65 @@ const useIframeMessageHandler = (
   )
 
   useEffect(() => {
-    const handleIframeMessage = (msg: CustomMessageEvent) => {
-      if (!msg?.data.messageId) {
+    const handleIframeMessage = (
+      messageId: SDKMessageIds,
+      messagePayload: SDKMessageToPayload[typeof messageId],
+      requestId: RequestId,
+    ): void => {
+      if (!messageId) {
         console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
-      const { requestId } = msg.data
 
-      switch (msg.data.messageId) {
+      switch (messageId) {
+        // typescript doesn't narrow type in switch/case statements
+        // issue: https://github.com/microsoft/TypeScript/issues/20375
+        // possible solution: https://stackoverflow.com/a/43879897/7820085
         case SDK_MESSAGES.SEND_TRANSACTIONS: {
-          if (msg.data.data) {
-            openConfirmationModal(msg.data.data, requestId)
+          if (messagePayload) {
+            openConfirmationModal(
+              messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS],
+              undefined,
+              requestId,
+            )
+          }
+          break
+        }
+
+        case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
+          const payload = messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS_V2]
+          if (payload) {
+            openConfirmationModal(payload.txs, payload.params, requestId)
+          }
+          break
+        }
+
+        case SDK_MESSAGES.RPC_CALL: {
+          const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
+
+          if (
+            web3ReadOnly.currentProvider !== null &&
+            typeof web3ReadOnly.currentProvider !== 'string' &&
+            'send' in web3ReadOnly.currentProvider
+          ) {
+            web3ReadOnly.currentProvider?.send?.(
+              {
+                jsonrpc: '2.0',
+                method: payload?.call,
+                params: payload?.params,
+                id: '1',
+              },
+              (err, res) => {
+                if (!err) {
+                  const rpcCallMsg = {
+                    messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
+                    data: res,
+                  }
+
+                  sendMessageToIframe(rpcCallMsg, requestId)
+                }
+              },
+            )
           }
           break
         }
@@ -90,14 +136,14 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: network.toLowerCase() as LowercaseNetworks,
+              network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }
           const envInfoMessage = {
             messageId: INTERFACE_MESSAGES.ENV_INFO,
             data: {
-              txServiceUrl: getTxServiceHost(),
+              txServiceUrl: getTxServiceUrl(),
             },
           }
 
@@ -106,7 +152,7 @@ const useIframeMessageHandler = (
           break
         }
         default: {
-          console.error(`ThirdPartyApp: A message was received with an unknown message id ${msg.data.messageId}.`)
+          console.error(`ThirdPartyApp: A message was received with an unknown message id ${messageId}.`)
           break
         }
       }
@@ -119,7 +165,7 @@ const useIframeMessageHandler = (
         console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
         return
       }
-      handleIframeMessage(message)
+      handleIframeMessage(message.data.messageId, message.data.data, message.data.requestId)
     }
 
     window.addEventListener('message', onIframeMessage)
@@ -132,7 +178,6 @@ const useIframeMessageHandler = (
     dispatch,
     enqueueSnackbar,
     ethBalance,
-    network,
     openConfirmationModal,
     safeAddress,
     safeName,

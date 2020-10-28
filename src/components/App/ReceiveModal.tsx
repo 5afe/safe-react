@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
 import EtherscanBtn from 'src/components/EtherscanBtn'
@@ -13,9 +13,11 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
+import { border, fontColor, lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
+import { getNetworkInfo } from 'src/config'
 
+const networkInfo = getNetworkInfo()
 const useStyles = makeStyles(
   createStyles({
     heading: {
@@ -34,6 +36,12 @@ const useStyles = makeStyles(
       padding: md,
       borderRadius: '6px',
       border: `1px solid ${secondaryText}`,
+    },
+    networkInfo: {
+      backgroundColor: `${networkInfo?.backgroundColor ?? border}`,
+      color: `${networkInfo?.textColor ?? fontColor}`,
+      padding: md,
+      marginBottom: 0,
     },
     annotation: {
       margin: lg,
@@ -79,7 +87,7 @@ type Props = {
   safeName: string
 }
 
-const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
+const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement => {
   const classes = useStyles()
 
   return (
@@ -93,9 +101,12 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
         </IconButton>
       </Row>
       <Hairline />
+      <Paragraph className={classes.networkInfo} noMargin size="lg" weight="bolder">
+        {networkInfo.label} Network only send {networkInfo.label} assets to this Safe.
+      </Paragraph>
       <Paragraph className={classes.annotation} noMargin size="lg">
-        This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send
-        ETH and ERC-20 tokens to this address!
+        This is the address of your Safe. Deposit funds by scanning the QR code or copying the address below. Only send{' '}
+        {networkInfo.nativeCoin.name} and ERC-20 tokens to this address!
       </Paragraph>
       <Col layout="column" middle="xs">
         <Paragraph className={classes.safeName} noMargin size="lg" weight="bold">
@@ -115,7 +126,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props) => {
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn type="address" value={safeAddress} />
+          <EtherscanBtn value={safeAddress} />
         </Block>
       </Col>
       <Hairline />

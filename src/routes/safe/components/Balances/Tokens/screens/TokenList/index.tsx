@@ -1,6 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
-import { makeStyles } from '@material-ui/core/styles'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import { List, Set } from 'immutable'
@@ -9,7 +8,7 @@ import React, { useState } from 'react'
 import { FixedSizeList } from 'react-window'
 
 import TokenRow from './TokenRow'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -32,14 +31,18 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
       token.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const useStyles = makeStyles(styles)
-
 type Props = {
   setActiveScreen: (newScreen: string) => void
   tokens: List<Token>
   activeTokens: List<Token>
   blacklistedTokens: Set<string>
   safeAddress: string
+}
+
+export type ItemData = {
+  tokens: List<Token>
+  activeTokensAddresses: Set<string>
+  onSwitch: (token: Token) => () => void
 }
 
 export const TokenList = (props: Props): React.ReactElement => {
@@ -59,7 +62,6 @@ export const TokenList = (props: Props): React.ReactElement => {
 
   const onCancelSearch = () => {
     setFilter('')
-    this.setState(() => ({ filter: '' }))
   }
 
   const onChangeSearchBar = (value: string) => {
@@ -85,16 +87,11 @@ export const TokenList = (props: Props): React.ReactElement => {
     dispatch(updateBlacklistedTokens(safeAddress, newBlacklistedTokensAddresses))
   }
 
-  const createItemData = (
-    tokens: List<Token>,
-    activeTokensAddresses: Set<string>,
-  ): { tokens: List<Token>; activeTokensAddresses: Set<string>; onSwitch: (token: Token) => void } => {
-    return {
-      tokens,
-      activeTokensAddresses,
-      onSwitch: onSwitch,
-    }
-  }
+  const createItemData = (tokens: List<Token>, activeTokensAddresses: Set<string>): ItemData => ({
+    tokens,
+    activeTokensAddresses,
+    onSwitch,
+  })
 
   const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
 

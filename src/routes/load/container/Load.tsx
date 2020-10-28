@@ -1,5 +1,6 @@
 import * as React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 import Layout from 'src/routes/load/components/Layout'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
@@ -77,7 +78,12 @@ const Load = (): React.ReactElement => {
 
   return (
     <Page>
-      <Layout onLoadSafeSubmit={onLoadSafeSubmit} network={network} userAddress={userAddress} provider={provider} />
+      <Layout
+        onLoadSafeSubmit={onLoadSafeSubmit}
+        network={ETHEREUM_NETWORK[network]}
+        userAddress={userAddress}
+        provider={provider}
+      />
     </Page>
   )
 }

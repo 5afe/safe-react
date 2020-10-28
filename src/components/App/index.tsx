@@ -5,10 +5,10 @@ import { useSelector } from 'react-redux'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
-import AlertIcon from './assets/alert.svg'
-import CheckIcon from './assets/check.svg'
-import ErrorIcon from './assets/error.svg'
-import InfoIcon from './assets/info.svg'
+import AlertIcon from 'src/assets/icons/alert.svg'
+import CheckIcon from 'src/assets/icons/check.svg'
+import ErrorIcon from 'src/assets/icons/error.svg'
+import InfoIcon from 'src/assets/icons/info.svg'
 
 import AppLayout from 'src/components/AppLayout'
 import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
@@ -16,8 +16,8 @@ import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
 import Img from 'src/components/layout/Img'
-import { getNetwork } from 'src/config'
-import { ETHEREUM_NETWORK } from 'src/logic/wallets/getWeb3'
+import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
@@ -26,11 +26,11 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors/index'
+import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-import Receive from './ReceiveModal'
+import ReceiveModal from './ReceiveModal'
 import { useSidebarItems } from 'src/components/AppLayout/Sidebar/useSidebarItems'
 
 const notificationStyles = {
@@ -46,6 +46,12 @@ const notificationStyles = {
   info: {
     background: '#fff',
   },
+  receiveModal: {
+    height: 'auto',
+    maxWidth: 'calc(100% - 30px)',
+    minHeight: '544px',
+    overflow: 'hidden',
+  },
 }
 
 const Frame = styled.div`
@@ -55,7 +61,7 @@ const Frame = styled.div`
   max-width: 100%;
 `
 
-const desiredNetwork = getNetwork()
+const desiredNetwork = getNetworkId()
 
 const useStyles = makeStyles(notificationStyles)
 
@@ -67,7 +73,7 @@ const App: React.FC = ({ children }) => {
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeName = useSelector(safeNameSelector) ?? ''
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
@@ -77,7 +83,7 @@ const App: React.FC = ({ children }) => {
   useLoadSafe(safeAddress)
   useSafeScheduledUpdates(safeAddress)
 
-  const sendFunds = safeActionsState.sendFunds as { isOpen: boolean; selectedToken: string }
+  const sendFunds = safeActionsState.sendFunds
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
@@ -138,10 +144,11 @@ const App: React.FC = ({ children }) => {
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
-              open={safeActionsState.showReceive as boolean}
+              open={safeActionsState.showReceive}
+              paperClassName={classes.receiveModal}
               title="Receive Tokens"
             >
-              <Receive onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
+              <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />
             </Modal>
           )}
         </>

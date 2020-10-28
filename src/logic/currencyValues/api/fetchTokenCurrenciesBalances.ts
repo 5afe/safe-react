@@ -1,28 +1,22 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceHost } from 'src/config'
+import { getSafeServiceBaseUrl } from 'src/config'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 
 export type BalanceEndpoint = {
-  balance: string
-  balanceUsd: string
   tokenAddress: string
   token?: TokenProps
-  usdConversion: string
+  balance: string
+  fiatBalance: string
+  fiatConversion: string
+  fiatCode: string
 }
 
-const fetchTokenCurrenciesBalances = (
+export const fetchTokenCurrenciesBalances = (
   safeAddress: string,
   excludeSpamTokens = true,
 ): Promise<AxiosResponse<BalanceEndpoint[]>> => {
-  const apiUrl = getTxServiceHost()
-  const url = `${apiUrl}safes/${safeAddress}/balances/usd/?exclude_spam=${excludeSpamTokens}`
+  const url = `${getSafeServiceBaseUrl(safeAddress)}/balances/usd/?exclude_spam=${excludeSpamTokens}`
 
-  return axios.get(url, {
-    params: {
-      limit: 3000,
-    },
-  })
+  return axios.get(url)
 }
-
-export default fetchTokenCurrenciesBalances

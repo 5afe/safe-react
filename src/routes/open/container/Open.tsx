@@ -22,6 +22,7 @@ import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/sto
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -60,7 +61,7 @@ export const createSafe = (values, userAccount) => {
 
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations)
 
-  const promiEvent = deploymentTx.send({ from: userAccount, value: 0 })
+  const promiEvent = deploymentTx.send({ from: userAccount })
 
   promiEvent
     .once('transactionHash', (txHash) => {
@@ -68,7 +69,7 @@ export const createSafe = (values, userAccount) => {
     })
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
-      const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
+      const safeAddress = receipt.events?.ProxyCreation.returnValues.proxy
       const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
       // returning info for testing purposes, in app is fully async
       return { safeAddress: safeProps.address, safeTx: receipt }
@@ -83,7 +84,7 @@ export const createSafe = (values, userAccount) => {
 const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
-  const [creationTxPromise, setCreationTxPromise] = useState()
+  const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
   const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
   const [safePropsFromUrl, setSafePropsFromUrl] = useState()
   const userAccount = useSelector(userAccountSelector)
@@ -171,7 +172,7 @@ const Open = (): React.ReactElement => {
   }
 
   const onRetry = async () => {
-    const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const values = await loadFromStorage<{ txHash?: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
     delete values?.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)
