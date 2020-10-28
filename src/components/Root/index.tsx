@@ -22,11 +22,9 @@ const Root = (): React.ReactElement => (
     <Provider store={store}>
       <MuiThemeProvider theme={theme}>
         <ConnectedRouter history={history}>
-          {
-            <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
-              <App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>
-            </Sentry.ErrorBoundary>
-          }
+          <Sentry.ErrorBoundary fallback={GlobalErrorBoundary}>
+            <App>{wrapInSuspense(<AppRoutes />, <Loader />)}</App>
+          </Sentry.ErrorBoundary>
         </ConnectedRouter>
       </MuiThemeProvider>
     </Provider>
