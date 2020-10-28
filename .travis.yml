@@ -95,6 +95,20 @@ deploy:
       branch: release/v2.14.0
       condition: $REACT_APP_NETWORK = energy_web_chain
 
+  # Volta testing on staging
+  - provider: s3
+    bucket: $STAGING_BUCKET_NAME
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    skip_cleanup: true
+    local_dir: build
+    upload_dir: current/app
+    region: $AWS_DEFAULT_REGION
+    on:
+      branch: release/v2.14.0
+      condition: $REACT_APP_NETWORK = volta
+
+
   # Prepare production deployment
   - provider: s3
     bucket: $STAGING_BUCKET_NAME
