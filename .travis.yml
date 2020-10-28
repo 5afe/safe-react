@@ -27,6 +27,7 @@ matrix:
         - REACT_APP_NETWORK='volta'
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
         - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
+      if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='energy_web_chain'
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
