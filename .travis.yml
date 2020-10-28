@@ -1,4 +1,4 @@
-if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
+if: (branch = development) OR (branch = master) OR (branch = release/2.14.0) OR (type = pull_request) OR (tag IS present)
 sudo: required
 dist: bionic
 language: node_js
@@ -25,10 +25,21 @@ matrix:
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
         - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
       if: (branch = master AND NOT type = pull_request) OR tag IS present
+    - env:
+        - REACT_APP_NETWORK='volta'
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+        - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
+    - env:
+        - REACT_APP_NETWORK='energy_web_chain'
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
+        - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
+      if: ((branch = master OR branch = release/2.14.0) AND NOT type = pull_request) OR tag IS present
+
 cache:
   yarn: true
 before_script:
   - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi;
+  - if [ $TRAVIS_PULL_REQUEST != "false" ]; then export PUBLIC_URL="/${REACT_APP_NETWORK}/app"; fi;
 before_install:
   # Needed to deploy pull request and releases
   - sudo apt-get update
@@ -74,7 +85,7 @@ deploy:
     on:
       branch: master
   
-  # xDai testing on staging
+  # EWC testing on staging
   - provider: s3
     bucket: $STAGING_BUCKET_NAME
     access_key_id: $AWS_ACCESS_KEY_ID
@@ -84,8 +95,8 @@ deploy:
     upload_dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
-      branch: release/v2.13.0
-      condition: $REACT_APP_NETWORK = xdai
+      branch: release/2.14.0
+      condition: $REACT_APP_NETWORK = energy_web_chain
 
   # Prepare production deployment
   - provider: s3

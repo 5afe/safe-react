@@ -13,6 +13,8 @@ const getServiceUrl = (txType: string, safeAddress: string): string => {
   }[txType](safeAddress)
 }
 
+// TODO: Remove this magic
+/* eslint-disable */
 async function fetchTransactions(
   txType: TransactionTypes.INCOMING,
   safeAddress: string,
@@ -28,6 +30,7 @@ async function fetchTransactions(
   safeAddress: string,
   eTag: string | null,
 ): Promise<{ eTag: string | null; results: TxServiceModel[] | IncomingTxServiceModel[] }> {
+  /* eslint-enable */
   try {
     const url = getServiceUrl(txType, safeAddress)
     const response = await axios.get(url, eTag ? { headers: { 'If-None-Match': eTag } } : undefined)
