@@ -28,6 +28,7 @@ matrix:
     - env:
         - REACT_APP_NETWORK='volta'
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
         - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
     - env:
         - REACT_APP_NETWORK='energy_web_chain'
