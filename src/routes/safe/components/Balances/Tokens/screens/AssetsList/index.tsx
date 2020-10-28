@@ -1,4 +1,5 @@
 import MuiList from '@material-ui/core/List'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import SearchBar from 'material-ui-search-bar'
@@ -27,6 +28,10 @@ import {
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 
+type Props = {
+  setActiveScreen: (newScreen: string) => void
+}
+
 const filterBy = (filter, nfts) =>
   nfts.filter(
     (asset) =>
@@ -36,7 +41,7 @@ const filterBy = (filter, nfts) =>
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props) => {
+const AssetsList = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -126,12 +131,12 @@ const AssetsList = (props) => {
         </Row>
         <Hairline />
       </Block>
-      {!nftAssetsList.length && (
+      {!nftAssetsList?.length && (
         <Block className={classes.progressContainer} justify="center">
-          <Paragraph>No collectibles available</Paragraph>
+          {!nftAssetsList ? <CircularProgress /> : <Paragraph>No collectibles available</Paragraph>}
         </Block>
       )}
-      {nftAssetsList.length > 0 && (
+      {nftAssetsFilteredList.length > 0 && (
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}

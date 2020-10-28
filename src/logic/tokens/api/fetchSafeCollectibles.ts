@@ -1,6 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getTxServiceUrl } from 'src/config'
+import { getSafeServiceBaseUrl } from 'src/config'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type CollectibleResult = {
   address: string
@@ -16,9 +17,8 @@ export type CollectibleResult = {
 }
 
 export const fetchSafeCollectibles = async (safeAddress: string): Promise<AxiosResponse<CollectibleResult[]>> => {
-  const apiUrl = getTxServiceUrl()
-
-  const url = `${apiUrl}/safes/${safeAddress}/collectibles/`
+  const address = checksumAddress(safeAddress)
+  const url = `${getSafeServiceBaseUrl(address)}/collectibles/`
 
   return axios.get(url)
 }
