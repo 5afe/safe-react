@@ -23,7 +23,7 @@ type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
 interface ChooseTxTypeProps {
   onClose: () => void
-  recipientAddress: string
+  recipientAddress?: string
   setActiveScreen: React.Dispatch<React.SetStateAction<ActiveScreen>>
 }
 

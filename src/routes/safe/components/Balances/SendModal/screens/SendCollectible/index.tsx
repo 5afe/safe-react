@@ -28,6 +28,7 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -43,13 +44,28 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
+type SendCollectibleProps = {
+  initialValues: any
+  onClose: () => void
+  onNext: (txInfo: SendCollectibleTxInfo) => void
+  recipientAddress?: string
+  selectedToken: NFTToken
+}
+
+export type SendCollectibleTxInfo = {
+  assetAddress: string
+  assetName: string
+  nftTokenId: string
+  recipientAddress?: string
+}
+
 const SendCollectible = ({
   initialValues,
   onClose,
   onNext,
   recipientAddress,
-  selectedToken = {},
-}): React.ReactElement => {
+  selectedToken,
+}: SendCollectibleProps): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
@@ -67,7 +83,7 @@ const SendCollectible = ({
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: SendCollectibleTxInfo) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       values.recipientAddress = selectedEntry?.address
