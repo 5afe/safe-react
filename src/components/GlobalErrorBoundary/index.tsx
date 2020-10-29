@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Text, Icon, FixedIcon, Title, Button } from '@gnosis.pm/safe-react-components'
 
+import { IS_PRODUCTION } from 'src/utils/constants'
+
 const Wrapper = styled.div`
   width: 100%;
   margin-top: 50px;
@@ -47,14 +49,12 @@ type Props = {
 }
 
 const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.ReactElement => {
-  const isProduction = process.env.NODE_ENV === 'production'
-
   return (
     <Wrapper>
       <Content>
         <Title size="md">Something went wrong, please try again.</Title>
         <FixedIcon type="networkError" />
-        {isProduction && (
+        {IS_PRODUCTION && (
           <div>
             <Text size="xl" as="span">
               In case the problem persists, please reach out to us via{' '}
@@ -78,7 +78,7 @@ const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.Re
             </LinkWrapper>
           </div>
         )}
-        {!isProduction && (
+        {!IS_PRODUCTION && (
           <>
             <Text size="xl" color="error">
               {error.toString()}
