@@ -1,13 +1,16 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
+// @todo (agustin) we need to use fixed gasPrice because the oracle is not working right now and it's returning 0
+// once the oracle is fixed we need to remove the fixed value
 const baseConfig: EnvironmentSettings = {
-  txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',  
+  txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
   },
+  gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
