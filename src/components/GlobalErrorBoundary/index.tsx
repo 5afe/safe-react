@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Text, Icon, FixedIcon, Title, Button } from '@gnosis.pm/safe-react-components'
+import { Text, Link, Icon, FixedIcon, Title } from '@gnosis.pm/safe-react-components'
 
 import { IS_PRODUCTION } from 'src/utils/constants'
 
@@ -34,11 +34,12 @@ const LinkWrapper = styled.div`
   }
 `
 
-const StyledButton = styled(Button)`
-  span.MuiButton-label {
-    svg {
-      margin-right: 5px;
-    }
+const LinkContent = styled.div`
+  display: flex;
+  align-items: center;
+
+  > span {
+    margin-right: 5px;
   }
 `
 
@@ -88,17 +89,12 @@ const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.Re
             </Text>
           </>
         )}
-        <StyledButton
-          size="md"
-          color="primary"
-          iconType="home"
-          variant="contained"
-          onClick={() => {
-            window.location.href = '/app/'
-          }}
-        >
-          Go to Home
-        </StyledButton>
+        <Link size="lg" color="primary" href="/app/">
+          <LinkContent>
+            <Icon size="md" type="home" color="primary" />
+            Go to Home
+          </LinkContent>
+        </Link>
       </Content>
     </Wrapper>
   )
