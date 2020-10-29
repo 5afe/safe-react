@@ -1,39 +1,67 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
-import {
-  getGnosisSafeInstanceAt,
-  getSpendingLimitContract,
-  MULTI_SEND_ADDRESS,
-} from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getEncodedMultiSendCallData, MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
-import { Token, makeToken } from 'src/logic/tokens/store/model/token'
-import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-
+import {
+  addSpendingLimitBeneficiaryMultiSendTx,
+  adjustAmountToToken,
+  currentMinutes,
+  enableSpendingLimitModuleMultiSendTx,
+  setSpendingLimitMultiSendTx,
+  setSpendingLimitTx,
+  spendingLimitMultiSendTx,
+  SpendingLimitRow,
+} from 'src/logic/safe/utils/spendingLimits'
+import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
+import { makeToken, Token } from 'src/logic/tokens/store/model/token'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
+import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import {
-  adjustAmountToToken,
-  currentMinutes,
-  SpendingLimitRow,
-} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 const { nativeCoin } = getNetworkInfo()
+
+const useExistentSpendingLimit = ({
+  spendingLimits,
+  txToken,
+  values,
+}: {
+  spendingLimits: SafeRecordProps['spendingLimits']
+  txToken: Token
+  values: ReviewSpendingLimitProps['values']
+}) => {
+  // undefined: before setting a value
+  // null: if no previous value
+  // SpendingLimit: if previous value exists
+  return useMemo<SpendingLimit | null>(() => {
+    // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
+    const currentDelegate = spendingLimits?.find(
+      ({ delegate, token }) =>
+        sameAddress(delegate, values.beneficiary) &&
+        sameAddress(token, values.token === nativeCoin.address ? ZERO_ADDRESS : values.token),
+    )
+
+    // let the user know that is about to replace an existent allowance
+    if (currentDelegate !== undefined) {
+      return {
+        ...currentDelegate,
+        amount: fromTokenUnit(currentDelegate.amount, txToken.decimals),
+      }
+    } else {
+      return null
+    }
+  }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
+}
 
 interface ReviewSpendingLimitProps {
   onBack: ActionCallback
@@ -50,49 +78,15 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
 
-  // undefined: before setting a value
-  // null: if no previous value
-  // SpendingLimit: if previous value exists
-  const [existentSpendingLimit, setExistentSpendingLimit] = useState<SpendingLimit | null>(null)
-  useEffect(() => {
-    const checkExistence = async () => {
-      // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
-      const currentDelegate = spendingLimits?.find(
-        ({ delegate, token }) =>
-          sameAddress(delegate, values.beneficiary) &&
-          sameAddress(token, values.token === nativeCoin.address ? ZERO_ADDRESS : values.token),
-      )
-
-      // let the user know that is about to replace an existent allowance
-      if (currentDelegate !== undefined) {
-        setExistentSpendingLimit({
-          ...currentDelegate,
-          amount: fromTokenUnit(currentDelegate.amount, txToken.decimals),
-        })
-      } else {
-        setExistentSpendingLimit(null)
-      }
-    }
-
-    checkExistence()
-  }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
-
-  const handleSubmit = async () => {
-    const spendingLimitContract = getSpendingLimitContract()
+  const handleSubmit = () => {
     const isSpendingLimitEnabled = spendingLimits !== null
-
     const transactions: MultiSendTx[] = []
 
     // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
     if (!isSpendingLimitEnabled && safeAddress) {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      transactions.push({
-        to: safeAddress,
-        value: 0,
-        data: safeInstance.methods.enableModule(SPENDING_LIMIT_MODULE_ADDRESS).encodeABI(),
-        operation: DELEGATE_CALL,
-      })
+      transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress))
     }
 
     // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
@@ -102,56 +96,26 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
 
     // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
     if (!isDelegateAlreadyAdded && values?.beneficiary) {
-      transactions.push({
-        to: SPENDING_LIMIT_MODULE_ADDRESS,
-        value: 0,
-        data: spendingLimitContract.methods.addDelegate(values?.beneficiary).encodeABI(),
-        operation: DELEGATE_CALL,
-      })
+      transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
     }
 
     // prepare the setAllowance tx
     const startTime = currentMinutes() - 30
-    const setAllowanceTx = {
-      to: SPENDING_LIMIT_MODULE_ADDRESS,
-      value: 0,
-      data: spendingLimitContract.methods
-        .setAllowance(
-          values.beneficiary,
-          values.token === nativeCoin.address ? ZERO_ADDRESS : values.token,
-          toTokenUnit(values.amount, txToken.decimals),
-          values.withResetTime ? +values.resetTime * 60 * 24 : 0,
-          values.withResetTime ? startTime : 0,
-        )
-        .encodeABI(),
-      operation: DELEGATE_CALL,
+    const spendingLimitArgs = {
+      beneficiary: values.beneficiary,
+      token: values.token,
+      spendingLimitInWei: toTokenUnit(values.amount, txToken.decimals),
+      resetTimeMin: values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+      resetBaseMin: values.withResetTime ? startTime : 0,
     }
 
     if (safeAddress) {
       // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
       if (transactions.length === 0) {
-        dispatch(
-          createTransaction({
-            safeAddress,
-            to: SPENDING_LIMIT_MODULE_ADDRESS,
-            valueInWei: '0',
-            txData: setAllowanceTx.data,
-            notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-          }),
-        )
+        dispatch(createTransaction(setSpendingLimitTx({ spendingLimitArgs, safeAddress })))
       } else {
-        transactions.push(setAllowanceTx)
-
-        dispatch(
-          createTransaction({
-            safeAddress,
-            to: MULTI_SEND_ADDRESS,
-            valueInWei: '0',
-            txData: getEncodedMultiSendCallData(transactions, getWeb3()),
-            notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
-            operation: DELEGATE_CALL,
-          }),
-        )
+        transactions.push(setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress }))
+        dispatch(createTransaction(spendingLimitMultiSendTx({ transactions, safeAddress })))
       }
     }
   }

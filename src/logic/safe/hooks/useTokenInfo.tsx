@@ -8,7 +8,7 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 
 const { nativeCoin } = getNetworkInfo()
 
-const useToken = (address: string): Token | undefined => {
+const useTokenInfo = (address: string): Token | undefined => {
   const tokens = useSelector(extendedSafeTokensSelector)
 
   return React.useMemo(() => {
@@ -19,4 +19,4 @@ const useToken = (address: string): Token | undefined => {
   }, [address, tokens])
 }
 
-export default useToken
+export default useTokenInfo

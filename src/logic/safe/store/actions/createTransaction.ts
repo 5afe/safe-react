@@ -97,7 +97,7 @@ export const storeTx = async (
   }
 }
 
-interface CreateTransactionArgs {
+export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
   notifiedTransaction: string
   operation?: number

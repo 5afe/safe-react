@@ -1,7 +1,9 @@
 import semverLessThan from 'semver/functions/lt'
 
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
+import { CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 type ModulesPaginated = {
@@ -73,4 +75,21 @@ export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: stri
   const safeInstance = getGnosisSafeInstanceAt(safeAddress)
 
   return safeInstance.methods.disableModule(previousModule, module).encodeABI()
+}
+
+type EnableModuleParams = {
+  moduleAddress: string
+  safeAddress: string
+}
+export const enableModuleTx = ({ moduleAddress, safeAddress }: EnableModuleParams): CreateTransactionArgs => {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+
+  return {
+    safeAddress,
+    to: safeAddress,
+    operation: CALL,
+    valueInWei: '0',
+    txData: safeInstance.methods.enableModule(moduleAddress).encodeABI(),
+    notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+  }
 }

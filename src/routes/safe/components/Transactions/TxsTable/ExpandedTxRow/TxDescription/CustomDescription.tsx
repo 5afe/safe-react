@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import Col from 'src/components/layout/Col'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
-import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
+import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 
 import { styles } from './styles'
@@ -104,7 +104,7 @@ const ModifySpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): Rea
     [resetTimeMin],
   )
 
-  const tokenInfo = useToken(tokenAddress)
+  const tokenInfo = useTokenInfo(tokenAddress)
 
   return (
     <>
@@ -130,7 +130,7 @@ const ModifySpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): Rea
 
 const DeleteSpendingLimitDetails = ({ data }: NewSpendingLimitDetailsProps): React.ReactElement => {
   const [beneficiary, tokenAddress] = React.useMemo(() => data.parameters.map(({ value }) => value), [data.parameters])
-  const tokenInfo = useToken(tokenAddress)
+  const tokenInfo = useTokenInfo(tokenAddress)
 
   return (
     <>

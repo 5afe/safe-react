@@ -1,29 +1,24 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { List, Set, Map } from 'immutable'
+import { List, Map, Set } from 'immutable'
 import { Action, Dispatch } from 'redux'
 import { AbiItem } from 'web3-utils'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
-import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-import {
-  requestAllowancesByDelegatesAndTokens,
-  requestTokensByDelegate,
-} from 'src/routes/safe/components/Settings/SpendingLimit/utils'
-import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import { AppReduxState } from 'src/store'
-import { latestMasterContractVersionSelector } from '../selectors'
-import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
 import { getModules } from 'src/logic/safe/utils/modules'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
+import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
+import { AppReduxState } from 'src/store'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { latestMasterContractVersionSelector } from 'src/logic/safe/store/selectors'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -77,6 +72,7 @@ export const buildSafe = async (
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
   const modules = await getModules(safeInfo)
+  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
 
   return {
     address: safeAddress,
@@ -95,22 +91,8 @@ export const buildSafe = async (
     blacklistedAssets: Set(),
     blacklistedTokens: Set(),
     modules,
+    spendingLimits,
   }
-}
-
-const getSpendingLimits = async (
-  modules: string[] | undefined,
-  safeAddress: string,
-): Promise<SpendingLimit[] | null> => {
-  const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
-
-  if (isSpendingLimitEnabled) {
-    const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
-    const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-    return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
-  }
-
-  return null
 }
 
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
@@ -172,6 +154,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     }
   })
 }
+
 export default (safeAdd: string) => async (
   dispatch: Dispatch<any>,
   getState: () => AppReduxState,

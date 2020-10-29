@@ -1,28 +1,22 @@
 import { Button } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { AbiItem } from 'web3-utils'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
-import { getNetworkInfo } from 'src/config'
-import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import { RESET_TIME_OPTIONS } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import Modal from './Modal'
 import { useStyles } from './style'
-
-const { nativeCoin } = getNetworkInfo()
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -33,26 +27,18 @@ interface RemoveSpendingLimitModalProps {
 const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): React.ReactElement => {
   const classes = useStyles()
 
-  const tokenInfo = useToken(spendingLimit.spent.tokenAddress)
+  const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
   const removeSelectedSpendingLimit = async (): Promise<void> => {
     try {
-      const web3 = getWeb3()
-      const spendingLimitContract = new web3.eth.Contract(
-        SpendingLimitModule.abi as AbiItem[],
-        SPENDING_LIMIT_MODULE_ADDRESS,
-      )
       const {
         beneficiary,
         spent: { tokenAddress },
       } = spendingLimit
-
-      const txData = spendingLimitContract.methods
-        .deleteAllowance(beneficiary, sameAddress(tokenAddress, nativeCoin.address) ? ZERO_ADDRESS : tokenAddress)
-        .encodeABI()
+      const txData = getDeleteAllowanceTxData({ beneficiary, tokenAddress })
 
       dispatch(
         createTransaction({

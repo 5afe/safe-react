@@ -9,8 +9,7 @@ import { getExplorerInfo } from 'src/config'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-
-import { KEYCODES } from 'src/routes/safe/components/Settings/SpendingLimit/utils'
+import { KEYCODES } from 'src/logic/safe/utils/spendingLimits'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;

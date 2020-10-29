@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import useToken from 'src/routes/safe/components/Settings/SpendingLimit/hooks/useToken'
+import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
 
@@ -21,18 +21,18 @@ const StyledImageName = styled.div`
   align-items: center;
 `
 
-type FormattedAmountsProps = { amount: string; spent: string; token?: Token }
+type FormattedAmountsProps = { amount: string; spent: string; tokenInfo?: Token }
 
 type FormattedAmounts = { amount: string; spent: string }
 
-const useFormattedAmounts = ({ amount, spent, token }: FormattedAmountsProps): FormattedAmounts | undefined => {
+const useFormattedAmounts = ({ amount, spent, tokenInfo }: FormattedAmountsProps): FormattedAmounts | undefined => {
   return React.useMemo(() => {
-    if (token) {
-      const formattedSpent = formatAmount(fromTokenUnit(spent, token.decimals)).toString()
-      const formattedAmount = formatAmount(fromTokenUnit(amount, token.decimals)).toString()
+    if (tokenInfo) {
+      const formattedSpent = formatAmount(fromTokenUnit(spent, tokenInfo.decimals)).toString()
+      const formattedAmount = formatAmount(fromTokenUnit(amount, tokenInfo.decimals)).toString()
       return { amount: formattedAmount, spent: formattedSpent }
     }
-  }, [amount, spent, token])
+  }, [amount, spent, tokenInfo])
 }
 
 interface SpentVsAmountProps {
@@ -45,13 +45,13 @@ const SpentVsAmount = ({ amount, spent, tokenAddress }: SpentVsAmountProps): Rea
   const { width } = useWindowDimensions()
   const showIcon = React.useMemo(() => width > 1024, [width])
 
-  const token = useToken(tokenAddress)
-  const spentInfo = useFormattedAmounts({ amount, spent, token })
+  const tokenInfo = useTokenInfo(tokenAddress)
+  const spentInfo = useFormattedAmounts({ amount, spent, tokenInfo })
 
-  return spentInfo && token ? (
+  return spentInfo && tokenInfo ? (
     <StyledImageName>
-      {showIcon && <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />}
-      <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${token.symbol}`}</Text>
+      {showIcon && <StyledImage alt={tokenInfo.name} onError={setImageToPlaceholder} src={tokenInfo.logoUri} />}
+      <Text size="lg">{`${spentInfo.spent} of ${spentInfo.amount} ${tokenInfo.symbol}`}</Text>
     </StyledImageName>
   ) : null
 }

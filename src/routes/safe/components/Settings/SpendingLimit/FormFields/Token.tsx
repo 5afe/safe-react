@@ -1,8 +1,9 @@
 import React from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import styled from 'styled-components'
 
 const TokenInput = styled.div`
   grid-area: tokenInput;

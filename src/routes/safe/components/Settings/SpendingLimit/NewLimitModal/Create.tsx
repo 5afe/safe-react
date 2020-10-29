@@ -5,7 +5,6 @@ import styled from 'styled-components'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import GnoButton from 'src/components/layout/Button'
-
 import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 

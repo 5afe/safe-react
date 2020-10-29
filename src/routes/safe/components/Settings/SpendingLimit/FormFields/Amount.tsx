@@ -7,7 +7,6 @@ import styled from 'styled-components'
 import GnoField from 'src/components/forms/Field'
 import { composeValidators, minValue, mustBeFloat, required } from 'src/components/forms/validator'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 
 export const Field = styled(GnoField)`

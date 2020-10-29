@@ -3,12 +3,12 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
 import Review from './Review'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const CREATE = 'CREATE' as const
 export const REVIEW = 'REVIEW' as const
