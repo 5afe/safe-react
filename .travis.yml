@@ -58,8 +58,11 @@ script:
   - yarn prettier:check
   - yarn test:coverage
   - yarn build
-  - if [ [$TRAVIS_BRANCH == master AND $TRAVIS_PULL_REQUEST == "false"] OR [ -n "$TRAVIS_TAG" ]]; then
+  - if [ [ [ $TRAVIS_BRANCH == "master" ] && [ $TRAVIS_PULL_REQUEST == "false" ] ] || [ -n "$TRAVIS_TAG" ]]; then
+      echo "Upload sentry source maps"
       yarn sentry-upload-sourcemaps;
+    else
+      echo "Skip source map upload";
     fi;
 after_success:
   # Pull Request - Deploy it to a review environment
