@@ -58,7 +58,9 @@ script:
   - yarn prettier:check
   - yarn test:coverage
   - yarn build
-  - if [ (branch = master AND NOT type = pull_request) OR tag IS present ]; then yarn sentry-upload-sourcemaps; fi;
+  - if [ [$TRAVIS_BRANCH == master AND $TRAVIS_PULL_REQUEST == "false"] OR [ -n "$TRAVIS_TAG" ]]; then
+      yarn sentry-upload-sourcemaps;
+    fi;
 after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
