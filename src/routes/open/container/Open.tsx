@@ -172,7 +172,7 @@ const Open = (): React.ReactElement => {
   }
 
   const onRetry = async () => {
-    const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const values = await loadFromStorage<{ txHash?: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
     delete values?.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)

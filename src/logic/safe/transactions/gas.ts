@@ -11,6 +11,7 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { sameString } from 'src/utils/strings'
 
 const estimateDataGasCosts = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
@@ -54,7 +55,7 @@ export const estimateTxGasCosts = async (
       const signatures = tx?.confirmations
         ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
         : `0x000000000000000000000000${from.replace(
-            '0x',
+            EMPTY_DATA,
             '',
           )}000000000000000000000000000000000000000000000000000000000000000001`
       txData = await safeInstance.methods
@@ -92,6 +93,84 @@ export const estimateTxGasCosts = async (
   }
 }
 
+// Parses the result of OpenEthereum/Parity and Nethermind error messages and returns the value
+export const getNonGETHErrorDataResult = (errorMessage: string): string | undefined => {
+  // Extracts JSON object from the error message
+  const [, ...error] = errorMessage.split('\n')
+  try {
+    const errorAsJSON = JSON.parse(error.join(''))
+
+    if (errorAsJSON?.data) {
+      const [, dataResult] = errorAsJSON.data.split(' ')
+      return dataResult
+    }
+  } catch (error) {
+    console.error(`Error trying to extract data from openEthereum/Nethermind error message: ${errorMessage}`)
+  }
+}
+
+const getGasEstimationTxResponse = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  const web3 = getWeb3()
+  try {
+    const result = await web3.eth.call(txConfig)
+
+    // GETH Nodes
+    // In case that the gas is not enough we will receive an EMPTY data
+    // Otherwise we will receive the gas amount as hash data
+
+    if (!sameString(result, EMPTY_DATA)) {
+      return new BigNumber(result.substring(138), 16).toNumber()
+    }
+  } catch (error) {
+    // OpenEthereum/Parity nodes
+    // Parity/OpenEthereum nodes always returns the response as an error
+    // So we try to extract the estimation result within the error in case is possible
+    const estimationData = getNonGETHErrorDataResult(error.message)
+
+    if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
+      throw error
+    }
+
+    return new BigNumber(estimationData.substring(138), 16).toNumber()
+  }
+
+  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation
+  // We cannot throw this error above because it will be captured again on the OpenEthereum code bellow
+  throw new Error('Error while estimating the gas required for tx')
+}
+
+const calculateMinimumGasForTransaction = async (
+  additionalGasBatches: number[],
+  safeAddress: string,
+  estimateData: string,
+  txGasEstimation: number,
+  dataGasEstimation: number,
+): Promise<number> => {
+  for (const additionalGas of additionalGasBatches) {
+    const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
+    try {
+      await getGasEstimationTxResponse({
+        to: safeAddress,
+        from: safeAddress,
+        data: estimateData,
+        gasPrice: 0,
+        gas: amountOfGasToTryTx,
+      })
+      return txGasEstimation + additionalGas
+    } catch (error) {
+      console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
+    }
+  }
+
+  return 0
+}
+
 export const estimateSafeTxGas = async (
   safe: GnosisSafe | undefined,
   safeAddress: string,
@@ -106,63 +185,26 @@ export const estimateSafeTxGas = async (
       safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     }
 
-    const web3 = await getWeb3()
     const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
-    const estimateResponse = await web3.eth.call({
+    const gasEstimationResponse = await getGasEstimationTxResponse({
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
     })
-    const txGasEstimation = new BigNumber(estimateResponse.substring(138), 16).toNumber() + 10000
+
+    const txGasEstimation = gasEstimationResponse + 10000
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
-    const additionalGasBatches = [10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
+    const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
-    const batch = new web3.BatchRequest()
-    const estimationRequests = additionalGasBatches.map(
-      (additionalGas) =>
-        new Promise((resolve) => {
-          // there are no type definitions for .request, so for now ts-ignore is there
-          // Issue link: https://github.com/ethereum/web3.js/issues/3144
-          // eslint-disable-next-line
-          // @ts-ignore
-          const request = web3.eth.call.request(
-            {
-              to: safeAddress,
-              from: safeAddress,
-              data: estimateData,
-              gasPrice: 0,
-              gasLimit: txGasEstimation + dataGasEstimation + additionalGas,
-            },
-            (error, res) => {
-              // res.data check is for OpenEthereum/Parity revert messages format
-              const isOpenEthereumRevertMsg = res && typeof res.data === 'string'
-
-              const isEstimationSuccessful =
-                !error &&
-                ((typeof res === 'string' && res !== '0x') || (isOpenEthereumRevertMsg && res.data.slice(9) !== '0x'))
-
-              resolve({
-                success: isEstimationSuccessful,
-                estimation: txGasEstimation + additionalGas,
-              })
-            },
-          )
-
-          batch.add(request)
-        }),
+    return await calculateMinimumGasForTransaction(
+      additionalGasBatches,
+      safeAddress,
+      estimateData,
+      txGasEstimation,
+      dataGasEstimation,
     )
-    batch.execute()
-
-    const estimationResponses = await Promise.all(estimationRequests)
-    const firstSuccessfulRequest: any = estimationResponses.find((res: any) => res.success)
-
-    if (firstSuccessfulRequest) {
-      return firstSuccessfulRequest.estimation
-    }
-
-    return 0
   } catch (error) {
     console.error('Error calculating tx gas estimation', error)
     return 0

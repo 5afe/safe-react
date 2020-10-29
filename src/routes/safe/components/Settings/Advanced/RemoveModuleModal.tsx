@@ -39,12 +39,12 @@ const openIconStyle = {
   color: secondary,
 }
 
-interface RemoveModuleModal {
+interface RemoveModuleModalProps {
   onClose: () => void
   selectedModule: ModulePair
 }
 
-const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModal): React.ReactElement => {
+const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
