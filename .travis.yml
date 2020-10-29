@@ -1,5 +1,4 @@
 if: (branch = development) OR (branch = master) OR (branch = release/2.14.0) OR (type = pull_request) OR (tag IS present)
-sudo: required
 dist: bionic
 language: node_js
 node_js:
@@ -59,8 +58,7 @@ script:
   - yarn prettier:check
   - yarn test:coverage
   - yarn build
-  - yarn sentry-upload-sourcemaps
-  # - if [ (branch = master AND NOT type = pull_request) OR tag IS present ]; then yarn sentry-upload-sourcemaps; fi;
+  - if [ (branch = master AND NOT type = pull_request) OR tag IS present ]; then yarn sentry-upload-sourcemaps; fi;
 after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
