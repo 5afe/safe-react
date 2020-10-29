@@ -1,5 +1,5 @@
 import Tooltip from '@material-ui/core/Tooltip'
-import { makeStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 
@@ -9,23 +9,25 @@ import Img from 'src/components/layout/Img'
 import { xs } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
 
-const useStyles = makeStyles({
-  container: {
-    alignItems: 'center',
-    borderRadius: '50%',
-    display: 'flex',
-    justifyContent: 'center',
-    margin: `0 ${xs}`,
-    padding: '0',
-    transition: 'background-color .2s ease-in-out',
-    '&:hover': {
-      backgroundColor: '#F0EFEE',
+const useStyles = makeStyles(
+  createStyles({
+    container: {
+      alignItems: 'center',
+      borderRadius: '50%',
+      display: 'flex',
+      justifyContent: 'center',
+      margin: `0 ${xs}`,
+      padding: '0',
+      transition: 'background-color .2s ease-in-out',
+      '&:hover': {
+        backgroundColor: '#F0EFEE',
+      },
     },
-  },
-  increasedPopperZindex: {
-    zIndex: 2001,
-  },
-})
+    increasedPopperZindex: {
+      zIndex: 2001,
+    },
+  }),
+)
 
 interface EtherscanBtnProps {
   className?: string
@@ -33,7 +35,11 @@ interface EtherscanBtnProps {
   value: string
 }
 
-const EtherscanBtn = ({ className = '', increaseZindex = false, value }: EtherscanBtnProps): React.ReactElement => {
+export const EtherscanBtn = ({
+  className = '',
+  increaseZindex = false,
+  value,
+}: EtherscanBtnProps): React.ReactElement => {
   const classes = useStyles()
   const customClasses = increaseZindex ? { popper: classes.increasedPopperZindex } : {}
 
@@ -55,5 +61,3 @@ const EtherscanBtn = ({ className = '', increaseZindex = false, value }: Ethersc
     </Tooltip>
   )
 }
-
-export default EtherscanBtn

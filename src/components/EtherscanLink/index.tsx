@@ -5,7 +5,7 @@ import React from 'react'
 import { styles } from './style'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
+import { EtherscanBtn } from 'src/components/EtherscanBtn'
 import Block from 'src/components/layout/Block'
 import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
@@ -20,7 +20,7 @@ interface EtherscanLinkProps {
   value: string
 }
 
-const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkProps): React.ReactElement => {
+export const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkProps): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -34,5 +34,3 @@ const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkPro
     </Block>
   )
 }
-
-export default EtherscanLink
