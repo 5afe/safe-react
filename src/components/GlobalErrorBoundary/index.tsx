@@ -54,7 +54,7 @@ const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.Re
       <Content>
         <Title size="md">Something went wrong, please try again.</Title>
         <FixedIcon type="networkError" />
-        {!isProduction && (
+        {isProduction && (
           <div>
             <Text size="xl" as="span">
               In case the problem persists, please reach out to us via{' '}
@@ -78,7 +78,7 @@ const GlobalErrorBoundaryFallback = ({ error, componentStack }: Props): React.Re
             </LinkWrapper>
           </div>
         )}
-        {isProduction && (
+        {!isProduction && (
           <>
             <Text size="xl" color="error">
               {error.toString()}
