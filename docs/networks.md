@@ -5,7 +5,7 @@
 We have currently this structure for the network configuration:
 
 - This is the main configuration that you need to provide in order to add a new network.
-```
+```typescript
 export interface NetworkConfig {
   network: NetworkSettings
   disabledFeatures?: SafeFeatures
@@ -15,11 +15,11 @@ export interface NetworkConfig {
 ```
 
 
-
 #### NetworkSettings
 
 - It contains the id of the ETH Network, the name of the network, information about the native coin of that network and a boolean that marks the network as a testnet or a production network.
-```
+
+```typescript
 export type NetworkSettings = {
   id: ETHEREUM_NETWORK,
   backgroundColor: string,
@@ -30,9 +30,9 @@ export type NetworkSettings = {
 }
 ```
 
-- Currently supported ETHEREUM_NETWORKS:
+- Currently supported Ethereum-compatible networks:
 
-```
+```typescript
 export enum ETHEREUM_NETWORK {
   MAINNET = 1,
   MORDEN = 2,
@@ -50,7 +50,7 @@ export enum ETHEREUM_NETWORK {
 
 - For the native coin, this is the structure:
 
-```
+```typescript
 type Token = {
   address: string
   name: string
@@ -65,7 +65,7 @@ type Token = {
 
 Its an array that contains a list of features that should be disabled for the network. It's empty as default.
 
-```
+```typescript
 export type SafeFeatures = FEATURES[]
 
 export enum FEATURES {
@@ -80,11 +80,11 @@ export enum FEATURES {
 
 It is an array that contains a list of wallets that will be disabled for the network. It's empty as default.
 
-```
+```typescript
 export type Wallets = WALLETS[]
 ```
 
-```
+```typescript
 export enum WALLETS {
   METAMASK = 'metamask',
   WALLET_CONNECT = 'walletConnect',
@@ -108,7 +108,7 @@ export enum WALLETS {
 
 If the network has different enviroments, you can add them here, otherwise you should add only the production settings
 
-```
+```typescript
 type SafeEnvironments = {
   dev?: EnvironmentSettings
   staging?: EnvironmentSettings
@@ -119,7 +119,8 @@ type SafeEnvironments = {
 We use a transaction service (**txServiceUrl**) for fetching the transactions and balances of the safe and also to POST messages with the created transactions, this should be provided by Gnosis.
 
 The **networkExplorer** information is information related to the networkExplorer used for the given network (Blockscout for xDai, Etherscan for mainnet, etc). This is used for link transaction hashes and addresses to the given network explorer.
-```
+
+```typescript
 export type EnvironmentSettings = GasPrice & {
   txServiceUrl: string
   relayApiUrl?: string
@@ -131,8 +132,9 @@ export type EnvironmentSettings = GasPrice & {
 }
 ```
 
-The **gasPrice** for the network in case it's a fixed amount (like xDai), otherwise you can give an oracle we can use to fetch the current gas price
-```
+The **gasPrice** for the network in case it's a fixed amount (like xDai), otherwise you can give an oracle we can use to fetch the current gas price.
+
+```typescript
 type GasPrice = {
   gasPrice: number
   gasPriceOracle?: GasPriceOracle
@@ -143,7 +145,7 @@ type GasPrice = {
 }
 ```
 
-```
+```typescript
 export type GasPriceOracle = {
   url: string
   // Different gas api providers can use a different name to reflect different gas levels based on tx speed
@@ -163,9 +165,9 @@ export type GasPriceOracle = {
 ---
 ## How to add a network 
 
-1) In case that is not already supported, add the network on the **ETHEREUM_NETWORK** enum in `src/config/networks/network.d.ts`
+1) In case that is not already supported, add the network on the **ETHEREUM_NETWORK** enum in [`src/config/networks/network.d.ts`](/src/config/networks/network.d.ts)
 
-```
+```typescript
 export enum ETHEREUM_NETWORK {
   MAINNET = 1,
   MORDEN = 2,
@@ -189,9 +191,9 @@ export enum ETHEREUM_NETWORK {
 * REACT_APP_FORTMATIC_KEY
 * REACT_APP_BLOCKNATIVE_KEY
 
-3) Add the **NetworkSettings** in `src/config/networks` as `<network_name>.ts`:
+3) Add the **NetworkSettings** in [`src/config/networks`](/src/config/networks) as `<network_name>.ts`:
 
-```
+```typescript
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
@@ -247,7 +249,7 @@ export default <NETWORK_NAME>
 ## Configuration example (xDai) - fixed gas price
 
 1) **ETHEREUM_NETWORK**
-```
+```typescript
 export enum ETHEREUM_NETWORK {
   MAINNET = 1,
   MORDEN = 2,
@@ -263,9 +265,9 @@ export enum ETHEREUM_NETWORK {
 }
 ```
 
-2) **Network file** (src/config/networks/xdai.ts)
+2) **Network file** [xdai](/src/config/networks/xdai.ts)
 
-```
+```typescript
 import { ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const xDai: NetworkConfig = {
@@ -306,9 +308,9 @@ export default xDai
 ## Configuration example (Mainnet) - gas price retrieven by oracle
 
 
-**Network file** (src/config/networks/mainnet.ts)
+**Network file** [mainnet](/src/config/networks/mainnet.ts)
 
-```
+```typescript
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
