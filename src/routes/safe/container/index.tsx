@@ -101,7 +101,7 @@ const Container = (): React.ReactElement => {
           path={`${matchSafeWithAddress?.path}/address-book`}
           render={() => wrapInSuspense(<AddressBookTable />, null)}
         />
-        <Redirect to={`${matchSafeWithAddress?.path}/balances`} />
+        <Redirect to={`${matchSafeWithAddress?.url}/balances`} />
       </Switch>
       {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
     </>
