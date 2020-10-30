@@ -1,4 +1,5 @@
-if: (branch = development) OR (branch = master) OR (branch = release/2.14.0) OR (type = pull_request) OR (tag IS present)
+if: (branch = development) OR (branch = master) OR (branch = release/v2.14.0) OR (type = pull_request) OR (tag IS present)
+sudo: required
 dist: bionic
 language: node_js
 node_js:
@@ -41,7 +42,7 @@ matrix:
         - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
         - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
-      if: ((branch = master OR branch = release/2.14.0) AND NOT type = pull_request) OR tag IS present
+      if: ((branch = master OR branch = release/v2.14.0) AND NOT type = pull_request) OR tag IS present
 
 cache:
   yarn: true
@@ -107,8 +108,22 @@ deploy:
     upload_dir: current/app
     region: $AWS_DEFAULT_REGION
     on:
-      branch: release/2.14.0
+      branch: release/v2.14.0
       condition: $REACT_APP_NETWORK = energy_web_chain
+
+  # Volta testing on staging
+  - provider: s3
+    bucket: $STAGING_BUCKET_NAME
+    access_key_id: $AWS_ACCESS_KEY_ID
+    secret_access_key: $AWS_SECRET_ACCESS_KEY
+    skip_cleanup: true
+    local_dir: build
+    upload_dir: current/app
+    region: $AWS_DEFAULT_REGION
+    on:
+      branch: release/v2.14.0
+      condition: $REACT_APP_NETWORK = volta
+
 
   # Prepare production deployment
   - provider: s3

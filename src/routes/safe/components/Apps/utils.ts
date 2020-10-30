@@ -25,7 +25,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
   // Aave
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX1NUtvm9WjbvT79sTdeg3sw1NxZAM273y44nBy5d2jZb`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },

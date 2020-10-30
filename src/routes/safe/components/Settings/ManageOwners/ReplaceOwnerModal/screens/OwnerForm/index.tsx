@@ -6,7 +6,6 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -23,6 +22,8 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { safeOwnersSelector } from 'src/logic/safe/store/selectors'
 
 import { styles } from './style'
+import { getExplorerInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -94,7 +95,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                           {ownerAddress}
                         </Paragraph>
                         <CopyBtn content={ownerAddress} />
-                        <EtherscanBtn value={ownerAddress} />
+                        <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                       </Block>
                     </Block>
                   </Col>

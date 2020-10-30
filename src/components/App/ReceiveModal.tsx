@@ -5,7 +5,6 @@ import QRCode from 'qrcode.react'
 import React, { ReactElement } from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -15,7 +14,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { border, fontColor, lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
 import { copyToClipboard } from 'src/utils/clipboard'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const networkInfo = getNetworkInfo()
 const useStyles = makeStyles(
@@ -126,7 +126,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn value={safeAddress} />
+          <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
       </Col>
       <Hairline />
