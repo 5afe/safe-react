@@ -1,5 +1,5 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',  
@@ -41,7 +41,23 @@ const mainnet: NetworkConfig = {
       decimals: 18,
       logoUri: EwcLogo,
     },
-  }
+  },
+  disabledWallets:[
+    WALLETS.TREZOR,
+    WALLETS.LEDGER,
+    WALLETS.COINBASE,
+    WALLETS.DAPPER,
+    WALLETS.FORTMATIC,
+    WALLETS.OPERA,
+    WALLETS.OPERA_TOUCH,
+    WALLETS.PORTIS,
+    WALLETS.TORUS,
+    WALLETS.TRUST,
+    WALLETS.UNILOGIN,
+    WALLETS.WALLET_CONNECT,
+    WALLETS.WALLET_LINK,
+    WALLETS.AUTHEREUM
+  ]
 }
 
 export default mainnet
