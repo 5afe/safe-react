@@ -11,17 +11,10 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import {
-  isCancelTransaction,
-  mockTransaction,
-  TxToMock,
-} from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
-
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-import { storeTx } from './createTransaction'
-import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
-import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
+import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/actions/transactions/pendingTransactions'
 
 const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddress, tx, userAddress }) => async (
   dispatch,
@@ -121,30 +114,18 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
         try {
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash }),
-            storeTx(
-              mockedTx.withMutations((record) => {
-                record
-                  .updateIn(
-                    ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
-                    (previous) => previous.push(from),
-                  )
-                  .set('status', TransactionStatus.PENDING)
-              }),
-              safeAddress,
-              dispatch,
-              state,
-            ),
+            storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
           ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           dispatch(closeSnackbarAction(pendingExecutionKey))
-          await storeTx(tx, safeAddress, dispatch, state)
+          await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
         dispatch(closeSnackbarAction(pendingExecutionKey))
-        storeTx(tx, safeAddress, dispatch, state)
+        storeTx({ transaction: tx, safeAddress, dispatch, state })
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
@@ -160,43 +141,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
           ),
         )
 
-        const toStoreTx = isExecution
-          ? mockedTx.withMutations((record) => {
-              record
-                .set('executionTxHash', receipt.transactionHash)
-                .set('blockNumber', receipt.blockNumber)
-                .set('executionDate', record.submissionDate)
-                .set('executor', from)
-                .set('isExecuted', true)
-                .set('isSuccessful', receipt.status)
-                .set(
-                  'status',
-                  receipt.status
-                    ? isCancelTransaction(record, safeAddress)
-                      ? TransactionStatus.CANCELLED
-                      : TransactionStatus.SUCCESS
-                    : TransactionStatus.FAILED,
-                )
-                .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
-                .updateIn(['ownersWithPendingActions', 'confirm'], (prev) => prev.clear())
-            })
-          : mockedTx.withMutations((record) => {
-              record
-                .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
-                  previous.pop(),
-                )
-                .set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
-            })
-
-        await storeTx(
-          toStoreTx.update('confirmations', (confirmations) => {
-            const index = confirmations.findIndex(({ owner }) => owner === from)
-            return index === -1 ? confirmations.push(makeConfirmation({ owner: from })) : confirmations
-          }),
-          safeAddress,
-          dispatch,
-          state,
-        )
+        await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 
