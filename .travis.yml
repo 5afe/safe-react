@@ -10,27 +10,38 @@ matrix:
   include:
     - env:
         - REACT_APP_NETWORK='mainnet'
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
         - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_MAINNET}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_MAINNET}
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
       if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='rinkeby'
+        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_RINKEBY}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_RINKEBY}
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
         - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
     - env:
         - REACT_APP_NETWORK='xdai'
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
         - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
+        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
       if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='volta'
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
         - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
+        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_VOLTA}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+      if: (branch = master AND NOT type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='energy_web_chain'
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
         - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
+        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
+        - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
+        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
       if: ((branch = master OR branch = release/v2.14.0) AND NOT type = pull_request) OR tag IS present
 
 cache:
@@ -48,7 +59,12 @@ script:
   - yarn prettier:check
   - yarn test:coverage
   - yarn build
-  #- bash ./config/travis/build.sh
+  - if [[ $TRAVIS_BRANCH == "master" && $TRAVIS_PULL_REQUEST == "false" ]] || [ -n "$TRAVIS_TAG" ]; then
+      echo "Upload sentry source maps"
+      yarn sentry-upload-sourcemaps;
+    else
+      echo "Skip source map upload";
+    fi;
 after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
