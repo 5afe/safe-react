@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import Item from './components/Item'
 
 import Paragraph from 'src/components/layout/Paragraph'
-import { activeNftAssetsListSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
+import { activeNftAssetsListSelector, orderedNFTAssets } from 'src/logic/collectibles/store/selectors'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { fontColor, lg, screenSm, screenXs } from 'src/theme/variables'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
@@ -81,7 +81,7 @@ const Collectibles = (): React.ReactElement => {
   const classes = useStyles()
   const [selectedToken, setSelectedToken] = React.useState<NFTToken | undefined>()
   const [sendNFTsModalOpen, setSendNFTsModalOpen] = React.useState(false)
-  const nftTokens = useSelector(nftTokensSelector)
+  const nftTokens = useSelector(orderedNFTAssets)
   const activeAssetsList = useSelector(activeNftAssetsListSelector)
   const { trackEvent } = useAnalytics()
 
