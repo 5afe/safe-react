@@ -1,3 +1,5 @@
+import { AnyAction } from 'redux'
+import { ThunkAction } from 'redux-thunk'
 import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -6,6 +8,7 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
@@ -13,13 +16,33 @@ import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { AppReduxState } from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/actions/transactions/pendingTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
-const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddress, tx, userAddress }) => async (
-  dispatch,
-  getState,
-) => {
+import { Dispatch, DispatchReturn } from './types'
+
+interface ProcessTransactionArgs {
+  approveAndExecute: boolean
+  notifiedTransaction: string
+  safeAddress: string
+  tx: Transaction
+  userAddress: string
+}
+
+type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
+
+const processTransaction = ({
+  approveAndExecute,
+  notifiedTransaction,
+  safeAddress,
+  tx,
+  userAddress,
+}: ProcessTransactionArgs): ProcessTransactionAction => async (
+  dispatch: Dispatch,
+  getState: () => AppReduxState,
+): Promise<DispatchReturn> => {
   const state = getState()
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
@@ -50,7 +73,7 @@ const processTransaction = ({ approveAndExecute, notifiedTransaction, safeAddres
     safeInstance,
     to: tx.recipient,
     valueInWei: tx.value,
-    data: tx.data,
+    data: tx.data ?? EMPTY_DATA,
     operation: tx.operation,
     nonce: tx.nonce,
     safeTxGas: tx.safeTxGas,
