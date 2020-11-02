@@ -14,10 +14,16 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
+import { NFTAssets } from 'src/logic/collectibles/sources/collectibles'
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 
-const SelectedToken = ({ assetAddress, assets }) => {
+type SelectedTokenProps = {
+  assetAddress?: string
+  assets: NFTAssets
+}
+
+const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.ReactElement => {
   const classes = useSelectedTokenStyles()
   const asset = assetAddress ? assets[assetAddress] : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
@@ -32,7 +38,7 @@ const SelectedToken = ({ assetAddress, assets }) => {
           <ListItemText
             className={classes.tokenData}
             primary={shortener(asset.name)}
-            secondary={`${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+            secondary={`${formatAmount(asset.numberOfTokens.toString())} ${asset.symbol}`}
           />
         </>
       ) : (
@@ -46,7 +52,12 @@ const SelectedToken = ({ assetAddress, assets }) => {
 
 const useTokenSelectFieldStyles = makeStyles(selectStyles)
 
-const TokenSelectField = ({ assets, initialValue }) => {
+type TokenSelectFieldProps = {
+  assets: NFTAssets
+  initialValue?: string
+}
+
+const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): React.ReactElement => {
   const classes = useTokenSelectFieldStyles()
   const assetsAddresses = Object.keys(assets)
 
@@ -70,7 +81,7 @@ const TokenSelectField = ({ assets, initialValue }) => {
             </ListItemIcon>
             <ListItemText
               primary={asset.name}
-              secondary={`Count: ${formatAmount(asset.numberOfTokens)} ${asset.symbol}`}
+              secondary={`Count: ${formatAmount(asset.numberOfTokens.toString())} ${asset.symbol}`}
             />
           </MenuItem>
         )
