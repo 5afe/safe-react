@@ -5,7 +5,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 // once the oracle is fixed we need to remove the fixed value
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
+  safeAppsUrl: 'https://safe-apps-ewc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
@@ -24,11 +24,10 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps.gnosis-safe.io',
+      safeAppsUrl: 'https://apps-ewc.gnosis-safe.io',
     },
   },
   network: {

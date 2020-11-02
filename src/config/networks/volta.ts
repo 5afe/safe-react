@@ -3,7 +3,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, WALLETS, NetworkConfig } from 's
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
+  safeAppsUrl: 'https://safe-apps-volta.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
@@ -21,11 +21,10 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps.gnosis-safe.io',
+      safeAppsUrl: 'https://apps-volta.gnosis-safe.io',
     },
   },
   network: {
