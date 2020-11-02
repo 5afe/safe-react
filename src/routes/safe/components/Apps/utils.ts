@@ -1,7 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp } from './types.d'
+import { SafeApp, SAFE_APP_LOADING_STATUS } from './types.d'
 
 import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
@@ -111,7 +111,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
 ]
 
-export const getAppInfoFromOrigin = (origin: string): Record<string, string> | null => {
+export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
     return JSON.parse(origin)
   } catch (error) {
@@ -132,9 +132,25 @@ export const isAppManifestValid = (appInfo: SafeApp): boolean =>
   // no `error` (or `error` undefined)
   !appInfo.error
 
+export const getEmptySafeApp = (): SafeApp => {
+  return {
+    id: Math.random().toString(),
+    url: '',
+    name: 'unknown',
+    iconUrl: appsIconSvg,
+    error: false,
+    description: '',
+    loadingStatus: SAFE_APP_LOADING_STATUS.ADDED,
+  }
+}
+
 export const getAppInfoFromUrl = memoize(
   async (appUrl: string): Promise<SafeApp> => {
-    let res = { id: '', url: appUrl, name: 'unknown', iconUrl: appsIconSvg, error: true, description: '' }
+    let res = {
+      ...getEmptySafeApp(),
+      error: true,
+      loadingStatus: SAFE_APP_LOADING_STATUS.ERROR,
+    }
 
     if (!appUrl?.length) {
       return res
@@ -161,6 +177,7 @@ export const getAppInfoFromUrl = memoize(
         ...appInfo.data,
         id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
         error: false,
+        loadingStatus: SAFE_APP_LOADING_STATUS.SUCCESS,
       }
 
       if (appInfo.data.iconPath) {

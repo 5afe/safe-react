@@ -13,7 +13,7 @@ import styled, { css } from 'styled-components'
 import ManageApps from './components/ManageApps'
 import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
-import { SafeApp } from './types.d'
+import { SafeApp, SAFE_APP_LOADING_STATUS } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -67,7 +67,7 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 const NETWORK_NAME = getNetworkName()
 
 const Apps = (): React.ReactElement => {
-  const { appList, loadingAppList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
+  const { appList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [selectedAppId, setSelectedAppId] = useState<string>()
@@ -97,7 +97,7 @@ const Apps = (): React.ReactElement => {
   ])
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
-  const enabledApps = useMemo(() => appList.filter((a) => !a.disabled), [appList])
+  const enabledApps = useMemo(() => appList.filter((app) => !app.disabled), [appList])
   const { sendMessageToIframe } = useIframeMessageHandler(
     selectedApp,
     openConfirmationModal,
@@ -134,8 +134,15 @@ const Apps = (): React.ReactElement => {
   // Auto Select app first App
   useEffect(() => {
     const selectFirstEnabledApp = () => {
+      const areAppsLoading = appList.some((a) =>
+        [SAFE_APP_LOADING_STATUS.LOADING, SAFE_APP_LOADING_STATUS.ADDED].includes(a.loadingStatus),
+      )
+      if (areAppsLoading) {
+        return
+      }
+
       const firstEnabledApp = appList.find((a) => !a.disabled)
-      if (firstEnabledApp) {
+      if (firstEnabledApp && firstEnabledApp.loadingStatus === SAFE_APP_LOADING_STATUS.SUCCESS) {
         setSelectedAppId(firstEnabledApp.id)
       }
     }
@@ -171,7 +178,7 @@ const Apps = (): React.ReactElement => {
     })
   }, [ethBalance, safeAddress, selectedApp, sendMessageToIframe])
 
-  if (loadingAppList || !appList.length || !safeAddress) {
+  if (!appList.length || !safeAddress) {
     return (
       <LoadingContainer>
         <Loader size="md" />

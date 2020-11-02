@@ -9,7 +9,7 @@ import SubmitButtonStatus from './SubmitButtonStatus'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
-import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
+import { getEmptySafeApp } from '../utils'
 
 const StyledText = styled(Text)`
   margin-bottom: 19px;
@@ -39,14 +39,7 @@ const INITIAL_VALUES: AddAppFormValues = {
   agreementAccepted: false,
 }
 
-const APP_INFO: SafeApp = {
-  id: '',
-  url: '',
-  name: '',
-  iconUrl: appsIconSvg,
-  error: false,
-  description: '',
-}
+const APP_INFO = getEmptySafeApp()
 
 interface AddAppProps {
   appList: SafeApp[]
