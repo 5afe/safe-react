@@ -79,7 +79,7 @@ export const storeTx = async ({ transaction, safeAddress, dispatch, state }: Sto
     // `transaction` is the Cancellation tx
     // So we need to decide the `status` for the main transaction this `transaction` is cancelling
     let status: TransactionStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
-    // `cancelled` is a that becomes true if its corresponding Cancellation tx was successfully executed
+    // `cancelled`, will become true if its corresponding Cancellation tx was successfully executed
     let cancelled = false
 
     switch (transaction.status) {
