@@ -21,7 +21,7 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
+import { CollectibleSelectField } from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
 import { sm } from 'src/theme/variables'
 
@@ -49,7 +49,7 @@ type SendCollectibleProps = {
   onClose: () => void
   onNext: (txInfo: SendCollectibleTxInfo) => void
   recipientAddress?: string
-  selectedToken: NFTToken
+  selectedToken?: NFTToken
 }
 
 export type SendCollectibleTxInfo = {
@@ -219,7 +219,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={(selectedToken as any).assetAddress} />
+                    <TokenSelectField assets={nftAssets} initialValue={selectedToken?.assetAddress} />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -231,7 +231,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="md">
                   <Col>
-                    <CollectibleSelectField initialValue={(selectedToken as any).tokenId} tokens={selectedNFTTokens} />
+                    <CollectibleSelectField initialValue={selectedToken?.tokenId} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>

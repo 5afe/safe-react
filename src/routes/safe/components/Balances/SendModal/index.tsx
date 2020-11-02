@@ -161,7 +161,7 @@ const SendModal = ({
             onClose={onClose}
             onNext={handleSendCollectible}
             recipientAddress={recipientAddress}
-            selectedToken={selectedToken as NFTToken}
+            selectedToken={selectedToken as NFTToken | undefined}
           />
         )}
         {activeScreen === 'reviewCollectible' && (
