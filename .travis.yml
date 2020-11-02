@@ -28,7 +28,7 @@ matrix:
         - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
         - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
         - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
-      if: (branch = master AND NOT type = pull_request) OR (branch = release/* AND type = pull_request) OR tag IS present
+      if: (branch = master AND NOT type = pull_request) OR (branch =~ ^release\/.*$ AND type = pull_request) OR tag IS present
     - env:
         - REACT_APP_NETWORK='volta'
         - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
