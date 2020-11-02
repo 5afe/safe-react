@@ -28,7 +28,6 @@ const statusToLabel = {
   awaiting_confirmations: 'Awaiting confirmations',
   awaiting_execution: 'Awaiting execution',
   pending: 'Pending',
-  cacatua: 'Cacatúa',
 } as const
 
 const statusIconStyle = {
