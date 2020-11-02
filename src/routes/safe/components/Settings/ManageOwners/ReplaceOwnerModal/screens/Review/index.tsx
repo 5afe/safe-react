@@ -26,6 +26,9 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 import { styles } from './style'
+import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { List } from 'immutable'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -37,6 +40,8 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector)
+  const addressBook = useSelector(addressBookSelector)
+  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
   useEffect(() => {
     let isCurrent = true
@@ -106,7 +111,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
               </Paragraph>
             </Row>
             <Hairline />
-            {owners?.map(
+            {ownersWithAddressBookName?.map(
               (owner) =>
                 owner.address !== ownerAddress && (
                   <React.Fragment key={owner.address}>
