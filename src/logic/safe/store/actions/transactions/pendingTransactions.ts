@@ -150,9 +150,8 @@ export const removeTxFromStore = (
   if (transaction.isCancellationTx) {
     const safeTransactions = safeTransactionsSelector(state)
     const transactions = safeTransactions.withMutations((txs) => {
-      txs
-        .find(({ nonce }) => Number(nonce) === Number(transaction.nonce))
-        .set('status', TransactionStatus.AWAITING_YOUR_CONFIRMATION)
+      const txIndex = txs.findIndex(({ nonce }) => Number(nonce) === Number(transaction.nonce))
+      txs[txIndex].set('status', TransactionStatus.AWAITING_YOUR_CONFIRMATION)
     })
 
     batch(() => {
