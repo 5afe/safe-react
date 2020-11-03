@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import GnoForm from 'src/components/forms/GnoForm'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -29,6 +28,8 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { getExplorerInfo } from 'src/config'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -187,7 +188,7 @@ const SendCollectible = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
