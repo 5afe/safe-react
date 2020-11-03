@@ -53,7 +53,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`,
     disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+    networks: [ETHEREUM_NETWORK.MAINNET],
   },
   // Sablier
   {
