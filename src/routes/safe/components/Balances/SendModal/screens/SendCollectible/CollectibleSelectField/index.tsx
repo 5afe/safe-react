@@ -37,7 +37,7 @@ const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): Rea
           <ListItemText
             className={classes.tokenData}
             primary={shortener(token.name)}
-            secondary={`token ID: ${shortener(token.tokenId as string)}`}
+            secondary={`token ID: ${shortener(token.tokenId.toString())}`}
           />
         </>
       ) : (
