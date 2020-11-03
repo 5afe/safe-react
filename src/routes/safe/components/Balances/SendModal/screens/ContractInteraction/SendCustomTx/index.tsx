@@ -8,7 +8,6 @@ import Close from '@material-ui/icons/Close'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextareaField from 'src/components/forms/TextareaField'
@@ -32,7 +31,8 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export interface CreatedTx {
   contractAddress: string
@@ -184,7 +184,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
