@@ -4,25 +4,25 @@ import { getNetworkInfo } from 'src/config'
 import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
-import { AVAILABLE_CURRENCIES, BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
+import { BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Token } from 'src/logic/tokens/store/model/token'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
+const { nativeCoin } = getNetworkInfo()
+
 const getTokenPriceInCurrency = (
   token: Token,
-  currencySelected?: AVAILABLE_CURRENCIES,
+  currencySelected?: string,
   currencyValues?: BalanceCurrencyList,
   currencyRate?: number,
 ): string => {
   if (!currencySelected) {
     return ''
   }
-
   const currencyValue = currencyValues?.find(({ tokenAddress }) => {
-    const { nativeCoin } = getNetworkInfo()
     if (token.address === nativeCoin.address && !tokenAddress) {
       return true
     }
@@ -51,7 +51,7 @@ export interface BalanceData {
 
 export const getBalanceData = (
   activeTokens: List<Token>,
-  currencySelected?: AVAILABLE_CURRENCIES,
+  currencySelected?: string,
   currencyValues?: BalanceCurrencyList,
   currencyRate?: number,
 ): List<BalanceData> => {

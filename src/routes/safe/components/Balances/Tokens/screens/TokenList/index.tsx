@@ -62,7 +62,6 @@ export const TokenList = (props: Props): React.ReactElement => {
 
   const onCancelSearch = () => {
     setFilter('')
-    this.setState(() => ({ filter: '' }))
   }
 
   const onChangeSearchBar = (value: string) => {

@@ -1,13 +1,12 @@
+import React, { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
 
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -19,7 +18,7 @@ import Row from 'src/components/layout/Row'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -29,11 +28,18 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+
+export type CustomTx = {
+  contractAddress?: string
+  data?: string
+  value?: string
+}
 
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: { contractAddress?: string; data?: string; value?: string }
+  tx: CustomTx
 }
 
 const useStyles = makeStyles(styles)
@@ -72,15 +78,19 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress: safeAddress as string,
-        to: txRecipient as string,
-        valueInWei: txValue,
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-      }),
-    )
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txValue,
+          txData,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    } else {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+    }
 
     onClose()
   }
@@ -122,7 +132,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 {tx.contractAddress}
               </Paragraph>
               <CopyBtn content={tx.contractAddress as string} />
-              <EtherscanBtn value={tx.contractAddress as string} />
+              <ExplorerButton explorerUrl={getExplorerInfo(tx.contractAddress as string)} />
             </Block>
           </Col>
         </Row>

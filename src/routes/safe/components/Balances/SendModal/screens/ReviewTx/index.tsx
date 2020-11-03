@@ -2,14 +2,12 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
-import { withSnackbar } from 'notistack'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -21,7 +19,7 @@ import Row from 'src/components/layout/Row'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gasNew'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -33,12 +31,26 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
+export type ReviewTxProp = {
+  recipientAddress: string
+  amount: string
+  txRecipient: string
+  token: string
+}
+
+type ReviewTxProps = {
+  onClose: () => void
+  onPrev: () => void
+  tx: ReviewTxProp
+}
+
+const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -69,7 +81,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient, txData)
+      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
 
@@ -92,17 +104,19 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: txRecipient,
-        valueInWei: txAmount,
-        txData: data,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
+    if (safeAddress) {
+      dispatch(
+        createTransaction({
+          safeAddress: safeAddress,
+          to: txRecipient as string,
+          valueInWei: txAmount,
+          txData: data,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+        }),
+      )
+    } else {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+    }
     onClose()
   }
 
@@ -148,7 +162,7 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn value={tx.recipientAddress} />
+              <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
             </Block>
           </Col>
         </Row>
@@ -196,4 +210,4 @@ const ReviewTx = ({ closeSnackbar, enqueueSnackbar, onClose, onPrev, tx }) => {
   )
 }
 
-export default withSnackbar(ReviewTx)
+export default ReviewTx

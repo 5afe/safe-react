@@ -2,8 +2,8 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getGasPrice, getGasPriceOracle } from 'src/config'
 
-// const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
 
 export const checkReceiptStatus = async (hash) => {
@@ -26,29 +26,31 @@ export const checkReceiptStatus = async (hash) => {
   return Promise.resolve()
 }
 
-export const calculateGasPrice = async () => {
-  /*
-  const web3 = getWeb3()
-  const { network } = web3.version
-  const isMainnet = MAINNET_NETWORK === network
-
-  const url = isMainnet
-    ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
-    : 'https://safe-relay.dev.gnosisdev.com/'
-  */
-
+export const calculateGasPrice = async (): Promise<string> => {
   if (process.env.NODE_ENV === 'test') {
     return '20000000000'
   }
 
-  const url = 'https://ethgasstation.info/json/ethgasAPI.json'
-  // const errMsg = 'Error querying gas station'
-  const { data } = await axios.get(url)
+  const gasPrice = getGasPrice()
+  const gasPriceOracle = getGasPriceOracle()
 
-  return new BigNumber(data.average).multipliedBy(1e8).toString()
+  if (gasPrice) {
+    // Fixed gas price in configuration. xDai uses this approach
+    return new BigNumber(gasPrice).toString()
+  } else if (gasPriceOracle) {
+    const { url, gasParameter } = gasPriceOracle
+
+    // Fetch from gas price provider
+    const { data } = await axios.get(url)
+
+    return new BigNumber(data[gasParameter]).multipliedBy(1e8).toString()
+  } else {
+    const errorMsg = 'gasPrice or gasPriceOracle not set in config'
+    return Promise.reject(errorMsg)
+  }
 }
 
-export const calculateGasOf = async (data, from, to) => {
+export const calculateGasOf = async (data: string, from: string, to: string): Promise<number> => {
   const web3 = getWeb3()
   try {
     const gas = await web3.eth.estimateGas({ data, from, to })

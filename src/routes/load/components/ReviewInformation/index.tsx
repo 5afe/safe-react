@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import React from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -16,6 +15,8 @@ import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME, THRESHOLD } from 'src/routes/load/
 import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
+import { getExplorerInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const checkIfUserAddressIsAnOwner = (values: Record<string, string>, userAddress: string): boolean => {
   let isOwner = false
@@ -76,7 +77,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                   {shortVersionOf(safeAddress, 4)}
                 </Paragraph>
                 <CopyBtn content={safeAddress} />
-                <EtherscanBtn value={safeAddress} />
+                <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
               </Row>
             </Block>
             <Block margin="lg">
@@ -121,7 +122,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                           {address}
                         </Paragraph>
                         <CopyBtn content={address} />
-                        <EtherscanBtn value={address} />
+                        <ExplorerButton explorerUrl={getExplorerInfo(address)} />
                       </Block>
                     </Block>
                   </Col>

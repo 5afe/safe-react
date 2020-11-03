@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import GnoForm from 'src/components/forms/GnoForm'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -28,6 +27,9 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { getExplorerInfo } from 'src/config'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -43,13 +45,28 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
+type SendCollectibleProps = {
+  initialValues: any
+  onClose: () => void
+  onNext: (txInfo: SendCollectibleTxInfo) => void
+  recipientAddress?: string
+  selectedToken: NFTToken
+}
+
+export type SendCollectibleTxInfo = {
+  assetAddress: string
+  assetName: string
+  nftTokenId: string
+  recipientAddress?: string
+}
+
 const SendCollectible = ({
   initialValues,
   onClose,
   onNext,
   recipientAddress,
-  selectedToken = {},
-}): React.ReactElement => {
+  selectedToken,
+}: SendCollectibleProps): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
@@ -67,7 +84,7 @@ const SendCollectible = ({
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: SendCollectibleTxInfo) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       values.recipientAddress = selectedEntry?.address
@@ -171,7 +188,7 @@ const SendCollectible = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>

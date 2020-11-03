@@ -25,7 +25,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
   // Aave
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX1NUtvm9WjbvT79sTdeg3sw1NxZAM273y44nBy5d2jZb`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -57,7 +57,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
   // Sablier
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVmBWNY6fPrt6SwYynJoCrU7ZWydo3Zr9rDNQR5bcKsFb`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmboeZ9bae26Skg5xskCsXWjJuLjYk7aHgPh4BAnfRBDgo`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
@@ -74,8 +74,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
     networks: [
       ETHEREUM_NETWORK.MAINNET,
       ETHEREUM_NETWORK.RINKEBY,
-      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-      ETHEREUM_NETWORK.VOLTA,
+      //ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+      //ETHEREUM_NETWORK.VOLTA,
       // ETHEREUM_NETWORK.XDAI,
     ],
   },
