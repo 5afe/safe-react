@@ -1,13 +1,16 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
+// @todo (agustin) we need to use fixed gasPrice because the oracle is not working right now and it's returning 0
+// once the oracle is fixed we need to remove the fixed value
 const baseConfig: EnvironmentSettings = {
-  txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',  
-  safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
+  txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
+  safeAppsUrl: 'https://safe-apps-ewc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
   },
+  gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
@@ -21,11 +24,10 @@ const mainnet: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps.gnosis-safe.io',
+      safeAppsUrl: 'https://apps-ewc.gnosis-safe.io',
     },
   },
   network: {
@@ -41,7 +43,23 @@ const mainnet: NetworkConfig = {
       decimals: 18,
       logoUri: EwcLogo,
     },
-  }
+  },
+  disabledWallets:[
+    WALLETS.TREZOR,
+    WALLETS.LEDGER,
+    WALLETS.COINBASE,
+    WALLETS.DAPPER,
+    WALLETS.FORTMATIC,
+    WALLETS.OPERA,
+    WALLETS.OPERA_TOUCH,
+    WALLETS.PORTIS,
+    WALLETS.TORUS,
+    WALLETS.TRUST,
+    WALLETS.UNILOGIN,
+    WALLETS.WALLET_CONNECT,
+    WALLETS.WALLET_LINK,
+    WALLETS.AUTHEREUM
+  ]
 }
 
 export default mainnet

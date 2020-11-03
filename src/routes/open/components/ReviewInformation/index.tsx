@@ -2,9 +2,8 @@ import TableContainer from '@material-ui/core/TableContainer'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -18,6 +17,7 @@ import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExt
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 type ReviewComponentProps = {
   userAccount: string
@@ -118,7 +118,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />
-                        <EtherscanBtn value={addresses[index]} />
+                        <ExplorerButton explorerUrl={getExplorerInfo(addresses[index])} />
                       </Block>
                     </Block>
                   </Col>
