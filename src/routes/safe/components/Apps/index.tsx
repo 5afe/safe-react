@@ -28,6 +28,8 @@ import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { getNetworkName } from 'src/config'
 
+const loaderDotsSvg = require('src/routes/opening/assets/loader-dots.svg')
+
 const centerCSS = css`
   display: flex;
   align-items: center;
@@ -97,7 +99,15 @@ const Apps = (): React.ReactElement => {
   ])
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
-  const enabledApps = useMemo(() => appList.filter((app) => !app.disabled), [appList])
+  const enabledApps = useMemo(() => {
+    const areAppsLoading = appList.some((app) =>
+      [SAFE_APP_LOADING_STATUS.ADDED, SAFE_APP_LOADING_STATUS.LOADING].includes(app.loadingStatus),
+    )
+
+    return areAppsLoading
+      ? appList.map((app) => ({ ...app, name: 'Loading', iconUrl: loaderDotsSvg }))
+      : appList.filter((app) => !app.disabled)
+  }, [appList])
   const { sendMessageToIframe } = useIframeMessageHandler(
     selectedApp,
     openConfirmationModal,

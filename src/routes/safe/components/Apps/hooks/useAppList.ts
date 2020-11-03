@@ -4,8 +4,6 @@ import { getAppInfoFromUrl, getEmptySafeApp, staticAppsList } from '../utils'
 import { SafeApp, StoredSafeApp, SAFE_APP_LOADING_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
 
-const loaderDotsSvg = require('src/routes/opening/assets/loader-dots.svg')
-
 const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
 type onAppToggleHandler = (appId: string, enabled: boolean) => Promise<void>
@@ -114,8 +112,6 @@ const useAppList = (): UseAppListReturnType => {
         const appInfo = {
           ...getEmptySafeApp(),
           url: appUrl,
-          name: 'loading',
-          iconUrl: loaderDotsSvg,
         }
 
         appInfo.disabled = Boolean(currentApp.disabled)
