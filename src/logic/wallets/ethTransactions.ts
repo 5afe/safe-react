@@ -4,7 +4,6 @@ import { BigNumber } from 'bignumber.js'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracle } from 'src/config'
 
-// const MAINNET_NETWORK = 1
 export const EMPTY_DATA = '0x'
 
 export const checkReceiptStatus = async (hash) => {
@@ -28,16 +27,6 @@ export const checkReceiptStatus = async (hash) => {
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  /*
-  const web3 = getWeb3()
-  const { network } = web3.version
-  const isMainnet = MAINNET_NETWORK === network
-
-  const url = isMainnet
-    ? 'https://safe-relay.staging.gnosisdev.com/api/v1/gas-station/'
-    : 'https://safe-relay.dev.gnosisdev.com/'
-  */
-
   if (process.env.NODE_ENV === 'test') {
     return '20000000000'
   }
@@ -61,7 +50,7 @@ export const calculateGasPrice = async (): Promise<string> => {
   }
 }
 
-export const calculateGasOf = async (data, from, to) => {
+export const calculateGasOf = async (data: string, from: string, to: string): Promise<number> => {
   const web3 = getWeb3()
   try {
     const gas = await web3.eth.estimateGas({ data, from, to })
