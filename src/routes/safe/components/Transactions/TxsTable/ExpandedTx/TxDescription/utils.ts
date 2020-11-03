@@ -29,77 +29,140 @@ interface TxData {
   upgradeTx?: boolean
 }
 
+const getTxDataForModifySettingsTxs = (tx: Transaction): TxData => {
+  const txData: TxData = {}
+
+  if (!tx.modifySettingsTx || !tx.decodedParams) {
+    return txData
+  }
+
+  txData.recipient = tx.recipient
+  txData.modifySettingsTx = true
+
+  if (tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]) {
+    const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]
+    txData.action = SAFE_METHODS_NAMES.REMOVE_OWNER
+    txData.removedOwner = owner
+    txData.newThreshold = _threshold
+
+    return txData
+  }
+  if (tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]) {
+    const { _threshold } = tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]
+    txData.action = SAFE_METHODS_NAMES.CHANGE_THRESHOLD
+    txData.newThreshold = _threshold
+    return txData
+  }
+  if (tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]) {
+    const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]
+    txData.action = SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD
+    txData.addedOwner = owner
+    txData.newThreshold = _threshold
+    return txData
+  }
+
+  if (tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]) {
+    const { newOwner, oldOwner } = tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]
+    txData.action = SAFE_METHODS_NAMES.SWAP_OWNER
+    txData.removedOwner = oldOwner
+    txData.addedOwner = newOwner
+    return txData
+  }
+
+  if (tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]) {
+    const { module } = tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]
+    txData.action = SAFE_METHODS_NAMES.ENABLE_MODULE
+    txData.module = module
+    return txData
+  }
+
+  if (tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]) {
+    const { module } = tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]
+    txData.action = SAFE_METHODS_NAMES.DISABLE_MODULE
+    txData.module = module
+    return txData
+  }
+
+  return txData
+}
+
+const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
+  const txData: TxData = {}
+
+  if (!tx.decodedParams) {
+    return txData
+  }
+
+  if (tx.isTokenTransfer) {
+    const { to } = tx.decodedParams.transfer || {}
+    txData.recipient = to
+    txData.isTokenTransfer = true
+    return txData
+  }
+
+  if (tx.isCollectibleTransfer) {
+    const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
+    const { to, value } = safeTransferFrom || transferFrom || transfer || {}
+    txData.recipient = to
+    txData.tokenId = value
+    txData.isCollectibleTransfer = true
+
+    return txData
+  }
+
+  if (tx.modifySettingsTx) {
+    return getTxDataForModifySettingsTxs(tx)
+  }
+
+  if (tx.multiSendTx) {
+    txData.recipient = tx.recipient
+    txData.data = tx.data
+    txData.customTx = true
+    return txData
+  }
+
+  txData.recipient = tx.recipient
+  txData.data = tx.data
+  txData.customTx = true
+
+  return txData
+}
+
 export const getTxData = (tx: Transaction): TxData => {
   const txData: TxData = {}
 
   if (tx.decodedParams) {
-    if (tx.isTokenTransfer) {
-      const { to } = tx.decodedParams.transfer || {}
-      txData.recipient = to
-      txData.isTokenTransfer = true
-    } else if (tx.isCollectibleTransfer) {
-      const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
-      const { to, value } = safeTransferFrom || transferFrom || transfer || {}
-      txData.recipient = to
-      txData.tokenId = value
-      txData.isCollectibleTransfer = true
-    } else if (tx.modifySettingsTx) {
-      txData.recipient = tx.recipient
-      txData.modifySettingsTx = true
+    return getTxDataForTxsWithDecodedParams(tx)
+  }
 
-      if (tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]) {
-        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.REMOVE_OWNER]
-        txData.action = SAFE_METHODS_NAMES.REMOVE_OWNER
-        txData.removedOwner = owner
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]) {
-        const { _threshold } = tx.decodedParams[SAFE_METHODS_NAMES.CHANGE_THRESHOLD]
-        txData.action = SAFE_METHODS_NAMES.CHANGE_THRESHOLD
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]) {
-        const { _threshold, owner } = tx.decodedParams[SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD]
-        txData.action = SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD
-        txData.addedOwner = owner
-        txData.newThreshold = _threshold
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]) {
-        const { newOwner, oldOwner } = tx.decodedParams[SAFE_METHODS_NAMES.SWAP_OWNER]
-        txData.action = SAFE_METHODS_NAMES.SWAP_OWNER
-        txData.removedOwner = oldOwner
-        txData.addedOwner = newOwner
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]) {
-        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.ENABLE_MODULE]
-        txData.action = SAFE_METHODS_NAMES.ENABLE_MODULE
-        txData.module = module
-      } else if (tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]) {
-        const { module } = tx.decodedParams[SAFE_METHODS_NAMES.DISABLE_MODULE]
-        txData.action = SAFE_METHODS_NAMES.DISABLE_MODULE
-        txData.module = module
-      }
-    } else if (tx.multiSendTx) {
-      txData.recipient = tx.recipient
-      txData.data = tx.data
-      txData.customTx = true
-    } else {
-      txData.recipient = tx.recipient
-      txData.data = tx.data
-      txData.customTx = true
-    }
-  } else if (tx.customTx) {
+  if (tx.customTx) {
     txData.recipient = tx.recipient
     txData.data = tx.data
     txData.customTx = true
-  } else if (Number(tx.value) > 0) {
+    return txData
+  }
+  if (Number(tx.value) > 0) {
     txData.recipient = tx.recipient
-  } else if (tx.isCancellationTx) {
+    return txData
+  }
+
+  if (tx.isCancellationTx) {
     txData.cancellationTx = true
-  } else if (tx.creationTx) {
+    return txData
+  }
+
+  if (tx.creationTx) {
     txData.creationTx = true
-  } else if (tx.upgradeTx) {
+    return txData
+  }
+
+  if (tx.upgradeTx) {
     txData.upgradeTx = true
     txData.data = `The contract of this Safe is upgraded to Version ${getSafeVersion(tx.data)}`
-  } else {
-    txData.recipient = tx.recipient
+
+    return txData
   }
+  txData.recipient = tx.recipient
 
   return txData
 }
