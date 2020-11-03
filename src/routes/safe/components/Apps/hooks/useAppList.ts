@@ -12,7 +12,6 @@ type onAppRemovedHandler = (appId: string) => void
 
 type UseAppListReturnType = {
   appList: SafeApp[]
-  //  loadingAppList: boolean
   onAppToggle: onAppToggleHandler
   onAppAdded: onAppAddedHandler
   onAppRemoved: onAppRemovedHandler
