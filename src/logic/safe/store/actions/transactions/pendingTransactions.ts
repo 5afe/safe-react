@@ -10,6 +10,7 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { Transaction, TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
 import { safeTransactionsSelector } from 'src/logic/safe/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { AppReduxState } from 'src/store'
 
@@ -57,13 +58,17 @@ const updateTxBasedOnReceipt = ({
     : transaction.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
 
   return txToStore.withMutations((tx) => {
-    // updates confirmations status
-    tx.update('confirmations', (confirmations) => {
-      const index = confirmations.findIndex(({ owner }) => owner === from)
-      return index === -1 ? confirmations.push(makeConfirmation({ owner: from })) : confirmations
-    })
-      .updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear())
-      .updateIn(['ownersWithPendingActions', 'confirm'], (prev) => prev.clear())
+    const senderHasAlreadyConfirmed = tx.confirmations.findIndex(({ owner }) => sameAddress(owner, from)) !== -1
+
+    if (!senderHasAlreadyConfirmed) {
+      // updates confirmations status
+      tx.update('confirmations', (confirmations) => confirmations.push(makeConfirmation({ owner: from })))
+    }
+
+    tx.updateIn(['ownersWithPendingActions', 'reject'], (prev) => prev.clear()).updateIn(
+      ['ownersWithPendingActions', 'confirm'],
+      (prev) => prev.clear(),
+    )
   })
 }
 
