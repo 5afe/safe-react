@@ -4,10 +4,12 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { List } from 'immutable'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -24,11 +26,10 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-
-import { styles } from './style'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { List } from 'immutable'
+
+import { styles } from './style'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -129,7 +130,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn value={owner.address} />
+                            <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
                           </Block>
                         </Block>
                       </Col>
@@ -158,7 +159,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn value={ownerAddress} />
+                    <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                   </Block>
                 </Block>
               </Col>
@@ -183,7 +184,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {values.ownerAddress}
                     </Paragraph>
                     <CopyBtn content={values.ownerAddress} />
-                    <EtherscanBtn value={values.ownerAddress} />
+                    <ExplorerButton explorerUrl={getExplorerInfo(values.ownerAddress)} />
                   </Block>
                 </Block>
               </Col>
