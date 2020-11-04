@@ -17,7 +17,7 @@ export interface NetworkConfig {
 
 #### NetworkSettings
 
-- It contains the id of the ETH Network, the name of the network, information about the native coin of that network and a boolean that marks the network as a testnet or a production network.
+- It contains the Ethereum compatible network id, the network name, information about the native coin of that network and a boolean to indicate if the network is a testnet or a production network.
 
 ```typescript
 export type NetworkSettings = {
@@ -30,7 +30,7 @@ export type NetworkSettings = {
 }
 ```
 
-- Currently supported Ethereum-compatible networks:
+- Currently supported Ethereum compatible networks:
 
 ```typescript
 export enum ETHEREUM_NETWORK {
@@ -48,7 +48,7 @@ export enum ETHEREUM_NETWORK {
 }
 ```
 
-- For the native coin, this is the structure:
+- This is the structure to define the native coin:
 
 ```typescript
 type Token = {
@@ -63,7 +63,7 @@ type Token = {
 
 #### SafeFeatures
 
-Its an array that contains a list of features that should be disabled for the network. It's empty as default.
+It's an array that contains a list of features that should be disabled for the network. It's empty by default.
 
 ```typescript
 export type SafeFeatures = FEATURES[]
@@ -78,7 +78,7 @@ export enum FEATURES {
 
 #### Wallets
 
-It is an array that contains a list of wallets that will be disabled for the network. It's empty as default.
+It's an array that contains a list of wallets that will be disabled for the network. It's empty by default.
 
 ```typescript
 export type Wallets = WALLETS[]
@@ -106,7 +106,7 @@ export enum WALLETS {
 
 #### SafeEnviroments
 
-If the network has different enviroments, you can add them here, otherwise you should add only the production settings
+If the network has different enviroments, you can add them here, otherwise you should only add production settings
 
 ```typescript
 type SafeEnvironments = {
@@ -116,9 +116,9 @@ type SafeEnvironments = {
 }
 ```
 
-We use a transaction service (**txServiceUrl**) for fetching the transactions and balances of the safe and also to POST messages with the created transactions, this should be provided by Gnosis.
+We use a transaction service (**txServiceUrl**) to fetch transactions and balances of each safe and also to POST messages with the created transactions, this should be provided by Gnosis.
 
-The **networkExplorer** information is information related to the networkExplorer used for the given network (Blockscout for xDai, Etherscan for mainnet, etc). This is used for link transaction hashes and addresses to the given network explorer.
+The **networkExplorer** parameters are used to provide information related to the networkExplorer used for the given network (Blockscout for xDai, Etherscan for mainnet, etc). This is used for link transaction hashes and addresses to the given network explorer.
 
 ```typescript
 export type EnvironmentSettings = GasPrice & {
@@ -132,7 +132,7 @@ export type EnvironmentSettings = GasPrice & {
 }
 ```
 
-The **gasPrice** for the network in case it's a fixed amount (like xDai), otherwise you can give an oracle we can use to fetch the current gas price.
+The **gasPrice** is used to indicate a fixed amount for some networks (like xDai), otherwise you can provide an oracle we can use to fetch the current gas price.
 
 ```typescript
 type GasPrice = {
@@ -165,7 +165,7 @@ export type GasPriceOracle = {
 ---
 ## How to add a network 
 
-1) In case that is not already supported, add the network on the **ETHEREUM_NETWORK** enum in [`src/config/networks/network.d.ts`](/src/config/networks/network.d.ts)
+1) In case that it is not already supported, add the network on the **ETHEREUM_NETWORK** enum in [`src/config/networks/network.d.ts`](/src/config/networks/network.d.ts)
 
 ```typescript
 export enum ETHEREUM_NETWORK {
