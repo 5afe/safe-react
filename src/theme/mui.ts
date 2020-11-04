@@ -1,5 +1,4 @@
 import { createMuiTheme } from '@material-ui/core/styles'
-import { rgba } from 'polished'
 
 import {
   boldFont,
@@ -407,7 +406,7 @@ const theme = createMuiTheme({
     MuiCheckbox: {
       colorSecondary: {
         '&$disabled': {
-          color: rgba(secondary, 0.5),
+          color: `rgba(${secondary}, 0.5)`,
         },
       },
     },
