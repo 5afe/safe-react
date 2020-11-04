@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useSelector } from 'react-redux'
 
-import EtherscanLink from 'src/components/EtherscanLink'
+import { EtherscanLink } from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
