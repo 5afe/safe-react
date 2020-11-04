@@ -13,10 +13,16 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
-const SelectedCollectible = ({ tokenId, tokens }) => {
+type SelectedCollectibleProps = {
+  tokenId?: number | string
+  tokens: NFTToken[]
+}
+
+const SelectedCollectible = ({ tokenId, tokens }: SelectedCollectibleProps): React.ReactElement => {
   const classes = useSelectedCollectibleStyles()
   const token = tokenId && tokens ? tokens.find(({ tokenId: id }) => tokenId === id) : null
   const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
@@ -31,7 +37,7 @@ const SelectedCollectible = ({ tokenId, tokens }) => {
           <ListItemText
             className={classes.tokenData}
             primary={shortener(token.name)}
-            secondary={`token ID: ${shortener(token.tokenId)}`}
+            secondary={`token ID: ${shortener(token.tokenId.toString())}`}
           />
         </>
       ) : (
@@ -45,7 +51,12 @@ const SelectedCollectible = ({ tokenId, tokens }) => {
 
 const useCollectibleSelectFieldStyles = makeStyles(selectStyles)
 
-const CollectibleSelectField = ({ initialValue, tokens }) => {
+type CollectibleSelectFieldProps = {
+  initialValue?: number | string
+  tokens: NFTToken[]
+}
+
+export const CollectibleSelectField = ({ initialValue, tokens }: CollectibleSelectFieldProps): React.ReactElement => {
   const classes = useCollectibleSelectFieldStyles()
 
   return (
@@ -69,5 +80,3 @@ const CollectibleSelectField = ({ initialValue, tokens }) => {
     </Field>
   )
 }
-
-export default CollectibleSelectField
