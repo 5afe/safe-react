@@ -50,6 +50,7 @@ const xDai: NetworkConfig = {
     WALLETS.WALLET_CONNECT,
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
+    WALLETS.LATTICE,
   ],
   disabledFeatures: [
     FEATURES.ENS,

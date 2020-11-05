@@ -15,7 +15,8 @@ export enum WALLETS {
   COINBASE = 'coinbase',
   WALLET_LINK = 'walletLink',
   OPERA = 'opera',
-  OPERA_TOUCH = 'operaTouch'
+  OPERA_TOUCH = 'operaTouch',
+  LATTICE = 'lattice',
 }
 
 export enum FEATURES {
