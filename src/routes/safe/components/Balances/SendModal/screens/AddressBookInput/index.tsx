@@ -5,6 +5,8 @@ import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } fr
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { getNetworkConfigDisabledFeatures } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -27,6 +29,9 @@ export interface AddressBookProps {
 type BaseAddressBookInputProps = AddressBookProps & {
   addressBookEntries: AddressBookEntry[]
 }
+
+const disabledFeatures = getNetworkConfigDisabledFeatures()
+const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS)
 
 const BaseAddressBookInput = ({
   addressBookEntries,
@@ -72,34 +77,41 @@ const BaseAddressBookInput = ({
     switch (reason) {
       case 'input': {
         const normalizedValue = trimSpaces(value)
+        const _validateAddress = (address: string) => {
+          const validatedAddress = validateAddress(address)
+
+          if (!validatedAddress) {
+            fieldMutator('')
+            return
+          }
+
+          const newEntry =
+            typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+
+          updateAddressInfo(newEntry)
+        }
 
         if (normalizedValue) {
-          if (isValidEnsName(normalizedValue)) {
-            const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
+          if (isENSEnabled) {
+            if (isValidEnsName(normalizedValue)) {
+              const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
 
-            const validatedAddress = validateAddress(address)
+              const validatedAddress = validateAddress(address)
 
-            if (!validatedAddress) {
-              fieldMutator('')
-              return
+              if (!validatedAddress) {
+                fieldMutator('')
+                return
+              }
+
+              const newEntry =
+                typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
+
+              updateAddressInfo(newEntry)
+            } else {
+              _validateAddress(normalizedValue)
             }
-
-            const newEntry =
-              typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
-
-            updateAddressInfo(newEntry)
           } else {
-            const validatedAddress = validateAddress(normalizedValue)
-
-            if (!validatedAddress) {
-              fieldMutator('')
-              return
-            }
-
-            const newEntry =
-              typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
-
-            updateAddressInfo(newEntry)
+            _validateAddress(normalizedValue)
           }
         }
         break
