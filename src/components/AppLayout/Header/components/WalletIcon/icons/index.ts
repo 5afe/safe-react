@@ -3,6 +3,7 @@ import metamaskIcon from './icon-metamask.png'
 import walletConnectIcon from './icon-wallet-connect.svg'
 import trezorIcon from './icon-trezor.svg'
 import ledgerIcon from './icon-ledger.svg'
+import latticeIcon from './icon-lattice.svg'
 import dapperIcon from './icon-dapper.png'
 import fortmaticIcon from './icon-fortmatic.svg'
 import portisIcon from './icon-portis.svg'
@@ -41,6 +42,10 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
   [WALLET_PROVIDER.LEDGER]: {
     src: ledgerIcon,
     height: 25,
+  },
+  [WALLET_PROVIDER.LATTICE]: {
+    src: latticeIcon,
+    height: 41,
   },
   [WALLET_PROVIDER.DAPPER]: {
     src: dapperIcon,
