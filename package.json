@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.13.1",
+  "version": "2.14.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -42,7 +42,8 @@
     "test:coverage": "yarn test --coverage --watchAll=false",
     "coveralls": "cat ./coverage/lcov.info | coveralls",
     "storybook": "start-storybook -p 9009 -s public",
-    "build-storybook": "build-storybook -s public"
+    "build-storybook": "build-storybook -s public",
+    "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/"
   },
   "husky": {
     "hooks": {
@@ -167,13 +168,15 @@
   "dependencies": {
     "@gnosis.pm/safe-apps-sdk": "https://github.com/gnosis/safe-apps-sdk.git#3f0689f",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#70e57bdd1e0fd5dfdf5768076577c1e000b5fe28",
+    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#8d8508e",    
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid": "5.28.0",
     "@material-ui/core": "4.11.0",
     "@material-ui/icons": "4.9.1",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@openzeppelin/contracts": "3.1.0",
+    "@sentry/react": "^5.27.1",
+    "@sentry/tracing": "^5.27.1",
     "@truffle/contract": "4.2.26",
     "async-sema": "^3.1.0",
     "axios": "0.20.0",
@@ -231,6 +234,7 @@
     "web3-utils": "^1.3.0"
   },
   "devDependencies": {
+    "@sentry/cli": "^1.58.0",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
     "@storybook/addons": "^5.3.19",
