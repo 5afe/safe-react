@@ -8,14 +8,14 @@ import {
   getERC721TokenContract,
 } from 'src/logic/tokens/store/actions/fetchTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
+import { store } from 'src/store'
+import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
 
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
@@ -45,7 +45,7 @@ export const isTokenTransfer = (tx: TxServiceModel): boolean => {
   return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
 }
 
-export const isSendERC721Transaction = (tx: TxServiceModel, txCode?: string, knownTokens?: TokenState): boolean => {
+export const isSendERC721Transaction = (tx: TxServiceModel): boolean => {
   // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
   // but no proper ERC721 standard implemented
   const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
@@ -55,11 +55,10 @@ export const isSendERC721Transaction = (tx: TxServiceModel, txCode?: string, kno
     hasERC721Transfer = tx.dataDecoded.parameters.findIndex((param) => sameString(param.name, 'tokenId')) !== -1
   }
 
-  return (
-    (txCode?.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) && !sameAddress(tx.to, ENS_TOKEN_CONTRACT)) ||
-    (isTokenTransfer(tx) && !knownTokens?.get(tx.to)) ||
-    hasERC721Transfer
-  )
+  // Note: this is only valid with our current case (client rendering), if we move to server side rendering we need to refactor this
+  const state = store.getState()
+  const knownAssets = nftAssetsListAddressesSelector(state)
+  return knownAssets.includes(tx.to) || hasERC721Transfer
 }
 
 export const getERC721Symbol = async (contractAddress: string): Promise<string> => {
@@ -99,12 +98,8 @@ export const getERC20DecimalsAndSymbol = async (
   return tokenInfo
 }
 
-export const isSendERC20Transaction = async (
-  tx: TxServiceModel,
-  txCode?: string,
-  knownTokens?: TokenState,
-): Promise<boolean> => {
-  let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
+export const isSendERC20Transaction = async (tx: TxServiceModel): Promise<boolean> => {
+  let isSendTokenTx = !isSendERC721Transaction(tx) && isTokenTransfer(tx)
 
   if (isSendTokenTx) {
     const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
