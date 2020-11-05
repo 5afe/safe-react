@@ -46,9 +46,6 @@ export const isTokenTransfer = (tx: TxServiceModel): boolean => {
 }
 
 export const isSendERC721Transaction = (tx: TxServiceModel): boolean => {
-  // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
-  // but no proper ERC721 standard implemented
-  const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
   let hasERC721Transfer = false
 
   if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
@@ -68,7 +65,12 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
     const tokenInstance = await ERC721token.at(contractAddress)
     tokenSymbol = tokenInstance.symbol()
   } catch (err) {
-    console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
+    // If the contract address is an ENS token contract, we know that the ERC721 standard is not proper implemented
+    // The method symbol() is missing
+    const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
+    if (!sameString(contractAddress, ENS_TOKEN_CONTRACT)) {
+      console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
+    }
   }
   return tokenSymbol
 }
