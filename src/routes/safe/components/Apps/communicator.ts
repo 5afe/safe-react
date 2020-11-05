@@ -1,15 +1,15 @@
 import { MutableRefObject } from 'react'
 
 class AppCommunicator {
-  #iframe: HTMLIFrameElement
+  private iframe: HTMLIFrameElement
 
   constructor(iframeRef: MutableRefObject<HTMLIFrameElement>) {
-    this.#iframe = iframeRef.current
+    this.iframe = iframeRef.current
   }
 }
 
-const useAppCommunicator = () => {
-  return new AppCommunicator()
+const useAppCommunicator = (iframeRef: MutableRefObject<HTMLIFrameElement>): AppCommunicator => {
+  return new AppCommunicator(iframeRef)
 }
 
 export { useAppCommunicator }

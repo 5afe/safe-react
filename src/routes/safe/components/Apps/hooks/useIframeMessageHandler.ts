@@ -9,8 +9,7 @@ import {
   RequestId,
   Transaction,
   LowercaseNetworks,
-  SendTransactionParams,
-} from '@gnosis.pm/safe-apps-sdk'
+} from '@gnosis.pm/safe-apps-sdk-v1'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { getNetworkName, getTxServiceUrl } from 'src/config/'
@@ -19,7 +18,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { TransactionParams } from '../index'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
@@ -43,7 +42,7 @@ const NETWORK_NAME = getNetworkName()
 
 const useIframeMessageHandler = (
   selectedApp: SafeApp | undefined,
-  openConfirmationModal: (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) => void,
+  openConfirmationModal: (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) => void,
   closeModal: () => void,
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
@@ -88,44 +87,6 @@ const useIframeMessageHandler = (
               messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS],
               undefined,
               requestId,
-            )
-          }
-          break
-        }
-
-        case SDK_MESSAGES.SEND_TRANSACTIONS_V2: {
-          const payload = messagePayload as SDKMessageToPayload[typeof SDK_MESSAGES.SEND_TRANSACTIONS_V2]
-          if (payload) {
-            openConfirmationModal(payload.txs, payload.params, requestId)
-          }
-          break
-        }
-
-        case SDK_MESSAGES.RPC_CALL: {
-          const payload = messagePayload as SDKMessageToPayload['RPC_CALL']
-
-          if (
-            web3ReadOnly.currentProvider !== null &&
-            typeof web3ReadOnly.currentProvider !== 'string' &&
-            'send' in web3ReadOnly.currentProvider
-          ) {
-            web3ReadOnly.currentProvider?.send?.(
-              {
-                jsonrpc: '2.0',
-                method: payload?.call,
-                params: payload?.params,
-                id: '1',
-              },
-              (err, res) => {
-                if (!err) {
-                  const rpcCallMsg = {
-                    messageId: INTERFACE_MESSAGES.RPC_CALL_RESPONSE,
-                    data: res,
-                  }
-
-                  sendMessageToIframe(rpcCallMsg, requestId)
-                }
-              },
             )
           }
           break

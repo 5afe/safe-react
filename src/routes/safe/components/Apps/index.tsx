@@ -1,11 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
-import {
-  INTERFACE_MESSAGES,
-  Transaction,
-  RequestId,
-  LowercaseNetworks,
-  SendTransactionParams,
-} from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
@@ -50,11 +44,15 @@ const CenteredMT = styled.div`
   margin-top: 16px;
 `
 
+export type TransactionParams = {
+  safeTxGas?: number
+}
+
 type ConfirmTransactionModalState = {
   isOpen: boolean
   txs: Transaction[]
   requestId?: RequestId
-  params?: SendTransactionParams
+  params?: TransactionParams
 }
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
@@ -83,7 +81,7 @@ const Apps = (): React.ReactElement => {
   const ethBalance = useSelector(safeEthBalanceSelector)
 
   const openConfirmationModal = useCallback(
-    (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) =>
+    (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
       setConfirmTransactionModal({
         isOpen: true,
         txs,
