@@ -72,7 +72,8 @@ export enum FEATURES {
   ERC721 = 'ERC721',
   ERC1155 = 'ERC1155',
   SAFE_APPS = 'SAFE_APPS',
-  CONTRACT_INTERACTION = 'CONTRACT_INTERACTION'
+  CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
+  ENS = 'ENS'
 }
 ```
 
@@ -235,7 +236,7 @@ const rinkeby: NetworkConfig = {
       address: '',
       name: '',
       symbol: '',
-      decimals: ?,
+      decimals: 0,
       logoUri: '',
     },
   },
