@@ -5,9 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -32,6 +31,7 @@ import { textShortener } from 'src/utils/strings'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -153,7 +153,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn value={tx.recipientAddress} />
+              <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
             </Block>
           </Col>
         </Row>

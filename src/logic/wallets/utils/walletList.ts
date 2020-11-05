@@ -41,6 +41,12 @@ const wallets: Wallet[] = [
   { walletName: WALLETS.TRUST, preferred: true, desktop: false },
   { walletName: WALLETS.DAPPER, desktop: false },
   {
+    walletName: WALLETS.LATTICE,
+    rpcUrl,
+    appName: 'Gnosis Safe',
+    desktop: false,
+  },
+  {
     walletName: WALLETS.FORTMATIC,
     apiKey: FORTMATIC_KEY,
     desktop: true,

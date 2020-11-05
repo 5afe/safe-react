@@ -5,7 +5,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import GnoForm from 'src/components/forms/GnoForm'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -21,7 +20,7 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
+import { CollectibleSelectField } from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
 import { sm } from 'src/theme/variables'
 
@@ -29,6 +28,8 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { getExplorerInfo } from 'src/config'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -49,7 +50,7 @@ type SendCollectibleProps = {
   onClose: () => void
   onNext: (txInfo: SendCollectibleTxInfo) => void
   recipientAddress?: string
-  selectedToken: NFTToken
+  selectedToken?: NFTToken
 }
 
 export type SendCollectibleTxInfo = {
@@ -187,7 +188,7 @@ const SendCollectible = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
@@ -219,7 +220,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={(selectedToken as any).assetAddress} />
+                    <TokenSelectField assets={nftAssets} initialValue={selectedToken?.assetAddress} />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -231,7 +232,7 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="md">
                   <Col>
-                    <CollectibleSelectField initialValue={(selectedToken as any).tokenId} tokens={selectedNFTTokens} />
+                    <CollectibleSelectField initialValue={selectedToken?.tokenId} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>
