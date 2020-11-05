@@ -1,7 +1,7 @@
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import * as React from 'react'
 
 import styles from './Layout.module.scss'
+import { Card, Title, Text, Divider } from '@gnosis.pm/safe-react-components'
 
 import ConnectButton from 'src/components/ConnectButton'
 import Block from 'src/components/layout/Block'
@@ -10,16 +10,42 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
-import { marginButtonImg, secondary } from 'src/theme/variables'
+import { marginButtonImg } from 'src/theme/variables'
+import styled from 'styled-components'
 
 const plus = require('../assets/new.svg')
 const safe = require('../assets/safe.svg')
 
-const openIconStyle = {
-  height: '13px',
-  color: secondary,
-  marginBottom: '-2px',
-}
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+const StyledCardDouble = styled(Card)`
+  display: flex;
+  padding: 0;
+`
+
+const StyledCard = styled(Card)`
+  margin: 0 20px 0 0;
+  max-width: 33%;
+`
+const CardsCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  padding: 24px;
+`
+
+/* const StyledDoubleCard = styled(Card)`
+  display: inline-block;
+  margin: 0 20px 0 0;
+  position: relative;
+`
+
+const StyledDivider = styled(Divider)`
+  left: 50%;
+  position: absolute;
+  margin: -24px 0 0 0;
+`  */
 
 const buttonStyle = {
   marginLeft: marginButtonImg,
@@ -61,30 +87,24 @@ export const LoadSafe = ({ provider, size }) => (
 const Welcome = ({ isOldMultisigMigration, provider }: any) => {
   const headingText = isOldMultisigMigration ? (
     <>
-      We will replicate the owner structure from your existing Gnosis MultiSig
-      <br />
-      to let you test the new interface.
-      <br />
-      As soon as you feel comfortable, start moving funds to your new Safe.
-      <br />{' '}
+      We will replicate the owner structure from your existing Gnosis MultiSig to let you test the new interface. As
+      soon as you feel comfortable, start moving funds to your new Safe.
     </>
   ) : (
     <>
-      Gnosis Safe Multisig is the most secure way to manage crypto funds
-      <br />
-      collectively. It is an improvement of the Gnosis MultiSig, which is used by more than 3000 teams
-      <br /> and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
-      <br /> design, formally verified smart contracts and vastly improved user experience.{' '}
+      Gnosis Safe Multisig is the most trusted platform to manage <br /> digital assets on Ethereum. Here is how to get
+      started:{' '}
     </>
   )
   return (
     <Block className={styles.safe}>
-      <Heading align="center" margin="lg" tag="h1" weight="bold">
-        Welcome to
-        <br />
-        Gnosis Safe Multisig
-      </Heading>
-      <Heading align="center" margin="xl" tag="h3">
+      <Title size="md">Welcome to Gnosis Safe Multisig</Title>
+      {/* <Heading align="center" margin="lg" tag="h1" weight="bold">
+        Welcome to Gnosis Safe Multisig
+      </Heading> */}
+      <Title size="xs">{headingText}</Title>
+
+      {/* <Heading align="center" margin="xl" tag="h3">
         {headingText}
         <a
           className={styles.learnMoreLink}
@@ -95,15 +115,44 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
           Learn more
           <OpenInNew style={openIconStyle} />
         </a>
-      </Heading>
+      </Heading> */}
       {provider ? (
         <>
-          <Block className={styles.safeActions} margin="md">
-            <CreateSafe provider={provider} size="large" />
-          </Block>
-          <Block className={styles.safeActions} margin="md">
-            <LoadSafe provider={provider} size="large" />
-          </Block>
+          <Wrapper>
+            <StyledCard>
+              <Title size="xs">Connect wallet</Title>
+              <Text size="xl">
+                Gnosis Safe Multisig supports a wide range of wallets that you can choose to be one of the
+                authentication factors.
+              </Text>
+              <Block className={styles.LoadSafe} margin="md" padding="lg">
+                <LoadSafe provider={provider} size="large" />
+              </Block>
+            </StyledCard>
+            <StyledCardDouble>
+              <CardsCol>
+                <Title size="xs">Create Safe</Title>
+                <Text size="xl">
+                  Create a new Safe Multisig that is controlled by one or multiple owners. <br />
+                  You will be required to pay a network fee for creating your new Safe.
+                </Text>
+                <Block className={styles.safeActions} margin="md">
+                  <CreateSafe provider={provider} size="large" />
+                </Block>
+              </CardsCol>
+              <Divider orientation="vertical" />
+              <CardsCol>
+                <Title size="xs">Load Safe</Title>
+                <Text size="xl">
+                  Create a new Safe Multisig that is controlled by one or multiple owners. <br />
+                  You will be required to pay a network fee for creating your new Safe.
+                </Text>
+                <Block className={styles.safeActions} margin="md">
+                  <LoadSafe provider={provider} size="large" />
+                </Block>
+              </CardsCol>
+            </StyledCardDouble>
+          </Wrapper>
         </>
       ) : (
         <Block className={styles.connectWallet} margin="md">
