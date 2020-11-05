@@ -128,6 +128,8 @@ const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
   return txData
 }
 
+// @todo (agustin) this function does not makes much sense
+// it should be refactored to simplify unnecessary if's checks and re-asigning props to the txData object
 export const getTxData = (tx: Transaction): TxData => {
   const txData: TxData = {}
 
