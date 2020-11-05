@@ -16,13 +16,6 @@ export const CK_ADDRESS = {
   [ETHEREUM_NETWORK.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
 }
 
-// ENS Contract Addresses by network
-// This is an exception made for ENS tokens.
-// Given that ENS is behind a Proxy, we fail to identify it as a valid ERC721 looking a
-export const ENS_ADDRESS = {
-  [ETHEREUM_NETWORK.MAINNET]: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
-}
-
 // safeTransferFrom(address,address,uint256)
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
