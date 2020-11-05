@@ -14,8 +14,8 @@ import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
 import { sameString } from 'src/utils/strings'
+import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions'
 
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
@@ -51,7 +51,7 @@ export const isSendERC721Transaction = (tx: TxServiceModel, txCode?: string, kno
   const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
   let hasERC721Transfer = false
 
-  if (tx.dataDecoded && sameString(tx.dataDecoded.method, SAFE_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
+  if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
     hasERC721Transfer = tx.dataDecoded.parameters.findIndex((param) => sameString(param.name, 'tokenId')) !== -1
   }
 

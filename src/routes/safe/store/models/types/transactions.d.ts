@@ -229,7 +229,6 @@ export const SAFE_METHODS_NAMES = {
   SWAP_OWNER: 'swapOwner',
   ENABLE_MODULE: 'enableModule',
   DISABLE_MODULE: 'disableModule',
-  SAFE_TRANSFER_FROM: 'safeTransferFrom',
 }
 
 export const METHOD_TO_ID = {
