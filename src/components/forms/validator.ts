@@ -1,10 +1,10 @@
 import { List } from 'immutable'
 import memoize from 'lodash.memoize'
+import { isFeatureEnabled } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getNetworkConfigDisabledFeatures } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
 
 type ValidatorReturnType = string | undefined
 type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -61,13 +61,12 @@ export const ok = (): undefined => undefined
 
 export const mustBeEthereumAddress = memoize(
   (address: string): ValidatorReturnType => {
-    const disabledFeatures = getNetworkConfigDisabledFeatures()
-    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
-
     const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
 
-    const errorMessage = `Address should be a valid Ethereum address${isENSEnabled ? ' or ENS name' : ''}`
+    const errorMessage = `Address should be a valid Ethereum address${
+      isFeatureEnabled(FEATURES.ENS_LOOKUP) ? ' or ENS name' : ''
+    }`
 
     return startsWith0x && isAddress ? undefined : errorMessage
   },
@@ -76,10 +75,10 @@ export const mustBeEthereumAddress = memoize(
 export const mustBeEthereumContractAddress = memoize(
   async (address: string): Promise<ValidatorReturnType> => {
     const contractCode = await getWeb3().eth.getCode(address)
-    const disabledFeatures = getNetworkConfigDisabledFeatures()
-    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
 
-    const errorMessage = `Address should be a valid Ethereum contract address${isENSEnabled ? ' or ENS name' : ''}`
+    const errorMessage = `Address should be a valid Ethereum contract address${
+      isFeatureEnabled(FEATURES.ENS_LOOKUP) ? ' or ENS name' : ''
+    }`
 
     return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '' ? errorMessage : undefined
   },

@@ -5,7 +5,7 @@ import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } fr
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getNetworkConfigDisabledFeatures } from 'src/config'
+import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -32,9 +32,6 @@ export interface BaseAddressBookInputProps extends AddressBookProps {
   setValidationText: Dispatch<SetStateAction<string | undefined>>
   validationText: string | undefined
 }
-
-const disabledFeatures = getNetworkConfigDisabledFeatures()
-const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
 
 const BaseAddressBookInput = ({
   addressBookEntries,
@@ -86,7 +83,7 @@ const BaseAddressBookInput = ({
         }
 
         // ENS-enabled resolve/validation
-        if (isENSEnabled && isValidEnsName(normalizedValue)) {
+        if (isFeatureEnabled(FEATURES.ENS_LOOKUP) && isValidEnsName(normalizedValue)) {
           const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
 
           const validatedAddress = validateAddress(address)
