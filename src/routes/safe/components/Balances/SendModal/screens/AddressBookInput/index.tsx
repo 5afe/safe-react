@@ -34,7 +34,7 @@ export interface BaseAddressBookInputProps extends AddressBookProps {
 }
 
 const disabledFeatures = getNetworkConfigDisabledFeatures()
-const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS)
+const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
 
 const BaseAddressBookInput = ({
   addressBookEntries,

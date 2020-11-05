@@ -62,7 +62,7 @@ export const ok = (): undefined => undefined
 export const mustBeEthereumAddress = memoize(
   (address: string): ValidatorReturnType => {
     const disabledFeatures = getNetworkConfigDisabledFeatures()
-    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS)
+    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
 
     const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
@@ -77,7 +77,7 @@ export const mustBeEthereumContractAddress = memoize(
   async (address: string): Promise<ValidatorReturnType> => {
     const contractCode = await getWeb3().eth.getCode(address)
     const disabledFeatures = getNetworkConfigDisabledFeatures()
-    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS)
+    const isENSEnabled = disabledFeatures.every((feature) => feature !== FEATURES.ENS_LOOKUP)
 
     const errorMessage = `Address should be a valid Ethereum contract address${isENSEnabled ? ' or ENS name' : ''}`
 

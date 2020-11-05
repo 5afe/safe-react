@@ -59,7 +59,7 @@ const mainnet: NetworkConfig = {
     WALLETS.LATTICE,
   ],
   disabledFeatures: [
-    FEATURES.ENS,
+    FEATURES.ENS_LOOKUP,
   ],
 }
 

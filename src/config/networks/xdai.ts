@@ -53,7 +53,7 @@ const xDai: NetworkConfig = {
     WALLETS.LATTICE,
   ],
   disabledFeatures: [
-    FEATURES.ENS,
+    FEATURES.ENS_LOOKUP,
   ],
 }
 
