@@ -15,7 +15,7 @@ import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/tra
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions'
+import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
 
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
