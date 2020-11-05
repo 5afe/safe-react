@@ -4,7 +4,7 @@ import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
 import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { mustBeEthereumAddress } from 'src/components/forms/validator'
+import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { getNetworkConfigDisabledFeatures } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -26,8 +26,11 @@ export interface AddressBookProps {
   setSelectedEntry: Dispatch<SetStateAction<{ address: string; name: string }> | null>
 }
 
-type BaseAddressBookInputProps = AddressBookProps & {
+export interface BaseAddressBookInputProps extends AddressBookProps {
   addressBookEntries: AddressBookEntry[]
+  setSelectedEntry: (args: { address: string; name: string } | null) => void
+  setValidationText: Dispatch<SetStateAction<string | undefined>>
+  validationText: string | undefined
 }
 
 const disabledFeatures = getNetworkConfigDisabledFeatures()
@@ -38,9 +41,9 @@ const BaseAddressBookInput = ({
   fieldMutator,
   setIsValidAddress,
   setSelectedEntry,
+  setValidationText,
+  validationText,
 }: BaseAddressBookInputProps): ReactElement => {
-  const [validationText, setValidationText] = useState<string>('')
-
   const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
     setSelectedEntry(addressEntry)
     fieldMutator(addressEntry.address)
@@ -77,43 +80,41 @@ const BaseAddressBookInput = ({
     switch (reason) {
       case 'input': {
         const normalizedValue = trimSpaces(value)
-        const _validateAddress = (address: string) => {
+
+        if (!normalizedValue) {
+          break
+        }
+
+        // ENS-enabled resolve/validation
+        if (isENSEnabled && isValidEnsName(normalizedValue)) {
+          const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
+
           const validatedAddress = validateAddress(address)
 
           if (!validatedAddress) {
             fieldMutator('')
-            return
+            break
           }
 
-          const newEntry =
-            typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+          const newEntry = typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
 
           updateAddressInfo(newEntry)
+          break
         }
 
-        if (normalizedValue) {
-          if (isENSEnabled) {
-            if (isValidEnsName(normalizedValue)) {
-              const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
+        // ETH address validation
+        const validatedAddress = validateAddress(normalizedValue)
 
-              const validatedAddress = validateAddress(address)
-
-              if (!validatedAddress) {
-                fieldMutator('')
-                return
-              }
-
-              const newEntry =
-                typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
-
-              updateAddressInfo(newEntry)
-            } else {
-              _validateAddress(normalizedValue)
-            }
-          } else {
-            _validateAddress(normalizedValue)
-          }
+        if (!validatedAddress) {
+          fieldMutator('')
+          break
         }
+
+        const newEntry =
+          typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+
+        updateAddressInfo(newEntry)
+
         break
       }
     }
@@ -154,12 +155,26 @@ const BaseAddressBookInput = ({
 
 export const AddressBookInput = (props: AddressBookProps): ReactElement => {
   const addressBookEntries = useSelector(addressBookSelector)
-  return <BaseAddressBookInput addressBookEntries={addressBookEntries} {...props} />
+  const [validationText, setValidationText] = useState<string>('')
+
+  return (
+    <BaseAddressBookInput
+      addressBookEntries={addressBookEntries}
+      setValidationText={setValidationText}
+      validationText={validationText}
+      {...props}
+    />
+  )
 }
 
-export const ContractsAddressBookInput = (props: AddressBookProps): ReactElement => {
+export const ContractsAddressBookInput = ({
+  setIsValidAddress,
+  setSelectedEntry,
+  ...props
+}: AddressBookProps): ReactElement => {
   const addressBookEntries = useSelector(addressBookSelector)
   const [filteredEntries, setFilteredEntries] = useState<AddressBookEntry[]>([])
+  const [validationText, setValidationText] = useState<string>('')
 
   useEffect(() => {
     const filterContractAddresses = async (): Promise<void> => {
@@ -169,5 +184,23 @@ export const ContractsAddressBookInput = (props: AddressBookProps): ReactElement
     filterContractAddresses()
   }, [addressBookEntries])
 
-  return <BaseAddressBookInput addressBookEntries={filteredEntries} {...props} />
+  const onSetSelectedEntry = async (selectedEntry) => {
+    if (selectedEntry?.address) {
+      // verify if `address` is a contract
+      const contractAddressErrorMessage = await mustBeEthereumContractAddress(selectedEntry.address)
+      setIsValidAddress(!contractAddressErrorMessage)
+      contractAddressErrorMessage && setValidationText(contractAddressErrorMessage)
+    }
+  }
+
+  return (
+    <BaseAddressBookInput
+      addressBookEntries={filteredEntries}
+      setIsValidAddress={setIsValidAddress}
+      setSelectedEntry={onSetSelectedEntry}
+      setValidationText={setValidationText}
+      validationText={validationText}
+      {...props}
+    />
+  )
 }
