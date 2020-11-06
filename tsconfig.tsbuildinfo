@@ -5255,7 +5255,7 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/hooks/useiframemessagehandler.ts": {
-        "version": "f8566f192f5dc87f7a7376f663277ea2014009da673d115e06314475d4b7e603",
+        "version": "99e093189c9d99c55028371a721d7a4ec954ff327dc6e959db5ab75f6fe34170",
         "signature": "d68211d02b36a7e1309ca90f35e6d6e3f34f4e15ad0c7ac65b4a7bc5b5930718",
         "affectsGlobalScope": false
       },
@@ -6490,8 +6490,8 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "105998b98a8cd2478fdd917bcd4f13d1254a0f4daa3cf9f9065ff247946dd732",
-        "signature": "3aea3fe93dc7ffac7763c48f19be432ee9f725824b7e37cb3b5696138ed6d617",
+        "version": "6de1b7c3eafe54fc1bb13c1361db4f2d8c918aae74548365743dc9789f40f9cf",
+        "signature": "ff004973179a0ae1b85a78c342e386c833bd4ddd443bab01b6e0e2d32dd21f3f",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/layout/style.ts": {
@@ -14631,7 +14631,8 @@
       "./src/routes/safe/components/apps/communicator.ts": [
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts",
         "./node_modules/@types/react/index.d.ts",
-        "./node_modules/date-fns/typings.d.ts"
+        "./node_modules/date-fns/typings.d.ts",
+        "./src/routes/safe/components/apps/types.d.ts"
       ],
       "./src/routes/safe/components/apps/components/appframe.tsx": [
         "./node_modules/@gnosis.pm/safe-react-components/dist/index.d.ts",
@@ -22760,7 +22761,8 @@
       ],
       "./src/routes/safe/components/apps/communicator.ts": [
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts",
-        "./node_modules/@types/react/index.d.ts"
+        "./node_modules/@types/react/index.d.ts",
+        "./src/routes/safe/components/apps/types.d.ts"
       ],
       "./src/routes/safe/components/apps/components/appframe.tsx": [
         "./node_modules/@types/react/index.d.ts",
@@ -24752,7 +24754,29 @@
       "./src/routes/safe/components/apps/addappform/appurl.tsx",
       "./src/routes/safe/components/apps/addappform/index.tsx",
       "./src/routes/safe/components/apps/addappform/submitbuttonstatus.tsx",
-      "./src/routes/safe/components/apps/communicator.ts",
+      [
+        "./src/routes/safe/components/apps/communicator.ts",
+        [
+          {
+            "file": "./src/routes/safe/components/apps/communicator.ts",
+            "start": 1232,
+            "length": 30,
+            "messageText": "Expected 2 arguments, but got 1.",
+            "category": 1,
+            "code": 2554,
+            "relatedInformation": [
+              {
+                "file": "./src/routes/safe/components/apps/communicator.ts",
+                "start": 306,
+                "length": 12,
+                "messageText": "An argument for 'app' was not provided.",
+                "category": 3,
+                "code": 6210
+              }
+            ]
+          }
+        ]
+      ],
       "./src/routes/safe/components/apps/components/appframe.tsx",
       "./src/routes/safe/components/apps/components/confirmtransactionmodal.tsx",
       "./src/routes/safe/components/apps/components/gasestimationinfo.tsx",
