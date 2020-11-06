@@ -1,4 +1,5 @@
 import { createMuiTheme } from '@material-ui/core/styles'
+import { fade } from '@material-ui/core/styles/colorManipulator'
 
 import {
   boldFont,
@@ -406,7 +407,7 @@ const theme = createMuiTheme({
     MuiCheckbox: {
       colorSecondary: {
         '&$disabled': {
-          color: `rgba(${secondary}, 0.5)`,
+          color: fade(secondary, 0.5),
         },
       },
     },
