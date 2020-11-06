@@ -21,6 +21,7 @@ import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { getNetworkName } from 'src/config'
+import { useAppCommunicator } from './communicator'
 
 const centerCSS = css`
   display: flex;
@@ -102,6 +103,13 @@ const Apps = (): React.ReactElement => {
     closeConfirmationModal,
     iframeRef,
   )
+  const communicator = useAppCommunicator(iframeRef, selectedApp)
+
+  useEffect(() => {
+    communicator?.on('getEnvInfo', () => {
+      console.log('hehehe')
+    })
+  }, [communicator])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     sendMessageToIframe(

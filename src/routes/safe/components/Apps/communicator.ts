@@ -50,7 +50,7 @@ class AppCommunicator {
 }
 
 const useAppCommunicator = (
-  iframeRef: MutableRefObject<HTMLIFrameElement>,
+  iframeRef: MutableRefObject<HTMLIFrameElement | null>,
   app?: SafeApp,
 ): AppCommunicator | undefined => {
   const [communicator, setCommunicator] = useState<AppCommunicator | undefined>(undefined)
@@ -61,8 +61,8 @@ const useAppCommunicator = (
       setCommunicator(communicatorInstance)
     }
 
-    if (app) {
-      initCommunicator(iframeRef, app)
+    if (app && iframeRef.current !== null) {
+      initCommunicator(iframeRef as MutableRefObject<HTMLIFrameElement>, app)
     }
 
     return () => {

@@ -6490,8 +6490,8 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "6de1b7c3eafe54fc1bb13c1361db4f2d8c918aae74548365743dc9789f40f9cf",
-        "signature": "ff004973179a0ae1b85a78c342e386c833bd4ddd443bab01b6e0e2d32dd21f3f",
+        "version": "8ba6a627d267a946f2303952c1e199bc4a9853a8f1f73fd5b798bf3e68402529",
+        "signature": "a3bf7b88af45d1439e3af250680452c59df2d3dca95bc5cdfea37d0e9c01d229",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/layout/style.ts": {
@@ -24754,29 +24754,7 @@
       "./src/routes/safe/components/apps/addappform/appurl.tsx",
       "./src/routes/safe/components/apps/addappform/index.tsx",
       "./src/routes/safe/components/apps/addappform/submitbuttonstatus.tsx",
-      [
-        "./src/routes/safe/components/apps/communicator.ts",
-        [
-          {
-            "file": "./src/routes/safe/components/apps/communicator.ts",
-            "start": 1232,
-            "length": 30,
-            "messageText": "Expected 2 arguments, but got 1.",
-            "category": 1,
-            "code": 2554,
-            "relatedInformation": [
-              {
-                "file": "./src/routes/safe/components/apps/communicator.ts",
-                "start": 306,
-                "length": 12,
-                "messageText": "An argument for 'app' was not provided.",
-                "category": 3,
-                "code": 6210
-              }
-            ]
-          }
-        ]
-      ],
+      "./src/routes/safe/components/apps/communicator.ts",
       "./src/routes/safe/components/apps/components/appframe.tsx",
       "./src/routes/safe/components/apps/components/confirmtransactionmodal.tsx",
       "./src/routes/safe/components/apps/components/gasestimationinfo.tsx",
