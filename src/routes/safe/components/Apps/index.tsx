@@ -20,7 +20,7 @@ import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { getNetworkName } from 'src/config'
+import { getNetworkName, getTxServiceUrl } from 'src/config'
 import { useAppCommunicator } from './communicator'
 
 const centerCSS = css`
@@ -106,9 +106,9 @@ const Apps = (): React.ReactElement => {
   const communicator = useAppCommunicator(iframeRef, selectedApp)
 
   useEffect(() => {
-    communicator?.on('getEnvInfo', () => {
-      console.log('hehehe')
-    })
+    communicator?.on('getEnvInfo', () => ({
+      txServiceUrl: getTxServiceUrl(),
+    }))
   }, [communicator])
 
   const onUserTxConfirm = (safeTxHash: string) => {

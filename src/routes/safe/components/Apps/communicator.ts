@@ -14,28 +14,29 @@ class AppCommunicator {
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
-  on(method: Methods, handler: () => Promise<unknown> | unknown): void {
+  on = (method: Methods, handler: () => Promise<unknown> | unknown): void => {
     this.handlers.set(method, handler)
   }
 
-  isValidMessage(msg): boolean {
+  private isValidMessage = (msg): boolean => {
     const sameOrigin = msg.origin === window.origin
     const knownOrigin = this.app.url.includes(msg.origin)
 
     return knownOrigin && !sameOrigin
   }
 
-  canHandleMessage(msg): boolean {
+  private canHandleMessage = (msg): boolean => {
     return !!this.handlers.get(msg.data.method)
   }
 
-  send(payload, requestId): void {
+  send = (payload, requestId): void => {
     this.iframe.contentWindow?.postMessage({ ...payload, requestId }, this.app.url)
   }
 
-  handleIncomingMessage(msg: MessageEvent): void {
+  handleIncomingMessage = (msg: MessageEvent): void => {
     const validMessage = this.isValidMessage(msg)
     const hasHandler = this.canHandleMessage(msg)
+
     if (validMessage && hasHandler) {
       const handler = this.handlers.get(msg.data.method)
       const response = handler(msg)
@@ -44,7 +45,7 @@ class AppCommunicator {
     }
   }
 
-  clear(): void {
+  clear = (): void => {
     window.removeEventListener('message', this.handleIncomingMessage)
   }
 }
@@ -56,8 +57,9 @@ const useAppCommunicator = (
   const [communicator, setCommunicator] = useState<AppCommunicator | undefined>(undefined)
 
   useEffect(() => {
+    let communicatorInstance
     const initCommunicator = (iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) => {
-      const communicatorInstance = new AppCommunicator(iframeRef, app)
+      communicatorInstance = new AppCommunicator(iframeRef, app)
       setCommunicator(communicatorInstance)
     }
 
@@ -66,9 +68,9 @@ const useAppCommunicator = (
     }
 
     return () => {
-      communicator?.clear()
+      communicatorInstance?.clear()
     }
-  }, [app, communicator, iframeRef])
+  }, [app, iframeRef])
 
   return communicator
 }
