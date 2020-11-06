@@ -1,11 +1,10 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 
 import AwaitingIcon from './assets/awaiting.svg'
 import ErrorIcon from './assets/error.svg'
 import OkIcon from './assets/ok.svg'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
@@ -19,7 +18,7 @@ const statusToIcon = {
   awaiting_confirmations: AwaitingIcon,
   awaiting_execution: AwaitingIcon,
   pending: <CircularProgress size={14} />,
-}
+} as const
 
 const statusToLabel = {
   success: 'Success',
@@ -29,15 +28,16 @@ const statusToLabel = {
   awaiting_confirmations: 'Awaiting confirmations',
   awaiting_execution: 'Awaiting execution',
   pending: 'Pending',
-}
+} as const
 
 const statusIconStyle = {
   height: '14px',
   width: '14px',
 }
 
-const Status = ({ classes, status }) => {
-  const Icon = statusToIcon[status]
+const Status = ({ status }: { status: keyof typeof statusToLabel }): ReactElement => {
+  const classes = useStyles()
+  const Icon: typeof statusToIcon[keyof typeof statusToIcon] = statusToIcon[status]
 
   return (
     <Block className={`${classes.container} ${classes[status]}`}>
@@ -49,4 +49,4 @@ const Status = ({ classes, status }) => {
   )
 }
 
-export default withStyles(styles as any)(Status)
+export default Status

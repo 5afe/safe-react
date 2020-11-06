@@ -2,13 +2,12 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import React, { useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -34,6 +33,7 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -189,7 +189,7 @@ const SendFunds = ({
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
