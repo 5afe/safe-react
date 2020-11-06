@@ -11,8 +11,8 @@ export const toTokenUnit = (amount: number | string, decimals: string | number):
   const amountBN = new BigNumber(amount).times(`1e${decimals}`)
   const [, amountDecimalPlaces] = amount.toString().split('.')
 
-  if (amountDecimalPlaces?.length >= +decimals) {
-    return amountBN.toFixed(+decimals, BigNumber.ROUND_DOWN)
+  if (amountDecimalPlaces?.length > +decimals) {
+    return amountBN.toFixed(0, BigNumber.ROUND_DOWN)
   }
 
   return amountBN.toFixed()
