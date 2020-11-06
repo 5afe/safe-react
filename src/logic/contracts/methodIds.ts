@@ -56,7 +56,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
     case SAFE_METHODS_NAMES.REMOVE_OWNER: {
       const params = {
         prevOwner: 'address',
-        oldOwner: 'address',
+        owner: 'address',
         _threshold: 'uint',
       }
 

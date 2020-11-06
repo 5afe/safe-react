@@ -1,6 +1,4 @@
 import { push } from 'connected-react-router'
-import { List, Map } from 'immutable'
-import { batch } from 'react-redux'
 import semverSatisfies from 'semver/functions/satisfies'
 import { ThunkAction } from 'redux-thunk'
 
@@ -24,10 +22,11 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import { addOrUpdateCancellationTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
-import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
-import { removeCancellationTransaction } from 'src/logic/safe/store/actions/transactions/removeCancellationTransaction'
-import { removeTransaction } from 'src/logic/safe/store/actions/transactions/removeTransaction'
+import {
+  removeTxFromStore,
+  storeSignedTx,
+  storeExecutedTx,
+} from 'src/logic/safe/store/actions/transactions/pendingTransactions'
 import {
   generateSafeTxHash,
   mockTransaction,
@@ -35,67 +34,12 @@ import {
 } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-import { makeConfirmation } from '../models/confirmation'
 import fetchTransactions from './transactions/fetchTransactions'
-import { safeTransactionsSelector } from 'src/logic/safe/store/selectors'
-import { Transaction, TransactionStatus, TxArgs } from 'src/logic/safe/store/models/types/transaction'
+import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
-
-export const removeTxFromStore = (
-  tx: Transaction,
-  safeAddress: string,
-  dispatch: Dispatch,
-  state: AppReduxState,
-): void => {
-  if (tx.isCancellationTx) {
-    const newTxStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
-    const transactions = safeTransactionsSelector(state)
-    const txsToUpdate = transactions
-      .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
-      .withMutations((list) => list.map((tx) => tx.set('status', newTxStatus)))
-
-    batch(() => {
-      dispatch(addOrUpdateTransactions({ safeAddress, transactions: txsToUpdate }))
-      dispatch(removeCancellationTransaction({ safeAddress, transaction: tx }))
-    })
-  } else {
-    dispatch(removeTransaction({ safeAddress, transaction: tx }))
-  }
-}
-
-export const storeTx = async (
-  tx: Transaction,
-  safeAddress: string,
-  dispatch: Dispatch,
-  state: AppReduxState,
-): Promise<void> => {
-  if (tx.isCancellationTx) {
-    let newTxStatus: TransactionStatus = TransactionStatus.AWAITING_YOUR_CONFIRMATION
-
-    if (tx.isExecuted) {
-      newTxStatus = TransactionStatus.CANCELLED
-    } else if (tx.status === TransactionStatus.PENDING) {
-      newTxStatus = tx.status
-    }
-
-    const transactions = safeTransactionsSelector(state)
-    const txsToUpdate = transactions
-      .filter((transaction) => Number(transaction.nonce) === Number(tx.nonce))
-      .withMutations((list) =>
-        list.map((tx) => tx.set('status', newTxStatus).set('cancelled', newTxStatus === TransactionStatus.CANCELLED)),
-      )
-
-    batch(() => {
-      dispatch(addOrUpdateCancellationTransactions({ safeAddress, transactions: Map({ [`${tx.nonce}`]: tx }) }))
-      dispatch(addOrUpdateTransactions({ safeAddress, transactions: txsToUpdate }))
-    })
-  } else {
-    dispatch(addOrUpdateTransactions({ safeAddress, transactions: List([tx]) }))
-  }
-}
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -228,15 +172,7 @@ const createTransaction = (
 
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash, origin }),
-            storeTx(
-              mockedTx.updateIn(
-                ['ownersWithPendingActions', mockedTx.isCancellationTx ? 'reject' : 'confirm'],
-                (previous) => previous.push(from),
-              ),
-              safeAddress,
-              dispatch,
-              state,
-            ),
+            storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
           ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
@@ -263,29 +199,8 @@ const createTransaction = (
           ),
         )
 
-        const toStoreTx = isExecution
-          ? mockedTx.withMutations((record) => {
-              record
-                .set('executionTxHash', receipt.transactionHash)
-                .set('executor', from)
-                .set('isExecuted', true)
-                .set('isSuccessful', receipt.status)
-                .set('status', receipt.status ? TransactionStatus.SUCCESS : TransactionStatus.FAILED)
-            })
-          : mockedTx.set('status', TransactionStatus.AWAITING_CONFIRMATIONS)
+        await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
-        await storeTx(
-          toStoreTx.withMutations((record) => {
-            record
-              .set('confirmations', List([makeConfirmation({ owner: from })]))
-              .updateIn(['ownersWithPendingActions', toStoreTx.isCancellationTx ? 'reject' : 'confirm'], (previous) =>
-                previous.pop(from),
-              )
-          }),
-          safeAddress,
-          dispatch,
-          state,
-        )
         dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash

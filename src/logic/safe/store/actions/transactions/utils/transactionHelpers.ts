@@ -21,11 +21,12 @@ import {
   TxArgs,
   RefundParams,
 } from 'src/logic/safe/store/models/types/transaction'
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
-import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState, store } from 'src/store'
-import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeSelector,
+  safeTransactionsSelector,
+  safeCancellationTransactionsSelector,
+} from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   BatchProcessTxsProps,
@@ -323,9 +324,13 @@ export type TxToMock = TxArgs & {
 
 export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
   const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
-  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
-  const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
-  const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
+  const safe = safeSelector(state)
+  const cancellationTxs = safeCancellationTransactionsSelector(state)
+  const outgoingTxs = safeTransactionsSelector(state)
+
+  if (!safe) {
+    throw new Error('Failed to recover Safe from the store')
+  }
 
   return buildTx({
     cancellationTxs,
