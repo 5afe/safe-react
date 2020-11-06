@@ -30,14 +30,6 @@ type ReturnType = {
   sendMessageToIframe: <T extends InterfaceMessageIds>(message: InterfaceMessageProps<T>, requestId?: RequestId) => void
 }
 
-interface CustomMessageEvent extends MessageEvent {
-  data: {
-    requestId: RequestId
-    messageId: SDKMessageIds
-    data: SDKMessageToPayload[SDKMessageIds]
-  }
-}
-
 const NETWORK_NAME = getNetworkName()
 
 const useIframeMessageHandler = (
@@ -118,7 +110,13 @@ const useIframeMessageHandler = (
         }
       }
     }
-    const onIframeMessage = async (message: CustomMessageEvent) => {
+    const onIframeMessage = async (
+      message: MessageEvent<{
+        requestId: RequestId
+        messageId: SDKMessageIds
+        data: SDKMessageToPayload[SDKMessageIds]
+      }>,
+    ) => {
       if (message.origin === window.origin) {
         return
       }
