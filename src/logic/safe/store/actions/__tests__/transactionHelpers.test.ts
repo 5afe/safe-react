@@ -277,6 +277,7 @@ jest.mock('src/logic/collectibles/utils')
 jest.mock('src/logic/tokens/utils/tokenHelpers')
 describe('isCustomTransaction', () => {
   afterAll(() => {
+    jest.unmock('src/logic/collectibles/utils')
     jest.unmock('src/logic/tokens/utils/tokenHelpers')
   })
   it('It should return true if Is outgoing transaction, is not an erc20 transaction, not an upgrade transaction and not and erc721 transaction', async () => {
