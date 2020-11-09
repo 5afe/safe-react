@@ -5425,7 +5425,7 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/index.tsx": {
-        "version": "08030b77afa7a98216ac90b22c7433434bca7d780e4cd7b2251e928a3926be21",
+        "version": "e64a2945a0437b50ef38e45ddf2c2c8636d66b95671bfdd9ef5053b69f9d660c",
         "signature": "f360297036232d413f6c1966f03a42de2384de5a91e909b40f8bfa62981948ac",
         "affectsGlobalScope": false
       },
@@ -25224,7 +25224,19 @@
       "./src/routes/safe/components/apps/hooks/useapplist.ts",
       "./src/routes/safe/components/apps/hooks/useiframemessagehandler.ts",
       "./src/routes/safe/components/apps/hooks/uselegalconsent.ts",
-      "./src/routes/safe/components/apps/index.tsx",
+      [
+        "./src/routes/safe/components/apps/index.tsx",
+        [
+          {
+            "file": "./src/routes/safe/components/apps/index.tsx",
+            "start": 3728,
+            "length": 10,
+            "code": 2345,
+            "category": 1,
+            "messageText": "Argument of type '(msg: any) => void' is not assignable to parameter of type '() => unknown'."
+          }
+        ]
+      ],
       "./src/routes/safe/components/apps/types.d.ts",
       "./src/routes/safe/components/apps/utils.ts",
       "./src/routes/safe/components/assets/addressbookicon.tsx",

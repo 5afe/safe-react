@@ -41,7 +41,9 @@ class AppCommunicator {
       const handler = this.handlers.get(msg.data.method)
       const response = handler(msg)
 
-      this.send(response, msg.data.requestId)
+      if (response) {
+        this.send(response, msg.data.requestId)
+      }
     }
   }
 
