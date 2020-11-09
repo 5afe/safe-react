@@ -35,11 +35,13 @@ const useStyles = makeStyles(
 type EllipsisTransactionDetailsProps = {
   address: string
   knownAddress?: boolean
+  sendModalOpenHandler?: () => void
 }
 
 export const EllipsisTransactionDetails = ({
   address,
   knownAddress,
+  sendModalOpenHandler,
 }: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
@@ -57,21 +59,25 @@ export const EllipsisTransactionDetails = ({
   }
 
   return (
-    <ClickAwayListener onClickAway={closeMenuHandler}>
-      <div className={classes.container} role="menu" tabIndex={0}>
-        <MoreHorizIcon onClick={handleClick} onKeyDown={handleClick} />
-        <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
-          <MenuItem disabled onClick={closeMenuHandler}>
-            Send Again
-          </MenuItem>
-          <Divider />
-          {knownAddress ? (
-            <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
-          ) : (
-            <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>
-          )}
-        </Menu>
-      </div>
-    </ClickAwayListener>
+    <>
+      <ClickAwayListener onClickAway={closeMenuHandler}>
+        <div className={classes.container} role="menu" tabIndex={0}>
+          <MoreHorizIcon onClick={handleClick} onKeyDown={handleClick} />
+          <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
+            {sendModalOpenHandler ? (
+              <>
+                <MenuItem onClick={sendModalOpenHandler}>Send Again</MenuItem>
+                <Divider />
+              </>
+            ) : null}
+            {knownAddress ? (
+              <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
+            ) : (
+              <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>
+            )}
+          </Menu>
+        </div>
+      </ClickAwayListener>
+    </>
   )
 }
