@@ -94,7 +94,7 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
                     {ownerAddress}
                   </Paragraph>
                   <CopyBtn content={ownerAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
+                  <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                 </Block>
               </Row>
             </Block>
