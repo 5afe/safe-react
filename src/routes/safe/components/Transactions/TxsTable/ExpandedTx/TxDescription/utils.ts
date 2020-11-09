@@ -106,6 +106,7 @@ export const getTxData = (tx: Transaction): TxData => {
 
   if (sameString(tx.type, 'outgoing') && tx.symbol && sameString(tx.symbol, 'eth')) {
     txData.isTokenTransfer = true
+    txData.tokenAddress = '0x000'
   }
 
   return txData
