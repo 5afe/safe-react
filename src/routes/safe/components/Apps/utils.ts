@@ -3,10 +3,10 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp, SAFE_APP_LOADING_STATUS } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/appsIcon.svg'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { SAFE_APPS_LIST_PROVIDER_URL } from 'src/utils/constants'
+// import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
@@ -15,101 +15,22 @@ const removeLastTrailingSlash = (url) => {
   return url
 }
 
-const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
-export const staticAppsList: Array<{ url: string; disabled: boolean; networks: number[] }> = [
-  // 1inch
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-  // Aave
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX1NUtvm9WjbvT79sTdeg3sw1NxZAM273y44nBy5d2jZb`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-  //Balancer Exchange
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-  //Balancer Pool
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaTucdZYLKTqaewwJduVMM8qfCDhyaEqjd8tBNae26K1J`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-  // Compound
-  { url: `${gnosisAppsUrl}/compound`, disabled: false, networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY] },
-  // Idle
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZ3oug89a3BaVqdJrJEA8CKmLF4M8snuAnphR6z1yq8V8`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
-  },
-  // request
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-  // Sablier
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmboeZ9bae26Skg5xskCsXWjJuLjYk7aHgPh4BAnfRBDgo`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
-  },
-  // Synthetix
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXLxxczMH4MBEYDeeN9zoiHDzVkeBmB5rBjA3UniPEFcA`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
-  },
-  // OpenZeppelin
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQovvfYYMUXjZfNbysQDUEXR8nr55iJRwcYgJQGJR7KEA`,
-    disabled: false,
-    networks: [
-      ETHEREUM_NETWORK.MAINNET,
-      ETHEREUM_NETWORK.RINKEBY,
-      //ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-      //ETHEREUM_NETWORK.VOLTA,
-      // ETHEREUM_NETWORK.XDAI,
-    ],
-  },
-  // TX-Builder
-  {
-    url: `${gnosisAppsUrl}/tx-builder`,
-    disabled: false,
-    networks: [
-      ETHEREUM_NETWORK.MAINNET,
-      ETHEREUM_NETWORK.RINKEBY,
-      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-      ETHEREUM_NETWORK.VOLTA,
-      ETHEREUM_NETWORK.XDAI,
-    ],
-  },
-  // Wallet-Connect
-  {
-    url: `${gnosisAppsUrl}/walletConnect`,
-    disabled: false,
-    networks: [
-      ETHEREUM_NETWORK.MAINNET,
-      ETHEREUM_NETWORK.RINKEBY,
-      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-      ETHEREUM_NETWORK.VOLTA,
-      ETHEREUM_NETWORK.XDAI,
-    ],
-  },
-  // Yearn Vaults
-  {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`,
-    disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET],
-  },
-]
+type AppsList = {
+  name: string
+  url: string
+  disabled: boolean
+  networks: number[]
+}
+
+export const getAppsList = async (): Promise<AppsList[]> => {
+  if (!SAFE_APPS_LIST_PROVIDER_URL) {
+    throw Error('There is not SAFE_APPS_LIST_PROVIDER_URL defined')
+  }
+
+  const res = await axios.get<{ safeAppsList: AppsList[] }>(`${SAFE_APPS_LIST_PROVIDER_URL}/manifest.json`)
+
+  return res.data.safeAppsList
+}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {

@@ -106,7 +106,10 @@ const Apps = (): React.ReactElement => {
 
     return areAppsLoading
       ? appList.map((app) => ({ ...app, name: 'Loading', iconUrl: loaderDotsSvg }))
-      : appList.filter((app) => !app.disabled)
+      : appList
+          .filter((app) => !app.disabled)
+          .filter((app) => app.loadingStatus === SAFE_APP_LOADING_STATUS.SUCCESS)
+          .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
   }, [appList])
   const { sendMessageToIframe } = useIframeMessageHandler(
     selectedApp,
