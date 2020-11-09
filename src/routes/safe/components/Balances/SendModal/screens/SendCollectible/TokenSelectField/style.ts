@@ -1,6 +1,7 @@
 import { sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const selectedTokenStyles = () => ({
+export const selectedTokenStyles = createStyles({
   container: {
     minHeight: '55px',
     padding: 0,
@@ -16,7 +17,7 @@ export const selectedTokenStyles = () => ({
   },
 })
 
-export const selectStyles = () => ({
+export const selectStyles = createStyles({
   selectMenu: {
     paddingRight: 0,
   },

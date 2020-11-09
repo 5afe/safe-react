@@ -35,7 +35,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       return {
         method: METHOD_TO_ID[methodId],
         parameters: [
-          { name: 'oldOwner', type: 'address', value: decodedParameters[1] },
+          { name: 'owner', type: 'address', value: decodedParameters[1] },
           { name: '_threshold', type: 'uint', value: decodedParameters[2] },
         ],
       }

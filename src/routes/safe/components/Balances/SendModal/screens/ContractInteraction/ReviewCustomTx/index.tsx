@@ -4,10 +4,9 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -29,6 +28,7 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export type CustomTx = {
   contractAddress?: string
@@ -132,7 +132,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 {tx.contractAddress}
               </Paragraph>
               <CopyBtn content={tx.contractAddress as string} />
-              <EtherscanBtn value={tx.contractAddress as string} />
+              <ExplorerButton explorerUrl={getExplorerInfo(tx.contractAddress as string)} />
             </Block>
           </Col>
         </Row>
