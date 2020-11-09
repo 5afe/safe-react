@@ -1,5 +1,6 @@
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
+import { sameString } from 'src/utils/strings'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()
@@ -101,6 +102,10 @@ export const getTxData = (tx: Transaction): TxData => {
     txData.data = `The contract of this Safe is upgraded to Version ${getSafeVersion(tx.data)}`
   } else {
     txData.recipient = tx.recipient
+  }
+
+  if (sameString(tx.type, 'outgoing') && tx.symbol && sameString(tx.symbol, 'eth')) {
+    txData.isTokenTransfer = true
   }
 
   return txData
