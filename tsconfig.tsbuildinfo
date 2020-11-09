@@ -5385,8 +5385,8 @@
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts": {
-        "version": "1d51d3a32436b86a1a38ff6faf31a44231cd4d3f9828d04ddbe6b1d62f5b1bd6",
-        "signature": "1d51d3a32436b86a1a38ff6faf31a44231cd4d3f9828d04ddbe6b1d62f5b1bd6",
+        "version": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
+        "signature": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts": {
@@ -5395,23 +5395,23 @@
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts": {
-        "version": "9aa3737eef5eb68ffc36ac8c20b178c4358f22cff50a6be2e3d4ae2f827e7f09",
-        "signature": "9aa3737eef5eb68ffc36ac8c20b178c4358f22cff50a6be2e3d4ae2f827e7f09",
+        "version": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
+        "signature": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts": {
-        "version": "2d757329de29dd600b4aee00264a935974e4f9e79ccd73472a54141d8142c7d1",
-        "signature": "2d757329de29dd600b4aee00264a935974e4f9e79ccd73472a54141d8142c7d1",
+        "version": "f5a8db166430766248bede13c7e60ef54c25b777037de9e5d2b8b89acd73f0b1",
+        "signature": "f5a8db166430766248bede13c7e60ef54c25b777037de9e5d2b8b89acd73f0b1",
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": {
-        "version": "df862b754302d272a1ef703f6b5cf3bf0800fdc6945c98a9f41e992f63e639f1",
-        "signature": "df862b754302d272a1ef703f6b5cf3bf0800fdc6945c98a9f41e992f63e639f1",
+        "version": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
+        "signature": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": {
-        "version": "86c6c346df738d7890680ba7672e56973abbc1eb4a4e50bda0a525662ed8fee0",
-        "signature": "86c6c346df738d7890680ba7672e56973abbc1eb4a4e50bda0a525662ed8fee0",
+        "version": "ab181c7d57c26997ca2a713e210902342fb5cad464c5d6f3e180178d095dfdc1",
+        "signature": "ab181c7d57c26997ca2a713e210902342fb5cad464c5d6f3e180178d095dfdc1",
         "affectsGlobalScope": false
       },
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts": {
@@ -5420,12 +5420,12 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "8243559419af0fe09b3d50f99c127eab572cd2c3f607195bf6e67d16c7604209",
-        "signature": "1e5b3073934dd15bdf31820fa1ea92ef3754e4783aea1289309d09a316aa4924",
+        "version": "986ce7c4abc3362abe8cca6bd2ae9e77e62641e82359d762aa2a64e03b67b5da",
+        "signature": "4cc591f58edee2dabbd7e83bb8d2aebe3d011595421b0cba2b9b8a2a7ec723c5",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/index.tsx": {
-        "version": "a17accd2e618da0c1fecb3f5bc1f2785e1694e09e59013ed9ba8d14421893197",
+        "version": "08030b77afa7a98216ac90b22c7433434bca7d780e4cd7b2251e928a3926be21",
         "signature": "f360297036232d413f6c1966f03a42de2384de5a91e909b40f8bfa62981948ac",
         "affectsGlobalScope": false
       },
@@ -7469,6 +7469,7 @@
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": [
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": [
@@ -17607,6 +17608,7 @@
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": [
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
       "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": [

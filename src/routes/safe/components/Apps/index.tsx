@@ -115,6 +115,10 @@ const Apps = (): React.ReactElement => {
       ethBalance,
       network: NETWORK_NAME,
     }))
+
+    communicator?.on('sendTransactions', (msg) => {
+      console.log({ type: 'sendTxs', msg })
+    })
   }, [communicator, ethBalance, safeAddress])
 
   const onUserTxConfirm = (safeTxHash: string) => {
