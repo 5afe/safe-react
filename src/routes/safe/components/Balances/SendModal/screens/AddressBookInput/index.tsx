@@ -186,7 +186,8 @@ export const ContractsAddressBookInput = ({
       // verify if `address` is a contract
       const contractAddressErrorMessage = await mustBeEthereumContractAddress(selectedEntry.address)
       setIsValidAddress(!contractAddressErrorMessage)
-      contractAddressErrorMessage && setValidationText(contractAddressErrorMessage)
+      setValidationText(contractAddressErrorMessage ?? '')
+      setSelectedEntry(selectedEntry)
     }
   }
 
