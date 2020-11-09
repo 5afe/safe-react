@@ -27,6 +27,7 @@ interface TxData {
   cancellationTx?: boolean
   creationTx?: boolean
   upgradeTx?: boolean
+  tokenAddress?: string
 }
 
 export const getTxData = (tx: Transaction): TxData => {
@@ -37,6 +38,7 @@ export const getTxData = (tx: Transaction): TxData => {
       const { to } = tx.decodedParams.transfer || {}
       txData.recipient = to
       txData.isTokenTransfer = true
+      txData.tokenAddress = tx.recipient
     } else if (tx.isCollectibleTransfer) {
       const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
       const { to, value } = safeTransferFrom || transferFrom || transfer || {}
