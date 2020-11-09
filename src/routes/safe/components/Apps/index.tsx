@@ -109,7 +109,13 @@ const Apps = (): React.ReactElement => {
     communicator?.on('getEnvInfo', () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
-  }, [communicator])
+
+    communicator?.on('getSafeInfo', () => ({
+      safeAddress,
+      ethBalance,
+      network: NETWORK_NAME,
+    }))
+  }, [communicator, ethBalance, safeAddress])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     sendMessageToIframe(

@@ -29,8 +29,8 @@ class AppCommunicator {
     return !!this.handlers.get(msg.data.method)
   }
 
-  send = (payload, requestId): void => {
-    this.iframe.contentWindow?.postMessage({ ...payload, requestId }, this.app.url)
+  send = (response, requestId): void => {
+    this.iframe.contentWindow?.postMessage({ response, requestId }, this.app.url)
   }
 
   handleIncomingMessage = (msg: MessageEvent): void => {
