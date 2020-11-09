@@ -8,7 +8,7 @@ import CopyBtn from 'src/components/CopyBtn'
 import Block from 'src/components/layout/Block'
 import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
-import EllipsisTransactionDetails from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
+import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
 
