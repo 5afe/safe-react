@@ -49,34 +49,28 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
-export type SendFundsTx = {
-  amount?: string
-  recipientAddress?: string
-  token?: string
-}
-
 type SendFundsProps = {
-  initialValues: SendFundsTx
   onClose: () => void
   onNext: (txInfo: unknown) => void
   recipientAddress?: string
   selectedToken?: string
+  amount?: string
 }
 
 const { nativeCoin } = getNetworkInfo()
 
 const SendFunds = ({
-  initialValues,
   onClose,
   onNext,
   recipientAddress,
   selectedToken = '',
+  amount,
 }: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
-    address: recipientAddress || initialValues.recipientAddress,
+    address: recipientAddress,
     name: '',
   })
 
@@ -110,7 +104,11 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={{ amount, recipientAddress, token: selectedToken }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
