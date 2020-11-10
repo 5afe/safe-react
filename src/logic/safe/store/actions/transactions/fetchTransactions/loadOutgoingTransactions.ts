@@ -1,7 +1,6 @@
 import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -9,7 +8,6 @@ import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { store } from 'src/store'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
-import { Token } from 'src/logic/tokens/store/model/token'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 
@@ -65,7 +63,6 @@ export type OutgoingTxs = {
 
 export type BatchProcessTxsProps = OutgoingTxs & {
   currentUser?: string
-  knownTokens: Map<string, Token>
   safe: SafeRecord
 }
 
@@ -138,7 +135,6 @@ const batchRequestContractCode = (transactions: TxServiceModel[]): Promise<Batch
 const batchProcessOutgoingTransactions = async ({
   cancellationTxs,
   currentUser,
-  knownTokens,
   outgoingTxs,
   safe,
 }: BatchProcessTxsProps): Promise<{
@@ -150,15 +146,13 @@ const batchProcessOutgoingTransactions = async ({
   const cancellationTxsWithData = cancelTxsValues.length ? await batchRequestContractCode(cancelTxsValues) : []
 
   const cancel = {}
-  for (const [tx, txCode] of cancellationTxsWithData) {
+  for (const [tx] of cancellationTxsWithData) {
     cancel[`${tx.nonce}`] = await buildTx({
       cancellationTxs,
       currentUser,
-      knownTokens,
       outgoingTxs,
       safe,
       tx,
-      txCode,
     })
   }
 
@@ -166,16 +160,14 @@ const batchProcessOutgoingTransactions = async ({
   const outgoingTxsWithData = outgoingTxs.length ? await batchRequestContractCode(outgoingTxs) : []
 
   const outgoing: Transaction[] = []
-  for (const [tx, txCode] of outgoingTxsWithData) {
+  for (const [tx] of outgoingTxsWithData) {
     outgoing.push(
       await buildTx({
         cancellationTxs,
         currentUser,
-        knownTokens,
         outgoingTxs,
         safe,
         tx,
-        txCode,
       }),
     )
   }
@@ -195,7 +187,6 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
     return defaultResponse
   }
 
-  const knownTokens: TokenState = state[TOKEN_REDUCER_ID]
   const currentUser: string = state[PROVIDER_REDUCER_ID].get('account')
   const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
 
@@ -215,7 +206,6 @@ export const loadOutgoingTransactions = async (safeAddress: string): Promise<Saf
   const { cancel, outgoing } = await batchProcessOutgoingTransactions({
     cancellationTxs,
     currentUser,
-    knownTokens,
     outgoingTxs,
     safe,
   })

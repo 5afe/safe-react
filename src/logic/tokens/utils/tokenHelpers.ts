@@ -5,7 +5,6 @@ import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
 import { isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -62,12 +61,8 @@ export const getERC20DecimalsAndSymbol = async (
   return tokenInfo
 }
 
-export const isSendERC20Transaction = async (
-  tx: TxServiceModel,
-  txCode?: string,
-  knownTokens?: TokenState,
-): Promise<boolean> => {
-  let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
+export const isSendERC20Transaction = async (tx: TxServiceModel): Promise<boolean> => {
+  let isSendTokenTx = !isSendERC721Transaction(tx) && isTokenTransfer(tx)
 
   if (isSendTokenTx) {
     const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)

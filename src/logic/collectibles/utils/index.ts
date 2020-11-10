@@ -1,11 +1,13 @@
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
 import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
-import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import { isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
+import { store } from 'src/store'
+import { sameString } from 'src/utils/strings'
 
 // CryptoKitties Contract Addresses by network
 // This is an exception made for a popular NFT that's not ERC721 standard-compatible,
@@ -22,18 +24,19 @@ export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 /**
  * Verifies that a tx received by the transaction service is an ERC721 token-related transaction
  * @param {TxServiceModel} tx
- * @param {string | undefined} txCode
- * @param {TokenState | undefined} knownTokens
  * @returns boolean
  */
-export const isSendERC721Transaction = (tx: TxServiceModel, txCode?: string, knownTokens?: TokenState): boolean => {
-  // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
-  // but no proper ERC721 standard implemented
-  return (
-    (txCode?.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) &&
-      tx.to !== '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85') ||
-    (isTokenTransfer(tx) && !knownTokens?.get(tx.to))
-  )
+export const isSendERC721Transaction = (tx: TxServiceModel): boolean => {
+  let hasERC721Transfer = false
+
+  if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
+    hasERC721Transfer = tx.dataDecoded.parameters.findIndex((param) => sameString(param.name, 'tokenId')) !== -1
+  }
+
+  // Note: this is only valid with our current case (client rendering), if we move to server side rendering we need to refactor this
+  const state = store.getState()
+  const knownAssets = nftAssetsListAddressesSelector(state)
+  return knownAssets.includes(tx.to) || hasERC721Transfer
 }
 
 /**
@@ -49,6 +52,12 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
     const tokenInstance = await ERC721token.at(contractAddress)
     tokenSymbol = tokenInstance.symbol()
   } catch (err) {
+    // If the contract address is an ENS token contract, we know that the ERC721 standard is not proper implemented
+    // The method symbol() is missing
+    const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
+    if (sameAddress(contractAddress, ENS_TOKEN_CONTRACT)) {
+      return 'ENS'
+    }
     console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
   }
 
