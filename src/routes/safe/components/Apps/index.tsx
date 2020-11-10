@@ -27,6 +27,8 @@ import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { getNetworkName } from 'src/config'
+import { useRouteMatch, useHistory } from 'react-router-dom'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 const loaderDotsSvg = require('src/routes/opening/assets/loader-dots.svg')
 
@@ -69,6 +71,9 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 const NETWORK_NAME = getNetworkName()
 
 const Apps = (): React.ReactElement => {
+  const history = useHistory()
+  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+
   const { appList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
 
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
@@ -106,7 +111,7 @@ const Apps = (): React.ReactElement => {
 
     return areAppsLoading
       ? appList.map((app) => ({ ...app, name: 'Loading', iconUrl: loaderDotsSvg }))
-      : appList.filter((app) => !app.disabled)
+      : appList.filter((app) => !app.disabled).map((app) => ({ ...app, id: app.url }))
   }, [appList])
   const { sendMessageToIframe } = useIframeMessageHandler(
     selectedApp,
@@ -130,15 +135,18 @@ const Apps = (): React.ReactElement => {
   }
 
   const onSelectApp = useCallback(
-    (appId) => {
-      if (selectedAppId === appId) {
+    (appUrl) => {
+      if (selectedAppId === appUrl) {
         return
       }
+      const goToApp = `${matchSafeWithAddress?.url}/app?appUrl=${encodeURI(appUrl)}`
+      debugger
+      history.push(goToApp)
 
-      setAppIsLoading(true)
-      setSelectedAppId(appId)
+      //setAppIsLoading(true)
+      //setSelectedAppId(appId)
     },
-    [selectedAppId],
+    [selectedAppId, history, matchSafeWithAddress],
   )
 
   // Auto Select app first App
@@ -153,7 +161,7 @@ const Apps = (): React.ReactElement => {
 
       const firstEnabledApp = appList.find((a) => !a.disabled)
       if (firstEnabledApp && firstEnabledApp.loadingStatus === SAFE_APP_LOADING_STATUS.SUCCESS) {
-        setSelectedAppId(firstEnabledApp.id)
+        setSelectedAppId(firstEnabledApp.url)
       }
     }
 

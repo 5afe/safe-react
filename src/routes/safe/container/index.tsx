@@ -20,6 +20,7 @@ export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
 const Apps = React.lazy(() => import('../components/Apps'))
+const App = React.lazy(() => import('../components/App'))
 const Settings = React.lazy(() => import('../components/Settings'))
 const Balances = React.lazy(() => import('../components/Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
@@ -46,7 +47,7 @@ const Container = (): React.ReactElement => {
       return left === right
     },
   )
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAppsEnabled = Boolean(featuresEnabled?.includes(FEATURES.SAFE_APPS))
 
   if (!safeAddress) {
@@ -90,7 +91,20 @@ const Container = (): React.ReactElement => {
             return wrapInSuspense(<Apps />, null)
           }}
         />
-
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/app`}
+          render={(
+            {
+              /* history */
+            },
+          ) => {
+            // if (!safeAppsEnabled) {
+            //   history.push(`${matchSafeWithAddress?.url}/balances`)
+            // }
+            return wrapInSuspense(<App />, null)
+          }}
+        />
         <Route
           exact
           path={`${matchSafeWithAddress?.path}/settings`}
