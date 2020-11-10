@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-import { SafeOwner } from '../../../logic/safe/store/models/safe'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const getAccountsFrom = (values) => {
   const accounts = Object.keys(values)
