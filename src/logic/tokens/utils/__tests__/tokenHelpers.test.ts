@@ -203,4 +203,32 @@ describe('isERC721Contract', () => {
     // then
     expect(txValue).toEqual(expectedResult)
   })
+
+  it('It should return the right conversion from token to unit with exceeding decimals', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '333333333333333398'
+    const VALUE = '0.33333333333333339878798333'
+
+    // when
+    const txValue = toTokenUnit(VALUE, decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
+  })
+
+  it('It should return the right conversion from token to unit with exact decimals', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '333333333333333399'
+    const VALUE = '0.333333333333333399'
+
+    // when
+    const txValue = toTokenUnit(VALUE, decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
+  })
 })
