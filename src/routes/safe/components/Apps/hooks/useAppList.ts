@@ -127,34 +127,38 @@ const useAppList = (): UseAppListReturnType => {
     }
   }, [appList])
 
-  // fetch each safe-app
-  // replace real data if it was success remove it from the list otherwise
+  // fetch each safe-app replace with real data
   useEffect(() => {
-    if (!appList?.length) {
-      return
+    const updateSafeApp = (res: SafeApp) => {
+      setAppList((prevAppList) => {
+        const cpAppList = [...prevAppList]
+        const index = cpAppList.findIndex((currentApp) => currentApp.url === res.url)
+        const app = cpAppList[index]
+
+        cpAppList[index] = res.error
+          ? { ...app, loadingStatus: SAFE_APP_LOADING_STATUS.ERROR }
+          : { ...app, ...res, loadingStatus: SAFE_APP_LOADING_STATUS.SUCCESS }
+
+        return cpAppList
+      })
     }
 
-    appList
-      .filter((app) => app.loadingStatus === SAFE_APP_LOADING_STATUS.ADDED)
-      .forEach((resApp) => {
-        let cpApps = [...appList]
-        const index = appList.findIndex((currentApp) => currentApp.url === resApp.url)
-        cpApps[index] = { ...cpApps[index], loadingStatus: SAFE_APP_LOADING_STATUS.LOADING }
-        setAppList(cpApps)
+    const getAppInfo = (filteredAppList: SafeApp[]) => {
+      filteredAppList.forEach((app) => {
+        const index = filteredAppList.findIndex((currentApp) => currentApp.url === app.url)
+        filteredAppList[index] = { ...filteredAppList[index], loadingStatus: SAFE_APP_LOADING_STATUS.LOADING }
 
-        getAppInfoFromUrl(resApp.url).then((res: SafeApp) => {
-          if (res.error) {
-            // if there was an error trying to load the safe-app, remove it from the list
-            cpApps.splice(index, 1)
-            throw Error(`There was a problem trying to load app ${res.url}`)
-          } else {
-            // if the safe app was loaded correctly, update the safe-app info
-            cpApps[index] = res
-          }
-          cpApps = cpApps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-          setAppList(cpApps)
-        })
+        getAppInfoFromUrl(app.url).then(updateSafeApp)
       })
+
+      setAppList(filteredAppList)
+    }
+
+    const filteredAppList = appList.filter((app) => app.loadingStatus === SAFE_APP_LOADING_STATUS.ADDED)
+    if (!filteredAppList.length) {
+      return
+    }
+    getAppInfo(filteredAppList)
   }, [appList])
 
   return {
