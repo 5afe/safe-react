@@ -1,5 +1,5 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -30,7 +30,15 @@ const formMutators = {
   },
 }
 
-const OwnerForm = ({ classes, onClose, onSubmit }) => {
+const useStyles = makeStyles(styles)
+
+type OwnerFormProps = {
+  onClose: () => void
+  onSubmit: (values) => void
+}
+
+export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactElement => {
+  const classes = useStyles()
   const handleSubmit = (values) => {
     onSubmit(values)
   }
@@ -72,7 +80,6 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
                 <Row margin="md">
                   <Col xs={8}>
                     <Field
-                      className={classes.addressInput}
                       component={TextField}
                       name="ownerName"
                       placeholder="Owner name*"
@@ -86,7 +93,6 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput
-                      className={classes.addressInput}
                       fieldMutator={mutators.setOwnerAddress}
                       name="ownerAddress"
                       placeholder="Owner address*"
@@ -102,11 +108,10 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button className={classes.button} minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
-                  className={classes.button}
                   color="primary"
                   minWidth={140}
                   testId={ADD_OWNER_NEXT_BTN_TEST_ID}
@@ -123,5 +128,3 @@ const OwnerForm = ({ classes, onClose, onSubmit }) => {
     </>
   )
 }
-
-export default withStyles(styles as any)(OwnerForm)
