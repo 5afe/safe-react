@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useFormState, useField } from 'react-final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import {
@@ -82,11 +82,10 @@ const EthAddressInput = ({
               validate={validate}
             />
           ) : (
-            <AddressBookInput
+            <ContractsAddressBookInput
               setSelectedEntry={setSelectedEntry}
               setIsValidAddress={() => {}}
               fieldMutator={onScannedValue}
-              isCustomTx
               pristine={pristine}
             />
           )}

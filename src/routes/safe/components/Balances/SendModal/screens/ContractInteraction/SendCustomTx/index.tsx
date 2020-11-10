@@ -25,7 +25,7 @@ import Row from 'src/components/layout/Row'
 import ScanQRModal from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sm } from 'src/theme/variables'
 
 import ArrowDown from '../../assets/arrow-down.svg'
@@ -147,9 +147,13 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                      if (e.key === 'Tab') {
+                        return
                       }
+                      setSelectedEntry(null)
+                    }}
+                    onClick={() => {
+                      setSelectedEntry(null)
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -193,9 +197,8 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   <>
                     <Row margin="md">
                       <Col xs={11}>
-                        <AddressBookInput
+                        <ContractsAddressBookInput
                           fieldMutator={mutators.setRecipient}
-                          isCustomTx
                           pristine={pristine}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
