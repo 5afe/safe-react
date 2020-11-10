@@ -1,11 +1,8 @@
-import { List } from 'immutable'
-
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import memoize from 'lodash.memoize'
 
 type ValidatorReturnType = string | undefined
-type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
+export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
 type AsyncValidator = (...args: unknown[]) => Promise<ValidatorReturnType>
 export type Validator = GenericValidatorType | AsyncValidator
 
@@ -81,11 +78,16 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType =>
+//export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType =>
+export const uniqueAddress = (addresses: string[]): GenericValidatorType =>
   memoize(
-    (value: string): ValidatorReturnType => {
-      const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
-      return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
+    (): ValidatorReturnType => {
+      const repeatedAddresses = addresses.filter((element, position, array) => array.indexOf(element) !== position)
+
+      if (repeatedAddresses.length > 0) {
+        return ADDRESS_REPEATED_ERROR
+      }
+      return undefined
     },
   )
 
