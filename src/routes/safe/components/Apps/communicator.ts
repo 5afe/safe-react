@@ -39,7 +39,7 @@ class AppCommunicator {
 
     if (validMessage && hasHandler) {
       const handler = this.handlers.get(msg.data.method)
-      const response = handler(msg)
+      const response = handler(msg, this.send)
 
       // If response is not returned, it means the response will be send somewhere else
       if (response) {

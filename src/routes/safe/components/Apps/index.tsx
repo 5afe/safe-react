@@ -11,6 +11,7 @@ import { SafeApp } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import {
   safeEthBalanceSelector,
   safeParamAddressFromStateSelector,
@@ -116,11 +117,38 @@ const Apps = (): React.ReactElement => {
       network: NETWORK_NAME,
     }))
 
+    communicator?.on('rpcCall', (msg) => {
+      if (
+        web3ReadOnly.currentProvider !== null &&
+        typeof web3ReadOnly.currentProvider !== 'string' &&
+        'send' in web3ReadOnly.currentProvider
+      ) {
+        web3ReadOnly.currentProvider?.send?.(
+          {
+            jsonrpc: '2.0',
+            method: msg.data.data?.call,
+            params: msg.data.data?.params,
+            id: '1',
+          },
+          (err, res) => {
+            if (err) {
+              // @ts-expect-error aaah
+              communicator?.send({ success: false, error: err }, msg.data.requestId)
+              return
+            }
+
+            // @ts-expect-error aaah
+            communicator?.send(res, msg.data.requestId)
+          },
+        )
+      }
+    })
+
     communicator?.on('sendTransactions', (msg) => {
       // @ts-expect-error aaah
       openConfirmationModal(msg.data.data.txs as Transaction[], msg.data.data.params, msg.data.requestId)
     })
-  }, [communicator, ethBalance, openConfirmationModal, safeAddress])
+  }, [communicator, ethBalance, openConfirmationModal, safeAddress, sendMessageToIframe])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     // Safe Apps SDK V1 Handler

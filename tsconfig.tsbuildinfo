@@ -5340,7 +5340,7 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/hooks/useiframemessagehandler.ts": {
-        "version": "99e093189c9d99c55028371a721d7a4ec954ff327dc6e959db5ab75f6fe34170",
+        "version": "bee0b17b6d1935d86c8716d91d0300d3c5d6f26d33e700b6abb4579b0b1cbe93",
         "signature": "d68211d02b36a7e1309ca90f35e6d6e3f34f4e15ad0c7ac65b4a7bc5b5930718",
         "affectsGlobalScope": false
       },
@@ -5384,48 +5384,48 @@
         "signature": "a4a71fb069324df03e122f3b6596ec15c24c2754a41f3fadd18c11785f7439fd",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts": {
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts": {
         "version": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
         "signature": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts": {
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts": {
         "version": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
         "signature": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts": {
-        "version": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
-        "signature": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts": {
-        "version": "f5a8db166430766248bede13c7e60ef54c25b777037de9e5d2b8b89acd73f0b1",
-        "signature": "f5a8db166430766248bede13c7e60ef54c25b777037de9e5d2b8b89acd73f0b1",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": {
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts": {
         "version": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
         "signature": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": {
-        "version": "ab181c7d57c26997ca2a713e210902342fb5cad464c5d6f3e180178d095dfdc1",
-        "signature": "ab181c7d57c26997ca2a713e210902342fb5cad464c5d6f3e180178d095dfdc1",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts": {
+        "version": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
+        "signature": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts": {
-        "version": "1823265611d6ebe9dc4694f93323a58134f4e5487bbae225513c54e4f1881fc5",
-        "signature": "1823265611d6ebe9dc4694f93323a58134f4e5487bbae225513c54e4f1881fc5",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts": {
+        "version": "19ad12abdd243f99e909160cf1ec52391f3cba939c53124d1e07684da25a695b",
+        "signature": "19ad12abdd243f99e909160cf1ec52391f3cba939c53124d1e07684da25a695b",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts": {
+        "version": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
+        "signature": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts": {
+        "version": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
+        "signature": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "92bae59a1c2fff7f5f6d579c992d038b5dcf33aa4cdfb1223e48aea5d5b016a9",
-        "signature": "4cc591f58edee2dabbd7e83bb8d2aebe3d011595421b0cba2b9b8a2a7ec723c5",
+        "version": "c16c176e383ecc54fd31dba3c9e78f0768f1cf0c430dd7bb1c7fbacc3c60f70f",
+        "signature": "ea51f003d1e4723b616edf51516dea1f89d3d67f4b5e615525e72b80a8258d12",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/index.tsx": {
-        "version": "e64a2945a0437b50ef38e45ddf2c2c8636d66b95671bfdd9ef5053b69f9d660c",
+        "version": "57378152644a01b17576887f7e83c83efe49731d3857dc92d670f123d3404f06",
         "signature": "f360297036232d413f6c1966f03a42de2384de5a91e909b40f8bfa62981948ac",
         "affectsGlobalScope": false
       },
@@ -7449,38 +7449,38 @@
         "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/txs/index.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts": [
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts": [
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts": [
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts": [
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./node_modules/web3-core/types/index.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
       "./node_modules/@gnosis.pm/safe-contracts/build/contracts/gnosissafe.json": [
@@ -14882,7 +14882,7 @@
         "./src/routes/safe/components/apps/utils.ts"
       ],
       "./src/routes/safe/components/apps/communicator.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts",
         "./node_modules/@types/react/index.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./src/routes/safe/components/apps/types.d.ts"
@@ -17588,38 +17588,38 @@
         "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/txs/index.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts": [
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts": [
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts": [
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts": [
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts",
         "./node_modules/web3-core/types/index.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts": [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
         "./node_modules/date-fns/typings.d.ts"
       ],
       "./node_modules/@gnosis.pm/safe-react-components/dist/datadisplay/card/index.d.ts": [
@@ -23190,7 +23190,7 @@
         "./src/routes/safe/components/apps/types.d.ts"
       ],
       "./src/routes/safe/components/apps/communicator.ts": [
-        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts",
         "./node_modules/@types/react/index.d.ts",
         "./src/routes/safe/components/apps/types.d.ts"
       ],
@@ -23993,13 +23993,13 @@
       "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/txs/envinfo.d.ts",
       "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/txs/index.d.ts",
       "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/types.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/communication/methods.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/constants.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/eth/index.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/index.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/txs/index.d.ts",
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/types.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
       "./node_modules/@gnosis.pm/safe-contracts/build/contracts/gnosissafe.json",
       "./node_modules/@gnosis.pm/safe-contracts/build/contracts/gnosissafeproxy.json",
       "./node_modules/@gnosis.pm/safe-contracts/build/contracts/gnosissafeproxyfactory.json",
@@ -25224,19 +25224,7 @@
       "./src/routes/safe/components/apps/hooks/useapplist.ts",
       "./src/routes/safe/components/apps/hooks/useiframemessagehandler.ts",
       "./src/routes/safe/components/apps/hooks/uselegalconsent.ts",
-      [
-        "./src/routes/safe/components/apps/index.tsx",
-        [
-          {
-            "file": "./src/routes/safe/components/apps/index.tsx",
-            "start": 3728,
-            "length": 10,
-            "code": 2345,
-            "category": 1,
-            "messageText": "Argument of type '(msg: any) => void' is not assignable to parameter of type '() => unknown'."
-          }
-        ]
-      ],
+      "./src/routes/safe/components/apps/index.tsx",
       "./src/routes/safe/components/apps/types.d.ts",
       "./src/routes/safe/components/apps/utils.ts",
       "./src/routes/safe/components/assets/addressbookicon.tsx",
@@ -25526,6 +25514,34 @@
       ],
       [
         "./node_modules/@gnosis.pm/safe-apps-sdk/dist/sdk.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts",
+        1
+      ],
+      [
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts",
         1
       ],
       [
