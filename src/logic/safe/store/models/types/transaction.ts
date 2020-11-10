@@ -59,7 +59,7 @@ export type TransactionProps = {
   isCollectibleTransfer: boolean
   isExecuted: boolean
   isPending?: boolean
-  isSuccessful: boolean
+  isSuccessful?: boolean
   isTokenTransfer: boolean
   masterCopy: string
   modifySettingsTx: boolean

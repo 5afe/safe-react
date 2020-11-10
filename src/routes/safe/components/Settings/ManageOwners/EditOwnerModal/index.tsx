@@ -93,8 +93,8 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
                   <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
                     {ownerAddress}
                   </Paragraph>
-                  <CopyBtn content={safeAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
+                  <CopyBtn content={ownerAddress} />
+                  <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                 </Block>
               </Row>
             </Block>
