@@ -1,5 +1,5 @@
 import { MutableRefObject, useEffect, useState } from 'react'
-import { Methods } from '@gnosis.pm/safe-apps-sdk'
+import { Methods, __VERSION__ } from '@gnosis.pm/safe-apps-sdk'
 import { SafeApp } from './types.d'
 
 class AppCommunicator {
@@ -14,7 +14,7 @@ class AppCommunicator {
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
-  on = (method: Methods, handler: () => Promise<unknown> | unknown): void => {
+  on = (method: Methods, handler: (...args: unknown[]) => Promise<unknown> | unknown): void => {
     this.handlers.set(method, handler)
   }
 
@@ -26,11 +26,11 @@ class AppCommunicator {
   }
 
   private canHandleMessage = (msg): boolean => {
-    return !!this.handlers.get(msg.data.method)
+    return Boolean(this.handlers.get(msg.data.method))
   }
 
   send = (response, requestId): void => {
-    this.iframe.contentWindow?.postMessage({ response, requestId }, this.app.url)
+    this.iframe.contentWindow?.postMessage({ response, requestId, version: __VERSION__ }, this.app.url)
   }
 
   handleIncomingMessage = (msg: MessageEvent): void => {
@@ -41,6 +41,7 @@ class AppCommunicator {
       const handler = this.handlers.get(msg.data.method)
       const response = handler(msg)
 
+      // If response is not returned, it means the response will be send somewhere else
       if (response) {
         this.send(response, msg.data.requestId)
       }

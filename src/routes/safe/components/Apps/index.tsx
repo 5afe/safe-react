@@ -117,22 +117,31 @@ const Apps = (): React.ReactElement => {
     }))
 
     communicator?.on('sendTransactions', (msg) => {
-      console.log({ type: 'sendTxs', msg })
+      // @ts-expect-error aaah
+      openConfirmationModal(msg.data.data.txs as Transaction[], msg.data.data.params, msg.data.requestId)
     })
-  }, [communicator, ethBalance, safeAddress])
+  }, [communicator, ethBalance, openConfirmationModal, safeAddress])
 
   const onUserTxConfirm = (safeTxHash: string) => {
+    // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
       confirmTransactionModal.requestId,
     )
+
+    // Safe Apps SDK V2 Handler
+    communicator?.send({ success: true, safeTxHash }, confirmTransactionModal.requestId)
   }
 
   const onTxReject = () => {
+    // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
       confirmTransactionModal.requestId,
     )
+
+    // Safe Apps SDK V2 Handler
+    communicator?.send({ success: false, error: 'Transaction was rejected' }, confirmTransactionModal.requestId)
   }
 
   const onSelectApp = useCallback(

@@ -49,6 +49,7 @@ const useIframeMessageHandler = (
       const requestWithMessage = {
         ...message,
         requestId: requestId || Math.trunc(window.performance.now()),
+        version: '0.4.2',
       }
 
       if (iframeRef && selectedApp) {

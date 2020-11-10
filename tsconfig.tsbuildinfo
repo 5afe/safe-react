@@ -5420,7 +5420,7 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "986ce7c4abc3362abe8cca6bd2ae9e77e62641e82359d762aa2a64e03b67b5da",
+        "version": "92bae59a1c2fff7f5f6d579c992d038b5dcf33aa4cdfb1223e48aea5d5b016a9",
         "signature": "4cc591f58edee2dabbd7e83bb8d2aebe3d011595421b0cba2b9b8a2a7ec723c5",
         "affectsGlobalScope": false
       },
