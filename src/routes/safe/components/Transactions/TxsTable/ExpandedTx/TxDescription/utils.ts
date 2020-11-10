@@ -1,6 +1,7 @@
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
 import { sameString } from 'src/utils/strings'
+import { getNetworkInfo } from 'src/config'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()
@@ -104,9 +105,10 @@ export const getTxData = (tx: Transaction): TxData => {
     txData.recipient = tx.recipient
   }
 
-  if (sameString(tx.type, 'outgoing') && tx.symbol && sameString(tx.symbol, 'eth')) {
+  const { nativeCoin } = getNetworkInfo()
+  if (sameString(tx.type, 'outgoing') && tx.symbol && sameString(tx.symbol, nativeCoin.symbol)) {
     txData.isTokenTransfer = true
-    txData.tokenAddress = '0x000'
+    txData.tokenAddress = nativeCoin.address
   }
 
   return txData
