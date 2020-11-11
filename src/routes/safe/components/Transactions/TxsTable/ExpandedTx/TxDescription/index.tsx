@@ -7,7 +7,7 @@ import SettingsDescription from './SettingsDescription'
 import CustomDescription from './CustomDescription'
 import TransferDescription from './TransferDescription'
 
-import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
+import { getRawTxAmount, getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Block from 'src/components/layout/Block'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
@@ -30,8 +30,12 @@ const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
     recipient,
     removedOwner,
     upgradeTx,
+    tokenAddress,
+    isTokenTransfer,
   }: any = getTxData(tx)
-  const amount = getTxAmount(tx, false)
+
+  const amountWithSymbol = getTxAmount(tx, false)
+  const amount = getRawTxAmount(tx)
   return (
     <Block className={classes.txDataContainer}>
       {modifySettingsTx && action && (
@@ -43,10 +47,18 @@ const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
           module={module}
         />
       )}
-      {!upgradeTx && customTx && <CustomDescription amount={amount} data={data} recipient={recipient} storedTx={tx} />}
+      {!upgradeTx && customTx && (
+        <CustomDescription amount={amountWithSymbol} data={data} recipient={recipient} storedTx={tx} />
+      )}
       {upgradeTx && <div>{data}</div>}
       {!cancellationTx && !modifySettingsTx && !customTx && !creationTx && !upgradeTx && (
-        <TransferDescription amount={amount} recipient={recipient} />
+        <TransferDescription
+          amountWithSymbol={amountWithSymbol}
+          recipient={recipient}
+          tokenAddress={tokenAddress}
+          rawAmount={amount}
+          isTokenTransfer={isTokenTransfer}
+        />
       )}
     </Block>
   )
