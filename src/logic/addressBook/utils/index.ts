@@ -1,8 +1,9 @@
 import { List } from 'immutable'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 
 const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
@@ -135,3 +136,39 @@ export const checkIfEntryWasDeletedFromAddressBook = (
   const isAlreadyInAddressBook = !!addressBook.find((entry) => sameAddress(entry.address, address))
   return addressShouldBeOnTheAddressBook && !isAlreadyInAddressBook
 }
+
+/**
+ * Returns a filtered list of AddressBookEntries whose addresses are contracts
+ * @param {Array<AddressBookEntry>} addressBook
+ * @returns Array<AddressBookEntry>
+ */
+export const filterContractAddressBookEntries = async (addressBook: AddressBookState): Promise<AddressBookEntry[]> => {
+  const abFlags = await Promise.all(
+    addressBook.map(
+      async ({ address }: AddressBookEntry): Promise<boolean> => {
+        return (await mustBeEthereumContractAddress(address)) === undefined
+      },
+    ),
+  )
+
+  return addressBook.filter((_, index) => abFlags[index])
+}
+
+/**
+ * Filters the AddressBookEntries by `address` or `name` based on the `inputValue`
+ * @param {Array<AddressBookEntry>} addressBookEntries
+ * @param {Object} filterParams
+ * @param {String} filterParams.inputValue
+ * @return Array<AddressBookEntry>
+ */
+export const filterAddressEntries = (
+  addressBookEntries: AddressBookEntry[],
+  { inputValue }: { inputValue: string },
+): AddressBookEntry[] =>
+  addressBookEntries.filter(({ address, name }) => {
+    const inputLowerCase = inputValue.toLowerCase()
+    const foundName = name.toLowerCase().includes(inputLowerCase)
+    const foundAddress = address?.toLowerCase().includes(inputLowerCase)
+
+    return foundName || foundAddress
+  })
