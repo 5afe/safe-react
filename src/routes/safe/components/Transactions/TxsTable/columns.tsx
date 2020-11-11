@@ -73,7 +73,7 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
 }
 
 export const getRawTxAmount = (tx: Transaction): string => {
-  const { decodedParams, isTokenTransfer } = tx
+  const { decimals, decodedParams, isTokenTransfer } = tx
   const { nativeCoin } = getNetworkInfo()
   const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
 
@@ -85,7 +85,8 @@ export const getRawTxAmount = (tx: Transaction): string => {
     return NOT_AVAILABLE
   }
 
-  const finalValue = new BigNumber(value).times(`1e-${nativeCoin.decimals}`).toFixed()
+  const tokenDecimals = decimals ?? nativeCoin.decimals
+  const finalValue = new BigNumber(value).times(`1e-${tokenDecimals}`).toFixed()
 
   return finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 }
