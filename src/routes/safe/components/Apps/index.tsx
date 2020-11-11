@@ -122,7 +122,7 @@ const Apps = (): React.ReactElement => {
       const params = msg.data.params as RPCPayload
 
       try {
-        const response = await new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
+        const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
           if (
             web3ReadOnly.currentProvider !== null &&
             typeof web3ReadOnly.currentProvider !== 'string' &&
@@ -139,7 +139,7 @@ const Apps = (): React.ReactElement => {
                 if (err) {
                   reject({ success: false, error: err })
                 }
-
+                console.log({ res })
                 resolve(res?.result)
               },
             )

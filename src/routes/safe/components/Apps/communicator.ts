@@ -34,17 +34,18 @@ class AppCommunicator {
   }
 
   send = (response, requestId): void => {
+    console.log({ response, requestId })
     this.iframe.contentWindow?.postMessage({ response, requestId, version: __VERSION__ }, this.app.url)
   }
 
-  handleIncomingMessage = (msg: SDKMessageEvent): void => {
+  handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {
     const validMessage = this.isValidMessage(msg)
     const hasHandler = this.canHandleMessage(msg)
 
     if (validMessage && hasHandler) {
       const handler = this.handlers.get(msg.data.method)
       // @ts-expect-error Handler existence is checked in this.canHandleMessage
-      const response = handler(msg)
+      const response = await handler(msg)
 
       // If response is not returned, it means the response will be send somewhere else
       if (response) {

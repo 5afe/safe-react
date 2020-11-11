@@ -5264,6 +5264,41 @@
         "signature": "76e11130a15b7ad899bfca44620bad1ad5d709e536d1431c92d15d0081d3f397",
         "affectsGlobalScope": false
       },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts": {
+        "version": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
+        "signature": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts": {
+        "version": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
+        "signature": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts": {
+        "version": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
+        "signature": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts": {
+        "version": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
+        "signature": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts": {
+        "version": "a232482d06600688cb999f812384fca4fa2812d6a1f71eb5b338f9bfe8e9ea4a",
+        "signature": "a232482d06600688cb999f812384fca4fa2812d6a1f71eb5b338f9bfe8e9ea4a",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts": {
+        "version": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
+        "signature": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
+        "affectsGlobalScope": false
+      },
+      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts": {
+        "version": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
+        "signature": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
+        "affectsGlobalScope": false
+      },
       "./src/routes/safe/components/apps/addappform/appagreement.tsx": {
         "version": "9d7dad3abf52118e8d3708276236bf7bdff94d087654ed5ca25b3bee746cbd92",
         "signature": "0adb1e1b8279fd7d9201c826ec96f25122521f29c4db18ca33e05f8ee392f3df",
@@ -5384,48 +5419,13 @@
         "signature": "a4a71fb069324df03e122f3b6596ec15c24c2754a41f3fadd18c11785f7439fd",
         "affectsGlobalScope": false
       },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/communication/methods.d.ts": {
-        "version": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
-        "signature": "74cf8f2224b086c41ff6ec4b2d17f366498fe9b0ff8cb9bb00aebc4824216d40",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/constants.d.ts": {
-        "version": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
-        "signature": "21e1196679f6b745a8f500e030c6b0bcf33a80021783024a3908ba9fffe7c923",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/txs/index.d.ts": {
-        "version": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
-        "signature": "cf94b9b81791c009365b1ac13e8e94d76929b089bbb52fbb50b373a0f5d6deda",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/eth/index.d.ts": {
-        "version": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
-        "signature": "89a443cf82d45fb4dbb76e291fbd71133fa054317a9d31d35e4849ed72c9eff2",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/types.d.ts": {
-        "version": "19ad12abdd243f99e909160cf1ec52391f3cba939c53124d1e07684da25a695b",
-        "signature": "19ad12abdd243f99e909160cf1ec52391f3cba939c53124d1e07684da25a695b",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/sdk.d.ts": {
-        "version": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
-        "signature": "6231a7f98496abadc7e609cafbdf8b7ac3d21b60297f48e4238c7ba4ab5ba55c",
-        "affectsGlobalScope": false
-      },
-      "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts": {
-        "version": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
-        "signature": "6bc635661b4299a2436911e06ba0d28762ca04c6873ce172108f1f36900e58d1",
-        "affectsGlobalScope": false
-      },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "c16c176e383ecc54fd31dba3c9e78f0768f1cf0c430dd7bb1c7fbacc3c60f70f",
-        "signature": "ea51f003d1e4723b616edf51516dea1f89d3d67f4b5e615525e72b80a8258d12",
+        "version": "587ec70340305b499096401a19374347d7869ba37e46b06588838d193ddff532",
+        "signature": "7c0eb2244f5f1d2a239751b3dcba2f6a8eab746a45251a7f89e8de52aba4d9d8",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/index.tsx": {
-        "version": "57378152644a01b17576887f7e83c83efe49731d3857dc92d670f123d3404f06",
+        "version": "eb4fe792f689881afbcf22f6b24550973be1e4ef0b58f42642db36bcf8c77cca",
         "signature": "f360297036232d413f6c1966f03a42de2384de5a91e909b40f8bfa62981948ac",
         "affectsGlobalScope": false
       },
@@ -14972,6 +14972,7 @@
       ],
       "./src/routes/safe/components/apps/index.tsx": [
         "./node_modules/@gnosis.pm/safe-apps-sdk-v1/dist/index.d.ts",
+        "./node_modules/@gnosis.pm/safe-apps-sdk/dist/src/index.d.ts",
         "./node_modules/@gnosis.pm/safe-react-components/dist/index.d.ts",
         "./node_modules/@types/react-redux/index.d.ts",
         "./node_modules/@types/react/index.d.ts",
@@ -14980,6 +14981,7 @@
         "./src/components/listcontentlayout/index.ts",
         "./src/config/index.ts",
         "./src/logic/safe/store/selectors/index.ts",
+        "./src/logic/wallets/getweb3.ts",
         "./src/routes/safe/components/apps/communicator.ts",
         "./src/routes/safe/components/apps/components/appframe.tsx",
         "./src/routes/safe/components/apps/components/confirmtransactionmodal.tsx",
