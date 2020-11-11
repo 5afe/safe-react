@@ -1,5 +1,7 @@
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
+import { sameString } from 'src/utils/strings'
+import { getNetworkInfo } from 'src/config'
 
 const getSafeVersion = (data) => {
   const contractAddress = data.substr(340, 40).toLowerCase()
@@ -27,6 +29,7 @@ interface TxData {
   cancellationTx?: boolean
   creationTx?: boolean
   upgradeTx?: boolean
+  tokenAddress?: string
 }
 
 const getTxDataForModifySettingsTxs = (tx: Transaction): TxData => {
@@ -97,6 +100,7 @@ const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
     const { to } = tx.decodedParams.transfer || {}
     txData.recipient = to
     txData.isTokenTransfer = true
+    txData.tokenAddress = tx.recipient
     return txData
   }
 
@@ -132,6 +136,12 @@ const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
 // it should be refactored to simplify unnecessary if's checks and re-asigning props to the txData object
 export const getTxData = (tx: Transaction): TxData => {
   const txData: TxData = {}
+
+  const { nativeCoin } = getNetworkInfo()
+  if (sameString(tx.type, 'outgoing') && tx.symbol && sameString(tx.symbol, nativeCoin.symbol)) {
+    txData.isTokenTransfer = true
+    txData.tokenAddress = nativeCoin.address
+  }
 
   if (tx.decodedParams) {
     return getTxDataForTxsWithDecodedParams(tx)
