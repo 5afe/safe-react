@@ -86,17 +86,14 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]): GenericValidatorType =>
-  memoize(
-    (): ValidatorReturnType => {
-      const repeatedAddresses = addresses.filter((element, position, array) => array.indexOf(element) !== position)
+export const uniqueAddress = (addresses: string[]): GenericValidatorType => (): ValidatorReturnType => {
+  const repeatedAddresses = addresses.filter((element, position, array) => array.indexOf(element) !== position)
 
-      if (repeatedAddresses.length > 0) {
-        return ADDRESS_REPEATED_ERROR
-      }
-      return undefined
-    },
-  )
+  if (repeatedAddresses.length > 0) {
+    return ADDRESS_REPEATED_ERROR
+  }
+  return undefined
+}
 
 export const composeValidators = (...validators: Validator[]) => (value: unknown): ValidatorReturnType =>
   validators.reduce(
