@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useRef, useState, useMemo } from 'react'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import { Card, IconText, Loader, Menu, Title } from '@gnosis.pm/safe-react-components'
+import { MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 
@@ -80,7 +81,7 @@ const Apps = (): React.ReactElement => {
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
-  const ethBalance = useSelector(safeEthBalanceSelector)
+  const ethBalance = useSelector(safeEthBalanceSelector) as string
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
@@ -117,30 +118,37 @@ const Apps = (): React.ReactElement => {
       network: NETWORK_NAME,
     }))
 
-    communicator?.on('rpcCall', (msg) => {
-      if (
-        web3ReadOnly.currentProvider !== null &&
-        typeof web3ReadOnly.currentProvider !== 'string' &&
-        'send' in web3ReadOnly.currentProvider
-      ) {
-        web3ReadOnly.currentProvider?.send?.(
-          {
-            jsonrpc: '2.0',
-            method: msg.data.data?.call,
-            params: msg.data.data?.params,
-            id: '1',
-          },
-          (err, res) => {
-            if (err) {
-              // @ts-expect-error aaah
-              communicator?.send({ success: false, error: err }, msg.data.requestId)
-              return
-            }
+    communicator?.on('rpcCall', async (msg) => {
+      const params = msg.data.params as RPCPayload
 
-            // @ts-expect-error aaah
-            communicator?.send(res, msg.data.requestId)
-          },
-        )
+      try {
+        const response = await new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
+          if (
+            web3ReadOnly.currentProvider !== null &&
+            typeof web3ReadOnly.currentProvider !== 'string' &&
+            'send' in web3ReadOnly.currentProvider
+          ) {
+            web3ReadOnly.currentProvider?.send?.(
+              {
+                jsonrpc: '2.0',
+                method: params.call,
+                params: params.params,
+                id: '1',
+              },
+              (err, res) => {
+                if (err) {
+                  reject({ success: false, error: err })
+                }
+
+                resolve(res?.result)
+              },
+            )
+          }
+        })
+
+        return response
+      } catch (err) {
+        return { success: false, error: err }
       }
     })
 

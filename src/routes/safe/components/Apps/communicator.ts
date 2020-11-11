@@ -1,10 +1,14 @@
 import { MutableRefObject, useEffect, useState } from 'react'
-import { Methods, __VERSION__ } from '@gnosis.pm/safe-apps-sdk'
+import { __VERSION__, SDKMessageEvent, MethodToResponse, Methods, ErrorResponse } from '@gnosis.pm/safe-apps-sdk'
 import { SafeApp } from './types.d'
+
+type MessageHandler = (
+  msg: SDKMessageEvent,
+) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
 class AppCommunicator {
   private iframe: HTMLIFrameElement
-  private handlers = new Map()
+  private handlers = new Map<string, MessageHandler>()
   private app: SafeApp
 
   constructor(iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) {
@@ -14,18 +18,18 @@ class AppCommunicator {
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
-  on = (method: Methods, handler: (...args: unknown[]) => Promise<unknown> | unknown): void => {
+  on = (method: Methods, handler: MessageHandler): void => {
     this.handlers.set(method, handler)
   }
 
-  private isValidMessage = (msg): boolean => {
+  private isValidMessage = (msg: SDKMessageEvent): boolean => {
     const sameOrigin = msg.origin === window.origin
     const knownOrigin = this.app.url.includes(msg.origin)
 
     return knownOrigin && !sameOrigin
   }
 
-  private canHandleMessage = (msg): boolean => {
+  private canHandleMessage = (msg: SDKMessageEvent): boolean => {
     return Boolean(this.handlers.get(msg.data.method))
   }
 
@@ -33,13 +37,14 @@ class AppCommunicator {
     this.iframe.contentWindow?.postMessage({ response, requestId, version: __VERSION__ }, this.app.url)
   }
 
-  handleIncomingMessage = (msg: MessageEvent): void => {
+  handleIncomingMessage = (msg: SDKMessageEvent): void => {
     const validMessage = this.isValidMessage(msg)
     const hasHandler = this.canHandleMessage(msg)
 
     if (validMessage && hasHandler) {
       const handler = this.handlers.get(msg.data.method)
-      const response = handler(msg, this.send)
+      // @ts-expect-error Handler existence is checked in this.canHandleMessage
+      const response = handler(msg)
 
       // If response is not returned, it means the response will be send somewhere else
       if (response) {
