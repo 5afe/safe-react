@@ -3,16 +3,14 @@ import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
-import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -23,9 +21,10 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
@@ -33,7 +32,7 @@ import { sm } from 'src/theme/variables'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -69,15 +68,30 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
-    address: recipientAddress,
-    name: '',
-  })
+  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
+    const defaultEntry = { address: recipientAddress || '', name: '' }
 
+    // if there's nothing to lookup for, we return the default entry
+    if (!recipientAddress) {
+      return defaultEntry
+    }
+
+    const addressBookEntry = addressBook.find(({ address }) => {
+      return sameAddress(recipientAddress, address)
+    })
+
+    // if found in the Address Book, then we return the entry
+    if (addressBookEntry) {
+      return addressBookEntry
+    }
+
+    // otherwise we return the default entry
+    return defaultEntry
+  })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
 
-  React.useMemo(() => {
+  useEffect(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
@@ -150,9 +164,13 @@ const SendFunds = ({
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string' })
+                      if (e.key === 'Tab') {
+                        return
                       }
+                      setSelectedEntry({ address: '', name: '' })
+                    }}
+                    onClick={() => {
+                      setSelectedEntry({ address: '', name: '' })
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -163,52 +181,29 @@ const SendFunds = ({
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
-                      <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
-                      </Col>
-                      <Col layout="column" xs={11}>
-                        <Block justify="left">
-                          <Block>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
-                              weight="bolder"
-                            >
-                              {selectedEntry.name}
-                            </Paragraph>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
-                              weight="bolder"
-                            >
-                              {selectedEntry.address}
-                            </Paragraph>
-                          </Block>
-                          <CopyBtn content={selectedEntry.address} />
-                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
-                        </Block>
-                      </Col>
+                      <EthHashInfo
+                        hash={selectedEntry.address}
+                        name={selectedEntry.name}
+                        showIdenticon
+                        showCopyBtn
+                        explorerUrl={getExplorerInfo(selectedEntry.address)}
+                      />
                     </Row>
                   </div>
                 ) : (
-                  <>
-                    <Row margin="md">
-                      <Col xs={11}>
-                        <AddressBookInput
-                          fieldMutator={mutators.setRecipient}
-                          pristine={pristine}
-                          recipientAddress={recipientAddress}
-                          setIsValidAddress={setIsValidAddress}
-                          setSelectedEntry={setSelectedEntry}
-                        />
-                      </Col>
-                      <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
-                      </Col>
-                    </Row>
-                  </>
+                  <Row margin="md">
+                    <Col xs={11}>
+                      <AddressBookInput
+                        fieldMutator={mutators.setRecipient}
+                        pristine={pristine}
+                        setIsValidAddress={setIsValidAddress}
+                        setSelectedEntry={setSelectedEntry}
+                      />
+                    </Col>
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  </Row>
                 )}
                 <Row margin="sm">
                   <Col>
@@ -254,15 +249,7 @@ const SendFunds = ({
                         maxValue(selectedTokenRecord?.balance || 0),
                       )}
                     />
-                    <OnChange name="token">
-                      {() => {
-                        setSelectedEntry({
-                          name: selectedEntry?.name,
-                          address: selectedEntry?.address,
-                        })
-                        mutators.onTokenChange()
-                      }}
-                    </OnChange>
+                    <OnChange name="token">{() => mutators.onTokenChange()}</OnChange>
                   </Col>
                 </Row>
               </Block>
