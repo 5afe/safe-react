@@ -40,6 +40,13 @@ const CenteredMT = styled.div`
   margin-top: 16px;
 `
 
+const ContentWrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
 const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }
@@ -86,7 +93,7 @@ const Apps = (): React.ReactElement => {
   }
 
   return (
-    <>
+    <ContentWrapper>
       <CardsWrapper>
         <AppCard iconUrl={AddAppIcon} onButtonClick={console.log} buttonText="Add custom app" />
 
@@ -113,7 +120,7 @@ const Apps = (): React.ReactElement => {
           textSize="sm"
         />
       </CenteredMT>
-    </>
+    </ContentWrapper>
   )
 }
 

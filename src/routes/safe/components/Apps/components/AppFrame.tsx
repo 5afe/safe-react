@@ -1,6 +1,6 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { FixedIcon, Loader, Title } from '@gnosis.pm/safe-react-components'
+import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {
@@ -56,6 +56,14 @@ const Centered = styled.div`
   justify-content: center;
   flex-direction: column;
 `
+
+const ContentWrapper = styled(Card)`
+  height: calc(100% - 73px);
+  width: calc(100% - 50px);
+  margin: 20px 0;
+  overflow: auto;
+`
+
 type ConfirmTransactionModalState = {
   isOpen: boolean
   txs: Transaction[]
@@ -161,7 +169,11 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   }
 
   if (!selectedApp) {
-    return <div>Loading...</div>
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   if (!consentReceived) {
@@ -178,7 +190,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   }
 
   return (
-    <>
+    <ContentWrapper>
       {/* <Menu>
         <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
       </Menu> */}
@@ -210,7 +222,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
       />
-    </>
+    </ContentWrapper>
   )
 }
 
