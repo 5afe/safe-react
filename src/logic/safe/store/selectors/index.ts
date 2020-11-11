@@ -213,7 +213,7 @@ export const safeOwnersAddressesSelector = createSelector(safeOwnersSelector, (o
     return []
   }
 
-  return owners?.map((o) => o.address)?.toArray()
+  return owners?.map(({ address }) => address)?.toArray()
 })
 
 export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
