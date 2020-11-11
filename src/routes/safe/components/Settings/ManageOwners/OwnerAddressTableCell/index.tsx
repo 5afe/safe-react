@@ -13,10 +13,11 @@ type OwnerAddressTableCellProps = {
   knownAddress?: boolean
   showLinks: boolean
   userName?: string
+  sendModalOpenHandler?: () => void
 }
 
 const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
-  const { address, knownAddress, showLinks, userName } = props
+  const { address, knownAddress, showLinks, userName, sendModalOpenHandler } = props
   const [cut, setCut] = useState(0)
   const { width } = useWindowDimensions()
 
@@ -36,7 +37,12 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
           {userName && getValidAddressBookName(userName)}
-          <EtherscanLink knownAddress={knownAddress} value={address} cut={cut} />
+          <EtherscanLink
+            knownAddress={knownAddress}
+            value={address}
+            cut={cut}
+            sendModalOpenHandler={sendModalOpenHandler}
+          />
         </div>
       ) : (
         <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>
