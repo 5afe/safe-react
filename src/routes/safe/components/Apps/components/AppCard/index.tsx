@@ -41,6 +41,7 @@ type Props = {
   iconUrl?: string
   buttonText?: string
   onButtonClick?: () => void
+  onCardClick?: () => void
 }
 
 export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
@@ -56,13 +57,14 @@ const Apps = ({
   iconUrl,
   buttonText,
   onButtonClick,
+  onCardClick,
 }: Props): React.ReactElement => {
   if (isLoading) {
     return <div>skeleton</div>
   }
 
   return (
-    <StyledApps className={className}>
+    <StyledApps className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} />
 
       {name && <Title size="sm">{name}</Title>}
