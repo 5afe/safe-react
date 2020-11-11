@@ -95,7 +95,7 @@ const Apps = (): React.ReactElement => {
   return (
     <ContentWrapper>
       <CardsWrapper>
-        <AppCard iconUrl={AddAppIcon} onButtonClick={console.log} buttonText="Add custom app" />
+        <AppCard iconUrl={AddAppIcon} onButtonClick={console.log} buttonText="Add custom app" iconSize="lg" />
 
         {apps.map((a) => (
           <AppCard

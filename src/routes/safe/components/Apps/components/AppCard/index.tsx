@@ -29,8 +29,10 @@ const StyledApps = styled.div`
   }
 `
 
-const IconImg = styled.img`
-  width: 92px;
+const IconImg = styled.img<{ size: 'md' | 'lg' }>`
+  width: ${({ size }) => (size === 'md' ? '48px' : '102px')};
+  height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
+  object-fit: contain;
 `
 
 type Props = {
@@ -39,6 +41,7 @@ type Props = {
   name?: string
   description?: string
   iconUrl?: string
+  iconSize?: 'md' | 'lg'
   buttonText?: string
   onButtonClick?: () => void
   onCardClick?: () => void
@@ -55,6 +58,7 @@ const Apps = ({
   name,
   description,
   iconUrl,
+  iconSize = 'md',
   buttonText,
   onButtonClick,
   onCardClick,
@@ -65,7 +69,7 @@ const Apps = ({
 
   return (
     <StyledApps className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
-      <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} />
+      <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
       {name && <Title size="sm">{name}</Title>}
       {description && <Text size="lg">{description} </Text>}
