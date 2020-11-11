@@ -15,6 +15,8 @@ import AppFrame from './components/AppFrame'
 import { useAppList } from './hooks/useAppList'
 import { SafeApp, SAFE_APP_LOADING_STATUS } from './types.d'
 
+import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
+import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import LCL from 'src/components/ListContentLayout'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
@@ -44,9 +46,10 @@ const LoadingContainer = styled.div`
   ${centerCSS};
 `
 
-const StyledCard = styled(Card)`
-  margin-bottom: 24px;
-  ${centerCSS};
+const CardsWrapper = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: justify-content-center;
 `
 
 const CenteredMT = styled.div`
@@ -230,18 +233,14 @@ const Apps = (): React.ReactElement => {
         <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
       </Menu> */}
 
-      {apps.map((a) => {}) ? (
-        <LCL.Wrapper>
-          <LCL.Menu>
-            <LCL.List activeItem={selectedAppId} items={apps} onItemClick={onSelectApp} />
-          </LCL.Menu>
-          <LCL.Content></LCL.Content>
-        </LCL.Wrapper>
-      ) : (
-        <StyledCard>
-          <Title size="xs">No Apps Enabled</Title>
-        </StyledCard>
-      )}
+      <CardsWrapper>
+        <AppCard iconUrl={AddAppIcon} onButtonClick={console.log} buttonText="Add custom app" />
+
+        {apps.map((a) => (
+          <AppCard key={a.url} iconUrl={a.iconUrl} name={a.name} description={a.description} />
+        ))}
+      </CardsWrapper>
+
       <CenteredMT>
         <IconText
           color="secondary"
