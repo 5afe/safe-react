@@ -28,7 +28,26 @@ const StyledApps = styled.div`
     }
   }
 `
-
+const Skeleton = styled.div``
+const AppIconSK = styled.div`
+  height: 60px;
+  width: 60px;
+  border-radius: 30px;
+  margin: 0 auto;
+  background-color: lightgrey;
+`
+const TitleSK = styled.div`
+  height: 24px;
+  width: 160px;
+  margin: 24px auto;
+  background-color: lightgrey;
+`
+const DescriptionSK = styled.div`
+  height: 16px;
+  width: 200px;
+  margin: 8px auto;
+  background-color: lightgrey;
+`
 const IconImg = styled.img`
   width: 92px;
 `
@@ -58,7 +77,16 @@ const Apps = ({
   onButtonClick,
 }: Props): React.ReactElement => {
   if (isLoading) {
-    return <div>skeleton</div>
+    return (
+      <StyledApps className={className}>
+        <Skeleton>
+          <AppIconSK />
+          <TitleSK />
+          <DescriptionSK />
+          <DescriptionSK />
+        </Skeleton>
+      </StyledApps>
+    )
   }
 
   return (
