@@ -13,6 +13,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
+import { getNetworkInfo } from 'src/config'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -69,6 +70,25 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
   }
 
   return getAmountWithSymbol({ decimals: decimals as string, symbol: symbol as string, value }, formatted)
+}
+
+export const getRawTxAmount = (tx: Transaction): string => {
+  const { decimals, decodedParams, isTokenTransfer } = tx
+  const { nativeCoin } = getNetworkInfo()
+  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
+
+  if (tx.isCollectibleTransfer) {
+    return '1'
+  }
+
+  if (!isTokenTransfer && !(Number(value) > 0)) {
+    return NOT_AVAILABLE
+  }
+
+  const tokenDecimals = decimals ?? nativeCoin.decimals
+  const finalValue = new BigNumber(value).times(`1e-${tokenDecimals}`).toFixed()
+
+  return finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 }
 
 export interface TableData {

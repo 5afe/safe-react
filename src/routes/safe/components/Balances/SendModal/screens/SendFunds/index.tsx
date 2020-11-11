@@ -48,44 +48,36 @@ const formMutators = {
 
 const useStyles = makeStyles(styles)
 
-export type SendFundsTx = {
-  amount?: string
-  recipientAddress?: string
-  token?: string
-}
-
 type SendFundsProps = {
-  initialValues: SendFundsTx
   onClose: () => void
   onNext: (txInfo: unknown) => void
   recipientAddress?: string
   selectedToken?: string
+  amount?: string
 }
 
 const { nativeCoin } = getNetworkInfo()
 
 const SendFunds = ({
-  initialValues,
   onClose,
   onNext,
   recipientAddress,
   selectedToken = '',
+  amount,
 }: SendFundsProps): React.ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
-    const defaultEntry = { address: '', name: '' }
+    const defaultEntry = { address: recipientAddress || '', name: '' }
 
     // if there's nothing to lookup for, we return the default entry
-    if (!initialValues?.recipientAddress && !recipientAddress) {
+    if (!recipientAddress) {
       return defaultEntry
     }
 
-    // if there's something to lookup for, `initialValues` has precedence over `recipientAddress`
-    const predefinedAddress = initialValues?.recipientAddress ?? recipientAddress
     const addressBookEntry = addressBook.find(({ address }) => {
-      return sameAddress(predefinedAddress, address)
+      return sameAddress(recipientAddress, address)
     })
 
     // if found in the Address Book, then we return the entry
@@ -126,7 +118,11 @@ const SendFunds = ({
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} initialValues={initialValues} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={{ amount, recipientAddress, token: selectedToken }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
