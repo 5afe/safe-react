@@ -4,7 +4,6 @@ import { FixedIcon, Loader, Title } from '@gnosis.pm/safe-react-components'
 import { useHistory } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useLegalConsent } from '../hooks/useLegalConsent'
-import { SafeApp } from '../types'
 import LegalDisclaimer from './LegalDisclaimer'
 
 const StyledIframe = styled.iframe`
@@ -37,7 +36,7 @@ const Centered = styled.div`
 `
 
 type AppFrameProps = {
-  selectedApp: SafeApp | undefined
+  appUrl: string
   safeAddress: string
   network: string
   granted: boolean
@@ -46,14 +45,14 @@ type AppFrameProps = {
 }
 
 const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameComponent(
-  { selectedApp, safeAddress, network, appIsLoading, granted, onIframeLoad },
+  { appUrl, safeAddress, network, appIsLoading, granted, onIframeLoad },
   iframeRef,
 ): React.ReactElement {
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
-  if (!selectedApp) {
+  if (!appUrl) {
     return <div />
   }
 
@@ -71,21 +70,26 @@ const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameC
   }
 
   return (
-    <IframeWrapper>
-      {appIsLoading && (
-        <LoadingContainer>
-          <Loader size="md" />
-        </LoadingContainer>
-      )}
-      <StyledIframe
-        frameBorder="0"
-        id={`iframe-${selectedApp.name}`}
-        ref={iframeRef}
-        src={selectedApp.url}
-        title={selectedApp.name}
-        onLoad={onIframeLoad}
-      />
-    </IframeWrapper>
+    <>
+      {/* <Menu>
+        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
+      </Menu> */}
+      <IframeWrapper>
+        {appIsLoading && (
+          <LoadingContainer>
+            <Loader size="md" />
+          </LoadingContainer>
+        )}
+        <StyledIframe
+          frameBorder="0"
+          id={`iframe-${appUrl}`}
+          ref={iframeRef}
+          src={appUrl}
+          title={appUrl} // TODO: Change it!
+          onLoad={onIframeLoad}
+        />
+      </IframeWrapper>
+    </>
   )
 })
 

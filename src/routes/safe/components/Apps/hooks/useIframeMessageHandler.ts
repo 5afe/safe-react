@@ -161,10 +161,10 @@ const useIframeMessageHandler = (
       if (message.origin === window.origin) {
         return
       }
-      if (!selectedApp?.url.includes(message.origin)) {
-        console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
-        return
-      }
+      // if (!selectedApp?.url.includes(message.origin)) {
+      //   console.error(`ThirdPartyApp: A message was received from an unknown origin ${message.origin}`)
+      //   return
+      // }
       handleIframeMessage(message.data.messageId, message.data.data, message.data.requestId)
     }
 

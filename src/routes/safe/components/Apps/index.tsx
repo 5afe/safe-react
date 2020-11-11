@@ -27,7 +27,7 @@ import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { getNetworkName } from 'src/config'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useRouteMatch, useHistory, useLocation } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 const loaderDotsSvg = require('src/routes/opening/assets/loader-dots.svg')
@@ -70,9 +70,16 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 
 const NETWORK_NAME = getNetworkName()
 
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search)
+}
+
 const Apps = (): React.ReactElement => {
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+
+  const query = useQuery()
+  const appUrl = query.get('appUrl')
 
   const { appList, onAppToggle, onAppAdded, onAppRemoved } = useAppList()
 
@@ -104,14 +111,14 @@ const Apps = (): React.ReactElement => {
   ])
 
   const selectedApp = useMemo(() => appList.find((app) => app.id === selectedAppId), [appList, selectedAppId])
-  const enabledApps = useMemo(() => {
+  const apps = useMemo(() => {
     const areAppsLoading = appList.some((app) =>
       [SAFE_APP_LOADING_STATUS.ADDED, SAFE_APP_LOADING_STATUS.LOADING].includes(app.loadingStatus),
     )
 
     return areAppsLoading
       ? appList.map((app) => ({ ...app, name: 'Loading', iconUrl: loaderDotsSvg }))
-      : appList.filter((app) => !app.disabled).map((app) => ({ ...app, id: app.url }))
+      : appList.map((app) => ({ ...app, id: app.url }))
   }, [appList])
   const { sendMessageToIframe } = useIframeMessageHandler(
     selectedApp,
@@ -139,8 +146,7 @@ const Apps = (): React.ReactElement => {
       if (selectedAppId === appUrl) {
         return
       }
-      const goToApp = `${matchSafeWithAddress?.url}/app?appUrl=${encodeURI(appUrl)}`
-      debugger
+      const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appUrl)}`
       history.push(goToApp)
 
       //setAppIsLoading(true)
@@ -181,7 +187,7 @@ const Apps = (): React.ReactElement => {
 
   const handleIframeLoad = useCallback(() => {
     const iframe = iframeRef.current
-    if (!iframe || !selectedApp || !isSameURL(iframe.src, selectedApp.url)) {
+    if (!iframe || !isSameURL(iframe.src, appUrl as string)) {
       return
     }
 
@@ -194,7 +200,7 @@ const Apps = (): React.ReactElement => {
         ethBalance: ethBalance as string,
       },
     })
-  }, [ethBalance, safeAddress, selectedApp, sendMessageToIframe])
+  }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
   if (!appList.length || !safeAddress) {
     return (
@@ -204,27 +210,32 @@ const Apps = (): React.ReactElement => {
     )
   }
 
+  if (appUrl) {
+    return (
+      <AppFrame
+        ref={iframeRef}
+        granted={granted}
+        appUrl={appUrl}
+        safeAddress={safeAddress}
+        network={NETWORK_NAME}
+        appIsLoading={appIsLoading}
+        onIframeLoad={handleIframeLoad}
+      />
+    )
+  }
+
   return (
     <>
-      <Menu>
+      {/* <Menu>
         <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
-      </Menu>
-      {enabledApps.length ? (
+      </Menu> */}
+
+      {apps.map((a) => {}) ? (
         <LCL.Wrapper>
           <LCL.Menu>
-            <LCL.List activeItem={selectedAppId} items={enabledApps} onItemClick={onSelectApp} />
+            <LCL.List activeItem={selectedAppId} items={apps} onItemClick={onSelectApp} />
           </LCL.Menu>
-          <LCL.Content>
-            <AppFrame
-              ref={iframeRef}
-              granted={granted}
-              selectedApp={selectedApp}
-              safeAddress={safeAddress}
-              network={NETWORK_NAME}
-              appIsLoading={appIsLoading}
-              onIframeLoad={handleIframeLoad}
-            />
-          </LCL.Content>
+          <LCL.Content></LCL.Content>
         </LCL.Wrapper>
       ) : (
         <StyledCard>
@@ -240,7 +251,7 @@ const Apps = (): React.ReactElement => {
           textSize="sm"
         />
       </CenteredMT>
-      <ConfirmTransactionModal
+      {/* <ConfirmTransactionModal
         isOpen={confirmTransactionModal.isOpen}
         app={selectedApp as SafeApp}
         safeAddress={safeAddress}
@@ -251,7 +262,7 @@ const Apps = (): React.ReactElement => {
         onUserConfirm={onUserTxConfirm}
         params={confirmTransactionModal.params}
         onTxReject={onTxReject}
-      />
+      /> */}
     </>
   )
 }
