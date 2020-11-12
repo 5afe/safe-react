@@ -88,21 +88,18 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
 export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType => (): ValidatorReturnType => {
-  if ('size' in addresses) {
-    const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
+  // @ts-expect-error both list and array have signatures for map but TS thinks they're not compatible
+  const lowercaseAddresses = addresses.map((address) => address.toLowerCase())
+  const uniqueAddresses = new Set(lowercaseAddresses)
+  const lengthPropName = 'size' in addresses ? 'size' : 'length'
 
-    if (uniqueAddresses.size !== addresses?.size) {
-      return ADDRESS_REPEATED_ERROR
-    }
+  if (
+    uniqueAddresses[lengthPropName] !== addresses?.[lengthPropName] ||
+    uniqueAddresses[lengthPropName] !== addresses?.[lengthPropName]
+  ) {
+    return ADDRESS_REPEATED_ERROR
   }
 
-  if ('length' in addresses) {
-    const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
-
-    if (uniqueAddresses.size !== addresses?.length) {
-      return ADDRESS_REPEATED_ERROR
-    }
-  }
   return undefined
 }
 
