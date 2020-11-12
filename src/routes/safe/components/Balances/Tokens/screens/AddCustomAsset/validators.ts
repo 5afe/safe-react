@@ -1,5 +1,5 @@
 import memoize from 'lodash.memoize'
-import { isERC721Contract } from 'src/logic/tokens/utils/tokenHelpers'
+import { isERC721Contract } from 'src/logic/collectibles/utils'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 // eslint-disable-next-line
