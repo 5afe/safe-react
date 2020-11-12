@@ -5,11 +5,11 @@ import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import NoSafe from 'src/components/NoSafe'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { AppReduxState } from 'src/store'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
+import { getNetworkConfigDisabledFeatures } from 'src/config'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -36,18 +36,7 @@ const Container = (): React.ReactElement => {
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const provider = useSelector(providerNameSelector)
-  const featuresEnabled = useSelector<AppReduxState, FEATURES[] | undefined>(
-    safeFeaturesEnabledSelector,
-    (left, right) => {
-      if (Array.isArray(left) && Array.isArray(right)) {
-        return JSON.stringify(left) === JSON.stringify(right)
-      }
-
-      return left === right
-    },
-  )
   const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const safeAppsEnabled = Boolean(featuresEnabled?.includes(FEATURES.SAFE_APPS))
 
   if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
@@ -83,16 +72,15 @@ const Container = (): React.ReactElement => {
         <Route
           exact
           path={`${matchSafeWithAddress?.path}/apps`}
-          render={
-            (/* {
-            history
-          } */) => {
-              // if (!safeAppsEnabled) {
-              //   history.push(`${matchSafeWithAddress?.url}/balances`)
-              // }
-              return wrapInSuspense(<Apps />, null)
+          render={({ history }) => {
+            // TODO: This will only check if Safe apps are disabled by network config
+            // I removed the check for safe version features because seems to be a race-condition issue
+            const disabledFeatures = getNetworkConfigDisabledFeatures()
+            if (disabledFeatures[FEATURES.SAFE_APPS]) {
+              history.push(`${matchSafeWithAddress?.url}/balances`)
             }
-          }
+            return wrapInSuspense(<Apps />, null)
+          }}
         />
         <Route
           exact

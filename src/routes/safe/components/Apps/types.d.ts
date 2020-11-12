@@ -11,7 +11,6 @@ export type SafeApp = {
   name: string
   iconUrl: string
   disabled?: boolean
-  isDeletable?: boolean
   description: string
   error: boolean
   loadingStatus: SAFE_APP_LOADING_STATUS
@@ -19,5 +18,4 @@ export type SafeApp = {
 
 export type StoredSafeApp = {
   url: string
-  disabled?: boolean
 }

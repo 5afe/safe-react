@@ -32,7 +32,7 @@ const StyledApps = styled.div`
 const IconImg = styled.img<{ size: 'md' | 'lg' }>`
   width: ${({ size }) => (size === 'md' ? '48px' : '102px')};
   height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
-  object-fit: contain;
+  object-fit: cover;
 `
 
 const Skeleton = styled.div``
@@ -55,6 +55,14 @@ const DescriptionSK = styled.div`
   width: 200px;
   margin: 8px auto;
   background-color: lightgrey;
+`
+
+const AppName = styled(Title)`
+  text-align: center;
+`
+
+const AppDescription = styled(Text)`
+  height: 40px;
 `
 
 type Props = {
@@ -102,11 +110,11 @@ const Apps = ({
     <StyledApps className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
-      {name && <Title size="sm">{name}</Title>}
-      {description && <Text size="lg">{description} </Text>}
+      {name && <AppName size="sm">{name}</AppName>}
+      {description && <AppDescription size="lg">{description} </AppDescription>}
 
       {onButtonClick && (
-        <Button size="md" color="primary" variant="contained">
+        <Button size="md" color="primary" variant="contained" onClick={onButtonClick}>
           {buttonText}
         </Button>
       )}

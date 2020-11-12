@@ -8,6 +8,8 @@ import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
+export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
+
 const removeLastTrailingSlash = (url) => {
   if (url.substr(-1) === '/') {
     return url.substr(0, url.length - 1)
@@ -16,7 +18,12 @@ const removeLastTrailingSlash = (url) => {
 }
 
 const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
-export const staticAppsList: Array<{ url: string; disabled: boolean; networks: number[] }> = [
+export type StaticAppInfo = {
+  url: string
+  disabled: boolean
+  networks: number[]
+}
+export const staticAppsList: Array<StaticAppInfo> = [
   // 1inch
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUDTSghr154kCCGguyA3cbG5HRVd2tQgNR7yD69bcsjm5`,
@@ -213,10 +220,10 @@ export const getIpfsLinkFromEns = memoize(
 )
 
 export const uniqueApp = (appList: SafeApp[]) => (url: string): string | undefined => {
+  const newUrl = new URL(url)
   const exists = appList.some((a) => {
     try {
       const currentUrl = new URL(a.url)
-      const newUrl = new URL(url)
       return currentUrl.href === newUrl.href
     } catch (error) {
       console.error('There was a problem trying to validate the URL existence.', error.message)

@@ -1,7 +1,17 @@
 import React, { useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
-import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { useHistory } from 'react-router-dom'
+import {
+  FixedIcon,
+  Loader,
+  Title,
+  Text,
+  Card,
+  GenericModal,
+  ModalFooterConfirmation,
+  Menu,
+  ButtonLink,
+} from '@gnosis.pm/safe-react-components'
+import { useHistory, useRouteMatch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import {
   INTERFACE_MESSAGES,
@@ -20,13 +30,16 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkName } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+import { staticAppsList } from 'src/routes/safe/components/Apps/utils'
 
 import ConfirmTransactionModal from '../components/ConfirmTransactionModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
-import { getAppInfoFromUrl } from '../utils'
-import { SafeApp } from '../types.d'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
+import { SafeApp, StoredSafeApp } from '../types.d'
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -58,7 +71,7 @@ const Centered = styled.div`
 `
 
 const ContentWrapper = styled(Card)`
-  height: calc(100% - 73px);
+  height: calc(100% - 127px);
   width: calc(100% - 50px);
   margin: 20px 0;
   overflow: auto;
@@ -89,16 +102,20 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
   const safeName = useSelector(safeNameSelector)
-
+  const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
-  const iframeRef = useRef<HTMLIFrameElement>(null)
 
+  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+
+  const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
     INITIAL_CONFIRM_TX_MODAL_STATE,
   )
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
-  const [selectedApp, setSelectedApp] = useState<SafeApp | undefined>()
+  const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
+  const [isRemoveModalOpen, setIsRemoveModalOpen] = useState(false)
+  const [isAppDeletable, setIsAppDeletable] = useState<boolean | undefined>()
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
 
@@ -117,7 +134,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   ])
 
   const { sendMessageToIframe } = useIframeMessageHandler(
-    selectedApp,
+    safeApp,
     openConfirmationModal,
     closeConfirmationModal,
     iframeRef,
@@ -154,21 +171,44 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
     )
   }
 
+  const openRemoveModal = () => setIsRemoveModalOpen(true)
+
+  const closeRemoveModal = () => setIsRemoveModalOpen(false)
+
+  const removeApp = async () => {
+    const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
+    const filteredList = persistedAppList.filter((a) => a.url !== safeApp?.url)
+    saveToStorage(APPS_STORAGE_KEY, filteredList)
+
+    const goToApp = `${matchSafeWithAddress?.url}/apps`
+    history.push(goToApp)
+  }
+
   useEffect(() => {
     const loadApp = async () => {
       const app = await getAppInfoFromUrl(appUrl)
-      setSelectedApp(app)
+
+      const existsStaticApp = staticAppsList.some((staticApp) => staticApp.url === app.url)
+      setIsAppDeletable(!existsStaticApp)
+      setSafeApp(app)
     }
 
     loadApp()
   }, [appUrl])
+
+  //track GA
+  useEffect(() => {
+    if (safeApp) {
+      trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Apps', label: safeApp.name })
+    }
+  }, [safeApp, trackEvent])
 
   // TODO check if URL
   if (!appUrl) {
     throw Error('App url No provided or it is invalid.')
   }
 
-  if (!selectedApp) {
+  if (!safeApp) {
     return (
       <LoadingContainer>
         <Loader size="md" />
@@ -190,39 +230,65 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   }
 
   return (
-    <ContentWrapper>
-      {/* <Menu>
-        <ManageApps appList={appList} onAppAdded={onAppAdded} onAppToggle={onAppToggle} onAppRemoved={onAppRemoved} />
-      </Menu> */}
-      <IframeWrapper>
-        {appIsLoading && (
-          <LoadingContainer>
-            <Loader size="md" />
-          </LoadingContainer>
+    <>
+      <Menu>
+        {isAppDeletable && (
+          <ButtonLink color="error" iconType="delete" onClick={openRemoveModal}>
+            Remove app
+          </ButtonLink>
         )}
-        <StyledIframe
-          frameBorder="0"
-          id={`iframe-${appUrl}`}
-          ref={iframeRef}
-          src={appUrl}
-          title={appUrl} // TODO: Change it!
-          onLoad={onIframeLoad}
-        />
-      </IframeWrapper>
+      </Menu>
+      <ContentWrapper>
+        <IframeWrapper>
+          {appIsLoading && (
+            <LoadingContainer>
+              <Loader size="md" />
+            </LoadingContainer>
+          )}
+          <StyledIframe
+            frameBorder="0"
+            id={`iframe-${appUrl}`}
+            ref={iframeRef}
+            src={appUrl}
+            title={appUrl} // TODO: Change it!
+            onLoad={onIframeLoad}
+          />
+        </IframeWrapper>
 
-      <ConfirmTransactionModal
-        isOpen={confirmTransactionModal.isOpen}
-        app={selectedApp as SafeApp}
-        safeAddress={safeAddress}
-        ethBalance={ethBalance as string}
-        safeName={safeName as string}
-        txs={confirmTransactionModal.txs}
-        onClose={closeConfirmationModal}
-        onUserConfirm={onUserTxConfirm}
-        params={confirmTransactionModal.params}
-        onTxReject={onTxReject}
-      />
-    </ContentWrapper>
+        {isRemoveModalOpen && (
+          <GenericModal
+            title={
+              <Title size="sm" withoutMargin>
+                Remove app
+              </Title>
+            }
+            body={<Text size="md">This action will remove {safeApp.name} from the interface</Text>}
+            footer={
+              <ModalFooterConfirmation
+                cancelText="Cancel"
+                handleCancel={closeRemoveModal}
+                handleOk={removeApp}
+                okText="Remove"
+              />
+            }
+            onClose={closeRemoveModal}
+          />
+        )}
+
+        <ConfirmTransactionModal
+          isOpen={confirmTransactionModal.isOpen}
+          app={safeApp as SafeApp}
+          safeAddress={safeAddress}
+          ethBalance={ethBalance as string}
+          safeName={safeName as string}
+          txs={confirmTransactionModal.txs}
+          onClose={closeConfirmationModal}
+          onUserConfirm={onUserTxConfirm}
+          params={confirmTransactionModal.params}
+          onTxReject={onTxReject}
+        />
+      </ContentWrapper>
+    </>
   )
 }
 
