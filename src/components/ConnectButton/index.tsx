@@ -4,7 +4,7 @@ import React from 'react'
 import Button from 'src/components/layout/Button'
 import { getNetworkId } from 'src/config'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
-import { fetchProvider } from 'src/logic/wallets/store/actions'
+import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
@@ -39,6 +39,7 @@ export const onboard = Onboard({
       if (!address && lastUsedAddress) {
         lastUsedAddress = ''
         providerName = undefined
+        store.dispatch(removeProvider())
       }
     },
   },
