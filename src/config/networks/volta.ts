@@ -1,5 +1,5 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, WALLETS, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
@@ -41,7 +41,7 @@ const mainnet: NetworkConfig = {
       logoUri: EwcLogo,
     },
   },
-  disabledWallets:[
+  disabledWallets: [
     WALLETS.TREZOR,
     WALLETS.LEDGER,
     WALLETS.COINBASE,
@@ -56,8 +56,11 @@ const mainnet: NetworkConfig = {
     WALLETS.WALLET_CONNECT,
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
-    WALLETS.LATTICE
-  ]
+    WALLETS.LATTICE,
+  ],
+  disabledFeatures: [
+    FEATURES.ENS_LOOKUP,
+  ],
 }
 
 export default mainnet

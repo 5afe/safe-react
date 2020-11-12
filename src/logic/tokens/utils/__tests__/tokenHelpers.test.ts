@@ -1,5 +1,6 @@
 import { makeToken } from 'src/logic/tokens/store/model/token'
-import { getERC20DecimalsAndSymbol, isERC721Contract, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC20DecimalsAndSymbol, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
+import { isERC721Contract } from 'src/logic/collectibles/utils'
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 

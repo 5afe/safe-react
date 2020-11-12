@@ -5,7 +5,7 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
 import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { getNetworkConfigDisabledFeatures } from 'src/config'
+import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 
 type FeatureConfigByVersion = {
@@ -41,9 +41,8 @@ const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, ver
 }
 
 export const enabledFeatures = (version?: string): FEATURES[] => {
-  const disabledFeatures = getNetworkConfigDisabledFeatures()
   return FEATURES_BY_VERSION.reduce((acc: FEATURES[], feature: Feature) => {
-    if (!disabledFeatures.includes(feature.name) && version && checkFeatureEnabledByVersion(feature, version)) {
+    if (isFeatureEnabled(feature.name) && version && checkFeatureEnabledByVersion(feature, version)) {
       acc.push(feature.name)
     }
     return acc
