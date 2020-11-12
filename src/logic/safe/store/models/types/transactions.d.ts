@@ -241,7 +241,13 @@ export const METHOD_TO_ID = {
 
 export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 
-type TokenMethods = 'transfer' | 'transferFrom' | 'safeTransferFrom'
+export const TOKEN_TRANSFER_METHODS_NAMES = {
+  TRANSFER: 'transfer',
+  TRANSFER_FROM: 'transferFrom',
+  SAFE_TRANSFER_FROM: 'safeTransferFrom',
+} as const
+
+type TokenMethods = typeof TOKEN_TRANSFER_METHODS_NAMES[keyof typeof TOKEN_TRANSFER_METHODS_NAMES]
 
 type SafeDecodedParams = {
   [key in SafeMethods]?: Record<string, string>

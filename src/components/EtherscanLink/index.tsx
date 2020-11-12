@@ -8,7 +8,7 @@ import CopyBtn from 'src/components/CopyBtn'
 import Block from 'src/components/layout/Block'
 import Span from 'src/components/layout/Span'
 import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
-import EllipsisTransactionDetails from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
+import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
 
@@ -19,9 +19,16 @@ interface EtherscanLinkProps {
   cut?: number
   knownAddress?: boolean
   value: string
+  sendModalOpenHandler?: () => void
 }
 
-export const EtherscanLink = ({ className, cut, knownAddress, value }: EtherscanLinkProps): React.ReactElement => {
+export const EtherscanLink = ({
+  className,
+  cut,
+  knownAddress,
+  value,
+  sendModalOpenHandler,
+}: EtherscanLinkProps): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -31,7 +38,13 @@ export const EtherscanLink = ({ className, cut, knownAddress, value }: Etherscan
       </Span>
       <CopyBtn className={cn(classes.button, classes.firstButton)} content={value} />
       <ExplorerButton explorerUrl={getExplorerInfo(value)} />
-      {knownAddress !== undefined ? <EllipsisTransactionDetails address={value} knownAddress={knownAddress} /> : null}
+      {knownAddress !== undefined ? (
+        <EllipsisTransactionDetails
+          address={value}
+          knownAddress={knownAddress}
+          sendModalOpenHandler={sendModalOpenHandler}
+        />
+      ) : null}
     </Block>
   )
 }

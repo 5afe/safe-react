@@ -6,7 +6,6 @@ import React, { Suspense, useEffect, useState } from 'react'
 import Modal from 'src/components/Modal'
 import { CollectibleTx } from './screens/ReviewCollectible'
 import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
-import { SendFundsTx } from './screens/SendFunds'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewTx'
@@ -53,6 +52,7 @@ type Props = {
   onClose: () => void
   recipientAddress?: string
   selectedToken?: string | NFTToken
+  tokenAmount?: string
 }
 
 const SendModal = ({
@@ -61,6 +61,7 @@ const SendModal = ({
   onClose,
   recipientAddress,
   selectedToken,
+  tokenAmount,
 }: Props): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
@@ -119,11 +120,11 @@ const SendModal = ({
         )}
         {activeScreen === 'sendFunds' && (
           <SendFunds
-            initialValues={tx as SendFundsTx}
             onClose={onClose}
             onNext={handleTxCreation}
             recipientAddress={recipientAddress}
             selectedToken={selectedToken as string}
+            amount={tokenAmount}
           />
         )}
         {activeScreen === 'reviewTx' && (
