@@ -18,7 +18,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersAddressesSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersAddressesListSelector } from 'src/logic/safe/store/selectors'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -42,7 +42,7 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const owners = useSelector(safeOwnersAddressesSelector)
+  const owners = useSelector(safeOwnersAddressesListSelector)
   const ownerDoesntExist = uniqueAddress(owners)
 
   return (

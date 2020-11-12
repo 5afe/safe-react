@@ -208,7 +208,7 @@ export const safeModulesSelector = createSelector(safeSelector, safeFieldSelecto
 
 export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
 
-export const safeOwnersAddressesSelector = createSelector(
+export const safeOwnersAddressesListSelector = createSelector(
   safeOwnersSelector,
   (owners): List<string> => {
     if (!owners) {
