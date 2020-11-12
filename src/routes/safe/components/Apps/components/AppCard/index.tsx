@@ -4,8 +4,9 @@ import { fade } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button } from '@gnosis.pm/safe-react-components'
 
 import appsIconSvg from 'src/assets/icons/apps.svg'
+import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
 
-const StyledApps = styled.div`
+const AppCard = styled.div`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -29,95 +30,10 @@ const StyledApps = styled.div`
   }
 `
 
-const IconImg = styled.img<{ size: 'md' | 'lg' }>`
+const IconImg = styled.img<{ size: 'md' | 'lg'; src: string | undefined }>`
   width: ${({ size }) => (size === 'md' ? '48px' : '102px')};
   height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
-  object-fit: cover;
-`
-
-const AppIconSK = styled.div`
-  height: 60px;
-  width: 60px;
-  border-radius: 30px;
-  margin: 0 auto;
-  background-color: lightgrey;
-  background: linear-gradient(84deg, lightgrey, transparent);
-  background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
-
-  @-webkit-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @-moz-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @-o-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-`
-const TitleSK = styled.div`
-  height: 24px;
-  width: 160px;
-  margin: 24px auto;
-  background-color: lightgrey;
-  background: linear-gradient(84deg, lightgrey, transparent);
-  background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
-`
-const DescriptionSK = styled.div`
-  height: 16px;
-  width: 200px;
-  background-color: lightgrey;
-  background: linear-gradient(84deg, lightgrey, transparent);
-  background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
+  object-fit: contain;
 `
 
 const AppName = styled(Title)`
@@ -126,6 +42,7 @@ const AppName = styled(Title)`
 
 const AppDescription = styled(Text)`
   height: 40px;
+  text-align: center;
 `
 
 type Props = {
@@ -158,17 +75,17 @@ const Apps = ({
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
-      <StyledApps className={className}>
+      <AppCard className={className}>
         <AppIconSK />
         <TitleSK />
         <DescriptionSK />
         <DescriptionSK />
-      </StyledApps>
+      </AppCard>
     )
   }
 
   return (
-    <StyledApps className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
+    <AppCard className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
       {name && <AppName size="sm">{name}</AppName>}
@@ -179,7 +96,7 @@ const Apps = ({
           {buttonText}
         </Button>
       )}
-    </StyledApps>
+    </AppCard>
   )
 }
 

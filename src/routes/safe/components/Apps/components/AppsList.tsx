@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react'
+import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
 import { GenericModal, IconText, Loader, Menu } from '@gnosis.pm/safe-react-components'
@@ -10,10 +10,8 @@ import { useRouteMatch, useHistory } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 import { useAppList } from '../hooks/useAppList'
-import { SAFE_APP_LOADING_STATUS } from '../types.d'
+import { SAFE_APP_LOADING_STATUS, SafeApp } from '../types.d'
 import AddAppForm from './AddAppForm'
-
-const loaderDotsSvg = require('src/routes/opening/assets/loader-dots.svg')
 
 const centerCSS = css`
   display: flex;
@@ -61,15 +59,8 @@ const AppsList = (): React.ReactElement => {
 
   const closeAddAppModal = () => setIsAddAppModalOpen(false)
 
-  const apps = useMemo(() => {
-    const areAppsLoading = appList.some((app) =>
-      [SAFE_APP_LOADING_STATUS.ADDED, SAFE_APP_LOADING_STATUS.LOADING].includes(app.loadingStatus),
-    )
-
-    return areAppsLoading
-      ? appList.map((app) => ({ ...app, name: 'Loading', iconUrl: loaderDotsSvg }))
-      : appList.map((app) => ({ ...app, id: app.url }))
-  }, [appList])
+  const isAppLoading = (app: SafeApp) =>
+    [SAFE_APP_LOADING_STATUS.ADDED, SAFE_APP_LOADING_STATUS.LOADING].includes(app.loadingStatus)
 
   if (!appList.length || !safeAddress) {
     return (
@@ -89,8 +80,9 @@ const AppsList = (): React.ReactElement => {
         <CardsWrapper>
           <AppCard iconUrl={AddAppIcon} onButtonClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
 
-          {apps.map((a) => (
+          {appList.map((a) => (
             <AppCard
+              isLoading={isAppLoading(a)}
               key={a.url}
               iconUrl={a.iconUrl}
               name={a.name}
