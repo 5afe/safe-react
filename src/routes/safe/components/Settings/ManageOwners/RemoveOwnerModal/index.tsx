@@ -13,7 +13,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { Dispatch } from 'src/logic/safe/store/actions/types'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 const styles = createStyles({
   biggerModalWindow: {

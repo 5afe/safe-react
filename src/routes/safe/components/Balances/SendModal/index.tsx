@@ -9,7 +9,7 @@ import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewTx'
-import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))

@@ -16,7 +16,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { Dispatch } from 'src/logic/safe/store/actions/types'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 const styles = createStyles({
   biggerModalWindow: {
