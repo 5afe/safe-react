@@ -2,6 +2,7 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import memoize from 'lodash.memoize'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { List } from 'immutable'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -86,13 +87,22 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[]): GenericValidatorType => (): ValidatorReturnType => {
-  const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
+export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType => (): ValidatorReturnType => {
+  if ('size' in addresses) {
+    const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
 
-  if (uniqueAddresses.size !== addresses.length) {
-    return ADDRESS_REPEATED_ERROR
+    if (uniqueAddresses.size !== addresses?.size) {
+      return ADDRESS_REPEATED_ERROR
+    }
   }
 
+  if ('length' in addresses) {
+    const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
+
+    if (uniqueAddresses.size !== addresses?.length) {
+      return ADDRESS_REPEATED_ERROR
+    }
+  }
   return undefined
 }
 
