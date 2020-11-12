@@ -177,6 +177,12 @@ describe('Forms > Validators', () => {
 
       expect(uniqueAddress(addresses)()).toEqual(ADDRESS_REPEATED_ERROR)
     })
+
+    it('Returns an error message for an array with duplicated checksum and not checksum values', async () => {
+      const addresses = ['0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe', '0xde0b295669a9fd93d5f28d9ec85e40f4cb697bae']
+
+      expect(uniqueAddress(addresses)()).toEqual(ADDRESS_REPEATED_ERROR)
+    })
   })
 
   describe('differentFrom validator', () => {

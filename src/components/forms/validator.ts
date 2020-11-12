@@ -87,11 +87,12 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
 export const uniqueAddress = (addresses: string[]): GenericValidatorType => (): ValidatorReturnType => {
-  const uniqueAddresses = new Set(addresses)
+  const uniqueAddresses = new Set(addresses.map((address) => address.toLowerCase()))
 
   if (uniqueAddresses.size !== addresses.length) {
     return ADDRESS_REPEATED_ERROR
   }
+
   return undefined
 }
 
