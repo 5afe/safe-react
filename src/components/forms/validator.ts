@@ -93,10 +93,7 @@ export const uniqueAddress = (addresses: string[] | List<string>): GenericValida
   const uniqueAddresses = new Set(lowercaseAddresses)
   const lengthPropName = 'size' in addresses ? 'size' : 'length'
 
-  if (
-    uniqueAddresses[lengthPropName] !== addresses?.[lengthPropName] ||
-    uniqueAddresses[lengthPropName] !== addresses?.[lengthPropName]
-  ) {
+  if (uniqueAddresses.size !== addresses?.[lengthPropName]) {
     return ADDRESS_REPEATED_ERROR
   }
 
