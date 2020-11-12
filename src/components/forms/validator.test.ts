@@ -169,7 +169,7 @@ describe('Forms > Validators', () => {
     it('Returns undefined for an address not contained in the passed array', async () => {
       const addresses = ['0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe']
 
-      expect(uniqueAddress(addresses)('0xe7e3272a84cf3fe180345b9f7234ba705eB5E2CA')).toBeUndefined()
+      expect(uniqueAddress(addresses)()).toBeUndefined()
     })
 
     it('Returns an error message for an array with duplicated values', async () => {
