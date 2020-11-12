@@ -5420,12 +5420,12 @@
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/communicator.ts": {
-        "version": "587ec70340305b499096401a19374347d7869ba37e46b06588838d193ddff532",
-        "signature": "7c0eb2244f5f1d2a239751b3dcba2f6a8eab746a45251a7f89e8de52aba4d9d8",
+        "version": "352ae6260cc920fed110071bc883723295c4c3b8d065db9217e5d37b660336d6",
+        "signature": "e7428abc74e092311734e7ac358dbcfa18a5786c8a0a4d3094d6e82ede9b0b23",
         "affectsGlobalScope": false
       },
       "./src/routes/safe/components/apps/index.tsx": {
-        "version": "eb4fe792f689881afbcf22f6b24550973be1e4ef0b58f42642db36bcf8c77cca",
+        "version": "c59fa7d3b3bac4ed7c14f5ccbe42881a0c408f7bce4d5e959ecb8c52ca1b06a3",
         "signature": "f360297036232d413f6c1966f03a42de2384de5a91e909b40f8bfa62981948ac",
         "affectsGlobalScope": false
       },

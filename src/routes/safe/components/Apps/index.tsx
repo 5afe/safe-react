@@ -139,7 +139,7 @@ const Apps = (): React.ReactElement => {
                 if (err) {
                   reject({ success: false, error: err })
                 }
-                console.log({ res })
+
                 resolve(res?.result)
               },
             )

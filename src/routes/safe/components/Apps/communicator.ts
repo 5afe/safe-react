@@ -34,7 +34,6 @@ class AppCommunicator {
   }
 
   send = (response, requestId): void => {
-    console.log({ response, requestId })
     this.iframe.contentWindow?.postMessage({ response, requestId, version: __VERSION__ }, this.app.url)
   }
 
@@ -48,7 +47,7 @@ class AppCommunicator {
       const response = await handler(msg)
 
       // If response is not returned, it means the response will be send somewhere else
-      if (response) {
+      if (typeof response !== 'undefined') {
         this.send(response, msg.data.requestId)
       }
     }
