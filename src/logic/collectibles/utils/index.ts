@@ -50,7 +50,7 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
   try {
     const ERC721token = await getERC721TokenContract()
     const tokenInstance = await ERC721token.at(contractAddress)
-    tokenSymbol = tokenInstance.symbol()
+    tokenSymbol = await tokenInstance.symbol()
   } catch (err) {
     // If the contract address is an ENS token contract, we know that the ERC721 standard is not proper implemented
     // The method symbol() is missing
