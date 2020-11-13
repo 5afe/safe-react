@@ -6,53 +6,63 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 
-const Grid = styled.div`
-  height: 100%;
-  overflow: auto;
+const Container = styled.div`
+  height: 100vh;
+  width: 100vw;
+  display: flex;
+  flex-direction: column;
+
   background-color: ${({ theme }) => theme.colors.background};
-  display: grid;
-  grid-template-columns: 200px 1fr;
-  grid-template-rows: 54px 1fr;
-  grid-template-areas:
-    'topbar topbar'
-    'sidebar body';
 `
 
-const GridTopbarWrapper = styled.nav`
+const HeaderWrapper = styled.nav`
+  height: 54px;
+  width: 100%;
+  z-index: 1;
+
   background-color: white;
-  box-shadow: 0 2px 4px 0 rgba(212, 212, 211, 0.59);
-  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-  z-index: 999;
-  grid-area: topbar;
+  box-shadow: 0 0 4px 0 rgba(212, 212, 211, 0.59);
 `
 
-const GridSidebarWrapper = styled.aside`
-  width: 200px;
-  padding: 62px 8px 0 8px;
+const BodyWrapper = styled.div`
+  height: calc(100% - 54px);
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+`
+
+const SidebarWrapper = styled.aside`
   height: 100%;
+  width: 200px;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  z-index: 1;
+
+  padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
+`
+
+const ContentWrapper = styled.section`
+  width: 100%;
   display: flex;
   flex-direction: column;
-  box-sizing: border-box;
-  position: fixed;
-  grid-area: sidebar;
-`
+  overflow-x: auto;
 
-const GridBodyWrapper = styled.section`
-  margin: 0 16px 0 16px;
-  grid-area: body;
-  display: flex;
-  flex-direction: column;
-  align-content: stretch;
-`
+  padding: 0 16px;
 
-export const BodyWrapper = styled.div`
-  flex: 1 100%;
-`
+  > :nth-child(1) {
+    flex-grow: 1;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+  }
 
-export const FooterWrapper = styled.footer`
-  margin: 0 16px;
+  > :nth-child(2) {
+    width: 100%;
+    height: 59px;
+  }
 `
 
 type Props = {
@@ -77,29 +87,29 @@ const Layout: React.FC<Props> = ({
   children,
   sidebarItems,
 }): React.ReactElement => (
-  <Grid>
-    <GridTopbarWrapper>
+  <Container>
+    <HeaderWrapper>
       <Header />
-    </GridTopbarWrapper>
-    <GridSidebarWrapper>
-      <Sidebar
-        items={sidebarItems}
-        safeAddress={safeAddress}
-        safeName={safeName}
-        balance={balance}
-        granted={granted}
-        onToggleSafeList={onToggleSafeList}
-        onReceiveClick={onReceiveClick}
-        onNewTransactionClick={onNewTransactionClick}
-      />
-    </GridSidebarWrapper>
-    <GridBodyWrapper>
-      <BodyWrapper>{children}</BodyWrapper>
-      <FooterWrapper>
+    </HeaderWrapper>
+    <BodyWrapper>
+      <SidebarWrapper>
+        <Sidebar
+          items={sidebarItems}
+          safeAddress={safeAddress}
+          safeName={safeName}
+          balance={balance}
+          granted={granted}
+          onToggleSafeList={onToggleSafeList}
+          onReceiveClick={onReceiveClick}
+          onNewTransactionClick={onNewTransactionClick}
+        />
+      </SidebarWrapper>
+      <ContentWrapper>
+        <div>{children}</div>
         <Footer />
-      </FooterWrapper>
-    </GridBodyWrapper>
-  </Grid>
+      </ContentWrapper>
+    </BodyWrapper>
+  </Container>
 )
 
 export default Layout
