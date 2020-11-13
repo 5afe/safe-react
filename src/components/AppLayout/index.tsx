@@ -33,13 +33,13 @@ const BodyWrapper = styled.div`
 
 const SidebarWrapper = styled.aside`
   height: 100%;
-  width: 200px;
+  width: 224px;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
   z-index: 1;
 
-  padding: 8px 8px 0 8px;
+  padding: 8px;
   background-color: ${({ theme }) => theme.colors.white};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
 `
