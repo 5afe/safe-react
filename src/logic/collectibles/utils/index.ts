@@ -54,14 +54,18 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
   } catch (err) {
     // If the contract address is an ENS token contract, we know that the ERC721 standard is not proper implemented
     // The method symbol() is missing
-    const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
-    if (sameAddress(contractAddress, ENS_TOKEN_CONTRACT)) {
+    if (isENSContract(contractAddress)) {
       return 'ENS'
     }
     console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
   }
 
   return tokenSymbol
+}
+
+export const isENSContract = (contractAddress: string): boolean => {
+  const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
+  return sameAddress(contractAddress, ENS_TOKEN_CONTRACT)
 }
 
 /**
