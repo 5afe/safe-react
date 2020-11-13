@@ -1,4 +1,4 @@
-import { getNetworkId } from 'src/config'
+import { getNetworkId, getNetworkInfo } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
@@ -16,6 +16,14 @@ import { sameString } from 'src/utils/strings'
 export const CK_ADDRESS = {
   [ETHEREUM_NETWORK.MAINNET]: '0x06012c8cf97bead5deae237070f9587f8e7a266d',
   [ETHEREUM_NETWORK.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
+}
+
+// Note: xDAI ENS is missing, once we have it we need to add it here
+const ENS_CONTRACT_ADDRESS = {
+  [ETHEREUM_NETWORK.MAINNET]: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
+  [ETHEREUM_NETWORK.RINKEBY]: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
+  [ETHEREUM_NETWORK.ENERGY_WEB_CHAIN]: '0x0A6d64413c07E10E890220BBE1c49170080C6Ca0',
+  [ETHEREUM_NETWORK.VOLTA]: '0xd7CeF70Ba7efc2035256d828d5287e2D285CD1ac',
 }
 
 // safeTransferFrom(address,address,uint256)
@@ -64,8 +72,8 @@ export const getERC721Symbol = async (contractAddress: string): Promise<string> 
 }
 
 export const isENSContract = (contractAddress: string): boolean => {
-  const ENS_TOKEN_CONTRACT = '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85'
-  return sameAddress(contractAddress, ENS_TOKEN_CONTRACT)
+  const { id } = getNetworkInfo()
+  return sameAddress(contractAddress, ENS_CONTRACT_ADDRESS[id])
 }
 
 /**
