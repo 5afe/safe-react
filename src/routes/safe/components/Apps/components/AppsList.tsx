@@ -38,6 +38,7 @@ const CardsWrapper = styled.div`
   column-gap: 20px;
   row-gap: 20px;
   justify-content: space-evenly;
+  margin: 0 0 16px 0;
 `
 
 const ContentWrapper = styled.div`
