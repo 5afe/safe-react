@@ -8,7 +8,7 @@ import { getAddressValidator } from './validators'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import trash from 'src/assets/icons/trash.svg'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'

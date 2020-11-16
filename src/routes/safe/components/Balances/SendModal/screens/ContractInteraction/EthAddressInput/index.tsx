@@ -27,7 +27,7 @@ export interface EthAddressInputProps {
   text: string
 }
 
-const EthAddressInput = ({
+export const EthAddressInput = ({
   isContract = true,
   isRequired = true,
   name,
@@ -97,5 +97,3 @@ const EthAddressInput = ({
     </>
   )
 }
-
-export default EthAddressInput

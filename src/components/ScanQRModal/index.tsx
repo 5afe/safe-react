@@ -1,6 +1,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import * as React from 'react'
 import QrReader from 'react-qr-reader'
@@ -15,14 +15,22 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { useEffect, useState } from 'react'
 
-const { useEffect, useState } = React
+const useStyles = makeStyles(styles)
 
-const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
-  const [hasWebcam, setHasWebcam] = useState<any>(null)
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  onScan: (value: string) => void
+}
+
+export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElement => {
+  const classes = useStyles()
+  const [hasWebcam, setHasWebcam] = useState<boolean>(false)
   const scannerRef: any = React.createRef()
   const openImageDialog = React.useCallback(() => {
-    scannerRef.current.openImageDialog()
+    scannerRef?.current.openImageDialog()
   }, [scannerRef])
 
   useEffect(() => {
@@ -99,5 +107,3 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
     </Modal>
   )
 }
-
-export default withStyles(styles as any)(ScanQRModal)
