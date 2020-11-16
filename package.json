@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.14.0",
+  "version": "2.14.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -151,7 +151,7 @@
   "resolutions": {
     "@typescript-eslint/eslint-plugin": "^4.5.0",
     "@typescript-eslint/parser": "^4.5.0",
-    "node-gyp": "^5.1.0"
+    "node-gyp": "^7.1.0"
   },
   "browserslist": {
     "production": [
