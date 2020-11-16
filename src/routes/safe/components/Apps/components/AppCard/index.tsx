@@ -14,7 +14,6 @@ const AppCard = styled.div`
   box-shadow: 1px 2px 10px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.18)};
   border-radius: 8px;
   padding: 24px;
-  margin: 10px;
   background-color: ${({ theme }) => theme.colors.white};
   height: 232px;
   cursor: default !important;
