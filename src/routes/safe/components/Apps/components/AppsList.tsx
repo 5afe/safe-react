@@ -34,7 +34,7 @@ const LoadingContainer = styled.div`
 const CardsWrapper = styled.div`
   width: 100%;
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(280px, auto));
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
   column-gap: 20px;
   row-gap: 20px;
   justify-content: space-evenly;
