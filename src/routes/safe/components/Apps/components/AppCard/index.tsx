@@ -1,20 +1,17 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 import { fade } from '@material-ui/core/styles/colorManipulator'
-import { Title, Text, Button } from '@gnosis.pm/safe-react-components'
+import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
 
-const AppCard = styled.div`
+const AppCard = styled(Card)`
   display: flex;
   align-items: center;
   flex-direction: column;
   justify-content: space-evenly;
   box-shadow: 1px 2px 10px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.18)};
-  border-radius: 8px;
-  padding: 24px;
-  background-color: ${({ theme }) => theme.colors.white};
   height: 232px;
   cursor: default !important;
 
