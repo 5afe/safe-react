@@ -8,7 +8,7 @@ type MessageHandler = (
 
 class AppCommunicator {
   private iframe: HTMLIFrameElement
-  private handlers = new Map<string, MessageHandler>()
+  private handlers = new Map<Methods, MessageHandler>()
   private app: SafeApp
 
   constructor(iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) {
