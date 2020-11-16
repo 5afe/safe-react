@@ -10,7 +10,7 @@ import { useRouteMatch, useHistory } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 import { useAppList } from '../hooks/useAppList'
-import { SAFE_APP_LOADING_STATUS, SafeApp } from '../types.d'
+import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types.d'
 import AddAppForm from './AddAppForm'
 
 const Wrapper = styled.div`
@@ -65,8 +65,7 @@ const AppsList = (): React.ReactElement => {
 
   const closeAddAppModal = () => setIsAddAppModalOpen(false)
 
-  const isAppLoading = (app: SafeApp) =>
-    [SAFE_APP_LOADING_STATUS.ADDED, SAFE_APP_LOADING_STATUS.LOADING].includes(app.loadingStatus)
+  const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
 
   if (!appList.length || !safeAddress) {
     return (
@@ -79,7 +78,7 @@ const AppsList = (): React.ReactElement => {
   return (
     <Wrapper>
       <Menu>
-        {/* TODO: Add navigation breadcrumb. Empty for now to give top margin */}
+        {/* TODO: Add navigation breadcrumb. Empty for now to give some top margin */}
         <div />
       </Menu>
 
@@ -93,17 +92,20 @@ const AppsList = (): React.ReactElement => {
             actionTrigger={TriggerType.Button}
           />
 
-          {appList.map((a) => (
-            <AppCard
-              isLoading={isAppLoading(a)}
-              key={a.url}
-              iconUrl={a.iconUrl}
-              name={a.name}
-              description={a.description}
-              onClick={onAddAppHandler(a.url)}
-              actionTrigger={TriggerType.Content}
-            />
-          ))}
+          {appList
+            .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
+            .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
+            .map((a) => (
+              <AppCard
+                isLoading={isAppLoading(a)}
+                key={a.url}
+                iconUrl={a.iconUrl}
+                name={a.name}
+                description={a.description}
+                onClick={onAddAppHandler(a.url)}
+                actionTrigger={TriggerType.Content}
+              />
+            ))}
         </CardsWrapper>
 
         <IconText

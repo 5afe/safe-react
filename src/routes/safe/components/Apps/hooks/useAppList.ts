@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react'
 import { loadFromStorage } from 'src/utils/storage'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp, staticAppsList } from '../utils'
-import { SafeApp, StoredSafeApp, SAFE_APP_LOADING_STATUS } from '../types.d'
+import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
 
 type UseAppListReturnType = {
@@ -10,87 +10,50 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
+  // const [appListPivot, setAppListPivot] = useState<{ string: SafeApp }>({} as { string: SafeApp })
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
   // it was developed to speed up initial page load, otherwise the
   // app renders a loading until all the safe-apps are fetched.
   useEffect(() => {
+    const fetchAppCallback = (res: SafeApp) => {
+      setAppList((prevStatus) => {
+        const cpPrevStatus = [...prevStatus]
+        const appIndex = cpPrevStatus.findIndex((a) => a.url === res.url)
+        const newStatus = res.error ? SAFE_APP_FETCH_STATUS.ERROR : SAFE_APP_FETCH_STATUS.SUCCESS
+        cpPrevStatus[appIndex] = { ...res, fetchStatus: newStatus }
+        return cpPrevStatus
+      })
+    }
+
     const loadApps = async () => {
-      // recover apps from storage:
-      // * third-party apps added by the user
-      // * disabled status for both static and third-party apps
-      const persistedAppList = (await loadFromStorage<StoredSafeApp[]>(APPS_STORAGE_KEY)) || []
-      let list: (StoredSafeApp & { networks?: number[] })[] = [...persistedAppList]
+      // recover apps from storage (third-party apps added by the user)
+      const persistedAppList =
+        (await loadFromStorage<(StoredSafeApp & { networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
 
-      // merge stored apps with static apps (apps added manually can be deleted by the user)
-      staticAppsList.forEach((staticApp) => {
-        const app = list.find((persistedApp) => persistedApp.url === staticApp.url)
-        if (app) {
-          app.networks = staticApp.networks
-        } else {
-          list.push({ ...staticApp })
-        }
-      })
+      // backward compatibility. In a previous implementation a safe app could be disabled, that state was
+      // persisted in the storage.
+      const customApps = persistedAppList.filter(
+        (persistedApp) => !staticAppsList.some((staticApp) => staticApp.url === persistedApp.url),
+      )
 
-      // filter app by network
-      list = list.filter((app) => {
+      const apps: SafeApp[] = [...staticAppsList, ...customApps]
         // if the app does not expose supported networks, include them. (backward compatible)
-        if (!app.networks) {
-          return true
-        }
-        return app.networks.includes(getNetworkId())
-      })
-
-      const apps: SafeApp[] = []
-      for (let index = 0; index < list.length; index++) {
-        const currentApp = list[index]
-        const appUrl = currentApp.url.trim()
-
-        const appInfo = {
+        .filter((app) => (!app.networks ? true : app.networks.includes(getNetworkId())))
+        .map((app) => ({
           ...getEmptySafeApp(),
-          url: appUrl,
-        }
-
-        apps.push(appInfo)
-      }
+          url: app.url.trim(),
+        }))
 
       setAppList(apps)
+
+      apps.forEach((app) => getAppInfoFromUrl(app.url).then(fetchAppCallback))
     }
 
     if (!appList.length) {
       loadApps()
     }
-  }, [appList])
-
-  // fetch each safe-app
-  // replace real data if it was success remove it from the list otherwise
-  useEffect(() => {
-    if (!appList?.length) {
-      return
-    }
-
-    appList
-      .filter((app) => app.loadingStatus === SAFE_APP_LOADING_STATUS.ADDED)
-      .forEach((resApp) => {
-        let cpApps = [...appList]
-        const index = appList.findIndex((currentApp) => currentApp.url === resApp.url)
-        cpApps[index] = { ...cpApps[index], loadingStatus: SAFE_APP_LOADING_STATUS.LOADING }
-        setAppList(cpApps)
-
-        getAppInfoFromUrl(resApp.url).then((res: SafeApp) => {
-          if (res.error) {
-            // if there was an error trying to load the safe-app, remove it from the list
-            cpApps.splice(index, 1)
-            throw Error(`There was a problem trying to load app ${res.url}`)
-          } else {
-            // if the safe app was loaded correctly, update the safe-app info
-            cpApps[index] = res
-          }
-          cpApps = cpApps.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
-          setAppList(cpApps)
-        })
-      })
   }, [appList])
 
   return {

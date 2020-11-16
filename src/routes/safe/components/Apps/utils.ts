@@ -1,7 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp, SAFE_APP_LOADING_STATUS } from './types.d'
+import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 
 import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
@@ -147,7 +147,7 @@ export const getEmptySafeApp = (): SafeApp => {
     iconUrl: appsIconSvg,
     error: false,
     description: '',
-    loadingStatus: SAFE_APP_LOADING_STATUS.ADDED,
+    fetchStatus: SAFE_APP_FETCH_STATUS.LOADING,
   }
 }
 
@@ -156,7 +156,7 @@ export const getAppInfoFromUrl = memoize(
     let res = {
       ...getEmptySafeApp(),
       error: true,
-      loadingStatus: SAFE_APP_LOADING_STATUS.ERROR,
+      loadingStatus: SAFE_APP_FETCH_STATUS.ERROR,
     }
 
     if (!appUrl?.length) {
@@ -184,7 +184,7 @@ export const getAppInfoFromUrl = memoize(
         ...appInfo.data,
         id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
         error: false,
-        loadingStatus: SAFE_APP_LOADING_STATUS.SUCCESS,
+        loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
       }
 
       if (appInfo.data.iconPath) {

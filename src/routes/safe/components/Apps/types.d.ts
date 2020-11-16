@@ -1,5 +1,4 @@
-export enum SAFE_APP_LOADING_STATUS {
-  ADDED = 'ADDED',
+export enum SAFE_APP_FETCH_STATUS {
   LOADING = 'LOADING',
   SUCCESS = 'SUCCESS',
   ERROR = 'ERROR',
@@ -13,7 +12,7 @@ export type SafeApp = {
   disabled?: boolean
   description: string
   error: boolean
-  loadingStatus: SAFE_APP_LOADING_STATUS
+  fetchStatus: SAFE_APP_FETCH_STATUS
 }
 
 export type StoredSafeApp = {
