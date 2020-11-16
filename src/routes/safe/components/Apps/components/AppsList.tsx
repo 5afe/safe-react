@@ -13,6 +13,12 @@ import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_LOADING_STATUS, SafeApp } from '../types.d'
 import AddAppForm from './AddAppForm'
 
+const Wrapper = styled.div`
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+`
+
 const centerCSS = css`
   display: flex;
   align-items: center;
@@ -26,21 +32,20 @@ const LoadingContainer = styled.div`
 `
 
 const CardsWrapper = styled.div`
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: justify-content-center;
-`
-
-const CenteredMT = styled.div`
-  ${centerCSS};
-  margin-top: 16px;
+  width: 100%;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, auto));
+  column-gap: 20px;
+  row-gap: 20px;
+  justify-content: space-evenly;
 `
 
 const ContentWrapper = styled.div`
-  height: 100%;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
+  flex-grow: 1;
+  align-items: center;
 `
 
 const AppsList = (): React.ReactElement => {
@@ -71,11 +76,12 @@ const AppsList = (): React.ReactElement => {
   }
 
   return (
-    <>
+    <Wrapper>
       <Menu>
         {/* TODO: Add navigation breadcrumb. Empty for now to give top margin */}
         <div />
       </Menu>
+
       <ContentWrapper>
         <CardsWrapper>
           <AppCard
@@ -99,15 +105,13 @@ const AppsList = (): React.ReactElement => {
           ))}
         </CardsWrapper>
 
-        <CenteredMT>
-          <IconText
-            color="secondary"
-            iconSize="sm"
-            iconType="info"
-            text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
-            textSize="sm"
-          />
-        </CenteredMT>
+        <IconText
+          color="secondary"
+          iconSize="sm"
+          iconType="info"
+          text="These are third-party apps, which means they are not owned, controlled, maintained or audited by Gnosis. Interacting with the apps is at your own risk."
+          textSize="sm"
+        />
       </ContentWrapper>
 
       {isAddAppModalOpen && (
@@ -117,7 +121,7 @@ const AppsList = (): React.ReactElement => {
           onClose={closeAddAppModal}
         />
       )}
-    </>
+    </Wrapper>
   )
 }
 
