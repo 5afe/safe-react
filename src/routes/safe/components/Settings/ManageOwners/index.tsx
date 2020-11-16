@@ -84,8 +84,8 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const ownersAdbk = getOwnersWithNameFromAddressBook(addressBook, owners)
-  const ownerData = getOwnerData(ownersAdbk)
+  const ownersWithAddressBookName = getOwnersWithNameFromAddressBook(addressBook, owners)
+  const ownerData = getOwnerData(ownersWithAddressBookName)
 
   return (
     <>

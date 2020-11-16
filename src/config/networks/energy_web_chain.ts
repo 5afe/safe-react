@@ -1,5 +1,5 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 // @todo (agustin) we need to use fixed gasPrice because the oracle is not working right now and it's returning 0
 // once the oracle is fixed we need to remove the fixed value
@@ -44,7 +44,7 @@ const mainnet: NetworkConfig = {
       logoUri: EwcLogo,
     },
   },
-  disabledWallets:[
+  disabledWallets: [
     WALLETS.TREZOR,
     WALLETS.LEDGER,
     WALLETS.COINBASE,
@@ -58,8 +58,12 @@ const mainnet: NetworkConfig = {
     WALLETS.UNILOGIN,
     WALLETS.WALLET_CONNECT,
     WALLETS.WALLET_LINK,
-    WALLETS.AUTHEREUM
-  ]
+    WALLETS.AUTHEREUM,
+    WALLETS.LATTICE,
+  ],
+  disabledFeatures: [
+    FEATURES.ENS_LOOKUP,
+  ],
 }
 
 export default mainnet

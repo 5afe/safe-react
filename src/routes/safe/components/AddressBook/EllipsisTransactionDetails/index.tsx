@@ -1,4 +1,4 @@
-import { ClickAwayListener, Divider } from '@material-ui/core'
+import { ClickAwayListener, createStyles, Divider } from '@material-ui/core'
 import Menu from '@material-ui/core/Menu'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
@@ -11,26 +11,38 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { xs } from 'src/theme/variables'
 
-const useStyles = makeStyles({
-  container: {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    cursor: 'pointer',
-    margin: `0 ${xs}`,
-    borderRadius: '50%',
-    transition: 'background-color .2s ease-in-out',
-    '&:hover': {
-      backgroundColor: '#F0EFEE',
+const useStyles = makeStyles(
+  createStyles({
+    container: {
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+      cursor: 'pointer',
+      margin: `0 ${xs}`,
+      borderRadius: '50%',
+      transition: 'background-color .2s ease-in-out',
+      '&:hover': {
+        backgroundColor: '#F0EFEE',
+      },
+      outline: 'none',
     },
-    outline: 'none',
-  },
-  increasedPopperZindex: {
-    zIndex: 2001,
-  },
-})
+    increasedPopperZindex: {
+      zIndex: 2001,
+    },
+  }),
+)
 
-const EllipsisTransactionDetails = ({ address, knownAddress }) => {
+type EllipsisTransactionDetailsProps = {
+  address: string
+  knownAddress?: boolean
+  sendModalOpenHandler?: () => void
+}
+
+export const EllipsisTransactionDetails = ({
+  address,
+  knownAddress,
+  sendModalOpenHandler,
+}: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
   const [anchorEl, setAnchorEl] = React.useState(null)
 
@@ -51,10 +63,12 @@ const EllipsisTransactionDetails = ({ address, knownAddress }) => {
       <div className={classes.container} role="menu" tabIndex={0}>
         <MoreHorizIcon onClick={handleClick} onKeyDown={handleClick} />
         <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
-          <MenuItem disabled onClick={closeMenuHandler}>
-            Send Again
-          </MenuItem>
-          <Divider />
+          {sendModalOpenHandler ? (
+            <>
+              <MenuItem onClick={sendModalOpenHandler}>Send Again</MenuItem>
+              <Divider />
+            </>
+          ) : null}
           {knownAddress ? (
             <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
           ) : (
@@ -65,5 +79,3 @@ const EllipsisTransactionDetails = ({ address, knownAddress }) => {
     </ClickAwayListener>
   )
 }
-
-export default EllipsisTransactionDetails
