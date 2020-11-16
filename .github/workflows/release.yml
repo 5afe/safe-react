@@ -87,7 +87,7 @@ jobs:
           path: ./dist/Safe[ ]Multisig*.dmg
 
       - name: 'Upload Artifacts Linux'
-        if: contains(github.ref, 'development') && startsWith(matrix.os, 'ubuntu')
+        if: contains(github.ref, 'release/v2.14.1') && startsWith(matrix.os, 'ubuntu')
         uses: actions/upload-artifact@v2
         with:
           name: Desktop Linux
