@@ -38,9 +38,7 @@ export const ScanQRWrapper = ({ handleScan }: Props): React.ReactElement => {
         alt="Scan QR"
         className={classes.qrCodeBtn}
         height={20}
-        onClick={() => {
-          openQrModal()
-        }}
+        onClick={() => openQrModal()}
         role="button"
         src={QRIcon}
         testId="qr-icon"

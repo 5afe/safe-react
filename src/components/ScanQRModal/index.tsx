@@ -27,7 +27,8 @@ type Props = {
 
 export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElement => {
   const classes = useStyles()
-  const [hasWebcam, setHasWebcam] = useState<boolean | null>(null)
+  const [useWebcam, setUseWebcam] = useState<boolean | null>(null)
+  const [fileUploadModalOpen, setFileUploadModalOpen] = useState<boolean>(false)
   const scannerRef: any = React.createRef()
   const openImageDialog = React.useCallback(() => {
     scannerRef.current.openImageDialog()
@@ -36,22 +37,30 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
   useEffect(() => {
     checkWebcam(
       () => {
-        setHasWebcam(true)
+        setUseWebcam(true)
       },
       () => {
-        setHasWebcam(false)
+        setUseWebcam(false)
       },
     )
   }, [])
 
   useEffect(() => {
-    // this fires only when the hasWebcam changes to false (null > false (user doesn't have webcam)
-    // , true > false (user switched from webcam to file upload))
-    // Doesn't fire on re-render
-    if (hasWebcam === false) {
+    if (useWebcam === false && !fileUploadModalOpen) {
+      setFileUploadModalOpen(true)
       openImageDialog()
     }
-  }, [hasWebcam, openImageDialog])
+  }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen])
+
+  const onFileUploadHandlerClose = (successData, error) => {
+    if (successData) {
+      onScan(successData)
+    }
+    if (error) {
+      console.error('Error uploading file', error)
+    }
+    setFileUploadModalOpen(false)
+  }
 
   return (
     <Modal description="Receive Tokens Form" handleClose={onClose} open={isOpen} title="Receive Tokens">
@@ -65,19 +74,15 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
       </Row>
       <Hairline />
       <Col className={classes.detailsContainer} layout="column" middle="xs">
-        {hasWebcam === null ? (
+        {useWebcam === null ? (
           <Block className={classes.loaderContainer} justify="center">
             <CircularProgress />
           </Block>
         ) : (
           <QrReader
-            legacyMode={!hasWebcam}
-            onError={(err) => {
-              console.error(err)
-            }}
-            onScan={(data) => {
-              if (data) onScan(data)
-            }}
+            legacyMode={!useWebcam}
+            onError={(err) => onFileUploadHandlerClose(null, err)}
+            onScan={(data) => onFileUploadHandlerClose(data, null)}
             ref={scannerRef}
             style={{ width: '400px', height: '400px' }}
           />
@@ -93,11 +98,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
           color="primary"
           minWidth={154}
           onClick={() => {
-            if (hasWebcam) {
-              setHasWebcam(false)
-            } else {
-              openImageDialog()
-            }
+            setUseWebcam(false)
           }}
           variant="contained"
         >
