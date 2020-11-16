@@ -26,9 +26,10 @@ const AppCard = styled(Card)`
   }
 `
 
-const IconImg = styled.img<{ size: 'md' | 'lg'; src: string | undefined }>`
+const IconImg = styled.img<{ size: 'md' | 'lg'; src: string | undefined; isClickable: boolean }>`
   width: ${({ size }) => (size === 'md' ? '48px' : '102px')};
   height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
+  cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
   object-fit: contain;
 `
 
@@ -102,7 +103,13 @@ const Apps = ({
   return (
     <AppCard className={className}>
       <ConditionalClickableContent isClickable={actionTrigger === TriggerType.Content} onClick={onClick}>
-        <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
+        <IconImg
+          alt={`${name || 'App'} Logo`}
+          src={iconUrl}
+          onError={setAppImageFallback}
+          size={iconSize}
+          isClickable={actionTrigger === TriggerType.Content}
+        />
       </ConditionalClickableContent>
 
       {name && (
