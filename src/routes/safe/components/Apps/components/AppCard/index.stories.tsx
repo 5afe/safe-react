@@ -1,6 +1,6 @@
 import React from 'react'
 
-import AppCard from './index'
+import AppCard, { TriggerType } from './index'
 
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 
@@ -12,7 +12,7 @@ export default {
 export const Loading = (): React.ReactElement => <AppCard isLoading />
 
 export const AddCustomApp = (): React.ReactElement => (
-  <AppCard iconUrl={AddAppIcon} onButtonClick={console.log} buttonText="Add custom app" />
+  <AppCard iconUrl={AddAppIcon} onClick={console.log} buttonText="Add custom app" actionTrigger={TriggerType.Content} />
 )
 
 export const LoadedApp = (): React.ReactElement => (
@@ -20,5 +20,7 @@ export const LoadedApp = (): React.ReactElement => (
     iconUrl="https://cryptologos.cc/logos/versions/gnosis-gno-gno-logo-circle.svg?v=007"
     name="Gnosis"
     description="Gnosis safe app"
+    actionTrigger={TriggerType.Button}
+    onClick={console.log}
   />
 )

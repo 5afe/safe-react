@@ -18,6 +18,7 @@ const AppCard = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   width: 244px;
   height: 232px;
+  cursor: default !important;
 
   :hover {
     box-shadow: 1px 2px 16px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.35)};
@@ -45,7 +46,33 @@ const AppDescription = styled(Text)`
   text-align: center;
 `
 
+const ClickableContent = styled.div`
+  cursor: pointer;
+`
+
+export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
+  error.currentTarget.onerror = null
+  error.currentTarget.src = appsIconSvg
+}
+
+const ConditionalClickableContent = ({
+  isClickable,
+  onClick,
+  children,
+}: {
+  isClickable: boolean
+  onClick: () => void
+  children: React.ReactNode
+}): React.ReactElement => <ClickableContent onClick={isClickable ? onClick : undefined}>{children}</ClickableContent>
+
+export enum TriggerType {
+  Button,
+  Content,
+}
+
 type Props = {
+  onClick?: () => void
+  actionTrigger?: TriggerType
   isLoading?: boolean
   className?: string
   name?: string
@@ -53,13 +80,6 @@ type Props = {
   iconUrl?: string
   iconSize?: 'md' | 'lg'
   buttonText?: string
-  onButtonClick?: () => void
-  onCardClick?: () => void
-}
-
-export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {
-  error.currentTarget.onerror = null
-  error.currentTarget.src = appsIconSvg
 }
 
 const Apps = ({
@@ -70,8 +90,8 @@ const Apps = ({
   iconUrl,
   iconSize = 'md',
   buttonText,
-  onButtonClick,
-  onCardClick,
+  onClick = () => undefined,
+  actionTrigger,
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
@@ -85,14 +105,25 @@ const Apps = ({
   }
 
   return (
-    <AppCard className={className} onClick={onButtonClick ? () => undefined : onCardClick}>
-      <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
+    <AppCard className={className}>
+      <ConditionalClickableContent isClickable={actionTrigger === TriggerType.Content} onClick={onClick}>
+        <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
+      </ConditionalClickableContent>
 
-      {name && <AppName size="sm">{name}</AppName>}
-      {description && <AppDescription size="lg">{description} </AppDescription>}
+      {name && (
+        <ConditionalClickableContent isClickable={actionTrigger === TriggerType.Content} onClick={onClick}>
+          <AppName size="sm">{name}</AppName>
+        </ConditionalClickableContent>
+      )}
 
-      {onButtonClick && (
-        <Button size="md" color="primary" variant="contained" onClick={onButtonClick}>
+      {description && (
+        <ConditionalClickableContent isClickable={actionTrigger === TriggerType.Content} onClick={onClick}>
+          <AppDescription size="lg">{description} </AppDescription>
+        </ConditionalClickableContent>
+      )}
+
+      {actionTrigger === TriggerType.Button && (
+        <Button size="md" color="primary" variant="contained" onClick={onClick}>
           {buttonText}
         </Button>
       )}

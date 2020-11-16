@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { GenericModal, IconText, Loader, Menu } from '@gnosis.pm/safe-react-components'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
+import AppCard, { TriggerType } from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { useRouteMatch, useHistory } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -78,7 +78,13 @@ const AppsList = (): React.ReactElement => {
       </Menu>
       <ContentWrapper>
         <CardsWrapper>
-          <AppCard iconUrl={AddAppIcon} onButtonClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
+          <AppCard
+            iconUrl={AddAppIcon}
+            onClick={openAddAppModal}
+            buttonText="Add custom app"
+            iconSize="lg"
+            actionTrigger={TriggerType.Button}
+          />
 
           {appList.map((a) => (
             <AppCard
@@ -87,7 +93,8 @@ const AppsList = (): React.ReactElement => {
               iconUrl={a.iconUrl}
               name={a.name}
               description={a.description}
-              onCardClick={onAddAppHandler(a.url)}
+              onClick={onAddAppHandler(a.url)}
+              actionTrigger={TriggerType.Content}
             />
           ))}
         </CardsWrapper>
