@@ -27,10 +27,10 @@ type Props = {
 
 export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElement => {
   const classes = useStyles()
-  const [hasWebcam, setHasWebcam] = useState<boolean>(false)
+  const [hasWebcam, setHasWebcam] = useState<boolean | null>(null)
   const scannerRef: any = React.createRef()
   const openImageDialog = React.useCallback(() => {
-    scannerRef?.current.openImageDialog()
+    scannerRef.current.openImageDialog()
   }, [scannerRef])
 
   useEffect(() => {

@@ -57,6 +57,7 @@ export const EthAddressInput = ({
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
+    setSelectedEntry({ address: scannedAddress })
     onScannedValue(scannedAddress)
     closeQrModal()
   }
