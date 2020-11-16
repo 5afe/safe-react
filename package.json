@@ -30,7 +30,7 @@
     "generate-types:contracts": "cross-env typechain --target=web3-v1 --outDir './src/types/contracts' './node_modules/@gnosis.pm/safe-contracts/build/contracts/*.json'",
     "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
-    "postinstall": "electron-builder install-app-deps && yarn generate-types",
+    "postinstall": "patch-package && electron-builder install-app-deps && yarn generate-types",
     "preelectron-pack": "yarn build",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
