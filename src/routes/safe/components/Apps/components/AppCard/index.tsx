@@ -16,7 +16,6 @@ const AppCard = styled.div`
   padding: 24px;
   margin: 10px;
   background-color: ${({ theme }) => theme.colors.white};
-  width: 244px;
   height: 232px;
   cursor: default !important;
 
