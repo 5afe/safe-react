@@ -8,7 +8,7 @@ import Img from 'src/components/layout/Img'
 
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
-import SubmitButtonStatus from './SubmitButtonStatus'
+import FormButtons from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from '../../utils'
 import { saveToStorage } from 'src/utils/storage'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -78,7 +78,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
 
           <AppAgreement />
 
-          <SubmitButtonStatus appInfo={appInfo} onCancel={closeModal} />
+          <FormButtons appInfo={appInfo} onCancel={closeModal} />
         </>
       )}
     </GnoForm>

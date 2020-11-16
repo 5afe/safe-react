@@ -16,12 +16,12 @@ const ButtonsContainer = styled.div`
   justify-content: space-between;
 `
 
-interface SubmitButtonStatusProps {
+interface Props {
   appInfo: SafeApp
   onCancel: () => void
 }
 
-const SubmitButtonStatus = ({ appInfo, onCancel }: SubmitButtonStatusProps): ReactElement => {
+const FormButtons = ({ appInfo, onCancel }: Props): ReactElement => {
   const { valid, validating, visited } = useFormState({
     subscription: { valid: true, validating: true, visited: true },
   })
@@ -48,4 +48,4 @@ const SubmitButtonStatus = ({ appInfo, onCancel }: SubmitButtonStatusProps): Rea
   )
 }
 
-export default SubmitButtonStatus
+export default FormButtons
