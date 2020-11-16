@@ -216,7 +216,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
     )
   }
 
-  if (!consentReceived) {
+  if (consentReceived === false) {
     return <LegalDisclaimer onCancel={redirectToBalance} onConfirm={onConsentReceipt} />
   }
 
