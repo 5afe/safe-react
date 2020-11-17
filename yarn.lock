@@ -1522,9 +1522,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#03ff672d6f73366297986d58631f9582fe2ed4a3":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#ff29c3c":
   version "0.4.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#03ff672d6f73366297986d58631f9582fe2ed4a3"
+  resolved "https://github.com/gnosis/safe-react-components.git#ff29c3ccfd391142b92edefba0f773aaf16f1799"
   dependencies:
     classnames "^2.2.6"
     polished "^3.6.7"
