@@ -31,11 +31,13 @@ const AppCard = styled(Card)`
 const IconImg = styled.img<{ size: 'md' | 'lg'; src: string | undefined }>`
   width: ${({ size }) => (size === 'md' ? '60px' : '102px')};
   height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
+  margin-top: ${({ size }) => (size === 'md' ? '0' : '-16px')};
   object-fit: contain;
 `
 
 const AppName = styled(Title)`
   text-align: center;
+  margin: 16px 0 9px 0;
 `
 
 const AppDescription = styled(Text)`
