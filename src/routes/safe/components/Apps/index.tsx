@@ -16,12 +16,12 @@ import { useAppList } from './hooks/useAppList'
 import { SafeApp } from './types.d'
 
 import LCL from 'src/components/ListContentLayout'
-import { grantedSelector } from 'src/routes/safe/container/selector'
 import {
+  grantedSelector,
   safeEthBalanceSelector,
-  safeParamAddressFromStateSelector,
   safeNameSelector,
-} from 'src/logic/safe/store/selectors'
+  safeParamAddressFromStateSelector,
+} from 'src/routes/safe/container/selector'
 import { isSameURL } from 'src/utils/url'
 import { useIframeMessageHandler } from './hooks/useIframeMessageHandler'
 import ConfirmTransactionModal from './components/ConfirmTransactionModal'

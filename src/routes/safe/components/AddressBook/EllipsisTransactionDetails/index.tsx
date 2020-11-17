@@ -8,7 +8,7 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 import { xs } from 'src/theme/variables'
 
 const useStyles = makeStyles(

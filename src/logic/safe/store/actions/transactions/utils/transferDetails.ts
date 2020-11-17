@@ -1,7 +1,7 @@
 import { Transfer, TxConstants } from 'src/logic/safe/store/models/types/transactions.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 import { store } from 'src/store'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import {
   ERC20TransferDetails,
   ERC721TransferDetails,

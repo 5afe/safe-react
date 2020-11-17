@@ -1,10 +1,7 @@
 import { nftAssetsSelector } from 'src/logic/collectibles/store/selectors'
 import updateActiveAssets from 'src/logic/safe/store/actions/updateActiveAssets'
-import {
-  safeActiveAssetsSelectorBySafe,
-  safeBlacklistedAssetsSelectorBySafe,
-  safesMapSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeActiveAssetsSelectorBySafe, safeBlacklistedAssetsSelectorBySafe } from 'src/logic/safe/store/selectors'
+import { safesMapSelector } from 'src/routes/safe/container/selector'
 
 const activateAssetsByBalance = (safeAddress) => async (dispatch, getState) => {
   try {

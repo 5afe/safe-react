@@ -14,13 +14,13 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
 import { getNetworkName, getTxServiceUrl } from 'src/config/'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import {
   safeEthBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+} from 'src/routes/safe/container/selector'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T

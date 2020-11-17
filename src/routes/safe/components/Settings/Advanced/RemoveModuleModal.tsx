@@ -6,6 +6,7 @@ import OpenInNew from '@material-ui/icons/OpenInNew'
 import cn from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 import styled from 'styled-components'
 
 import Identicon from 'src/components/Identicon'
@@ -21,7 +22,6 @@ import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { md, secondary } from 'src/theme/variables'
 

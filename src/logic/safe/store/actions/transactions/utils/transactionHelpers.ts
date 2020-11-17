@@ -16,12 +16,9 @@ import {
   TxArgs,
   RefundParams,
 } from 'src/logic/safe/store/models/types/transaction'
+import { safeSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState, store } from 'src/store'
-import {
-  safeSelector,
-  safeTransactionsSelector,
-  safeCancellationTransactionsSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeTransactionsSelector, safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   BatchProcessTxsProps,

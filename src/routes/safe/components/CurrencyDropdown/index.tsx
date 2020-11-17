@@ -9,6 +9,7 @@ import classNames from 'classnames'
 import 'currency-flags/dist/currency-flags.min.css'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 
 import CheckIcon from './img/check.svg'
 
@@ -16,7 +17,6 @@ import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setS
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
 import { setImageToPlaceholder } from '../Balances/utils'
 import Img from 'src/components/layout/Img/index'

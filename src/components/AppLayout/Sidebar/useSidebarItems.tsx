@@ -6,7 +6,7 @@ import ListIcon from 'src/components/List/ListIcon'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
 import { useSelector } from 'react-redux'
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { safeFeaturesEnabledSelector } from 'src/routes/safe/container/selector'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)

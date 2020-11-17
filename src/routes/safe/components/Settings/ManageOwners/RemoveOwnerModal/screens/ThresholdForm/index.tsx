@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/container/selector'
 
 import { styles } from './style'
 
@@ -17,7 +18,6 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 

@@ -6,6 +6,7 @@ import classNames from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getExplorerInfo } from 'src/config'
+import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 
 import { styles } from './style'
 
@@ -19,7 +20,6 @@ import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
 
 const openIconStyle = {

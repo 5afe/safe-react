@@ -7,6 +7,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNetworkInfo } from 'src/config'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/container/selector'
 
 import { styles } from './style'
 
@@ -23,7 +24,6 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 const useStyles = makeStyles(styles)

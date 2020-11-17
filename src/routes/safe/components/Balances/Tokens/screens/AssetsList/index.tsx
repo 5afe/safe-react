@@ -7,6 +7,7 @@ import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
 import Paragraph from 'src/components/layout/Paragraph'
+import { safeActiveAssetsListSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 
 import { useStyles } from './style'
 
@@ -20,11 +21,7 @@ import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import AssetRow from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
 import updateActiveAssets from 'src/logic/safe/store/actions/updateActiveAssets'
 import updateBlacklistedAssets from 'src/logic/safe/store/actions/updateBlacklistedAssets'
-import {
-  safeActiveAssetsListSelector,
-  safeBlacklistedAssetsSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeBlacklistedAssetsSelector } from 'src/logic/safe/store/selectors'
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
 

@@ -2,6 +2,7 @@ import { Loader, Text, theme, Title } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { safeModulesSelector, safeNonceSelector } from 'src/routes/safe/container/selector'
 import styled from 'styled-components'
 
 import { getModuleData } from './dataFetcher'
@@ -9,7 +10,6 @@ import { styles } from './style'
 import ModulesTable from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
-import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(styles)

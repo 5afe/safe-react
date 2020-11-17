@@ -1,6 +1,7 @@
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { safeOwnersSelector, safeThresholdSelector } from 'src/routes/safe/container/selector'
 
 import OwnersList from './OwnersList'
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
@@ -19,7 +20,6 @@ import { List } from 'immutable'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './style'
 import { makeTransaction } from 'src/logic/safe/store/models/transaction'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TransactionStatus } from 'src/logic/safe/store/models/types/transaction'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 

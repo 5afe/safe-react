@@ -13,16 +13,16 @@ import addTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import { AppReduxState } from 'src/store'
-import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import {
   safeActiveTokensSelector,
   safeBalancesSelector,
-  safeBlacklistedTokensSelector,
   safeEthBalanceSelector,
   safeSelector,
-} from 'src/logic/safe/store/selectors'
+} from 'src/routes/safe/container/selector'
+import { AppReduxState } from 'src/store'
+import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
 

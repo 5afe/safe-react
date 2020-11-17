@@ -19,16 +19,16 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import UpdateSafeModal from 'src/routes/safe/components/Settings/UpdateSafeModal'
-import { grantedSelector } from 'src/routes/safe/container/selector'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import Link from 'src/components/layout/Link'
 import {
-  latestMasterContractVersionSelector,
+  grantedSelector,
   safeCurrentVersionSelector,
   safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+} from 'src/routes/safe/container/selector'
+import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import Link from 'src/components/layout/Link'
+import { latestMasterContractVersionSelector } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'

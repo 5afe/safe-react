@@ -8,15 +8,15 @@ import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
-import { grantedSelector } from 'src/routes/safe/container/selector'
+import {
+  grantedSelector,
+  safeParamAddressFromStateSelector,
+  safesMapSelector,
+} from 'src/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from 'src/logic/safe/store/actions/addIncomingTransactions'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import {
-  safeParamAddressFromStateSelector,
-  safesMapSelector,
-  safeCancellationTransactionsSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeCancellationTransactionsSelector } from 'src/logic/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'

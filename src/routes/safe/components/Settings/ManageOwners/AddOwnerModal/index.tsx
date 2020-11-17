@@ -1,6 +1,7 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 
 import { OwnerForm } from './screens/OwnerForm'
 import ReviewAddOwner from './screens/Review'
@@ -13,7 +14,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'

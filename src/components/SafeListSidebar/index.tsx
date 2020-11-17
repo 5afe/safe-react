@@ -3,6 +3,7 @@ import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import SearchBar from 'material-ui-search-bar'
 import { connect } from 'react-redux'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 
 import SafeList from './SafeList'
 import { sortedSafeListSelector } from './selectors'
@@ -18,7 +19,7 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { defaultSafeSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
 
 export const SafeListSidebarContext = React.createContext({

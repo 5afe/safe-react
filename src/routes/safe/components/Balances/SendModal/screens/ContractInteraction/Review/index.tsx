@@ -21,7 +21,7 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeSelector } from 'src/routes/safe/container/selector'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)

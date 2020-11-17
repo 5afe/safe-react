@@ -8,7 +8,6 @@ import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,
   adjustAmountToToken,
@@ -28,6 +27,7 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/component
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { ActionCallback, CREATE } from 'src/routes/safe/components/Settings/SpendingLimit/NewLimitModal/index'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
+import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/routes/safe/container/selector'
 
 const { nativeCoin } = getNetworkInfo()
 

@@ -21,7 +21,7 @@ import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
 
 import { styles } from './style'

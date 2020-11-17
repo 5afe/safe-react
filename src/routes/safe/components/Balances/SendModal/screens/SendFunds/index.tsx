@@ -24,7 +24,6 @@ import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
@@ -33,7 +32,7 @@ import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/
 import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { extendedSafeTokensSelector, safeSpendingLimitsSelector } from 'src/routes/safe/container/selector'
 import { sm } from 'src/theme/variables'
 
 import ArrowDown from '../assets/arrow-down.svg'

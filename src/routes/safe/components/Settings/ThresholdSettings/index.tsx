@@ -14,13 +14,13 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { grantedSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import {
+  grantedSelector,
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+} from 'src/routes/safe/container/selector'
+import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(styles)

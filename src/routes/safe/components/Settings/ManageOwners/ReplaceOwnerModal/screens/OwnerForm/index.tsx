@@ -19,7 +19,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { safeOwnersAddressesListSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersAddressesListSelector } from 'src/routes/safe/container/selector'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
