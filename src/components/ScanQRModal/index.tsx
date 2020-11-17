@@ -29,6 +29,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
   const classes = useStyles()
   const [useWebcam, setUseWebcam] = useState<boolean | null>(null)
   const [fileUploadModalOpen, setFileUploadModalOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
   const scannerRef: any = React.createRef()
   const openImageDialog = React.useCallback(() => {
     scannerRef.current.openImageDialog()
@@ -46,18 +47,20 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
   }, [])
 
   useEffect(() => {
-    if (useWebcam === false && !fileUploadModalOpen) {
+    if (useWebcam === false && !fileUploadModalOpen && !error) {
       setFileUploadModalOpen(true)
       openImageDialog()
     }
-  }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen])
+  }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen, error])
 
-  const onFileUploadHandlerClose = (error, successData) => {
+  const onFileUploadHandlerClose = (error: string | null, successData: string | null) => {
     if (successData) {
       onScan(successData)
-    }
-    if (error) {
+    } else if (error) {
       console.error('Error uploading file', error)
+      setError(`The QR could not be read`)
+    } else {
+      setError(`The QR could not be read`)
     }
     setFileUploadModalOpen(false)
   }
@@ -74,6 +77,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
       </Row>
       <Hairline />
       <Col className={classes.detailsContainer} layout="column" middle="xs">
+        {error}
         {useWebcam === null ? (
           <Block className={classes.loaderContainer} justify="center">
             <CircularProgress />
@@ -99,6 +103,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
           minWidth={154}
           onClick={() => {
             setUseWebcam(false)
+            setError(null)
           }}
           variant="contained"
         >

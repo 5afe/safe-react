@@ -97,10 +97,10 @@ const SafeOwnersForm = (props): React.ReactElement => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = (value) => {
+  const handleScan = (value: string | null) => {
     let scannedAddress = value
 
-    if (scannedAddress.startsWith('ethereum:')) {
+    if (scannedAddress?.startsWith('ethereum:')) {
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
