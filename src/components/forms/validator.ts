@@ -1,13 +1,11 @@
-import { List } from 'immutable'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import memoize from 'lodash.memoize'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
-
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { List } from 'immutable'
 
 type ValidatorReturnType = string | undefined
-type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
+export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
 type AsyncValidator = (...args: unknown[]) => Promise<ValidatorReturnType>
 export type Validator = GenericValidatorType | AsyncValidator
 
@@ -89,13 +87,18 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
-export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType =>
-  memoize(
-    (value: string): ValidatorReturnType => {
-      const addressAlreadyExists = addresses.some((address) => sameAddress(value, address))
-      return addressAlreadyExists ? ADDRESS_REPEATED_ERROR : undefined
-    },
-  )
+export const uniqueAddress = (addresses: string[] | List<string>): GenericValidatorType => (): ValidatorReturnType => {
+  // @ts-expect-error both list and array have signatures for map but TS thinks they're not compatible
+  const lowercaseAddresses = addresses.map((address) => address.toLowerCase())
+  const uniqueAddresses = new Set(lowercaseAddresses)
+  const lengthPropName = 'size' in addresses ? 'size' : 'length'
+
+  if (uniqueAddresses.size !== addresses?.[lengthPropName]) {
+    return ADDRESS_REPEATED_ERROR
+  }
+
+  return undefined
+}
 
 export const composeValidators = (...validators: Validator[]) => (value: unknown): ValidatorReturnType =>
   validators.reduce(
