@@ -1,4 +1,16 @@
-import styled from 'styled-components'
+import styled, { keyframes } from 'styled-components'
+
+const gradientSK = keyframes`
+  0% {
+    background-position: 0% 54%;
+  }
+  50% {
+    background-position: 100% 47%;
+  }
+  100% {
+    background-position: 0% 54%;
+  }
+`
 
 export const AppIconSK = styled.div`
   height: 60px;
@@ -8,56 +20,7 @@ export const AppIconSK = styled.div`
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
-
-  @-webkit-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @-moz-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @-o-keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
-  @keyframes gradient-SK {
-    0% {
-      background-position: 0% 54%;
-    }
-    50% {
-      background-position: 100% 47%;
-    }
-    100% {
-      background-position: 0% 54%;
-    }
-  }
+  animation: ${gradientSK} 1.5s ease infinite;
 `
 export const TitleSK = styled.div`
   height: 24px;
@@ -66,11 +29,7 @@ export const TitleSK = styled.div`
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
+  animation: ${gradientSK} 1.5s ease infinite;
 `
 export const DescriptionSK = styled.div`
   height: 16px;
@@ -78,9 +37,5 @@ export const DescriptionSK = styled.div`
   background-color: lightgrey;
   background: linear-gradient(84deg, lightgrey, transparent);
   background-size: 400% 400%;
-
-  -webkit-animation: gradient-SK 1.5s ease infinite;
-  -moz-animation: gradient-SK 1.5s ease infinite;
-  -o-animation: gradient-SK 1.5s ease infinite;
-  animation: gradient-SK 1.5s ease infinite;
+  animation: ${gradientSK} 1.5s ease infinite;
 `
