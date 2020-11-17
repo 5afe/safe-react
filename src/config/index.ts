@@ -1,7 +1,15 @@
 import memoize from 'lodash.memoize'
 
 import networks from 'src/config/networks'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkSettings, SafeFeatures, Wallets, GasPriceOracle } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_NETWORK,
+  FEATURES,
+  GasPriceOracle,
+  NetworkSettings,
+  SafeFeatures,
+  Wallets,
+} from 'src/config/networks/network.d'
 import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
@@ -89,6 +97,16 @@ export const getNetworkExplorerInfo = (): { name: string; url: string; apiUrl: s
 })
 
 export const getNetworkConfigDisabledFeatures = (): SafeFeatures => getConfig().disabledFeatures || []
+
+/**
+ * Checks if a particular feature is enabled in the current network configuration
+ * @params {FEATURES} feature
+ * @returns boolean
+ */
+export const isFeatureEnabled = memoize((feature: FEATURES): boolean => {
+  const disabledFeatures = getNetworkConfigDisabledFeatures()
+  return !disabledFeatures.some((disabledFeature) => disabledFeature === feature)
+})
 
 export const getNetworkConfigDisabledWallets = (): Wallets => getConfig()?.disabledWallets || []
 

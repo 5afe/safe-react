@@ -101,6 +101,10 @@ Give an example
 
 Add additional notes about how to deploy this on a live system
 
+## Configuring the app for running on different networks
+
+[Please check the network configuration documentation](./docs/networks.md)
+
 ## Built With
 
 * [Truffle React Box](https://github.com/truffle-box/react-box) - The web framework used

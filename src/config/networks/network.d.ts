@@ -15,14 +15,16 @@ export enum WALLETS {
   COINBASE = 'coinbase',
   WALLET_LINK = 'walletLink',
   OPERA = 'opera',
-  OPERA_TOUCH = 'operaTouch'
+  OPERA_TOUCH = 'operaTouch',
+  LATTICE = 'lattice',
 }
 
 export enum FEATURES {
   ERC721 = 'ERC721',
   ERC1155 = 'ERC1155',
   SAFE_APPS = 'SAFE_APPS',
-  CONTRACT_INTERACTION = 'CONTRACT_INTERACTION'
+  CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
+  ENS_LOOKUP = 'ENS_LOOKUP',
 }
 
 type Token = {
