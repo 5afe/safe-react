@@ -41,13 +41,6 @@ import LegalDisclaimer from './LegalDisclaimer'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types.d'
 
-const StyledIframe = styled.iframe`
-  padding: 15px;
-  box-sizing: border-box;
-  width: 100%;
-  height: 100%;
-`
-
 const LoadingContainer = styled.div`
   width: 100%;
   height: 100%;
@@ -56,25 +49,30 @@ const LoadingContainer = styled.div`
   justify-content: center;
 `
 
-const IframeWrapper = styled.div`
-  position: relative;
-  height: 100%;
-  width: 100%;
-  overflow: hidden;
-`
-
-const Centered = styled.div`
+const OwnerDisclaimer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
   flex-direction: column;
+  height: 476px;
 `
 
-const ContentWrapper = styled(Card)`
-  height: calc(100% - 127px);
-  width: calc(100% - 50px);
+const AppWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+`
+
+const StyledCard = styled(Card)`
   margin: 20px 0;
+  flex-grow: 1;
+`
+
+const StyledIframe = styled.iframe`
+  height: 100%;
+  width: 100%;
   overflow: auto;
+  box-sizing: border-box;
 `
 
 type ConfirmTransactionModalState = {
@@ -222,15 +220,15 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
 
   if (NETWORK_NAME === 'UNKNOWN' || !granted) {
     return (
-      <Centered style={{ height: '476px' }}>
+      <OwnerDisclaimer>
         <FixedIcon type="notOwner" />
         <Title size="xs">To use apps, you must be an owner of this Safe</Title>
-      </Centered>
+      </OwnerDisclaimer>
     )
   }
 
   return (
-    <>
+    <AppWrapper>
       <Menu>
         {isAppDeletable && (
           <ButtonLink color="error" iconType="delete" onClick={openRemoveModal}>
@@ -238,57 +236,57 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
           </ButtonLink>
         )}
       </Menu>
-      <ContentWrapper>
-        <IframeWrapper>
-          {appIsLoading && (
-            <LoadingContainer>
-              <Loader size="md" />
-            </LoadingContainer>
-          )}
-          <StyledIframe
-            frameBorder="0"
-            id={`iframe-${appUrl}`}
-            ref={iframeRef}
-            src={appUrl}
-            title={appUrl} // TODO: Change it!
-            onLoad={onIframeLoad}
-          />
-        </IframeWrapper>
 
-        {isRemoveModalOpen && (
-          <GenericModal
-            title={
-              <Title size="sm" withoutMargin>
-                Remove app
-              </Title>
-            }
-            body={<Text size="md">This action will remove {safeApp.name} from the interface</Text>}
-            footer={
-              <ModalFooterConfirmation
-                cancelText="Cancel"
-                handleCancel={closeRemoveModal}
-                handleOk={removeApp}
-                okText="Remove"
-              />
-            }
-            onClose={closeRemoveModal}
-          />
+      <StyledCard>
+        {appIsLoading && (
+          <LoadingContainer>
+            <Loader size="md" />
+          </LoadingContainer>
         )}
 
-        <ConfirmTransactionModal
-          isOpen={confirmTransactionModal.isOpen}
-          app={safeApp as SafeApp}
-          safeAddress={safeAddress}
-          ethBalance={ethBalance as string}
-          safeName={safeName as string}
-          txs={confirmTransactionModal.txs}
-          onClose={closeConfirmationModal}
-          onUserConfirm={onUserTxConfirm}
-          params={confirmTransactionModal.params}
-          onTxReject={onTxReject}
+        <StyledIframe
+          frameBorder="0"
+          id={`iframe-${appUrl}`}
+          ref={iframeRef}
+          src={appUrl}
+          title={safeApp.name}
+          onLoad={onIframeLoad}
         />
-      </ContentWrapper>
-    </>
+      </StyledCard>
+
+      {isRemoveModalOpen && (
+        <GenericModal
+          title={
+            <Title size="sm" withoutMargin>
+              Remove app
+            </Title>
+          }
+          body={<Text size="md">This action will remove {safeApp.name} from the interface</Text>}
+          footer={
+            <ModalFooterConfirmation
+              cancelText="Cancel"
+              handleCancel={closeRemoveModal}
+              handleOk={removeApp}
+              okText="Remove"
+            />
+          }
+          onClose={closeRemoveModal}
+        />
+      )}
+
+      <ConfirmTransactionModal
+        isOpen={confirmTransactionModal.isOpen}
+        app={safeApp as SafeApp}
+        safeAddress={safeAddress}
+        ethBalance={ethBalance as string}
+        safeName={safeName as string}
+        txs={confirmTransactionModal.txs}
+        onClose={closeConfirmationModal}
+        onUserConfirm={onUserTxConfirm}
+        params={confirmTransactionModal.params}
+        onTxReject={onTxReject}
+      />
+    </AppWrapper>
   )
 }
 
