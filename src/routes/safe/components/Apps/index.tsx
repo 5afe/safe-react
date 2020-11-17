@@ -136,8 +136,8 @@ const Apps = (): React.ReactElement => {
                 id: '1',
               },
               (err, res) => {
-                if (err) {
-                  reject({ success: false, error: err })
+                if (err || res?.error) {
+                  reject(err || res?.error)
                 }
 
                 resolve(res?.result)
@@ -148,7 +148,7 @@ const Apps = (): React.ReactElement => {
 
         return response
       } catch (err) {
-        return { success: false, error: err }
+        return err
       }
     })
 

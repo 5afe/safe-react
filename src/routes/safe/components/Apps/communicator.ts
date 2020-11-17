@@ -43,12 +43,16 @@ class AppCommunicator {
 
     if (validMessage && hasHandler) {
       const handler = this.handlers.get(msg.data.method)
-      // @ts-expect-error Handler existence is checked in this.canHandleMessage
-      const response = await handler(msg)
+      try {
+        // @ts-expect-error Handler existence is checked in this.canHandleMessage
+        const response = await handler(msg)
 
-      // If response is not returned, it means the response will be send somewhere else
-      if (typeof response !== 'undefined') {
-        this.send(response, msg.data.requestId)
+        // If response is not returned, it means the response will be send somewhere else
+        if (typeof response !== 'undefined') {
+          this.send(response, msg.data.requestId)
+        }
+      } catch (err) {
+        this.send({ success: false, error: err }, msg.data.requestId)
       }
     }
   }
