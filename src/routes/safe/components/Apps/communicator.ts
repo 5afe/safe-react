@@ -52,7 +52,7 @@ class AppCommunicator {
           this.send(response, msg.data.requestId)
         }
       } catch (err) {
-        this.send({ success: false, error: err }, msg.data.requestId)
+        this.send({ success: false, error: err.message }, msg.data.requestId)
       }
     }
   }

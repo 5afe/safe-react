@@ -140,7 +140,7 @@ const Apps = (): React.ReactElement => {
                   reject(err || res?.error)
                 }
 
-                resolve(res?.result)
+                resolve({ success: true, data: res?.result })
               },
             )
           }
