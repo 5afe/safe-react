@@ -56,9 +56,6 @@ export const saveAddressBook = async (addressBook: AddressBookState): Promise<vo
   }
 }
 
-export const getAddressesListFromAddressBook = (addressBook: AddressBookState): string[] =>
-  addressBook.map((entry) => entry.address)
-
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean
 }

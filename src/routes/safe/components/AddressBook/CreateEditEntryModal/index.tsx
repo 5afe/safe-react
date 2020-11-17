@@ -19,8 +19,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { getAddressesListFromAddressBook } from 'src/logic/addressBook/utils'
+import { addressBookAddressesListSelector } from 'src/logic/addressBook/store/selectors'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -42,8 +41,7 @@ const CreateEditEntryModalComponent = ({
     }
   }
 
-  const addressBook = useSelector(addressBookSelector)
-  const addressBookAddressesList = getAddressesListFromAddressBook(addressBook)
+  const addressBookAddressesList = useSelector(addressBookAddressesListSelector)
   const entryDoesntExist = uniqueAddress(addressBookAddressesList)
 
   const formMutators = {
