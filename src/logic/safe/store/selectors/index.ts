@@ -1,6 +1,7 @@
 import { List, Map, Set } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
+import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
 
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import {
@@ -17,14 +18,13 @@ import { MODULE_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/mod
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { tokenListSelector } from 'src/logic/tokens/store/selectors'
+import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFE_PARAM_ADDRESS, SAFELIST_ADDRESS } from 'src/routes/routes'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -269,6 +269,17 @@ export const safeOwnersSelector = createSelector(safeSelector, safeFieldSelector
 export const safeModulesSelector = createSelector(safeSelector, safeFieldSelector('modules'))
 
 export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
+
+export const safeOwnersAddressesListSelector = createSelector(
+  safeOwnersSelector,
+  (owners): List<string> => {
+    if (!owners) {
+      return List([])
+    }
+
+    return owners?.map(({ address }) => address)
+  },
+)
 
 export const safeSpendingLimitsSelector = createSelector(safeSelector, safeFieldSelector('spendingLimits'))
 

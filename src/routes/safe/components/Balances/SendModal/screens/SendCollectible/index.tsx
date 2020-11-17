@@ -1,3 +1,4 @@
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -19,17 +20,17 @@ import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { CollectibleSelectField } from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
-import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
+import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
+import { getExplorerInfo } from 'src/config'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sm } from 'src/theme/variables'
 
-import ArrowDown from '../assets/arrow-down.svg'
+import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 
+import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
-import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import { getExplorerInfo } from 'src/config'
+import TokenSelectField from './TokenSelectField'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -71,9 +72,27 @@ const SendCollectible = ({
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(addressBookSelector)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
-    address: recipientAddress || initialValues.recipientAddress,
-    name: '',
+  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
+    const defaultEntry = { address: '', name: '' }
+
+    // if there's nothing to lookup for, we return the default entry
+    if (!initialValues?.recipientAddress && !recipientAddress) {
+      return defaultEntry
+    }
+
+    // if there's something to lookup for, `initialValues` has precedence over `recipientAddress`
+    const predefinedAddress = initialValues?.recipientAddress ?? recipientAddress
+    const addressBookEntry = addressBook.find(({ address }) => {
+      return sameAddress(predefinedAddress, address)
+    })
+
+    // if found in the Address Book, then we return the entry
+    if (addressBookEntry) {
+      return addressBookEntry
+    }
+
+    // otherwise we return the default entry
+    return defaultEntry
   })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
@@ -123,7 +142,7 @@ const SendCollectible = ({
             const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName ?? '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -151,9 +170,13 @@ const SendCollectible = ({
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry({ address: '', name: 'string' })
+                      if (e.key === 'Tab') {
+                        return
                       }
+                      setSelectedEntry({ address: '', name: '' })
+                    }}
+                    onClick={() => {
+                      setSelectedEntry({ address: '', name: '' })
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -200,7 +223,6 @@ const SendCollectible = ({
                         <AddressBookInput
                           fieldMutator={mutators.setRecipient}
                           pristine={pristine}
-                          recipientAddress={recipientAddress}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
                         />

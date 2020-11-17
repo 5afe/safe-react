@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import {
   getModuleAmount,
+  NOT_AVAILABLE,
   TableData,
   TX_TABLE_RAW_CANCEL_TX_ID,
   TX_TABLE_RAW_TX_ID,
@@ -32,6 +33,7 @@ import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/
 import IncomingTxDescription from './IncomingTxDescription'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import TransferDescription from './TxDescription/TransferDescription'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactElement => {
   const classes = useStyles()
@@ -47,6 +49,8 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
       }
     }
   }, [tx.dataDecoded, tx.to, tx.type])
+
+  const amountWithSymbol = getModuleAmount(tx)
 
   return (
     <Block className={classes.expandedTxBlock}>
@@ -69,7 +73,13 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): React.ReactEle
           </Block>
           <Hairline />
           <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-            {recipient && <TransferDescription amount={getModuleAmount(tx)} recipient={recipient} />}
+            {recipient && (
+              <TransferDescription
+                amountWithSymbol={amountWithSymbol}
+                isTokenTransfer={!sameAddress(amountWithSymbol, NOT_AVAILABLE)}
+                recipient={recipient}
+              />
+            )}
           </Block>
         </Col>
       </Row>

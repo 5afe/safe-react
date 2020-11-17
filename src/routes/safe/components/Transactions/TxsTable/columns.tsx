@@ -5,15 +5,16 @@ import parseISO from 'date-fns/parseISO'
 import { List } from 'immutable'
 import React from 'react'
 
+import TxType from './TxType'
+
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
 import { SafeModuleTransaction, Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-
-import TxType from './TxType'
+import { getNetworkInfo } from 'src/config'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -26,7 +27,7 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
-const NOT_AVAILABLE = 'n/a'
+export const NOT_AVAILABLE = 'n/a'
 
 interface AmountData {
   decimals?: number | string
@@ -102,6 +103,26 @@ export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): st
   }
 
   return NOT_AVAILABLE
+}
+
+export const getRawTxAmount = (tx: Transaction): string => {
+  const { decimals, decodedParams, isTokenTransfer } = tx
+  const { nativeCoin } = getNetworkInfo()
+  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
+  const { value } = tokenDecodedTransfer || tx
+
+  if (tx.isCollectibleTransfer) {
+    return '1'
+  }
+
+  if (!isTokenTransfer && !(Number(value) > 0)) {
+    return NOT_AVAILABLE
+  }
+
+  const tokenDecimals = decimals ?? nativeCoin.decimals
+  const finalValue = new BigNumber(value).times(`1e-${tokenDecimals}`).toFixed()
+
+  return finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
 }
 
 export interface TableData {

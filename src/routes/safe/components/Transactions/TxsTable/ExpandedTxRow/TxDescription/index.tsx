@@ -32,9 +32,9 @@ const UpgradeDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement =
 }
 
 const TransferDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement => {
-  const amount = getTxAmount(tx, false)
-  const { recipient } = getTxData(tx)
-  return <TransferDescription {...{ amount, recipient }} />
+  const amountWithSymbol = getTxAmount(tx, false)
+  const { recipient, isTokenTransfer = false } = getTxData(tx)
+  return <TransferDescription {...{ amountWithSymbol, recipient, isTokenTransfer }} />
 }
 
 const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
