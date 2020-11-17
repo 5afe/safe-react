@@ -52,7 +52,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
     }
   }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen])
 
-  const onFileUploadHandlerClose = (successData, error) => {
+  const onFileUploadHandlerClose = (error, successData) => {
     if (successData) {
       onScan(successData)
     }
@@ -81,8 +81,8 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
         ) : (
           <QrReader
             legacyMode={!useWebcam}
-            onError={(err) => onFileUploadHandlerClose(null, err)}
-            onScan={(data) => onFileUploadHandlerClose(data, null)}
+            onError={(err) => onFileUploadHandlerClose(err, null)}
+            onScan={(data) => onFileUploadHandlerClose(null, data)}
             ref={scannerRef}
             style={{ width: '400px', height: '400px' }}
           />
