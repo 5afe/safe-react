@@ -9,7 +9,7 @@ import Row from 'src/components/layout/Row'
 import { initContracts } from 'src/logic/contracts/safeContracts'
 import Review from 'src/routes/open/components/ReviewInformation'
 import SafeNameField from 'src/routes/open/components/SafeNameForm'
-import SafeOwnersFields from 'src/routes/open/components/SafeOwnersConfirmationsForm'
+import { SafeOwnersPage } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 import {
   FIELD_CONFIRMATIONS,
   FIELD_SAFE_NAME,
@@ -129,7 +129,7 @@ const Layout = (props: LayoutProps): React.ReactElement => {
             testId="create-safe-form"
           >
             <StepperPage component={SafeNameField} />
-            <StepperPage component={SafeOwnersFields} />
+            <StepperPage component={SafeOwnersPage} />
             <StepperPage network={network} userAccount={userAccount} component={Review} />
           </Stepper>
         </Block>

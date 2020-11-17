@@ -2,7 +2,6 @@ import { List } from 'immutable'
 import {
   checkIfEntryWasDeletedFromAddressBook,
   getAddressBookFromStorage,
-  getAddressesListFromAddressBook,
   getNameFromAddressBook,
   getOwnersWithNameFromAddressBook,
   isValidAddressBookName,
@@ -27,24 +26,6 @@ const getMockOldAddressBookEntry = ({ address = '', name = '', isOwner = false }
     isOwner,
   }
 }
-
-describe('getAddressesListFromAdbk', () => {
-  const entry1 = getMockAddressBookEntry('123456', 'test1')
-  const entry2 = getMockAddressBookEntry('78910', 'test2')
-  const entry3 = getMockAddressBookEntry('4781321', 'test3')
-
-  it('It should returns the list of addresses within the addressBook given a safeAddressBook', () => {
-    // given
-    const safeAddressBook = [entry1, entry2, entry3]
-    const expectedResult = [entry1.address, entry2.address, entry3.address]
-
-    // when
-    const result = getAddressesListFromAddressBook(safeAddressBook)
-
-    // then
-    expect(result).toStrictEqual(expectedResult)
-  })
-})
 
 describe('getNameFromSafeAddressBook', () => {
   const entry1 = getMockAddressBookEntry('123456', 'test1')
