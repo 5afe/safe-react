@@ -12,22 +12,24 @@ const AppCard = styled(Card)`
   flex-direction: column;
   justify-content: space-evenly;
   box-shadow: 1px 2px 10px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.18)};
-  height: 232px;
+  height: 232px !important;
   cursor: default !important;
+  box-sizing: border-box;
 
   :hover {
     box-shadow: 1px 2px 16px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.35)};
     transition: box-shadow 0.3s ease-in-out;
+    background-color: ${({ theme }) => theme.colors.background};
     cursor: pointer;
 
-    h4 {
+    h5 {
       color: ${({ theme }) => theme.colors.primary};
     }
   }
 `
 
 const IconImg = styled.img<{ size: 'md' | 'lg'; src: string | undefined; isClickable: boolean }>`
-  width: ${({ size }) => (size === 'md' ? '48px' : '102px')};
+  width: ${({ size }) => (size === 'md' ? '60px' : '102px')};
   height: ${({ size }) => (size === 'md' ? '60px' : '92px')};
   cursor: ${({ isClickable }) => (isClickable ? 'pointer' : 'default')};
   object-fit: contain;
@@ -38,7 +40,7 @@ const AppName = styled(Title)`
 `
 
 const AppDescription = styled(Text)`
-  height: 40px;
+  height: 71px;
   text-align: center;
 `
 
@@ -114,7 +116,7 @@ const Apps = ({
 
       {name && (
         <ConditionalClickableContent isClickable={actionTrigger === TriggerType.Content} onClick={onClick}>
-          <AppName size="sm">{name}</AppName>
+          <AppName size="xs">{name}</AppName>
         </ConditionalClickableContent>
       )}
 
