@@ -236,21 +236,13 @@ const SafeOwnersForm = (props): React.ReactElement => {
   )
 }
 
-const SafeOwnersPage = ({ updateInitialProps }) =>
+export const SafeOwnersPage = () =>
   function OpenSafeOwnersPage(controls, { errors, form, values }) {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
-          <SafeOwnersForm
-            errors={errors}
-            form={form}
-            otherAccounts={getAccountsFrom(values)}
-            updateInitialProps={updateInitialProps}
-            values={values}
-          />
+          <SafeOwnersForm errors={errors} form={form} otherAccounts={getAccountsFrom(values)} values={values} />
         </OpenPaper>
       </>
     )
   }
-
-export default SafeOwnersPage
