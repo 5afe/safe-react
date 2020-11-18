@@ -1,12 +1,13 @@
 // All of the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
 
-const TransportNodeHid = require("@ledgerhq/hw-transport-node-hid").default;
-const log = require('electron-log');
-const isDev = require("electron-is-dev");
-window.TransportNodeHid = TransportNodeHid;
+const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton').default
+const log = require('electron-log')
+const isDev = require('electron-is-dev')
 
-window.isDesktop = true;
+window.TransportNodeHid = TransportNodeHid
+
+window.isDesktop = true
 
 window.addEventListener('DOMContentLoaded', () => {
   const origLog = console.log
