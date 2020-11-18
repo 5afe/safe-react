@@ -36,6 +36,7 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
 export const isTokenTransfer = (tx: TxServiceModel): boolean => {
   return (
     !isEmptyData(tx.data) &&
+    // Check if contains 'transfer' method code
     tx.data?.substring(0, 10) === '0xa9059cbb' &&
     Number(tx.value) === 0 &&
     tx.operation === CALL
