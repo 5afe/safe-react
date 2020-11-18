@@ -1,6 +1,6 @@
-import { uniqueAddress } from 'src/components/forms/validator'
+import { GenericValidatorType, uniqueAddress } from 'src/components/forms/validator'
 
-export const getAddressValidator = (addresses, position) => {
+export const getAddressValidator = (addresses: string[], position: number): GenericValidatorType => {
   // thanks Rich Harris
   // https://twitter.com/Rich_Harris/status/1125850391155965952
   const copy = addresses.slice()
