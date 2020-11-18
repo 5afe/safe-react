@@ -1,6 +1,7 @@
 import { RadioButtons, Text } from '@gnosis.pm/safe-react-components'
 import { BigNumber } from 'bignumber.js'
-import React from 'react'
+import React, { ReactElement, useMemo } from 'react'
+import { useForm } from 'react-final-form'
 import styled from 'styled-components'
 
 import Field from 'src/components/forms/Field'
@@ -18,22 +19,18 @@ const SpendingLimitRadioButtons = styled(RadioButtons)`
 `
 
 interface SpendingLimitRowProps {
-  onOptionSelect: () => void
   tokenSpendingLimit: SpendingLimit
   selectedToken: Token
 }
 
-export const SpendingLimitRow = ({
-  onOptionSelect,
-  tokenSpendingLimit,
-  selectedToken,
-}: SpendingLimitRowProps): React.ReactElement => {
-  const availableAmount = React.useMemo(() => {
+export const SpendingLimitRow = ({ tokenSpendingLimit, selectedToken }: SpendingLimitRowProps): ReactElement => {
+  const availableAmount = useMemo(() => {
     return fromTokenUnit(
       new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
       selectedToken.decimals,
     )
   }, [selectedToken.decimals, tokenSpendingLimit.amount, tokenSpendingLimit.spent])
+  const { mutators } = useForm()
 
   return (
     <Row margin="sm">
@@ -44,7 +41,7 @@ export const SpendingLimitRow = ({
             <SpendingLimitRadioButtons
               name={name}
               value={value || 'multiSig'}
-              onRadioChange={onOptionSelect}
+              onRadioChange={mutators.setTxType}
               options={[
                 { label: 'Multisig Transaction', value: 'multiSig' },
                 {

@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { BigNumber } from 'bignumber.js'
 import React, { ReactElement, useState, useEffect } from 'react'
-import { OnChange } from 'react-final-form-listeners'
 import { useSelector } from 'react-redux'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -75,6 +74,26 @@ type SendFundsProps = {
 
 const { nativeCoin } = getNetworkInfo()
 
+const getTokenByAddress = ({ tokenAddress, tokens }) => {
+  const token = tokens?.find(({ address }) => sameAddress(address, tokenAddress)) ?? {}
+  const balance = token?.balance ?? 0
+  const decimals = token?.decimals ?? 0
+
+  return {
+    ...token,
+    balance,
+    decimals,
+  }
+}
+
+const allowedBySpendingLimit = ({ tokenAddress, tokenSpendingLimit, tokens }) => {
+  const { balance, decimals } = getTokenByAddress({ tokenAddress, tokens })
+  const diff = new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString()
+  const diffInDecimals = fromTokenUnit(diff, decimals)
+
+  return new BigNumber(balance).gt(diffInDecimals) ? diffInDecimals : balance
+}
+
 const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amount }: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
@@ -121,6 +140,31 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
   const currentUser = useSelector(userAccountSelector)
 
+  const sendFundsValidation = (values) => {
+    const { amount, token: tokenAddress, txType } = values ?? {}
+
+    if (!amount || !tokenAddress) {
+      return
+    }
+
+    const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+
+    const amountValidation = composeValidators(
+      required,
+      mustBeFloat,
+      minValue(0, false),
+      maxValue(
+        isSpendingLimit
+          ? allowedBySpendingLimit({ tokenAddress, tokenSpendingLimit, tokens })
+          : getTokenByAddress({ tokenAddress, tokens }).balance,
+      ),
+    )(amount)
+
+    return {
+      amount: amountValidation,
+    }
+  }
+
   return (
     <>
       <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
@@ -137,6 +181,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
         formMutators={formMutators}
         initialValues={{ amount, recipientAddress, token: selectedToken }}
         onSubmit={handleSubmit}
+        validation={sendFundsValidation}
       >
         {(...args) => {
           const formState = args[2]
@@ -145,12 +190,12 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
           const selectedTokenRecord = tokens?.find((token) => token.address === tokenAddress)
           tokenSpendingLimit =
             selectedTokenRecord &&
-            spendingLimits?.find(
-              ({ delegate, token }) =>
-                delegate.toLowerCase() === currentUser.toLowerCase() &&
-                (token === ZERO_ADDRESS ? nativeCoin.address : token.toLowerCase()) ===
-                  selectedTokenRecord.address.toLowerCase(),
-            )
+            spendingLimits
+              ?.filter(({ delegate }) => sameAddress(delegate, currentUser))
+              .find(({ token }) => {
+                const tokenAddress = sameAddress(token, ZERO_ADDRESS) ? nativeCoin.address : token
+                return sameAddress(tokenAddress, selectedTokenRecord.address)
+              })
 
           const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
@@ -232,17 +277,13 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                   <Col>
                     <TokenSelectField
                       initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== nativeCoin.name.toUpperCase()}
+                      isValid={sameAddress(tokenAddress, nativeCoin.name)}
                       tokens={tokens}
                     />
                   </Col>
                 </Row>
                 {tokenSpendingLimit && selectedTokenRecord && (
-                  <SpendingLimitRow
-                    onOptionSelect={mutators.setTxType}
-                    selectedToken={selectedTokenRecord}
-                    tokenSpendingLimit={tokenSpendingLimit}
-                  />
+                  <SpendingLimitRow selectedToken={selectedTokenRecord} tokenSpendingLimit={tokenSpendingLimit} />
                 )}
                 <Row margin="xs">
                   <Col between="lg">
@@ -288,28 +329,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                       text="Amount*"
                       type="text"
                       testId="amount-input"
-                      validate={composeValidators(
-                        required,
-                        mustBeFloat,
-                        minValue(0, false),
-                        maxValue(
-                          tokenSpendingLimit && txType === 'spendingLimit'
-                            ? new BigNumber(selectedTokenRecord?.balance ?? 0).gt(
-                                fromTokenUnit(
-                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord?.decimals ?? 0,
-                                ),
-                              )
-                              ? fromTokenUnit(
-                                  new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
-                                  selectedTokenRecord?.decimals ?? 0,
-                                )
-                              : selectedTokenRecord?.balance ?? 0
-                            : selectedTokenRecord?.balance ?? 0,
-                        ),
-                      )}
                     />
-                    <OnChange name="token">{() => mutators.onTokenChange()}</OnChange>
                   </Col>
                 </Row>
               </Block>
@@ -322,7 +342,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                   className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
-                  disabled={shouldDisableSubmitButton}
+                  disabled={!formState.valid || shouldDisableSubmitButton}
                   minWidth={140}
                   type="submit"
                   variant="contained"
