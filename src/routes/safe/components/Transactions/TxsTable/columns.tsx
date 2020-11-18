@@ -108,8 +108,7 @@ export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): st
 export const getRawTxAmount = (tx: Transaction): string => {
   const { decimals, decodedParams, isTokenTransfer } = tx
   const { nativeCoin } = getNetworkInfo()
-  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
-  const { value } = tokenDecodedTransfer || tx
+  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
 
   if (tx.isCollectibleTransfer) {
     return '1'

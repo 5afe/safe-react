@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { safeOwnersAddressesListSelector } from 'src/routes/safe/container/selector'
 
 import { styles } from './style'
 
@@ -19,6 +18,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { safeOwnersAddressesListSelector } from 'src/routes/safe/container/selector'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
