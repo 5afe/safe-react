@@ -83,7 +83,7 @@ export const createSafe = (values, userAccount) => {
   return promiEvent
 }
 
-export const Open = (): React.ReactElement => {
+const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
@@ -201,3 +201,5 @@ export const Open = (): React.ReactElement => {
     </Page>
   )
 }
+
+export default Open
