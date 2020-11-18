@@ -64,7 +64,6 @@ const AppWrapper = styled.div`
 `
 
 const StyledCard = styled(Card)`
-  /* margin: 20px 0; */
   flex-grow: 1;
 `
 
