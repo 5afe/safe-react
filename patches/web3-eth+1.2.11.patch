@@ -1,0 +1,19 @@
+diff --git a/node_modules/web3-eth/src/getNetworkType.js b/node_modules/web3-eth/src/getNetworkType.js
+index 3be3a20..88edbd9 100644
+--- a/node_modules/web3-eth/src/getNetworkType.js
++++ b/node_modules/web3-eth/src/getNetworkType.js
+@@ -63,6 +63,14 @@ var getNetworkType = function (callback) {
+                 id === 42) {
+                 returnValue = 'kovan';
+             }
++            if (genesis.hash === '0x0b6d3e680af2fc525392c720666cce58e3d8e6fe75ba4b48cb36bcc69039229b' &&
++              id === 246) {
++                returnValue = 'energyWebChain';
++            }
++            if (genesis.hash === '0xebd8b413ca7b7f84a8dd20d17519ce2b01954c74d94a0a739a3e416abe0e43e5' &&
++              id === 73799) {
++                returnValue = 'volta';
++            }
+ 
+             if (_.isFunction(callback)) {
+                 callback(null, returnValue);
