@@ -60,18 +60,8 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
 
 export const getTxAmount = (tx: Transaction, formatted = true): string => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-
-  let value: string | number = 0
-
-  if (isTokenTransfer) {
-    const transferValue = (decodedParams as TokenDecodedParams).transfer?.value
-
-    if (transferValue) {
-      value = transferValue
-    }
-  } else {
-    value = tx.value
-  }
+  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
+  const { value } = tokenDecodedTransfer || tx
 
   if (tx.isCollectibleTransfer) {
     return `1 ${tx.symbol}`
@@ -108,7 +98,8 @@ export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): st
 export const getRawTxAmount = (tx: Transaction): string => {
   const { decimals, decodedParams, isTokenTransfer } = tx
   const { nativeCoin } = getNetworkInfo()
-  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
+  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
+  const { value } = tokenDecodedTransfer || tx
 
   if (tx.isCollectibleTransfer) {
     return '1'
