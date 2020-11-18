@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
 import Opening from 'src/routes/opening'
-import Layout from 'src/routes/open/components/Layout'
+import { Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
@@ -12,6 +12,7 @@ import {
   getAccountsFrom,
   getNamesFrom,
   getOwnersFrom,
+  getSafeCreationSaltFrom,
   getSafeNameFrom,
   getThresholdFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
@@ -58,8 +59,9 @@ export const createSafe = (values, userAccount) => {
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values)
 
-  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations)
+  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
   const promiEvent = deploymentTx.send({ from: userAccount })
 
@@ -81,7 +83,7 @@ export const createSafe = (values, userAccount) => {
   return promiEvent
 }
 
-const Open = (): React.ReactElement => {
+export const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
@@ -199,5 +201,3 @@ const Open = (): React.ReactElement => {
     </Page>
   )
 }
-
-export default Open
