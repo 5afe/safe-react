@@ -74,12 +74,13 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations) => {
+export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number) => {
   const gnosisSafeData = safeMaster.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
 
-  return proxyFactoryMaster.methods.createProxy(safeMaster.options.address, gnosisSafeData)
+  const randomSalt = new Date().getTime()
+  return proxyFactoryMaster.methods.createProxyWithNonce(safeMaster.options.address, gnosisSafeData, randomSalt)
 }
 
 export const estimateGasForDeployingSafe = async (
