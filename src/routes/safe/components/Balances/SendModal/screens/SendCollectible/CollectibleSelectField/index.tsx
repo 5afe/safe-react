@@ -13,7 +13,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
-import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 
 const useSelectedCollectibleStyles = makeStyles(selectedTokenStyles)
 
