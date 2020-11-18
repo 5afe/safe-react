@@ -140,7 +140,7 @@ const Apps = (): React.ReactElement => {
                   reject(err || res?.error)
                 }
 
-                resolve({ success: true, data: res?.result })
+                resolve(res?.result)
               },
             )
           }
@@ -154,7 +154,7 @@ const Apps = (): React.ReactElement => {
 
     communicator?.on('sendTransactions', (msg) => {
       // @ts-expect-error explore ways to fix this
-      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.requestId)
+      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
   }, [communicator, ethBalance, openConfirmationModal, safeAddress, sendMessageToIframe])
 
@@ -166,7 +166,7 @@ const Apps = (): React.ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ success: true, safeTxHash }, confirmTransactionModal.requestId)
+    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId)
   }
 
   const onTxReject = () => {
@@ -177,7 +177,7 @@ const Apps = (): React.ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ success: false, error: 'Transaction was rejected' }, confirmTransactionModal.requestId)
+    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId, true)
   }
 
   const onSelectApp = useCallback(

@@ -1,5 +1,12 @@
 import { MutableRefObject, useEffect, useState } from 'react'
-import { __VERSION__, SDKMessageEvent, MethodToResponse, Methods, ErrorResponse } from '@gnosis.pm/safe-apps-sdk'
+import {
+  getSDKVersion,
+  SDKMessageEvent,
+  MethodToResponse,
+  Methods,
+  ErrorResponse,
+  MessageFormatter,
+} from '@gnosis.pm/safe-apps-sdk'
 import { SafeApp } from './types.d'
 
 type MessageHandler = (
@@ -33,8 +40,12 @@ class AppCommunicator {
     return Boolean(this.handlers.get(msg.data.method))
   }
 
-  send = (response, requestId): void => {
-    this.iframe.contentWindow?.postMessage({ response, requestId, version: __VERSION__ }, this.app.url)
+  send = (data, requestId, error = false): void => {
+    const msg = error
+      ? MessageFormatter.makeErrorResponse(requestId, data)
+      : MessageFormatter.makeResponse(requestId, data, getSDKVersion())
+
+    this.iframe.contentWindow?.postMessage(msg, this.app.url)
   }
 
   handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {
@@ -49,10 +60,10 @@ class AppCommunicator {
 
         // If response is not returned, it means the response will be send somewhere else
         if (typeof response !== 'undefined') {
-          this.send(response, msg.data.requestId)
+          this.send(response, msg.data.id)
         }
       } catch (err) {
-        this.send({ success: false, error: err.message }, msg.data.requestId)
+        this.send(err.message, msg.data.id, true)
       }
     }
   }
