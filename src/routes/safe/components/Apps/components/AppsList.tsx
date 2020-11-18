@@ -48,6 +48,9 @@ const ContentWrapper = styled.div`
   flex-grow: 1;
   align-items: center;
 `
+const Breadcrumb = styled.div`
+  height: 51px;
+`
 
 const AppsList = (): React.ReactElement => {
   const history = useHistory()
@@ -79,7 +82,7 @@ const AppsList = (): React.ReactElement => {
     <Wrapper>
       <Menu>
         {/* TODO: Add navigation breadcrumb. Empty for now to give some top margin */}
-        <div />
+        <Breadcrumb />
       </Menu>
 
       <ContentWrapper>

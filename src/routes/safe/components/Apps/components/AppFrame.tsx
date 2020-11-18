@@ -64,7 +64,7 @@ const AppWrapper = styled.div`
 `
 
 const StyledCard = styled(Card)`
-  margin: 20px 0;
+  /* margin: 20px 0; */
   flex-grow: 1;
 `
 
@@ -73,6 +73,10 @@ const StyledIframe = styled.iframe`
   width: 100%;
   overflow: auto;
   box-sizing: border-box;
+`
+
+const Breadcrumb = styled.div`
+  height: 51px;
 `
 
 type ConfirmTransactionModalState = {
@@ -230,6 +234,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   return (
     <AppWrapper>
       <Menu>
+        <Breadcrumb />
         {isAppDeletable && (
           <ButtonLink color="error" iconType="delete" onClick={openRemoveModal}>
             Remove app
