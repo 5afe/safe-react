@@ -1,4 +1,4 @@
-import { getNonGETHErrorDataResult } from 'src/logic/safe/transactions/gas'
+import { getDataFromNodeErrorMessage } from 'src/logic/safe/transactions/gas'
 
 describe('getOpenEthereumErrorDataResult', () => {
   it(`should return data hash from given OpenEthereum response`, () => {
@@ -14,7 +14,7 @@ describe('getOpenEthereumErrorDataResult', () => {
       '}'
 
     // when
-    const result = getNonGETHErrorDataResult(openEthResponse)
+    const result = getDataFromNodeErrorMessage(openEthResponse)
 
     // then
     expect(result).toBe(resultExpected)
@@ -25,7 +25,7 @@ describe('getOpenEthereumErrorDataResult', () => {
     const openEthResponse = ''
 
     // when
-    const result = getNonGETHErrorDataResult(openEthResponse)
+    const result = getDataFromNodeErrorMessage(openEthResponse)
 
     // then
     expect(result).toBe(resultExpected)
@@ -42,7 +42,7 @@ describe('getOpenEthereumErrorDataResult', () => {
       '}'
 
     // when
-    const result = getNonGETHErrorDataResult(openEthResponse)
+    const result = getDataFromNodeErrorMessage(openEthResponse)
 
     // then
     expect(result).toBe(resultExpected)
@@ -60,7 +60,7 @@ describe('getOpenEthereumErrorDataResult', () => {
       '}'
 
     // when
-    const result = getNonGETHErrorDataResult(openEthResponse)
+    const result = getDataFromNodeErrorMessage(openEthResponse)
 
     // then
     expect(result).toBe(resultExpected)
