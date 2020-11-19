@@ -126,7 +126,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
       return dataResult
     }
   } catch (error) {
-    console.error(`Error trying to extract data as error from error message: ${errorMessage}`)
+    console.error(`Error trying to extract data from node error message: ${errorMessage}`)
   }
 }
 
