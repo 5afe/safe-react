@@ -42,7 +42,6 @@ const mainnet: NetworkConfig = {
     },
   },
   disabledWallets: [
-    WALLETS.LEDGER,
     WALLETS.COINBASE,
     WALLETS.DAPPER,
     WALLETS.FORTMATIC,
