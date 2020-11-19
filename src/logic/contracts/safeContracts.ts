@@ -4,7 +4,6 @@ import memoize from 'lodash.memoize'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import IProxySol from '@gnosis.pm/safe-contracts/build/contracts/IProxy.json'
-import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
