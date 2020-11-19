@@ -41,9 +41,10 @@ class AppCommunicator {
   }
 
   send = (data, requestId, error = false): void => {
+    const sdkVersion = getSDKVersion()
     const msg = error
-      ? MessageFormatter.makeErrorResponse(requestId, data)
-      : MessageFormatter.makeResponse(requestId, data, getSDKVersion())
+      ? MessageFormatter.makeErrorResponse(requestId, data, sdkVersion)
+      : MessageFormatter.makeResponse(requestId, data, sdkVersion)
 
     this.iframe.contentWindow?.postMessage(msg, this.app.url)
   }
@@ -63,6 +64,7 @@ class AppCommunicator {
           this.send(response, msg.data.id)
         }
       } catch (err) {
+        console.log({ err })
         this.send(err.message, msg.data.id, true)
       }
     }
