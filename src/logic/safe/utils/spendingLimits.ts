@@ -13,6 +13,8 @@ import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 
 export const KEYCODES = {
   TAB: 9,
@@ -245,3 +247,61 @@ export const spendingLimitMultiSendTx = ({
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   operation: DELEGATE_CALL,
 })
+
+type SpendingLimitAllowedBalance = GetTokenByAddress & {
+  tokenSpendingLimit: SpendingLimit
+}
+
+/**
+ * Calculates the remaining amount available for a particular SpendingLimit
+ * @param {string} tokenAddress
+ * @param {SpendingLimit} tokenSpendingLimit
+ * @param {List<Token>} tokens
+ * returns string
+ */
+export const spendingLimitAllowedBalance = ({
+  tokenAddress,
+  tokenSpendingLimit,
+  tokens,
+}: SpendingLimitAllowedBalance): string | number => {
+  const token = getBalanceAndDecimalsFromToken({ tokenAddress, tokens })
+
+  if (!token) {
+    return 0
+  }
+
+  const { balance, decimals } = token
+  const diff = new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString()
+  const diffInFPNotation = fromTokenUnit(diff, decimals)
+
+  return new BigNumber(balance).gt(diffInFPNotation) ? diffInFPNotation : balance
+}
+
+type GetSpendingLimitByTokenAddress = {
+  spendingLimits?: SpendingLimit[] | null
+  tokenAddress?: string
+}
+
+/**
+ * Returns the SpendingLimit info for the specified tokenAddress
+ * @param {SpendingLimit[] | undefined | null} spendingLimits
+ * @param {string | undefined} tokenAddress
+ * @returns SpendingLimit | undefined
+ */
+export const getSpendingLimitByTokenAddress = ({
+  spendingLimits,
+  tokenAddress,
+}: GetSpendingLimitByTokenAddress): SpendingLimit | undefined => {
+  if (!tokenAddress || !spendingLimits) {
+    return
+  }
+
+  const { nativeCoin } = getNetworkInfo()
+
+  return spendingLimits.find(({ token: spendingLimitTokenAddress }) => {
+    spendingLimitTokenAddress = sameAddress(spendingLimitTokenAddress, ZERO_ADDRESS)
+      ? nativeCoin.address
+      : spendingLimitTokenAddress
+    return sameAddress(spendingLimitTokenAddress, tokenAddress)
+  })
+}

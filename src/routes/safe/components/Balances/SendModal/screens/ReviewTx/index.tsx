@@ -1,7 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { BigNumber } from 'bignumber.js'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -16,16 +15,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
 
 import ArrowDown from '../assets/arrow-down.svg'
@@ -42,6 +44,8 @@ export type ReviewTxProp = {
   amount: string
   txRecipient: string
   token: string
+  txType?: string
+  tokenSpendingLimit?: SpendingLimit
 }
 
 type ReviewTxProps = {
@@ -75,8 +79,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
       if (!isSendingETH) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
-        const decimals = await tokenInstance.decimals()
-        const txAmount = new BigNumber(tx.amount).times(10 ** decimals.toNumber()).toString()
+        const txAmount = toTokenUnit(tx.amount, txToken.decimals)
 
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
@@ -99,12 +102,34 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
+    const isSpendingLimit = tx.txType === 'spendingLimit'
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
     const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
-    if (safeAddress) {
+    if (!safeAddress) {
+      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+      return
+    }
+
+    if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
+      const spendingLimit = getSpendingLimitContract()
+      spendingLimit.methods
+        .executeAllowanceTransfer(
+          safeAddress,
+          sameAddress(txToken.address, nativeCoin.address) ? ZERO_ADDRESS : txToken.address,
+          tx.recipientAddress,
+          toTokenUnit(tx.amount, txToken.decimals),
+          ZERO_ADDRESS,
+          0,
+          tx.tokenSpendingLimit.delegate,
+          EMPTY_DATA,
+        )
+        .send({ from: tx.tokenSpendingLimit.delegate })
+        .on('transactionHash', () => onClose())
+        .catch(console.error)
+    } else {
       dispatch(
         createTransaction({
           safeAddress: safeAddress,
@@ -114,10 +139,8 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
-    } else {
-      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+      onClose()
     }
-    onClose()
   }
 
   return (
