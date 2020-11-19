@@ -4,6 +4,7 @@ import memoize from 'lodash.memoize'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import IProxySol from '@gnosis.pm/safe-contracts/build/contracts/IProxy.json'
+import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
@@ -21,8 +22,6 @@ export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3
 export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
 export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A'
 
-const web3 = getWeb3()
-
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
 
@@ -31,7 +30,7 @@ let safeMaster: GnosisSafe
  * @param {Web3} web3
  * @param {ETHEREUM_NETWORK} networkId
  */
-export const getGnosisSafeContract = memoize((networkId: ETHEREUM_NETWORK) => {
+export const getGnosisSafeContract = memoize((web3: Web3, networkId: ETHEREUM_NETWORK) => {
   const networks = GnosisSafeSol.networks
   // TODO: this may not be the most scalable approach,
   //  but up until v1.2.0 the address is the same for all the networks.
@@ -46,7 +45,7 @@ export const getGnosisSafeContract = memoize((networkId: ETHEREUM_NETWORK) => {
  * @param {ETHEREUM_NETWORK} networkId
  */
 const getProxyFactoryContract = memoize(
-  (networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
+  (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
     const networks = ProxyFactorySol.networks
     // TODO: this may not be the most scalable approach,
     //  but up until v1.2.0 the address is the same for all the networks.
@@ -60,18 +59,20 @@ const getProxyFactoryContract = memoize(
 )
 
 const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string> => {
+  const web3 = getWeb3()
   const proxyInstance = (new web3.eth.Contract(IProxySol.abi as AbiItem[], proxyAddress) as unknown) as IProxy
-  return await proxyInstance.methods.masterCopy().call()
+  return proxyInstance.methods.masterCopy().call()
 }
 
 export const instantiateSafeContracts = async () => {
+  const web3 = getWeb3()
   const networkId = await getNetworkIdFrom(web3)
 
   // Create ProxyFactory Master Copy
-  proxyFactoryMaster = getProxyFactoryContract(networkId)
+  proxyFactoryMaster = getProxyFactoryContract(web3, networkId)
 
   // Create Safe Master copy
-  safeMaster = getGnosisSafeContract(networkId)
+  safeMaster = getGnosisSafeContract(web3, networkId)
 }
 
 export const getSafeMasterContract = async () => {
@@ -127,6 +128,7 @@ export const estimateGasForDeployingSafe = async (
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
+  const web3 = getWeb3()
   return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
 }
 
