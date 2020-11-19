@@ -1509,9 +1509,9 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-0.4.2.tgz#ae87b2164931c006cb0efdede3d82ff210df1648"
   integrity sha512-BwA2dyCebPMdi4JhhTkp6EjkhEM6vAIviKdhqHiHnSmL+sDfxtP1jdOuE8ME2/4+5TiLSS8k8qscYjLSlf1LLw==
 
-"@gnosis.pm/safe-apps-sdk@https://github.com/gnosis/safe-apps-sdk.git#3e32a4d":
+"@gnosis.pm/safe-apps-sdk@https://github.com/gnosis/safe-apps-sdk.git#8cf9681":
   version "1.0.0"
-  resolved "https://github.com/gnosis/safe-apps-sdk.git#3e32a4df84acf64f5718f21f10c6efccabe0536f"
+  resolved "https://github.com/gnosis/safe-apps-sdk.git#8cf9681f9edbcda0c081d613cbda69203838953c"
   dependencies:
     semver "^7.3.2"
     web3-core "^1.3.0"
