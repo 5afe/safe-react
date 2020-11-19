@@ -9,7 +9,7 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { initContracts } from 'src/logic/contracts/safeContracts'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { background, connected } from 'src/theme/variables'
@@ -152,7 +152,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
   useEffect(() => {
     const loadContracts = async () => {
-      await initContracts()
+      await instantiateSafeContracts()
       setLoading(false)
     }
 
