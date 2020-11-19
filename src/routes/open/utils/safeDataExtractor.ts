@@ -28,3 +28,5 @@ export const getOwnersFrom = (names, addresses): List<SafeOwner> => {
 export const getThresholdFrom = (values) => Number(values.confirmations)
 
 export const getSafeNameFrom = (values) => values.name
+
+export const getSafeCreationSaltFrom = (values) => values.safeCreationSalt

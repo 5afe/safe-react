@@ -74,24 +74,25 @@ export const getSafeMasterContract = async () => {
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts, numConfirmations) => {
+export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number, safeCreationSalt: number) => {
   const gnosisSafeData = safeMaster.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
 
-  return proxyFactoryMaster.methods.createProxy(safeMaster.options.address, gnosisSafeData)
+  return proxyFactoryMaster.methods.createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
 }
 
 export const estimateGasForDeployingSafe = async (
-  safeAccounts,
-  numConfirmations,
-  userAccount,
+  safeAccounts: string[],
+  numConfirmations: number,
+  userAccount: string,
+  safeCreationSalt: number
 ) => {
   const gnosisSafeData = await safeMaster.methods
     .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.methods
-    .createProxy(safeMaster.options.address, gnosisSafeData)
+    .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
     .encodeABI()
   const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.options.address)
   const gasPrice = await calculateGasPrice()

@@ -9,6 +9,7 @@ import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { CALL } from 'src/logic/safe/transactions'
 
 export const getEthAsToken = (balance: string | number): Token => {
   const { nativeCoin } = getNetworkInfo()
@@ -33,7 +34,13 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
 }
 
 export const isTokenTransfer = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
+  return (
+    !isEmptyData(tx.data) &&
+    // Check if contains 'transfer' method code
+    tx.data?.substring(0, 10) === '0xa9059cbb' &&
+    Number(tx.value) === 0 &&
+    tx.operation === CALL
+  )
 }
 
 export const getERC20DecimalsAndSymbol = async (
