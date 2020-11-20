@@ -34,7 +34,6 @@ const BodyWrapper = styled.div`
 const SidebarWrapper = styled.aside`
   height: 100%;
   width: 200px;
-  overflow-y: auto;
   display: flex;
   flex-direction: column;
   z-index: 1;
