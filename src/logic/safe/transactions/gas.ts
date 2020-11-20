@@ -141,9 +141,9 @@ const getGasEstimationTxResponse = async (txConfig: {
   try {
     const result = await web3.eth.call(txConfig)
 
-    // GETH Nodes (old version)
+    // GETH Nodes (geth version < v1.9.24)
     // In case that the gas is not enough we will receive an EMPTY data
-    // Otherwise we will receive the gas amount as hash data -> this is valid for old versions of GETH nodes
+    // Otherwise we will receive the gas amount as hash data -> this is valid for old versions of GETH nodes ( < v1.9.24)
 
     if (!sameString(result, EMPTY_DATA)) {
       return new BigNumber(result.substring(138), 16).toNumber()
@@ -159,7 +159,7 @@ const getGasEstimationTxResponse = async (txConfig: {
     return new BigNumber(estimationData.substring(138), 16).toNumber()
   }
 
-  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation (for old version geth nodes)
+  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation (for version < v1.9.24 of geth nodes)
   // We cannot throw this error above because it will be captured again on the catch block bellow
   throw new Error('Error while estimating the gas required for tx')
 }
