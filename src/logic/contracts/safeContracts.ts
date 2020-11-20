@@ -3,7 +3,6 @@ import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.
 import memoize from 'lodash.memoize'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
-import IProxySol from '@gnosis.pm/safe-contracts/build/contracts/IProxy.json'
 import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
@@ -13,8 +12,8 @@ import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransact
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
-import { IProxy } from 'src/types/contracts/IProxy'
 import { fetchMasterCopies } from './api/masterCopies'
+import { getSafeInfo, SafeInfo } from '../safe/utils/safeInformation'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
@@ -58,10 +57,14 @@ const getProxyFactoryContract = memoize(
   },
 )
 
-export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string> => {
-  const web3 = getWeb3()
-  const proxyInstance = (new web3.eth.Contract(IProxySol.abi as AbiItem[], proxyAddress) as unknown) as IProxy
-  return proxyInstance.methods.masterCopy().call()
+export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
+  const res = await getSafeInfo(proxyAddress)
+  const masterCopyAddress = (res as SafeInfo)?.masterCopy
+  if (!masterCopyAddress) {
+    console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
+    return
+  }
+  return masterCopyAddress
 }
 
 export const instantiateSafeContracts = async () => {
@@ -149,6 +152,7 @@ export const validateProxy = async (safeAddress: string): Promise<boolean> => {
   const code = await web3.eth.getCode(safeAddress)
   const codeWithoutMetadata = cleanByteCodeMetadata(code)
   const supportedProxies = [SafeProxy]
+
   for (let i = 0; i < supportedProxies.length; i += 1) {
     const proxy = supportedProxies[i]
     const proxyCode = proxy.deployedBytecode
