@@ -14,25 +14,33 @@ import { AbiItem } from 'web3-utils'
  */
 type MethodsArgsType = Array<string | number>
 
- interface Props {
+interface Props {
   abi: AbiItem[]
   address: string
   batch?: BatchRequest
   context?: unknown
-  methods: Array<string | {method: string, type?: string, args: MethodsArgsType }>
- }
+  methods: Array<string | { method: string; type?: string; args: MethodsArgsType }>
+}
 
-const generateBatchRequests = <ReturnValues>({ abi, address, batch, context, methods }: Props): Promise<ReturnValues> => {
+const generateBatchRequests = <ReturnValues>({
+  abi,
+  address,
+  batch,
+  context,
+  methods,
+}: Props): Promise<ReturnValues> => {
   const contractInstance = new web3.eth.Contract(abi, address)
   const localBatch = new web3.BatchRequest()
 
   const values = methods.map((methodObject) => {
-    let method, type, args: MethodsArgsType = []
+    let method,
+      type,
+      args: MethodsArgsType = []
 
     if (typeof methodObject === 'string') {
       method = methodObject
     } else {
-      ({ method, type, args } = methodObject)
+      ;({ method, type, args } = methodObject)
     }
 
     return new Promise((resolve) => {

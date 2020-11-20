@@ -46,9 +46,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       const decodedParameters = web3.eth.abi.decodeParameters(['uint'], params)
       return {
         method: METHOD_TO_ID[methodId],
-        parameters: [
-          { name: '_threshold', type: 'uint', value: decodedParameters[0] },
-        ],
+        parameters: [{ name: '_threshold', type: 'uint', value: decodedParameters[0] }],
       }
     }
 
@@ -57,9 +55,7 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
       const decodedParameters = web3.eth.abi.decodeParameters(['address'], params)
       return {
         method: METHOD_TO_ID[methodId],
-        parameters: [
-          { name: 'module', type: 'address', value: decodedParameters[0] },
-        ],
+        parameters: [{ name: 'module', type: 'address', value: decodedParameters[0] }],
       }
     }
 
@@ -85,7 +81,7 @@ const isSafeMethod = (methodId: string): boolean => {
 }
 
 export const decodeMethods = (data: string): DataDecoded | null => {
-  if(!data.length) {
+  if (!data.length) {
     return null
   }
 
