@@ -66,6 +66,8 @@ const configuration = (): NetworkSpecificConfiguration => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
+export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
+
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
 export const getRelayUrl = (): string | undefined => getConfig().relayApiUrl
@@ -85,6 +87,10 @@ export const getRpcServiceUrl = (): string => {
 
   return getConfig().rpcServiceUrl
 }
+
+export const getSafeClientGatewayBaseUrl = (safeAddress: string) => `${getClientGatewayUrl()}/safes/${safeAddress}`
+
+export const getTxDetailsUrl = (clientGatewayTxId: string) => `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
