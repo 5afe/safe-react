@@ -14,7 +14,7 @@ import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
 import { IProxy } from 'src/types/contracts/IProxy'
-import { getValidMasterCopies } from './api/fetchValidMasterCopies'
+import { fetchMasterCopies } from './api/masterCopies'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
@@ -58,7 +58,7 @@ const getProxyFactoryContract = memoize(
   },
 )
 
-const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string> => {
+export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string> => {
   const web3 = getWeb3()
   const proxyInstance = (new web3.eth.Contract(IProxySol.abi as AbiItem[], proxyAddress) as unknown) as IProxy
   return proxyInstance.methods.masterCopy().call()
@@ -134,7 +134,7 @@ export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
 
 export const isMasterCopyValid = async (safeAddress: string): Promise<boolean> => {
   const masterCopyAddress = await getMasterCopyAddressFromProxyAddress(safeAddress)
-  const res = await getValidMasterCopies()
+  const res = await fetchMasterCopies()
   return !res ? false : res.some((mc) => mc.address === masterCopyAddress)
 }
 
