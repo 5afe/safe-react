@@ -16,7 +16,7 @@ const styles = () => ({
     position: 'absolute',
     top: '120px',
     width: '500px',
-    height: '530px',
+    height: '540px',
     borderRadius: sm,
     backgroundColor: '#ffffff',
     boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
