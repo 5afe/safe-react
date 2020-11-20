@@ -2,18 +2,15 @@ import { AbiItem } from 'web3-utils'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import memoize from 'lodash.memoize'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
-import { fetchMasterCopies } from './api/masterCopies'
-import { getSafeInfo, SafeInfo } from '../safe/utils/safeInformation'
+import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
@@ -133,34 +130,4 @@ export const estimateGasForDeployingSafe = async (
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
   return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
-}
-
-export const isMasterCopyValid = async (safeAddress: string): Promise<boolean> => {
-  const masterCopyAddress = await getMasterCopyAddressFromProxyAddress(safeAddress)
-  const res = await fetchMasterCopies()
-  return !res ? false : res.some((mc) => mc.address === masterCopyAddress)
-}
-
-const cleanByteCodeMetadata = (bytecode: string): string => {
-  const metaData = 'a165'
-  return bytecode.substring(0, bytecode.lastIndexOf(metaData))
-}
-
-export const validateProxy = async (safeAddress: string): Promise<boolean> => {
-  // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
-  const web3 = getWeb3()
-  const code = await web3.eth.getCode(safeAddress)
-  const codeWithoutMetadata = cleanByteCodeMetadata(code)
-  const supportedProxies = [SafeProxy]
-
-  for (let i = 0; i < supportedProxies.length; i += 1) {
-    const proxy = supportedProxies[i]
-    const proxyCode = proxy.deployedBytecode
-    const proxyCodeWithoutMetadata = cleanByteCodeMetadata(proxyCode)
-    if (codeWithoutMetadata === proxyCodeWithoutMetadata) {
-      return true
-    }
-  }
-
-  return isProxyCode(codeWithoutMetadata)
 }
