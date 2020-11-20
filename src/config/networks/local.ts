@@ -2,6 +2,7 @@ import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
+  clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
   relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'http://localhost:3002',
