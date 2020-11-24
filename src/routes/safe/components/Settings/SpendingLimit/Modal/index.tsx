@@ -85,7 +85,7 @@ export interface ModalProps {
 }
 
 // TODO: this is a potential proposal for `safe-react-components` Modal
-//  By being able to combine components for better flexibility, this way Buttons ban be part of the form body
+//  By being able to combine components for better flexibility, this way Buttons can be part of the form body
 const Modal = ({ children, ...props }: ModalProps): ReactElement => {
   const classes = useStyles()
 
