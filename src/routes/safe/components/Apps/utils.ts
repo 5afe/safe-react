@@ -25,7 +25,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
   // Aave
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmY1MUZo44UkT8EokYHs7xDvWEziYSn7n3c4ojVB6qo3SM`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX1NUtvm9WjbvT79sTdeg3sw1NxZAM273y44nBy5d2jZb`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -53,11 +53,11 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`,
     disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+    networks: [ETHEREUM_NETWORK.MAINNET],
   },
   // Sablier
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVmBWNY6fPrt6SwYynJoCrU7ZWydo3Zr9rDNQR5bcKsFb`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfLqzEHz5TEupRLPuFp7prtcVAm6hKii5YZsVZWeM17Lr`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
@@ -74,8 +74,8 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
     networks: [
       ETHEREUM_NETWORK.MAINNET,
       ETHEREUM_NETWORK.RINKEBY,
-      ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
-      ETHEREUM_NETWORK.VOLTA,
+      //ETHEREUM_NETWORK.ENERGY_WEB_CHAIN,
+      //ETHEREUM_NETWORK.VOLTA,
       // ETHEREUM_NETWORK.XDAI,
     ],
   },
@@ -93,7 +93,7 @@ export const staticAppsList: Array<{ url: string; disabled: boolean; networks: n
   },
   // Wallet-Connect
   {
-    url: `${gnosisAppsUrl}/walletConnect`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVWjxqMYuqZ4WvxKdrErcTt1Sx5JHxZosjYz9zHiHRAiq`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,

@@ -5,9 +5,8 @@ import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -21,6 +20,10 @@ import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { List } from 'immutable'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -31,6 +34,9 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
+  const addressBook = useSelector(addressBookSelector)
+  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+
   useEffect(() => {
     let isCurrent = true
 
@@ -101,7 +107,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
               </Paragraph>
             </Row>
             <Hairline />
-            {owners?.map(
+            {ownersWithAddressBookName?.map(
               (owner) =>
                 owner.address !== ownerAddress && (
                   <React.Fragment key={owner.address}>
@@ -119,7 +125,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                               {owner.address}
                             </Paragraph>
                             <CopyBtn content={owner.address} />
-                            <EtherscanBtn value={owner.address} />
+                            <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
                           </Block>
                         </Block>
                       </Col>
@@ -148,7 +154,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                       {ownerAddress}
                     </Paragraph>
                     <CopyBtn content={ownerAddress} />
-                    <EtherscanBtn value={ownerAddress} />
+                    <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                   </Block>
                 </Block>
               </Col>

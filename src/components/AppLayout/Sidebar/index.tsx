@@ -16,7 +16,7 @@ const HelpContainer = styled.div`
 const HelpCenterLink = styled.a`
   height: 30px;
   width: 166px;
-  padding: 6px 0 0 16px;
+  padding: 8px 0 8px 16px;
   margin: 14px 0px;
   text-decoration: none;
   display: block;

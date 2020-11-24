@@ -5,9 +5,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -21,17 +20,17 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { getERC721TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
+import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -67,14 +66,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
     const estimateGas = async () => {
       try {
-        const methodToCall = `0x${SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH}`
-        const transferParams = [tx.recipientAddress, tx.nftTokenId]
-        const params = [safeAddress, ...transferParams]
-        const ERC721Token = await getERC721TokenContract()
-        const tokenInstance = await ERC721Token.at(tx.assetAddress)
-        const txData = tokenInstance.contract.methods[methodToCall](...params).encodeABI()
-
-        const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.recipientAddress, txData)
+        const txData = await generateERC721TransferTxData(tx, safeAddress)
+        const estimatedGasCosts = await estimateTxGasCosts(safeAddress ?? '', tx.recipientAddress, txData)
         const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const formattedGasCosts = formatAmount(gasCosts)
 
@@ -92,7 +85,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, tx.assetAddress, tx.nftTokenId, tx.recipientAddress])
+  }, [safeAddress, tx])
 
   const submitTx = async () => {
     try {
@@ -153,7 +146,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
                 {tx.recipientAddress}
               </Paragraph>
               <CopyBtn content={tx.recipientAddress} />
-              <EtherscanBtn value={tx.recipientAddress} />
+              <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
             </Block>
           </Col>
         </Row>

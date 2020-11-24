@@ -1,12 +1,7 @@
-import { List, Map } from 'immutable'
+import { List } from 'immutable'
 import { getNetworkInfo } from 'src/config'
-import { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import {
-  getERC20DecimalsAndSymbol,
-  getERC721Symbol,
-  isSendERC20Transaction,
-  isSendERC721Transaction,
-} from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC20DecimalsAndSymbol, isSendERC20Transaction } from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC721Symbol, isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
@@ -21,18 +16,18 @@ import {
   TxArgs,
   RefundParams,
 } from 'src/logic/safe/store/models/types/transaction'
-import { CANCELLATION_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/cancellationTransactions'
-import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState, store } from 'src/store'
-import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeSelector,
+  safeTransactionsSelector,
+  safeCancellationTransactionsSelector,
+} from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   BatchProcessTxsProps,
   TxServiceModel,
 } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { TypedDataUtils } from 'eth-sig-util'
-import { Token } from 'src/logic/tokens/store/model/token'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DataDecoded, DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
@@ -82,16 +77,11 @@ export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress?: string):
   return !sameAddress(tx.to, safeAddress) && !isEmptyData(tx.data)
 }
 
-export const isCustomTransaction = async (
-  tx: TxServiceModel,
-  txCode?: string,
-  safeAddress?: string,
-  knownTokens?: TokenState,
-): Promise<boolean> => {
+export const isCustomTransaction = async (tx: TxServiceModel, safeAddress?: string): Promise<boolean> => {
   const isOutgoing = isOutgoingTransaction(tx, safeAddress)
-  const isErc20 = await isSendERC20Transaction(tx, txCode, knownTokens)
+  const isErc20 = await isSendERC20Transaction(tx)
   const isUpgrade = isUpgradeTransaction(tx)
-  const isErc721 = isSendERC721Transaction(tx, txCode, knownTokens)
+  const isErc721 = isSendERC721Transaction(tx)
 
   return isOutgoing && !isErc20 && !isUpgrade && !isErc721
 }
@@ -231,27 +221,24 @@ export const calculateTransactionType = (tx: Transaction): TransactionTypeValues
 
 export type BuildTx = BatchProcessTxsProps & {
   tx: TxServiceModel
-  txCode?: string
 }
 
 export const buildTx = async ({
   cancellationTxs,
   currentUser,
-  knownTokens,
   outgoingTxs,
   safe,
   tx,
-  txCode,
 }: BuildTx): Promise<Transaction> => {
   const safeAddress = safe.address
   const { nativeCoin } = getNetworkInfo()
   const isModifySettingsTx = isModifySettingsTransaction(tx, safeAddress)
   const isTxCancelled = isTransactionCancelled(tx, outgoingTxs, cancellationTxs)
-  const isSendERC721Tx = isSendERC721Transaction(tx, txCode, knownTokens)
-  const isSendERC20Tx = await isSendERC20Transaction(tx, txCode, knownTokens)
+  const isSendERC721Tx = isSendERC721Transaction(tx)
+  const isSendERC20Tx = await isSendERC20Transaction(tx)
   const isMultiSendTx = isMultiSendTransaction(tx)
   const isUpgradeTx = isUpgradeTransaction(tx)
-  const isCustomTx = await isCustomTransaction(tx, txCode, safeAddress, knownTokens)
+  const isCustomTx = await isCustomTransaction(tx, safeAddress)
   const isCancellationTx = isCancelTransaction(tx, safeAddress)
   const refundParams = await getRefundParams(tx, getERC20DecimalsAndSymbol)
   const decodedParams = getDecodedParams(tx)
@@ -322,19 +309,20 @@ export type TxToMock = TxArgs & {
 }
 
 export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
-  const knownTokens: Map<string, Token> = state[TOKEN_REDUCER_ID]
-  const safe: SafeRecord = state[SAFE_REDUCER_ID].getIn(['safes', safeAddress])
-  const cancellationTxs = state[CANCELLATION_TRANSACTIONS_REDUCER_ID].get(safeAddress) || Map()
-  const outgoingTxs = state[TRANSACTIONS_REDUCER_ID].get(safeAddress) || List()
+  const safe = safeSelector(state)
+  const cancellationTxs = safeCancellationTransactionsSelector(state)
+  const outgoingTxs = safeTransactionsSelector(state)
+
+  if (!safe) {
+    throw new Error('Failed to recover Safe from the store')
+  }
 
   return buildTx({
     cancellationTxs,
     currentUser: undefined,
-    knownTokens,
     outgoingTxs,
     safe,
     tx: (tx as unknown) as TxServiceModel,
-    txCode: EMPTY_DATA,
   })
 }
 

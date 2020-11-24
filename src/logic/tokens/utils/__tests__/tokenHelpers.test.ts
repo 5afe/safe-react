@@ -1,5 +1,6 @@
 import { makeToken } from 'src/logic/tokens/store/model/token'
-import { getERC20DecimalsAndSymbol, isERC721Contract, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC20DecimalsAndSymbol, isTokenTransfer } from 'src/logic/tokens/utils/tokenHelpers'
+import { isERC721Contract } from 'src/logic/collectibles/utils'
 import { getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
@@ -196,6 +197,34 @@ describe('isERC721Contract', () => {
 
     const expectedResult = '300000000000000000'
     const VALUE = 0.3
+
+    // when
+    const txValue = toTokenUnit(VALUE, decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
+  })
+
+  it('It should return the right conversion from token to unit with exceeding decimals', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '333333333333333398'
+    const VALUE = '0.33333333333333339878798333'
+
+    // when
+    const txValue = toTokenUnit(VALUE, decimals)
+
+    // then
+    expect(txValue).toEqual(expectedResult)
+  })
+
+  it('It should return the right conversion from token to unit with exact decimals', () => {
+    // given
+    const decimals = Number(18)
+
+    const expectedResult = '333333333333333399'
+    const VALUE = '0.333333333333333399'
 
     // when
     const txValue = toTokenUnit(VALUE, decimals)

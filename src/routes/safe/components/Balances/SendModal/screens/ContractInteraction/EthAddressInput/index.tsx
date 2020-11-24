@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useFormState, useField } from 'react-final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import {
@@ -27,7 +27,7 @@ export interface EthAddressInputProps {
   text: string
 }
 
-const EthAddressInput = ({
+export const EthAddressInput = ({
   isContract = true,
   isRequired = true,
   name,
@@ -57,6 +57,7 @@ const EthAddressInput = ({
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
+    setSelectedEntry({ address: scannedAddress })
     onScannedValue(scannedAddress)
     closeQrModal()
   }
@@ -82,11 +83,10 @@ const EthAddressInput = ({
               validate={validate}
             />
           ) : (
-            <AddressBookInput
+            <ContractsAddressBookInput
               setSelectedEntry={setSelectedEntry}
               setIsValidAddress={() => {}}
               fieldMutator={onScannedValue}
-              isCustomTx
               pristine={pristine}
             />
           )}
@@ -98,5 +98,3 @@ const EthAddressInput = ({
     </>
   )
 }
-
-export default EthAddressInput

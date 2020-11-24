@@ -1,5 +1,5 @@
-import { EnvironmentSettings, ETHEREUM_NETWORK, WALLETS, NetworkConfig } from 'src/config/networks/network.d'
 import xDaiLogo from 'src/config/assets/token_xdai.svg'
+import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
@@ -36,10 +36,25 @@ const xDai: NetworkConfig = {
       logoUri: xDaiLogo,
     },
   },
-  disabledWallets:[
+  disabledWallets: [
     WALLETS.TREZOR,
-    WALLETS.LEDGER
-  ]
+    WALLETS.LEDGER,
+    WALLETS.COINBASE,
+    WALLETS.DAPPER,
+    WALLETS.FORTMATIC,
+    WALLETS.OPERA,
+    WALLETS.OPERA_TOUCH,
+    WALLETS.TORUS,
+    WALLETS.TRUST,
+    WALLETS.UNILOGIN,
+    WALLETS.WALLET_CONNECT,
+    WALLETS.WALLET_LINK,
+    WALLETS.AUTHEREUM,
+    WALLETS.LATTICE,
+  ],
+  disabledFeatures: [
+    FEATURES.ENS_LOOKUP,
+  ],
 }
 
 export default xDai

@@ -8,7 +8,6 @@ import Close from '@material-ui/icons/Close'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextareaField from 'src/components/forms/TextareaField'
@@ -23,16 +22,17 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sm } from 'src/theme/variables'
 
 import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export interface CreatedTx {
   contractAddress: string
@@ -147,9 +147,13 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                      if (e.key === 'Tab') {
+                        return
                       }
+                      setSelectedEntry(null)
+                    }}
+                    onClick={() => {
+                      setSelectedEntry(null)
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -184,7 +188,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
@@ -193,9 +197,8 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   <>
                     <Row margin="md">
                       <Col xs={11}>
-                        <AddressBookInput
+                        <ContractsAddressBookInput
                           fieldMutator={mutators.setRecipient}
-                          isCustomTx
                           pristine={pristine}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}

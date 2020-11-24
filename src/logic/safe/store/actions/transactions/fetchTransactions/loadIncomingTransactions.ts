@@ -10,6 +10,7 @@ import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { makeIncomingTransaction } from 'src/logic/safe/store/models/incomingTransaction'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions/fetchTransactions'
 import { TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { isENSContract } from 'src/logic/collectibles/utils'
 
 export type IncomingTxServiceModel = {
   blockNumber: number
@@ -76,12 +77,18 @@ const batchIncomingTxsTokenDataRequest = (txs: IncomingTxServiceModel[]) => {
   batch.execute()
 
   return Promise.all(whenTxsValues).then((txsValues) =>
-    txsValues.map(([tx, symbol, decimals, ethTx, ethTxReceipt]) => [
-      tx,
-      symbol ? symbol : nativeCoin.symbol,
-      decimals ? decimals : nativeCoin.decimals,
-      new bn(ethTx?.gasPrice ?? 0).times(ethTxReceipt?.gasUsed ?? 0),
-    ]),
+    txsValues.map(([tx, symbolFetched, decimals, ethTx, ethTxReceipt]) => {
+      let symbol = symbolFetched
+      if (!symbolFetched) {
+        symbol = isENSContract(tx.tokenAddress) ? 'ENS' : nativeCoin.symbol
+      }
+      return [
+        tx,
+        symbol,
+        decimals ? decimals : nativeCoin.decimals,
+        new bn(ethTx?.gasPrice ?? 0).times(ethTxReceipt?.gasUsed ?? 0),
+      ]
+    }),
   )
 }
 

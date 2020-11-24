@@ -1,13 +1,11 @@
 import { WalletInitOptions } from 'bnc-onboard/dist/src/interfaces'
 
 import { getNetworkId, getRpcServiceUrl, getNetworkConfigDisabledWallets } from 'src/config'
-import { ETHEREUM_NETWORK, WALLETS } from 'src/config/networks/network.d'
+import { WALLETS } from 'src/config/networks/network.d'
 import { FORTMATIC_KEY, PORTIS_ID } from 'src/utils/constants'
 
 const networkId = getNetworkId()
 const disabledWallets = getNetworkConfigDisabledWallets()
-const PORTIS_DAPP_ID = PORTIS_ID[networkId] ?? PORTIS_ID[ETHEREUM_NETWORK.RINKEBY]
-const FORTMATIC_API_KEY = FORTMATIC_KEY[networkId] ?? FORTMATIC_KEY[ETHEREUM_NETWORK.RINKEBY]
 
 type Wallet = WalletInitOptions & {
   desktop: boolean
@@ -43,13 +41,19 @@ const wallets: Wallet[] = [
   { walletName: WALLETS.TRUST, preferred: true, desktop: false },
   { walletName: WALLETS.DAPPER, desktop: false },
   {
+    walletName: WALLETS.LATTICE,
+    rpcUrl,
+    appName: 'Gnosis Safe',
+    desktop: false,
+  },
+  {
     walletName: WALLETS.FORTMATIC,
-    apiKey: FORTMATIC_API_KEY,
+    apiKey: FORTMATIC_KEY,
     desktop: true,
   },
   {
     walletName: WALLETS.PORTIS,
-    apiKey: PORTIS_DAPP_ID,
+    apiKey: PORTIS_ID,
     desktop: true,
   },
   { walletName: WALLETS.AUTHEREUM, desktop: false },

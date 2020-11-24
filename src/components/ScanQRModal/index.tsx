@@ -1,6 +1,6 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import * as React from 'react'
 import QrReader from 'react-qr-reader'
@@ -15,11 +15,21 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { useEffect, useState } from 'react'
 
-const { useEffect, useState } = React
+const useStyles = makeStyles(styles)
 
-const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
-  const [hasWebcam, setHasWebcam] = useState<any>(null)
+type Props = {
+  isOpen: boolean
+  onClose: () => void
+  onScan: (value: string) => void
+}
+
+export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElement => {
+  const classes = useStyles()
+  const [useWebcam, setUseWebcam] = useState<boolean | null>(null)
+  const [fileUploadModalOpen, setFileUploadModalOpen] = useState<boolean>(false)
+  const [error, setError] = useState<string | null>(null)
   const scannerRef: any = React.createRef()
   const openImageDialog = React.useCallback(() => {
     scannerRef.current.openImageDialog()
@@ -28,22 +38,35 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
   useEffect(() => {
     checkWebcam(
       () => {
-        setHasWebcam(true)
+        setUseWebcam(true)
       },
       () => {
-        setHasWebcam(false)
+        setUseWebcam(false)
       },
     )
   }, [])
 
   useEffect(() => {
-    // this fires only when the hasWebcam changes to false (null > false (user doesn't have webcam)
-    // , true > false (user switched from webcam to file upload))
-    // Doesn't fire on re-render
-    if (hasWebcam === false) {
+    if (useWebcam === false && !fileUploadModalOpen && !error) {
+      setFileUploadModalOpen(true)
       openImageDialog()
     }
-  }, [hasWebcam, openImageDialog])
+  }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen, error])
+
+  const onFileScannedResolve = (error: string | null, successData: string | null) => {
+    if (successData) {
+      onScan(successData)
+    }
+    if (error) {
+      console.error('Error uploading file', error)
+      setError(`The QR could not be read`)
+    }
+    if (!useWebcam) {
+      setError(`The QR could not be read`)
+    }
+
+    setFileUploadModalOpen(false)
+  }
 
   return (
     <Modal description="Receive Tokens Form" handleClose={onClose} open={isOpen} title="Receive Tokens">
@@ -57,19 +80,16 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
       </Row>
       <Hairline />
       <Col className={classes.detailsContainer} layout="column" middle="xs">
-        {hasWebcam === null ? (
+        {error}
+        {useWebcam === null ? (
           <Block className={classes.loaderContainer} justify="center">
             <CircularProgress />
           </Block>
         ) : (
           <QrReader
-            legacyMode={!hasWebcam}
-            onError={(err) => {
-              console.error(err)
-            }}
-            onScan={(data) => {
-              if (data) onScan(data)
-            }}
+            legacyMode={!useWebcam}
+            onError={(err) => onFileScannedResolve(err, null)}
+            onScan={(data) => onFileScannedResolve(null, data)}
             ref={scannerRef}
             style={{ width: '400px', height: '400px' }}
           />
@@ -85,11 +105,9 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
           color="primary"
           minWidth={154}
           onClick={() => {
-            if (hasWebcam) {
-              setHasWebcam(false)
-            } else {
-              openImageDialog()
-            }
+            setUseWebcam(false)
+            setError(null)
+            setFileUploadModalOpen(false)
           }}
           variant="contained"
         >
@@ -99,5 +117,3 @@ const ScanQRModal = ({ classes, isOpen, onClose, onScan }) => {
     </Modal>
   )
 }
-
-export default withStyles(styles as any)(ScanQRModal)

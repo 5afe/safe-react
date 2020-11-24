@@ -1,24 +1,21 @@
-import { createStyles } from '@material-ui/core'
+import { createStyles, makeStyles } from '@material-ui/core'
 
-export const styles = createStyles({
-  itemOptionList: {
-    display: 'flex',
-  },
+export const useTextFieldLabelStyle = makeStyles(
+  createStyles({
+    root: {
+      overflow: 'hidden',
+      borderRadius: 4,
+      fontSize: '15px',
+      width: '500px',
+    },
+  }),
+)
 
-  adbkEntryName: {
-    display: 'flex',
-    flexDirection: 'column',
-    fontSize: '14px',
-  },
-  identicon: {
-    display: 'flex',
-    padding: '5px',
-    flexDirection: 'column',
-    justifyContent: 'center',
-  },
-
-  root: {
-    fontSize: '14px',
-    backgroundColor: 'red',
-  },
-})
+export const useTextFieldInputStyle = makeStyles(
+  createStyles({
+    root: {
+      fontSize: '14px',
+      width: '420px',
+    },
+  }),
+)

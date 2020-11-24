@@ -5,7 +5,6 @@ import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -26,6 +25,8 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { sm } from 'src/theme/variables'
 
 import { styles } from './style'
+import { getExplorerInfo } from 'src/config'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -92,8 +93,8 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
                   <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
                     {ownerAddress}
                   </Paragraph>
-                  <CopyBtn content={safeAddress} />
-                  <EtherscanBtn value={safeAddress} />
+                  <CopyBtn content={ownerAddress} />
+                  <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
                 </Block>
               </Row>
             </Block>

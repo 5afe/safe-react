@@ -24,6 +24,7 @@ export const WALLET_PROVIDER = {
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
   TREZOR: 'TREZOR',
+  LATTICE: 'LATTICE',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing

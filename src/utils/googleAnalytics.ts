@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useState } from 'react'
 import GoogleAnalytics, { EventArgs } from 'react-ga'
+import { getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
@@ -15,11 +16,17 @@ export const loadGoogleAnalytics = (): void => {
   // eslint-disable-next-line no-console
   console.log('Loading google analytics...')
   const trackingID = getGoogleAnalyticsTrackingID()
+  const networkInfo = getNetworkInfo()
   if (!trackingID) {
     console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
   } else {
     GoogleAnalytics.initialize(trackingID)
-    GoogleAnalytics.set({ anonymizeIp: true })
+    GoogleAnalytics.set({
+      anonymizeIp: true,
+      appName: `Gnosis Safe Multisig (${networkInfo.label})`,
+      appId: `io.gnosis.safe.${networkInfo.label.toLowerCase()}`,
+      appVersion: process.env.REACT_APP_APP_VERSION,
+    })
     analyticsLoaded = true
   }
 }
