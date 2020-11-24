@@ -92,7 +92,7 @@ const ResetTime = (): ReactElement => {
     input: { value: withResetTime },
   } = useField('withResetTime', { subscription: { value: true } })
 
-  const switchExplanation = withResetTime ? 'one time' : 'choose reset time period'
+  const switchExplanation = withResetTime ? 'choose reset time period' : 'one time'
 
   return (
     <>
