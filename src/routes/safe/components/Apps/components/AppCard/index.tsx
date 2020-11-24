@@ -6,7 +6,7 @@ import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
 
-const AppCard = styled(Card)`
+const StyledAppCard = styled(Card)`
   display: flex;
   align-items: center;
   flex-direction: column;
@@ -66,7 +66,7 @@ type Props = {
   buttonText?: string
 }
 
-const Apps = ({
+const AppCard = ({
   isLoading = false,
   className,
   name,
@@ -78,17 +78,17 @@ const Apps = ({
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
-      <AppCard className={className}>
+      <StyledAppCard className={className}>
         <AppIconSK />
         <TitleSK />
         <DescriptionSK />
         <DescriptionSK />
-      </AppCard>
+      </StyledAppCard>
     )
   }
 
   return (
-    <AppCard className={className} onClick={onClick}>
+    <StyledAppCard className={className} onClick={onClick}>
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
       {name && <AppName size="xs">{name}</AppName>}
@@ -100,8 +100,8 @@ const Apps = ({
           {buttonText}
         </Button>
       )}
-    </AppCard>
+    </StyledAppCard>
   )
 }
 
-export default Apps
+export default AppCard

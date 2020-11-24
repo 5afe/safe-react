@@ -91,7 +91,6 @@ const AppsList = (): React.ReactElement => {
 
           {appList
             .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
-            .sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
             .map((a) => (
               <AppCard
                 isLoading={isAppLoading(a)}

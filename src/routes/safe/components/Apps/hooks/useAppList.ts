@@ -23,7 +23,7 @@ const useAppList = (): UseAppListReturnType => {
         const appIndex = cpPrevStatus.findIndex((a) => a.url === res.url)
         const newStatus = res.error ? SAFE_APP_FETCH_STATUS.ERROR : SAFE_APP_FETCH_STATUS.SUCCESS
         cpPrevStatus[appIndex] = { ...res, fetchStatus: newStatus }
-        return cpPrevStatus
+        return cpPrevStatus.sort((a, b) => a.name.toLowerCase().localeCompare(b.name.toLowerCase()))
       })
     }
 
