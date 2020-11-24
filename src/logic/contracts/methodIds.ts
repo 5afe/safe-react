@@ -8,6 +8,7 @@ import {
   TOKEN_TRANSFER_METHODS_NAMES,
 } from 'src/logic/safe/store/models/types/transactions.d'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { sameString } from 'src/utils/strings'
 
 type DecodeInfoProps = {
   paramsHash: string
@@ -104,12 +105,12 @@ export const decodeParamsFromSafeMethod = (data: string): DataDecoded | null => 
 
 export const isSetAllowanceMethod = (data: string): boolean => {
   const methodId = data.slice(0, 10)
-  return SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId] === SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE
+  return sameString(SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId], SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE)
 }
 
 export const isDeleteAllowanceMethod = (data: string): boolean => {
   const methodId = data.slice(0, 10)
-  return SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId] === SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE
+  return sameString(SPENDING_LIMIT_METHOD_ID_TO_NAME[methodId], SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE)
 }
 
 export const decodeParamsFromSpendingLimit = (data: string): DataDecoded | null => {

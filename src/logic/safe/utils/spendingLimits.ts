@@ -15,6 +15,7 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
+import { sameString } from 'src/utils/strings'
 
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
@@ -49,13 +50,15 @@ export type SpendingLimitRow = {
   nonce: string
 }
 
+const ZERO_VALUE = '0'
+
 /**
  * Deleted Allowance have their `amount` and `resetTime` set to `0` (zero)
  * @param {SpendingLimitRow} allowance
  * @returns boolean
  */
 const discardZeroAllowance = ({ amount, resetTimeMin }: SpendingLimitRow): boolean =>
-  !(amount === '0' && resetTimeMin === '0')
+  !(sameString(amount, ZERO_VALUE) && sameString(resetTimeMin, ZERO_VALUE))
 
 type TokenSpendingLimit = [string, string, string, string, string]
 
@@ -190,7 +193,7 @@ export const setSpendingLimitTx = ({
   return {
     safeAddress,
     to: SPENDING_LIMIT_MODULE_ADDRESS,
-    valueInWei: '0',
+    valueInWei: ZERO_VALUE,
     txData: spendingLimitContract.methods
       .setAllowance(
         beneficiary,
@@ -226,7 +229,7 @@ export const spendingLimitMultiSendTx = ({
 }: SpendingLimitMultiSendTx): CreateTransactionArgs => ({
   safeAddress,
   to: MULTI_SEND_ADDRESS,
-  valueInWei: '0',
+  valueInWei: ZERO_VALUE,
   txData: getEncodedMultiSendCallData(transactions, getWeb3()),
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   operation: DELEGATE_CALL,

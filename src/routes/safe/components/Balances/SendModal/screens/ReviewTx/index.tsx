@@ -29,6 +29,7 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -62,8 +63,8 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const [data, setData] = useState('')
 
-  const txToken = useMemo(() => tokens.find((token) => token.address === tx.token), [tokens, tx.token])
-  const isSendingETH = txToken?.address === nativeCoin.address
+  const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
+  const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
@@ -102,7 +103,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
-    const isSpendingLimit = tx.txType === 'spendingLimit'
+    const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe

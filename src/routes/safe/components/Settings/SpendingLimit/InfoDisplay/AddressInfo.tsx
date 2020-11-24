@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { sameString } from 'src/utils/strings'
 
 import DataDisplay from './DataDisplay'
 
@@ -21,7 +22,7 @@ const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): ReactElemen
     <DataDisplay title={title}>
       <EthHashInfo
         hash={address}
-        name={name !== 'UNKNOWN' ? name : undefined}
+        name={sameString(name, 'UNKNOWN') ? undefined : name}
         showCopyBtn
         showIdenticon
         textSize="lg"

@@ -48,7 +48,7 @@ const useExistentSpendingLimit = ({
     const currentDelegate = spendingLimits?.find(
       ({ delegate, token }) =>
         sameAddress(delegate, values.beneficiary) &&
-        sameAddress(token, values.token === nativeCoin.address ? ZERO_ADDRESS : values.token),
+        sameAddress(token, sameAddress(values.token, nativeCoin.address) ? ZERO_ADDRESS : values.token),
     )
 
     // let the user know that is about to replace an existent allowance
