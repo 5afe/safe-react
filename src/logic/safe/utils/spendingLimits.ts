@@ -21,17 +21,6 @@ export const KEYCODES = {
   SHIFT: 16,
 }
 
-export const adjustAmountToToken = (amount: string, decimals: string | number): string => {
-  const amountBN = new BigNumber(amount)
-  const [, amountDecimalPlaces] = amount.split('.')
-
-  if (amountDecimalPlaces?.length >= 18) {
-    return amountBN.toFixed(+decimals, BigNumber.ROUND_DOWN)
-  }
-
-  return amountBN.toFixed()
-}
-
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
 const requestTokensByDelegate = async (

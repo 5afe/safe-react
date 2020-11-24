@@ -10,7 +10,6 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,
-  adjustAmountToToken,
   currentMinutes,
   enableSpendingLimitModuleMultiSendTx,
   setSpendingLimitMultiSendTx,
@@ -139,7 +138,7 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
         <Col margin="lg">
-          <TokenInfo amount={adjustAmountToToken(values.amount, txToken.decimals)} title="Amount" token={txToken} />
+          <TokenInfo amount={fromTokenUnit(values.amount, txToken.decimals)} title="Amount" token={txToken} />
           {existentSpendingLimit && (
             <Text size="lg" color="error">
               Previous Amount: {existentSpendingLimit.amount}
