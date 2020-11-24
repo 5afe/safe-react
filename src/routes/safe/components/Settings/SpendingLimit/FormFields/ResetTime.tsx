@@ -92,13 +92,15 @@ const ResetTime = (): ReactElement => {
     input: { value: withResetTime },
   } = useField('withResetTime', { subscription: { value: true } })
 
+  const switchExplanation = withResetTime ? 'one time' : 'choose reset time period'
+
   return (
     <>
       <ResetTimeLabel>
         <Text size="xl">Set a reset time so the allowance automatically refills after the defined time period.</Text>
       </ResetTimeLabel>
       <ResetTimeToggle>
-        <Switch label="Reset time" name="withResetTime" />
+        <Switch label={`Reset time (${switchExplanation})`} name="withResetTime" />
       </ResetTimeToggle>
       {withResetTime && (
         <ResetTimeOptions>
