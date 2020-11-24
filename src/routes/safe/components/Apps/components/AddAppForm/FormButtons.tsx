@@ -28,7 +28,7 @@ const FormButtons = ({ appInfo, onCancel }: Props): ReactElement => {
 
   const isSubmitDisabled = useMemo(() => {
     // if non visited, fields were not evaluated yet. Then, the default value is considered invalid
-    const fieldsVisited = visited?.agreementAccepted && visited.appUrl
+    const fieldsVisited = visited?.agreementAccepted && visited?.appUrl
 
     return validating || !valid || !fieldsVisited || !isAppManifestValid(appInfo)
   }, [validating, valid, visited, appInfo])
