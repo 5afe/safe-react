@@ -107,12 +107,16 @@ export type TxArgs = {
   valueInWei: string
 }
 
-export type SafeModuleTransaction = ModuleTxServiceModel & {
+type SafeModuleCompatibilityTypes = {
   nonce?: string // not required for this tx: added for compatibility
   fee?: number // not required for this tx: added for compatibility
   executionTxHash?: string // not required for this tx: added for compatibility
   safeTxHash: string // table uses this key as a unique row identifier, added for compatibility
-  status: TransactionStatus
-  type: TransactionTypes
-  tokenInfo?: Token
 }
+
+export type SafeModuleTransaction = ModuleTxServiceModel &
+  SafeModuleCompatibilityTypes & {
+    status: TransactionStatus
+    type: TransactionTypes
+    tokenInfo?: Token
+  }
