@@ -50,7 +50,8 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps):
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
-  const explorerInfo = getExplorerInfo(selectedModule[0])
+  const moduleAddress = selectedModule[1]
+  const explorerInfo = getExplorerInfo(moduleAddress)
   const { url } = explorerInfo()
 
   const removeSelectedModule = async (): Promise<void> => {
@@ -92,16 +93,16 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps):
         <Block className={classes.modalContainer}>
           <Row className={classes.modalOwner}>
             <Col align="center" xs={1}>
-              <Identicon address={selectedModule[0]} diameter={32} />
+              <Identicon address={moduleAddress} diameter={32} />
             </Col>
             <Col xs={11}>
               <Block className={cn(classes.modalName, classes.modalUserName)}>
                 <Paragraph noMargin size="lg" weight="bolder">
-                  {selectedModule[0]}
+                  {moduleAddress}
                 </Paragraph>
                 <Block className={classes.modalUser} justify="center">
                   <Paragraph color="disabled" noMargin size="md">
-                    {selectedModule[0]}
+                    {moduleAddress}
                   </Paragraph>
                   <Link className={classes.modalOpen} target="_blank" to={url}>
                     <OpenInNew style={openIconStyle} />
