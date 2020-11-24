@@ -208,6 +208,17 @@ export const safeModulesSelector = createSelector(safeSelector, safeFieldSelecto
 
 export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
 
+export const safeOwnersAddressesListSelector = createSelector(
+  safeOwnersSelector,
+  (owners): List<string> => {
+    if (!owners) {
+      return List([])
+    }
+
+    return owners?.map(({ address }) => address)
+  },
+)
+
 export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
   const addresses = Set().withMutations((set) => {
     safes.forEach((safe) => {

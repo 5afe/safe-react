@@ -8,7 +8,7 @@ import { getAddressValidator } from './validators'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import trash from 'src/assets/icons/trash.svg'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -97,10 +97,10 @@ const SafeOwnersForm = (props): React.ReactElement => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = (value) => {
+  const handleScan = (value: string | null) => {
     let scannedAddress = value
 
-    if (scannedAddress.startsWith('ethereum:')) {
+    if (scannedAddress?.startsWith('ethereum:')) {
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
@@ -236,21 +236,13 @@ const SafeOwnersForm = (props): React.ReactElement => {
   )
 }
 
-const SafeOwnersPage = ({ updateInitialProps }) =>
+export const SafeOwnersPage = () =>
   function OpenSafeOwnersPage(controls, { errors, form, values }) {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
-          <SafeOwnersForm
-            errors={errors}
-            form={form}
-            otherAccounts={getAccountsFrom(values)}
-            updateInitialProps={updateInitialProps}
-            values={values}
-          />
+          <SafeOwnersForm errors={errors} form={form} otherAccounts={getAccountsFrom(values)} values={values} />
         </OpenPaper>
       </>
     )
   }
-
-export default SafeOwnersPage

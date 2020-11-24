@@ -13,7 +13,7 @@ import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
+import { getAccountsFrom, getNamesFrom, getSafeCreationSaltFrom } from 'src/routes/open/utils/safeDataExtractor'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
@@ -33,20 +33,23 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!addresses.length || !numOwners || !userAccount) {
         return
       }
-      const estimatedGasCosts = (await estimateGasForDeployingSafe(addresses, numOwners, userAccount)).toString()
+      const estimatedGasCosts = (
+        await estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt)
+      ).toString()
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       setGasCosts(formattedGasCosts)
     }
 
     estimateGas()
-  }, [addresses, numOwners, userAccount])
+  }, [addresses, numOwners, safeCreationSalt, userAccount])
 
   return (
     <>
@@ -140,7 +143,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
   )
 }
 
-const Review = () =>
+export const Review = () =>
   function ReviewPage(controls, props): React.ReactElement {
     return (
       <>
@@ -150,5 +153,3 @@ const Review = () =>
       </>
     )
   }
-
-export default Review
