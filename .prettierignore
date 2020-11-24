@@ -9,4 +9,5 @@ node_modules
 public
 scripts
 src/assets
+src/types/contracts
 test
