@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import styles from './Layout.module.scss'
-import { Card, Title, Text, Divider } from '@gnosis.pm/safe-react-components'
+import { Card, Title, Text, Divider, ButtonLink } from '@gnosis.pm/safe-react-components'
 
 import ConnectButton from 'src/components/ConnectButton'
 import Block from 'src/components/layout/Block'
@@ -19,6 +19,7 @@ const safe = require('../assets/safe.svg')
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
+  justify-content: space-around;
 `
 const StyledCardDouble = styled(Card)`
   display: flex;
@@ -33,6 +34,7 @@ const CardsCol = styled.div`
   display: flex;
   flex-direction: column;
   padding: 24px;
+  width: 50%;
 `
 
 /* const StyledDoubleCard = styled(Card)`
@@ -47,6 +49,27 @@ const StyledDivider = styled(Divider)`
   margin: -24px 0 0 0;
 `  */
 
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 0 16px 0;
+
+  h5 {
+    margin: 0 16px;
+  }
+`
+
+const Dot = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  height: 36px;
+  width: 36px;
+  background-color: ${({ theme }) => theme.colors.primary};
+  color: ${({ theme }) => theme.colors.white};
+`
 const buttonStyle = {
   marginLeft: marginButtonImg,
 }
@@ -120,18 +143,31 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
         <>
           <Wrapper>
             <StyledCard>
-              <Title size="xs">Connect wallet</Title>
+              <TitleWrapper>
+                <Dot>
+                  <Title size="xs">1</Title>
+                </Dot>
+                <Title size="xs">Connect wallet</Title>
+              </TitleWrapper>
               <Text size="xl">
                 Gnosis Safe Multisig supports a wide range of wallets that you can choose to be one of the
                 authentication factors.
               </Text>
+              <ButtonLink textSize="xl" color="primary" iconType="externalLink">
+                Why do I need to connect wallet?
+              </ButtonLink>
               <Block className={styles.LoadSafe} margin="md" padding="lg">
                 <LoadSafe provider={provider} size="large" />
               </Block>
             </StyledCard>
             <StyledCardDouble>
               <CardsCol>
-                <Title size="xs">Create Safe</Title>
+                <TitleWrapper>
+                  <Dot>
+                    <Title size="xs">2</Title>
+                  </Dot>
+                  <Title size="xs">Create Safe</Title>
+                </TitleWrapper>
                 <Text size="xl">
                   Create a new Safe Multisig that is controlled by one or multiple owners. <br />
                   You will be required to pay a network fee for creating your new Safe.
@@ -142,10 +178,10 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
               </CardsCol>
               <Divider orientation="vertical" />
               <CardsCol>
-                <Title size="xs">Load Safe</Title>
+                <Title size="xs">Load existing Safe</Title>
                 <Text size="xl">
-                  Create a new Safe Multisig that is controlled by one or multiple owners. <br />
-                  You will be required to pay a network fee for creating your new Safe.
+                  Already have a Safe? Do you want to access your Safe Multisig from a different device? Easily load
+                  your Safe Multisig using your Safe address.
                 </Text>
                 <Block className={styles.safeActions} margin="md">
                   <LoadSafe provider={provider} size="large" />
