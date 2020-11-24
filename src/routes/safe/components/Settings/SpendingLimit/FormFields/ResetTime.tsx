@@ -95,7 +95,7 @@ const ResetTime = (): ReactElement => {
   return (
     <>
       <ResetTimeLabel>
-        <Text size="xl">Set a reset-time to have the allowance automatically refill after a defined time-period.</Text>
+        <Text size="xl">Set a reset time so the allowance automatically refills after the defined time period.</Text>
       </ResetTimeLabel>
       <ResetTimeToggle>
         <Switch label="Reset time" name="withResetTime" />
