@@ -4,6 +4,7 @@ import styles from './Layout.module.scss'
 import { Card, Title, Text, Divider, ButtonLink } from '@gnosis.pm/safe-react-components'
 
 import ConnectButton from 'src/components/ConnectButton'
+/* import Dot from 'src/routes/safe/components/Dot' */
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
@@ -19,20 +20,22 @@ const safe = require('../assets/safe.svg')
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
 `
 const StyledCardDouble = styled(Card)`
   display: flex;
   padding: 0;
 `
-
 const StyledCard = styled(Card)`
   margin: 0 20px 0 0;
   max-width: 33%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 `
 const CardsCol = styled.div`
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
   padding: 24px;
   width: 50%;
 `
