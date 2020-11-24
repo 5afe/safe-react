@@ -114,7 +114,6 @@ const Apps = (): React.ReactElement => {
 
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
-      ethBalance,
       network: NETWORK_NAME,
     }))
 
@@ -156,7 +155,7 @@ const Apps = (): React.ReactElement => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
-  }, [communicator, ethBalance, openConfirmationModal, safeAddress, sendMessageToIframe])
+  }, [communicator, openConfirmationModal, safeAddress, sendMessageToIframe])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     // Safe Apps SDK V1 Handler
