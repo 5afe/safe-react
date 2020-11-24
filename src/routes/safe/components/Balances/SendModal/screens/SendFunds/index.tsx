@@ -33,6 +33,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -226,7 +227,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.key === 'Tab') {
+                      if (sameString(e.key, 'Tab')) {
                         return
                       }
                       setSelectedEntry({ address: '', name: '' })

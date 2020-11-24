@@ -16,11 +16,6 @@ import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 
-export const KEYCODES = {
-  TAB: 9,
-  SHIFT: 16,
-}
-
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
 const requestTokensByDelegate = async (

@@ -9,7 +9,7 @@ import { getExplorerInfo } from 'src/config'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { KEYCODES } from 'src/logic/safe/utils/spendingLimits'
+import { sameString } from 'src/utils/strings'
 
 const BeneficiaryInput = styled.div`
   grid-area: beneficiaryInput;
@@ -59,9 +59,10 @@ const Beneficiary = (): ReactElement => {
   }
 
   const handleOnKeyDown = (e: KeyboardEvent<HTMLElement>): void => {
-    if (![KEYCODES.TAB, KEYCODES.SHIFT].includes(e.keyCode)) {
-      setSelectedEntry(null)
+    if (sameString(e.key, 'Tab')) {
+      return
     }
+    setSelectedEntry(null)
   }
 
   const handleOnClick = () => {
