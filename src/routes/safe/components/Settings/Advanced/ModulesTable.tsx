@@ -50,9 +50,9 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  const [selectedModule, setSelectedModule] = React.useState<ModulePair>()
-  const triggerRemoveSelectedModule = (module: ModulePair): void => {
-    setSelectedModule(module)
+  const [selectedModulePair, setSelectedModulePair] = React.useState<ModulePair>()
+  const triggerRemoveSelectedModule = (modulePair: ModulePair): void => {
+    setSelectedModulePair(modulePair)
     setViewRemoveModuleModal(true)
   }
 
@@ -80,7 +80,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
                 {autoColumns.map((column, index) => {
                   const columnId = column.id
                   const rowElement = row[columnId]
-                  const moduleAddress = rowElement[1]
+                  const [, moduleAddress] = rowElement
 
                   return (
                     <React.Fragment key={`${columnId}-${index}`}>
@@ -118,8 +118,8 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
           }
         </Table>
       </TableContainer>
-      {viewRemoveModuleModal && selectedModule && (
-        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModule={selectedModule} />
+      {viewRemoveModuleModal && selectedModulePair && (
+        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModulePair={selectedModulePair} />
       )}
     </>
   )

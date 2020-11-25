@@ -41,22 +41,22 @@ const openIconStyle = {
 
 interface RemoveModuleModalProps {
   onClose: () => void
-  selectedModule: ModulePair
+  selectedModulePair: ModulePair
 }
 
-const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps): React.ReactElement => {
+const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
-  const moduleAddress = selectedModule[1]
+  const [, moduleAddress] = selectedModulePair
   const explorerInfo = getExplorerInfo(moduleAddress)
   const { url } = explorerInfo()
 
   const removeSelectedModule = async (): Promise<void> => {
     try {
-      const txData = getDisableModuleTxData(selectedModule, safeAddress)
+      const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
 
       dispatch(
         createTransaction({
@@ -68,7 +68,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps):
         }),
       )
     } catch (e) {
-      console.error(`failed to remove the module ${selectedModule}`, e.message)
+      console.error(`failed to remove the module ${selectedModulePair}`, e.message)
     }
   }
 
