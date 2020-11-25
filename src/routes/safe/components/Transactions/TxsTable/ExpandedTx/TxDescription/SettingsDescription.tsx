@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { EtherscanLink } from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
@@ -20,7 +20,7 @@ interface RemovedOwnerProps {
   removedOwner: string
 }
 
-const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): React.ReactElement => {
+const RemovedOwner = ({ removedOwner }: RemovedOwnerProps): ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBookSelector(state, removedOwner))
 
   return (
@@ -39,7 +39,7 @@ interface AddedOwnerProps {
   addedOwner: string
 }
 
-const AddedOwner = ({ addedOwner }: AddedOwnerProps): React.ReactElement => {
+const AddedOwner = ({ addedOwner }: AddedOwnerProps): ReactElement => {
   const ownerChangedName = useSelector((state) => getNameFromAddressBookSelector(state, addedOwner))
 
   return (
@@ -58,7 +58,7 @@ interface NewThresholdProps {
   newThreshold: string
 }
 
-const NewThreshold = ({ newThreshold }: NewThresholdProps): React.ReactElement => (
+const NewThreshold = ({ newThreshold }: NewThresholdProps): ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_CHANGE_THRESHOLD_TEST_ID}>
     <Bold>Change required confirmations:</Bold>
     <Paragraph noMargin size="md">
@@ -71,7 +71,7 @@ interface AddModuleProps {
   module: string
 }
 
-const AddModule = ({ module }: AddModuleProps): React.ReactElement => (
+const AddModule = ({ module }: AddModuleProps): ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_ADD_MODULE_TEST_ID}>
     <Bold>Add module:</Bold>
     <EtherscanLink value={module} knownAddress={false} />
@@ -82,7 +82,7 @@ interface RemoveModuleProps {
   module: string
 }
 
-const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
+const RemoveModule = ({ module }: RemoveModuleProps): ReactElement => (
   <Block data-testid={TRANSACTIONS_DESC_REMOVE_MODULE_TEST_ID}>
     <Bold>Remove module:</Bold>
     <EtherscanLink value={module} knownAddress={false} />
@@ -90,7 +90,7 @@ const RemoveModule = ({ module }: RemoveModuleProps): React.ReactElement => (
 )
 
 interface SettingsDescriptionProps {
-  action: SafeMethods
+  action?: SafeMethods
   addedOwner?: string
   newThreshold?: string
   removedOwner?: string
@@ -103,7 +103,7 @@ const SettingsDescription = ({
   newThreshold,
   removedOwner,
   module,
-}: SettingsDescriptionProps): React.ReactElement => {
+}: SettingsDescriptionProps): ReactElement => {
   if (action === SAFE_METHODS_NAMES.REMOVE_OWNER && removedOwner && newThreshold) {
     return (
       <>

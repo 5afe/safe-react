@@ -41,21 +41,22 @@ const openIconStyle = {
 
 interface RemoveModuleModalProps {
   onClose: () => void
-  selectedModule: ModulePair
+  selectedModulePair: ModulePair
 }
 
-const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps): React.ReactElement => {
+const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const dispatch = useDispatch()
 
-  const explorerInfo = getExplorerInfo(selectedModule[0])
+  const [, moduleAddress] = selectedModulePair
+  const explorerInfo = getExplorerInfo(moduleAddress)
   const { url } = explorerInfo()
 
   const removeSelectedModule = async (): Promise<void> => {
     try {
-      const txData = getDisableModuleTxData(selectedModule, safeAddress)
+      const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
 
       dispatch(
         createTransaction({
@@ -67,7 +68,7 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps):
         }),
       )
     } catch (e) {
-      console.error(`failed to remove the module ${selectedModule}`, e.message)
+      console.error(`failed to remove the module ${selectedModulePair}`, e.message)
     }
   }
 
@@ -92,16 +93,16 @@ const RemoveModuleModal = ({ onClose, selectedModule }: RemoveModuleModalProps):
         <Block className={classes.modalContainer}>
           <Row className={classes.modalOwner}>
             <Col align="center" xs={1}>
-              <Identicon address={selectedModule[0]} diameter={32} />
+              <Identicon address={moduleAddress} diameter={32} />
             </Col>
             <Col xs={11}>
               <Block className={cn(classes.modalName, classes.modalUserName)}>
                 <Paragraph noMargin size="lg" weight="bolder">
-                  {selectedModule[0]}
+                  {moduleAddress}
                 </Paragraph>
                 <Block className={classes.modalUser} justify="center">
                   <Paragraph color="disabled" noMargin size="md">
-                    {selectedModule[0]}
+                    {moduleAddress}
                   </Paragraph>
                   <Link className={classes.modalOpen} target="_blank" to={url}>
                     <OpenInNew style={openIconStyle} />
