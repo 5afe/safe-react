@@ -28,7 +28,7 @@ type ModulesPaginated = {
  * @param {Array<string>} modules
  * @returns null | Array<ModulePair>
  */
-const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | null => {
+export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | null => {
   if (modules?.length) {
     return modules.map((moduleAddress, index, modules) => {
       if (index === 0) {
