@@ -53,7 +53,7 @@ describe('modules -> buildModulesLinkedList', () => {
     // Given
     moduleManager.enableModule('0xc')
     moduleManager.enableModule('0xb')
-    moduleManager.enableModule('0xa') // returned list should be ordered [0xa, 0xb, 0xc]
+    moduleManager.enableModule('0xa') // returned list is ordered [0xa, 0xb, 0xc]
     const modulesPairList = buildModulesLinkedList(moduleManager.getModules())
 
     // When
@@ -69,7 +69,7 @@ describe('modules -> buildModulesLinkedList', () => {
     ])
   })
 
-  it(`should properly provide a list of modules pair to remove this firstly added module`, () => {
+  it(`should properly provide a list of modules pair to remove the firstly added module`, () => {
     // Given
     moduleManager.enableModule('0xc')
     moduleManager.enableModule('0xb')
@@ -89,7 +89,7 @@ describe('modules -> buildModulesLinkedList', () => {
     ])
   })
 
-  it(`should properly provide a list of modules pair to remove this lastly added module`, () => {
+  it(`should properly provide a list of modules pair to remove the lastly added module`, () => {
     // Given
     moduleManager.enableModule('0xc')
     moduleManager.enableModule('0xb')
