@@ -6,6 +6,7 @@ import {
   Methods,
   ErrorResponse,
   MessageFormatter,
+  METHODS,
 } from '@gnosis.pm/safe-apps-sdk'
 import { SafeApp } from './types.d'
 
@@ -30,10 +31,12 @@ class AppCommunicator {
   }
 
   private isValidMessage = (msg: SDKMessageEvent): boolean => {
-    const sameOrigin = msg.origin === window.origin
+    // @ts-expect-error .parent doesn't exist on some possible types
+    const sentFromIframe = msg.source.parent === window.parent
     const knownOrigin = this.app.url.includes(msg.origin)
+    const knownMethod = Object.values(METHODS).includes(msg.data.method)
 
-    return knownOrigin && !sameOrigin
+    return knownOrigin && sentFromIframe && knownMethod
   }
 
   private canHandleMessage = (msg: SDKMessageEvent): boolean => {
