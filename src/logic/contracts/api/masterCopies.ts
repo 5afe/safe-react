@@ -4,7 +4,7 @@ import memoize from 'lodash.memoize'
 
 export enum MasterCopyDeployer {
   GNOSIS = 'Gnosis',
-  CIRCLE = 'Circle',
+  CIRCLES = 'Circles',
 }
 
 type MasterCopyFetch = {
@@ -25,7 +25,7 @@ const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
   const masterCopy = {
     address: mc.address,
     version: dashIndex === -1 ? mc.version : mc.version.substring(0, dashIndex),
-    deployer: dashIndex === -1 ? MasterCopyDeployer.GNOSIS : MasterCopyDeployer.CIRCLE,
+    deployer: dashIndex === -1 ? MasterCopyDeployer.GNOSIS : MasterCopyDeployer.CIRCLES,
     deployerRepoUrl:
       dashIndex === -1
         ? 'https://github.com/gnosis/safe-contracts/releases'
