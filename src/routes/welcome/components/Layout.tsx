@@ -118,8 +118,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: any) => {
     </>
   ) : (
     <>
-      Gnosis Safe Multisig is the most trusted platform to manage <br /> digital assets on Ethereum. Here is how to get
-      started:{' '}
+      Gnosis Safe Multisig is the most trusted platform to manage digital assets. <br /> Here is how to get started:{' '}
     </>
   )
   return (
