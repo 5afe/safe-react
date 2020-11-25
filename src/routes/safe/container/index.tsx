@@ -1,15 +1,15 @@
-import { GenericModal } from '@gnosis.pm/safe-react-components'
+import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import NoSafe from 'src/components/NoSafe'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
-import { getNetworkConfigDisabledFeatures } from 'src/config'
+import { LoadingContainer } from 'src/components/LoaderContainer'
 
 export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
 export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
@@ -26,6 +26,7 @@ const TxsTable = React.lazy(() => import('src/routes/safe/components/Transaction
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const [modal, setModal] = useState({
     isOpen: false,
     title: null,
@@ -40,6 +41,14 @@ const Container = (): React.ReactElement => {
 
   if (!safeAddress) {
     return <NoSafe provider={provider} text="Safe not found" />
+  }
+
+  if (!featuresEnabled) {
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
   const closeGenericModal = () => {
@@ -73,10 +82,7 @@ const Container = (): React.ReactElement => {
           exact
           path={`${matchSafeWithAddress?.path}/apps`}
           render={({ history }) => {
-            // TODO: This will only check if Safe apps are disabled by network config
-            // I removed the check for safe version features because seems to be a race-condition issue
-            const disabledFeatures = getNetworkConfigDisabledFeatures()
-            if (disabledFeatures[FEATURES.SAFE_APPS]) {
+            if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
               history.push(`${matchSafeWithAddress?.url}/balances`)
             }
             return wrapInSuspense(<Apps />, null)

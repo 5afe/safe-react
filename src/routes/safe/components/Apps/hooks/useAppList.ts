@@ -10,7 +10,6 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
-  // const [appListPivot, setAppListPivot] = useState<{ string: SafeApp }>({} as { string: SafeApp })
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status

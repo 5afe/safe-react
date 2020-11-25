@@ -40,14 +40,7 @@ import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types.d'
-
-const LoadingContainer = styled.div`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-`
+import { LoadingContainer } from 'src/components/LoaderContainer'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -204,7 +197,6 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
     }
   }, [safeApp, trackEvent])
 
-  // TODO check if URL
   if (!appUrl) {
     throw Error('App url No provided or it is invalid.')
   }
