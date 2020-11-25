@@ -1,4 +1,4 @@
-import React, { forwardRef } from 'react'
+import React, { forwardRef, useEffect, useRef, useState } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title } from '@gnosis.pm/safe-react-components'
 import { useHistory } from 'react-router-dom'
@@ -6,6 +6,7 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import { SafeApp } from '../types'
 import LegalDisclaimer from './LegalDisclaimer'
+import { TIMEOUT } from 'src/utils/constants'
 
 const StyledIframe = styled.iframe`
   padding: 15px;
@@ -20,6 +21,7 @@ const LoadingContainer = styled.div`
   display: flex;
   align-items: center;
   justify-content: center;
+  flex-direction: column;
 `
 
 const IframeWrapper = styled.div`
@@ -52,6 +54,22 @@ const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameC
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
+  const timer = useRef<number>()
+  const [appTimeout, setAppTimeout] = useState(false)
+
+  useEffect(() => {
+    if (appIsLoading) {
+      timer.current = setTimeout(() => {
+        setAppTimeout(true)
+      }, TIMEOUT)
+    } else {
+      clearTimeout(timer.current)
+    }
+
+    return () => {
+      clearTimeout(timer.current)
+    }
+  }, [appIsLoading])
 
   if (!selectedApp) {
     return <div />
@@ -74,6 +92,7 @@ const AppFrame = forwardRef<HTMLIFrameElement, AppFrameProps>(function AppFrameC
     <IframeWrapper>
       {appIsLoading && (
         <LoadingContainer>
+          {appTimeout && <Title size="xs">The IPFS provider is slow, the app might not load properly</Title>}
           <Loader size="md" />
         </LoadingContainer>
       )}
