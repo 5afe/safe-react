@@ -138,7 +138,11 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
           <AddressInfo address={values.beneficiary} title="Beneficiary" />
         </Col>
         <Col margin="lg">
-          <TokenInfo amount={fromTokenUnit(values.amount, txToken.decimals)} title="Amount" token={txToken} />
+          <TokenInfo
+            amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
+            title="Amount"
+            token={txToken}
+          />
           {existentSpendingLimit && (
             <Text size="lg" color="error">
               Previous Amount: {existentSpendingLimit.amount}
