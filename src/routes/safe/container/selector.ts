@@ -63,6 +63,18 @@ export const extendedSafeTokensSelector = createSelector(
   },
 )
 
+export const safeKnownCoins = createSelector(
+  tokensSelector,
+  safeEthAsTokenSelector,
+  (safeTokens, nativeCoinAsToken): List<Token> => {
+    if (nativeCoinAsToken) {
+      return safeTokens.set(nativeCoinAsToken.address, nativeCoinAsToken).toList()
+    }
+
+    return safeTokens.toList()
+  },
+)
+
 const moduleTransactionsSelector = (state: AppReduxState) => state[MODULE_TRANSACTIONS_REDUCER_ID]
 
 export const modulesTransactionsBySafeSelector = createSelector(
