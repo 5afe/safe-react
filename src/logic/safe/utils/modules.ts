@@ -9,11 +9,32 @@ type ModulesPaginated = {
   next: string
 }
 
-const buildModulesLinkedList = (modules: string[], nextModule: string = SENTINEL_ADDRESS): Array<ModulePair> | null => {
+/**
+ * Builds a collection of tuples with (prev, module) module addresses
+ *
+ * The `modules` param, is organized from the most recently added to the oldest.
+ *
+ * By assuming this, we are able to recreate the linked list that's defined at contract level
+ *   considering `0x1` (SENTINEL_ADDRESS) address as the list's initial node.
+ *
+ * Given this scenario, we have a linked list in the form of
+ *
+ *  **`0x1->modules[n]->module[n-1]->module[0]->0x1`**
+ *
+ * So,
+ *  - if we want to disable `module[n]`, we need to pass `(module[n], 0x1)` as arguments,
+ *  - if we want to disable `module[n-1]`, we need to pass `(module[n-1], module[n])`,
+ *  - ... and so on
+ * @param {Array<string>} modules
+ * @returns null | Array<ModulePair>
+ */
+export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | null => {
   if (modules?.length) {
     return modules.map((moduleAddress, index, modules) => {
-      const prevModule = modules[index + 1]
-      return [moduleAddress, prevModule !== undefined ? prevModule : nextModule]
+      if (index === 0) {
+        return [SENTINEL_ADDRESS, moduleAddress]
+      }
+      return [modules[index - 1], moduleAddress]
     })
   }
 
@@ -58,10 +79,12 @@ export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<Modul
       // as we're not sure if there are more than 10 modules enabled for the current Safe
       const safeInstance = getGnosisSafeInstanceAt(safeInfo.address)
 
-      // TODO: 100 is an arbitrary large number, to avoid the need for pagination. But pagination must be properly handled
+      // TODO: 100 is an arbitrary large number, to avoid the need for pagination.
+      //  But pagination must be properly handled
+      //  if `modules.next !== SENTINEL_ADDRESS`, then we have more modules to retrieve
       const modules: ModulesPaginated = await safeInstance.methods.getModulesPaginated(SENTINEL_ADDRESS, 100).call()
 
-      return buildModulesLinkedList(modules.array, modules.next)
+      return buildModulesLinkedList(modules.array)
     } catch (e) {
       console.error('Failed to retrieve Safe modules', e)
     }
@@ -69,7 +92,7 @@ export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<Modul
 }
 
 export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string): string => {
-  const [module, previousModule] = modulePair
+  const [previousModule, module] = modulePair
   const safeInstance = getGnosisSafeInstanceAt(safeAddress)
 
   return safeInstance.methods.disableModule(previousModule, module).encodeABI()

@@ -6,7 +6,12 @@ export type SafeOwner = {
   address: string
 }
 
-export type ModulePair = [string, string]
+export type ModulePair = [
+  // previous module
+  string,
+  // module
+  string,
+]
 
 export type SafeRecordProps = {
   name: string
