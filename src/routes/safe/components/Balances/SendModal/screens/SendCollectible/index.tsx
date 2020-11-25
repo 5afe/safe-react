@@ -25,6 +25,7 @@ import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { getExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
 
 import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 
@@ -170,7 +171,7 @@ const SendCollectible = ({
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.key === 'Tab') {
+                      if (sameString(e.key, 'Tab')) {
                         return
                       }
                       setSelectedEntry({ address: '', name: '' })

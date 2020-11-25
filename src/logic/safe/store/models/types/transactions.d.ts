@@ -228,16 +228,30 @@ export const SAFE_METHODS_NAMES = {
   SWAP_OWNER: 'swapOwner',
   ENABLE_MODULE: 'enableModule',
   DISABLE_MODULE: 'disableModule',
-}
+} as const
 
-export const METHOD_TO_ID = {
+export const SAFE_METHOD_ID_TO_NAME = {
   '0xe318b52b': SAFE_METHODS_NAMES.SWAP_OWNER,
   '0x0d582f13': SAFE_METHODS_NAMES.ADD_OWNER_WITH_THRESHOLD,
   '0xf8dc5dd9': SAFE_METHODS_NAMES.REMOVE_OWNER,
   '0x694e80c3': SAFE_METHODS_NAMES.CHANGE_THRESHOLD,
   '0x610b5925': SAFE_METHODS_NAMES.ENABLE_MODULE,
   '0xe009cfde': SAFE_METHODS_NAMES.DISABLE_MODULE,
-}
+} as const
+
+export const SPENDING_LIMIT_METHODS_NAMES = {
+  ADD_DELEGATE: 'addDelegate',
+  SET_ALLOWANCE: 'setAllowance',
+  EXECUTE_ALLOWANCE_TRANSFER: 'executeAllowanceTransfer',
+  DELETE_ALLOWANCE: 'deleteAllowance',
+} as const
+
+export const SPENDING_LIMIT_METHOD_ID_TO_NAME = {
+  '0xe71bdf41': SPENDING_LIMIT_METHODS_NAMES.ADD_DELEGATE,
+  '0xbeaeb388': SPENDING_LIMIT_METHODS_NAMES.SET_ALLOWANCE,
+  '0x4515641a': SPENDING_LIMIT_METHODS_NAMES.EXECUTE_ALLOWANCE_TRANSFER,
+  '0x885133e3': SPENDING_LIMIT_METHODS_NAMES.DELETE_ALLOWANCE,
+} as const
 
 export type SafeMethods = typeof SAFE_METHODS_NAMES[keyof typeof SAFE_METHODS_NAMES]
 
@@ -247,13 +261,19 @@ export const TOKEN_TRANSFER_METHODS_NAMES = {
   SAFE_TRANSFER_FROM: 'safeTransferFrom',
 } as const
 
+export const TOKEN_TRANSFER_METHOD_ID_TO_NAME = {
+  '0xa9059cbb': TOKEN_TRANSFER_METHODS_NAMES.TRANSFER,
+  '0x23b872dd': TOKEN_TRANSFER_METHODS_NAMES.TRANSFER_FROM,
+  '0x42842e0e': TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM,
+} as const
+
 type TokenMethods = typeof TOKEN_TRANSFER_METHODS_NAMES[keyof typeof TOKEN_TRANSFER_METHODS_NAMES]
 
-type SafeDecodedParams = {
+export type SafeDecodedParams = {
   [key in SafeMethods]?: Record<string, string>
 }
 
-type TokenDecodedParams = {
+export type TokenDecodedParams = {
   [key in TokenMethods]?: Record<string, string>
 }
 
