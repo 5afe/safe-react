@@ -46,6 +46,18 @@ const NOTIFICATION_IDS = {
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: 'SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG',
   SETTINGS_CHANGE_FAILED_MSG: 'SETTINGS_CHANGE_FAILED_MSG',
   TESTNET_VERSION_MSG: 'TESTNET_VERSION_MSG',
+  SIGN_NEW_SPENDING_LIMIT_MSG: 'SIGN_NEW_SPENDING_LIMIT_MSG',
+  NEW_SPENDING_LIMIT_PENDING_MSG: 'NEW_SPENDING_LIMIT_PENDING_MSG',
+  NEW_SPENDING_LIMIT_REJECTED_MSG: 'NEW_SPENDING_LIMIT_REJECTED_MSG',
+  NEW_SPENDING_LIMIT_EXECUTED_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MSG',
+  NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  NEW_SPENDING_LIMIT_FAILED_MSG: 'NEW_SPENDING_LIMIT_FAILED_MSG',
+  SIGN_REMOVE_SPENDING_LIMIT_MSG: 'SIGN_REMOVE_SPENDING_LIMIT_MSG',
+  REMOVE_SPENDING_LIMIT_PENDING_MSG: 'REMOVE_SPENDING_LIMIT_PENDING_MSG',
+  REMOVE_SPENDING_LIMIT_REJECTED_MSG: 'REMOVE_SPENDING_LIMIT_REJECTED_MSG',
+  REMOVE_SPENDING_LIMIT_EXECUTED_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MSG',
+  REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
+  REMOVE_SPENDING_LIMIT_FAILED_MSG: 'REMOVE_SPENDING_LIMIT_FAILED_MSG',
   WRONG_NETWORK_MSG: 'WRONG_NETWORK_MSG',
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: 'ADDRESS_BOOK_NEW_ENTRY_SUCCESS',
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: 'ADDRESS_BOOK_EDIT_ENTRY_SUCCESS',
@@ -188,6 +200,56 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   SETTINGS_CHANGE_FAILED_MSG: {
     message: 'Settings change failed',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+
+  // Spending Limit
+  SIGN_NEW_SPENDING_LIMIT_MSG: {
+    message: 'Please sign the new Spending Limit',
+    options: { variant: INFO, persist: true },
+  },
+  NEW_SPENDING_LIMIT_PENDING_MSG: {
+    message: 'New Spending Limit pending',
+    options: { variant: INFO, persist: true },
+  },
+  NEW_SPENDING_LIMIT_REJECTED_MSG: {
+    message: 'New Spending Limit rejected',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_EXECUTED_MSG: {
+    message: 'New Spending Limit successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'New Spending Limit successfully created. More confirmations needed to execute',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  NEW_SPENDING_LIMIT_FAILED_MSG: {
+    message: 'New Spending Limit failed',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  SIGN_REMOVE_SPENDING_LIMIT_MSG: {
+    message: 'Please sign the remove Spending Limit',
+    options: { variant: INFO, persist: true },
+  },
+  REMOVE_SPENDING_LIMIT_PENDING_MSG: {
+    message: 'Remove Spending Limit pending',
+    options: { variant: INFO, persist: true },
+  },
+  REMOVE_SPENDING_LIMIT_REJECTED_MSG: {
+    message: 'Remove Spending Limit rejected',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_EXECUTED_MSG: {
+    message: 'Remove Spending Limit successfully executed',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
+    message: 'Remove Spending Limit successfully created. More confirmations needed to execute',
+    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+  },
+  REMOVE_SPENDING_LIMIT_FAILED_MSG: {
+    message: 'Remove Spending Limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 

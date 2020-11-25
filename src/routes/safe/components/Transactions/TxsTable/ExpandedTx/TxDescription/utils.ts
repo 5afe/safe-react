@@ -1,5 +1,5 @@
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { SAFE_METHODS_NAMES } from 'src/routes/safe/store/models/types/transactions.d'
+import { SAFE_METHODS_NAMES, SafeMethods, TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 import { sameString } from 'src/utils/strings'
 import { getNetworkInfo } from 'src/config'
 
@@ -17,7 +17,7 @@ interface TxData {
   data?: string | null
   recipient?: string
   module?: string
-  action?: string
+  action?: SafeMethods
   addedOwner?: string
   removedOwner?: string
   newThreshold?: string
@@ -97,7 +97,7 @@ const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
   }
 
   if (tx.isTokenTransfer) {
-    const { to } = tx.decodedParams.transfer || {}
+    const { to } = (tx.decodedParams as TokenDecodedParams).transfer || {}
     txData.recipient = to
     txData.isTokenTransfer = true
     txData.tokenAddress = tx.recipient
@@ -105,7 +105,7 @@ const getTxDataForTxsWithDecodedParams = (tx: Transaction): TxData => {
   }
 
   if (tx.isCollectibleTransfer) {
-    const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams
+    const { safeTransferFrom, transfer, transferFrom } = tx.decodedParams as TokenDecodedParams
     const { to, value } = safeTransferFrom || transferFrom || transfer || {}
     txData.recipient = to
     txData.tokenId = value
