@@ -4,12 +4,12 @@ import { useSelector } from 'react-redux'
 import { getNetworkInfo } from 'src/config'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { tokenListSelector } from 'src/logic/tokens/store/selectors'
 
 const { nativeCoin } = getNetworkInfo()
 
 const useTokenInfo = (address: string): Token | undefined => {
-  const tokens = useSelector(extendedSafeTokensSelector)
+  const tokens = useSelector(tokenListSelector)
 
   return useMemo(() => {
     if (tokens) {
