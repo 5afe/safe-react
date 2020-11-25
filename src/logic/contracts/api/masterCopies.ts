@@ -20,16 +20,16 @@ export type MasterCopy = {
 }
 
 const extractMasterCopyInfo = (mc: MasterCopyFetch): MasterCopy => {
+  const isCircles = mc.version.toLowerCase().includes(MasterCopyDeployer.CIRCLES.toLowerCase())
   const dashIndex = mc.version.indexOf('-')
 
   const masterCopy = {
     address: mc.address,
-    version: dashIndex === -1 ? mc.version : mc.version.substring(0, dashIndex),
-    deployer: dashIndex === -1 ? MasterCopyDeployer.GNOSIS : MasterCopyDeployer.CIRCLES,
-    deployerRepoUrl:
-      dashIndex === -1
-        ? 'https://github.com/gnosis/safe-contracts/releases'
-        : 'https://github.com/CirclesUBI/safe-contracts/releases',
+    version: !isCircles ? mc.version : mc.version.substring(0, dashIndex),
+    deployer: !isCircles ? MasterCopyDeployer.GNOSIS : MasterCopyDeployer.CIRCLES,
+    deployerRepoUrl: !isCircles
+      ? 'https://github.com/gnosis/safe-contracts/releases'
+      : 'https://github.com/CirclesUBI/safe-contracts/releases',
   }
   return masterCopy
 }
