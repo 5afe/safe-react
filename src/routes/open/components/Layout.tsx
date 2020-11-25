@@ -7,11 +7,12 @@ import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Row from 'src/components/layout/Row'
 import { initContracts } from 'src/logic/contracts/safeContracts'
-import Review from 'src/routes/open/components/ReviewInformation'
+import { Review } from 'src/routes/open/components/ReviewInformation'
 import SafeNameField from 'src/routes/open/components/SafeNameForm'
 import { SafeOwnersPage } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 import {
   FIELD_CONFIRMATIONS,
+  FIELD_CREATION_PROXY_SALT,
   FIELD_SAFE_NAME,
   getOwnerAddressBy,
   getOwnerNameBy,
@@ -40,6 +41,7 @@ type InitialValuesForm = {
   owner0Name?: string
   confirmations: string
   safeName?: string
+  safeCreationSalt: number
 }
 
 const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
@@ -51,6 +53,7 @@ const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): Initi
       [getOwnerNameBy(0)]: ownerName || 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
+      [FIELD_CREATION_PROXY_SALT]: Date.now(),
     }
   }
   let obj = {}
@@ -68,6 +71,7 @@ const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): Initi
     ...obj,
     [FIELD_CONFIRMATIONS]: threshold || '1',
     [FIELD_SAFE_NAME]: name,
+    [FIELD_CREATION_PROXY_SALT]: Date.now(),
   }
 }
 
@@ -92,7 +96,7 @@ type LayoutProps = {
   safeProps?: SafeProps
 }
 
-const Layout = (props: LayoutProps): React.ReactElement => {
+export const Layout = (props: LayoutProps): React.ReactElement => {
   const { onCallSafeContractSubmit, safeProps } = props
 
   const provider = useSelector(providerNameSelector)
@@ -139,5 +143,3 @@ const Layout = (props: LayoutProps): React.ReactElement => {
     </>
   )
 }
-
-export default Layout
