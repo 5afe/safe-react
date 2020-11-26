@@ -80,7 +80,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
       NETWORK: 'MAINNET',
-      APP_ENV: 'production'
+      APP_ENV: 'production',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = mainnet.environment.production.txServiceUrl
@@ -100,7 +100,7 @@ describe('Config Services', () => {
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: 'production',
       NETWORK: 'XDAI',
-      APP_ENV: 'production'
+      APP_ENV: 'production',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
     const TX_SERVICE_URL = xdai.environment.production.txServiceUrl

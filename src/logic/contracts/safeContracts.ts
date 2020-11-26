@@ -1,17 +1,16 @@
 import { AbiItem } from 'web3-utils'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import memoize from 'lodash.memoize'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
-import SafeProxy from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxy.json'
 import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { isProxyCode } from 'src/logic/contracts/historicProxyCode'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
+import { AllowanceModule } from 'src/types/contracts/AllowanceModule.d'
+import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 import SpendingLimitModule from './artifacts/AllowanceModule.json'
@@ -22,7 +21,6 @@ export const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3
 export const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
 export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB05bDa35A'
 
-
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
 
@@ -31,13 +29,13 @@ let safeMaster: GnosisSafe
  * @param {Web3} web3
  * @param {ETHEREUM_NETWORK} networkId
  */
-const createGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
+export const getGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
   const networks = GnosisSafeSol.networks
   // TODO: this may not be the most scalable approach,
   //  but up until v1.2.0 the address is the same for all the networks.
   //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
   const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
-  return new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], contractAddress) as unknown as GnosisSafe
+  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafe
 }
 
 /**
@@ -45,48 +43,69 @@ const createGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
  * @param {Web3} web3
  * @param {ETHEREUM_NETWORK} networkId
  */
-const createProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
+const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
   const networks = ProxyFactorySol.networks
   // TODO: this may not be the most scalable approach,
   //  but up until v1.2.0 the address is the same for all the networks.
   //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
   const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
-  return new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
+  return (new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafeProxyFactory
 }
 
-const createSpendingLimitContract = () => {
+/**
+ * Creates a Contract instance of the GnosisSafeProxyFactory contract
+ */
+export const getSpendingLimitContract = () => {
   const web3 = getWeb3()
-  return new web3.eth.Contract(SpendingLimitModule.abi as AbiItem[], SPENDING_LIMIT_MODULE_ADDRESS)
+  return (new web3.eth.Contract(
+    SpendingLimitModule.abi as AbiItem[],
+    SPENDING_LIMIT_MODULE_ADDRESS,
+  ) as unknown) as AllowanceModule
 }
 
-export const getGnosisSafeContract = memoize(createGnosisSafeContract)
-export const getSpendingLimitContract = memoize(createSpendingLimitContract)
-const getCreateProxyFactoryContract = memoize(createProxyFactoryContract)
+export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
+  const res = await getSafeInfo(proxyAddress)
+  const masterCopyAddress = (res as SafeInfo)?.masterCopy
+  if (!masterCopyAddress) {
+    console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
+    return
+  }
+  return masterCopyAddress
+}
 
-const instantiateMasterCopies = async () => {
+export const instantiateSafeContracts = async () => {
   const web3 = getWeb3()
   const networkId = await getNetworkIdFrom(web3)
 
   // Create ProxyFactory Master Copy
-  proxyFactoryMaster = getCreateProxyFactoryContract(web3, networkId)
+  proxyFactoryMaster = getProxyFactoryContract(web3, networkId)
 
   // Create Safe Master copy
   safeMaster = getGnosisSafeContract(web3, networkId)
 }
 
-export const initContracts = instantiateMasterCopies
-
 export const getSafeMasterContract = async () => {
-  await initContracts()
-
+  await instantiateSafeContracts()
   return safeMaster
 }
 
-export const getSafeDeploymentTransaction = (safeAccounts: string[], numConfirmations: number, safeCreationSalt: number) => {
+export const getSafeDeploymentTransaction = (
+  safeAccounts: string[],
+  numConfirmations: number,
+  safeCreationSalt: number,
+) => {
   const gnosisSafeData = safeMaster.methods
-    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
+    .setup(
+      safeAccounts,
+      numConfirmations,
+      ZERO_ADDRESS,
+      '0x',
+      DEFAULT_FALLBACK_HANDLER_ADDRESS,
+      ZERO_ADDRESS,
+      0,
+      ZERO_ADDRESS,
+    )
     .encodeABI()
-
   return proxyFactoryMaster.methods.createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
 }
 
@@ -94,10 +113,19 @@ export const estimateGasForDeployingSafe = async (
   safeAccounts: string[],
   numConfirmations: number,
   userAccount: string,
-  safeCreationSalt: number
+  safeCreationSalt: number,
 ) => {
   const gnosisSafeData = await safeMaster.methods
-    .setup(safeAccounts, numConfirmations, ZERO_ADDRESS, '0x', DEFAULT_FALLBACK_HANDLER_ADDRESS, ZERO_ADDRESS, 0, ZERO_ADDRESS)
+    .setup(
+      safeAccounts,
+      numConfirmations,
+      ZERO_ADDRESS,
+      '0x',
+      DEFAULT_FALLBACK_HANDLER_ADDRESS,
+      ZERO_ADDRESS,
+      0,
+      ZERO_ADDRESS,
+    )
     .encodeABI()
   const proxyFactoryData = proxyFactoryMaster.methods
     .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
@@ -110,29 +138,5 @@ export const estimateGasForDeployingSafe = async (
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
-  return new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown as GnosisSafe
-}
-
-const cleanByteCodeMetadata = (bytecode: string): string => {
-  const metaData = 'a165'
-  return bytecode.substring(0, bytecode.lastIndexOf(metaData))
-}
-
-export const validateProxy = async (safeAddress: string): Promise<boolean> => {
-  // https://solidity.readthedocs.io/en/latest/metadata.html#usage-for-source-code-verification
-  const web3 = getWeb3()
-  const code = await web3.eth.getCode(safeAddress)
-  const codeWithoutMetadata = cleanByteCodeMetadata(code)
-  const supportedProxies = [SafeProxy]
-  for (let i = 0; i < supportedProxies.length; i += 1) {
-    const proxy = supportedProxies[i]
-    const proxyCode = proxy.deployedBytecode
-    const proxyCodeWithoutMetadata = cleanByteCodeMetadata(proxyCode)
-    if (codeWithoutMetadata === proxyCodeWithoutMetadata) {
-      return true
-    }
-  }
-
-
-  return isProxyCode(codeWithoutMetadata)
+  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
 }

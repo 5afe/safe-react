@@ -20,10 +20,9 @@ import {
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from 'src/logic/contracts/safeContracts'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 const useStyles = makeStyles({
   root: {
@@ -42,42 +41,23 @@ const useStyles = makeStyles({
   },
 })
 
-export const SAFE_INSTANCE_ERROR = 'Address given is not a Safe instance'
-export const SAFE_MASTERCOPY_ERROR = 'Address is not a Safe or mastercopy is not supported'
+export const SAFE_ADDRESS_NOT_VALID = 'Address given is not a valid Safe address'
 
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
 export const safeFieldsValidation = async (values): Promise<Record<string, string>> => {
   const errors = {}
-  const web3 = getWeb3()
-  const safeAddress = values[FIELD_LOAD_ADDRESS]
+  const address = values[FIELD_LOAD_ADDRESS]
 
-  if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
+  if (!address || mustBeEthereumAddress(address) !== undefined) {
     return errors
   }
 
-  const isValidProxy = await validateProxy(safeAddress)
-  if (!isValidProxy) {
-    errors[FIELD_LOAD_ADDRESS] = SAFE_INSTANCE_ERROR
-    return errors
-  }
-
-  // check mastercopy
-  const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress, 0)
-  // https://www.reddit.com/r/ethereum/comments/6l3da1/how_long_are_ethereum_addresses/
-  // ganache returns plain address
-  // rinkeby returns 0x0000000000000+{40 address charachers}
-  // address comes last so we just get last 40 charachers (1byte = 2hex chars)
-  const checksummedProxyAddress = web3.utils.toChecksumAddress(
-    `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
-  )
-  const safeMaster = await getSafeMasterContract()
-  const masterCopy = safeMaster.options.address
-  const sameMasterCopy =
-    checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
-  if (!sameMasterCopy) {
-    errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
+  // if getSafeInfo does not provide data, it's not a valid safe.
+  const safeInfo = await getSafeInfo(address)
+  if (!safeInfo) {
+    errors[FIELD_LOAD_ADDRESS] = SAFE_ADDRESS_NOT_VALID
   }
 
   return errors

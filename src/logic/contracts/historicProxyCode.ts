@@ -1,4 +1,4 @@
-// 
+//
 
 // Code of the safe v1.0.0
 const proxyCodeV10 =

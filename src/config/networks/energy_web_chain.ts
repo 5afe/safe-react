@@ -60,7 +60,7 @@ const mainnet: NetworkConfig = {
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
-  ]
+  ],
 }
 
 export default mainnet
