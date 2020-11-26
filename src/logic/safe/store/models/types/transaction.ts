@@ -1,4 +1,7 @@
 import { List, Map, RecordOf } from 'immutable'
+
+import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
+import { Token } from 'src/logic/tokens/store/model/token'
 import { Confirmation } from './confirmation'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { DataDecoded, Transfer } from './transactions'
@@ -14,6 +17,8 @@ export enum TransactionTypes {
   UPGRADE = 'upgrade',
   TOKEN = 'token',
   COLLECTIBLE = 'collectible',
+  MODULE = 'module',
+  SPENDING_LIMIT = 'spendingLimit',
 }
 export type TransactionTypeValues = typeof TransactionTypes[keyof typeof TransactionTypes]
 
@@ -47,7 +52,7 @@ export type TransactionProps = {
   data: string | null
   dataDecoded: DataDecoded | null
   decimals?: (number | string) | null
-  decodedParams: DecodedParams | null
+  decodedParams: DecodedParams
   executionDate?: string | null
   executionTxHash?: string | null
   executor: string
@@ -101,3 +106,17 @@ export type TxArgs = {
   to: string
   valueInWei: string
 }
+
+type SafeModuleCompatibilityTypes = {
+  nonce?: string // not required for this tx: added for compatibility
+  fee?: number // not required for this tx: added for compatibility
+  executionTxHash?: string // not required for this tx: added for compatibility
+  safeTxHash: string // table uses this key as a unique row identifier, added for compatibility
+}
+
+export type SafeModuleTransaction = ModuleTxServiceModel &
+  SafeModuleCompatibilityTypes & {
+    status: TransactionStatus
+    type: TransactionTypes
+    tokenInfo?: Token
+  }

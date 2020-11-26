@@ -18,6 +18,7 @@ import { AppReduxState } from 'src/store'
 import { latestMasterContractVersionSelector } from 'src/logic/safe/store/selectors'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
+import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -71,6 +72,7 @@ export const buildSafe = async (
   const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
   const featuresEnabled = enabledFeatures(currentVersion)
   const modules = await getModules(safeInfo)
+  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
 
   return {
     address: safeAddress,
@@ -89,6 +91,7 @@ export const buildSafe = async (
     blacklistedAssets: Set(),
     blacklistedTokens: Set(),
     modules,
+    spendingLimits,
   }
 }
 
@@ -106,6 +109,9 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     getLocalSafe(safeAddress),
   ])
 
+  // request SpendingLimit info
+  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
+
   // Converts from [ { address, ownerName} ] to address array
   const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
 
@@ -116,6 +122,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
       address: safeAddress,
       name: localSafe?.name,
       modules,
+      spendingLimits,
       nonce: Number(remoteNonce),
       threshold: Number(remoteThreshold),
       featuresEnabled: localSafe?.currentVersion

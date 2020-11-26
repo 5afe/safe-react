@@ -12,6 +12,9 @@ import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransact
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+
+import SpendingLimitModule from './artifacts/AllowanceModule.json'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
@@ -51,8 +54,13 @@ const createProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gn
   return new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown as GnosisSafeProxyFactory
 }
 
-export const getGnosisSafeContract = memoize(createGnosisSafeContract)
+const createSpendingLimitContract = () => {
+  const web3 = getWeb3()
+  return new web3.eth.Contract(SpendingLimitModule.abi as AbiItem[], SPENDING_LIMIT_MODULE_ADDRESS)
+}
 
+export const getGnosisSafeContract = memoize(createGnosisSafeContract)
+export const getSpendingLimitContract = memoize(createSpendingLimitContract)
 const getCreateProxyFactoryContract = memoize(createProxyFactoryContract)
 
 const instantiateMasterCopies = async () => {
