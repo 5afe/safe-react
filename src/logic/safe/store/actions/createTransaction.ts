@@ -217,7 +217,7 @@ const createTransaction = (
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
-    dispatch(enqueueSnackbar(errorMsg))
+    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     const executeDataUsedSignatures = safeInstance.methods
       .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
