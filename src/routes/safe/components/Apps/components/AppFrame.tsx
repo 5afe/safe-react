@@ -123,6 +123,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
       }, TIMEOUT)
     } else {
       clearTimeout(timer.current)
+      setAppTimeout(false)
     }
 
     return () => {
