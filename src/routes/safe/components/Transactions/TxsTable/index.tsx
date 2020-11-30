@@ -9,6 +9,7 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
 import React, { useState, useEffect } from 'react'
 import { useSelector } from 'react-redux'
+import { TransactionSummary } from 'src/logic/safe/store/models/types/gateway'
 
 import { ExpandedTx } from './ExpandedTx'
 import Status from './Status'
@@ -47,8 +48,13 @@ const TxsTable = (): React.ReactElement => {
   const filteredData = getTxTableData(transactions, cancellationTransactions)
     .sort((tx1, tx2) => {
       // First order by nonce
-      const aNonce = Number(tx1.tx?.nonce)
-      const bNonce = Number(tx1.tx?.nonce)
+      // @ts-expect-error .nonce may be undefined for TransactionSummary type
+      const aNonceValue = tx1.tx.nonce
+      const aNonce = Number(aNonceValue ?? (tx1.tx as TransactionSummary).executionInfo?.nonce)
+      // @ts-expect-error .nonce may be undefined for TransactionSummary type
+      const bNonceValue = tx2.tx.nonce
+      const bNonce = Number(bNonceValue ?? (tx2.tx as TransactionSummary).executionInfo?.nonce)
+
       if (aNonce && bNonce) {
         const difference = aNonce - bNonce
         if (difference !== 0) {
@@ -86,7 +92,7 @@ const TxsTable = (): React.ReactElement => {
         >
           {(sortedData) =>
             sortedData.map((row) => {
-              const rowId = `${row.tx.safeTxHash}-${row.tx.type}`
+              const rowId = row[TX_TABLE_ID]
               return (
                 <React.Fragment key={rowId}>
                   <TableRow
