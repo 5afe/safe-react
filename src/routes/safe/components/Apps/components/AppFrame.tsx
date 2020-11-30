@@ -40,7 +40,7 @@ import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types.d'
-import { LoadingContainer } from 'src/components/LoaderContainer'
+import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 
 const OwnerDisclaimer = styled.div`
@@ -256,8 +256,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
           <LoadingContainer style={{ flexDirection: 'column' }}>
             {appTimeout && (
               <Title size="xs">
-                The safe-app it&apos;s taking longer than usual to load. There might be a problem with the safe-app
-                provider.
+                The safe-app is taking longer than usual to load. There might be a problem with the safe-app provider.
               </Title>
             )}
             <Loader size="md" />
