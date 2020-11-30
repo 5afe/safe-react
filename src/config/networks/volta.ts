@@ -42,8 +42,6 @@ const mainnet: NetworkConfig = {
     },
   },
   disabledWallets: [
-    WALLETS.TREZOR,
-    WALLETS.LEDGER,
     WALLETS.COINBASE,
     WALLETS.DAPPER,
     WALLETS.FORTMATIC,
@@ -53,7 +51,6 @@ const mainnet: NetworkConfig = {
     WALLETS.TORUS,
     WALLETS.TRUST,
     WALLETS.UNILOGIN,
-    WALLETS.WALLET_CONNECT,
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
