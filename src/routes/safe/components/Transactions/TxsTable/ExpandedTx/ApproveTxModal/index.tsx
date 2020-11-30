@@ -18,13 +18,16 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { estimateTxGasCosts, getGasEstimationTxResponse } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import InfoIcon from 'src/assets/icons/info_red.svg'
+import Img from 'src/components/layout/Img'
 
 const useStyles = makeStyles(styles)
 
@@ -82,9 +85,27 @@ const ApproveTxModal = ({
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
+  const [txWillFail, setTxWillFail] = useState(false)
 
   useEffect(() => {
     let isCurrent = true
+
+    const checkIfTxWillFail = async () => {
+      try {
+        const web3 = getWeb3()
+        const from = await getAccountFrom(web3)
+        if (from) {
+          await getGasEstimationTxResponse({
+            to: tx.recipient,
+            from,
+            data: tx.data as string,
+          })
+        }
+      } catch (error) {
+        console.warn('The transaction will fail, it was not possible to estimate the amount of gas to execute the tx')
+        setTxWillFail(true)
+      }
+    }
 
     const estimateGas = async () => {
       const estimatedGasCosts = await estimateTxGasCosts(
@@ -94,6 +115,9 @@ const ApproveTxModal = ({
         tx,
         approveAndExecute ? userAddress : undefined,
       )
+
+      await checkIfTxWillFail()
+
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
@@ -124,7 +148,13 @@ const ApproveTxModal = ({
   }
 
   return (
-    <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
+    <Modal
+      description={description}
+      handleClose={onClose}
+      open={isOpen}
+      title={title}
+      paperClassName={txWillFail ? classes.paperModalContainer : undefined}
+    >
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.headingText} noMargin weight="bolder">
           {title}
@@ -168,6 +198,14 @@ const ApproveTxModal = ({
             } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
+        {txWillFail && (
+          <Row align="center">
+            <Paragraph color="error" className={classes.executionWarningRow}>
+              <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+              This transaction will most likely fail. To save gas costs, collect rejections and cancel this transaction.
+            </Paragraph>
+          </Row>
+        )}
       </Block>
       <Row align="center" className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>
