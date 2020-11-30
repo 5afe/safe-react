@@ -45,7 +45,9 @@ const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
       {tx.type === TransactionTypes.SETTINGS && <SettingsDescriptionTx tx={tx} />}
       {tx.type === TransactionTypes.CUSTOM && <CustomDescriptionTx tx={tx} />}
       {tx.type === TransactionTypes.UPGRADE && <UpgradeDescriptionTx tx={tx} />}
-      {[TransactionTypes.TOKEN, TransactionTypes.COLLECTIBLE].includes(tx.type) && <TransferDescriptionTx tx={tx} />}
+      {[TransactionTypes.TOKEN, TransactionTypes.COLLECTIBLE, TransactionTypes.OUTGOING].includes(tx.type) && (
+        <TransferDescriptionTx tx={tx} />
+      )}
     </Block>
   )
 }
