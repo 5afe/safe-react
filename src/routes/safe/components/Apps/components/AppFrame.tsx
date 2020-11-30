@@ -252,8 +252,13 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
 
       <StyledCard>
         {appIsLoading && (
-          <LoadingContainer>
-            {appTimeout && <Title size="xs">The IPFS provider is slow, the app might not load properly</Title>}
+          <LoadingContainer style={{ flexDirection: 'column' }}>
+            {appTimeout && (
+              <Title size="xs">
+                The safe-app it&apos;s taking longer than usual to load. There might be a problem with the safe-app
+                provider.
+              </Title>
+            )}
             <Loader size="md" />
           </LoadingContainer>
         )}
