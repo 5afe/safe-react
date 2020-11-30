@@ -62,7 +62,6 @@ export const createSafe = (values, userAccount) => {
   const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-
   const promiEvent = deploymentTx.send({ from: userAccount })
 
   promiEvent

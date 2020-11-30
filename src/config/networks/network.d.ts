@@ -51,12 +51,12 @@ export enum ETHEREUM_NETWORK {
 
 export type NetworkSettings = {
   // TODO: id now seems to be unnecessary
-  id: ETHEREUM_NETWORK,
-  backgroundColor: string,
-  textColor: string,
-  label: string,
-  isTestNet: boolean,
-  nativeCoin: Token,
+  id: ETHEREUM_NETWORK
+  backgroundColor: string
+  textColor: string
+  label: string
+  isTestNet: boolean
+  nativeCoin: Token
 }
 
 // something around this to display or not some critical sections in the app, depending on the network support
@@ -73,14 +73,16 @@ export type GasPriceOracle = {
   gasParameter: string
 }
 
-type GasPrice = {
-  gasPrice: number
-  gasPriceOracle?: GasPriceOracle
-} | {
-  gasPrice?: number
-  // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-  gasPriceOracle: GasPriceOracle
-}
+type GasPrice =
+  | {
+      gasPrice: number
+      gasPriceOracle?: GasPriceOracle
+    }
+  | {
+      gasPrice?: number
+      // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
+      gasPriceOracle: GasPriceOracle
+    }
 
 export type EnvironmentSettings = GasPrice & {
   txServiceUrl: string

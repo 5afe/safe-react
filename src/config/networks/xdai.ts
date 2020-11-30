@@ -14,12 +14,11 @@ const baseConfig: EnvironmentSettings = {
 const xDai: NetworkConfig = {
   environment: {
     staging: {
-      ...baseConfig
+      ...baseConfig,
     },
     production: {
       ...baseConfig,
       safeAppsUrl: 'https://apps-xdai.gnosis-safe.io',
-
     },
   },
   network: {
@@ -52,9 +51,7 @@ const xDai: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
   ],
-  disabledFeatures: [
-    FEATURES.ENS_LOOKUP,
-  ],
+  disabledFeatures: [FEATURES.ENS_LOOKUP],
 }
 
 export default xDai
