@@ -1,8 +1,9 @@
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { List, Map } from 'immutable'
 
 import { TransactionSummary } from 'src/logic/safe/store/models/types/gateway'
 import { buildIncomingTxServiceUrl } from 'src/logic/safe/transactions/incomingTxHistory'
+import { sameString } from 'src/utils/strings'
 
 export type IncomingTxServiceModel = {
   blockNumber: number
@@ -13,21 +14,33 @@ export type IncomingTxServiceModel = {
   from: string
 }
 
+type ClientGatewayResponse = {
+  next: string | null
+  previous: string | null
+  results: TransactionSummary[]
+}
+
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 let next, previous
 export const loadIncomingTransactions = async (safeAddress: string): Promise<Map<string, List<TransactionSummary>>> => {
   const incomingTxsFromGateway = buildIncomingTxServiceUrl(safeAddress)
   // requests the first 100 incoming txs
-  const params = 'page_url=limit%3D100'
+  const params = {
+    page_url: 'limit=100',
+  }
   const {
     data: { results, ...pointers },
-  } = await axios.get<{ next: string | null; previous: string | null; results: TransactionSummary[] }>(
-    incomingTxsFromGateway,
-    { params },
-  )
+  } = await axios.get<ClientGatewayResponse, AxiosResponse<ClientGatewayResponse>>(incomingTxsFromGateway, { params })
 
   next = pointers.next
   previous = pointers.previous
 
-  return Map({ [safeAddress]: List(results) })
+  return Map({
+    [safeAddress]: List(
+      results.filter(({ txInfo }) => {
+        // @ts-expect-error .direction doesn't exist on some possible types
+        return sameString(txInfo.direction, 'INCOMING')
+      }),
+    ),
+  })
 }
