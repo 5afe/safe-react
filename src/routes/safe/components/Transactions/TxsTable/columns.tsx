@@ -10,11 +10,17 @@ import TxType from './TxType'
 import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
-import { SafeModuleTransaction, Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import {
+  SafeModuleTransaction,
+  Transaction,
+  TransactionStatus,
+  TransactionTypes,
+} from 'src/logic/safe/store/models/types/transaction'
 import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { getNetworkInfo } from 'src/config'
+import { TransactionSummary, Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { isGatewayTransaction } from 'src/logic/safe/store/models/types/gatewayHelpers'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -36,7 +42,7 @@ interface AmountData {
 }
 
 const getAmountWithSymbol = (
-  { decimals = 0, symbol = NOT_AVAILABLE, value }: AmountData,
+  { decimals = '0', symbol = NOT_AVAILABLE, value }: AmountData,
   formatted = false,
 ): string => {
   const nonFormattedValue = new BigNumber(value).times(`1e-${decimals}`).toFixed()
@@ -46,16 +52,34 @@ const getAmountWithSymbol = (
   return `${txAmount} ${symbol}`
 }
 
-export const getIncomingTxAmount = (tx: Transaction, formatted = true): string => {
-  // simple workaround to avoid displaying unexpected values for incoming NFT transfer
-  if (INCOMING_TX_TYPES[tx.type] === INCOMING_TX_TYPES.ERC721_TRANSFER) {
-    return `1 ${tx.symbol}`
+export const getIncomingTxAmount = (tx: Transfer, formatted = true): string => {
+  switch (tx.transferInfo.type) {
+    case 'ERC721':
+      // simple workaround to avoid displaying unexpected values for incoming NFT transfer
+      return `1 ${tx.transferInfo.tokenSymbol}`
+    case 'ETHER': {
+      const { nativeCoin } = getNetworkInfo()
+      return getAmountWithSymbol(
+        {
+          decimals: nativeCoin.decimals,
+          symbol: nativeCoin.symbol,
+          value: tx.transferInfo.value,
+        },
+        formatted,
+      )
+    }
+    case 'ERC20':
+      return getAmountWithSymbol(
+        {
+          decimals: `${tx.transferInfo.decimals ?? '0'}`,
+          symbol: `${tx.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
+          value: tx.transferInfo.value,
+        },
+        formatted,
+      )
+    default:
+      return NOT_AVAILABLE
   }
-
-  return getAmountWithSymbol(
-    { decimals: tx.decimals as string, symbol: tx.symbol as string, value: tx.value },
-    formatted,
-  )
 }
 
 export const getTxAmount = (tx: Transaction, formatted = true): string => {
@@ -122,12 +146,12 @@ export interface TableData {
   dateOrder?: number
   id: string
   status: string
-  tx: Transaction | SafeModuleTransaction
+  tx: TransactionSummary | Transaction | SafeModuleTransaction
   type: any
 }
 
 const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
-  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+  [TX_TABLE_ID]: `${tx.safeTxHash}-${tx.type}`,
   [TX_TABLE_TYPE_ID]: <TxType txType={tx.type} origin={null} />,
   [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
   [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
@@ -136,13 +160,13 @@ const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getIncomingTxTableData = (tx: Transaction): TableData => ({
-  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+const getIncomingTxTableData = (tx: TransactionSummary): TableData => ({
+  [TX_TABLE_ID]: `${tx.id}-${tx.txInfo.type}`,
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" origin={null} />,
-  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate || '0'),
-  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate || '0')),
-  [TX_TABLE_AMOUNT_ID]: getIncomingTxAmount(tx),
-  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_DATE_ID]: formatDate(new Date(tx.timestamp).toISOString()),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(new Date(tx.timestamp).toISOString())),
+  [TX_TABLE_AMOUNT_ID]: tx.txInfo.type === 'Transfer' ? getIncomingTxAmount(tx.txInfo) : NOT_AVAILABLE,
+  [TX_TABLE_STATUS_ID]: TransactionStatus[tx.txStatus],
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
@@ -162,7 +186,7 @@ const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): Table
   const txType = getTxType(tx)
 
   return {
-    [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+    [TX_TABLE_ID]: `${tx.safeTxHash}-${tx.type}`,
     [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
@@ -174,24 +198,35 @@ const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): Table
 }
 
 export const getTxTableData = (
-  transactions: List<Transaction | SafeModuleTransaction>,
+  transactions: List<Transaction | SafeModuleTransaction | TransactionSummary>,
   cancelTxs: CancellationTransactions,
-): List<TableData> => {
-  return transactions.map((tx) => {
-    const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(tx.type)
-    const isIncomingTx = INCOMING_TX_TYPES[tx.type] !== undefined
+): List<TableData> =>
+  transactions.reduce((acc, tx): List<TableData> => {
+    if (isGatewayTransaction(tx)) {
+      // TransactionSummary
+      if (tx.txInfo.type === 'Transfer') {
+        switch (tx.txInfo.direction) {
+          case 'INCOMING': {
+            return acc.push(getIncomingTxTableData(tx))
+          }
+          case 'OUTGOING':
+          case 'UNKNOWN':
+            return acc
+        }
+      }
+    } else {
+      const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(tx.type)
 
-    if (isModuleTx) {
-      return getModuleTxTableData(tx as SafeModuleTransaction)
+      if (isModuleTx) {
+        return acc.push(getModuleTxTableData(tx as SafeModuleTransaction))
+      }
+
+      return acc.push(getTransactionTableData(tx as Transaction, cancelTxs.get(`${tx.nonce}`)))
     }
 
-    if (isIncomingTx) {
-      return getIncomingTxTableData(tx as Transaction)
-    }
-
-    return getTransactionTableData(tx as Transaction, cancelTxs.get(`${tx.nonce}`))
-  })
-}
+    // this line was added due to TS2366 error
+    return acc
+  }, List([]) as List<TableData>)
 
 export const generateColumns = (): List<TableColumn> => {
   const nonceColumn = {
