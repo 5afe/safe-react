@@ -32,9 +32,9 @@ const getCurrentEnvironment = (): string => {
 }
 
 type NetworkSpecificConfiguration = EnvironmentSettings & {
-  network: NetworkSettings,
-  disabledFeatures?: SafeFeatures,
-  disabledWallets?: Wallets,
+  network: NetworkSettings
+  disabledFeatures?: SafeFeatures
+  disabledWallets?: Wallets
 }
 
 const configuration = (): NetworkSpecificConfiguration => {
@@ -60,7 +60,7 @@ const configuration = (): NetworkSpecificConfiguration => {
     ...networkBaseConfig,
     network: configFile.network,
     disabledFeatures: configFile.disabledFeatures,
-    disabledWallets: configFile.disabledWallets
+    disabledWallets: configFile.disabledWallets,
   }
 }
 
@@ -137,10 +137,10 @@ const fetchContractABI = memoize(
   (url, contractAddress) => `${url}_${contractAddress}`,
 )
 
-const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined=> {
+const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefined => {
   switch (networkExplorerName.toLowerCase()) {
     case 'etherscan': {
-      return  ETHERSCAN_API_KEY
+      return ETHERSCAN_API_KEY
     }
     default: {
       return undefined
@@ -148,7 +148,7 @@ const getNetworkExplorerApiKey = (networkExplorerName: string): string | undefin
   }
 }
 
-export const getContractABI = async (contractAddress: string)  =>{
+export const getContractABI = async (contractAddress: string) => {
   const { apiUrl, name } = getNetworkExplorerInfo()
 
   const apiKey = getNetworkExplorerApiKey(name)
@@ -181,7 +181,7 @@ export const getExplorerInfo = (hash: string): BlockScanInfo => {
       const type = hash.length > 42 ? 'tx' : 'address'
       return () => ({
         url: `${url}/${type}/${hash}`,
-        alt:  name || '',
+        alt: name || '',
       })
     }
   }

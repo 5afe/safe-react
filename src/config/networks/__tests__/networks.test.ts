@@ -41,11 +41,10 @@ describe('Networks config files test', () => {
           return
         }
 
-        const environmentConfigKeys = Object
-          .keys(networkConfigElement)
-          .filter((environmentConfigKey) =>
-            environmentConfigKey.endsWith('Uri') && !!networkConfigElement[environmentConfigKey]
-          )
+        const environmentConfigKeys = Object.keys(networkConfigElement).filter(
+          (environmentConfigKey) =>
+            environmentConfigKey.endsWith('Uri') && !!networkConfigElement[environmentConfigKey],
+        )
 
         // Then
         environmentConfigKeys.forEach((environmentConfigKey) => {
@@ -53,7 +52,10 @@ describe('Networks config files test', () => {
           const isValid = isValidURL(networkConfigElementUri)
 
           if (!isValid) {
-            console.log(`Invalid URI in "${networkFileName}" at ${environment}.${environmentConfigKey}:`, networkConfigElementUri)
+            console.log(
+              `Invalid URI in "${networkFileName}" at ${environment}.${environmentConfigKey}:`,
+              networkConfigElementUri,
+            )
           }
 
           expect(isValid).toBeTruthy()

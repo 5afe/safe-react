@@ -1,3 +1,4 @@
+import { List } from 'immutable'
 import { AbiItem } from 'web3-utils'
 
 import { getNetworkInfo } from 'src/config'
@@ -9,6 +10,8 @@ import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { CALL } from 'src/logic/safe/transactions'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const getEthAsToken = (balance: string | number): Token => {
   const { nativeCoin } = getNetworkInfo()
@@ -33,7 +36,13 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
 }
 
 export const isTokenTransfer = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data?.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
+  return (
+    !isEmptyData(tx.data) &&
+    // Check if contains 'transfer' method code
+    tx.data?.substring(0, 10) === '0xa9059cbb' &&
+    Number(tx.value) === 0 &&
+    tx.operation === CALL
+  )
 }
 
 export const getERC20DecimalsAndSymbol = async (
@@ -74,4 +83,33 @@ export const isSendERC20Transaction = async (tx: TxServiceModel): Promise<boolea
   }
 
   return isSendTokenTx
+}
+
+export type GetTokenByAddress = {
+  tokenAddress: string
+  tokens: List<Token>
+}
+
+export type TokenFound = {
+  balance: string | number
+  decimals: string | number
+}
+
+/**
+ * Finds and returns a Token object by the provided address
+ * @param {string} tokenAddress
+ * @param {List<Token>} tokens
+ * @returns Token | undefined
+ */
+export const getBalanceAndDecimalsFromToken = ({ tokenAddress, tokens }: GetTokenByAddress): TokenFound | undefined => {
+  const token = tokens?.find(({ address }) => sameAddress(address, tokenAddress))
+
+  if (!token) {
+    return
+  }
+
+  return {
+    balance: token.balance ?? 0,
+    decimals: token.decimals ?? 0,
+  }
 }

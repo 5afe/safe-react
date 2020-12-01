@@ -15,7 +15,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { Dispatch } from 'src/logic/safe/store/actions/types'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 const styles = createStyles({
   biggerModalWindow: {

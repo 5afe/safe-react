@@ -8,7 +8,6 @@ import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
-import { BLOCKNATIVE_KEY } from 'src/utils/constants'
 
 const networkId = getNetworkId()
 
@@ -18,7 +17,6 @@ let providerName
 const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
-  dappId: BLOCKNATIVE_KEY,
   networkId: networkId,
   subscriptions: {
     wallet: (wallet) => {
