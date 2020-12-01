@@ -85,7 +85,7 @@ function getOpenedWindow(url, options) {
 function createWindow(port = DEFAULT_PORT) {
   mainWindow = new BrowserWindow({
     show: false,
-    width: 1024,
+    width: 1366,
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),

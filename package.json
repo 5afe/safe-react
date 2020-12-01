@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.15.1",
+  "version": "2.16.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -182,7 +182,7 @@
     "async-sema": "^3.1.0",
     "axios": "0.21.0",
     "bignumber.js": "9.0.1",
-    "bnc-onboard": "1.15.0",
+    "bnc-onboard": "1.14.0",
     "classnames": "^2.2.6",
     "concurrently": "^5.3.0",
     "connected-react-router": "6.8.0",
