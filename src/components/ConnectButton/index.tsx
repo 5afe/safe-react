@@ -65,21 +65,17 @@ export const onboardUser = async (): Promise<boolean> => {
   return walletSelected && onboard.walletCheck()
 }
 
-const ConnectButton = (props): React.ReactElement => (
-  <Button
-    color="primary"
-    minWidth={140}
-    onClick={async () => {
-      const walletSelected = await onboard.walletSelect()
+export const onConnectButtonClick = async () => {
+  const walletSelected = await onboard.walletSelect()
 
-      // perform wallet checks only if user selected a wallet
-      if (walletSelected) {
-        await onboard.walletCheck()
-      }
-    }}
-    variant="contained"
-    {...props}
-  >
+  // perform wallet checks only if user selected a wallet
+  if (walletSelected) {
+    await onboard.walletCheck()
+  }
+}
+
+const ConnectButton = (props): React.ReactElement => (
+  <Button color="primary" minWidth={140} onClick={onConnectButtonClick} variant="contained" {...props}>
     Connect
   </Button>
 )
