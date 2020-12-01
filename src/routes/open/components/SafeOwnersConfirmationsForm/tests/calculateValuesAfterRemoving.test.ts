@@ -1,4 +1,4 @@
-import { calculateValuesAfterRemoving } from 'src/routes/open/components/SafeOwnersConfirmationsForm/index'
+import { calculateValuesAfterRemoving } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 
 describe('calculateValuesAfterRemoving', () => {
   it(`should properly remove the last owner row`, () => {
@@ -45,7 +45,7 @@ describe('calculateValuesAfterRemoving', () => {
         owner0Address: '0x90F8bf6A479f320ead074411a4B0e7944Ea8c9C1',
         owner1Name: 'Owner 2',
         owner1Address: '0x22d491Bde2303f2f43325b2108D26f1eAbA1e32b',
-      }
+      },
     )
   })
 })
