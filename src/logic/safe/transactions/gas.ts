@@ -229,3 +229,24 @@ export const estimateSafeTxGas = async (
     return 0
   }
 }
+
+export const checkIfTxWillFail = async ({ txTo, data }: { txTo?: string; data: string }): Promise<boolean> => {
+  const web3 = getWeb3()
+  try {
+    if (!txTo) {
+      return true
+    }
+    const from = await getAccountFrom(web3)
+    if (!from) {
+      return true
+    }
+    await getGasEstimationTxResponse({
+      to: txTo,
+      from,
+      data,
+    })
+    return false
+  } catch (error) {
+    return true
+  }
+}
