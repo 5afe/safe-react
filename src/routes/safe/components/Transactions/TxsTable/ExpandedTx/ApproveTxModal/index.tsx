@@ -18,14 +18,13 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts, getGasEstimationTxResponse } from 'src/logic/safe/transactions/gas'
+import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import Img from 'src/components/layout/Img'
 
@@ -88,24 +87,16 @@ const ApproveTxModal = ({
   const [txWillFail, setTxWillFail] = useState(false)
 
   useEffect(() => {
-    let isCurrent = true
-
-    const checkIfTxWillFail = async () => {
-      try {
-        const web3 = getWeb3()
-        const from = await getAccountFrom(web3)
-        if (from) {
-          await getGasEstimationTxResponse({
-            to: tx.recipient,
-            from,
-            data: tx.data as string,
-          })
-        }
-      } catch (error) {
-        console.warn('The transaction will fail, it was not possible to estimate the amount of gas to execute the tx')
-        setTxWillFail(true)
-      }
+    const checkIfTxWillFailAsync = async () => {
+      const txWillFailResult = await checkIfTxWillFail({ txTo: tx.recipient, data: tx.data as string })
+      setTxWillFail(txWillFailResult)
     }
+
+    checkIfTxWillFailAsync()
+  }, [tx.recipient, tx.data])
+
+  useEffect(() => {
+    let isCurrent = true
 
     const estimateGas = async () => {
       const estimatedGasCosts = await estimateTxGasCosts(
@@ -115,8 +106,6 @@ const ApproveTxModal = ({
         tx,
         approveAndExecute ? userAddress : undefined,
       )
-
-      await checkIfTxWillFail()
 
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
