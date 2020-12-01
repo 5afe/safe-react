@@ -19,7 +19,7 @@ import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -35,6 +35,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import InfoIcon from 'src/assets/icons/info_red.svg'
 
 const useStyles = makeStyles(styles)
 
@@ -61,11 +62,23 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const [data, setData] = useState('')
+  const [data, setData] = useState(EMPTY_DATA)
 
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
+  const [txWillFail, setTxWillFail] = useState(false)
+
+  useEffect(() => {
+    const checkIfTxWillFailAsync = async () => {
+      if (data !== EMPTY_DATA) {
+        const txWillFailResult = await checkIfTxWillFail({ txTo: txRecipient, data })
+        setTxWillFail(txWillFailResult)
+      }
+    }
+
+    checkIfTxWillFailAsync()
+  }, [data, txRecipient])
 
   useEffect(() => {
     let isCurrent = true
@@ -210,6 +223,15 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
+          {txWillFail && data !== EMPTY_DATA && (
+            <Row align="center">
+              <Paragraph color="error" className={classes.executionWarningRow}>
+                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+                This transaction will most likely fail. To save gas costs, collect rejections and cancel this
+                transaction.
+              </Paragraph>
+            </Row>
+          )}
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
