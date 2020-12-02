@@ -10,22 +10,28 @@ import { onConnectButtonClick } from 'src/components/ConnectButton'
 const Wrapper = styled.div`
   display: flex;
   flex-direction: row;
+  margin: 24px 0 0 0;
 `
 const StyledCardDouble = styled(Card)`
   display: flex;
   padding: 0;
 `
 const StyledCard = styled(Card)`
-  margin: 0 20px 0 0;
-  max-width: 33%;
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
+  margin: 0 20px 0 0;
+  max-width: 33%;
 `
 const CardsCol = styled.div`
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   padding: 24px;
   width: 50%;
+`
+const StyledButton = styled(Button)`
+  margin-top: auto;
 `
 const TitleWrapper = styled.div`
   display: flex;
@@ -44,7 +50,7 @@ const StyledTitleOnly = styled(Title)`
   margin: 0 0 16px 0;
 `
 const StyledButtonLink = styled(ButtonLink)`
-  margin: 16px 0 0 -8px;
+  margin: 16px 0 16px -8px;
 `
 
 type Props = {
@@ -56,7 +62,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
   return (
     <Block>
       {/* Title */}
-      <Title size="md" strong withoutMargin>
+      <Title size="md" strong>
         Welcome to Gnosis Safe Multisig.
       </Title>
 
@@ -122,11 +128,11 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 Create a new Safe Multisig that is controlled by one or multiple owners. <br />
                 You will be required to pay a network fee for creating your new Safe.
               </Text>
-              <Button size="lg" color="primary" variant="contained" disabled={!provider}>
+              <StyledButton size="lg" color="primary" variant="contained" disabled={!provider}>
                 <Text size="xl" color="white">
                   + Create new Safe
                 </Text>
-              </Button>
+              </StyledButton>
             </CardsCol>
 
             <Divider orientation="vertical" />
@@ -140,7 +146,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 Already have a Safe? Do you want to access your Safe Multisig from a different device? Easily load your
                 Safe Multisig using your Safe address.
               </Text>
-              <Button
+              <StyledButton
                 variant="bordered"
                 iconType="safe"
                 iconSize="sm"
@@ -152,7 +158,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 <Text size="xl" color="secondary">
                   Load existing Safe
                 </Text>
-              </Button>
+              </StyledButton>
             </CardsCol>
           </StyledCardDouble>
         </Wrapper>
