@@ -147,6 +147,11 @@ export const getGasEstimationTxResponse = async (txConfig: {
 
     if (!sameString(result, EMPTY_DATA)) {
       return new BigNumber(result.substring(138), 16).toNumber()
+    } else {
+      // This is a transfer of native coin (eth, xDai, etc), in that case the empty result is valid
+      if (sameString(txConfig.data, EMPTY_DATA)) {
+        return new BigNumber(21000).toNumber()
+      }
     }
   } catch (error) {
     // So we try to extract the estimation result within the error in case is possible
@@ -232,6 +237,7 @@ export const estimateSafeTxGas = async (
 
 export const checkIfTxWillFail = async ({ txTo, data }: { txTo?: string; data: string }): Promise<boolean> => {
   const web3 = getWeb3()
+  console.log('data', data)
   try {
     if (!txTo) {
       return true
