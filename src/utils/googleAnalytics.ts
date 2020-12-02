@@ -20,11 +20,7 @@ export const loadGoogleAnalytics = (): void => {
   if (!trackingID) {
     console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
   } else {
-    ReactGA.initialize(trackingID, {
-      gaOptions: {
-        siteSpeedSampleRate: 100,
-      },
-    })
+    ReactGA.initialize(trackingID)
     ReactGA.set({
       anonymizeIp: true,
       appName: `Gnosis Safe Multisig (${networkInfo.label})`,
