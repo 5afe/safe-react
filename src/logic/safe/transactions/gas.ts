@@ -237,7 +237,6 @@ export const estimateSafeTxGas = async (
 
 export const checkIfTxWillFail = async ({ txTo, data }: { txTo?: string; data: string }): Promise<boolean> => {
   const web3 = getWeb3()
-  console.log('data', data)
   try {
     if (!txTo) {
       return true

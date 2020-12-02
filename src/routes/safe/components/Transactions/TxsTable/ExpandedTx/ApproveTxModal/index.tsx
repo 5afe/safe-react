@@ -106,7 +106,6 @@ const ApproveTxModal = ({
         tx,
         approveAndExecute ? userAddress : undefined,
       )
-
       const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const formattedGasCosts = formatAmount(gasCosts)
       if (isCurrent) {
