@@ -4,8 +4,9 @@ import styled from 'styled-components'
 import { Card, Button, Title, Text, Divider, ButtonLink, Dot } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
-// import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
+import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
+import Link from 'src/components/layout/Link'
 
 const Wrapper = styled.div`
   display: flex;
@@ -113,7 +114,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
             </Button>
           </StyledCard>
 
-          <StyledCardDouble>
+          <StyledCardDouble disabled={!provider}>
             {/* Create safe */}
             <CardsCol>
               <TitleWrapper>
@@ -128,7 +129,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 Create a new Safe Multisig that is controlled by one or multiple owners. <br />
                 You will be required to pay a network fee for creating your new Safe.
               </Text>
-              <StyledButton size="lg" color="primary" variant="contained" disabled={!provider}>
+              <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
                 <Text size="xl" color="white">
                   + Create new Safe
                 </Text>
@@ -152,8 +153,8 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 iconSize="sm"
                 size="lg"
                 color="secondary"
-                onClick={() => alert('click')}
-                disabled={!provider}
+                component={Link}
+                to={LOAD_ADDRESS}
               >
                 <Text size="xl" color="secondary">
                   Load existing Safe
