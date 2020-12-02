@@ -14,7 +14,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
@@ -23,6 +23,7 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
+import InfoIcon from 'src/assets/icons/info_red.svg'
 
 const useStyles = makeStyles(styles)
 
@@ -47,6 +48,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const [gasCosts, setGasCosts] = useState('< 0.001')
+  const [txWillFail, setTxWillFail] = useState(false)
+
+  useEffect(() => {
+    const checkIfTxWillFailAsync = async () => {
+      const txWillFailResult = await checkIfTxWillFail({ txTo: tx.contractAddress, data: tx.data as string })
+      setTxWillFail(txWillFailResult)
+    }
+
+    checkIfTxWillFailAsync()
+  }, [tx.contractAddress, tx.data])
+
   useEffect(() => {
     let isCurrent = true
 
@@ -165,6 +177,15 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
+          {txWillFail && (
+            <Row align="center">
+              <Paragraph color="error" className={classes.executionWarningRow}>
+                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+                This transaction will most likely fail. To save gas costs, collect rejections and cancel this
+                transaction.
+              </Paragraph>
+            </Row>
+          )}
         </Row>
       </Block>
       <Hairline />
