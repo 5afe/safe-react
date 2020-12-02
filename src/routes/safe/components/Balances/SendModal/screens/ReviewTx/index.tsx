@@ -62,7 +62,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const { address: safeAddress } = useSelector(safeSelector) || {}
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const [data, setData] = useState(EMPTY_DATA)
+  const [data, setData] = useState('')
 
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
@@ -71,7 +71,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
 
   useEffect(() => {
     const checkIfTxWillFailAsync = async () => {
-      if (data !== EMPTY_DATA) {
+      if (data) {
         const txWillFailResult = await checkIfTxWillFail({ txTo: txRecipient, data })
         setTxWillFail(txWillFailResult)
       }
@@ -223,7 +223,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txWillFail && data !== EMPTY_DATA && (
+          {txWillFail && (
             <Row align="center">
               <Paragraph color="error" className={classes.executionWarningRow}>
                 <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
