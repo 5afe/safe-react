@@ -19,7 +19,7 @@ import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -31,6 +31,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import InfoIcon from 'src/assets/icons/info_red.svg'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -60,6 +61,18 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
   const [data, setData] = useState('')
+  const [txWillFail, setTxWillFail] = useState(false)
+
+  useEffect(() => {
+    const checkIfTxWillFailAsync = async () => {
+      if (data) {
+        const txWillFailResult = await checkIfTxWillFail({ txTo: tx.recipientAddress, data })
+        setTxWillFail(txWillFailResult)
+      }
+    }
+
+    checkIfTxWillFailAsync()
+  }, [data, tx.recipientAddress])
 
   useEffect(() => {
     let isCurrent = true
@@ -167,6 +180,15 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
+          {txWillFail && (
+            <Row align="center">
+              <Paragraph color="error" className={classes.executionWarningRow}>
+                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+                This transaction will most likely fail. To save gas costs, collect rejections and cancel this
+                transaction.
+              </Paragraph>
+            </Row>
+          )}
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
