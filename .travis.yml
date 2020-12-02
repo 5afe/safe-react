@@ -52,8 +52,6 @@ before_install:
   - sudo apt-get update
   - sudo apt-get -y install python-pip python-dev libusb-1.0-0-dev libudev-dev
   - pip install awscli --upgrade --user
-install:
-  - yarn install --network-concurrency 1
 script:
   - yarn lint:check
   - yarn prettier:check
