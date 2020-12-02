@@ -64,7 +64,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Sablier
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfLqzEHz5TEupRLPuFp7prtcVAm6hKii5YZsVZWeM17Lr`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmb1Xpfu9mnX4A3trpoVeBZ9sTiNtEuRoFKEiaVXWntDxB`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
@@ -88,7 +88,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // TX-Builder
   {
-    url: `${gnosisAppsUrl}/tx-builder`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXdrr9hRbXSaqMb71iKnEp66PwwsAbJDR9XdwByUYSTxB`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
@@ -100,7 +100,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Wallet-Connect
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVWjxqMYuqZ4WvxKdrErcTt1Sx5JHxZosjYz9zHiHRAiq`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmWwSuByB3B3hLU5ita3RQgiSEDYtBr5LjjDCRGb8YqLKF`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
