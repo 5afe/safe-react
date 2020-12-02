@@ -57,7 +57,7 @@ export interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
-const REJECT_CONFIRM_TX_ERROR_CODE = 4001
+export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 const createTransaction = (
   {
@@ -211,7 +211,6 @@ const createTransaction = (
       ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
       : notificationsQueue.afterExecutionError.message
 
-    console.error(`Error creating the TX: `, err)
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
     if (pendingExecutionKey) {
@@ -220,7 +219,7 @@ const createTransaction = (
 
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
-    if (err.code !== REJECT_CONFIRM_TX_ERROR_CODE) {
+    if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
       const executeDataUsedSignatures = safeInstance.methods
         .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
         .encodeABI()
