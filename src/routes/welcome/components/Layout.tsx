@@ -98,7 +98,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               Gnosis Safe Multisig supports a wide range of wallets that you can choose to be one of the authentication
               factors.
             </Text>
-            <StyledButtonLink textSize="xl" color="primary" iconType="externalLink">
+            <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
               Why do I need to connect wallet?
             </StyledButtonLink>
             <Button
