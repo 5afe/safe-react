@@ -1,12 +1,11 @@
 import * as React from 'react'
 
 import styled from 'styled-components'
-import { Card, Button, Title, Text, Divider, ButtonLink, Dot, Icon } from '@gnosis.pm/safe-react-components'
+import { Card, Button, Title, Text, Divider, ButtonLink, Dot, Icon, Link } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
-import Link from 'src/components/layout/Link'
 
 const Wrapper = styled.div`
   display: flex;
@@ -100,7 +99,15 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               factors.
             </Text>
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
-              Why do I need to connect wallet?
+              <Link
+                size="xl"
+                href="https://help.gnosis-safe.io/en/articles/4689442-why-do-i-need-to-connect-a-wallet"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="More info about: Why do I need to connect wallet?"
+              >
+                Why do I need to connect wallet?
+              </Link>
             </StyledButtonLink>
             <StyledButton
               size="lg"
