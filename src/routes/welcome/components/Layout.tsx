@@ -1,7 +1,7 @@
 import * as React from 'react'
 
 import styled from 'styled-components'
-import { Card, Button, Title, Text, Divider, ButtonLink, Dot } from '@gnosis.pm/safe-react-components'
+import { Card, Button, Title, Text, Divider, ButtonLink, Dot, Icon } from '@gnosis.pm/safe-react-components'
 
 import Block from 'src/components/layout/Block'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
@@ -88,7 +88,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
           <StyledCard>
             <TitleWrapper>
               <Dot color="primary">
-                <Title size="xs">1</Title>
+                {!provider ? <Title size="xs">1</Title> : <Icon color="white" type="check" size="md" />}
               </Dot>
               <StyledTitle size="sm" strong withoutMargin>
                 Connect wallet
