@@ -42,15 +42,15 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
-  //Balancer Pool
+  // Balancer Pool
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaTucdZYLKTqaewwJduVMM8qfCDhyaEqjd8tBNae26K1J`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
-   //CMM
-   // Point to a static server to allow app update without Safe deployment
-   {
+  // CMM
+  // Point to a static server to allow app update without Safe deployment
+  {
     url: `https://safe-cmm.gnosis.io`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.XDAI],
