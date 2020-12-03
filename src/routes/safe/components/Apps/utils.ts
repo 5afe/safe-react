@@ -48,6 +48,13 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
+   //CMM
+   // Point to a static server to allow app update without Safe deployment
+   {
+    url: `https://safe-cmm.gnosis.io`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.XDAI],
+  },
   // Compound
   { url: `${gnosisAppsUrl}/compound`, disabled: false, networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY] },
   // Idle
