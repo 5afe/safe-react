@@ -22,7 +22,8 @@ const StyledCard = styled(Card)`
   flex-direction: column;
   align-items: flex-start;
   margin: 0 20px 0 0;
-  max-width: 33%;
+  max-width: 27%;
+  height: 276px;
 `
 const CardsCol = styled.div`
   display: flex;
@@ -101,7 +102,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
               Why do I need to connect wallet?
             </StyledButtonLink>
-            <Button
+            <StyledButton
               size="lg"
               color="primary"
               variant="contained"
@@ -111,7 +112,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               <Text size="xl" color="white">
                 Connect wallet
               </Text>
-            </Button>
+            </StyledButton>
           </StyledCard>
 
           <StyledCardDouble disabled={!provider}>
