@@ -1,13 +1,13 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
 import { border, fancy, screenSm, warning } from 'src/theme/variables'
 
-const key = require('../assets/key.svg')
-const triangle = require('../assets/triangle.svg')
+import KeyIcon from '../assets/key.svg'
+import TriangleIcon from '../assets/triangle.svg'
 
 const styles = createStyles({
   root: {
@@ -71,12 +71,12 @@ export const KeyRing = ({
   hideDot = false,
   keySize,
   mode,
-}: Props): React.ReactElement => {
+}: Props): ReactElement => {
   const classes = useStyles(styles)
   const keyStyle = buildKeyStyleFrom(circleSize, center, dotSize)
   const dotStyle = buildDotStyleFrom(dotSize, dotTop, dotRight, mode)
   const isWarning = mode === 'warning'
-  const img = isWarning ? triangle : key
+  const img = isWarning ? TriangleIcon : KeyIcon
 
   return (
     <>

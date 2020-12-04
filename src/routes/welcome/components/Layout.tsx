@@ -1,5 +1,5 @@
 import OpenInNew from '@material-ui/icons/OpenInNew'
-import * as React from 'react'
+import React from 'react'
 
 import styles from './Layout.module.scss'
 
@@ -12,8 +12,8 @@ import Link from 'src/components/layout/Link'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { marginButtonImg, secondary } from 'src/theme/variables'
 
-const plus = require('../assets/new.svg')
-const safe = require('../assets/safe.svg')
+import PlusIcon from '../assets/new.svg'
+import SafeIcon from '../assets/safe.svg'
 
 const openIconStyle = {
   height: '13px',
@@ -37,7 +37,7 @@ export const CreateSafe = ({ provider, size }: any) => (
     variant="contained"
     testId="create-new-safe-btn"
   >
-    <Img alt="Safe" height={14} src={plus} />
+    <Img alt="Safe" height={14} src={PlusIcon} />
     <div style={buttonStyle}>Create new Safe</div>
   </Button>
 )
@@ -53,7 +53,7 @@ export const LoadSafe = ({ provider, size }) => (
     variant="outlined"
     testId="load-existing-safe-btn"
   >
-    <Img alt="Safe" height={14} src={safe} />
+    <Img alt="Safe" height={14} src={SafeIcon} />
     <div style={buttonStyle}>Load existing Safe</div>
   </Button>
 )

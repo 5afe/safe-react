@@ -15,7 +15,7 @@ import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { border, headerHeight, md, screenSm, sm } from 'src/theme/variables'
 
-const logo = require('../assets/gnosis-safe-multisig-logo.svg')
+import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 
 const styles = () => ({
   root: {
@@ -59,7 +59,7 @@ const Layout = openHoc(({ classes, clickAway, open, providerDetails, providerInf
   <Row className={classes.summary}>
     <Col className={classes.logo} middle="xs" start="xs">
       <Link to="/">
-        <Img alt="Gnosis Team Safe" height={36} src={logo} testId="heading-gnosis-logo" />
+        <Img alt="Gnosis Team Safe" height={36} src={SafeLogo} testId="heading-gnosis-logo" />
       </Link>
     </Col>
     <Spacer />
