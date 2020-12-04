@@ -1,7 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import { CALL } from '.'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
@@ -54,25 +53,9 @@ export const estimateTxGasCosts = async (
     const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
 
     let txData
+    let gas
     if (isExecution) {
-      const signatures = tx?.confirmations
-        ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-        : getPreValidatedSignatures(from)
-
-      txData = await safeInstance.methods
-        .execTransaction(
-          to,
-          tx?.value || 0,
-          data,
-          CALL,
-          tx?.safeTxGas || 0,
-          0,
-          0,
-          ZERO_ADDRESS,
-          ZERO_ADDRESS,
-          signatures,
-        )
-        .encodeABI()
+      gas = await estimateExecTransactionGas(safeAddress, data, to, tx?.value || '0', CALL)
     } else {
       const txHash = await safeInstance.methods
         .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
@@ -80,15 +63,14 @@ export const estimateTxGasCosts = async (
           from,
         })
       txData = await safeInstance.methods.approveHash(txHash).encodeABI()
+      gas = await calculateGasOf(txData, from, safeAddress)
     }
 
-    const gas = await calculateGasOf(txData, from, safeAddress)
     const gasPrice = await calculateGasPrice()
 
     return gas * parseInt(gasPrice, 10)
   } catch (err) {
-    console.error('Error while estimating transaction execution gas costs:')
-    console.error(err)
+    console.error('Error while estimating transaction execution gas costs:', err.message)
 
     return 10000
   }
@@ -196,7 +178,7 @@ const calculateMinimumGasForTransaction = async (
   return 0
 }
 
-export const estimateSafeTxGas = async (
+export const estimateExecTransactionGas = async (
   safeAddress: string,
   data: string,
   to: string,
@@ -227,7 +209,7 @@ export const estimateSafeTxGas = async (
       dataGasEstimation,
     )
   } catch (error) {
-    console.error('Error calculating tx gas estimation', error)
+    console.info('Error calculating tx gas estimation', error.message)
     return 0
   }
 }
@@ -255,9 +237,9 @@ export const checkIfExecTxWillFail = async ({
       return true
     }
 
-    const estimateGas = await estimateSafeTxGas(safeAddress, data, txTo, txAmount, operation)
+    const estimateGas = await estimateExecTransactionGas(safeAddress, data, txTo, txAmount, operation)
 
-    return estimateGas > 0
+    return estimateGas <= 0
   } catch (error) {
     return true
   }

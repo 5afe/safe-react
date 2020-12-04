@@ -20,7 +20,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
+import { estimateExecTransactionGas } from 'src/logic/safe/transactions/gas'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
@@ -100,7 +100,7 @@ const ConfirmTransactionModal = ({
     const estimateGas = async () => {
       try {
         setEstimatingGas(true)
-        const safeTxGas = await estimateSafeTxGas(
+        const safeTxGas = await estimateExecTransactionGas(
           safeAddress,
           encodeMultiSendCall(txs),
           MULTI_SEND_ADDRESS,
