@@ -1,19 +1,15 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { BigNumber } from 'bignumber.js'
-import { AbiItem } from 'web3-utils'
-
 import { CALL } from '.'
-
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { sameString } from 'src/utils/strings'
 
-const estimateDataGasCosts = (data: string): number => {
+// Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
+const parseRequiredTxGasResponse = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
     if (currentValue === EMPTY_DATA) {
       return accumulator + 0
@@ -27,6 +23,14 @@ const estimateDataGasCosts = (data: string): number => {
   }
 
   return data.match(/.{2}/g)?.reduce(reducer, 0)
+}
+
+// https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+export const getPreValidatedSignatures = (from: string): string => {
+  return `0x000000000000000000000000${from.replace(
+    EMPTY_DATA,
+    '',
+  )}000000000000000000000000000000000000000000000000000000000000000001`
 }
 
 export const estimateTxGasCosts = async (
@@ -44,20 +48,17 @@ export const estimateTxGasCosts = async (
       return 0
     }
 
-    const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const nonce = await safeInstance.methods.nonce().call()
     const threshold = await safeInstance.methods.getThreshold().call()
     const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
 
     let txData
     if (isExecution) {
-      // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
       const signatures = tx?.confirmations
         ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
-        : `0x000000000000000000000000${from.replace(
-            EMPTY_DATA,
-            '',
-          )}000000000000000000000000000000000000000000000000000000000000000001`
+        : getPreValidatedSignatures(from)
+
       txData = await safeInstance.methods
         .execTransaction(
           to,
@@ -196,7 +197,6 @@ const calculateMinimumGasForTransaction = async (
 }
 
 export const estimateSafeTxGas = async (
-  safe: GnosisSafe | undefined,
   safeAddress: string,
   data: string,
   to: string,
@@ -204,10 +204,7 @@ export const estimateSafeTxGas = async (
   operation: number,
 ): Promise<number> => {
   try {
-    let safeInstance = safe
-    if (!safeInstance) {
-      safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    }
+    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
     const estimateData = safeInstance.methods.requiredTxGas(to, valueInWei, data, operation).encodeABI()
     const gasEstimationResponse = await getGasEstimationTxResponse({
@@ -219,7 +216,7 @@ export const estimateSafeTxGas = async (
     const txGasEstimation = gasEstimationResponse + 10000
 
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
-    const dataGasEstimation = estimateDataGasCosts(estimateData) + 21000
+    const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + 21000
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(
@@ -235,7 +232,19 @@ export const estimateSafeTxGas = async (
   }
 }
 
-export const checkIfTxWillFail = async ({ txTo, data }: { txTo?: string; data: string }): Promise<boolean> => {
+export const checkIfExecTxWillFail = async ({
+  safeAddress,
+  txTo,
+  data,
+  txAmount = '0',
+  operation = 0,
+}: {
+  safeAddress: string
+  txTo?: string
+  data: string
+  txAmount?: string
+  operation?: number
+}): Promise<boolean> => {
   const web3 = getWeb3()
   try {
     if (!txTo) {
@@ -245,12 +254,10 @@ export const checkIfTxWillFail = async ({ txTo, data }: { txTo?: string; data: s
     if (!from) {
       return true
     }
-    await getGasEstimationTxResponse({
-      to: txTo,
-      from,
-      data,
-    })
-    return false
+
+    const estimateGas = await estimateSafeTxGas(safeAddress, data, txTo, txAmount, operation)
+
+    return estimateGas > 0
   } catch (error) {
     return true
   }
