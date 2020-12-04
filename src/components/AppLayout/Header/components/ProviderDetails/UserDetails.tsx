@@ -19,7 +19,7 @@ import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { CircleDot } from '../CircleDot'
 import { createStyles } from '@material-ui/core'
 
-const walletIcon = require('../../assets/wallet.svg')
+import WalletIcon from '../../assets/wallet.svg'
 
 const styles = createStyles({
   container: {
@@ -150,7 +150,7 @@ export const UserDetails = ({
           Wallet
         </Paragraph>
         <Spacer />
-        <Img alt="Wallet icon" className={classes.logo} height={14} src={walletIcon} />
+        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
           {upperFirst(provider)}
         </Paragraph>
