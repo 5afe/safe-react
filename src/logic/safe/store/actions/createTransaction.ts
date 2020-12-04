@@ -14,7 +14,7 @@ import {
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas, getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -89,14 +89,9 @@ const createTransaction = (
   const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas =
-    safeTxGasArg || (await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation))
+  const safeTxGas = safeTxGasArg || (await estimateSafeTxGas(safeAddress, txData, to, valueInWei, operation))
 
-  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-  const sigs = `0x000000000000000000000000${from.replace(
-    '0x',
-    '',
-  )}000000000000000000000000000000000000000000000000000000000000000001`
+  const sigs = getPreValidatedSignatures(from)
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
   const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
