@@ -40,7 +40,8 @@ import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types.d'
-import { LoadingContainer } from 'src/components/LoaderContainer'
+import { LoadingContainer } from 'src/components/LoaderContainer/index'
+import { TIMEOUT } from 'src/utils/constants'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -112,6 +113,23 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   const [isAppDeletable, setIsAppDeletable] = useState<boolean | undefined>()
 
   const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
+  const timer = useRef<number>()
+  const [appTimeout, setAppTimeout] = useState(false)
+
+  useEffect(() => {
+    if (appIsLoading) {
+      timer.current = setTimeout(() => {
+        setAppTimeout(true)
+      }, TIMEOUT)
+    } else {
+      clearTimeout(timer.current)
+      setAppTimeout(false)
+    }
+
+    return () => {
+      clearTimeout(timer.current)
+    }
+  }, [appIsLoading])
 
   const openConfirmationModal = useCallback(
     (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) =>
@@ -235,7 +253,12 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
 
       <StyledCard>
         {appIsLoading && (
-          <LoadingContainer>
+          <LoadingContainer style={{ flexDirection: 'column' }}>
+            {appTimeout && (
+              <Title size="xs">
+                The safe-app is taking longer than usual to load. There might be a problem with the safe-app provider.
+              </Title>
+            )}
             <Loader size="md" />
           </LoadingContainer>
         )}

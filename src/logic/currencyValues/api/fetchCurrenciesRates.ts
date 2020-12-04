@@ -14,9 +14,9 @@ const fetchCurrenciesRates = async (
   let rate = 0
   if (sameString(targetCurrencyValue, AVAILABLE_CURRENCIES.NETWORK)) {
     try {
-      const result = await fetchTokenCurrenciesBalances(safeAddress)
-      if (result?.data?.length) {
-        rate = new BigNumber(1).div(result.data[0].fiatConversion).toNumber()
+      const tokenCurrenciesBalances = await fetchTokenCurrenciesBalances(safeAddress)
+      if (tokenCurrenciesBalances?.length) {
+        rate = new BigNumber(1).div(tokenCurrenciesBalances[0].fiatConversion).toNumber()
       }
     } catch (error) {
       console.error(`Fetching ${AVAILABLE_CURRENCIES.NETWORK} data from the relayer errored`, error)
