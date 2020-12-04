@@ -6,7 +6,6 @@ import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCO
 
 import Loader from 'src/components/Loader'
 import { defaultSafeSelector } from 'src/routes/safe/store/selectors'
-import { useAnalytics } from 'src/utils/googleAnalytics'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 
@@ -21,18 +20,12 @@ const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 const Routes = ({ location }) => {
   const [isInitialLoad, setInitialLoad] = useState(true)
   const defaultSafe = useSelector(defaultSafeSelector)
-  const { trackPage } = useAnalytics()
 
   useEffect(() => {
     if (isInitialLoad && location.pathname !== '/') {
       setInitialLoad(false)
     }
   }, [location.pathname, isInitialLoad])
-
-  useEffect(() => {
-    const page = location.pathname + location.search
-    trackPage(page)
-  }, [location.pathname, location.search, trackPage])
 
   return (
     <Switch>

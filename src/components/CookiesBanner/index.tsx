@@ -1,8 +1,5 @@
-import Checkbox from '@material-ui/core/Checkbox'
-import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
-import React, { useEffect, useState, useCallback } from 'react'
+import React, { useEffect, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Button from 'src/components/layout/Button'
@@ -12,7 +9,6 @@ import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBann
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -46,10 +42,12 @@ const useStyles = makeStyles({
   },
   form: {
     columnGap: '10px',
-    display: 'grid',
+    display: 'flex',
     gridTemplateColumns: '1fr',
     paddingBottom: '30px',
     rowGap: '10px',
+    alignItems: 'center',
+    justifyContent: 'center',
 
     [`@media (min-width: ${screenSm}px)`]: {
       gridTemplateColumns: '1fr 1fr 1fr',
@@ -67,52 +65,29 @@ const useStyles = makeStyles({
       textDecoration: 'none',
     },
   },
-  acceptPreferences: {
-    bottom: '-20px',
-    cursor: 'pointer',
-    position: 'absolute',
-    right: '20px',
-    textDecoration: 'underline',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      bottom: '-10px',
-    },
-
-    '&:hover': {
-      textDecoration: 'none',
-    },
-  },
 } as any)
 
 const CookiesBanner = () => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
-  const [showAnalytics, setShowAnalytics] = useState(false)
-  const [localNecessary, setLocalNecessary] = useState(true)
-  const [localAnalytics, setLocalAnalytics] = useState(false)
   const showBanner = useSelector(cookieBannerOpen)
 
   const acceptCookiesHandler = useCallback(async () => {
     const newState = {
       acceptedNecessary: true,
-      acceptedAnalytics: !isDesktop,
     }
     await saveCookie(COOKIES_KEY, newState, 365)
     dispatch(openCookieBanner(false))
-    setShowAnalytics(!isDesktop)
   }, [dispatch])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (cookiesState) {
-        const { acceptedAnalytics, acceptedNecessary } = cookiesState
-        setLocalAnalytics(acceptedAnalytics)
-        setLocalNecessary(acceptedNecessary)
+        const { acceptedNecessary } = cookiesState
         const openBanner = acceptedNecessary === false || showBanner
         dispatch(openCookieBanner(openBanner))
-        setShowAnalytics(acceptedAnalytics)
       } else {
         dispatch(openCookieBanner(true))
       }
@@ -124,58 +99,18 @@ const CookiesBanner = () => {
     if (isDesktop && showBanner) acceptCookiesHandler()
   }, [acceptCookiesHandler, showBanner])
 
-  const closeCookiesBannerHandler = async () => {
-    const newState = {
-      acceptedNecessary: true,
-      acceptedAnalytics: localAnalytics,
-    }
-    const expDays = localAnalytics ? 365 : 7
-    await saveCookie(COOKIES_KEY, newState, expDays)
-    setShowAnalytics(localAnalytics)
-    dispatch(openCookieBanner(false))
-  }
-
   const cookieBannerContent = (
     <div className={classes.container}>
-      <span
-        className={cn(classes.acceptPreferences, classes.text)}
-        onClick={closeCookiesBannerHandler}
-        onKeyDown={closeCookiesBannerHandler}
-        role="button"
-        tabIndex={0}
-      >
-        Accept preferences &gt;
-      </span>
       <div className={classes.content}>
         <p className={classes.text}>
           We use cookies to give you the best experience and to help improve our website. Please read our{' '}
           <Link className={classes.link} to="https://safe.gnosis.io/cookie">
             Cookie Policy
           </Link>{' '}
-          for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
-          to enhance site navigation, analyze site usage and provide customer support.
+          for more information. By clicking &quot;Accept&quot;, you agree to the storing of cookies on your device to
+          enhance site navigation.
         </p>
         <div className={classes.form}>
-          <div className={classes.formItem}>
-            <FormControlLabel
-              checked={localNecessary}
-              control={<Checkbox disabled />}
-              disabled
-              label="Necessary"
-              name="Necessary"
-              onChange={() => setLocalNecessary((prev) => !prev)}
-              value={localNecessary}
-            />
-          </div>
-          <div className={classes.formItem}>
-            <FormControlLabel
-              control={<Checkbox checked={localAnalytics} />}
-              label="Analytics"
-              name="Analytics"
-              onChange={() => setLocalAnalytics((prev) => !prev)}
-              value={localAnalytics}
-            />
-          </div>
           <div className={classes.formItem}>
             <Button
               color="primary"
@@ -184,17 +119,13 @@ const CookiesBanner = () => {
               onClick={() => acceptCookiesHandler()}
               variant="outlined"
             >
-              Accept All
+              Accept
             </Button>
           </div>
         </div>
       </div>
     </div>
   )
-
-  if (showAnalytics) {
-    loadGoogleAnalytics()
-  }
 
   return showBanner && !isDesktop ? cookieBannerContent : null
 }
