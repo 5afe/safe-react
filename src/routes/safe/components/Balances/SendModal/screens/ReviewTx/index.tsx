@@ -19,7 +19,7 @@ import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -65,20 +65,33 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const [data, setData] = useState('')
 
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
-  const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
+  const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
+  const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address
   const [txWillFail, setTxWillFail] = useState(false)
 
   useEffect(() => {
     const checkIfTxWillFailAsync = async () => {
-      if (data) {
-        const txWillFailResult = await checkIfTxWillFail({ txTo: txRecipient, data })
+      if (!data) {
+        return
+      }
+
+      if (txToken) {
+        let txAmount = '0'
+        if (isSendingNativeToken) {
+          txAmount = toTokenUnit(tx.amount, txToken.decimals)
+        }
+        const txWillFailResult = await checkIfExecTxWillFail({
+          safeAddress: safeAddress as string,
+          txTo: txRecipient,
+          data,
+          txAmount,
+        })
         setTxWillFail(txWillFailResult)
       }
     }
 
     checkIfTxWillFailAsync()
-  }, [data, txRecipient])
+  }, [data, isSendingNativeToken, safeAddress, tx.amount, txRecipient, txToken])
 
   useEffect(() => {
     let isCurrent = true
@@ -90,7 +103,9 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
 
       let txData = EMPTY_DATA
 
-      if (!isSendingETH) {
+      // @todo (agustin) this condition should be inverted, if we dont have data, the txData should be a transfer
+      // if we have data we cannot assume that it will be a transfer, this should be refactored
+      if (!isSendingNativeToken) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
         const txAmount = toTokenUnit(tx.amount, txToken.decimals)
@@ -113,14 +128,14 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
+  }, [isSendingNativeToken, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
     // txAmount should be 0 if we send tokens
     // the real value is encoded in txData and will be used by the contract
     // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
+    const txAmount = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     if (!safeAddress) {
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
