@@ -101,7 +101,6 @@ const ConfirmTransactionModal = ({
       try {
         setEstimatingGas(true)
         const safeTxGas = await estimateSafeTxGas(
-          undefined,
           safeAddress,
           encodeMultiSendCall(txs),
           MULTI_SEND_ADDRESS,

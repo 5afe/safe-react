@@ -14,7 +14,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
@@ -52,12 +52,16 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
 
   useEffect(() => {
     const checkIfTxWillFailAsync = async () => {
-      const txWillFailResult = await checkIfTxWillFail({ txTo: tx.contractAddress, data: tx.data as string })
+      const txWillFailResult = await checkIfExecTxWillFail({
+        safeAddress: safeAddress as string,
+        txTo: tx.contractAddress,
+        data: tx.data as string,
+      })
       setTxWillFail(txWillFailResult)
     }
 
     checkIfTxWillFailAsync()
-  }, [tx.contractAddress, tx.data])
+  }, [safeAddress, tx.contractAddress, tx.data])
 
   useEffect(() => {
     let isCurrent = true

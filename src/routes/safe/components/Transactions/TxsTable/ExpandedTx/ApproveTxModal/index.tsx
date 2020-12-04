@@ -18,7 +18,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
@@ -88,12 +88,12 @@ const ApproveTxModal = ({
 
   useEffect(() => {
     const checkIfTxWillFailAsync = async () => {
-      const txWillFailResult = await checkIfTxWillFail({ txTo: tx.recipient, data: tx.data as string })
+      const txWillFailResult = await checkIfExecTxWillFail({ safeAddress, txTo: tx.recipient, data: tx.data as string })
       setTxWillFail(txWillFailResult)
     }
 
     checkIfTxWillFailAsync()
-  }, [tx.recipient, tx.data])
+  }, [tx.recipient, tx.data, safeAddress])
 
   useEffect(() => {
     let isCurrent = true

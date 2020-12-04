@@ -19,7 +19,7 @@ import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -66,13 +66,17 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   useEffect(() => {
     const checkIfTxWillFailAsync = async () => {
       if (data) {
-        const txWillFailResult = await checkIfTxWillFail({ txTo: tx.recipientAddress, data })
+        const txWillFailResult = await checkIfExecTxWillFail({
+          safeAddress: safeAddress as string,
+          txTo: tx.recipientAddress,
+          data,
+        })
         setTxWillFail(txWillFailResult)
       }
     }
 
     checkIfTxWillFailAsync()
-  }, [data, tx.recipientAddress])
+  }, [data, safeAddress, tx.recipientAddress])
 
   useEffect(() => {
     let isCurrent = true
