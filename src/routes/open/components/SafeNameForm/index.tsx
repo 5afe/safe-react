@@ -58,7 +58,7 @@ const SafeName = ({ classes, safeName }) => (
           privacy policy
         </a>
         . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-        Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
+        RSK blockchain. These funds cannot be accessed by Gnosis at any point.
       </Paragraph>
     </Block>
   </>

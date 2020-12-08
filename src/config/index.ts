@@ -67,11 +67,6 @@ export const signaturesViaMetamask = () => {
   return config[SIGNATURES_VIA_METAMASK]
 }
 
-export const getGoogleAnalyticsTrackingID = () =>
-  getNetwork() === ETHEREUM_NETWORK.RSK
-    ? process.env.REACT_APP_GOOGLE_ANALYTICS_ID_RSK
-    : process.env.REACT_APP_GOOGLE_ANALYTICS_ID_TESTNET
-
 export const getIntercomId = () =>
   process.env.REACT_APP_ENV === 'production'
     ? process.env.REACT_APP_INTERCOM_ID
