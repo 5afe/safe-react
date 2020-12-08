@@ -1,6 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'react'
-import * as React from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
@@ -16,7 +15,7 @@ type Props = {
   handleScan: (dataResult: string, closeQrModal: () => void) => void
 }
 
-export const ScanQRWrapper = ({ handleScan }: Props): React.ReactElement => {
+export const ScanQRWrapper = ({ handleScan }: Props): ReactElement => {
   const classes = useStyles()
   const [qrModalOpen, setQrModalOpen] = useState(false)
 

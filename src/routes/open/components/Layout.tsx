@@ -6,7 +6,7 @@ import Stepper, { StepperPage } from 'src/components/Stepper'
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Row from 'src/components/layout/Row'
-import { initContracts } from 'src/logic/contracts/safeContracts'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { Review } from 'src/routes/open/components/ReviewInformation'
 import SafeNameField from 'src/routes/open/components/SafeNameForm'
 import { SafeOwnersPage } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
@@ -105,7 +105,7 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
 
   useEffect(() => {
     if (provider) {
-      initContracts()
+      instantiateSafeContracts()
     }
   }, [provider])
 

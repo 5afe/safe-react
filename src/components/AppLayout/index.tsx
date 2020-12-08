@@ -38,7 +38,7 @@ const SidebarWrapper = styled.aside`
   flex-direction: column;
   z-index: 1;
 
-  padding: 8px;
+  padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
 `

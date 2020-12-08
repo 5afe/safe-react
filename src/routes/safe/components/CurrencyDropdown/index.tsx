@@ -34,7 +34,7 @@ const CurrencyDropdown = (): React.ReactElement | null => {
 
   const currenciesList = Object.values(AVAILABLE_CURRENCIES)
   const tokenImage = nativeCoin.logoUri
-  const classes = useDropdownStyles()
+  const classes = useDropdownStyles({})
   const currenciesListFiltered = currenciesList.filter((currency) =>
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )

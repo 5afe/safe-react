@@ -36,17 +36,20 @@ export const safeNeedsUpdate = (currentVersion?: string, latestVersion?: string)
 export const getCurrentSafeVersion = (gnosisSafeInstance: GnosisSafe): Promise<string> =>
   gnosisSafeInstance.methods.VERSION().call()
 
-const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, version: string) => {
+const checkFeatureEnabledByVersion = (featureConfig: FeatureConfigByVersion, version?: string) => {
+  if (!version) {
+    return false
+  }
   return featureConfig.validVersion ? semverSatisfies(version, featureConfig.validVersion) : true
 }
 
 export const enabledFeatures = (version?: string): FEATURES[] => {
-  return FEATURES_BY_VERSION.reduce((acc: FEATURES[], feature: Feature) => {
-    if (isFeatureEnabled(feature.name) && version && checkFeatureEnabledByVersion(feature, version)) {
+  return FEATURES_BY_VERSION.reduce((acc, feature: Feature) => {
+    if (isFeatureEnabled(feature.name) && checkFeatureEnabledByVersion(feature, version)) {
       acc.push(feature.name)
     }
     return acc
-  }, [])
+  }, [] as FEATURES[])
 }
 
 interface SafeVersionInfo {

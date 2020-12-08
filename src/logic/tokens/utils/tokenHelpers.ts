@@ -1,3 +1,4 @@
+import { List } from 'immutable'
 import { AbiItem } from 'web3-utils'
 
 import { getNetworkInfo } from 'src/config'
@@ -10,6 +11,7 @@ import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { CALL } from 'src/logic/safe/transactions'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const getEthAsToken = (balance: string | number): Token => {
   const { nativeCoin } = getNetworkInfo()
@@ -81,4 +83,33 @@ export const isSendERC20Transaction = async (tx: TxServiceModel): Promise<boolea
   }
 
   return isSendTokenTx
+}
+
+export type GetTokenByAddress = {
+  tokenAddress: string
+  tokens: List<Token>
+}
+
+export type TokenFound = {
+  balance: string | number
+  decimals: string | number
+}
+
+/**
+ * Finds and returns a Token object by the provided address
+ * @param {string} tokenAddress
+ * @param {List<Token>} tokens
+ * @returns Token | undefined
+ */
+export const getBalanceAndDecimalsFromToken = ({ tokenAddress, tokens }: GetTokenByAddress): TokenFound | undefined => {
+  const token = tokens?.find(({ address }) => sameAddress(address, tokenAddress))
+
+  if (!token) {
+    return
+  }
+
+  return {
+    balance: token.balance ?? 0,
+    decimals: token.decimals ?? 0,
+  }
 }
