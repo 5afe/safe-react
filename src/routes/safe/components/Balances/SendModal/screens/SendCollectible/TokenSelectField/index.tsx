@@ -14,7 +14,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { textShortener } from 'src/utils/strings'
-import { NFTAssets } from 'src/logic/collectibles/sources/collectibles'
+import { NFTAssets } from 'src/logic/collectibles/sources/collectibles.d'
 
 const useSelectedTokenStyles = makeStyles(selectedTokenStyles)
 

@@ -1,0 +1,15 @@
+diff --git a/node_modules/web3-eth-ens/src/config.js b/node_modules/web3-eth-ens/src/config.js
+index b12e5f5..e0abf2d 100644
+--- a/node_modules/web3-eth-ens/src/config.js
++++ b/node_modules/web3-eth-ens/src/config.js
+@@ -30,7 +30,9 @@ var config = {
+         main: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+         ropsten: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+         rinkeby: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
+-        goerli: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e"
++        goerli: "0x00000000000C2E074eC69A0dFb2997BA6C7d2e1e",
++        energyWebChain: "0x0A6d64413c07E10E890220BBE1c49170080C6Ca0",
++        volta: "0xd7CeF70Ba7efc2035256d828d5287e2D285CD1ac",
+     },
+     // These ids obtained at ensdomains docs:
+     // https://docs.ens.domains/contract-developer-guide/writing-a-resolver

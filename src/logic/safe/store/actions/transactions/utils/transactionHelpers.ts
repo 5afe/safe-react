@@ -1,11 +1,7 @@
 import { List } from 'immutable'
 import { getNetworkInfo } from 'src/config'
-import {
-  getERC20DecimalsAndSymbol,
-  getERC721Symbol,
-  isSendERC20Transaction,
-  isSendERC721Transaction,
-} from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC20DecimalsAndSymbol, isSendERC20Transaction } from 'src/logic/tokens/utils/tokenHelpers'
+import { getERC721Symbol, isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'

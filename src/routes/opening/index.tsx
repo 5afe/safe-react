@@ -9,17 +9,17 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { initContracts } from 'src/logic/contracts/safeContracts'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { background, connected } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 
-const loaderDotsSvg = require('./assets/loader-dots.svg')
-const successSvg = require('./assets/success.svg')
-const vaultErrorSvg = require('./assets/vault-error.svg')
-const vaultSvg = require('./assets/vault.svg')
+import LoaderDotsSvg from './assets/loader-dots.svg'
+import SuccessSvg from './assets/success.svg'
+import VaultErrorSvg from './assets/vault-error.svg'
+import VaultSvg from './assets/vault.svg'
 
 const Wrapper = styled.div`
   display: grid;
@@ -140,19 +140,19 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
 
   const getImage = () => {
     if (error) {
-      return vaultErrorSvg
+      return VaultErrorSvg
     }
 
     if (stepIndex <= 4) {
-      return vaultSvg
+      return VaultSvg
     }
 
-    return successSvg
+    return SuccessSvg
   }
 
   useEffect(() => {
     const loadContracts = async () => {
-      await initContracts()
+      await instantiateSafeContracts()
       setLoading(false)
     }
 
@@ -323,7 +323,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={loaderDotsSvg} />}</BodyLoader>
+        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
 
         <BodyInstruction>
           <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">

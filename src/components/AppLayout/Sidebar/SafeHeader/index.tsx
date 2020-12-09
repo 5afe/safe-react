@@ -130,10 +130,13 @@ const SafeHeader = ({
 
   return (
     <>
+      {/* Network */}
       <StyledTextLabel size="sm" networkInfo={networkInfo}>
         {networkInfo.label}
       </StyledTextLabel>
+
       <Container>
+        {/* Identicon */}
         <IdenticonContainer>
           <FlexSpacer />
           <Identicon address={address} size="lg" />
@@ -142,6 +145,7 @@ const SafeHeader = ({
           </UnStyledButton>
         </IdenticonContainer>
 
+        {/* SafeInfo */}
         <Text size="xl">{safeName}</Text>
         <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>

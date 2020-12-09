@@ -8,6 +8,10 @@ import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 export const addressBookSelector = (state: AppReduxState): AddressBookState => state[ADDRESS_BOOK_REDUCER_ID]
 
+export const addressBookAddressesListSelector = createSelector(addressBookSelector, (addressBook): string[] => {
+  return addressBook.map((entry) => entry.address)
+})
+
 export const getNameFromAddressBookSelector = createSelector(
   addressBookSelector,
   (_, address) => address,

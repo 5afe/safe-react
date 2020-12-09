@@ -1,9 +1,8 @@
 import { makeStyles } from '@material-ui/core/styles'
-import { useState } from 'react'
-import * as React from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import Img from 'src/components/layout/Img'
 
 const useStyles = makeStyles({
@@ -12,7 +11,11 @@ const useStyles = makeStyles({
   },
 })
 
-export const ScanQRWrapper = (props) => {
+type Props = {
+  handleScan: (dataResult: string, closeQrModal: () => void) => void
+}
+
+export const ScanQRWrapper = ({ handleScan }: Props): ReactElement => {
   const classes = useStyles()
   const [qrModalOpen, setQrModalOpen] = useState(false)
 
@@ -25,7 +28,7 @@ export const ScanQRWrapper = (props) => {
   }
 
   const onScanFinished = (value) => {
-    props.handleScan(value, closeQrModal)
+    handleScan(value, closeQrModal)
   }
 
   return (
@@ -34,9 +37,7 @@ export const ScanQRWrapper = (props) => {
         alt="Scan QR"
         className={classes.qrCodeBtn}
         height={20}
-        onClick={() => {
-          openQrModal()
-        }}
+        onClick={() => openQrModal()}
         role="button"
         src={QRIcon}
         testId="qr-icon"

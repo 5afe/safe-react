@@ -273,9 +273,11 @@ describe('isOutgoingTransaction', () => {
   })
 })
 
+jest.mock('src/logic/collectibles/utils')
 jest.mock('src/logic/tokens/utils/tokenHelpers')
 describe('isCustomTransaction', () => {
   afterAll(() => {
+    jest.unmock('src/logic/collectibles/utils')
     jest.unmock('src/logic/tokens/utils/tokenHelpers')
   })
   it('It should return true if Is outgoing transaction, is not an erc20 transaction, not an upgrade transaction and not and erc721 transaction', async () => {
@@ -292,10 +294,11 @@ describe('isCustomTransaction', () => {
     })
     knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
 
+    const collectiblesHelpers = require('src/logic/collectibles/utils')
     const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
 
     txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
-    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
+    collectiblesHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
 
     // when
     const result = await isCustomTransaction(transaction, safeAddress)
@@ -303,7 +306,7 @@ describe('isCustomTransaction', () => {
     // then
     expect(result).toBe(true)
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
-    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
+    expect(collectiblesHelpers.isSendERC721Transaction).toHaveBeenCalled()
   })
   it('It should return true if is outgoing transaction, is not SendERC20Transaction, is not isUpgradeTransaction and not isSendERC721Transaction', async () => {
     // given
@@ -319,10 +322,11 @@ describe('isCustomTransaction', () => {
     })
     knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
 
+    const collectiblesHelpers = require('src/logic/collectibles/utils')
     const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
 
     txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
-    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
+    collectiblesHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
 
     // when
     const result = await isCustomTransaction(transaction, safeAddress)
@@ -330,7 +334,7 @@ describe('isCustomTransaction', () => {
     // then
     expect(result).toBe(true)
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
-    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
+    expect(collectiblesHelpers.isSendERC721Transaction).toHaveBeenCalled()
   })
   it('It should return false if is outgoing transaction, not SendERC20Transaction, isUpgradeTransaction and not isSendERC721Transaction', async () => {
     // given
@@ -347,10 +351,11 @@ describe('isCustomTransaction', () => {
     })
     knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
 
+    const collectiblesHelpers = require('src/logic/collectibles/utils')
     const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
 
     txHelpers.isSendERC20Transaction.mockImplementationOnce(() => true)
-    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
+    collectiblesHelpers.isSendERC721Transaction.mockImplementationOnce(() => false)
 
     // when
     const result = await isCustomTransaction(transaction, safeAddress)
@@ -373,10 +378,11 @@ describe('isCustomTransaction', () => {
     })
     knownTokens.set('0x00Df91984582e6e96288307E9c2f20b38C8FeCE9', token)
 
+    const collectiblesHelpers = require('src/logic/collectibles/utils')
     const txHelpers = require('src/logic/tokens/utils/tokenHelpers')
 
     txHelpers.isSendERC20Transaction.mockImplementationOnce(() => false)
-    txHelpers.isSendERC721Transaction.mockImplementationOnce(() => true)
+    collectiblesHelpers.isSendERC721Transaction.mockImplementationOnce(() => true)
 
     // when
     const result = await isCustomTransaction(transaction, safeAddress)
@@ -384,7 +390,7 @@ describe('isCustomTransaction', () => {
     // then
     expect(result).toBe(false)
     expect(txHelpers.isSendERC20Transaction).toHaveBeenCalled()
-    expect(txHelpers.isSendERC721Transaction).toHaveBeenCalled()
+    expect(collectiblesHelpers.isSendERC721Transaction).toHaveBeenCalled()
   })
 })
 

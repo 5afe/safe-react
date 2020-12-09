@@ -21,10 +21,11 @@ import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { NFTToken } from 'src/logic/collectibles/sources/collectibles'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { getExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
 
 import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 
@@ -170,7 +171,7 @@ const SendCollectible = ({
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.key === 'Tab') {
+                      if (sameString(e.key, 'Tab')) {
                         return
                       }
                       setSelectedEntry({ address: '', name: '' })

@@ -11,8 +11,10 @@ import { buildOrderFieldFrom } from 'src/components/Table/sorting'
 import { TableColumn } from 'src/components/Table/types.d'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { INCOMING_TX_TYPES } from 'src/logic/safe/store/models/incomingTransaction'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { SafeModuleTransaction, Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
+import { TokenDecodedParams } from 'src/logic/safe/store/models/types/transactions.d'
 import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
+import { getNetworkInfo } from 'src/config'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -25,7 +27,7 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 
 export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
 
-const NOT_AVAILABLE = 'n/a'
+export const NOT_AVAILABLE = 'n/a'
 
 interface AmountData {
   decimals?: number | string
@@ -58,7 +60,8 @@ export const getIncomingTxAmount = (tx: Transaction, formatted = true): string =
 
 export const getTxAmount = (tx: Transaction, formatted = true): string => {
   const { decimals = 18, decodedParams, isTokenTransfer, symbol } = tx
-  const { value } = isTokenTransfer && !!decodedParams?.transfer ? decodedParams.transfer : tx
+  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
+  const { value } = tokenDecodedTransfer || tx
 
   if (tx.isCollectibleTransfer) {
     return `1 ${tx.symbol}`
@@ -71,6 +74,47 @@ export const getTxAmount = (tx: Transaction, formatted = true): string => {
   return getAmountWithSymbol({ decimals: decimals as string, symbol: symbol as string, value }, formatted)
 }
 
+export const getModuleAmount = (tx: SafeModuleTransaction, formatted = true): string => {
+  if (tx.type === TransactionTypes.SPENDING_LIMIT && tx.tokenInfo) {
+    const { decimals, symbol } = tx.tokenInfo
+
+    let value
+
+    if (tx.dataDecoded) {
+      // if `dataDecoded` is defined, then it's a token transfer
+      const [, amount] = tx.dataDecoded.parameters
+      value = amount.value
+    } else {
+      // if `dataDecoded` is not defined, then it's an ETH transfer
+      value = tx.value
+    }
+
+    return getAmountWithSymbol({ decimals, symbol, value }, formatted)
+  }
+
+  return NOT_AVAILABLE
+}
+
+export const getRawTxAmount = (tx: Transaction): string => {
+  const { decimals, decodedParams, isTokenTransfer } = tx
+  const { nativeCoin } = getNetworkInfo()
+  const tokenDecodedTransfer = isTokenTransfer && (decodedParams as TokenDecodedParams)?.transfer
+  const { value } = tokenDecodedTransfer || tx
+
+  if (tx.isCollectibleTransfer) {
+    return '1'
+  }
+
+  if (!isTokenTransfer && !(Number(value) > 0)) {
+    return NOT_AVAILABLE
+  }
+
+  const tokenDecimals = decimals ?? nativeCoin.decimals
+  const finalValue = new BigNumber(value).times(`1e-${tokenDecimals}`).toFixed()
+
+  return finalValue === 'NaN' ? NOT_AVAILABLE : finalValue
+}
+
 export interface TableData {
   amount: string
   cancelTx?: Transaction
@@ -78,9 +122,19 @@ export interface TableData {
   dateOrder?: number
   id: string
   status: string
-  tx?: Transaction
+  tx: Transaction | SafeModuleTransaction
   type: any
 }
+
+const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
+  [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
+  [TX_TABLE_TYPE_ID]: <TxType txType={tx.type} origin={null} />,
+  [TX_TABLE_DATE_ID]: formatDate(tx.executionDate),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(tx.executionDate)),
+  [TX_TABLE_AMOUNT_ID]: getModuleAmount(tx),
+  [TX_TABLE_STATUS_ID]: tx.status,
+  [TX_TABLE_RAW_TX_ID]: tx,
+})
 
 const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
@@ -92,12 +146,24 @@ const getIncomingTxTableData = (tx: Transaction): TableData => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
+// This follows the approach of calculating the tx information closest to the presentation components.
+// Instead of populating tx in the store with another flag, Spending Limit tx is inferred here.
+const getTxType = (tx: Transaction): TransactionTypes => {
+  const SET_ALLOWANCE_HASH = 'beaeb388'
+  const DELETE_ALLOWANCE_HASH = '885133e3'
+
+  return tx.data?.includes(SET_ALLOWANCE_HASH) || tx.data?.includes(DELETE_ALLOWANCE_HASH)
+    ? TransactionTypes.SPENDING_LIMIT
+    : tx.type
+}
+
 const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): TableData => {
   const txDate = tx.submissionDate
+  const txType = getTxType(tx)
 
   return {
     [TX_TABLE_ID]: tx.blockNumber?.toString() ?? '',
-    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={tx.type} />,
+    [TX_TABLE_TYPE_ID]: <TxType origin={tx.origin} txType={txType} />,
     [TX_TABLE_DATE_ID]: txDate ? formatDate(txDate) : '',
     [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: txDate ? getTime(parseISO(txDate)) : null,
     [TX_TABLE_AMOUNT_ID]: getTxAmount(tx),
@@ -108,15 +174,22 @@ const getTransactionTableData = (tx: Transaction, cancelTx?: Transaction): Table
 }
 
 export const getTxTableData = (
-  transactions: List<Transaction>,
+  transactions: List<Transaction | SafeModuleTransaction>,
   cancelTxs: CancellationTransactions,
 ): List<TableData> => {
   return transactions.map((tx) => {
-    if (INCOMING_TX_TYPES[tx.type] !== undefined) {
-      return getIncomingTxTableData(tx)
+    const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(tx.type)
+    const isIncomingTx = INCOMING_TX_TYPES[tx.type] !== undefined
+
+    if (isModuleTx) {
+      return getModuleTxTableData(tx as SafeModuleTransaction)
     }
 
-    return getTransactionTableData(tx, cancelTxs.get(`${tx.nonce}`))
+    if (isIncomingTx) {
+      return getIncomingTxTableData(tx as Transaction)
+    }
+
+    return getTransactionTableData(tx as Transaction, cancelTxs.get(`${tx.nonce}`))
   })
 }
 

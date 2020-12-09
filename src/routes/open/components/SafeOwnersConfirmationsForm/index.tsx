@@ -4,11 +4,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
 import { styles } from './style'
-import { getAddressValidator } from './validators'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import trash from 'src/assets/icons/trash.svg'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -21,6 +20,7 @@ import {
   noErrorsOn,
   required,
   minMaxLength,
+  ADDRESS_REPEATED_ERROR,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -44,30 +44,70 @@ const { useState } = React
 
 export const ADD_OWNER_BUTTON = '+ Add another owner'
 
-export const calculateValuesAfterRemoving = (index, notRemovedOwners, values) => {
-  const initialValues = { ...values }
+/**
+ * Validates the whole OwnersForm, specially checks for non-repeated addresses
+ *
+ * If finds a repeated address, marks it as invalid
+ * @param {Object<string, string>} values
+ * @return Object<string, string>
+ */
+export const validateOwnersForm = (values: Record<string, string>): Record<string, string> => {
+  const { errors } = Object.keys(values).reduce(
+    (result, key) => {
+      if (/owner\d+Address/.test(key)) {
+        const address = values[key].toLowerCase()
 
-  const numOwnersAfterRemoving = notRemovedOwners - 1
+        if (result.addresses.includes(address)) {
+          result.errors[key] = ADDRESS_REPEATED_ERROR
+        }
 
-  for (let i = index; i < numOwnersAfterRemoving; i += 1) {
-    initialValues[getOwnerNameBy(i)] = values[getOwnerNameBy(i + 1)]
-    initialValues[getOwnerAddressBy(i)] = values[getOwnerAddressBy(i + 1)]
-  }
-
-  if (+values[FIELD_CONFIRMATIONS] === notRemovedOwners) {
-    initialValues[FIELD_CONFIRMATIONS] = numOwnersAfterRemoving.toString()
-  }
-
-  delete initialValues[getOwnerNameBy(index)]
-  delete initialValues[getOwnerAddressBy(index)]
-
-  return initialValues
+        result.addresses.push(address)
+      }
+      return result
+    },
+    { addresses: [] as string[], errors: {} },
+  )
+  return errors
 }
+
+export const calculateValuesAfterRemoving = (index: number, values: Record<string, string>): Record<string, string> =>
+  Object.keys(values)
+    .sort()
+    .reduce((newValues, key) => {
+      const ownerRelatedField = /owner(\d+)(Name|Address)/
+
+      if (!ownerRelatedField.test(key)) {
+        // no owner-related field
+        newValues[key] = values[key]
+        return newValues
+      }
+
+      const ownerToRemove = new RegExp(`owner${index}(Name|Address)`)
+
+      if (ownerToRemove.test(key)) {
+        // skip, doing anything with the removed field
+        return newValues
+      }
+
+      // we only have the owner-related fields to work with
+      // we must reduce the index value for those owners that come after the deleted owner row
+      const [, ownerOrder, ownerField] = key.match(ownerRelatedField) as RegExpMatchArray
+
+      if (Number(ownerOrder) > index) {
+        // reduce by one the order of the owner
+        newValues[`owner${Number(ownerOrder) - 1}${ownerField}`] = values[key]
+      } else {
+        // previous owners to the deleted row
+        newValues[key] = values[key]
+      }
+
+      return newValues
+    }, {} as Record<string, string>)
 
 const useStyles = makeStyles(styles)
 
 const SafeOwnersForm = (props): React.ReactElement => {
-  const { errors, form, otherAccounts, values } = props
+  const { errors, form, values } = props
   const classes = useStyles()
 
   const validOwners = getNumOwnersFrom(values)
@@ -87,7 +127,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
   }
 
   const onRemoveRow = (index) => () => {
-    const initialValues = calculateValuesAfterRemoving(index, numOwners, values)
+    const initialValues = calculateValuesAfterRemoving(index, values)
     form.reset(initialValues)
 
     setNumOwners(numOwners - 1)
@@ -97,10 +137,10 @@ const SafeOwnersForm = (props): React.ReactElement => {
     setNumOwners(numOwners + 1)
   }
 
-  const handleScan = (value) => {
+  const handleScan = (value: string | null) => {
     let scannedAddress = value
 
-    if (scannedAddress.startsWith('ethereum:')) {
+    if (scannedAddress?.startsWith('ethereum:')) {
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
@@ -171,7 +211,6 @@ const SafeOwnersForm = (props): React.ReactElement => {
                   name={addressName}
                   placeholder="Owner Address*"
                   text="Owner Address"
-                  validators={[getAddressValidator(otherAccounts, index)]}
                   testId={`create-safe-address-field-${index}`}
                 />
               </Col>
@@ -236,21 +275,13 @@ const SafeOwnersForm = (props): React.ReactElement => {
   )
 }
 
-const SafeOwnersPage = ({ updateInitialProps }) =>
+export const SafeOwnersPage = () =>
   function OpenSafeOwnersPage(controls, { errors, form, values }) {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
-          <SafeOwnersForm
-            errors={errors}
-            form={form}
-            otherAccounts={getAccountsFrom(values)}
-            updateInitialProps={updateInitialProps}
-            values={values}
-          />
+          <SafeOwnersForm errors={errors} form={form} otherAccounts={getAccountsFrom(values)} values={values} />
         </OpenPaper>
       </>
     )
   }
-
-export default SafeOwnersPage

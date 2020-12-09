@@ -22,11 +22,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import ScanQRModal from 'src/components/ScanQRModal'
+import { ScanQRModal } from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
 
 import ArrowDown from '../../assets/arrow-down.svg'
 
@@ -147,7 +148,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.key === 'Tab') {
+                      if (sameString(e.key, 'Tab')) {
                         return
                       }
                       setSelectedEntry(null)
