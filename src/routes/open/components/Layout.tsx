@@ -9,7 +9,7 @@ import Row from 'src/components/layout/Row'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { Review } from 'src/routes/open/components/ReviewInformation'
 import SafeNameField from 'src/routes/open/components/SafeNameForm'
-import { SafeOwnersPage } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
+import { SafeOwnersPage, validateOwnersForm } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 import {
   FIELD_CONFIRMATIONS,
   FIELD_CREATION_PROXY_SALT,
@@ -133,7 +133,7 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
             testId="create-safe-form"
           >
             <StepperPage component={SafeNameField} />
-            <StepperPage component={SafeOwnersPage} />
+            <StepperPage component={SafeOwnersPage} validate={validateOwnersForm} />
             <StepperPage network={network} userAccount={userAccount} component={Review} />
           </Stepper>
         </Block>
