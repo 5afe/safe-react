@@ -212,7 +212,7 @@
     "react-dom": "16.13.1",
     "react-final-form": "^6.5.2",
     "react-final-form-listeners": "^1.0.2",
-    "react-ga": "3.2.1",
+    "react-ga": "3.3.0",
     "react-hot-loader": "4.13.0",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.2",
