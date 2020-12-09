@@ -139,9 +139,8 @@ const useCheckIfTxWillFail = (data: string, safeAddress: string, txAmount: strin
         safeAddress: safeAddress as string,
         txTo: txRecipient,
         data,
-        txAmount: '1000',
+        txAmount,
       })
-      console.log('will fail? ', txWillFailResult)
       setTxWillFail(txWillFailResult)
     }
 
