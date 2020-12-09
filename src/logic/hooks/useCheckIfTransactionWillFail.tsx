@@ -17,7 +17,6 @@ export const useCheckIfTransactionWillFail = ({
   const [txWillFail, setTxWillFail] = useState(false)
 
   useEffect(() => {
-    // The data is loading
     if (!data.length) {
       return
     }
