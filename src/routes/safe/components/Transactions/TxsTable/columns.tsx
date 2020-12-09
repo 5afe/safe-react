@@ -3,7 +3,7 @@ import format from 'date-fns/format'
 import getTime from 'date-fns/getTime'
 import parseISO from 'date-fns/parseISO'
 import { List } from 'immutable'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import TxType from './TxType'
 
@@ -21,6 +21,7 @@ import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellat
 import { getNetworkInfo } from 'src/config'
 import { TransactionSummary, Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { isGatewayTransaction } from 'src/logic/safe/store/models/types/gatewayHelpers'
+import { TokenTransferAmount } from 'src/routes/safe/components/Transactions/List/Row/TokenTransferAmount'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -54,6 +55,15 @@ const getAmountWithSymbol = (
 
 export const getIncomingTxAmount = (tx: Transfer, formatted = true): string => {
   switch (tx.transferInfo.type) {
+    case 'ERC20':
+      return getAmountWithSymbol(
+        {
+          decimals: `${tx.transferInfo.decimals ?? '0'}`,
+          symbol: `${tx.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
+          value: tx.transferInfo.value,
+        },
+        formatted,
+      )
     case 'ERC721':
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${tx.transferInfo.tokenSymbol}`
@@ -68,15 +78,6 @@ export const getIncomingTxAmount = (tx: Transfer, formatted = true): string => {
         formatted,
       )
     }
-    case 'ERC20':
-      return getAmountWithSymbol(
-        {
-          decimals: `${tx.transferInfo.decimals ?? '0'}`,
-          symbol: `${tx.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
-          value: tx.transferInfo.value,
-        },
-        formatted,
-      )
     default:
       return NOT_AVAILABLE
   }
@@ -140,14 +141,14 @@ export const getRawTxAmount = (tx: Transaction): string => {
 }
 
 export interface TableData {
-  amount: string
-  cancelTx?: Transaction
-  date: string
+  [TX_TABLE_ID]: string
+  [TX_TABLE_TYPE_ID]: any
+  [TX_TABLE_DATE_ID]: string
   dateOrder?: number
-  id: string
-  status: string
-  tx: TransactionSummary | Transaction | SafeModuleTransaction
-  type: any
+  [TX_TABLE_AMOUNT_ID]: string | ReactElement
+  [TX_TABLE_STATUS_ID]: string
+  [TX_TABLE_RAW_TX_ID]: TransactionSummary | Transaction | SafeModuleTransaction
+  [TX_TABLE_RAW_CANCEL_TX_ID]?: Transaction
 }
 
 const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
@@ -165,7 +166,16 @@ const getIncomingTxTableData = (tx: TransactionSummary): TableData => ({
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" origin={null} />,
   [TX_TABLE_DATE_ID]: formatDate(new Date(tx.timestamp).toISOString()),
   [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(new Date(tx.timestamp).toISOString())),
-  [TX_TABLE_AMOUNT_ID]: tx.txInfo.type === 'Transfer' ? getIncomingTxAmount(tx.txInfo) : NOT_AVAILABLE,
+  [TX_TABLE_AMOUNT_ID]:
+    tx.txInfo.type === 'Transfer' ? (
+      <TokenTransferAmount
+        direction={tx.txInfo.direction}
+        transferInfo={tx.txInfo.transferInfo}
+        amountWithSymbol={getIncomingTxAmount(tx.txInfo)}
+      />
+    ) : (
+      NOT_AVAILABLE
+    ),
   [TX_TABLE_STATUS_ID]: TransactionStatus[tx.txStatus],
   [TX_TABLE_RAW_TX_ID]: tx,
 })
