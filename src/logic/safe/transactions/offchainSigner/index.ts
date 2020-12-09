@@ -1,5 +1,6 @@
 import { getEIP712Signer } from './EIP712Signer'
 import { ethSigner } from './ethSigner'
+import { METAMASK_REJECT_CONFIRM_TX_ERROR_CODE } from 'src/logic/safe/store/actions/createTransaction'
 
 // 1. we try to sign via EIP-712 if user's wallet supports it
 // 2. If not, try to use eth_sign (Safe version has to be >1.1.1)
@@ -29,9 +30,8 @@ export const tryOffchainSigning = async (safeTxHash: string, txArgs, isHW: boole
       break
     } catch (err) {
       console.error(err)
-      // Metamask sign request error code
-      if (err.code === 4001) {
-        throw new Error('User denied sign request')
+      if (err.code === METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+        throw err
       }
     }
   }
