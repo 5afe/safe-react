@@ -33,6 +33,7 @@ const CardsCol = styled.div`
 `
 const StyledButton = styled(Button)`
   margin-top: auto;
+  text-decoration: none;
 `
 const TitleWrapper = styled.div`
   display: flex;
