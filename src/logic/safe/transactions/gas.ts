@@ -32,6 +32,45 @@ export const getPreValidatedSignatures = (from: string): string => {
   )}000000000000000000000000000000000000000000000000000000000000000001`
 }
 
+// @todo (agustin) check if this can be replaced by shouldExecuteTransaction() and refactor
+const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, transaction?: Transaction): boolean =>
+  transaction?.confirmations.size === threshold || !!preApprovingOwner || threshold === 1
+
+const estimateTxGas = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
+): Promise<number> => {
+  const web3 = getWeb3()
+  const from = await getAccountFrom(web3)
+
+  if (!from) {
+    return 0
+  }
+
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const threshold = await safeInstance.methods.getThreshold().call()
+  const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, tx)
+
+  if (isExecution) {
+    // Gas of executing a transaction within the safe (threshold reached and transaction executed)
+    return await estimateExecTransactionGas(safeAddress, data, to, tx?.value || '0', CALL)
+  }
+
+  const nonce = await safeInstance.methods.nonce().call()
+  const txHash = await safeInstance.methods
+    .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+    .call({
+      from,
+    })
+  // Gas of approving the transaction (threshold not reached or user did not executed the transaction)
+  const txData = await safeInstance.methods.approveHash(txHash).encodeABI()
+  return await calculateGasOf(txData, from, safeAddress)
+}
+
+// Returns the estimation of how much the user should pay for the given transaction (gas * price)
 export const estimateTxGasCosts = async (
   safeAddress: string,
   to: string,
@@ -40,32 +79,7 @@ export const estimateTxGasCosts = async (
   preApprovingOwner?: string,
 ): Promise<number> => {
   try {
-    const web3 = getWeb3()
-    const from = await getAccountFrom(web3)
-
-    if (!from) {
-      return 0
-    }
-
-    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const nonce = await safeInstance.methods.nonce().call()
-    const threshold = await safeInstance.methods.getThreshold().call()
-    const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
-
-    let txData
-    let gas
-    if (isExecution) {
-      gas = await estimateExecTransactionGas(safeAddress, data, to, tx?.value || '0', CALL)
-    } else {
-      const txHash = await safeInstance.methods
-        .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
-        .call({
-          from,
-        })
-      txData = await safeInstance.methods.approveHash(txHash).encodeABI()
-      gas = await calculateGasOf(txData, from, safeAddress)
-    }
-
+    const gas = await estimateTxGas(safeAddress, to, data, tx, preApprovingOwner)
     const gasPrice = await calculateGasPrice()
 
     return gas * parseInt(gasPrice, 10)
