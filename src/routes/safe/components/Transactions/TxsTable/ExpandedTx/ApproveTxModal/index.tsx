@@ -187,7 +187,10 @@ const ApproveTxModal = ({
           <Row align="center">
             <Paragraph color="error" className={classes.executionWarningRow}>
               <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-              This transaction will most likely fail. To save gas costs, collect rejections and cancel this transaction.
+              This transaction will most likely fail. To save gas costs,
+              {isTheTxReadyToBeExecuted
+                ? ` collect rejections and cancel this transaction.`
+                : ` avoid executing the transaction.`}
             </Paragraph>
           </Row>
         )}

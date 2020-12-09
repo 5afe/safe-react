@@ -17,7 +17,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -56,6 +56,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const shortener = textShortener()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const threshold = useSelector(safeThresholdSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const txToken = nftTokens.find(
@@ -175,8 +176,10 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             <Row align="center">
               <Paragraph color="error" className={classes.executionWarningRow}>
                 <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs, collect rejections and cancel this
-                transaction.
+                This transaction will most likely fail. To save gas costs,
+                {threshold && threshold > 1
+                  ? ` collect rejections and cancel this transaction.`
+                  : ` avoid executing the transaction.`}
               </Paragraph>
             </Row>
           )}

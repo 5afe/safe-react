@@ -21,7 +21,7 @@ import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/Co
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
@@ -48,6 +48,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const threshold = useSelector(safeThresholdSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
 
   const txWillFail = useCheckIfTransactionWillFail({
@@ -178,8 +179,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             <Row align="center">
               <Paragraph color="error" className={classes.executionWarningRow}>
                 <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs, collect rejections and cancel this
-                transaction.
+                This transaction will most likely fail. To save gas costs,
+                {threshold && threshold > 1
+                  ? ` collect rejections and cancel this transaction.`
+                  : ` avoid executing the transaction.`}
               </Paragraph>
             </Row>
           )}
