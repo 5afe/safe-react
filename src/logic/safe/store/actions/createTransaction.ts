@@ -57,6 +57,7 @@ export interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
+export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 const createTransaction = (
   {
@@ -205,20 +206,21 @@ const createTransaction = (
       ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
       : notificationsQueue.afterExecutionError.message
 
-    console.error(`Error creating the TX: `, err)
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
     if (pendingExecutionKey) {
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
-    dispatch(enqueueSnackbar(errorMsg))
+    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
-    const executeDataUsedSignatures = safeInstance.methods
-      .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-      .encodeABI()
-    const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-    console.error(`Error creating the TX - an attempt to get the error message: ${errMsg}`)
+    if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+      const executeDataUsedSignatures = safeInstance.methods
+        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+        .encodeABI()
+      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+      console.error(`Error creating the TX - an attempt to get the error message: ${errMsg}`)
+    }
   }
 
   return txHash
