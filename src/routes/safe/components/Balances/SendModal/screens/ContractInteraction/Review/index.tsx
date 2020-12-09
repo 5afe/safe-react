@@ -14,16 +14,17 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
 
 const useStyles = makeStyles(styles)
 
@@ -46,22 +47,14 @@ const { nativeCoin } = getNetworkInfo()
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
-  const [txWillFail, setTxWillFail] = useState(false)
 
-  useEffect(() => {
-    const checkIfTxWillFailAsync = async () => {
-      const txWillFailResult = await checkIfExecTxWillFail({
-        safeAddress: safeAddress as string,
-        txTo: tx.contractAddress,
-        data: tx.data as string,
-      })
-      setTxWillFail(txWillFailResult)
-    }
-
-    checkIfTxWillFailAsync()
-  }, [safeAddress, tx.contractAddress, tx.data])
+  const txWillFail = useCheckIfTransactionWillFail({
+    safeAddress,
+    txRecipient: tx.contractAddress || '',
+    data: tx.data || '',
+  })
 
   useEffect(() => {
     let isCurrent = true

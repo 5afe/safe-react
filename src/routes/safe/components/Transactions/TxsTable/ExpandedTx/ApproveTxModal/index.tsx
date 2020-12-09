@@ -18,7 +18,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
@@ -27,6 +27,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import Img from 'src/components/layout/Img'
+import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
 
 const useStyles = makeStyles(styles)
 
@@ -78,22 +79,18 @@ const ApproveTxModal = ({
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
-  const [txWillFail, setTxWillFail] = useState(false)
 
-  useEffect(() => {
-    const checkIfTxWillFailAsync = async () => {
-      const txWillFailResult = await checkIfExecTxWillFail({ safeAddress, txTo: tx.recipient, data: tx.data as string })
-      setTxWillFail(txWillFailResult)
-    }
-
-    checkIfTxWillFailAsync()
-  }, [tx.recipient, tx.data, safeAddress])
+  const txWillFail = useCheckIfTransactionWillFail({
+    safeAddress,
+    txRecipient: tx.recipient,
+    data: tx.data || '',
+  })
 
   useEffect(() => {
     let isCurrent = true

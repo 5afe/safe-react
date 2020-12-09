@@ -17,9 +17,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -32,6 +32,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -54,29 +55,15 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
   const [data, setData] = useState('')
-  const [txWillFail, setTxWillFail] = useState(false)
 
-  useEffect(() => {
-    const checkIfTxWillFailAsync = async () => {
-      if (data) {
-        const txWillFailResult = await checkIfExecTxWillFail({
-          safeAddress: safeAddress as string,
-          txTo: tx.recipientAddress,
-          data,
-        })
-        setTxWillFail(txWillFailResult)
-      }
-    }
-
-    checkIfTxWillFailAsync()
-  }, [data, safeAddress, tx.recipientAddress])
+  const txWillFail = useCheckIfTransactionWillFail({ data, safeAddress, txRecipient: tx.recipientAddress })
 
   useEffect(() => {
     let isCurrent = true

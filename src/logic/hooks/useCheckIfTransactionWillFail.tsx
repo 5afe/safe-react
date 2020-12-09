@@ -4,8 +4,8 @@ import { checkIfExecTxWillFail } from 'src/logic/safe/transactions/gas'
 type TransactionWillFailProps = {
   data: string
   safeAddress: string
-  txAmount?: string
   txRecipient: string
+  txAmount?: string
 }
 
 export const useCheckIfTransactionWillFail = ({
@@ -23,7 +23,7 @@ export const useCheckIfTransactionWillFail = ({
     }
     const checkIfTxWillFailAsync = async () => {
       const txWillFailResult = await checkIfExecTxWillFail({
-        safeAddress: safeAddress as string,
+        safeAddress,
         txTo: txRecipient,
         data,
         txAmount,

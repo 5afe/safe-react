@@ -17,9 +17,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { checkIfExecTxWillFail, estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -38,6 +38,7 @@ import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
+import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
@@ -126,44 +127,24 @@ const useEstimateGas = (txData: string, safeAddress: string, txRecipient: string
   return gasCosts
 }
 
-const useCheckIfTxWillFail = (data: string, safeAddress: string, txAmount: string, txRecipient: string) => {
-  const [txWillFail, setTxWillFail] = useState(false)
-
-  useEffect(() => {
-    // The data is loading
-    if (!data.length) {
-      return
-    }
-    const checkIfTxWillFailAsync = async () => {
-      const txWillFailResult = await checkIfExecTxWillFail({
-        safeAddress: safeAddress as string,
-        txTo: txRecipient,
-        data,
-        txAmount,
-      })
-      setTxWillFail(txWillFailResult)
-    }
-
-    checkIfTxWillFailAsync()
-  }, [data, safeAddress, txAmount, txRecipient])
-
-  return txWillFail
-}
-
 const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  // @todo (agustin) refactor with another selector, safeAddress can't be undefined here
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
-  const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address
+  const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
 
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
   const gasCosts = useEstimateGas(data, safeAddress as string, txRecipient as string)
-  const txWillFail = useCheckIfTxWillFail(data, safeAddress as string, txAmount, txRecipient as string)
+  const txWillFail = useCheckIfTransactionWillFail({
+    data,
+    safeAddress,
+    txAmount,
+    txRecipient,
+  })
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
