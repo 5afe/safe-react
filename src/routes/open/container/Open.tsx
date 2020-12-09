@@ -62,7 +62,6 @@ export const createSafe = (values, userAccount) => {
   const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-
   const promiEvent = deploymentTx.send({ from: userAccount })
 
   promiEvent
@@ -151,7 +150,6 @@ const Open = (): React.ReactElement => {
     ReactGA.event({
       category: 'User',
       action: 'Created a safe',
-      value: safeAddress,
     })
 
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)

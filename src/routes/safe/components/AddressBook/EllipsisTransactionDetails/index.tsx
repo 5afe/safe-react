@@ -63,12 +63,14 @@ export const EllipsisTransactionDetails = ({
       <div className={classes.container} role="menu" tabIndex={0}>
         <MoreHorizIcon onClick={handleClick} onKeyDown={handleClick} />
         <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
-          {sendModalOpenHandler ? (
-            <>
-              <MenuItem onClick={sendModalOpenHandler}>Send Again</MenuItem>
-              <Divider />
-            </>
-          ) : null}
+          {sendModalOpenHandler
+            ? [
+                <MenuItem key="send-again-button" onClick={sendModalOpenHandler}>
+                  Send Again
+                </MenuItem>,
+                <Divider key="divider" />,
+              ]
+            : null}
           {knownAddress ? (
             <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
           ) : (

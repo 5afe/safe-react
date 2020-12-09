@@ -20,6 +20,7 @@ import { trimSpaces } from 'src/utils/strings'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
+  label?: string
   pristine?: boolean
   recipientAddress?: string
   setIsValidAddress: (valid: boolean) => void
@@ -36,6 +37,7 @@ export interface BaseAddressBookInputProps extends AddressBookProps {
 const BaseAddressBookInput = ({
   addressBookEntries,
   fieldMutator,
+  label = 'Recipient',
   setIsValidAddress,
   setSelectedEntry,
   setValidationText,
@@ -137,7 +139,7 @@ const BaseAddressBookInput = ({
           fullWidth
           id="filled-error-helper-text"
           variant="filled"
-          label={validationText ? validationText : 'Recipient'}
+          label={validationText ? validationText : label}
           InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
           InputProps={{ ...params.InputProps, classes: inputStyles }}
         />

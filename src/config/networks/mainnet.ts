@@ -42,7 +42,7 @@ const mainnet: NetworkConfig = {
       decimals: 18,
       logoUri: EtherLogo,
     },
-  }
+  },
 }
 
 export default mainnet

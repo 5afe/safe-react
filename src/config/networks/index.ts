@@ -11,5 +11,5 @@ export default {
   rinkeby,
   xdai,
   energy_web_chain,
-  volta
+  volta,
 }

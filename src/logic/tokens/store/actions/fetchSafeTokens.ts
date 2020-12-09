@@ -77,14 +77,14 @@ const fetchSafeTokens = (safeAddress: string) => async (
       return
     }
 
-    const result = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
+    const tokenCurrenciesBalances = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
     const currentEthBalance = safeEthBalanceSelector(state)
     const safeBalances = safeBalancesSelector(state)
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
     const currencyValues = currencyValuesSelector(state)
 
-    const { balances, currencyList, ethBalance, tokens } = result.data.reduce<ExtractedData>(
+    const { balances, currencyList, ethBalance, tokens } = tokenCurrenciesBalances.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
       {
         balances: Map(),

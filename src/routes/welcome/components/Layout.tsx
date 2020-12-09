@@ -1,5 +1,4 @@
-import * as React from 'react'
-
+import React from 'react'
 import styled from 'styled-components'
 import { Card, Button, Title, Text, Divider, ButtonLink, Dot, Icon, Link } from '@gnosis.pm/safe-react-components'
 

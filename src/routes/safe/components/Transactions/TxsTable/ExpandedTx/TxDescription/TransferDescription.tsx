@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import { EtherscanLink } from 'src/components/EtherscanLink'
 import Block from 'src/components/layout/Block'
@@ -11,7 +11,7 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 
 interface TransferDescriptionProps {
   amountWithSymbol: string
-  recipient: string
+  recipient?: string
   tokenAddress?: string
   rawAmount?: string
   isTokenTransfer: boolean
@@ -23,7 +23,7 @@ const TransferDescription = ({
   tokenAddress,
   rawAmount,
   isTokenTransfer,
-}: TransferDescriptionProps): React.ReactElement => {
+}: TransferDescriptionProps): ReactElement | null => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
   const [sendModalOpen, setSendModalOpen] = React.useState(false)
 
@@ -31,7 +31,7 @@ const TransferDescription = ({
     setSendModalOpen(true)
   }
 
-  return (
+  return recipient ? (
     <>
       <Block data-testid={TRANSACTIONS_DESC_SEND_TEST_ID}>
         <Bold>Send {amountWithSymbol} to:</Bold>
@@ -60,7 +60,7 @@ const TransferDescription = ({
         tokenAmount={rawAmount}
       />
     </>
-  )
+  ) : null
 }
 
 export default TransferDescription
