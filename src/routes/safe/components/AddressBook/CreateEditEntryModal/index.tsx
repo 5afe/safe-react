@@ -1,10 +1,9 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Modal from 'src/components/Modal'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
@@ -20,55 +19,69 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { addressBookAddressesListSelector } from 'src/logic/addressBook/store/selectors'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { Entry } from 'src/routes/safe/components/AddressBook/index'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
 export const SAVE_NEW_ENTRY_BTN_ID = 'save-new-entry-btn-id'
 
-const CreateEditEntryModalComponent = ({
-  classes,
+const formMutators = {
+  setOwnerAddress: (args, state, utils) => {
+    utils.changeValue(state, 'address', () => args[0])
+  },
+}
+
+type CreateEditEntryModalProps = {
+  editEntryModalHandler: (entry: AddressBookEntry) => void
+  entryToEdit: Entry
+  isOpen: boolean
+  newEntryModalHandler: (entry: AddressBookEntry) => void
+  onClose: () => void
+}
+
+export const CreateEditEntryModal = ({
   editEntryModalHandler,
   entryToEdit,
   isOpen,
   newEntryModalHandler,
   onClose,
-}) => {
-  const onFormSubmitted = (values) => {
-    if (entryToEdit && !entryToEdit.entry.isNew) {
-      editEntryModalHandler(values)
-    } else {
+}: CreateEditEntryModalProps): ReactElement => {
+  const classes = useStyles()
+
+  const { isNew, ...initialValues } = entryToEdit.entry
+
+  const onFormSubmitted = (values: AddressBookEntry) => {
+    if (isNew) {
       newEntryModalHandler(values)
+    } else {
+      editEntryModalHandler(values)
     }
   }
 
-  const addressBookAddressesList = useSelector(addressBookAddressesListSelector)
-  const entryDoesntExist = uniqueAddress(addressBookAddressesList)
-
-  const formMutators = {
-    setOwnerAddress: (args, state, utils) => {
-      utils.changeValue(state, 'address', () => args[0])
-    },
-  }
+  const storedAddresses = useSelector(addressBookAddressesListSelector)
+  const isUniqueAddress = uniqueAddress(storedAddresses)
 
   return (
     <Modal
-      description={entryToEdit ? 'Edit addressBook entry' : 'Create new addressBook entry'}
+      description={isNew ? 'Create new addressBook entry' : 'Edit addressBook entry'}
       handleClose={onClose}
       open={isOpen}
       paperClassName={classes.smallerModalWindow}
-      title={entryToEdit ? 'Edit entry' : 'Create new entry'}
+      title={isNew ? 'Create new entry' : 'Edit entry'}
     >
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          {entryToEdit ? 'Edit entry' : 'Create entry'}
+          {isNew ? 'Create entry' : 'Edit entry'}
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} onSubmit={onFormSubmitted}>
+      <GnoForm formMutators={formMutators} onSubmit={onFormSubmitted} initialValues={initialValues}>
         {(...args) => {
+          const formState = args[2]
           const mutators = args[3]
           const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
@@ -86,13 +99,11 @@ const CreateEditEntryModalComponent = ({
                 <Row margin="md">
                   <Col xs={11}>
                     <Field
-                      className={classes.addressInput}
                       component={TextField}
-                      defaultValue={entryToEdit ? entryToEdit.entry.name : undefined}
                       name="name"
-                      placeholder={entryToEdit ? 'Entry name' : 'New entry'}
+                      placeholder="Name"
                       testId={CREATE_ENTRY_INPUT_NAME_ID}
-                      text={entryToEdit ? 'Entry*' : 'New entry*'}
+                      text="Name"
                       type="text"
                       validate={composeValidators(required, minMaxLength(1, 50))}
                     />
@@ -101,18 +112,16 @@ const CreateEditEntryModalComponent = ({
                 <Row margin="md">
                   <Col xs={11}>
                     <AddressInput
-                      className={classes.addressInput}
-                      defaultValue={entryToEdit ? entryToEdit.entry.address : undefined}
-                      disabled={!!entryToEdit}
+                      disabled={!isNew}
                       fieldMutator={mutators.setOwnerAddress}
                       name="address"
-                      placeholder="Owner address*"
+                      placeholder="Address*"
                       testId={CREATE_ENTRY_INPUT_ADDRESS_ID}
-                      text="Owner address*"
-                      validators={entryToEdit ? undefined : [entryDoesntExist]}
+                      text="Address*"
+                      validators={[(value?: string) => (isNew ? isUniqueAddress(value) : undefined)]}
                     />
                   </Col>
-                  {!entryToEdit ? (
+                  {isNew ? (
                     <Col center="xs" className={classes} middle="xs" xs={1}>
                       <ScanQRWrapper handleScan={handleScan} />
                     </Col>
@@ -131,8 +140,9 @@ const CreateEditEntryModalComponent = ({
                   testId={SAVE_NEW_ENTRY_BTN_ID}
                   type="submit"
                   variant="contained"
+                  disabled={!formState.valid}
                 >
-                  {entryToEdit ? 'Save' : 'Create'}
+                  {isNew ? 'Create' : 'Save'}
                 </Button>
               </Row>
             </>
@@ -142,5 +152,3 @@ const CreateEditEntryModalComponent = ({
     </Modal>
   )
 }
-
-export default withStyles(styles as any)(CreateEditEntryModalComponent)

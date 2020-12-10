@@ -3,7 +3,7 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -21,8 +21,8 @@ import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddr
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { isUserAnOwnerOfAnySafe } from 'src/logic/wallets/ethAddresses'
-import CreateEditEntryModal from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
+import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
+import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
@@ -47,20 +47,24 @@ interface AddressBookSelectedEntry extends AddressBookEntry {
   isNew?: boolean
 }
 
-const AddressBookTable = (): React.ReactElement => {
+export type Entry = {
+  entry: AddressBookSelectedEntry
+  index?: number
+  isOwnerAddress?: boolean
+}
+
+const initialEntryState: Entry = { entry: { address: '', name: '', isNew: true } }
+
+const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
-  const autoColumns = columns.filter((c) => !c.custom)
+  const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
   const safesList = useSelector(safesListSelector)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(addressBookSelector)
   const granted = useSelector(grantedSelector)
-  const [selectedEntry, setSelectedEntry] = useState<{
-    entry?: AddressBookSelectedEntry
-    index?: number
-    isOwnerAddress?: boolean
-  } | null>(null)
+  const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
@@ -78,8 +82,9 @@ const AddressBookTable = (): React.ReactElement => {
 
   useEffect(() => {
     if (entryAddressToEditOrCreateNew) {
-      const checksumEntryAdd = checksumAddress(entryAddressToEditOrCreateNew)
-      const oldEntryIndex = addressBook.findIndex((entry) => entry.address === checksumEntryAdd)
+      const address = checksumAddress(entryAddressToEditOrCreateNew)
+      const oldEntryIndex = addressBook.findIndex((entry) => sameAddress(entry.address, address))
+
       if (oldEntryIndex >= 0) {
         // Edit old entry
         setSelectedEntry({ entry: addressBook[oldEntryIndex], index: oldEntryIndex })
@@ -88,7 +93,7 @@ const AddressBookTable = (): React.ReactElement => {
         setSelectedEntry({
           entry: {
             name: '',
-            address: checksumEntryAdd,
+            address,
             isNew: true,
           },
         })
@@ -96,7 +101,7 @@ const AddressBookTable = (): React.ReactElement => {
     }
   }, [addressBook, entryAddressToEditOrCreateNew])
 
-  const newEntryModalHandler = (entry) => {
+  const newEntryModalHandler = (entry: AddressBookEntry) => {
     setEditCreateEntryModalOpen(false)
     const checksumEntries = {
       ...entry,
@@ -105,8 +110,8 @@ const AddressBookTable = (): React.ReactElement => {
     dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
   }
 
-  const editEntryModalHandler = (entry) => {
-    setSelectedEntry(null)
+  const editEntryModalHandler = (entry: AddressBookEntry) => {
+    setSelectedEntry(initialEntryState)
     setEditCreateEntryModalOpen(false)
     const checksumEntries = {
       ...entry,
@@ -116,8 +121,8 @@ const AddressBookTable = (): React.ReactElement => {
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = selectedEntry && selectedEntry.entry ? checksumAddress(selectedEntry.entry.address) : ''
-    setSelectedEntry(null)
+    const entryAddress = selectedEntry?.entry ? checksumAddress(selectedEntry.entry.address) : ''
+    setSelectedEntry(initialEntryState)
     setDeleteEntryModalOpen(false)
     dispatch(removeAddressBookEntry(entryAddress))
   }
@@ -128,8 +133,8 @@ const AddressBookTable = (): React.ReactElement => {
         <Col end="sm" xs={12}>
           <ButtonLink
             onClick={() => {
-              setSelectedEntry(null)
-              setEditCreateEntryModalOpen(!editCreateEntryModalOpen)
+              setSelectedEntry(initialEntryState)
+              setEditCreateEntryModalOpen(true)
             }}
             size="lg"
             testId="manage-tokens-btn"
