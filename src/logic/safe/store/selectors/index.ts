@@ -72,14 +72,13 @@ export const safeTransactionsSelector = createSelector(
   },
 )
 
-export const addressBookQueryParamsSelector = (state: AppReduxState): string | null => {
+export const addressBookQueryParamsSelector = (state: AppReduxState): string | undefined => {
   const { location } = state.router
-  let entryAddressToEditOrCreateNew = null
-  if (location && location.query) {
+
+  if (location?.query) {
     const { entryAddress } = location.query
-    entryAddressToEditOrCreateNew = entryAddress
+    return entryAddress
   }
-  return entryAddressToEditOrCreateNew
 }
 
 export const safeCancellationTransactionsSelector = createSelector(
