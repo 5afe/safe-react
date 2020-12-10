@@ -7,7 +7,7 @@ import SettingsDescription from './SettingsDescription'
 import CustomDescription from './CustomDescription'
 import TransferDescription from './TransferDescription'
 
-import { getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
+import { getRawTxAmount, getTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import Block from 'src/components/layout/Block'
 import { Transaction, TransactionTypes } from 'src/logic/safe/store/models/types/transaction'
 
@@ -33,8 +33,9 @@ const UpgradeDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement =
 
 const TransferDescriptionTx = ({ tx }: { tx: Transaction }): React.ReactElement => {
   const amountWithSymbol = getTxAmount(tx, false)
-  const { recipient, isTokenTransfer = false } = getTxData(tx)
-  return <TransferDescription {...{ amountWithSymbol, recipient, isTokenTransfer }} />
+  const rawAmount = getRawTxAmount(tx)
+  const { recipient, isTokenTransfer = false, tokenAddress } = getTxData(tx)
+  return <TransferDescription {...{ amountWithSymbol, recipient, isTokenTransfer, rawAmount, tokenAddress }} />
 }
 
 const TxDescription = ({ tx }: { tx: Transaction }): React.ReactElement => {
