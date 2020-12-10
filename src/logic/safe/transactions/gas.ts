@@ -130,7 +130,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   }
 }
 
-export const getGasEstimationTxResponse = async (txConfig: {
+const getGasEstimationTxResponse = async (txConfig: {
   to: string
   from: string
   data: string
