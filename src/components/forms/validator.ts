@@ -90,7 +90,7 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 
 export const uniqueAddress = (addresses: string[] | List<string> = []) => (address?: string): string | undefined => {
-  const addressExists = addresses.some(sameAddress.bind(null, address))
+  const addressExists = addresses.some((addressFromList) => sameAddress(addressFromList, address))
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }
 
