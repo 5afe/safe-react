@@ -1,4 +1,4 @@
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
@@ -10,11 +10,12 @@ import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTr
 import fetchSafeCreationTx from 'src/logic/safe/store/actions/fetchSafeCreationTx'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
-export const useLoadSafe = (safeAddress?: string): void => {
+export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
+  const [safeLoaded, setSafeLoaded] = useState(false)
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       if (safeAddress) {
         dispatch(fetchLatestMasterContractVersion())
           .then(() => {
@@ -24,7 +25,9 @@ export const useLoadSafe = (safeAddress?: string): void => {
           .then(() => {
             dispatch(fetchSafeCreationTx(safeAddress))
             dispatch(fetchTransactions(safeAddress))
-            return dispatch(addViewedSafe(safeAddress))
+            dispatch(addViewedSafe(safeAddress))
+            setSafeLoaded(true)
+            return
           })
       }
     }
@@ -32,4 +35,6 @@ export const useLoadSafe = (safeAddress?: string): void => {
 
     fetchData()
   }, [dispatch, safeAddress])
+
+  return safeLoaded
 }

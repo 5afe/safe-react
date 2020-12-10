@@ -8,7 +8,7 @@ import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
-export const useSafeScheduledUpdates = (safeAddress?: string): void => {
+export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
   const dispatch = useDispatch()
   const timer = useRef<number>()
 
@@ -34,7 +34,7 @@ export const useSafeScheduledUpdates = (safeAddress?: string): void => {
       }
     }
 
-    if (safeAddress) {
+    if (safeAddress && safeLoaded) {
       fetchSafeData(safeAddress)
     }
 
