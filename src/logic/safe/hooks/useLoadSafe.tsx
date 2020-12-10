@@ -12,7 +12,7 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
 export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
-  const [safeLoaded, setSafeLoaded] = useState(false)
+  const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -26,7 +26,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
             dispatch(fetchSafeCreationTx(safeAddress))
             dispatch(fetchTransactions(safeAddress))
             dispatch(addViewedSafe(safeAddress))
-            setSafeLoaded(true)
+            setIsSafeLoaded(true)
             return
           })
       }
@@ -36,5 +36,5 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
     fetchData()
   }, [dispatch, safeAddress])
 
-  return safeLoaded
+  return isSafeLoaded
 }
