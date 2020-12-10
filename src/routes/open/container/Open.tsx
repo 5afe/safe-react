@@ -150,7 +150,6 @@ const Open = (): React.ReactElement => {
     ReactGA.event({
       category: 'User',
       action: 'Created a safe',
-      value: safeAddress,
     })
 
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)

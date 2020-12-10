@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, withRouter } from 'react-router-dom'
+import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
@@ -19,8 +19,13 @@ const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
 
-const Routes = ({ location }) => {
+const Routes = (): React.ReactElement => {
   const [isInitialLoad, setInitialLoad] = useState(true)
+  const location = useLocation()
+  const matchSafeWithAction = useRouteMatch<{ safeAddress: string; safeAction: string }>({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction`,
+  })
+
   const defaultSafe = useSelector(defaultSafeSelector)
   const { trackPage } = useAnalytics()
 
@@ -31,9 +36,18 @@ const Routes = ({ location }) => {
   }, [location.pathname, isInitialLoad])
 
   useEffect(() => {
-    const page = location.pathname + location.search
-    trackPage(page)
-  }, [location.pathname, location.search, trackPage])
+    if (matchSafeWithAction) {
+      // prevent logging safeAddress
+      let safePage = `${SAFELIST_ADDRESS}/SAFE_ADDRESS`
+      if (matchSafeWithAction.params?.safeAction) {
+        safePage += `/${matchSafeWithAction.params?.safeAction}`
+      }
+      trackPage(safePage)
+    } else {
+      const page = `${location.pathname}${location.search}`
+      trackPage(page)
+    }
+  }, [location, matchSafeWithAction, trackPage])
 
   return (
     <Switch>
@@ -65,4 +79,4 @@ const Routes = ({ location }) => {
   )
 }
 
-export default withRouter(Routes)
+export default Routes

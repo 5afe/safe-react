@@ -26,7 +26,7 @@ export interface StepperPageFormProps {
 }
 
 interface StepperPageProps {
-  validate?: (...args: unknown[]) => undefined | string[] | Promise<undefined | Record<string, string>>
+  validate?: (...args: unknown[]) => undefined | Record<string, string> | Promise<undefined | Record<string, string>>
   component: (
     ...args: unknown[]
   ) => (controls: React.ReactElement, formProps: StepperPageFormProps) => React.ReactElement
