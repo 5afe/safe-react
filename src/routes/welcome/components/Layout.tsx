@@ -1,7 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Card, Button, Title, Text, Divider, ButtonLink, Dot, Icon, Link } from '@gnosis.pm/safe-react-components'
+import {
+  Card,
+  Button,
+  Title,
+  Text,
+  Divider,
+  ButtonLink,
+  Dot,
+  Icon,
+  Link as LinkSRC,
+} from '@gnosis.pm/safe-react-components'
 
+import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
@@ -99,7 +110,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               factors.
             </Text>
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
-              <Link
+              <LinkSRC
                 size="xl"
                 href="https://help.gnosis-safe.io/en/articles/4689442-why-do-i-need-to-connect-a-wallet"
                 target="_blank"
@@ -107,7 +118,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
                 title="More info about: Why do I need to connect wallet?"
               >
                 Why do I need to connect wallet?
-              </Link>
+              </LinkSRC>
             </StyledButtonLink>
             <StyledButton
               size="lg"
