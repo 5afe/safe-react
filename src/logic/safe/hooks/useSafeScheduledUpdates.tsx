@@ -42,5 +42,5 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       mounted = false
       clearTimeout(timer.current)
     }
-  }, [dispatch, safeAddress])
+  }, [dispatch, safeAddress, safeLoaded])
 }

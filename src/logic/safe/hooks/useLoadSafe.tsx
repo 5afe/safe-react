@@ -15,7 +15,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = () => {
       if (safeAddress) {
         dispatch(fetchLatestMasterContractVersion())
           .then(() => {
