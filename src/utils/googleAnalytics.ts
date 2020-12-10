@@ -1,5 +1,5 @@
 import { useCallback, useEffect, useState } from 'react'
-import GoogleAnalytics, { EventArgs } from 'react-ga'
+import ReactGA, { EventArgs } from 'react-ga'
 import { getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
@@ -20,8 +20,8 @@ export const loadGoogleAnalytics = (): void => {
   if (!trackingID) {
     console.error('[GoogleAnalytics] - In order to use google analytics you need to add an trackingID')
   } else {
-    GoogleAnalytics.initialize(trackingID)
-    GoogleAnalytics.set({
+    ReactGA.initialize(trackingID)
+    ReactGA.set({
       anonymizeIp: true,
       appName: `Gnosis Safe Multisig (${networkInfo.label})`,
       appId: `io.gnosis.safe.${networkInfo.label.toLowerCase()}`,
@@ -50,22 +50,19 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = useCallback(
-    (page) => {
-      if (!analyticsAllowed || !analyticsLoaded) {
-        return
-      }
-      GoogleAnalytics.pageview(page)
-    },
-    [analyticsAllowed],
-  )
+  const trackPage = (page) => {
+    if (!analyticsAllowed || !analyticsLoaded) {
+      return
+    }
+    ReactGA.pageview(page)
+  }
 
   const trackEvent = useCallback(
     (event: EventArgs) => {
       if (!analyticsAllowed || !analyticsLoaded) {
         return
       }
-      GoogleAnalytics.event(event)
+      ReactGA.event(event)
     },
     [analyticsAllowed],
   )
