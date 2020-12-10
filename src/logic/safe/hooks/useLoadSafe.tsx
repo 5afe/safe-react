@@ -15,20 +15,15 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
   useEffect(() => {
-    const fetchData = () => {
+    const fetchData = async () => {
       if (safeAddress) {
-        dispatch(fetchLatestMasterContractVersion())
-          .then(() => {
-            dispatch(fetchSafe(safeAddress))
-            return dispatch(fetchSafeTokens(safeAddress))
-          })
-          .then(() => {
-            dispatch(fetchSafeCreationTx(safeAddress))
-            dispatch(fetchTransactions(safeAddress))
-            dispatch(addViewedSafe(safeAddress))
-            setIsSafeLoaded(true)
-            return
-          })
+        await dispatch(fetchLatestMasterContractVersion())
+        await dispatch(fetchSafe(safeAddress))
+        setIsSafeLoaded(true)
+        await dispatch(fetchSafeTokens(safeAddress))
+        dispatch(fetchSafeCreationTx(safeAddress))
+        dispatch(fetchTransactions(safeAddress))
+        dispatch(addViewedSafe(safeAddress))
       }
     }
     dispatch(loadAddressBookFromStorage())
