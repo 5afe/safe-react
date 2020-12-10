@@ -5,10 +5,6 @@ import { useLocation } from 'react-router-dom'
 import AppFrame from './components/AppFrame'
 import AppsList from './components/AppsList'
 
-export type TransactionParams = {
-  safeTxGas?: number
-}
-
 const useQuery = () => {
   return new URLSearchParams(useLocation().search)
 }

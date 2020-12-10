@@ -18,7 +18,7 @@ import {
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
-import { TransactionParams } from '../index'
+import { TransactionParams } from '../components/AppFrame'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {

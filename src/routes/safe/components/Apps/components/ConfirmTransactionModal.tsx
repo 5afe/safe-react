@@ -24,7 +24,7 @@ import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
-import { TransactionParams } from '..'
+import { TransactionParams } from './AppFrame'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
