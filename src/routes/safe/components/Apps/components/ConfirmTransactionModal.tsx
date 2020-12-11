@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Icon, Text, Title, GenericModal, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
-import { Transaction, SendTransactionParams } from '@gnosis.pm/safe-apps-sdk'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
@@ -24,6 +24,7 @@ import { estimateExecTransactionGas } from 'src/logic/safe/transactions/gas'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
+import { TransactionParams } from './AppFrame'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -70,7 +71,7 @@ type OwnProps = {
   isOpen: boolean
   app: SafeApp
   txs: Transaction[]
-  params?: SendTransactionParams
+  params?: TransactionParams
   safeAddress: string
   safeName: string
   ethBalance: string
