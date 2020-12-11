@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -27,8 +27,8 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import InfoIcon from 'src/assets/icons/info_red.svg'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -52,14 +52,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const shortener = textShortener()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
   const [data, setData] = useState('')
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: tx.recipientAddress,
@@ -165,17 +164,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-            <Row align="center">
-              <Paragraph color="error" className={classes.executionWarningRow}>
-                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs,
-                {threshold && threshold > 1
-                  ? ` collect rejections and cancel this transaction.`
-                  : ` avoid executing the transaction.`}
-              </Paragraph>
-            </Row>
-          )}
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />

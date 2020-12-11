@@ -27,8 +27,8 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 export type CustomTx = {
   contractAddress?: string
@@ -51,7 +51,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: tx.data ? tx.data.trim() : '',
     safeAddress,
     txRecipient: tx.contractAddress || '',
@@ -148,14 +148,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-            <Row align="center">
-              <Paragraph color="error" className={classes.executionWarningRow}>
-                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs, avoid creating the transaction.
-              </Paragraph>
-            </Row>
-          )}
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
       <Hairline />

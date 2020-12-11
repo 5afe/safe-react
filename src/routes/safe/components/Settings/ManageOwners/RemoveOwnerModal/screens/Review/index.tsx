@@ -21,9 +21,8 @@ import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { List } from 'immutable'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import Img from 'src/components/layout/Img'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -50,14 +49,13 @@ export const ReviewRemoveOwnerModal = ({
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const [removeOwnerError, setRemoveOwnerError] = useState(false)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: safeAddress,
@@ -68,7 +66,6 @@ export const ReviewRemoveOwnerModal = ({
 
     if (!threshold) {
       console.error("Threshold value was not define, tx can't be executed")
-      setRemoveOwnerError(true)
       return
     }
 
@@ -203,15 +200,7 @@ export const ReviewRemoveOwnerModal = ({
           <br />
           {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
-        {txEstimationExecutionStatus === EstimationStatus.FAILURE ||
-          (removeOwnerError && (
-            <Row align="center">
-              <Paragraph color="error" className={classes.executionWarningRow}>
-                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs, avoid creating the transaction.
-              </Paragraph>
-            </Row>
-          ))}
+        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

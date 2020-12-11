@@ -27,9 +27,8 @@ import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import { styles } from './style'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import Img from 'src/components/layout/Img'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
@@ -66,7 +65,7 @@ export const ReviewReplaceOwnerModal = ({
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: safeAddress,
@@ -225,17 +224,7 @@ export const ReviewReplaceOwnerModal = ({
           <br />
           {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
-        {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-          <Row align="center">
-            <Paragraph color="error" className={classes.executionWarningRow}>
-              <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-              This transaction will most likely fail. To save gas costs,
-              {threshold && threshold > 1
-                ? ` collect rejections and cancel this transaction.`
-                : ` avoid executing the transaction.`}
-            </Paragraph>
-          </Row>
-        )}
+        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

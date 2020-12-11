@@ -22,9 +22,8 @@ import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import InfoIcon from 'src/assets/icons/info_red.svg'
-import Img from 'src/components/layout/Img'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const useStyles = makeStyles(styles)
 
@@ -82,7 +81,7 @@ const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     safeAddress,
     txRecipient: tx.recipient,
     txData: tx.data || '',
@@ -157,17 +156,7 @@ const ApproveTxModal = ({
             } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
-        {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-          <Row align="center">
-            <Paragraph color="error" className={classes.executionWarningRow}>
-              <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-              This transaction will most likely fail. To save gas costs,
-              {isTheTxReadyToBeExecuted
-                ? ` collect rejections and cancel this transaction.`
-                : ` avoid executing the transaction.`}
-            </Paragraph>
-          </Row>
-        )}
+        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Row align="center" className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>

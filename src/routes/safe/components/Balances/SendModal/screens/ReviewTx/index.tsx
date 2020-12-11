@@ -37,6 +37,7 @@ import InfoIcon from 'src/assets/icons/info_red.svg'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from '../../../../../../../components/TransactionFailText'
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
@@ -104,7 +105,6 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
-  const threshold = useSelector(safeThresholdSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
@@ -112,7 +112,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient,
@@ -223,17 +223,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-            <Row align="center">
-              <Paragraph color="error" className={classes.executionWarningRow}>
-                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs,
-                {threshold && threshold > 1
-                  ? ` collect rejections and cancel this transaction.`
-                  : ` avoid executing the transaction.`}
-              </Paragraph>
-            </Row>
-          )}
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />

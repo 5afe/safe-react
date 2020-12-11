@@ -18,9 +18,8 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import Img from 'src/components/layout/Img'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
@@ -46,7 +45,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: safeAddress,
@@ -183,14 +182,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           <br />
           {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
-        {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-          <Row align="center">
-            <Paragraph color="error" className={classes.executionWarningRow}>
-              <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-              This transaction will most likely fail. To save gas costs, avoid creating the transaction.
-            </Paragraph>
-          </Row>
-        )}
+        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

@@ -18,11 +18,11 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import Img from 'src/components/layout/Img'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const useStyles = makeStyles(styles)
 
@@ -38,9 +38,8 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector)
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
     safeAddress,
     txRecipient: safeAddress,
@@ -86,17 +85,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-            <Row align="center">
-              <Paragraph color="error" className={classes.executionWarningRow}>
-                <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                This transaction will most likely fail. To save gas costs,
-                {threshold && threshold > 1
-                  ? ` collect rejections and cancel this transaction.`
-                  : ` avoid executing the transaction.`}
-              </Paragraph>
-            </Row>
-          )}
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
       <Row align="center" className={classes.buttonRow}>

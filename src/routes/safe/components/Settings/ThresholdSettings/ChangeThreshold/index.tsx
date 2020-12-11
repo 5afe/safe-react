@@ -19,9 +19,9 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
-import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import Img from 'src/components/layout/Img'
-import InfoIcon from 'src/assets/icons/info_red.svg'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -128,14 +128,7 @@ export const ChangeThresholdModal = ({
                 <Paragraph>
                   {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
                 </Paragraph>
-                {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
-                  <Row align="center">
-                    <Paragraph color="error" className={classes.executionWarningRow}>
-                      <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
-                      This transaction will most likely fail. To save gas costs, avoid creating the transaction.
-                    </Paragraph>
-                  </Row>
-                )}
+                <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={false} />
               </Row>
             </Block>
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
