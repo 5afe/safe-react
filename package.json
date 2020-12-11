@@ -48,7 +48,7 @@
   "husky": {
     "hooks": {
       "pre-commit": "lint-staged --allow-empty",
-      "pre-push": "tsc"
+      "pre-push": "tsc --noEmit --incremental"
     }
   },
   "lint-staged": {
@@ -164,7 +164,8 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "https://github.com/gnosis/safe-apps-sdk.git#3f0689f",
+    "@gnosis.pm/safe-apps-sdk": "1.0.0-beta.4",
+    "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#3afc7cbb6914081036b4cbf10bacfe6270a9e198",
     "@gnosis.pm/util-contracts": "2.0.6",
