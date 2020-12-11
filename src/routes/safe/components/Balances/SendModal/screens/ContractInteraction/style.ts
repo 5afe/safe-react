@@ -71,11 +71,4 @@ export const styles = createStyles({
   fullWidth: {
     justifyContent: 'space-between',
   },
-  executionWarningRow: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  warningIcon: {
-    marginRight: sm,
-  },
 })

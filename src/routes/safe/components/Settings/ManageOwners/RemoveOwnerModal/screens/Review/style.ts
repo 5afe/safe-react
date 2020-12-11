@@ -81,11 +81,4 @@ export const styles = createStyles({
     textAlign: 'center',
     width: '100%',
   },
-  executionWarningRow: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  warningIcon: {
-    marginRight: sm,
-  },
 })

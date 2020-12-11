@@ -41,11 +41,4 @@ export const styles = createStyles({
     position: 'absolute',
     bottom: '-25px',
   },
-  executionWarningRow: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  warningIcon: {
-    marginRight: sm,
-  },
 })
