@@ -92,8 +92,13 @@ export const estimateTxGasCosts = async (
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
 export const getDataFromNodeErrorMessage = (errorMessage: string): string | undefined => {
+  // Replace illegal characters that often comes within the error string (like � for example)
+  // https://stackoverflow.com/questions/12754256/removing-invalid-characters-in-javascript
+  const normalizedErrorString = errorMessage.replace(/\uFFFD/g, '')
+
   // Extracts JSON object from the error message
-  const [, ...error] = errorMessage.split('\n')
+  const [, ...error] = normalizedErrorString.split('\n')
+
   try {
     const errorAsJSON = JSON.parse(error.join(''))
 
