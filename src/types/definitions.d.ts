@@ -1,8 +1,11 @@
-import Web3 from 'web3'
+export {}
 declare global {
   interface Window {
-    web3?: Web3
-    testAccountIndex?: string
+    ethereum?: {
+      autoRefreshOnNetworkChange: boolean
+      isMetaMask: boolean
+    }
+    testAccountIndex?: string | number
   }
 }
 declare module '@openzeppelin/contracts/build/contracts/ERC721'

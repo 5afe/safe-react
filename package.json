@@ -149,6 +149,7 @@
     }
   },
   "resolutions": {
+    "@babel/core": "^7.12.0",
     "sass-loader": "^9.0.0"
   },
   "browserslist": {
@@ -220,7 +221,6 @@
     "react-router-dom": "5.2.0",
     "react-scripts": "^4.0.1",
     "react-window": "^1.8.6",
-    "recompose": "^0.30.0",
     "redux": "4.0.5",
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
@@ -233,7 +233,7 @@
     "web3-utils": "^1.2.11"
   },
   "devDependencies": {
-    "@rescripts/cli": "^0.0.14",
+    "@rescripts/cli": "^0.0.15",
     "@sentry/cli": "^1.59.0",
     "@storybook/addon-actions": "^5.3.19",
     "@storybook/addon-links": "^5.3.19",
@@ -242,7 +242,7 @@
     "@storybook/react": "^5.3.19",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.2",
-    "@typechain/web3-v1": "^1.0.0",
+    "@typechain/web3-v1": "^2.0.0",
     "@types/history": "4.6.2",
     "@types/jest": "^26.0.16",
     "@types/lodash.memoize": "^4.1.6",
