@@ -106,13 +106,7 @@ const ApproveTxModal = ({
   }
 
   return (
-    <Modal
-      description={description}
-      handleClose={onClose}
-      open={isOpen}
-      title={title}
-      paperClassName={txEstimationExecutionStatus ? classes.paperModalContainer : undefined}
-    >
+    <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.headingText} noMargin weight="bolder">
           {title}
