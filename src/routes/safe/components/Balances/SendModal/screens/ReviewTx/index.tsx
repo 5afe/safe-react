@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 import CopyBtn from 'src/components/CopyBtn'
@@ -19,9 +19,7 @@ import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -38,7 +36,7 @@ import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
-import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
@@ -101,32 +99,6 @@ const useTxData = (
   return data
 }
 
-const useEstimateGas = (txData: string, safeAddress: string, txRecipient: string): string => {
-  const [gasCosts, setGasCosts] = useState('< 0.001')
-
-  useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async () => {
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, txRecipient, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [txData, safeAddress, txRecipient])
-
-  return gasCosts
-}
-
 const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -139,11 +111,10 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
 
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
-  const gasCosts = useEstimateGas(data, safeAddress as string, txRecipient as string)
-  const txWillFail = useCheckIfTransactionWillFail({
-    data,
+
+  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+    txData: data,
     safeAddress,
-    txAmount,
     txRecipient,
   })
 
@@ -252,7 +223,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txWillFail && (
+          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
             <Row align="center">
               <Paragraph color="error" className={classes.executionWarningRow}>
                 <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />

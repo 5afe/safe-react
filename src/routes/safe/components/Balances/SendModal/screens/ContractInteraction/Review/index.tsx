@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getNetworkInfo } from 'src/config'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -14,8 +14,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
@@ -24,7 +22,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 import InfoIcon from 'src/assets/icons/info_red.svg'
-import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const useStyles = makeStyles(styles)
 
@@ -49,35 +47,12 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
 
-  const txWillFail = useCheckIfTransactionWillFail({
+  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+    txData: tx.data || '',
     safeAddress,
     txRecipient: tx.contractAddress || '',
-    data: tx.data || '',
   })
-
-  useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async (): Promise<void> => {
-      const txData = tx.data ? tx.data.trim() : ''
-
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [safeAddress, tx.contractAddress, tx.data])
 
   const submitTx = async () => {
     const txRecipient = tx.contractAddress
@@ -175,7 +150,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
-          {txWillFail && (
+          {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
             <Row align="center">
               <Paragraph color="error" className={classes.executionWarningRow}>
                 <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />

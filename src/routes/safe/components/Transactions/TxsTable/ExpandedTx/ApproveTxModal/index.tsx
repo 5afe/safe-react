@@ -3,9 +3,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
@@ -18,8 +17,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
@@ -27,7 +24,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import Img from 'src/components/layout/Img'
-import { useCheckIfTransactionWillFail } from 'src/logic/hooks/useCheckIfTransactionWillFail'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const useStyles = makeStyles(styles)
 
@@ -81,41 +78,18 @@ const ApproveTxModal = ({
   const threshold = useSelector(safeThresholdSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  const txWillFail = useCheckIfTransactionWillFail({
+  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
     safeAddress,
     txRecipient: tx.recipient,
-    data: tx.data || '',
+    txData: tx.data || '',
+    txConfirmations: tx.confirmations.size,
+    txAmount: tx.value,
+    preApprovingOwner: approveAndExecute ? userAddress : undefined,
   })
-
-  useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async () => {
-      const estimatedGasCosts = await estimateTxGasCosts(
-        safeAddress,
-        tx.recipient,
-        tx.data as string,
-        tx,
-        approveAndExecute ? userAddress : undefined,
-      )
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [approveAndExecute, safeAddress, tx, userAddress])
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
@@ -138,7 +112,7 @@ const ApproveTxModal = ({
       handleClose={onClose}
       open={isOpen}
       title={title}
-      paperClassName={txWillFail ? classes.paperModalContainer : undefined}
+      paperClassName={txEstimationExecutionStatus ? classes.paperModalContainer : undefined}
     >
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.headingText} noMargin weight="bolder">
@@ -183,7 +157,7 @@ const ApproveTxModal = ({
             } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
-        {txWillFail && (
+        {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
           <Row align="center">
             <Paragraph color="error" className={classes.executionWarningRow}>
               <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
