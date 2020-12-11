@@ -35,7 +35,7 @@ const httpProviderOptions = {
 export const web3ReadOnly = new Web3(
   process.env.NODE_ENV !== 'test'
     ? new Web3.providers.HttpProvider(getRpcServiceUrl(), httpProviderOptions)
-    : window.web3?.currentProvider || 'ws://localhost:8545',
+    : 'ws://localhost:8545',
 )
 
 let web3 = web3ReadOnly
