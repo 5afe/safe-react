@@ -1,9 +1,8 @@
 import { BigNumber } from 'bignumber.js'
 import { CALL } from '.'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { EMPTY_DATA, calculateGasOf } from 'src/logic/wallets/ethTransactions'
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
 
@@ -33,16 +32,26 @@ export const getPreValidatedSignatures = (from: string): string => {
 }
 
 // @todo (agustin) check if this can be replaced by shouldExecuteTransaction() and refactor
-const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, transaction?: Transaction): boolean =>
-  transaction?.confirmations.size === threshold || !!preApprovingOwner || threshold === 1
+const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txConfirmations?: number): boolean =>
+  txConfirmations === threshold || !!preApprovingOwner || threshold === 1
 
-const estimateTxGas = async (
-  safeAddress: string,
-  to: string,
-  data: string,
-  tx?: Transaction,
-  preApprovingOwner?: string,
-): Promise<number> => {
+export type TransactionEstimationProps = {
+  txData: string
+  safeAddress: string
+  txRecipient: string
+  txConfirmations?: number
+  txAmount?: string
+  preApprovingOwner?: string
+}
+
+export const estimateTransactionGas = async ({
+  txAmount,
+  txConfirmations,
+  txData,
+  txRecipient,
+  safeAddress,
+  preApprovingOwner,
+}: TransactionEstimationProps): Promise<number> => {
   const web3 = getWeb3()
   const from = await getAccountFrom(web3)
 
@@ -52,42 +61,22 @@ const estimateTxGas = async (
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const threshold = await safeInstance.methods.getThreshold().call()
-  const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, tx)
+  const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
 
   if (isExecution) {
     // Gas of executing a transaction within the safe (threshold reached and transaction executed)
-    return await estimateExecTransactionGas(safeAddress, data, to, tx?.value || '0', CALL)
+    return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', CALL)
   }
 
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods
-    .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+    .getTransactionHash(txRecipient, txAmount || '0', txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
     .call({
       from,
     })
   // Gas of approving the transaction (threshold not reached or user did not executed the transaction)
-  const txData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return await calculateGasOf(txData, from, safeAddress)
-}
-
-// Returns the estimation of how much the user should pay for the given transaction (gas * price)
-export const estimateTxGasCosts = async (
-  safeAddress: string,
-  to: string,
-  data: string,
-  tx?: Transaction,
-  preApprovingOwner?: string,
-): Promise<number> => {
-  try {
-    const gas = await estimateTxGas(safeAddress, to, data, tx, preApprovingOwner)
-    const gasPrice = await calculateGasPrice()
-
-    return gas * parseInt(gasPrice, 10)
-  } catch (err) {
-    console.error('Error while estimating transaction execution gas costs:', err.message)
-
-    return 10000
-  }
+  const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
+  return await calculateGasOf(approveTransactionTxData, from, safeAddress)
 }
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
@@ -225,36 +214,5 @@ export const estimateExecTransactionGas = async (
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)
     return 0
-  }
-}
-
-export const checkIfExecTxWillFail = async ({
-  safeAddress,
-  txTo,
-  data,
-  txAmount = '0',
-  operation = 0,
-}: {
-  safeAddress: string
-  txTo?: string
-  data: string
-  txAmount?: string
-  operation?: number
-}): Promise<boolean> => {
-  const web3 = getWeb3()
-  try {
-    if (!txTo) {
-      return true
-    }
-    const from = await getAccountFrom(web3)
-    if (!from) {
-      return true
-    }
-
-    const estimateGas = await estimateExecTransactionGas(safeAddress, data, txTo, txAmount, operation)
-
-    return estimateGas <= 0
-  } catch (error) {
-    return true
   }
 }
