@@ -1,9 +1,10 @@
 import { useEffect, useState } from 'react'
-import { estimateTransactionGas, TransactionEstimationProps } from 'src/logic/safe/transactions/gas'
+import { estimateTransactionGas } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getNetworkInfo } from 'src/config'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -15,6 +16,19 @@ type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
   estimatedGas: number // Amount of gas needed for execute or approve the transaction
   gasCosts: string // Cost of gas to the user (estimatedGas * gasPrice) in format '< | > 100'
+  isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
+}
+
+const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txConfirmations?: number): boolean =>
+  txConfirmations === threshold || !!preApprovingOwner || threshold === 1
+
+type UseEstimateTransactionGasProps = {
+  txData: string
+  safeAddress: string
+  txRecipient: string
+  txConfirmations?: number
+  txAmount?: string
+  preApprovingOwner?: string
 }
 
 export const useEstimateTransactionGas = ({
@@ -24,11 +38,12 @@ export const useEstimateTransactionGas = ({
   txConfirmations,
   txAmount,
   preApprovingOwner,
-}: TransactionEstimationProps): TransactionGasEstimationResult => {
+}: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasCosts, setGasCosts] = useState({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
     estimatedGas: 0,
     gasCosts: '< 0.001',
+    isExecution: false,
   })
   const { nativeCoin } = getNetworkInfo()
 
@@ -41,13 +56,16 @@ export const useEstimateTransactionGas = ({
       }
 
       try {
+        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const threshold = await safeInstance.methods.getThreshold().call()
+        const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
+
         const estimatedGas = await estimateTransactionGas({
           safeAddress,
           txRecipient,
           txData,
-          txConfirmations,
           txAmount,
-          preApprovingOwner,
+          isExecution,
         })
         const gasPrice = await calculateGasPrice()
         const estimatedGasCosts = estimatedGas * parseInt(gasPrice, 10)
@@ -58,6 +76,7 @@ export const useEstimateTransactionGas = ({
             txEstimationExecutionStatus: estimatedGas <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
             estimatedGas,
             gasCosts: formattedGasCosts,
+            isExecution,
           })
         }
       } catch (error) {
@@ -69,6 +88,7 @@ export const useEstimateTransactionGas = ({
           txEstimationExecutionStatus: EstimationStatus.FAILURE,
           estimatedGas,
           gasCosts: formattedGasCosts,
+          isExecution: false,
         })
       }
     }

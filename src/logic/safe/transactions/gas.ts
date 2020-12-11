@@ -39,18 +39,16 @@ export type TransactionEstimationProps = {
   txData: string
   safeAddress: string
   txRecipient: string
-  txConfirmations?: number
+  isExecution: boolean
   txAmount?: string
-  preApprovingOwner?: string
 }
 
 export const estimateTransactionGas = async ({
   txAmount,
-  txConfirmations,
   txData,
   txRecipient,
+  isExecution,
   safeAddress,
-  preApprovingOwner,
 }: TransactionEstimationProps): Promise<number> => {
   const web3 = getWeb3()
   const from = await getAccountFrom(web3)
@@ -59,15 +57,12 @@ export const estimateTransactionGas = async ({
     return 0
   }
 
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const threshold = await safeInstance.methods.getThreshold().call()
-  const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
-
   if (isExecution) {
     // Gas of executing a transaction within the safe (threshold reached and transaction executed)
     return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', CALL)
   }
 
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods
     .getTransactionHash(txRecipient, txAmount || '0', txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
