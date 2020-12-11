@@ -11,15 +11,10 @@ import {
   Menu,
   ButtonLink,
 } from '@gnosis.pm/safe-react-components'
+import { MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 import { useSelector } from 'react-redux'
-import {
-  INTERFACE_MESSAGES,
-  Transaction,
-  RequestId,
-  LowercaseNetworks,
-  SendTransactionParams,
-} from '@gnosis.pm/safe-apps-sdk'
+import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 
 import {
   safeEthBalanceSelector,
@@ -27,12 +22,15 @@ import {
   safeNameSelector,
 } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkName } from 'src/config'
+import { getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { staticAppsList } from 'src/routes/safe/components/Apps/utils'
+import { LoadingContainer } from 'src/components/LoaderContainer/index'
+import { TIMEOUT } from 'src/utils/constants'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import ConfirmTransactionModal from '../components/ConfirmTransactionModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
@@ -40,8 +38,7 @@ import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl } from '../utils'
 import { SafeApp, StoredSafeApp } from '../types.d'
-import { LoadingContainer } from 'src/components/LoaderContainer/index'
-import { TIMEOUT } from 'src/utils/constants'
+import { useAppCommunicator } from '../communicator'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -72,11 +69,15 @@ const Breadcrumb = styled.div`
   height: 51px;
 `
 
+export type TransactionParams = {
+  safeTxGas?: number
+}
+
 type ConfirmTransactionModalState = {
   isOpen: boolean
   txs: Transaction[]
   requestId?: RequestId
-  params?: SendTransactionParams
+  params?: TransactionParams
 }
 
 type Props = {
@@ -132,7 +133,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   }, [appIsLoading])
 
   const openConfirmationModal = useCallback(
-    (txs: Transaction[], params: SendTransactionParams | undefined, requestId: RequestId) =>
+    (txs: Transaction[], params: TransactionParams | undefined, requestId: RequestId) =>
       setConfirmTransactionModal({
         isOpen: true,
         txs,
@@ -169,18 +170,78 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
     })
   }, [ethBalance, safeAddress, appUrl, sendMessageToIframe])
 
+  const communicator = useAppCommunicator(iframeRef, safeApp)
+
+  useEffect(() => {
+    communicator?.on('getEnvInfo', () => ({
+      txServiceUrl: getTxServiceUrl(),
+    }))
+
+    communicator?.on('getSafeInfo', () => ({
+      safeAddress,
+      network: NETWORK_NAME,
+    }))
+
+    communicator?.on('rpcCall', async (msg) => {
+      const params = msg.data.params as RPCPayload
+
+      try {
+        const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
+          if (
+            web3ReadOnly.currentProvider !== null &&
+            typeof web3ReadOnly.currentProvider !== 'string' &&
+            'send' in web3ReadOnly.currentProvider
+          ) {
+            web3ReadOnly.currentProvider?.send?.(
+              {
+                jsonrpc: '2.0',
+                method: params.call,
+                params: params.params,
+                id: '1',
+              },
+              (err, res) => {
+                if (err || res?.error) {
+                  reject(err || res?.error)
+                }
+
+                resolve(res?.result)
+              },
+            )
+          }
+        })
+
+        return response
+      } catch (err) {
+        return err
+      }
+    })
+
+    communicator?.on('sendTransactions', (msg) => {
+      // @ts-expect-error explore ways to fix this
+      openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
+    })
+  }, [communicator, openConfirmationModal, safeAddress])
+
   const onUserTxConfirm = (safeTxHash: string) => {
+    // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_CONFIRMED, data: { safeTxHash } },
       confirmTransactionModal.requestId,
     )
+
+    // Safe Apps SDK V2 Handler
+    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId)
   }
 
   const onTxReject = () => {
+    // Safe Apps SDK V1 Handler
     sendMessageToIframe(
       { messageId: INTERFACE_MESSAGES.TRANSACTION_REJECTED, data: {} },
       confirmTransactionModal.requestId,
     )
+
+    // Safe Apps SDK V2 Handler
+    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId, true)
   }
 
   const openRemoveModal = () => setIsRemoveModalOpen(true)
