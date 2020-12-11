@@ -57,6 +57,10 @@ const generateBatchRequests = <ReturnValues>({
         if (type !== undefined) {
           request = web3[type][method].request(...args, resolver)
         } else {
+          if (address === null) {
+            resolve()
+            return
+          }
           request = contractInstance.methods[method](...args).call.request(resolver)
         }
 

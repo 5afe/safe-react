@@ -11,6 +11,9 @@ import loadDefaultSafe from 'src/logic/safe/store/actions/loadDefaultSafe'
 import loadSafesFromStorage from 'src/logic/safe/store/actions/loadSafesFromStorage'
 import { store } from 'src/store'
 import { SENTRY_DSN } from './utils/constants'
+import { disableMMAutoRefreshWarning } from './utils/mm_warnings'
+
+disableMMAutoRefreshWarning()
 
 BigNumber.set({ EXPONENTIAL_AT: [-7, 255] })
 
