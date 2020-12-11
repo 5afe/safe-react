@@ -2,12 +2,17 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import Block from 'src/components/layout/Block'
 import Img from 'src/components/layout/Img'
-import { Transfer } from 'src/logic/safe/store/models/types/gateway'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { useAssetInfo } from 'src/routes/safe/components/Transactions/List/Row/hooks/useAssetInfo'
+
+import { Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { useAssetInfo } from './hooks/useAssetInfo'
+
+const Block = styled.div`
+  display: flex;
+  align-items: center;
+`
 
 const Amount = styled(Text)`
   margin-left: 10px;
@@ -23,7 +28,7 @@ export const TokenTransferAmount = (props: TokenTransferAmountProps): ReactEleme
   const assetInfo = useAssetInfo(props)
 
   return (
-    <Block justify="left">
+    <Block>
       <Img
         alt={assetInfo.name}
         height={18}

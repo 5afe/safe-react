@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { TokenTransferAmountProps } from 'src/routes/safe/components/Transactions/List/Row/TokenTransferAmount'
-import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
+import { TokenTransferAmountProps } from 'src/routes/safe/components/Transactions/TxsTable/CollapsedTx/TokenTransferAmount'
 
 type TokenTransferAsset = {
   name: string
@@ -10,6 +9,8 @@ type TokenTransferAsset = {
   amountWithSymbol: string
   type: string
 }
+
+const NOT_AVAILABLE = 'n/a'
 
 const defaultAssetValues: TokenTransferAsset = {
   name: NOT_AVAILABLE,

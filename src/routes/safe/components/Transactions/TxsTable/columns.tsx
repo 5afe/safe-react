@@ -21,7 +21,7 @@ import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellat
 import { getNetworkInfo } from 'src/config'
 import { TransactionSummary, Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { isGatewayTransaction } from 'src/logic/safe/store/models/types/gatewayHelpers'
-import { TokenTransferAmount } from 'src/routes/safe/components/Transactions/List/Row/TokenTransferAmount'
+import { TokenTransferAmount } from './CollapsedTx/TokenTransferAmount'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -53,27 +53,27 @@ const getAmountWithSymbol = (
   return `${txAmount} ${symbol}`
 }
 
-export const getIncomingTxAmount = (tx: Transfer, formatted = true): string => {
-  switch (tx.transferInfo.type) {
+export const getIncomingTxAmount = (txInfo: Transfer, formatted = true): string => {
+  switch (txInfo.transferInfo.type) {
     case 'ERC20':
       return getAmountWithSymbol(
         {
-          decimals: `${tx.transferInfo.decimals ?? '0'}`,
-          symbol: `${tx.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
-          value: tx.transferInfo.value,
+          decimals: `${txInfo.transferInfo.decimals ?? '0'}`,
+          symbol: `${txInfo.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
+          value: txInfo.transferInfo.value,
         },
         formatted,
       )
     case 'ERC721':
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
-      return `1 ${tx.transferInfo.tokenSymbol}`
+      return `1 ${txInfo.transferInfo.tokenSymbol}`
     case 'ETHER': {
       const { nativeCoin } = getNetworkInfo()
       return getAmountWithSymbol(
         {
           decimals: nativeCoin.decimals,
           symbol: nativeCoin.symbol,
-          value: tx.transferInfo.value,
+          value: txInfo.transferInfo.value,
         },
         formatted,
       )
@@ -161,23 +161,23 @@ const getModuleTxTableData = (tx: SafeModuleTransaction): TableData => ({
   [TX_TABLE_RAW_TX_ID]: tx,
 })
 
-const getIncomingTxTableData = (tx: TransactionSummary): TableData => ({
-  [TX_TABLE_ID]: `${tx.id}-${tx.txInfo.type}`,
+const getIncomingTxTableData = (transaction: TransactionSummary): TableData => ({
+  [TX_TABLE_ID]: `${transaction.id}-${transaction.txInfo.type}`,
   [TX_TABLE_TYPE_ID]: <TxType txType="incoming" origin={null} />,
-  [TX_TABLE_DATE_ID]: formatDate(new Date(tx.timestamp).toISOString()),
-  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(new Date(tx.timestamp).toISOString())),
+  [TX_TABLE_DATE_ID]: formatDate(new Date(transaction.timestamp).toISOString()),
+  [buildOrderFieldFrom(TX_TABLE_DATE_ID)]: getTime(parseISO(new Date(transaction.timestamp).toISOString())),
   [TX_TABLE_AMOUNT_ID]:
-    tx.txInfo.type === 'Transfer' ? (
+    transaction.txInfo.type === 'Transfer' ? (
       <TokenTransferAmount
-        direction={tx.txInfo.direction}
-        transferInfo={tx.txInfo.transferInfo}
-        amountWithSymbol={getIncomingTxAmount(tx.txInfo)}
+        direction={transaction.txInfo.direction}
+        transferInfo={transaction.txInfo.transferInfo}
+        amountWithSymbol={getIncomingTxAmount(transaction.txInfo)}
       />
     ) : (
       NOT_AVAILABLE
     ),
-  [TX_TABLE_STATUS_ID]: TransactionStatus[tx.txStatus],
-  [TX_TABLE_RAW_TX_ID]: tx,
+  [TX_TABLE_STATUS_ID]: TransactionStatus[transaction.txStatus],
+  [TX_TABLE_RAW_TX_ID]: transaction,
 })
 
 // This follows the approach of calculating the tx information closest to the presentation components.
@@ -211,13 +211,13 @@ export const getTxTableData = (
   transactions: List<Transaction | SafeModuleTransaction | TransactionSummary>,
   cancelTxs: CancellationTransactions,
 ): List<TableData> =>
-  transactions.reduce((acc, tx): List<TableData> => {
-    if (isGatewayTransaction(tx)) {
+  transactions.reduce((acc, transaction): List<TableData> => {
+    if (isGatewayTransaction(transaction)) {
       // TransactionSummary
-      if (tx.txInfo.type === 'Transfer') {
-        switch (tx.txInfo.direction) {
+      if (transaction.txInfo.type === 'Transfer') {
+        switch (transaction.txInfo.direction) {
           case 'INCOMING': {
-            return acc.push(getIncomingTxTableData(tx))
+            return acc.push(getIncomingTxTableData(transaction))
           }
           case 'OUTGOING':
           case 'UNKNOWN':
@@ -225,13 +225,13 @@ export const getTxTableData = (
         }
       }
     } else {
-      const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(tx.type)
+      const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(transaction.type)
 
       if (isModuleTx) {
-        return acc.push(getModuleTxTableData(tx as SafeModuleTransaction))
+        return acc.push(getModuleTxTableData(transaction as SafeModuleTransaction))
       }
 
-      return acc.push(getTransactionTableData(tx as Transaction, cancelTxs.get(`${tx.nonce}`)))
+      return acc.push(getTransactionTableData(transaction as Transaction, cancelTxs.get(`${transaction.nonce}`)))
     }
 
     // this line was added due to TS2366 error

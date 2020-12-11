@@ -1,15 +1,12 @@
-import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
-import axios, { AxiosResponse } from 'axios'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import memoize from 'lodash/memoize'
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import React, { ReactElement, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
 import RejectTxModal from './RejectTxModal'
 import TxDescription from './TxDescription'
-import { IncomingTx } from './IncomingTx'
 import { CreationTx } from './CreationTx'
 import { OutgoingTx } from './OutgoingTx'
 import useStyles from './style'
@@ -30,13 +27,13 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { Transaction, TransactionTypes, SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
-import IncomingTxDescription from './IncomingTxDescription'
-import { getExplorerInfo, getNetworkInfo, getTxDetailsUrl } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import TransferDescription from './TxDescription/TransferDescription'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { TransactionSummary, Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { TransactionSummary } from 'src/logic/safe/store/models/types/gateway'
 import { isGatewayTransaction } from 'src/logic/safe/store/models/types/gatewayHelpers'
+import { ExpandedGatewayTx } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedGatewayTx'
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): ReactElement => {
   const classes = useStyles()
@@ -194,104 +191,9 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
   )
 }
 
-// TODO: WIP -- this is here for ease of implementation
-//  it should be implemented as a selector
-//  also, `ExpandedTxDetails` type, is incomplete and should be defined inside `gateway.d.ts`
-//{
-// executedAt: 1604098453000,
-// txStatus: "SUCCESS",
-// txInfo: {},
-// txData: null,
-// detailedExecutionInfo: null,
-// txHash: "0xaff6465ba25f0bc48f26299b74e12c0bc41d614e2995fdacce50066bb4b934dd"
-// }
-
-type ExpandedTxDetails = {
-  executedAt: number
-  txStatus: string
-  txInfo: any
-  txData: string | null
-  detailedExecutionInfo: any | null
-  txHash: string
-}
-
-const txDetailedInfo = memoize(
-  async (transaction: TransactionSummary): Promise<ExpandedTxDetails> => {
-    const url = getTxDetailsUrl(transaction.id)
-    const { data } = await axios.get<ExpandedTxDetails, AxiosResponse<ExpandedTxDetails>>(url)
-    return data
-  },
-  (transaction: TransactionSummary) => {
-    return `${transaction.txStatus}-${transaction.id}`
-  },
-)
-
-const IncomingGatewayTx = ({
-  timestamp,
-  transferTx,
-  txHash = null,
-}: {
-  timestamp: TransactionSummary['timestamp']
-  transferTx: Transfer
-  txHash: string | null
-}): ReactElement => {
-  const classes = useStyles()
-
-  return (
-    <>
-      <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-        <div style={{ display: 'flex' }}>
-          <Bold className={classes.txHash}>Hash: </Bold>
-          {txHash ? (
-            <EthHashInfo hash={txHash} shortenHash={4} showCopyBtn explorerUrl={getExplorerInfo(txHash)} />
-          ) : (
-            <Loader size="xs" />
-          )}
-        </div>
-        <IncomingTx timestamp={timestamp} />
-      </Block>
-      <Hairline />
-      <IncomingTxDescription transferTx={transferTx} />
-    </>
-  )
-}
-
-const ExpandedGatewayTx = ({ tx }: { tx: TransactionSummary }): ReactElement | null => {
-  const classes = useStyles()
-  const isIncomingTx = tx.txInfo.type === 'Transfer' && tx.txInfo.direction === 'INCOMING'
-
-  const [txHash, setTxHash] = useState<string | null>(null)
-  useEffect(() => {
-    if (tx.id) {
-      txDetailedInfo(tx)
-        .then(({ txHash }) => setTxHash(txHash))
-        .catch((error) => {
-          console.error('Failed to retrieve tx details', error, tx)
-          setTxHash(NOT_AVAILABLE)
-        })
-    }
-  }, [tx])
-
-  if (isIncomingTx) {
-    return (
-      <Block className={classes.expandedTxBlock}>
-        <Row>
-          <Col layout="column" xs={6} className={classes.col}>
-            {isIncomingTx && (
-              <IncomingGatewayTx timestamp={tx.timestamp} transferTx={tx.txInfo as Transfer} txHash={txHash} />
-            )}
-          </Col>
-        </Row>
-      </Block>
-    )
-  }
-
-  return null
-}
-
 export const ExpandedTx = ({ row }: { row: TableData }): ReactElement => {
   if (isGatewayTransaction(row.tx)) {
-    return <ExpandedGatewayTx tx={row[TX_TABLE_RAW_TX_ID] as TransactionSummary} />
+    return <ExpandedGatewayTx transaction={row[TX_TABLE_RAW_TX_ID] as TransactionSummary} />
   }
 
   const isModuleTx = [TransactionTypes.SPENDING_LIMIT, TransactionTypes.MODULE].includes(
