@@ -3,7 +3,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import OwnerForm from './screens/OwnerForm'
-import ReviewReplaceOwner from './screens/Review'
 
 import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
@@ -16,6 +15,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { ReviewReplaceOwnerModal } from './screens/Review'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -28,9 +28,8 @@ const styles = createStyles({
 const useStyles = makeStyles(styles)
 
 type OwnerValues = {
-  ownerAddress: string
-  ownerName: string
-  threshold: string
+  newOwnerAddress: string
+  newOwnerName: string
 }
 
 export const sendReplaceOwner = async (
@@ -44,7 +43,7 @@ export const sendReplaceOwner = async (
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress).encodeABI()
+  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.newOwnerAddress).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
@@ -61,8 +60,8 @@ export const sendReplaceOwner = async (
       replaceSafeOwner({
         safeAddress,
         oldOwnerAddress: ownerAddressToRemove,
-        ownerAddress: values.ownerAddress,
-        ownerName: values.ownerName,
+        ownerAddress: values.newOwnerAddress,
+        ownerName: values.newOwnerName,
       }),
     )
   }
@@ -75,10 +74,18 @@ type ReplaceOwnerProps = {
   ownerName: string
 }
 
-const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwnerProps): React.ReactElement => {
+export const ReplaceOwnerModal = ({
+  isOpen,
+  onClose,
+  ownerAddress,
+  ownerName,
+}: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState<any>({})
+  const [values, setValues] = useState({
+    newOwnerAddress: '',
+    newOwnerName: '',
+  })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
@@ -86,7 +93,10 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
   useEffect(
     () => () => {
       setActiveScreen('checkOwner')
-      setValues({})
+      setValues({
+        newOwnerAddress: '',
+        newOwnerName: '',
+      })
     },
     [isOpen],
   )
@@ -96,9 +106,10 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
   const ownerSubmitted = (newValues) => {
     const { ownerAddress, ownerName } = newValues
     const checksumAddr = checksumAddress(ownerAddress)
-    values.ownerName = ownerName
-    values.ownerAddress = checksumAddr
-    setValues(values)
+    setValues({
+      newOwnerAddress: checksumAddr,
+      newOwnerName: ownerName,
+    })
     setActiveScreen('reviewReplaceOwner')
   }
 
@@ -108,7 +119,9 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
       await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, threshold)
 
       dispatch(
-        addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })),
+        addOrUpdateAddressBookEntry(
+          makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName }),
+        ),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)
@@ -128,7 +141,7 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
           <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
-          <ReviewReplaceOwner
+          <ReviewReplaceOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onReplaceOwner}
@@ -141,5 +154,3 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
     </Modal>
   )
 }
-
-export default ReplaceOwner

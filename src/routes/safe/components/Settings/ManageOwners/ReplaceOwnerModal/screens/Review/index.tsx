@@ -1,5 +1,5 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
@@ -7,7 +7,6 @@ import { useSelector } from 'react-redux'
 import { List } from 'immutable'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
@@ -24,47 +23,73 @@ import {
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import { styles } from './style'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import Img from 'src/components/layout/Img'
+import InfoIcon from 'src/assets/icons/info_red.svg'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
-  const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+const useStyles = makeStyles(styles)
+
+type ReplaceOwnerProps = {
+  onClose: () => void
+  onClickBack: () => void
+  onSubmit: () => void
+  ownerAddress: string
+  ownerName: string
+  values: {
+    newOwnerAddress: string
+    newOwnerName: string
+  }
+}
+
+export const ReviewReplaceOwnerModal = ({
+  onClickBack,
+  onClose,
+  onSubmit,
+  ownerAddress,
+  ownerName,
+  values,
+}: ReplaceOwnerProps): React.ReactElement => {
+  const classes = useStyles()
+  const [data, setData] = useState('')
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector)
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
+  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+    txData: data,
+    safeAddress,
+    txRecipient: safeAddress,
+  })
+
   useEffect(() => {
     let isCurrent = true
-    const estimateGas = async () => {
+    const calculateReplaceOwnerData = async () => {
       const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.ownerAddress).encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
+      const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.newOwnerAddress).encodeABI()
       if (isCurrent) {
-        setGasCosts(formattedGasCosts)
+        setData(txData)
       }
     }
 
-    estimateGas()
+    calculateReplaceOwnerData()
     return () => {
       isCurrent = false
     }
-  }, [ownerAddress, safeAddress, values.ownerAddress])
+  }, [ownerAddress, safeAddress, values.newOwnerAddress])
 
   return (
     <>
@@ -78,7 +103,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.formContainer}>
+      <Block>
         <Row className={classes.root}>
           <Col layout="column" xs={4}>
             <Block className={classes.details}>
@@ -172,19 +197,19 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
             <Hairline />
             <Row className={classes.selectedOwnerAdded}>
               <Col align="center" xs={1}>
-                <Identicon address={values.ownerAddress} diameter={32} />
+                <Identicon address={values.newOwnerAddress} diameter={32} />
               </Col>
               <Col xs={11}>
                 <Block className={classNames(classes.name, classes.userName)}>
                   <Paragraph noMargin size="lg" weight="bolder">
-                    {values.ownerName}
+                    {values.newOwnerName}
                   </Paragraph>
                   <Block className={classes.user} justify="center">
                     <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                      {values.ownerAddress}
+                      {values.newOwnerAddress}
                     </Paragraph>
-                    <CopyBtn content={values.ownerAddress} />
-                    <ExplorerButton explorerUrl={getExplorerInfo(values.ownerAddress)} />
+                    <CopyBtn content={values.newOwnerAddress} />
+                    <ExplorerButton explorerUrl={getExplorerInfo(values.newOwnerAddress)} />
                   </Block>
                 </Block>
               </Col>
@@ -200,6 +225,17 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
           <br />
           {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
+        {txEstimationExecutionStatus === EstimationStatus.FAILURE && (
+          <Row align="center">
+            <Paragraph color="error" className={classes.executionWarningRow}>
+              <Img alt="Info Tooltip" height={16} src={InfoIcon} className={classes.warningIcon} />
+              This transaction will most likely fail. To save gas costs,
+              {threshold && threshold > 1
+                ? ` collect rejections and cancel this transaction.`
+                : ` avoid executing the transaction.`}
+            </Paragraph>
+          </Row>
+        )}
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
@@ -221,5 +257,3 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     </>
   )
 }
-
-export default withStyles(styles as any)(ReviewRemoveOwner)

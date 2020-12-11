@@ -55,4 +55,11 @@ export const styles = createStyles({
     boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
     marginLeft: '15px',
   },
+  executionWarningRow: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  warningIcon: {
+    marginRight: sm,
+  },
 })

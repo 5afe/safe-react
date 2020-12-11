@@ -1,6 +1,7 @@
 import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     height: '372px',
   },
@@ -84,5 +85,12 @@ export const styles = () => ({
     padding: `0 ${lg}`,
     textAlign: 'center',
     width: '100%',
+  },
+  executionWarningRow: {
+    display: 'flex',
+    alignItems: 'center',
+  },
+  warningIcon: {
+    marginRight: sm,
   },
 })
