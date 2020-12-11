@@ -30,11 +30,4 @@ export const styles = createStyles({
     marginTop: sm,
     fontSize: md,
   },
-  executionWarningRow: {
-    display: 'flex',
-    alignItems: 'center',
-  },
-  warningIcon: {
-    marginRight: sm,
-  },
 })
