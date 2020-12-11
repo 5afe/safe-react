@@ -31,10 +31,6 @@ export const getPreValidatedSignatures = (from: string): string => {
   )}000000000000000000000000000000000000000000000000000000000000000001`
 }
 
-// @todo (agustin) check if this can be replaced by shouldExecuteTransaction() and refactor
-const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txConfirmations?: number): boolean =>
-  txConfirmations === threshold || !!preApprovingOwner || threshold === 1
-
 export type TransactionEstimationProps = {
   txData: string
   safeAddress: string
