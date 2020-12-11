@@ -47,13 +47,19 @@ export const useTxHash = (transaction: TransactionSummary): typeof initialTxHash
   const [txHashData, setTxHashData] = useState<typeof initialTxHashData>(initialTxHashData)
 
   useEffect(() => {
+    let isCurrent = true
+
     if (transaction.id) {
       txDetailedInfo(transaction)
-        .then(({ txHash }) => setTxHashData({ loading: false, error: false, txHash }))
+        .then(({ txHash }) => isCurrent && setTxHashData({ loading: false, error: false, txHash }))
         .catch((error) => {
           console.error('Failed to retrieve tx details', error, transaction)
-          setTxHashData({ loading: false, error: true, txHash: NOT_AVAILABLE })
+          isCurrent && setTxHashData({ loading: false, error: true, txHash: NOT_AVAILABLE })
         })
+    }
+
+    return () => {
+      isCurrent = false
     }
   }, [transaction])
 
