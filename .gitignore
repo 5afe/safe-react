@@ -12,3 +12,4 @@ yalc.lock
 # testing
 /coverage/
 src/types/contracts/
+tsconfig.tsbuildinfo
