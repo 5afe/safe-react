@@ -243,7 +243,7 @@
     "@storybook/react": "^5.3.19",
     "@testing-library/jest-dom": "5.11.6",
     "@testing-library/react": "11.2.2",
-    "@typechain/web3-v1": "^1.0.0",
+    "@typechain/web3-v1": "^2.0.0",
     "@types/history": "4.6.2",
     "@types/jest": "^26.0.16",
     "@types/lodash.memoize": "^4.1.6",
