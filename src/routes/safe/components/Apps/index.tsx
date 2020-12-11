@@ -1,9 +1,9 @@
 import React from 'react'
 
+import { useLocation } from 'react-router-dom'
+
 import AppFrame from './components/AppFrame'
 import AppsList from './components/AppsList'
-
-import { useLocation } from 'react-router-dom'
 
 const useQuery = () => {
   return new URLSearchParams(useLocation().search)
