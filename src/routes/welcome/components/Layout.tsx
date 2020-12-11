@@ -1,118 +1,189 @@
-import OpenInNew from '@material-ui/icons/OpenInNew'
 import React from 'react'
+import styled from 'styled-components'
+import {
+  Card,
+  Button,
+  Title,
+  Text,
+  Divider,
+  ButtonLink,
+  Dot,
+  Icon,
+  Link as LinkSRC,
+} from '@gnosis.pm/safe-react-components'
 
-import styles from './Layout.module.scss'
-
-import ConnectButton from 'src/components/ConnectButton'
-import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Heading from 'src/components/layout/Heading'
-import Img from 'src/components/layout/Img'
 import Link from 'src/components/layout/Link'
+import Block from 'src/components/layout/Block'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
-import { marginButtonImg, secondary } from 'src/theme/variables'
+import { onConnectButtonClick } from 'src/components/ConnectButton'
 
-import PlusIcon from '../assets/new.svg'
-import SafeIcon from '../assets/safe.svg'
+const Wrapper = styled.div`
+  display: flex;
+  flex-direction: row;
+  margin: 24px 0 0 0;
+`
+const StyledCardDouble = styled(Card)`
+  display: flex;
+  padding: 0;
+`
+const StyledCard = styled(Card)`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin: 0 20px 0 0;
+  max-width: 27%;
+  height: 276px;
+`
+const CardsCol = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  padding: 24px;
+  width: 50%;
+`
+const StyledButton = styled(Button)`
+  margin-top: auto;
+  text-decoration: none;
+`
+const TitleWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  margin: 0 0 16px 0;
 
-const openIconStyle = {
-  height: '13px',
-  color: secondary,
-  marginBottom: '-2px',
+  h5 {
+    color: white;
+  }
+`
+const StyledTitle = styled(Title)`
+  margin: 0 0 0 16px;
+`
+const StyledTitleOnly = styled(Title)`
+  margin: 0 0 16px 0;
+`
+const StyledButtonLink = styled(ButtonLink)`
+  margin: 16px 0 16px -8px;
+`
+
+type Props = {
+  isOldMultisigMigration?: boolean
+  provider: any
 }
 
-const buttonStyle = {
-  marginLeft: marginButtonImg,
-}
-
-export const CreateSafe = ({ provider, size }: any) => (
-  <Button
-    color="primary"
-    component={Link}
-    disabled={!provider}
-    minHeight={42}
-    minWidth={240}
-    size={size || 'medium'}
-    to={OPEN_ADDRESS}
-    variant="contained"
-    testId="create-new-safe-btn"
-  >
-    <Img alt="Safe" height={14} src={PlusIcon} />
-    <div style={buttonStyle}>Create new Safe</div>
-  </Button>
-)
-
-export const LoadSafe = ({ provider, size }) => (
-  <Button
-    color="primary"
-    component={Link}
-    disabled={!provider}
-    minWidth={240}
-    size={size || 'medium'}
-    to={LOAD_ADDRESS}
-    variant="outlined"
-    testId="load-existing-safe-btn"
-  >
-    <Img alt="Safe" height={14} src={SafeIcon} />
-    <div style={buttonStyle}>Load existing Safe</div>
-  </Button>
-)
-
-const Welcome = ({ isOldMultisigMigration, provider }: any) => {
-  const headingText = isOldMultisigMigration ? (
-    <>
-      We will replicate the owner structure from your existing Gnosis MultiSig
-      <br />
-      to let you test the new interface.
-      <br />
-      As soon as you feel comfortable, start moving funds to your new Safe.
-      <br />{' '}
-    </>
-  ) : (
-    <>
-      Gnosis Safe Multisig is the most secure way to manage crypto funds
-      <br />
-      collectively. It is an improvement of the Gnosis MultiSig, which is used by more than 3000 teams
-      <br /> and stores over $1B USD worth of digital assets. Gnosis Safe Multisig features a modular
-      <br /> design, formally verified smart contracts and vastly improved user experience.{' '}
-    </>
-  )
+const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElement => {
   return (
-    <Block className={styles.safe}>
-      <Heading align="center" margin="lg" tag="h1" weight="bold">
-        Welcome to
-        <br />
-        Gnosis Safe Multisig
-      </Heading>
-      <Heading align="center" margin="xl" tag="h3">
-        {headingText}
-        <a
-          className={styles.learnMoreLink}
-          href="https://gnosis-safe.io/teams"
-          rel="noopener noreferrer"
-          target="_blank"
-        >
-          Learn more
-          <OpenInNew style={openIconStyle} />
-        </a>
-      </Heading>
-      {provider ? (
-        <>
-          <Block className={styles.safeActions} margin="md">
-            <CreateSafe provider={provider} size="large" />
-          </Block>
-          <Block className={styles.safeActions} margin="md">
-            <LoadSafe provider={provider} size="large" />
-          </Block>
-        </>
-      ) : (
-        <Block className={styles.connectWallet} margin="md">
-          <Heading align="center" margin="md" tag="h3">
-            Get Started by Connecting a Wallet
-          </Heading>
-          <ConnectButton minHeight={42} minWidth={240} data-testid="connect-btn" />
-        </Block>
-      )}
+    <Block>
+      {/* Title */}
+      <Title size="md" strong>
+        Welcome to Gnosis Safe Multisig.
+      </Title>
+
+      {/* Subtitle */}
+      <Title size="xs">
+        {isOldMultisigMigration ? (
+          <>
+            We will replicate the owner structure from your existing Gnosis MultiSig to let you test the new interface.
+            As soon as you feel comfortable, start moving funds to your new Safe.
+          </>
+        ) : (
+          <>
+            Gnosis Safe Multisig is the most trusted platform to manage digital assets. <br /> Here is how to get
+            started:{' '}
+          </>
+        )}
+      </Title>
+
+      <>
+        <Wrapper>
+          {/* Connect wallet */}
+          <StyledCard>
+            <TitleWrapper>
+              <Dot color="primary">
+                {!provider ? <Title size="xs">1</Title> : <Icon color="white" type="check" size="md" />}
+              </Dot>
+              <StyledTitle size="sm" strong withoutMargin>
+                Connect wallet
+              </StyledTitle>
+            </TitleWrapper>
+            <Text size="xl">
+              Gnosis Safe Multisig supports a wide range of wallets that you can choose to be one of the authentication
+              factors.
+            </Text>
+            <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
+              <LinkSRC
+                size="xl"
+                href="https://help.gnosis-safe.io/en/articles/4689442-why-do-i-need-to-connect-a-wallet"
+                target="_blank"
+                rel="noopener noreferrer"
+                title="More info about: Why do I need to connect wallet?"
+              >
+                Why do I need to connect wallet?
+              </LinkSRC>
+            </StyledButtonLink>
+            <StyledButton
+              size="lg"
+              color="primary"
+              variant="contained"
+              onClick={onConnectButtonClick}
+              disabled={provider}
+              data-testid="connect-btn"
+            >
+              <Text size="xl" color="white">
+                Connect wallet
+              </Text>
+            </StyledButton>
+          </StyledCard>
+
+          <StyledCardDouble disabled={!provider}>
+            {/* Create safe */}
+            <CardsCol>
+              <TitleWrapper>
+                <Dot color="primary">
+                  <Title size="xs">2</Title>
+                </Dot>
+                <StyledTitle size="sm" strong withoutMargin>
+                  Create Safe
+                </StyledTitle>
+              </TitleWrapper>
+              <Text size="xl">
+                Create a new Safe Multisig that is controlled by one or multiple owners. <br />
+                You will be required to pay a network fee for creating your new Safe.
+              </Text>
+              <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
+                <Text size="xl" color="white">
+                  + Create new Safe
+                </Text>
+              </StyledButton>
+            </CardsCol>
+
+            <Divider orientation="vertical" />
+
+            {/* Load safe */}
+            <CardsCol>
+              <StyledTitleOnly size="sm" strong withoutMargin>
+                Load existing Safe
+              </StyledTitleOnly>
+              <Text size="xl">
+                Already have a Safe? Do you want to access your Safe Multisig from a different device? Easily load your
+                Safe Multisig using your Safe address.
+              </Text>
+              <StyledButton
+                variant="bordered"
+                iconType="safe"
+                iconSize="sm"
+                size="lg"
+                color="secondary"
+                component={Link}
+                to={LOAD_ADDRESS}
+              >
+                <Text size="xl" color="secondary">
+                  Load existing Safe
+                </Text>
+              </StyledButton>
+            </CardsCol>
+          </StyledCardDouble>
+        </Wrapper>
+      </>
     </Block>
   )
 }
