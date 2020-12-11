@@ -3,9 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
-import NoSafe from 'src/components/NoSafe'
-import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -35,13 +33,7 @@ const Container = (): React.ReactElement => {
     onClose: () => {},
   })
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const provider = useSelector(providerNameSelector)
   const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-
-  if (!safeAddress) {
-    return <NoSafe provider={provider} text="Safe not found" />
-  }
 
   if (!featuresEnabled) {
     return (
