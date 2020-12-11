@@ -5,7 +5,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
-import RejectTxModal from './RejectTxModal'
+import { RejectTxModal } from './RejectTxModal'
 import TxDescription from './TxDescription'
 import { IncomingTx } from './IncomingTx'
 import { CreationTx } from './CreationTx'
