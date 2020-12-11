@@ -1,4 +1,4 @@
-import { Transaction } from '@gnosis.pm/safe-apps-sdk'
+import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import { AbiItem } from 'web3-utils'
 import { MultiSend } from 'src/types/contracts/MultiSend.d'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
