@@ -32,7 +32,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Aave
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX1NUtvm9WjbvT79sTdeg3sw1NxZAM273y44nBy5d2jZb`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQ3w2ezp2zx3u2LYQHyuNzMrLDJFjyL1rjAFTjNMcQ4cK`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -95,7 +95,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // TX-Builder
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXdrr9hRbXSaqMb71iKnEp66PwwsAbJDR9XdwByUYSTxB`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYES1Se6i6679z3PfQ62bydgVVEoSRUabvjB35DfUGPGA`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
