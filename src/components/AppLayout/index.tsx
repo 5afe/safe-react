@@ -5,6 +5,9 @@ import { ListItemType } from 'src/components/List'
 import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
+import { screenXs } from 'src/theme/variables'
+import { Button, Card, Text } from '@gnosis.pm/safe-react-components'
+import Phone from './MobileStart/assets/phone@2x.png'
 
 const Container = styled.div`
   height: 100vh;
@@ -13,6 +16,13 @@ const Container = styled.div`
   flex-direction: column;
 
   background-color: ${({ theme }) => theme.colors.background};
+
+  /* @media (max-width: ${screenXs}px) {
+    background-color: ${({ theme }) => theme.colors.primary};
+    position: fixed;
+    height: 100vh;
+    width: 100vw;
+  } */
 `
 
 const HeaderWrapper = styled.nav`
@@ -63,6 +73,32 @@ const ContentWrapper = styled.section`
     height: 59px;
   }
 `
+const ModalApp = styled.div`
+  display: none;
+
+  @media (max-width: ${screenXs}px) {
+    position: fixed;
+    display: flex;
+    bottom: 0;
+    width: 100vw;
+    height: 260px;
+    background-color: ${({ theme }) => theme.colors.background};
+    z-index: 2147483004; /* on top of Intercom Button*/
+    padding: 20px 16px;
+  }
+`
+
+const StyledCard = styled(Card)`
+  background-color: #fdfdfd;
+  width: 245px;
+  height: 220px;
+  padding: 24px 40px 24px 24px;
+  box-sizing: border-box;
+  box-shadow: none;
+  display: flex;
+  justify-content: space-around;
+  flex-direction: column;
+`
 
 type Props = {
   sidebarItems: ListItemType[]
@@ -108,6 +144,16 @@ const Layout: React.FC<Props> = ({
         <Footer />
       </ContentWrapper>
     </BodyWrapper>
+    <ModalApp>
+      <StyledCard>
+        <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
+        <Text size="lg">Get the mobile app for a better experience.</Text>
+        <Button size="md" color="primary" variant="contained">
+          Get the App
+        </Button>
+      </StyledCard>
+      <img src={Phone} alt="Phone" width="45%" />
+    </ModalApp>
   </Container>
 )
 
