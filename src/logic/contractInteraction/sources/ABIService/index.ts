@@ -64,5 +64,5 @@ export const extractUsefulMethods = (abi: AbiItem[]): AbiItemExtended[] => {
 }
 
 export const isPayable = (method: AbiItem | AbiItemExtended): boolean => {
-  return !!method?.payable
+  return Boolean(method?.payable) || method.stateMutability === 'payable'
 }
