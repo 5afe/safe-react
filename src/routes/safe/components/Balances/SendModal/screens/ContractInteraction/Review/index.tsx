@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -46,24 +46,35 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [txParameters, setTxParameters] = useState<{
+    txRecipient: string
+    txData: string
+    txAmount: string
+  }>({ txData: '', txAmount: '', txRecipient: '' })
 
   const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
-    txData: tx.data || '',
     safeAddress,
-    txRecipient: tx.contractAddress || '',
+    txRecipient: txParameters?.txRecipient,
+    txAmount: txParameters?.txAmount,
+    txData: txParameters?.txData,
   })
 
+  useEffect(() => {
+    setTxParameters({
+      txRecipient: tx.contractAddress as string,
+      txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
+      txData: tx.data ? tx.data.trim() : '',
+    })
+  }, [tx.contractAddress, tx.value, tx.data, safeAddress])
+
   const submitTx = async () => {
-    const txRecipient = tx.contractAddress
-    const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
-    if (safeAddress) {
+    if (safeAddress && txParameters) {
       dispatch(
         createTransaction({
           safeAddress,
-          to: txRecipient as string,
-          valueInWei: txValue,
-          txData,
+          to: txParameters?.txRecipient,
+          valueInWei: txParameters?.txAmount,
+          txData: txParameters?.txData,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
