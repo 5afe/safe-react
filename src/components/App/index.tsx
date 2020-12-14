@@ -80,8 +80,8 @@ const App: React.FC = ({ children }) => {
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
 
-  useLoadSafe(safeAddress)
-  useSafeScheduledUpdates(safeAddress)
+  const safeLoaded = useLoadSafe(safeAddress)
+  useSafeScheduledUpdates(safeLoaded, safeAddress)
 
   const sendFunds = safeActionsState.sendFunds
   const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
