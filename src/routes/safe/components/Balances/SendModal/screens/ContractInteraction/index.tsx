@@ -60,7 +60,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
     if (contractAddress) {
       initialValues.contractAddress = contractAddress
     }
-  }, [contractAddress, initialValues.contractAddress])
+  }, [contractAddress, initialValues])
 
   const saveForm = async (values: CreatedTx): Promise<void> => {
     await handleSubmit(values, false)
