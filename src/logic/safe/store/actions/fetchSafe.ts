@@ -19,7 +19,8 @@ import { latestMasterContractVersionSelector } from 'src/logic/safe/store/select
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { sameString } from 'src/utils/strings'
+import { FEATURES } from 'src/config/networks/network'
+import { equalArrays } from 'src/utils/arrays'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -96,91 +97,6 @@ export const buildSafe = async (
   }
 }
 
-const equalArrays = (array1?: unknown[] | null, array2?: unknown[] | null): boolean => {
-  if (array1 && !array2) {
-    return false
-  }
-
-  if (!array1 && array2) {
-    return false
-  }
-
-  if (!array1 && !array2) {
-    return true
-  }
-
-  if (array1?.length !== array2?.length) {
-    return false
-  }
-
-  return array1
-    ? array1.every((element, index) => {
-        return array2 ? element === array2[index] : false
-      })
-    : false
-}
-
-const shouldSafeBeUpdated = (newSafeProps: Partial<SafeRecordProps>, oldSafeProps?: SafeRecordProps): boolean => {
-  if (!oldSafeProps) return true
-
-  const {
-    address,
-    name,
-    modules,
-    spendingLimits,
-    nonce,
-    threshold,
-    featuresEnabled,
-    ethBalance,
-    latestIncomingTxBlock,
-    currentVersion,
-  } = newSafeProps
-
-  if (!sameString(oldSafeProps.address, address)) {
-    return false
-  }
-
-  if (!sameString(oldSafeProps.name, name)) {
-    return true
-  }
-
-  if (nonce !== newSafeProps.nonce) {
-    return true
-  }
-
-  if (threshold !== newSafeProps.threshold) {
-    return true
-  }
-
-  if (!sameString(ethBalance, newSafeProps.ethBalance)) {
-    return true
-  }
-
-  if (latestIncomingTxBlock !== newSafeProps.latestIncomingTxBlock) {
-    return true
-  }
-
-  if (!sameString(currentVersion, newSafeProps.currentVersion)) {
-    return true
-  }
-
-  if (!equalArrays(modules, newSafeProps.modules)) {
-    return true
-  }
-
-  if (!equalArrays(spendingLimits, newSafeProps.spendingLimits)) {
-    return true
-  }
-
-  if (!equalArrays(featuresEnabled, newSafeProps.featuresEnabled)) {
-    return true
-  }
-
-  // @todo (agustin) add more conditions to check
-
-  return false
-}
-
 export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
   const safeAddress = checksumAddress(safeAdd)
   // Check if the owner's safe did change and update them
@@ -210,16 +126,19 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     spendingLimits,
     nonce: Number(remoteNonce),
     threshold: Number(remoteThreshold),
-    featuresEnabled: localSafe?.currentVersion
-      ? enabledFeatures(localSafe?.currentVersion)
-      : localSafe?.featuresEnabled || [],
   }
 
-  const shouldUpdateSafe = shouldSafeBeUpdated({ ...localSafe, ...updatedSafe }, localSafe)
+  const featuresEnabled: FEATURES[] = localSafe?.currentVersion
+    ? enabledFeatures(localSafe.currentVersion)
+    : localSafe?.featuresEnabled || []
 
-  if (shouldUpdateSafe) {
-    dispatch(updateSafe(updatedSafe))
+  // Adds the featuresEnabled property to the updateSafe values only
+  // If the featuresEnabled array did changed
+  if (!equalArrays(featuresEnabled, localSafe?.featuresEnabled)) {
+    updatedSafe['featuresEnabled'] = featuresEnabled
   }
+
+  dispatch(updateSafe(updatedSafe))
 
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
