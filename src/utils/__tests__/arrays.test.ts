@@ -67,4 +67,15 @@ describe('Utils > strings > equalArrays', () => {
     // Then
     expect(expectedResult).toEqual(true)
   })
+  it(`Given one null array and another not null, should return false`, () => {
+    // Given
+    const array1 = []
+    const array2 = null
+
+    // When
+    const expectedResult = equalArrays(array1, array2)
+
+    // Then
+    expect(expectedResult).toEqual(false)
+  })
 })
