@@ -1,4 +1,6 @@
-export const styles = () => ({
+import { createStyles } from '@material-ui/core'
+
+export const styles = createStyles({
   container: {
     marginTop: '56px',
   },
