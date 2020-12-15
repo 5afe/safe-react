@@ -18,6 +18,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { ADD_OR_UPDATE_SAFE, buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -78,11 +79,15 @@ export default handleActions(
       const safe = action.payload
       const safeAddress = safe.address
 
-      return state.updateIn(
-        ['safes', safeAddress],
-        makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
-        (prevSafe) => updateSafeProps(prevSafe, safe),
-      )
+      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
+
+      return shouldUpdate
+        ? state.updateIn(
+            ['safes', safeAddress],
+            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
+            (prevSafe) => updateSafeProps(prevSafe, safe),
+          )
+        : state
     },
     [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state: SafeReducerMap, action) => {
       const tokenAddress = action.payload
