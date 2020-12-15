@@ -19,7 +19,6 @@ import { latestMasterContractVersionSelector } from 'src/logic/safe/store/select
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { FEATURES } from 'src/config/networks/network'
 import { equalArrays } from 'src/utils/arrays'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
@@ -121,16 +120,16 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 
   const updatedSafe = {
     address: safeAddress,
-    name: localSafe?.name || '',
+    name: localSafe?.name,
     modules,
     spendingLimits,
     nonce: Number(remoteNonce),
     threshold: Number(remoteThreshold),
   }
 
-  const featuresEnabled: FEATURES[] = localSafe?.currentVersion
+  const featuresEnabled = localSafe?.currentVersion
     ? enabledFeatures(localSafe.currentVersion)
-    : localSafe?.featuresEnabled || []
+    : localSafe?.featuresEnabled
 
   // Adds the featuresEnabled property to the updateSafe values only
   // If the featuresEnabled array did changed
