@@ -206,7 +206,6 @@
     "js-cookie": "^2.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.memoize": "^4.1.2",
-    "lodash.isequal": "~4.5.0",
     "material-ui-search-bar": "^1.0.0",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "qrcode.react": "1.0.0",

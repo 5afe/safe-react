@@ -112,11 +112,15 @@ export default handleActions(
         return state.setIn(['safes', safe.address], makeSafe(safe))
       }
 
-      return state.updateIn(
-        ['safes', safe.address],
-        makeSafe({ name: safe?.name || 'LOADED SAFE', address: safe.address }),
-        (prevSafe) => updateSafeProps(prevSafe, safe),
-      )
+      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safe.safeAddress]))
+
+      return shouldUpdate
+        ? state.updateIn(
+            ['safes', safe.address],
+            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safe.address }),
+            (prevSafe) => updateSafeProps(prevSafe, safe),
+          )
+        : state
     },
     [REMOVE_SAFE]: (state: SafeReducerMap, action) => {
       const safeAddress = action.payload

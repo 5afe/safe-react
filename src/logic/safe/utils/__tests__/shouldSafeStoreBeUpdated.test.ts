@@ -65,7 +65,7 @@ const getMockedOldSafe = ({
 }
 
 describe('shouldSafeStoreBeUpdated', () => {
-  it(`Given an two equal safes, should return false`, () => {
+  it(`Given two equal safes, should return false`, () => {
     // given
     const oldSafe = getMockedOldSafe({})
 
