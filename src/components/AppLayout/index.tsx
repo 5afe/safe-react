@@ -6,7 +6,7 @@ import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
 import { screenXs } from 'src/theme/variables'
-import { Button, Card, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Card, Icon, Text } from '@gnosis.pm/safe-react-components'
 import Phone from './MobileStart/assets/phone@2x.png'
 
 const Container = styled.div`
@@ -79,25 +79,70 @@ const ModalApp = styled.div`
   @media (max-width: ${screenXs}px) {
     position: fixed;
     display: flex;
+    justify-content: space-between;
     bottom: 0;
     width: 100vw;
     height: 260px;
     background-color: ${({ theme }) => theme.colors.background};
     z-index: 2147483004; /* on top of Intercom Button*/
-    padding: 20px 16px;
+    padding: 20px 16px 0 16px;
   }
 `
 
 const StyledCard = styled(Card)`
   background-color: #fdfdfd;
-  width: 245px;
+  /*   width: 45vw; */
+  min-width: 245px;
   height: 220px;
-  padding: 24px 40px 24px 24px;
+  padding: 24px 58px 24px 24px;
   box-sizing: border-box;
   box-shadow: none;
   display: flex;
   justify-content: space-around;
   flex-direction: column;
+
+  @media (max-width: 300px) {
+    padding: 16px;
+    min-width: 215px;
+  }
+`
+/* const StyledButton = styled(Button)`
+  background: none;
+  border: none;
+  padding: 5px;
+  width: 26px;
+  height: 26px;
+
+  span {
+    margin-right: 0;
+  }
+
+  :focus {
+    outline: none;
+  }
+
+  :hover {
+    background: ${({ theme }) => theme.colors.separator};
+    border-radius: 16px;
+  }
+`; */
+
+const StyledImg = styled.img`
+  margin: 24px -81px 0 -58px;
+  z-index: 1;
+  width: 46%;
+  height: auto;
+
+  @media (max-width: 300px) {
+    display: none;
+  }
+`
+const StyledCloseBtn = styled(Icon)`
+  margin: 0 34px;
+
+  @media (max-width: 300px) {
+    margin: 0 24px 0 0;
+  }
 `
 
 type Props = {
@@ -152,7 +197,9 @@ const Layout: React.FC<Props> = ({
           Get the App
         </Button>
       </StyledCard>
-      <img src={Phone} alt="Phone" width="45%" />
+
+      <StyledImg src={Phone} alt="Phone" />
+      <StyledCloseBtn size="md" type="cross" />
     </ModalApp>
   </Container>
 )
