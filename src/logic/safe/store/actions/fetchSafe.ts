@@ -19,7 +19,7 @@ import { latestMasterContractVersionSelector } from 'src/logic/safe/store/select
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { equalArrays } from 'src/utils/arrays'
+import isEqual from 'lodash.isequal'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -133,7 +133,7 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
 
   // Adds the featuresEnabled property to the updateSafe values only
   // If the featuresEnabled array did changed
-  if (!equalArrays(featuresEnabled, localSafe?.featuresEnabled)) {
+  if (!isEqual(featuresEnabled, localSafe?.featuresEnabled)) {
     updatedSafe['featuresEnabled'] = featuresEnabled
   }
 

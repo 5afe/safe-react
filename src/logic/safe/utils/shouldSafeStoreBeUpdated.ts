@@ -1,6 +1,6 @@
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { sameString } from 'src/utils/strings'
-import { equalArrays } from 'src/utils/arrays'
+import isEqual from 'lodash.isequal'
 
 export const shouldSafeStoreBeUpdated = (
   newSafeProps: Partial<SafeRecordProps>,
@@ -49,11 +49,11 @@ export const shouldSafeStoreBeUpdated = (
     return true
   }
 
-  if (!equalArrays(modules, newSafeProps.modules) && newSafeProps.hasOwnProperty('modules')) {
+  if (!isEqual(modules, newSafeProps.modules) && newSafeProps.hasOwnProperty('modules')) {
     return true
   }
 
-  if (!equalArrays(spendingLimits, newSafeProps.spendingLimits) && newSafeProps.hasOwnProperty('spendingLimits')) {
+  if (!isEqual(spendingLimits, newSafeProps.spendingLimits) && newSafeProps.hasOwnProperty('spendingLimits')) {
     return true
   }
 
@@ -100,7 +100,7 @@ export const shouldSafeStoreBeUpdated = (
     return true
   }
 
-  if (!equalArrays(featuresEnabled, newSafeProps.featuresEnabled) && newSafeProps.hasOwnProperty('featuresEnabled')) {
+  if (!isEqual(featuresEnabled, newSafeProps.featuresEnabled) && newSafeProps.hasOwnProperty('featuresEnabled')) {
     return true
   }
 
