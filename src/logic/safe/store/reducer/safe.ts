@@ -41,7 +41,7 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
     blacklistedTokens,
     activeAssets,
     blacklistedAssets,
-    latestIncomingTxBlock: 0,
+    latestIncomingTxTimestamp: 0,
     modules: null,
   }
 }

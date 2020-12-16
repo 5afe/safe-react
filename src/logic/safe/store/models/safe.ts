@@ -37,7 +37,7 @@ export type SafeRecordProps = {
   blacklistedAssets: Set<string>
   balances: Map<string, string>
   nonce: number
-  latestIncomingTxBlock: number
+  latestIncomingTxTimestamp: number
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
@@ -58,7 +58,7 @@ const makeSafe = Record<SafeRecordProps>({
   blacklistedAssets: Set(),
   balances: Map(),
   nonce: 0,
-  latestIncomingTxBlock: 0,
+  latestIncomingTxTimestamp: 0,
   recurringUser: undefined,
   currentVersion: '',
   needsUpdate: false,
