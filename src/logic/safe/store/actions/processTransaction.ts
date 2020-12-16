@@ -97,7 +97,7 @@ const processTransaction = ({
       const signature = await tryOffchainSigning(tx.safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
-        dispatch(closeSnackbarAction(beforeExecutionKey))
+        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
@@ -130,7 +130,7 @@ const processTransaction = ({
       .send(sendParams)
       .once('transactionHash', async (hash: string) => {
         txHash = hash
-        dispatch(closeSnackbarAction(beforeExecutionKey))
+        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 
@@ -141,19 +141,19 @@ const processTransaction = ({
           ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          dispatch(closeSnackbarAction(pendingExecutionKey))
+          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
           await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
-        dispatch(closeSnackbarAction(pendingExecutionKey))
+        dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         storeTx({ transaction: tx, safeAddress, dispatch, state })
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
         if (pendingExecutionKey) {
-          dispatch(closeSnackbarAction(pendingExecutionKey))
+          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         }
 
         dispatch(
@@ -178,17 +178,16 @@ const processTransaction = ({
     const errorMsg = err.message
       ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
       : notificationsQueue.afterExecutionError.message
-    console.error(err)
 
-    if (txHash !== undefined) {
-      dispatch(closeSnackbarAction(beforeExecutionKey))
+    dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-      if (pendingExecutionKey) {
-        dispatch(closeSnackbarAction(pendingExecutionKey))
-      }
+    if (pendingExecutionKey) {
+      dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
+    }
 
-      dispatch(enqueueSnackbar(errorMsg))
+    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
+    if (txHash) {
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
       const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
       console.error(`Error executing the TX: ${errMsg}`)
