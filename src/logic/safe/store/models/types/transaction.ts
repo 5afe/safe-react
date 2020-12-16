@@ -89,7 +89,7 @@ export type TransactionProps = {
   value: string
 }
 
-export type Transaction = RecordOf<TransactionProps>
+export type Transaction = RecordOf<TransactionProps> & Readonly<TransactionProps>
 
 export type TxArgs = {
   baseGas: number
