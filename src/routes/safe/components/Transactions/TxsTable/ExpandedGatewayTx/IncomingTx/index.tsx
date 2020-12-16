@@ -1,12 +1,12 @@
 import React, { ReactElement } from 'react'
 
-import { TransactionSummary, Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { ExpandedTxDetails, Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { IncomingTxDetails } from './IncomingTxDetails'
 import { IncomingTxSummary } from './IncomingTxSummary'
 
-export const IncomingTx = ({ transaction }: { transaction: TransactionSummary }): ReactElement => (
+export const IncomingTx = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => (
   <>
-    <IncomingTxSummary transaction={transaction} />
-    <IncomingTxDetails txInfo={transaction.txInfo as Transfer} />
+    <IncomingTxSummary txDetails={txDetails} />
+    <IncomingTxDetails txInfo={txDetails.txInfo as Transfer} />
   </>
 )

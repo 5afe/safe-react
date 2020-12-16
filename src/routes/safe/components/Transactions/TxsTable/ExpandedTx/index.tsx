@@ -1,7 +1,7 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import React, { ReactElement, useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import ApproveTxModal from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
@@ -34,6 +34,7 @@ import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/s
 import { TransactionSummary } from 'src/logic/safe/store/models/types/gateway'
 import { isGatewayTransaction } from 'src/logic/safe/store/models/types/gatewayHelpers'
 import { ExpandedGatewayTx } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedGatewayTx'
+import { fetchTransactionDetails } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedGatewayTx/actions/fetchTransactionDetails'
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): ReactElement => {
   const classes = useStyles()
@@ -192,7 +193,10 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
 }
 
 export const ExpandedTx = ({ row }: { row: TableData }): ReactElement => {
+  const dispatch = useDispatch()
+
   if (isGatewayTransaction(row.tx)) {
+    dispatch(fetchTransactionDetails(row.tx.id))
     return <ExpandedGatewayTx transaction={row[TX_TABLE_RAW_TX_ID] as TransactionSummary} />
   }
 

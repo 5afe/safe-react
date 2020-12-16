@@ -25,5 +25,9 @@ export default makeStyles(
       paddingBottom: md,
       borderRight: '2px solid rgb(232, 231, 230)',
     },
+    centerContent: {
+      alignItems: 'center',
+      alignContent: 'center',
+    },
   }),
 )
