@@ -82,7 +82,9 @@ export const styles = createStyles({
     },
   },
   gasCostsContainer: {
-    padding: `0 ${lg}`,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     textAlign: 'center',
     width: '100%',
   },
