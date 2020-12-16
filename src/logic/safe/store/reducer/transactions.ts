@@ -1,14 +1,22 @@
-import { Map } from 'immutable'
-import { handleActions } from 'redux-actions'
+import { List, Map } from 'immutable'
+import { Action, handleActions } from 'redux-actions'
 
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import { REMOVE_TRANSACTION } from 'src/logic/safe/store/actions/transactions/removeTransaction'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { AppReduxState } from 'src/store'
 
 export const TRANSACTIONS_REDUCER_ID = 'transactions'
 
-export default handleActions(
+type TransactionBasePayload = { safeAddress: string }
+type TransactionsPayload = TransactionBasePayload & { transactions: List<Transaction> }
+type TransactionPayload = TransactionBasePayload & { transaction: Transaction }
+
+type Payload = TransactionsPayload | TransactionPayload
+
+export default handleActions<AppReduxState['transactions'], Payload>(
   {
-    [ADD_OR_UPDATE_TRANSACTIONS]: (state, action) => {
+    [ADD_OR_UPDATE_TRANSACTIONS]: (state, action: Action<TransactionsPayload>) => {
       const { safeAddress, transactions } = action.payload
 
       if (!safeAddress || !transactions || !transactions.size) {
@@ -46,7 +54,7 @@ export default handleActions(
         }
       })
     },
-    [REMOVE_TRANSACTION]: (state, action) => {
+    [REMOVE_TRANSACTION]: (state, action: Action<TransactionPayload>) => {
       const { safeAddress, transaction } = action.payload
 
       if (!safeAddress || !transaction) {
