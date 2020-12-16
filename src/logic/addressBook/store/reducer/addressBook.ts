@@ -19,9 +19,9 @@ export const buildAddressBook = (storedAddressBook: AddressBookState): AddressBo
   })
 }
 
-type AddressBookPayload = { addressBook: AddressBookState }
-type EntryPayload = { entry: AddressBookEntry }
-type RemoveEntryPayload = { entryAddress: string }
+export type AddressBookPayload = { addressBook: AddressBookState }
+export type EntryPayload = { entry: AddressBookEntry }
+export type RemoveEntryPayload = { entryAddress: string }
 
 type Payloads = AddressBookPayload | EntryPayload | RemoveEntryPayload
 
