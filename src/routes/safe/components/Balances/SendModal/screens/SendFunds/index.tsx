@@ -295,7 +295,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">{selectedToken?.symbol}</InputAdornment>,
+                        endAdornment: <InputAdornment position="end">{selectedToken?.symbol || ''}</InputAdornment>,
                       }}
                       name="amount"
                       placeholder="Amount*"
