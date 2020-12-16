@@ -46,8 +46,19 @@ const useStyles = makeStyles({
   },
 })
 
+type TxType =
+  | 'chooseTxType'
+  | 'sendFunds'
+  | 'reviewTx'
+  | 'contractInteraction'
+  | 'contractInteractionReview'
+  | 'reviewCustomTx'
+  | 'sendCollectible'
+  | 'reviewCollectible'
+  | ''
+
 type Props = {
-  activeScreenType: string
+  activeScreenType: TxType
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
@@ -64,7 +75,7 @@ const SendModal = ({
   tokenAmount,
 }: Props): React.ReactElement => {
   const classes = useStyles()
-  const [activeScreen, setActiveScreen] = useState(activeScreenType || 'chooseTxType')
+  const [activeScreen, setActiveScreen] = useState<TxType>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
 
