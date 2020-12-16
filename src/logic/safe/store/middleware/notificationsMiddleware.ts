@@ -3,6 +3,8 @@ import { push } from 'connected-react-router'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { TransactionSummary } from 'src/logic/safe/store/models/types/gateway'
+import { AddTxPayload } from 'src/logic/safe/store/reducer/incomingTransactions'
 import { getAwaitingTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -16,6 +18,7 @@ import {
   safeParamAddressFromStateSelector,
   safesMapSelector,
   safeCancellationTransactionsSelector,
+  safeSelector,
 } from 'src/logic/safe/store/selectors'
 
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
@@ -102,48 +105,54 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         break
       }
       case ADD_INCOMING_TRANSACTIONS: {
-        action.payload.forEach((incomingTransactions, safeAddress) => {
-          const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress, {})
-          const viewedSafes = state.currentSession['viewedSafes']
-          const recurringUser = viewedSafes?.includes(safeAddress)
+        const { incomingTxs, safeAddress } = action.payload as AddTxPayload
+        const latestIncomingTxTimestamp = safeSelector(state)?.latestIncomingTxTimestamp
 
-          const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
+        if (!latestIncomingTxTimestamp) {
+          break
+        }
 
-          const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
+        const viewedSafes = state.currentSession['viewedSafes']
+        const recurringUser = viewedSafes?.includes(safeAddress)
+        const newIncomingTransactions = incomingTxs.filter((tx) => tx.timestamp > latestIncomingTxTimestamp)
 
-          if (recurringUser) {
-            if (newIncomingTransactions.size > 3) {
-              dispatch(
-                enqueueSnackbar(
-                  enhanceSnackbarForAction({
-                    ...TX_INCOMING_MSG,
-                    message: 'Multiple incoming transfers',
-                  }),
-                ),
-              )
-            } else {
-              newIncomingTransactions.forEach((tx) => {
+        const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
+
+        if (recurringUser) {
+          if (newIncomingTransactions.size > 3) {
+            dispatch(
+              enqueueSnackbar(
+                enhanceSnackbarForAction({
+                  ...TX_INCOMING_MSG,
+                  message: 'Multiple incoming transfers',
+                }),
+              ),
+            )
+          } else {
+            newIncomingTransactions.forEach((tx) => {
+              if (tx.txInfo.type === 'Transfer') {
                 dispatch(
                   enqueueSnackbar(
                     enhanceSnackbarForAction({
                       ...TX_INCOMING_MSG,
-                      message: `${message}${getIncomingTxAmount(tx)}`,
+                      message: `${message}${getIncomingTxAmount(tx.txInfo)}`,
                     }),
                   ),
                 )
-              })
-            }
+              }
+            })
           }
+        }
 
-          dispatch(
-            updateSafe({
-              address: safeAddress,
-              latestIncomingTxBlock: newIncomingTransactions.size
-                ? newIncomingTransactions.first().blockNumber
-                : latestIncomingTxBlock,
-            }),
-          )
-        })
+        dispatch(
+          updateSafe({
+            address: safeAddress,
+            latestIncomingTxTimestamp: newIncomingTransactions.size
+              ? newIncomingTransactions.first<TransactionSummary>().timestamp
+              : latestIncomingTxTimestamp,
+          }),
+        )
+
         break
       }
       case ADD_OR_UPDATE_SAFE: {

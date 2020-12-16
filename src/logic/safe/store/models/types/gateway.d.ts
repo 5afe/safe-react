@@ -158,3 +158,45 @@ export type TransactionSummary = {
   txInfo: TransactionInfo // Polymorphic: Transfer, SettingsChange, Custom, Creation
   executionInfo: ExecutionInfo | null
 }
+
+type TransactionData = {
+  hexData: string | null
+  dataDecoded: DataDecoded | null
+  to: string
+  value: string | null
+  operation: Operation
+}
+
+type ModuleExecutionDetails = {
+  address: string
+}
+
+type MultiSigConfirmations = {
+  signer: string
+  signature: string | null
+}
+
+type MultiSigExecutionDetails = {
+  submittedAt: number
+  nonce: number
+  safeTxHash: string
+  executor: string | null
+  signers: string[]
+  confirmationsRequired: number
+  confirmations: MultiSigConfirmations[]
+}
+
+type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails | MultisigConfirmation
+
+export type ExpandedTxDetails = {
+  executedAt: number
+  txStatus: TransactionStatus
+  txInfo: TransactionInfo
+  txData: TransactionData | null
+  detailedExecutionInfo: DetailedExecutionInfo | null
+  txHash: string | null
+}
+
+export type Transaction = TransactionSummary & {
+  txDetails?: ExpandedTxDetails
+}

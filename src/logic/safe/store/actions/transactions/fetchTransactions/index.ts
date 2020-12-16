@@ -37,10 +37,9 @@ export default (safeAddress: string) => async (
 
     if (incomingTransactions.status === 'fulfilled') {
       const incomingTxs = incomingTransactions.value
-      const safeIncomingTxs = incomingTxs.get(safeAddress)
 
-      if (safeIncomingTxs?.size) {
-        dispatch(addIncomingTransactions(incomingTxs))
+      if (incomingTxs?.size) {
+        dispatch(addIncomingTransactions({ safeAddress, incomingTxs }))
       }
     }
 
