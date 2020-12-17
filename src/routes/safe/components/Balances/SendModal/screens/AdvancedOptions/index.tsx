@@ -44,7 +44,9 @@ const StyledLink = styled(Link)`
     margin-right: 5px;
   }
 `
-
+const StyledIconButton = styled(IconButton)`
+  margin: 10px 0 0 0;
+`
 const StyledText = styled(Text)`
   margin-top: 10px;
 `
@@ -65,9 +67,9 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
         <Title size="sm" withoutMargin>
           Advanced options
         </Title>
-        <IconButton disableRipple onClick={onClose}>
+        <StyledIconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
-        </IconButton>
+        </StyledIconButton>
       </Row>
 
       <StyledDivider />
@@ -86,7 +88,7 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
               </StyledText>
 
               <SafeOptions>
-                <StyledTextField value="" label="Safe nonce" />
+                <StyledTextField value="33" label="Safe nonce" />
                 <StyledTextField value="" label="SafeTxGas" />
               </SafeOptions>
 
