@@ -5,7 +5,7 @@ import { ListItemType } from 'src/components/List'
 import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
-import { screenXs } from 'src/theme/variables'
+import { screenMd } from 'src/theme/variables'
 import { Button, Card, Icon, Text } from '@gnosis.pm/safe-react-components'
 import Phone from './MobileStart/assets/phone@2x.png'
 import { rgba } from 'polished'
@@ -18,7 +18,7 @@ const Container = styled.div`
 
   background-color: ${({ theme }) => theme.colors.background};
 
-  /* @media (max-width: ${screenXs}px) {
+  /* @media (max-width: ${screenMd}px) {
     background-color: ${({ theme }) => theme.colors.primary};
     position: fixed;
     height: 100vh;
@@ -77,7 +77,7 @@ const ContentWrapper = styled.section`
 const Overlay = styled.div`
   display: none;
 
-  @media (max-width: ${screenXs}px) {
+  @media (max-width: ${screenMd}px) {
     display: block;
     position: absolute;
     bottom: 0;
@@ -91,7 +91,7 @@ const Overlay = styled.div`
 const ModalApp = styled.div`
   display: none;
 
-  @media (max-width: ${screenXs}px) {
+  @media (max-width: ${screenMd}px) {
     position: fixed;
     display: flex;
     justify-content: space-between;
@@ -131,6 +131,18 @@ const StyledImg = styled.img`
 
   @media (max-width: 340px) {
     display: none;
+  }
+
+  @media (min-width: 430px) {
+    width: 30%;
+  }
+
+  @media (min-width: 720px) {
+    width: 25%;
+  }
+
+  @media (min-width: 800px) {
+    width: 20%;
   }
 `
 
