@@ -8,6 +8,7 @@ import Sidebar from './Sidebar'
 import { screenXs } from 'src/theme/variables'
 import { Button, Card, Icon, Text } from '@gnosis.pm/safe-react-components'
 import Phone from './MobileStart/assets/phone@2x.png'
+import { rgba } from 'polished'
 
 const Container = styled.div`
   height: 100vh;
@@ -73,6 +74,20 @@ const ContentWrapper = styled.section`
     height: 59px;
   }
 `
+const Overlay = styled.div`
+  display: none;
+
+  @media (max-width: ${screenXs}px) {
+    display: block;
+    position: absolute;
+    bottom: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: ${({ theme }) => rgba(theme.colors.overlay.color, 0.75)};
+    z-index: 2147483009; /* on top of Intercom Button */
+  }
+`
+
 const ModalApp = styled.div`
   display: none;
 
@@ -84,7 +99,8 @@ const ModalApp = styled.div`
     width: 100vw;
     height: 260px;
     background-color: ${({ theme }) => theme.colors.background};
-    z-index: 2147483004; /* on top of Intercom Button*/
+    box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+    z-index: 2147483004; /* on top of Intercom Button */
     padding: 20px 16px 0 16px;
   }
 `
@@ -101,47 +117,35 @@ const StyledCard = styled(Card)`
   justify-content: space-around;
   flex-direction: column;
 
-  @media (max-width: 300px) {
+  @media (max-width: 340px) {
     padding: 16px;
     min-width: 215px;
   }
 `
-/* const StyledButton = styled(Button)`
-  background: none;
-  border: none;
-  padding: 5px;
-  width: 26px;
-  height: 26px;
-
-  span {
-    margin-right: 0;
-  }
-
-  :focus {
-    outline: none;
-  }
-
-  :hover {
-    background: ${({ theme }) => theme.colors.separator};
-    border-radius: 16px;
-  }
-`; */
-
 const StyledImg = styled.img`
   margin: 24px -81px 0 -58px;
   z-index: 1;
-  width: 46%;
+  width: 45%;
   height: auto;
+  object-fit: cover;
 
-  @media (max-width: 300px) {
+  @media (max-width: 340px) {
     display: none;
   }
 `
-const StyledCloseBtn = styled(Icon)`
-  margin: 0 34px;
 
-  @media (max-width: 300px) {
-    margin: 0 24px 0 0;
+const StyledCloseIcon = styled(Icon)`
+  margin: 0 34px;
+  width: 32px;
+  height: 32px;
+
+  &:hover {
+    background: ${({ theme }) => theme.colors.separator};
+    border-radius: 16px;
+  }
+
+  @media (max-width: 340px) {
+    margin: 8px 34px 0 16px;
   }
 `
 
@@ -189,18 +193,21 @@ const Layout: React.FC<Props> = ({
         <Footer />
       </ContentWrapper>
     </BodyWrapper>
-    <ModalApp>
-      <StyledCard>
-        <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
-        <Text size="lg">Get the mobile app for a better experience.</Text>
-        <Button size="md" color="primary" variant="contained">
-          Get the App
-        </Button>
-      </StyledCard>
+    <Overlay>
+      <ModalApp>
+        <StyledCard>
+          <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
+          <Text size="lg">Get the mobile app for a better experience.</Text>
+          <Button size="md" color="primary" variant="contained">
+            Get the App {/* https://gnosis-safe.io/#mobile */}
+          </Button>
+        </StyledCard>
 
-      <StyledImg src={Phone} alt="Phone" />
-      <StyledCloseBtn size="md" type="cross" />
-    </ModalApp>
+        <StyledImg src={Phone} alt="Phone" />
+
+        <StyledCloseIcon size="md" type="cross" />
+      </ModalApp>
+    </Overlay>
   </Container>
 )
 
