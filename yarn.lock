@@ -2906,14 +2906,14 @@
     crypto-js "^3.1.9-1"
     debug "^4.1.0"
 
-"@truffle/contract@4.2.30":
-  version "4.2.30"
-  resolved "https://registry.yarnpkg.com/@truffle/contract/-/contract-4.2.30.tgz#44a2a20e4baa6b40cbb0748a6bce997c22865bcd"
-  integrity sha512-BXQC+ddH18W9cVoRTlKH7hqnyrOo0HN7/Hyv7UiAgPh4JNpkZVUxFSd+/MLaE5r8NEG2hykDusOVJ3OaR9wvmw==
+"@truffle/contract@^4.3.0":
+  version "4.3.2"
+  resolved "https://registry.yarnpkg.com/@truffle/contract/-/contract-4.3.2.tgz#1009030a6dd393a62a99f6904b2926b82d3eab2f"
+  integrity sha512-xH8rwJ94KpJAE+bYjZJ8W9eKB20uxxnOL9RDUEpN5DjN81zedq3Cp8C8o9FR3SgCxwEy8YLN/RAlLRZX/UDpLg==
   dependencies:
     "@truffle/blockchain-utils" "^0.0.25"
     "@truffle/contract-schema" "^3.3.2"
-    "@truffle/debug-utils" "^5.0.1"
+    "@truffle/debug-utils" "^5.0.5"
     "@truffle/error" "^0.0.11"
     "@truffle/interface-adapter" "^0.4.18"
     bignumber.js "^7.2.1"
@@ -2926,13 +2926,13 @@
     web3-eth-abi "1.2.9"
     web3-utils "1.2.9"
 
-"@truffle/debug-utils@^5.0.1":
-  version "5.0.4"
-  resolved "https://registry.yarnpkg.com/@truffle/debug-utils/-/debug-utils-5.0.4.tgz#4b7bb18bc9434563d014d58956aba18198ce7148"
-  integrity sha512-iIZB6TVKqqwNDjQDEgzbruU7SGX+tr+d/Il8OiIqEfS2x0inJ6TeRgbsOCecOTdlBa/6F0Cq11rM0H8trC8YGg==
+"@truffle/debug-utils@^5.0.5":
+  version "5.0.5"
+  resolved "https://registry.yarnpkg.com/@truffle/debug-utils/-/debug-utils-5.0.5.tgz#6657fd232f18bd25bae7a2595866356c52aa6dde"
+  integrity sha512-auPolwGaG9tUm0NIagzyc9jAALFGYUfR8WRh1l+c0g9mOE4bkgJsGtbK/JXDVoIqf7uh73byPCAVsfctFre09g==
   dependencies:
     "@truffle/codec" "^0.9.1"
-    "@trufflesuite/chromafi" "^2.2.1"
+    "@trufflesuite/chromafi" "^2.2.2"
     chalk "^2.4.2"
     debug "^4.1.0"
     highlight.js "^10.4.0"
@@ -2969,7 +2969,7 @@
     source-map-support "^0.5.19"
     web3 "1.2.9"
 
-"@trufflesuite/chromafi@^2.2.1":
+"@trufflesuite/chromafi@^2.2.2":
   version "2.2.2"
   resolved "https://registry.yarnpkg.com/@trufflesuite/chromafi/-/chromafi-2.2.2.tgz#d3fc507aa8504faffc50fb892cedcfe98ff57f77"
   integrity sha512-mItQwVBsb8qP/vaYHQ1kDt2vJLhjoEXJptT6y6fJGvFophMFhOI/NsTVUa0nJL1nyMeFiS6hSYuNVdpQZzB1gA==
