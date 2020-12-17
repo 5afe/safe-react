@@ -32,6 +32,7 @@ const EthereumOptions = styled.div`
 
 const StyledTextField = styled(TextField)`
   width: 216px !important;
+  margin: 10px 0;
 `
 
 const StyledLink = styled(Link)`
@@ -42,6 +43,10 @@ const StyledLink = styled(Link)`
   > :first-of-type {
     margin-right: 5px;
   }
+`
+
+const StyledText = styled(Text)`
+  margin-top: 10px;
 `
 
 const useStyles = makeStyles(styles)
@@ -58,7 +63,7 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
       {/* Header */}
       <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
         <Title size="sm" withoutMargin>
-          Send Funds
+          Advanced options
         </Title>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.closeIcon} />
@@ -76,22 +81,22 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
         >
           {() => (
             <>
-              <Text size="xl" strong>
+              <StyledText size="xl" strong>
                 Safe transactions parameters
-              </Text>
+              </StyledText>
 
               <SafeOptions>
                 <StyledTextField value="" label="Safe nonce" />
                 <StyledTextField value="" label="SafeTxGas" />
               </SafeOptions>
 
-              <Text size="xl" strong>
-                Safe transactions parameters
-              </Text>
+              <StyledText size="xl" strong>
+                Ethereum transactions parameters
+              </StyledText>
 
               <EthereumOptions>
                 <StyledTextField value="" label="Ethereum nonce" />
-                <StyledTextField value="" label="Ethereum gas limite" />
+                <StyledTextField value="" label="Ethereum gas limit" />
                 <StyledTextField value="" label="Ethereum gas price (GWEI)" />
               </EthereumOptions>
             </>
