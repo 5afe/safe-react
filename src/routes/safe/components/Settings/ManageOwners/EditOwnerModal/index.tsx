@@ -40,17 +40,18 @@ type OwnProps = {
   selectedOwnerName: string
 }
 
-const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
+export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
-  const handleSubmit = (values) => {
-    const { ownerName } = values
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-    dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
-    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
-    dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
-
+  const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
+    // Update the value only if the ownerName really changed
+    if (ownerName !== selectedOwnerName) {
+      dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
+      dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
+      dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
+    }
     onClose()
   }
 
@@ -120,5 +121,3 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
     </Modal>
   )
 }
-
-export default EditOwnerComponent
