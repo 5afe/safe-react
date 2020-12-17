@@ -1,16 +1,12 @@
 import * as React from 'react'
-import { connect } from 'react-redux'
-
-import Layout from '../components/Layout'
-
-import selector from './selector'
+import { WelcomeLayout } from 'src/routes/welcome/components/index'
 
 import Page from 'src/components/layout/Page'
 
-const Welcome = ({ provider }) => (
+const Welcome = (): React.ReactElement => (
   <Page align="center">
-    <Layout provider={provider} />
+    <WelcomeLayout />
   </Page>
 )
 
-export default connect(selector)(Welcome)
+export default Welcome
