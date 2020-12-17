@@ -127,7 +127,7 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
           variant="contained"
           onClick={onClose}
         >
-          Submit
+          Confirm
         </Button>
       </Row>
     </>
