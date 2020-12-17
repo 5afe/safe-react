@@ -21,6 +21,7 @@ import Row from 'src/components/layout/Row'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
 import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
+import { WELCOME_ADDRESS } from 'src/routes/routes'
 
 const openIconStyle = {
   height: md,
@@ -29,13 +30,26 @@ const openIconStyle = {
 
 const useStyles = makeStyles(styles)
 
-const RemoveSafeComponent = ({ isOpen, onClose }) => {
+type RemoveSafeModalProps = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const dispatch = useDispatch()
   const explorerInfo = getExplorerInfo(safeAddress)
   const { url } = explorerInfo()
+
+  const onRemoveSafeHandler = () => {
+    dispatch(removeSafe(safeAddress))
+    onClose()
+    // using native redirect in order to avoid problems in several components
+    // trying to access references of the removed safe.
+    window.location.href = `/#/${WELCOME_ADDRESS}`
+  }
 
   return (
     <Modal
@@ -91,13 +105,7 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
         <Button
           className={classes.buttonRemove}
           minWidth={140}
-          onClick={() => {
-            dispatch(removeSafe(safeAddress))
-            onClose()
-            // using native redirect in order to avoid problems in several components
-            // trying to access references of the removed safe.
-            window.location.href = '/app/'
-          }}
+          onClick={onRemoveSafeHandler}
           type="submit"
           variant="contained"
         >
@@ -107,5 +115,3 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-
-export const RemoveSafeModal = RemoveSafeComponent
