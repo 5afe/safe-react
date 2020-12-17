@@ -34,7 +34,7 @@ import { sameString } from 'src/utils/strings'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Text } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
 
@@ -52,10 +52,11 @@ export type ReviewTxProp = {
 type ReviewTxProps = {
   onClose: () => void
   onPrev: () => void
+  onAdvancedOptions: () => void
   tx: ReviewTxProp
 }
 
-const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
+const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -146,6 +147,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
 
   return (
     <>
+      {/* Header */}
       <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
         <Paragraph className={classes.headingText} noMargin weight="bolder">
           Send Funds
@@ -155,8 +157,11 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           <Close className={classes.closeIcon} />
         </IconButton>
       </Row>
+
       <Hairline />
+
       <Block className={classes.container}>
+        {/* SafeInfo */}
         <SafeInfo />
         <Row margin="md">
           <Col xs={1}>
@@ -166,6 +171,8 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
             <Hairline />
           </Col>
         </Row>
+
+        {/* Recipient */}
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Recipient
@@ -190,6 +197,8 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
             </Block>
           </Col>
         </Row>
+
+        {/* Amount */}
         <Row margin="xs">
           <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
             Amount
@@ -206,13 +215,25 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
             {tx.amount} {txToken?.symbol}
           </Paragraph>
         </Row>
+
+        {/* Tx Details */}
+        <Button size="lg" iconType="addressBook" color="primary" onClick={onAdvancedOptions}>
+          <Text size="xl" color="primary">
+            Advanced Options
+          </Text>
+        </Button>
+
+        {/* Disclaimer */}
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>
+
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
+
+      {/* Footer */}
       <Row align="center" className={classes.buttonRow}>
         <Button minWidth={140} onClick={onPrev}>
           Back

@@ -69,13 +69,19 @@ export type SendFundsTx = {
 
 type SendFundsProps = {
   onClose: () => void
-  onNext: (txInfo: unknown) => void
+  onReview: (txInfo: unknown) => void
   recipientAddress?: string
   selectedToken?: string
   amount?: string
 }
 
-const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amount }: SendFundsProps): ReactElement => {
+const SendFunds = ({
+  onClose,
+  onReview,
+  recipientAddress,
+  selectedToken = '',
+  amount,
+}: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
@@ -115,7 +121,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry?.address
     }
-    onNext({ ...submitValues, tokenSpendingLimit })
+    onReview({ ...submitValues, tokenSpendingLimit })
   }
 
   const spendingLimits = useSelector(safeSpendingLimitsSelector)

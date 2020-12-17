@@ -30,6 +30,8 @@ const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/Send
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
+const AdvancedOptions = React.lazy(() => import('./screens/AdvancedOptions'))
+
 const useStyles = makeStyles({
   scalableModalWindow: {
     height: 'auto',
@@ -46,15 +48,16 @@ const useStyles = makeStyles({
   },
 })
 
-type TxType =
+export type TxType =
   | 'chooseTxType'
   | 'sendFunds'
-  | 'reviewTx'
+  | 'sendFundsReviewTx'
   | 'contractInteraction'
   | 'contractInteractionReview'
   | 'reviewCustomTx'
   | 'sendCollectible'
   | 'reviewCollectible'
+  | 'editTxAdvancedOptions'
   | ''
 
 type Props = {
@@ -78,6 +81,7 @@ const SendModal = ({
   const [activeScreen, setActiveScreen] = useState<TxType>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
+  const [prevScreen, setPrevScreen] = useState<TxType | undefined>()
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
@@ -88,7 +92,7 @@ const SendModal = ({
   const scalableModalSize = activeScreen === 'chooseTxType'
 
   const handleTxCreation = (txInfo: SendCollectibleTxInfo) => {
-    setActiveScreen('reviewTx')
+    setActiveScreen('sendFundsReviewTx')
     setTx(txInfo)
   }
 
@@ -111,6 +115,15 @@ const SendModal = ({
     setIsABI(!isABI)
   }
 
+  const goToEditTxAdvancedOptions = () => {
+    setPrevScreen(activeScreen)
+    setActiveScreen('editTxAdvancedOptions')
+  }
+
+  const closeAdvancedOptions = () => {
+    setActiveScreen(prevScreen || '')
+  }
+
   return (
     <Modal
       description="Send Tokens Form"
@@ -129,18 +142,26 @@ const SendModal = ({
         {activeScreen === 'chooseTxType' && (
           <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
         )}
+
         {activeScreen === 'sendFunds' && (
           <SendFunds
             onClose={onClose}
-            onNext={handleTxCreation}
+            onReview={handleTxCreation}
             recipientAddress={recipientAddress}
             selectedToken={selectedToken as string}
             amount={tokenAmount}
           />
         )}
-        {activeScreen === 'reviewTx' && (
-          <ReviewTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx as ReviewTxProp} />
+
+        {activeScreen === 'sendFundsReviewTx' && (
+          <ReviewTx
+            onClose={onClose}
+            onPrev={() => setActiveScreen('sendFunds')}
+            tx={tx as ReviewTxProp}
+            onAdvancedOptions={goToEditTxAdvancedOptions}
+          />
         )}
+
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
             isABI={isABI}
@@ -151,9 +172,11 @@ const SendModal = ({
             onNext={handleContractInteractionCreation}
           />
         )}
+
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
           <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
         )}
+
         {activeScreen === 'contractInteraction' && !isABI && (
           <SendCustomTx
             initialValues={tx as CustomTxProps}
@@ -164,9 +187,11 @@ const SendModal = ({
             contractAddress={recipientAddress}
           />
         )}
+
         {activeScreen === 'reviewCustomTx' && (
           <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
         )}
+
         {activeScreen === 'sendCollectible' && (
           <SendCollectible
             initialValues={tx}
@@ -176,6 +201,7 @@ const SendModal = ({
             selectedToken={selectedToken as NFTToken | undefined}
           />
         )}
+
         {activeScreen === 'reviewCollectible' && (
           <ReviewCollectible
             onClose={onClose}
@@ -183,6 +209,8 @@ const SendModal = ({
             tx={tx as CollectibleTx}
           />
         )}
+
+        {activeScreen === 'editTxAdvancedOptions' && <AdvancedOptions onClose={closeAdvancedOptions} />}
       </Suspense>
     </Modal>
   )
