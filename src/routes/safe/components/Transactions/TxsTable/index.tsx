@@ -35,6 +35,10 @@ const TxsTable = ({ classes }) => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
   }, [trackEvent])
 
+  useEffect(() => {
+    console.log('La coupeeeee')
+  }, [])
+
   const handleTxExpand = (rowId) => {
     setExpandedTx((prevRowId) => (prevRowId === rowId ? null : rowId))
   }
@@ -121,12 +125,9 @@ const TxsTable = ({ classes }) => {
                       colSpan={6}
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
-                      <Collapse
-                        component={() => <ExpandedTx row={row} />}
-                        in={expandedTx === rowId}
-                        timeout="auto"
-                        unmountOnExit
-                      />
+                      <Collapse in={expandedTx === rowId} unmountOnExit>
+                        <ExpandedTx row={row} />
+                      </Collapse>
                     </TableCell>
                   </TableRow>
                 </React.Fragment>
