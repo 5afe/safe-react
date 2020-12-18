@@ -38,10 +38,6 @@ const TxsTable = (): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Transactions' })
   }, [trackEvent])
 
-  useEffect(() => {
-    console.log('La coupeeeee')
-  }, [])
-
   const handleTxExpand = (rowId) => {
     setExpandedTx((prevRowId) => (prevRowId === rowId ? null : rowId))
   }
