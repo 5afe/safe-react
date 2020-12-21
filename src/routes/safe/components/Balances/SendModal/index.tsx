@@ -8,7 +8,7 @@ import { CollectibleTx } from './screens/ReviewCollectible'
 import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
-import { ReviewTxProp } from './screens/ReviewTx'
+import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
 
@@ -20,7 +20,7 @@ const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
 
 const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
 
-const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
+const ReviewSendFundsTx = React.lazy(() => import('./screens/ReviewSendFundsTx'))
 
 const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
 
@@ -154,7 +154,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'sendFundsReviewTx' && (
-          <ReviewTx
+          <ReviewSendFundsTx
             onClose={onClose}
             onPrev={() => setActiveScreen('sendFunds')}
             tx={tx as ReviewTxProp}
