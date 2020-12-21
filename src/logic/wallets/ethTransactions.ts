@@ -60,3 +60,14 @@ export const calculateGasOf = async (data: string, from: string, to: string): Pr
     return Promise.reject(err)
   }
 }
+
+export const getUserNonce = async (userAddress: string): Promise<number> => {
+  const web3 = getWeb3()
+  try {
+    const nonce = await web3.eth.getTransactionCount(userAddress)
+    debugger
+    return nonce
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}

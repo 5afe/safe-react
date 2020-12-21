@@ -29,6 +29,88 @@ const estimateDataGasCosts = (data: string): number => {
   return data.match(/.{2}/g)?.reduce(reducer, 0)
 }
 
+export type GasEstimationInfo = {
+  gasCost: number
+  gasPrice: string
+  total: number
+}
+
+export const estimateTxGasCosts2 = async (
+  safeAddress: string,
+  to: string,
+  data: string,
+  tx?: Transaction,
+  preApprovingOwner?: string,
+): Promise<GasEstimationInfo> => {
+  try {
+    const web3 = getWeb3()
+    const from = await getAccountFrom(web3)
+
+    if (!from) {
+      return {
+        gasCost: 0,
+        gasPrice: '0',
+        total: 0,
+      }
+    }
+
+    const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+    const nonce = await safeInstance.methods.nonce().call()
+    const threshold = await safeInstance.methods.getThreshold().call()
+    const isExecution = tx?.confirmations.size === Number(threshold) || !!preApprovingOwner || threshold === '1'
+
+    let txData
+    if (isExecution) {
+      // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+      const signatures = tx?.confirmations
+        ? generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+        : `0x000000000000000000000000${from.replace(
+            EMPTY_DATA,
+            '',
+          )}000000000000000000000000000000000000000000000000000000000000000001`
+      txData = await safeInstance.methods
+        .execTransaction(
+          to,
+          tx?.value || 0,
+          data,
+          CALL,
+          tx?.safeTxGas || 0,
+          0,
+          0,
+          ZERO_ADDRESS,
+          ZERO_ADDRESS,
+          signatures,
+        )
+        .encodeABI()
+    } else {
+      const txHash = await safeInstance.methods
+        .getTransactionHash(to, tx?.value || 0, data, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+        .call({
+          from,
+        })
+      txData = await safeInstance.methods.approveHash(txHash).encodeABI()
+    }
+
+    const gasCost = await calculateGasOf(txData, from, safeAddress)
+    const gasPrice = await calculateGasPrice()
+
+    return {
+      gasCost,
+      gasPrice,
+      total: gasCost * parseInt(gasPrice, 10),
+    }
+  } catch (err) {
+    console.error('Error while estimating transaction execution gas costs:')
+    console.error(err)
+
+    return {
+      gasCost: 0,
+      gasPrice: '0',
+      total: 10000,
+    }
+  }
+}
+
 export const estimateTxGasCosts = async (
   safeAddress: string,
   to: string,

@@ -5,11 +5,12 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { ExplorerButton, Text, Button, ButtonLink } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -19,26 +20,33 @@ import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { estimateTxGasCosts2, GasEstimationInfo } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { EMPTY_DATA, getUserNonce } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
+import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
+import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { ExplorerButton, Text } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
+
+const TxParameterWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
 
 export type ReviewTxProp = {
   recipientAddress: string
@@ -56,14 +64,17 @@ type ReviewTxProps = {
   tx: ReviewTxProp
 }
 
-const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): React.ReactElement => {
+const ReviewSendFundsTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
+  const userAddress = useSelector(userAccountSelector)
   const tokens = useSelector(extendedSafeTokensSelector)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
+  const [gasInfo, setGasInfo] = useState<(GasEstimationInfo & { formattedTotalGas: string }) | undefined>()
   const [data, setData] = useState('')
-
+  const [nonce, setNonce] = useState<number | undefined>()
+  const [safeNonce, setSafeNonce] = useState<string | undefined>()
+  const [safeTxGas] = useState(0)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
@@ -71,6 +82,7 @@ const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): Re
   useEffect(() => {
     let isCurrent = true
 
+    /* TODO: move to generic place */
     const estimateGas = async () => {
       if (!txToken) {
         return
@@ -86,22 +98,38 @@ const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): Re
         txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
       }
 
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
+      const estimation = await estimateTxGasCosts2(safeAddress as string, txRecipient as string, txData)
+      const gasCosts = fromTokenUnit(estimation.total, nativeCoin.decimals)
+      const formattedTotalGas = formatAmount(gasCosts)
 
       if (isCurrent) {
-        setGasCosts(formattedGasCosts)
+        setGasInfo({ ...estimation, formattedTotalGas })
         setData(txData)
       }
     }
-
     estimateGas()
 
+    /* TODO: move to generic place */
+    const getNonce = async () => {
+      const res = await getUserNonce(userAddress)
+      setNonce(res)
+    }
+    getNonce()
+
+    /* TODO: move to generic place */
+    const getSafeNonce = async () => {
+      const safeInstance = await getGnosisSafeInstanceAt(safeAddress as string)
+      const lastTx = await getLastTx(safeAddress as string)
+      const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
+      setSafeNonce(nonce)
+    }
+    getSafeNonce()
+
+    /* TODO: Refactor */
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken, 'userAddress  '])
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
@@ -217,16 +245,73 @@ const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): Re
         </Row>
 
         {/* Tx Details */}
-        <Button size="lg" iconType="addressBook" color="primary" onClick={onAdvancedOptions}>
-          <Text size="xl" color="primary">
-            Advanced Options
+
+        <Text size="md" color="secondaryLight">
+          Safe transactions parameters
+        </Text>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="text" strong>
+            Safe
           </Text>
-        </Button>
+          <Text size="lg" color="text" strong>
+            {safeNonce}
+          </Text>
+        </TxParameterWrapper>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="text" strong>
+            SafeTxGas
+          </Text>
+          <Text size="lg" color="text" strong>
+            {safeTxGas}
+          </Text>
+        </TxParameterWrapper>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="secondaryLight">
+            Ethereum transaction parameters
+          </Text>
+        </TxParameterWrapper>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="text" strong>
+            Ethereum nonce
+          </Text>
+          <Text size="lg" color="text" strong>
+            {nonce}
+          </Text>
+        </TxParameterWrapper>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="text" strong>
+            Ethereum gas limit
+          </Text>
+          <Text size="lg" color="text" strong>
+            {gasInfo?.gasCost}
+          </Text>
+        </TxParameterWrapper>
+
+        <TxParameterWrapper>
+          <Text size="lg" color="text" strong>
+            Ethereum gas price
+          </Text>
+          <Text size="lg" color="text" strong>
+            {parseInt(gasInfo?.gasPrice || '0', 10)}
+          </Text>
+        </TxParameterWrapper>
+        <ButtonLink color="primary" onClick={onAdvancedOptions}>
+          <Text size="xl" color="primary">
+            Edit
+          </Text>
+        </ButtonLink>
 
         {/* Disclaimer */}
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${
+              gasInfo?.formattedTotalGas || '< 0.001'
+            } (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
       </Block>
@@ -235,15 +320,15 @@ const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): Re
 
       {/* Footer */}
       <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={onPrev}>
+        <Button size="md" color="primary" variant="outlined" onClick={onPrev}>
           Back
         </Button>
         <Button
+          size="md"
           className={classes.submitButton}
           color="primary"
           data-testid="submit-tx-btn"
           disabled={!data}
-          minWidth={140}
           onClick={submitTx}
           type="submit"
           variant="contained"
@@ -255,4 +340,4 @@ const ReviewTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): Re
   )
 }
 
-export default ReviewTx
+export default ReviewSendFundsTx
