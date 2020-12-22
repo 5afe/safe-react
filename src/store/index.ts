@@ -1,4 +1,4 @@
-import { Map } from 'immutable'
+import { List, Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
@@ -22,7 +22,9 @@ import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
   CurrentSessionState,
 } from 'src/logic/currentSession/store/reducer/currentSession'
+import { Notification } from 'src/logic/notifications'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
+import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
 import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
@@ -87,11 +89,11 @@ export type AppReduxState = CombinedState<{
   [NFT_ASSETS_REDUCER_ID]: NFTAssets
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
-  [TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
-  [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, any>
+  [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
-  [NOTIFICATIONS_REDUCER_ID]: Map<string, any>
+  [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState

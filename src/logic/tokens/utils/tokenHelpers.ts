@@ -8,8 +8,7 @@ import { isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { BuildTx, isEmptyData, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { CALL } from 'src/logic/safe/transactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
@@ -35,7 +34,7 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
   return call !== '0x'
 }
 
-export const isTokenTransfer = (tx: TxServiceModel): boolean => {
+export const isTokenTransfer = (tx: BuildTx['tx']): boolean => {
   return (
     !isEmptyData(tx.data) &&
     // Check if contains 'transfer' method code
@@ -70,11 +69,11 @@ export const getERC20DecimalsAndSymbol = async (
   return tokenInfo
 }
 
-export const isSendERC20Transaction = async (tx: TxServiceModel): Promise<boolean> => {
+export const isSendERC20Transaction = async (tx: BuildTx['tx']): Promise<boolean> => {
   let isSendTokenTx = !isSendERC721Transaction(tx) && isTokenTransfer(tx)
 
   if (isSendTokenTx) {
-    const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
+    const { decimals, symbol } = await getERC20DecimalsAndSymbol((tx as ServiceTx).to)
 
     // some contracts may implement the same methods as in ERC20 standard
     // we may falsely treat them as tokens, so in case we get any errors when getting token info

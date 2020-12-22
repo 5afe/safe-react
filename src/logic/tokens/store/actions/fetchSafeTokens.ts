@@ -15,21 +15,8 @@ import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import {
-  safeActiveTokensSelector,
-  safeBalancesSelector,
-  safeBlacklistedTokensSelector,
-  safeEthBalanceSelector,
-  safeSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
-import { currencyValuesSelector } from 'src/logic/currencyValues/store/selectors'
-
-const noFunc = (): void => {}
-
-const updateSafeValue = (address: string) => (valueToUpdate: Partial<SafeRecordProps>) =>
-  updateSafe({ address, ...valueToUpdate })
 
 interface ExtractedData {
   balances: Map<string, string>
@@ -78,11 +65,8 @@ const fetchSafeTokens = (safeAddress: string) => async (
     }
 
     const tokenCurrenciesBalances = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
-    const currentEthBalance = safeEthBalanceSelector(state)
-    const safeBalances = safeBalancesSelector(state)
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
-    const currencyValues = currencyValuesSelector(state)
 
     const { balances, currencyList, ethBalance, tokens } = tokenCurrenciesBalances.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
@@ -100,24 +84,10 @@ const fetchSafeTokens = (safeAddress: string) => async (
       balances.keySeq().toSet().subtract(blacklistedTokens),
     )
 
-    const update = updateSafeValue(safeAddress)
-    const updateActiveTokens = activeTokens.equals(alreadyActiveTokens) ? noFunc : update({ activeTokens })
-    const updateBalances = balances.equals(safeBalances) ? noFunc : update({ balances })
-    const updateEthBalance = ethBalance === currentEthBalance ? noFunc : update({ ethBalance })
-    const storedCurrencyBalances = currencyValues?.get(safeAddress)?.get('currencyBalances')
-
-    const updateCurrencies = currencyList.equals(storedCurrencyBalances)
-      ? noFunc
-      : setCurrencyBalances(safeAddress, currencyList)
-
-    const updateTokens = tokens.size === 0 ? noFunc : addTokens(tokens)
-
     batch(() => {
-      dispatch(updateActiveTokens)
-      dispatch(updateBalances)
-      dispatch(updateEthBalance)
-      dispatch(updateCurrencies)
-      dispatch(updateTokens)
+      dispatch(updateSafe({ safeAddress, activeTokens, balances, ethBalance }))
+      dispatch(setCurrencyBalances(safeAddress, currencyList))
+      dispatch(addTokens(tokens))
     })
   } catch (err) {
     console.error('Error fetching active token list', err)

@@ -10,5 +10,7 @@ export const extendedTransactionsSelector = createSelector(
   safeIncomingTransactionsSelector,
   safeModuleTransactionsSelector,
   (transactions, incomingTransactions, moduleTransactions): List<Transaction | SafeModuleTransaction> =>
-    List([...transactions, ...incomingTransactions, ...moduleTransactions]),
+    List().withMutations((list) => {
+      list.concat(transactions).concat(incomingTransactions).concat(moduleTransactions)
+    }),
 )
