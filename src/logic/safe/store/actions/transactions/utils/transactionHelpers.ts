@@ -173,12 +173,12 @@ export const calculateTransactionStatus = (
 
   if (tx.isExecuted && tx.isSuccessful) {
     txStatus = TransactionStatus.SUCCESS
+  } else if (tx.creationTx) {
+    txStatus = TransactionStatus.SUCCESS
   } else if (tx.cancelled || nonce > tx.nonce) {
     txStatus = TransactionStatus.CANCELLED
   } else if (tx.confirmations.size === threshold) {
     txStatus = TransactionStatus.AWAITING_EXECUTION
-  } else if (tx.creationTx) {
-    txStatus = TransactionStatus.SUCCESS
   } else if (!!tx.isPending) {
     txStatus = TransactionStatus.PENDING
   } else {
