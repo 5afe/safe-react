@@ -231,7 +231,7 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
 
 export const enhanceSnackbarForAction = (
   notification: Notification,
-  key?: number | string,
+  key?: string,
   onClick?: () => void,
 ): Notification => ({
   ...notification,

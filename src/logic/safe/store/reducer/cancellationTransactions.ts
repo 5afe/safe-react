@@ -1,18 +1,25 @@
 import { Map } from 'immutable'
-import { handleActions } from 'redux-actions'
+import { Action, handleActions } from 'redux-actions'
 
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { ADD_OR_UPDATE_CANCELLATION_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateCancellationTransactions'
 import { REMOVE_CANCELLATION_TRANSACTION } from 'src/logic/safe/store/actions/transactions/removeCancellationTransaction'
+import { AppReduxState } from 'src/store'
 
 export const CANCELLATION_TRANSACTIONS_REDUCER_ID = 'cancellationTransactions'
 
 export type CancellationTransactions = Map<string, Transaction>
 export type CancellationTxState = Map<string, CancellationTransactions>
 
-export default handleActions(
+type CancellationTransactionsPayload = { safeAddress: string; transactions: CancellationTransactions }
+type CancellationTransactionPayload = { safeAddress: string; transaction: Transaction }
+
+export default handleActions<
+  AppReduxState['cancellationTransactions'],
+  CancellationTransactionsPayload | CancellationTransactionPayload
+>(
   {
-    [ADD_OR_UPDATE_CANCELLATION_TRANSACTIONS]: (state, action) => {
+    [ADD_OR_UPDATE_CANCELLATION_TRANSACTIONS]: (state, action: Action<CancellationTransactionsPayload>) => {
       const { safeAddress, transactions } = action.payload
 
       if (!safeAddress || !transactions || !transactions.size) {
@@ -41,7 +48,7 @@ export default handleActions(
         }
       })
     },
-    [REMOVE_CANCELLATION_TRANSACTION]: (state, action) => {
+    [REMOVE_CANCELLATION_TRANSACTION]: (state, action: Action<CancellationTransactionPayload>) => {
       const { safeAddress, transaction } = action.payload
 
       if (!safeAddress || !transaction) {

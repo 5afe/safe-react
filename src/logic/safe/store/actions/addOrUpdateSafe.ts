@@ -12,7 +12,6 @@ export const buildOwnersFrom = (names: string[], addresses: string[]): List<Safe
   return List(owners)
 }
 
-export const addOrUpdateSafe = createAction(ADD_OR_UPDATE_SAFE, (safe: SafeRecordProps, loadedFromStorage = false) => ({
+export const addOrUpdateSafe = createAction(ADD_OR_UPDATE_SAFE, (safe: SafeRecordProps) => ({
   safe,
-  loadedFromStorage,
 }))

@@ -15,7 +15,8 @@ export type NotificationId = keyof typeof NOTIFICATION_IDS
 export type Notification = {
   message: string
   options: OptionsObject
-  key?: number | string
+  key?: string
+  dismissed?: boolean
 }
 
 const NOTIFICATION_IDS = {
