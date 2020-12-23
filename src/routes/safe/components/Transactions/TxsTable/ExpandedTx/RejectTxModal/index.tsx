@@ -41,7 +41,6 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
-    safeAddress,
     txRecipient: safeAddress,
   })
 

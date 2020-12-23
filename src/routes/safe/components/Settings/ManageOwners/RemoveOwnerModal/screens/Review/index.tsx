@@ -57,7 +57,6 @@ export const ReviewRemoveOwnerModal = ({
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
-    safeAddress,
     txRecipient: safeAddress,
   })
 

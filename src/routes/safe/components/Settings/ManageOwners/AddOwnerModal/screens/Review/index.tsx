@@ -47,7 +47,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
-    safeAddress,
     txRecipient: safeAddress,
   })
 

@@ -60,7 +60,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
-    safeAddress,
     txRecipient: tx.recipientAddress,
   })
 

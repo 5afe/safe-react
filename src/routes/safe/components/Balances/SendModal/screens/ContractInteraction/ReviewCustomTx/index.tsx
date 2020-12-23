@@ -52,7 +52,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
-    safeAddress,
     txRecipient: tx.contractAddress as string,
     txData: tx.data ? tx.data.trim() : '',
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',

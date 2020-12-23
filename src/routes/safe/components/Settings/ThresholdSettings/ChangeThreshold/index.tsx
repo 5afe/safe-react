@@ -49,7 +49,6 @@ export const ChangeThresholdModal = ({
 
   const { gasCostHumanReadable, txEstimationExecutionStatus } = useEstimateTransactionGas({
     txData: data,
-    safeAddress,
     txRecipient: safeAddress,
   })
 

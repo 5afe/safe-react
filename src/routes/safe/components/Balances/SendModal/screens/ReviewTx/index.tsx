@@ -113,7 +113,6 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
-    safeAddress,
     txRecipient,
   })
 

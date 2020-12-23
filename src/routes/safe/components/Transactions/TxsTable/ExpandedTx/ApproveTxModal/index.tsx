@@ -82,7 +82,6 @@ const ApproveTxModal = ({
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
-    safeAddress,
     txRecipient: tx.recipient,
     txData: tx.data || '',
     txConfirmations: tx.confirmations.size,

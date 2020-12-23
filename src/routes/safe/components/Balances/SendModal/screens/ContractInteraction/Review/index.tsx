@@ -53,7 +53,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }>({ txData: '', txAmount: '', txRecipient: '' })
 
   const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
-    safeAddress,
     txRecipient: txParameters?.txRecipient,
     txAmount: txParameters?.txAmount,
     txData: txParameters?.txData,
