@@ -55,7 +55,7 @@ export const ReviewRemoveOwnerModal = ({
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
-  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: safeAddress,
@@ -198,7 +198,7 @@ export const ReviewRemoveOwnerModal = ({
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
           <br />
-          {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+          {`Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
         </Paragraph>
         <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>

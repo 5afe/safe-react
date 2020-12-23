@@ -111,7 +111,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
 
-  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient,
@@ -220,7 +220,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
         </Row>
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
           <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>

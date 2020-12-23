@@ -58,7 +58,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   )
   const [data, setData] = useState('')
 
-  const { gasCosts, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: tx.recipientAddress,
@@ -162,7 +162,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
         )}
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
           <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>

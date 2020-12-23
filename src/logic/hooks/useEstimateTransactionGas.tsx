@@ -12,13 +12,6 @@ export enum EstimationStatus {
   SUCCESS = 'SUCCESS',
 }
 
-type TransactionGasEstimationResult = {
-  txEstimationExecutionStatus: EstimationStatus
-  estimatedGas: number // Amount of gas needed for execute or approve the transaction
-  gasCosts: string // Cost of gas to the user (estimatedGas * gasPrice) in format '< | > 100'
-  isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
-}
-
 const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txConfirmations?: number): boolean =>
   txConfirmations === threshold || !!preApprovingOwner || threshold === 1
 
@@ -31,6 +24,15 @@ type UseEstimateTransactionGasProps = {
   preApprovingOwner?: string
 }
 
+type TransactionGasEstimationResult = {
+  txEstimationExecutionStatus: EstimationStatus
+  gasEstimation: number // Amount of gas needed for execute or approve the transaction
+  gasCosts: string // Cost of gas in raw format (estimatedGas * gasPrice)
+  gasCostHumanReadable: string // Cost of gas in format '< | > 100'
+  gasPrice: string // Current price of gas unit
+  isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
+}
+
 export const useEstimateTransactionGas = ({
   safeAddress,
   txRecipient,
@@ -39,10 +41,12 @@ export const useEstimateTransactionGas = ({
   txAmount,
   preApprovingOwner,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
-  const [gasCosts, setGasCosts] = useState({
+  const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
-    estimatedGas: 0,
-    gasCosts: '< 0.001',
+    gasEstimation: 0,
+    gasCosts: '0',
+    gasCostHumanReadable: '< 0.001',
+    gasPrice: '0',
     isExecution: false,
   })
   const { nativeCoin } = getNetworkInfo()
@@ -60,7 +64,7 @@ export const useEstimateTransactionGas = ({
         const threshold = await safeInstance.methods.getThreshold().call()
         const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
 
-        const estimatedGas = await estimateTransactionGas({
+        const gasEstimation = await estimateTransactionGas({
           safeAddress,
           txRecipient,
           txData,
@@ -68,26 +72,30 @@ export const useEstimateTransactionGas = ({
           isExecution,
         })
         const gasPrice = await calculateGasPrice()
-        const estimatedGasCosts = estimatedGas * parseInt(gasPrice, 10)
+        const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-        const formattedGasCosts = formatAmount(gasCosts)
+        const gasCostHumanReadable = formatAmount(gasCosts)
         if (isCurrent) {
-          setGasCosts({
-            txEstimationExecutionStatus: estimatedGas <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
-            estimatedGas,
-            gasCosts: formattedGasCosts,
+          setGasEstimation({
+            txEstimationExecutionStatus: gasEstimation <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
+            gasEstimation,
+            gasCosts,
+            gasCostHumanReadable,
+            gasPrice,
             isExecution,
           })
         }
       } catch (error) {
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const estimatedGas = 10000
-        const gasCosts = fromTokenUnit(estimatedGas, nativeCoin.decimals)
-        const formattedGasCosts = formatAmount(gasCosts)
-        setGasCosts({
+        const gasEstimation = 10000
+        const gasCosts = fromTokenUnit(gasEstimation, nativeCoin.decimals)
+        const gasCostHumanReadable = formatAmount(gasCosts)
+        setGasEstimation({
           txEstimationExecutionStatus: EstimationStatus.FAILURE,
-          estimatedGas,
-          gasCosts: formattedGasCosts,
+          gasEstimation,
+          gasCosts,
+          gasCostHumanReadable,
+          gasPrice: '1',
           isExecution: false,
         })
       }
@@ -100,5 +108,5 @@ export const useEstimateTransactionGas = ({
     }
   }, [txData, safeAddress, txRecipient, txConfirmations, txAmount, preApprovingOwner, nativeCoin.decimals])
 
-  return gasCosts
+  return gasEstimation
 }

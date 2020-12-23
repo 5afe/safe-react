@@ -47,7 +47,7 @@ export const ChangeThresholdModal = ({
   const classes = useStyles()
   const [data, setData] = useState('')
 
-  const { gasCosts, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const { gasCostHumanReadable, txEstimationExecutionStatus } = useEstimateTransactionGas({
     txData: data,
     safeAddress,
     txRecipient: safeAddress,
@@ -126,7 +126,7 @@ export const ChangeThresholdModal = ({
               </Row>
               <Row>
                 <Paragraph>
-                  {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+                  {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
                 </Paragraph>
                 <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={false} />
               </Row>
