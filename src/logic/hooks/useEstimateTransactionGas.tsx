@@ -4,9 +4,8 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
 import { getNetworkInfo } from 'src/config'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useSelector } from 'react-redux'
-import { safeParamAddressFromStateSelector } from '../safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -51,6 +50,7 @@ export const useEstimateTransactionGas = ({
   })
   const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const threshold = useSelector(safeThresholdSelector)
 
   useEffect(() => {
     let isCurrent = true
@@ -61,8 +61,6 @@ export const useEstimateTransactionGas = ({
       }
 
       try {
-        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-        const threshold = await safeInstance.methods.getThreshold().call()
         const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
 
         const gasEstimation = await estimateTransactionGas({
@@ -107,7 +105,7 @@ export const useEstimateTransactionGas = ({
     return () => {
       isCurrent = false
     }
-  }, [txData, safeAddress, txRecipient, txConfirmations, txAmount, preApprovingOwner, nativeCoin.decimals])
+  }, [txData, safeAddress, txRecipient, txConfirmations, txAmount, preApprovingOwner, nativeCoin.decimals, threshold])
 
   return gasEstimation
 }
