@@ -121,12 +121,9 @@ const TxsTable = (): React.ReactElement => {
                       colSpan={6}
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
-                      <Collapse
-                        component={() => <ExpandedTx row={row} />}
-                        in={expandedTx === rowId}
-                        timeout="auto"
-                        unmountOnExit
-                      />
+                      <Collapse in={expandedTx === rowId} unmountOnExit>
+                        <ExpandedTx row={row} />
+                      </Collapse>
                     </TableCell>
                   </TableRow>
                 </React.Fragment>
