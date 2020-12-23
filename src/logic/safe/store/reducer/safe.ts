@@ -107,17 +107,18 @@ export default handleActions(
 
     [ADD_OR_UPDATE_SAFE]: (state: SafeReducerMap, action) => {
       const { safe } = action.payload
+      const safeAddress = safe.address
 
-      if (!state.hasIn(['safes', safe.address])) {
-        return state.setIn(['safes', safe.address], makeSafe(safe))
+      if (!state.hasIn(['safes', safeAddress])) {
+        return state.setIn(['safes', safeAddress], makeSafe(safe))
       }
 
-      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safe.safeAddress]))
+      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
 
       return shouldUpdate
         ? state.updateIn(
-            ['safes', safe.address],
-            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safe.address }),
+            ['safes', safeAddress],
+            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state
