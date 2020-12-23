@@ -52,7 +52,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     txAmount: string
   }>({ txData: '', txAmount: '', txRecipient: '' })
 
-  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txRecipient: txParameters?.txRecipient,
     txAmount: txParameters?.txAmount,
     txData: txParameters?.txData,
@@ -157,7 +157,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
           <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>

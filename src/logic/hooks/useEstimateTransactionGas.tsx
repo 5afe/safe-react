@@ -27,8 +27,8 @@ type UseEstimateTransactionGasProps = {
 type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
   gasEstimation: number // Amount of gas needed for execute or approve the transaction
-  gasCosts: string // Cost of gas in raw format (estimatedGas * gasPrice)
-  gasCostHumanReadable: string // Cost of gas in format '< | > 100'
+  gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
+  gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
 }
@@ -43,8 +43,8 @@ export const useEstimateTransactionGas = ({
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
     gasEstimation: 0,
-    gasCosts: '0',
-    gasCostHumanReadable: '< 0.001',
+    gasCost: '0',
+    gasCostFormatted: '< 0.001',
     gasPrice: '0',
     isExecution: false,
   })
@@ -72,14 +72,14 @@ export const useEstimateTransactionGas = ({
         })
         const gasPrice = await calculateGasPrice()
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-        const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-        const gasCostHumanReadable = formatAmount(gasCosts)
+        const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+        const gasCostFormatted = formatAmount(gasCost)
         if (isCurrent) {
           setGasEstimation({
             txEstimationExecutionStatus: gasEstimation <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
             gasEstimation,
-            gasCosts,
-            gasCostHumanReadable,
+            gasCost,
+            gasCostFormatted,
             gasPrice,
             isExecution,
           })
@@ -87,13 +87,13 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
         const gasEstimation = 10000
-        const gasCosts = fromTokenUnit(gasEstimation, nativeCoin.decimals)
-        const gasCostHumanReadable = formatAmount(gasCosts)
+        const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
+        const gasCostFormatted = formatAmount(gasCost)
         setGasEstimation({
           txEstimationExecutionStatus: EstimationStatus.FAILURE,
           gasEstimation,
-          gasCosts,
-          gasCostHumanReadable,
+          gasCost,
+          gasCostFormatted,
           gasPrice: '1',
           isExecution: false,
         })

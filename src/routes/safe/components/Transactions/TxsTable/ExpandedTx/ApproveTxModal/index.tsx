@@ -81,7 +81,7 @@ const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txRecipient: tx.recipient,
     txData: tx.data || '',
     txConfirmations: tx.confirmations.size,
@@ -144,7 +144,7 @@ const ApproveTxModal = ({
           <Paragraph>
             {`You're about to ${
               approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${
+            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${
               nativeCoin.name
             } in this wallet to fund this confirmation.`}
           </Paragraph>

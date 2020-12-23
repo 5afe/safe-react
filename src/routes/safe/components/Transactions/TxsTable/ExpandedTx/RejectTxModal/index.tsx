@@ -39,7 +39,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const classes = useStyles()
 
-  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
   })
@@ -82,7 +82,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
           <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>

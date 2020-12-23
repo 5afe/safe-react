@@ -51,7 +51,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const { gasCostHumanReadable, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
     txRecipient: tx.contractAddress as string,
     txData: tx.data ? tx.data.trim() : '',
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
@@ -146,7 +146,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
         </Row>
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostHumanReadable} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
           <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
