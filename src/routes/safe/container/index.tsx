@@ -21,6 +21,7 @@ const Apps = React.lazy(() => import('../components/Apps'))
 const Settings = React.lazy(() => import('../components/Settings'))
 const Balances = React.lazy(() => import('../components/Balances'))
 const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/TxsTable'))
+const GatewayTransactions = React.lazy(() => import('src/routes/safe/components/GatewayTransactions'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
@@ -69,6 +70,11 @@ const Container = (): React.ReactElement => {
           exact
           path={`${matchSafeWithAddress?.path}/transactions`}
           render={() => wrapInSuspense(<TxsTable />, null)}
+        />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/gatewayTransactions`}
+          render={() => wrapInSuspense(<GatewayTransactions />, null)}
         />
         <Route
           exact
