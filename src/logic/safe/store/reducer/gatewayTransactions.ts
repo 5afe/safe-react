@@ -6,8 +6,11 @@ import {
 import {
   HistoryGatewayResponse,
   isDateLabel,
+  isLabel,
   isTransactionSummary,
+  Label,
   QueuedGatewayResponse,
+  StoreStructure,
 } from 'src/logic/safe/store/models/types/gateway.d'
 
 import { AppReduxState } from 'src/store'
@@ -22,7 +25,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { safeAddress, values } = action.payload
-      const history = {}
+      const history: StoreStructure['history'] = {}
 
       let currentTimestamp
       values.forEach((value) => {
@@ -32,7 +35,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
 
         if (isTransactionSummary(value) && currentTimestamp) {
-          history[currentTimestamp] = [...history[currentTimestamp], value]
+          history[currentTimestamp] = [...history[currentTimestamp], value.transaction]
         }
       })
 
@@ -48,8 +51,43 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         },
       }
     },
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => state,
+    [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
+      const { safeAddress, values } = action.payload
+      const queued: StoreStructure['queued'] = {
+        queued: {},
+        next: {},
+      }
+
+      let inLabelGroup: Label['label'] = 'Next'
+      values.forEach((value) => {
+        if (isLabel(value)) {
+          inLabelGroup = value.label
+        }
+
+        if (isTransactionSummary(value)) {
+          const txNonce = value.transaction.executionInfo?.nonce
+
+          if (!txNonce) {
+            return
+          }
+
+          const label = inLabelGroup.toLowerCase()
+          queued[label][txNonce] = [...(queued[label][txNonce] ?? []), value.transaction]
+        }
+      })
+
+      return {
+        // all the safes with their respective states
+        ...state,
+        // current safe
+        [safeAddress]: {
+          // keep history list
+          ...state[safeAddress],
+          // overwrites queued lists
+          queued,
+        },
+      }
+    },
   },
   {},
 )

@@ -214,7 +214,7 @@ type Transaction = TransactionSummary & {
 type StoreStructure = {
   queued: {
     next: { [nonce: number]: Transaction[] } // 1 Transaction element
-    queue: { [nonce: number]: Transaction[] } // n Transaction elements
+    queued: { [nonce: number]: Transaction[] } // n Transaction elements
   }
   history: { [timestamp: number]: Transaction[] } // n Transaction elements
 }
@@ -240,19 +240,20 @@ type TransactionGatewayResult = {
   conflictType: 'HasNext' | 'End' | 'None'
 }
 
-type HistoryGatewayResult = DateLabel | TransactionGatewayResult
-
-type HistoryGatewayResponse = {
+type GatewayResponse = {
   next: string | null
   previous: string | null
+}
+
+type HistoryGatewayResult = DateLabel | TransactionGatewayResult
+
+type HistoryGatewayResponse = GatewayResponse & {
   results: HistoryGatewayResult[]
 }
 
 type QueuedGatewayResult = Label | ConflictHeader | TransactionGatewayResult
 
-type QueuedGatewayResponse = {
-  next: string | null
-  previous: string | null
+type QueuedGatewayResponse = GatewayResponse & {
   results: QueuedGatewayResult[]
 }
 
@@ -260,12 +261,20 @@ type QueuedGatewayResponse = {
  * Helper functions
  */
 
-export const isDateLabel = (value: DateLabel | TransactionGatewayResult): value is DateLabel => {
+export const isDateLabel = (value: HistoryGatewayResult): value is DateLabel => {
   return value.type === 'DATE_LABEL'
 }
 
+export const isLabel = (value: QueuedGatewayResult): value is Label => {
+  return value.type === 'LABEL'
+}
+
+export const isConflictHeader = (value: QueuedGatewayResult): value is ConflictHeader => {
+  return value.type === 'CONFLICT_HEADER'
+}
+
 export const isTransactionSummary = (
-  value: DateLabel | TransactionGatewayResult,
+  value: HistoryGatewayResult | QueuedGatewayResult,
 ): value is TransactionGatewayResult => {
   return value.type === 'TRANSACTION'
 }
