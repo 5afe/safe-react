@@ -211,23 +211,61 @@ type Transaction = TransactionSummary & {
   txDetails?: ExpandedTxDetails
 }
 
-type UnifiedTransaction = {
-  // key can be `nonce` (queued) or `timestamp` (history)
-  [key: number]: Transaction[]
-}
-
 type StoreStructure = {
-  transactions: {
-    queued: {
-      next: UnifiedTransaction // 1 Transaction element
-      queue: UnifiedTransaction // n Transaction elements
-    }
-    history: UnifiedTransaction // n Transaction elements
+  queued: {
+    next: { [nonce: number]: Transaction[] } // 1 Transaction element
+    queue: { [nonce: number]: Transaction[] } // n Transaction elements
   }
+  history: { [timestamp: number]: Transaction[] } // n Transaction elements
 }
 
-type ClientGatewayResponse = {
+type Label = {
+  type: 'LABEL'
+  label: 'Next' | 'Queued'
+}
+
+type DateLabel = {
+  type: 'DATE_LABEL'
+  timestamp: number
+}
+
+type ConflictHeader = {
+  type: 'CONFLICT_HEADER'
+  nonce: number
+}
+
+type TransactionGatewayResult = {
+  type: 'TRANSACTION'
+  transaction: TransactionSummary
+  conflictType: 'HasNext' | 'End' | 'None'
+}
+
+type HistoryGatewayResult = DateLabel | TransactionGatewayResult
+
+type HistoryGatewayResponse = {
   next: string | null
   previous: string | null
-  results: TransactionSummary[]
+  results: HistoryGatewayResult[]
+}
+
+type QueuedGatewayResult = Label | ConflictHeader | TransactionGatewayResult
+
+type QueuedGatewayResponse = {
+  next: string | null
+  previous: string | null
+  results: QueuedGatewayResult[]
+}
+
+/**
+ * Helper functions
+ */
+
+export const isDateLabel = (value: DateLabel | TransactionGatewayResult): value is DateLabel => {
+  return value.type === 'DATE_LABEL'
+}
+
+export const isTransactionSummary = (
+  value: DateLabel | TransactionGatewayResult,
+): value is TransactionGatewayResult => {
+  return value.type === 'TRANSACTION'
 }
