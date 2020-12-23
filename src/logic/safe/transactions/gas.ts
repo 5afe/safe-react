@@ -12,6 +12,11 @@ import { EMPTY_DATA, calculateGasOf, calculateGasPrice } from 'src/logic/wallets
 import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { sameString } from 'src/utils/strings'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { getNetworkInfo } from 'src/config'
+
+const { nativeCoin } = getNetworkInfo()
 
 const estimateDataGasCosts = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
@@ -33,6 +38,7 @@ export type GasEstimationInfo = {
   gasCost: number
   gasPrice: string
   total: number
+  txGasHumanReadable: string
 }
 
 export const estimateTxGasCosts2 = async (
@@ -51,6 +57,7 @@ export const estimateTxGasCosts2 = async (
         gasCost: 0,
         gasPrice: '0',
         total: 0,
+        txGasHumanReadable: '0',
       }
     }
 
@@ -93,11 +100,15 @@ export const estimateTxGasCosts2 = async (
 
     const gasCost = await calculateGasOf(txData, from, safeAddress)
     const gasPrice = await calculateGasPrice()
+    const total = gasCost * parseInt(gasPrice, 10)
+    const gasInNativeCoinDecimals = fromTokenUnit(total, nativeCoin.decimals)
+    const txGasHumanReadable = formatAmount(gasInNativeCoinDecimals)
 
     return {
       gasCost,
       gasPrice,
-      total: gasCost * parseInt(gasPrice, 10),
+      txGasHumanReadable,
+      total,
     }
   } catch (err) {
     console.error('Error while estimating transaction execution gas costs:')
@@ -106,17 +117,23 @@ export const estimateTxGasCosts2 = async (
     return {
       gasCost: 0,
       gasPrice: '0',
+      txGasHumanReadable: '0',
       total: 10000,
     }
   }
 }
 
 export const estimateTxGasCosts = async (
-  safeAddress: string,
+  safeAddress: string, // opcional, asumir la safe actual
+
+  // usar un type {to, data, value}
   to: string,
   data: string,
+  // o tx (ya esta creada)
   tx?: Transaction,
-  preApprovingOwner?: string,
+  // TS tiene un typeOf para saber cual de los 2 es.
+
+  preApprovingOwner?: string, // no se puede obtener internamente?
 ): Promise<number> => {
   try {
     const web3 = getWeb3()
@@ -273,10 +290,10 @@ const calculateMinimumGasForTransaction = async (
 }
 
 export const estimateSafeTxGas = async (
-  safe: GnosisSafe | undefined,
-  safeAddress: string,
+  safe: GnosisSafe | undefined, // obtener internamente
+  safeAddress: string, // asumir safe actual
+  to: string, // usar mismo type {to, value, data}
   data: string,
-  to: string,
   valueInWei: string,
   operation: number,
 ): Promise<number> => {

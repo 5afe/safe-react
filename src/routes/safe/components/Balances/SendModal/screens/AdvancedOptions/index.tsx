@@ -10,6 +10,7 @@ import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -54,10 +55,11 @@ const StyledText = styled(Text)`
 const useStyles = makeStyles(styles)
 
 interface Props {
+  txParameters: TxParameters
   onClose: () => void
 }
 
-const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
+const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -88,8 +90,8 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
               </StyledText>
 
               <SafeOptions>
-                <StyledTextField value="33" label="Safe nonce" />
-                <StyledTextField value="" label="SafeTxGas" />
+                <StyledTextField value={txParameters.safeNonce?.toString() || ''} label="Safe nonce" />
+                <StyledTextField value={txParameters.safeTxGas?.toString() || ''} label="SafeTxGas" />
               </SafeOptions>
 
               <StyledText size="xl" strong>
@@ -97,9 +99,9 @@ const AdvancedOptions = ({ onClose }: Props): React.ReactElement => {
               </StyledText>
 
               <EthereumOptions>
-                <StyledTextField value="" label="Ethereum nonce" />
-                <StyledTextField value="" label="Ethereum gas limit" />
-                <StyledTextField value="" label="Ethereum gas price (GWEI)" />
+                <StyledTextField value={txParameters.ethNonce?.toString() || ''} label="Ethereum nonce" />
+                <StyledTextField value={txParameters.ethGasLimit?.toString() || ''} label="Ethereum gas limit" />
+                <StyledTextField value={txParameters.ethGasPrice?.toString() || ''} label="Ethereum gas price (GWEI)" />
               </EthereumOptions>
             </>
           )}

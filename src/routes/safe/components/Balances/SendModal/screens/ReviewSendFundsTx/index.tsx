@@ -3,11 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { ExplorerButton, Button } from '@gnosis.pm/safe-react-components'
+
 import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { ExplorerButton, Text, Button, ButtonLink } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
-
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -25,28 +24,23 @@ import { estimateTxGasCosts2, GasEstimationInfo } from 'src/logic/safe/transacti
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA, getUserNonce } from 'src/logic/wallets/ethTransactions'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
+import { TxParametersDetail } from '../../TxParametersDetail'
 
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
-
-const TxParameterWrapper = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
 
 export type ReviewTxProp = {
   recipientAddress: string
@@ -62,9 +56,16 @@ type ReviewTxProps = {
   onPrev: () => void
   onAdvancedOptions: () => void
   tx: ReviewTxProp
+  txParameters: TxParameters
 }
 
-const ReviewSendFundsTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxProps): React.ReactElement => {
+const ReviewSendFundsTx = ({
+  onClose,
+  onPrev,
+  tx,
+  onAdvancedOptions,
+  txParameters,
+}: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -72,9 +73,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxP
   const tokens = useSelector(extendedSafeTokensSelector)
   const [gasInfo, setGasInfo] = useState<(GasEstimationInfo & { formattedTotalGas: string }) | undefined>()
   const [data, setData] = useState('')
-  const [nonce, setNonce] = useState<number | undefined>()
-  const [safeNonce, setSafeNonce] = useState<string | undefined>()
-  const [safeTxGas] = useState(0)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
@@ -109,27 +107,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxP
     }
     estimateGas()
 
-    /* TODO: move to generic place */
-    const getNonce = async () => {
-      const res = await getUserNonce(userAddress)
-      setNonce(res)
-    }
-    getNonce()
-
-    /* TODO: move to generic place */
-    const getSafeNonce = async () => {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress as string)
-      const lastTx = await getLastTx(safeAddress as string)
-      const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
-      setSafeNonce(nonce)
-    }
-    getSafeNonce()
-
     /* TODO: Refactor */
     return () => {
       isCurrent = false
     }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken, 'userAddress  '])
+  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken, userAddress])
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
@@ -244,67 +226,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx, onAdvancedOptions }: ReviewTxP
           </Paragraph>
         </Row>
 
-        {/* Tx Details */}
-
-        <Text size="md" color="secondaryLight">
-          Safe transactions parameters
-        </Text>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="text" strong>
-            Safe
-          </Text>
-          <Text size="lg" color="text" strong>
-            {safeNonce}
-          </Text>
-        </TxParameterWrapper>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="text" strong>
-            SafeTxGas
-          </Text>
-          <Text size="lg" color="text" strong>
-            {safeTxGas}
-          </Text>
-        </TxParameterWrapper>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="secondaryLight">
-            Ethereum transaction parameters
-          </Text>
-        </TxParameterWrapper>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="text" strong>
-            Ethereum nonce
-          </Text>
-          <Text size="lg" color="text" strong>
-            {nonce}
-          </Text>
-        </TxParameterWrapper>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="text" strong>
-            Ethereum gas limit
-          </Text>
-          <Text size="lg" color="text" strong>
-            {gasInfo?.gasCost}
-          </Text>
-        </TxParameterWrapper>
-
-        <TxParameterWrapper>
-          <Text size="lg" color="text" strong>
-            Ethereum gas price
-          </Text>
-          <Text size="lg" color="text" strong>
-            {parseInt(gasInfo?.gasPrice || '0', 10)}
-          </Text>
-        </TxParameterWrapper>
-        <ButtonLink color="primary" onClick={onAdvancedOptions}>
-          <Text size="xl" color="primary">
-            Edit
-          </Text>
-        </ButtonLink>
+        {/* Tx Parameters */}
+        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
 
         {/* Disclaimer */}
         <Row>

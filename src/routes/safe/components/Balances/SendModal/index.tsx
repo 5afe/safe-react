@@ -11,6 +11,7 @@ import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -82,6 +83,7 @@ const SendModal = ({
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
   const [prevScreen, setPrevScreen] = useState<TxType | undefined>()
+  const txParameters = useTransactionParameters()
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
@@ -159,6 +161,7 @@ const SendModal = ({
             onPrev={() => setActiveScreen('sendFunds')}
             tx={tx as ReviewTxProp}
             onAdvancedOptions={goToEditTxAdvancedOptions}
+            txParameters={txParameters}
           />
         )}
 
@@ -210,7 +213,9 @@ const SendModal = ({
           />
         )}
 
-        {activeScreen === 'editTxAdvancedOptions' && <AdvancedOptions onClose={closeAdvancedOptions} />}
+        {activeScreen === 'editTxAdvancedOptions' && (
+          <AdvancedOptions txParameters={txParameters} onClose={closeAdvancedOptions} />
+        )}
       </Suspense>
     </Modal>
   )
