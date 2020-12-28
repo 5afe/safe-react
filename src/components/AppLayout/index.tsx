@@ -9,6 +9,7 @@ import { screenMd } from 'src/theme/variables'
 import { Button, Card, Icon, Text } from '@gnosis.pm/safe-react-components'
 import Phone from './MobileStart/assets/phone@2x.png'
 import { rgba } from 'polished'
+import { MobileView } from 'react-device-detect'
 
 const Container = styled.div`
   height: 100vh;
@@ -75,34 +76,26 @@ const ContentWrapper = styled.section`
   }
 `
 const Overlay = styled.div`
-  display: none;
-
-  @media (max-width: ${screenMd}px) {
-    display: block;
-    position: absolute;
-    bottom: 0;
-    width: 100vw;
-    height: 100vh;
-    background-color: ${({ theme }) => rgba(theme.colors.overlay.color, 0.75)};
-    z-index: 2147483009; /* on top of Intercom Button */
-  }
+  display: block;
+  position: absolute;
+  bottom: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: ${({ theme }) => rgba(theme.colors.overlay.color, 0.75)};
+  z-index: 2147483009; /* on top of Intercom Button */
 `
 
 const ModalApp = styled.div`
-  display: none;
-
-  @media (max-width: ${screenMd}px) {
-    position: fixed;
-    display: flex;
-    justify-content: space-between;
-    bottom: 0;
-    width: 100vw;
-    height: 260px;
-    background-color: ${({ theme }) => theme.colors.background};
-    box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
-    z-index: 2147483004; /* on top of Intercom Button */
-    padding: 20px 16px 0 16px;
-  }
+  position: fixed;
+  display: flex;
+  justify-content: space-between;
+  bottom: 0;
+  width: 100vw;
+  height: 260px;
+  background-color: ${({ theme }) => theme.colors.background};
+  box-shadow: 1px 2px 10px rgba(40, 54, 61, 0.18);
+  z-index: 2147483004; /* on top of Intercom Button */
+  padding: 20px 16px 0 16px;
 `
 
 const StyledCard = styled(Card)`
@@ -205,21 +198,23 @@ const Layout: React.FC<Props> = ({
         <Footer />
       </ContentWrapper>
     </BodyWrapper>
-    <Overlay>
-      <ModalApp>
-        <StyledCard>
-          <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
-          <Text size="lg">Get the mobile app for a better experience.</Text>
-          <Button size="md" color="primary" variant="contained">
-            Get the App {/* https://gnosis-safe.io/#mobile */}
-          </Button>
-        </StyledCard>
+    <MobileView>
+      <Overlay>
+        <ModalApp>
+          <StyledCard>
+            <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
+            <Text size="lg">Get the mobile app for a better experience.</Text>
+            <Button size="md" color="primary" variant="contained">
+              Get the App {/* https://gnosis-safe.io/#mobile */}
+            </Button>
+          </StyledCard>
 
-        <StyledImg src={Phone} alt="Phone" />
+          <StyledImg src={Phone} alt="Phone" />
 
-        <StyledCloseIcon size="md" type="cross" />
-      </ModalApp>
-    </Overlay>
+          <StyledCloseIcon size="md" type="cross" />
+        </ModalApp>
+      </Overlay>
+    </MobileView>
   </Container>
 )
 
