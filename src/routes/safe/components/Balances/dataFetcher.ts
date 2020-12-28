@@ -13,7 +13,7 @@ export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const { nativeCoin } = getNetworkInfo()
 
-const getTokenPriceValue = (token: Token, currencyValues?: BalanceCurrencyList, currencyRate?: number): string => {
+const getTokenValue = (token: Token, currencyValues?: BalanceCurrencyList, currencyRate?: number): string => {
   const currencyValue = currencyValues?.find(({ tokenAddress }) => {
     if (token.address === nativeCoin.address && !tokenAddress) {
       return true
@@ -27,36 +27,16 @@ const getTokenPriceValue = (token: Token, currencyValues?: BalanceCurrencyList, 
   }
 
   const { balanceInBaseCurrency } = currencyValue
-  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
+  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toString()
 
-  return formatAmountInUsFormat(balance)
+  return balance
 }
 
-const getTokenPriceInCurrency = (
-  token: Token,
-  currencySelected?: string,
-  currencyValues?: BalanceCurrencyList,
-  currencyRate?: number,
-): string => {
+const getTokenPriceInCurrency = (balance: string, currencySelected?: string): string => {
   if (!currencySelected) {
-    return ''
+    return Number('').toFixed(2)
   }
-  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
-    if (token.address === nativeCoin.address && !tokenAddress) {
-      return true
-    }
-
-    return token.address === tokenAddress
-  })
-
-  if (!currencyValue || !currencyRate) {
-    return ''
-  }
-
-  const { balanceInBaseCurrency } = currencyValue
-  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
-
-  return `${formatAmountInUsFormat(balance)} ${currencySelected}`
+  return `${formatAmountInUsFormat(Number(balance).toFixed(2))} ${currencySelected}`
 }
 
 export interface BalanceData {
@@ -77,6 +57,7 @@ export const getBalanceData = (
 ): List<BalanceData> => {
   const { nativeCoin } = getNetworkInfo()
   return activeTokens.map((token) => {
+    const balance = getTokenValue(token, currencyValues, currencyRate)
     return {
       [BALANCE_TABLE_ASSET_ID]: {
         name: token.name,
@@ -88,8 +69,8 @@ export const getBalanceData = (
       [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance?.toString() || '0')} ${token.symbol}`,
       balanceOrder: Number(token.balance),
       [FIXED]: token.symbol === nativeCoin.symbol,
-      [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
-      valueOrder: Number(getTokenPriceValue(token, currencyValues, currencyRate)),
+      [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(balance, currencySelected),
+      valueOrder: Number(balance),
     }
   })
 }
