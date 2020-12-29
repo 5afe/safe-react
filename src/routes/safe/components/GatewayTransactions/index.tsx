@@ -2,13 +2,17 @@ import { Menu, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
+
 import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway'
 import {
   historyTransactions,
   nextTransactions,
   queuedTransactions,
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import styled from 'styled-components'
+import { getTxAmount } from './utils'
+import { TxType } from './TxType'
+import { TokenTransferAmount } from './Row/TokenTransferAmount'
 
 const Wrapper = styled.div`
   display: flex;
@@ -118,7 +122,17 @@ const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
       <React.Fragment key={timestamp}>
         <H2>{timestamp}</H2>
         {txs.map((transaction) => (
-          <div key={transaction.id}>{JSON.stringify(transaction)}</div>
+          <div key={transaction.id}>
+            <div>{JSON.stringify(transaction)}</div>
+            <TxType tx={transaction} />
+            {transaction.txInfo.type === 'Transfer' && (
+              <TokenTransferAmount
+                direction={transaction.txInfo.direction}
+                transferInfo={transaction.txInfo.transferInfo}
+                amountWithSymbol={getTxAmount(transaction)}
+              />
+            )}
+          </div>
         ))}
       </React.Fragment>
     ))}

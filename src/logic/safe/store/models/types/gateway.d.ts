@@ -17,11 +17,15 @@ type Erc721Transfer = {
   tokenName: string | null
   tokenSymbol: string | null
   logoUri: string | null
+  decimals: number | null
+  value: string
 }
 
 type NativeTransfer = {
   type: 'ETHER'
   value: string
+  tokenSymbol: string | null
+  decimals: number | null
 }
 
 type TransferInfo = Erc20Transfer | Erc721Transfer | NativeTransfer
@@ -174,7 +178,7 @@ type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
 type TokenInfo = {
   tokenType: TokenType
   address: string
-  decimals: number
+  decimals: number | null
   symbol: string
   name: string
   logoUri: string | null
