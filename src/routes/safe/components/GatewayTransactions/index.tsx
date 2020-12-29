@@ -2,7 +2,7 @@ import { Menu, Tab } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
+import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway'
 import {
   historyTransactions,
   nextTransactions,
@@ -35,25 +35,60 @@ const H2 = styled.h2`
 
 type QueueTxListProps = {
   title: string
-  transactions: StoreStructure['queued']['next'] | StoreStructure['queued']['queued']
+  transactions: TransactionDetails['transactions']
 }
 
 const QueueTxList = ({ title, transactions }: QueueTxListProps): ReactElement => (
   <>
     <H2>{title}</H2>
-    {Object.entries(transactions).map(([nonce, txs]) => {
-      return (
-        <React.Fragment key={nonce}>
-          {txs.length === 1 ? (
-            <div>{JSON.stringify(txs[0])}</div>
-          ) : (
-            txs.map((transaction) => <div key={transaction.id}>{JSON.stringify(transaction)}</div>)
-          )}
-        </React.Fragment>
-      )
-    })}
+    {transactions.map(([nonce, txs]) => (
+      <React.Fragment key={nonce}>
+        {txs.length === 1 ? (
+          <div>{JSON.stringify(txs[0])}</div>
+        ) : (
+          txs.map((transaction) => <div key={transaction.id}>{JSON.stringify(transaction)}</div>)
+        )}
+      </React.Fragment>
+    ))}
   </>
 )
+
+type TransactionDetails = {
+  count: number
+  transactions: Array<[nonce: string, transactions: Transaction[]]>
+}
+
+type QueueTransactionsInfo = {
+  next: TransactionDetails
+  queue: TransactionDetails
+}
+
+const useQueueTransactions = (): QueueTransactionsInfo => {
+  const nextTxs = useSelector(nextTransactions)
+  const queuedTxs = useSelector(queuedTransactions)
+  const [txsCount, setTxsCount] = useState({ next: 0, queued: 0 })
+
+  useEffect(() => {
+    const next = nextTxs
+      ? Object.entries(nextTxs).reduce((acc, [, transactions]) => (acc += transactions.length), 0)
+      : 0
+    const queued = queuedTxs
+      ? Object.entries(queuedTxs).reduce((acc, [, transactions]) => (acc += transactions.length), 0)
+      : 0
+    setTxsCount({ next, queued })
+  }, [nextTxs, queuedTxs])
+
+  return {
+    next: {
+      count: txsCount.next,
+      transactions: nextTxs ? Object.entries(nextTxs) : [],
+    },
+    queue: {
+      count: txsCount.queued,
+      transactions: queuedTxs ? Object.entries(queuedTxs) : [],
+    },
+  }
+}
 
 const items: Item[] = [
   { id: 'queue', label: 'Queue' },
@@ -61,22 +96,14 @@ const items: Item[] = [
 ]
 
 const QueueTransactions = (): ReactElement => {
-  const nextTxs = useSelector(nextTransactions) ?? {}
-  const queuedTxs = useSelector(queuedTransactions) ?? {}
-  const [txsCount, setTxsCount] = useState({ next: 0, queued: 0 })
+  const { next, queue } = useQueueTransactions()
 
-  useEffect(() => {
-    const next = Object.entries(nextTxs).reduce((acc, [, transactions]) => (acc += transactions.length), 0)
-    const queued = Object.entries(queuedTxs).reduce((acc, [, transactions]) => (acc += transactions.length), 0)
-    setTxsCount({ next, queued })
-  }, [nextTxs, queuedTxs])
-
-  return txsCount.next + txsCount.queued === 0 ? (
+  return next.count + queue.count === 0 ? (
     <div>No txs</div>
   ) : (
     <>
-      <QueueTxList title="Next Transaction" transactions={nextTxs} />
-      {txsCount.queued !== 0 && <QueueTxList title="Queue" transactions={queuedTxs} />}
+      {next.transactions && <QueueTxList title="Next Transaction" transactions={next.transactions} />}
+      {queue.transactions && <QueueTxList title="Queue" transactions={queue.transactions} />}
     </>
   )
 }
