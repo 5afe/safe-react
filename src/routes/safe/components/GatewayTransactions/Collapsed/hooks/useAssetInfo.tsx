@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { TokenTransferAmountProps } from 'src/routes/safe/components/GatewayTransactions/Row/TokenTransferAmount'
+import { TokenTransferAmountProps } from 'src/routes/safe/components/GatewayTransactions/Collapsed/TokenTransferAmount'
 import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 type TokenTransferAsset = {

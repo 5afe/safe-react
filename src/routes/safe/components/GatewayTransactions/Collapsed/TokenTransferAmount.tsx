@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { FC, HTMLAttributes, ReactElement } from 'react'
+import React, { FC, HTMLAttributes } from 'react'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
@@ -7,7 +7,7 @@ import Img from 'src/components/layout/Img'
 import { Transfer } from 'src/logic/safe/store/models/types/gateway'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { useAssetInfo } from 'src/routes/safe/components/GatewayTransactions/Row/hooks/useAssetInfo'
+import { useAssetInfo } from 'src/routes/safe/components/GatewayTransactions/Collapsed/hooks/useAssetInfo'
 
 const Amount = styled(Text)`
   margin-left: 10px;
