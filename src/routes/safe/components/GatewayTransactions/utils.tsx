@@ -1,6 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 import parseISO from 'date-fns/parseISO'
+import { getNetworkInfo } from 'src/config'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { Transaction, Transfer } from 'src/logic/safe/store/models/types/gateway'
@@ -36,18 +37,34 @@ const getAmountWithSymbol = (
   return `${txAmount} ${symbol}`
 }
 
-export const getTxAmount = (tx: Transaction, formatted = true): string => {
-  const txInfo = tx.txInfo as Transfer
-  if (!txInfo.direction) return ''
-
-  return getAmountWithSymbol(
-    {
-      decimals: txInfo.transferInfo.decimals ? txInfo.transferInfo.decimals.toString() : '18',
-      symbol: txInfo.transferInfo.tokenSymbol ? (txInfo.transferInfo.tokenSymbol as string) : 'ETH',
-      value: txInfo.transferInfo.value,
-    },
-    formatted,
-  )
+export const getTxAmount = (txInfo: Transfer, formatted = true): string => {
+  switch (txInfo.transferInfo.type) {
+    case 'ERC20':
+      return getAmountWithSymbol(
+        {
+          decimals: `${txInfo.transferInfo.decimals ?? 0}`,
+          symbol: `${txInfo.transferInfo.tokenSymbol ?? NOT_AVAILABLE}`,
+          value: txInfo.transferInfo.value,
+        },
+        formatted,
+      )
+    case 'ERC721':
+      // simple workaround to avoid displaying unexpected values for incoming NFT transfer
+      return `1 ${txInfo.transferInfo.tokenSymbol}`
+    case 'ETHER': {
+      const { nativeCoin } = getNetworkInfo()
+      return getAmountWithSymbol(
+        {
+          decimals: nativeCoin.decimals,
+          symbol: nativeCoin.symbol,
+          value: txInfo.transferInfo.value,
+        },
+        formatted,
+      )
+    }
+    default:
+      return NOT_AVAILABLE
+  }
 }
 
 export interface TableData {

@@ -1,10 +1,11 @@
-import { Menu, Tab } from '@gnosis.pm/safe-react-components'
+import { Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
+import { format } from 'date-fns'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { isTransferTxInfo, StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import {
   historyTransactions,
   nextTransactions,
@@ -34,7 +35,41 @@ const ContentWrapper = styled.div`
 
 const H2 = styled.h2`
   text-transform: uppercase;
-  font-size: small;
+  font-size: smaller;
+`
+
+const TransactionsGroup = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  align-items: flex-start;
+  justify-content: flex-start;
+  margin: 16px 0;
+`
+
+const Table = styled.div`
+  display: table;
+  table-layout: fixed;
+  width: 100%;
+  background-color: white;
+  border-radius: 8px;
+  box-shadow: #00000026 0 0 8px 2px;
+
+  & > * {
+    display: table-row;
+
+    &:last-child {
+      & > .col {
+        border-bottom: none;
+      }
+    }
+
+    & > .col {
+      border-bottom: 1px solid lightgray;
+      display: table-cell;
+      padding: 12px;
+    }
+  }
 `
 
 type QueueTxListProps = {
@@ -119,22 +154,36 @@ type HistoryTxListProps = {
 const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
   <>
     {Object.entries(transactions).map(([timestamp, txs]) => (
-      <React.Fragment key={timestamp}>
-        <H2>{timestamp}</H2>
-        {txs.map((transaction) => (
-          <div key={transaction.id}>
-            <div>{JSON.stringify(transaction)}</div>
-            <TxType tx={transaction} />
-            {transaction.txInfo.type === 'Transfer' && (
-              <TokenTransferAmount
-                direction={transaction.txInfo.direction}
-                transferInfo={transaction.txInfo.transferInfo}
-                amountWithSymbol={getTxAmount(transaction)}
-              />
-            )}
-          </div>
-        ))}
-      </React.Fragment>
+      <TransactionsGroup key={timestamp}>
+        <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
+        <Table>
+          {txs.map((transaction) => (
+            <div key={transaction.id}>
+              <Text size="sm" className="col">
+                {transaction.executionInfo?.nonce}
+              </Text>
+              <div className="col">
+                <TxType tx={transaction} />
+              </div>
+              <div className="col">
+                {isTransferTxInfo(transaction.txInfo) && (
+                  <TokenTransferAmount
+                    direction={transaction.txInfo.direction}
+                    transferInfo={transaction.txInfo.transferInfo}
+                    amountWithSymbol={getTxAmount(transaction.txInfo)}
+                  />
+                )}
+              </div>
+              <Text size="sm" className="col">
+                {format(transaction.timestamp, 'h:mm a')}
+              </Text>
+              <Text size="sm" color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'} className="col" strong>
+                {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
+              </Text>
+            </div>
+          ))}
+        </Table>
+      </TransactionsGroup>
     ))}
   </>
 )
