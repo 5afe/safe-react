@@ -1,4 +1,4 @@
-import React, { ReactElement, useState, useEffect } from 'react'
+import React, { useState, useEffect, FC, HTMLAttributes } from 'react'
 import { useSelector } from 'react-redux'
 
 import CustomTxIcon from './assets/custom.svg'
@@ -28,7 +28,7 @@ type TxType = {
 }
 
 export const useTxType = (tx: Transaction): TxType => {
-  const [type, setType] = useState<TxType>({ icon: CustomTxIcon, text: 'Custom Transaction' })
+  const [type, setType] = useState<TxType>({ icon: CustomTxIcon, text: 'Custom transaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useEffect(() => {
@@ -57,7 +57,7 @@ export const useTxType = (tx: Transaction): TxType => {
           break
         }
 
-        setType({ icon: CustomTxIcon, text: 'Custom Transaction' })
+        setType({ icon: CustomTxIcon, text: 'Custom transaction' })
         break
       }
     }
@@ -66,7 +66,7 @@ export const useTxType = (tx: Transaction): TxType => {
   return type
 }
 
-export const TxType = ({ tx }: TxTypeProps): ReactElement => {
+export const TxType: FC<TxTypeProps & HTMLAttributes<unknown>> = ({ tx }) => {
   const { icon, text } = useTxType(tx)
   return <CustomIconText iconUrl={icon} text={text} />
 }

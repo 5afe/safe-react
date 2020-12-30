@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import React, { FC, HTMLAttributes, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
@@ -19,7 +19,7 @@ export type TokenTransferAmountProps = {
   amountWithSymbol: string
 }
 
-export const TokenTransferAmount = (props: TokenTransferAmountProps): ReactElement => {
+export const TokenTransferAmount: FC<TokenTransferAmountProps & HTMLAttributes<unknown>> = (props) => {
   const assetInfo = useAssetInfo(props)
 
   return (

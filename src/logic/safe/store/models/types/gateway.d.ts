@@ -282,3 +282,19 @@ export const isTransactionSummary = (
 ): value is TransactionGatewayResult => {
   return value.type === 'TRANSACTION'
 }
+
+export const isTransferTxInfo = (value: TransactionInfo): value is Transfer => {
+  return value.type === 'Transfer'
+}
+
+export const isSettingsChangeTxInfo = (value: TransactionInfo): value is SettingsChange => {
+  return value.type === 'SettingsChange'
+}
+
+export const isCustomTxInfo = (value: TransactionInfo): value is Custom => {
+  return value.type === 'Custom'
+}
+
+export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
+  return value.type === 'Creation'
+}
