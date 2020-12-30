@@ -48,27 +48,21 @@ const TransactionsGroup = styled.div`
 `
 
 const Table = styled.div`
-  display: table;
-  table-layout: fixed;
-  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 4fr 4fr 1fr 2fr;
+  grid-auto-rows: 48px;
+  width: calc(100% - 16px);
   background-color: white;
   border-radius: 8px;
   box-shadow: #00000026 0 0 8px 2px;
+  padding: 0 8px;
 
-  & > * {
-    display: table-row;
+  & > div {
+    align-self: center;
+  }
 
-    &:last-child {
-      & > .col {
-        border-bottom: none;
-      }
-    }
-
-    & > .col {
-      border-bottom: 1px solid lightgray;
-      display: table-cell;
-      padding: 12px;
-    }
+  & .tx-status {
+    justify-self: end;
   }
 `
 
@@ -158,14 +152,14 @@ const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
         <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
         <Table>
           {txs.map((transaction) => (
-            <div key={transaction.id}>
-              <Text size="sm" className="col">
-                {transaction.executionInfo?.nonce}
-              </Text>
-              <div className="col">
+            <React.Fragment key={transaction.id}>
+              <div className="tx-nonce">
+                <Text size="lg">{transaction.executionInfo?.nonce}</Text>
+              </div>
+              <div className="tx-type">
                 <TxType tx={transaction} />
               </div>
-              <div className="col">
+              <div className="tx-info">
                 {isTransferTxInfo(transaction.txInfo) && (
                   <TokenTransferAmount
                     direction={transaction.txInfo.direction}
@@ -174,13 +168,15 @@ const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
                   />
                 )}
               </div>
-              <Text size="sm" className="col">
-                {format(transaction.timestamp, 'h:mm a')}
-              </Text>
-              <Text size="sm" color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'} className="col" strong>
-                {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
-              </Text>
-            </div>
+              <div className="tx-time">
+                <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
+              </div>
+              <div className="tx-status">
+                <Text size="lg" color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'} className="col" strong>
+                  {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
+                </Text>
+              </div>
+            </React.Fragment>
           ))}
         </Table>
       </TransactionsGroup>
