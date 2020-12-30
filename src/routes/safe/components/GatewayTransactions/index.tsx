@@ -1,4 +1,4 @@
-import { Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
+import { Accordion, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { format } from 'date-fns'
 import React, { ReactElement, useEffect, useState } from 'react'
@@ -38,7 +38,7 @@ const H2 = styled.h2`
   font-size: smaller;
 `
 
-const TransactionsGroup = styled.div`
+const StyledTransactionsGroup = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -47,15 +47,33 @@ const TransactionsGroup = styled.div`
   margin: 16px 0;
 `
 
-const Table = styled.div`
-  display: grid;
-  grid-template-columns: 1fr 4fr 4fr 1fr 2fr;
-  grid-auto-rows: 48px;
-  width: calc(100% - 16px);
+const StyledTransactions = styled.div`
   background-color: white;
   border-radius: 8px;
   box-shadow: #00000026 0 0 8px 2px;
-  padding: 0 8px;
+  overflow: hidden;
+  width: 100%;
+
+  & .MuiAccordion-root {
+    &:first-child {
+      border-top: none;
+    }
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+
+  & .MuiAccordionSummary-root {
+    &.Mui-expanded {
+      background-color: ${({ theme }) => theme.colors.background};
+    }
+  }
+`
+
+const StyledTransaction = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 4fr 4fr 1fr 2fr;
+  width: 100%;
 
   & > div {
     align-self: center;
@@ -63,6 +81,7 @@ const Table = styled.div`
 
   & .tx-status {
     justify-self: end;
+    margin-right: 8px;
   }
 `
 
@@ -148,38 +167,50 @@ type HistoryTxListProps = {
 const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
   <>
     {Object.entries(transactions).map(([timestamp, txs]) => (
-      <TransactionsGroup key={timestamp}>
+      <StyledTransactionsGroup key={timestamp}>
         <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
-        <Table>
+        <StyledTransactions>
           {txs.map((transaction) => (
-            <React.Fragment key={transaction.id}>
-              <div className="tx-nonce">
-                <Text size="lg">{transaction.executionInfo?.nonce}</Text>
-              </div>
-              <div className="tx-type">
-                <TxType tx={transaction} />
-              </div>
-              <div className="tx-info">
-                {isTransferTxInfo(transaction.txInfo) && (
-                  <TokenTransferAmount
-                    direction={transaction.txInfo.direction}
-                    transferInfo={transaction.txInfo.transferInfo}
-                    amountWithSymbol={getTxAmount(transaction.txInfo)}
-                  />
-                )}
-              </div>
-              <div className="tx-time">
-                <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
-              </div>
-              <div className="tx-status">
-                <Text size="lg" color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'} className="col" strong>
-                  {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
-                </Text>
-              </div>
-            </React.Fragment>
+            <Accordion
+              TransitionProps={{ timeout: 50 }}
+              key={transaction.id}
+              summaryContent={
+                <StyledTransaction>
+                  <div className="tx-nonce">
+                    <Text size="lg">{transaction.executionInfo?.nonce}</Text>
+                  </div>
+                  <div className="tx-type">
+                    <TxType tx={transaction} />
+                  </div>
+                  <div className="tx-info">
+                    {isTransferTxInfo(transaction.txInfo) && (
+                      <TokenTransferAmount
+                        direction={transaction.txInfo.direction}
+                        transferInfo={transaction.txInfo.transferInfo}
+                        amountWithSymbol={getTxAmount(transaction.txInfo)}
+                      />
+                    )}
+                  </div>
+                  <div className="tx-time">
+                    <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
+                  </div>
+                  <div className="tx-status">
+                    <Text
+                      size="lg"
+                      color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'}
+                      className="col"
+                      strong
+                    >
+                      {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
+                    </Text>
+                  </div>
+                </StyledTransaction>
+              }
+              detailsContent={<div>{JSON.stringify(transaction)}</div>}
+            />
           ))}
-        </Table>
-      </TransactionsGroup>
+        </StyledTransactions>
+      </StyledTransactionsGroup>
     ))}
   </>
 )
