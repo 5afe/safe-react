@@ -1,11 +1,13 @@
-import { Accordion, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
+import { Accordion, Loader, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { format } from 'date-fns'
 import React, { ReactElement, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
+import { fetchTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
+import { getTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/selectors/getTransactionDetails'
 import styled from 'styled-components'
 
-import { isTransferTxInfo, StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import {
   historyTransactions,
   nextTransactions,
@@ -13,7 +15,7 @@ import {
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { getTxAmount } from './utils'
 import { TxType } from './TxType'
-import { TokenTransferAmount } from './Row/TokenTransferAmount'
+import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
 
 const Wrapper = styled.div`
   display: flex;
@@ -72,7 +74,7 @@ const StyledTransactions = styled.div`
 
 const StyledTransaction = styled.div`
   display: grid;
-  grid-template-columns: 1fr 4fr 4fr 1fr 2fr;
+  grid-template-columns: 1fr 3fr 3fr 1fr 2fr 2fr 2fr;
   width: 100%;
 
   & > div {
@@ -160,63 +162,82 @@ const QueueTransactions = (): ReactElement => {
   )
 }
 
-type HistoryTxListProps = {
-  transactions: StoreStructure['history']
+const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement => {
+  const transactionDetails = useSelector((state) => getTransactionDetails(state, transactionId, 'history'))
+
+  return transactionDetails ? <div>{JSON.stringify(transactionDetails)}</div> : <Loader size="md" />
 }
 
-const HistoryTxList = ({ transactions }: HistoryTxListProps): ReactElement => (
-  <>
-    {Object.entries(transactions).map(([timestamp, txs]) => (
-      <StyledTransactionsGroup key={timestamp}>
-        <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
-        <StyledTransactions>
-          {txs.map((transaction) => (
-            <Accordion
-              TransitionProps={{ timeout: 50 }}
-              key={transaction.id}
-              summaryContent={
-                <StyledTransaction>
-                  <div className="tx-nonce">
-                    <Text size="lg">{transaction.executionInfo?.nonce}</Text>
-                  </div>
-                  <div className="tx-type">
-                    <TxType tx={transaction} />
-                  </div>
-                  <div className="tx-info">
-                    {isTransferTxInfo(transaction.txInfo) && (
-                      <TokenTransferAmount
-                        direction={transaction.txInfo.direction}
-                        transferInfo={transaction.txInfo.transferInfo}
-                        amountWithSymbol={getTxAmount(transaction.txInfo)}
-                      />
-                    )}
-                  </div>
-                  <div className="tx-time">
-                    <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
-                  </div>
-                  <div className="tx-status">
-                    <Text
-                      size="lg"
-                      color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'}
-                      className="col"
-                      strong
-                    >
-                      {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
-                    </Text>
-                  </div>
-                </StyledTransaction>
-              }
-              detailsContent={<div>{JSON.stringify(transaction)}</div>}
-            />
-          ))}
-        </StyledTransactions>
-      </StyledTransactionsGroup>
-    ))}
-  </>
-)
+const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
+  const [detailsView, setDetailsView] = useState(false)
+  const dispatch = useDispatch()
+
+  return (
+    <Accordion
+      id={transaction.id}
+      onChange={(event, expanded, transactionId) => {
+        setDetailsView(expanded)
+
+        if (expanded && transactionId) {
+          // lookup tx details
+          dispatch(fetchTransactionDetails({ transactionId, txLocation: 'history' }))
+        }
+      }}
+      summaryContent={
+        <StyledTransaction>
+          <div className="tx-nonce">
+            <Text size="lg">{transaction.executionInfo?.nonce}</Text>
+          </div>
+          <div className="tx-type">
+            <TxType tx={transaction} />
+          </div>
+          <div className="tx-info">
+            {isTransferTxInfo(transaction.txInfo) && (
+              <TokenTransferAmount
+                direction={transaction.txInfo.direction}
+                transferInfo={transaction.txInfo.transferInfo}
+                amountWithSymbol={getTxAmount(transaction.txInfo)}
+              />
+            )}
+          </div>
+          <div className="tx-time">
+            <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
+          </div>
+          <div className="tx-votes" />
+          <div className="tx-actions" />
+          <div className="tx-status">
+            <Text size="lg" color={transaction.txStatus === 'SUCCESS' ? 'primary' : 'error'} className="col" strong>
+              {transaction.txStatus === 'SUCCESS' ? 'Success' : 'Fail'}
+            </Text>
+          </div>
+        </StyledTransaction>
+      }
+      detailsContent={detailsView && <TxDetails transactionId={transaction.id} />}
+    />
+  )
+}
+
+const HistoryTxList = (): ReactElement => {
+  const transactions = useSelector(historyTransactions)
+
+  return (
+    <>
+      {transactions &&
+        Object.entries(transactions).map(([timestamp, txs]) => (
+          <StyledTransactionsGroup key={timestamp}>
+            <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
+            <StyledTransactions>
+              {txs.map((transaction) => (
+                <TxRow key={transaction.id} transaction={transaction} />
+              ))}
+            </StyledTransactions>
+          </StyledTransactionsGroup>
+        ))}
+    </>
+  )
+}
 
 const GatewayTransactions = (): ReactElement => {
-  const historyTxs = useSelector(historyTransactions)
   const [tab, setTab] = useState(items[0].id)
 
   return (
@@ -227,7 +248,7 @@ const GatewayTransactions = (): ReactElement => {
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
         {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && historyTxs && <HistoryTxList transactions={historyTxs} />}
+        {tab === 'history' && <HistoryTxList />}
       </ContentWrapper>
     </Wrapper>
   )
