@@ -21,7 +21,7 @@ export const getTransactionDetails = createSelector(
     txLocation,
   }),
   (transactions, { transactionId, txLocation }): Transaction['txDetails'] => {
-    if (transactions) {
+    if (transactions && transactionId) {
       for (const [, txs] of Object.entries(
         transactions[txLocation] as StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
       )) {

@@ -1,13 +1,20 @@
-import { Accordion, Loader, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
+import { Accordion, EthHashInfo, Loader, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { format } from 'date-fns'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getExplorerInfo } from 'src/config'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { fetchTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/selectors/getTransactionDetails'
 import styled from 'styled-components'
 
-import { isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  ExpandedTxDetails,
+  isMultiSigExecutionDetails,
+  isTransferTxInfo,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import {
   historyTransactions,
   nextTransactions,
@@ -16,6 +23,7 @@ import {
 import { getTxAmount } from './utils'
 import { TxType } from './TxType'
 import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
+import { TxData as LegacyTxData } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/CustomDescription'
 
 const Wrapper = styled.div`
   display: flex;
@@ -162,27 +170,217 @@ const QueueTransactions = (): ReactElement => {
   )
 }
 
-const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement => {
-  const transactionDetails = useSelector((state) => getTransactionDetails(state, transactionId, 'history'))
+const useTransactionDetails = (
+  transactionId: string,
+  txLocation: 'history' | 'queued' | 'next',
+): { data?: ExpandedTxDetails; loading: boolean } => {
+  const [loading, setLoading] = useState(true)
+  const data = useSelector((state) => getTransactionDetails(state, transactionId, txLocation))
 
-  return transactionDetails ? <div>{JSON.stringify(transactionDetails)}</div> : <Loader size="md" />
+  useEffect(() => {
+    if (data) {
+      setLoading(false)
+    }
+  }, [data])
+
+  return {
+    data,
+    loading,
+  }
 }
 
-const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
-  const [detailsView, setDetailsView] = useState(false)
-  const dispatch = useDispatch()
+const TxDetailsContainer = styled.div`
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  column-gap: 2px;
+  row-gap: 2px;
+  background-color: lightgray;
+
+  & > div {
+    overflow: hidden;
+    background-color: white;
+    line-break: anywhere;
+    padding: 8px 16px;
+    word-break: break-all;
+  }
+
+  .tx-summary {
+    grid-row-start: 1;
+    grid-row-end: row1-end;
+  }
+
+  .tx-data {
+    grid-row-start: 2;
+  }
+
+  .tx-owners {
+    grid-column-start: 2;
+    grid-row-start: 1;
+    grid-row-end: span 2;
+  }
+`
+
+const InlineEthHashInfo = styled(EthHashInfo)`
+  display: inline-flex;
+`
+
+const TxSummary = ({
+  hash,
+  nonce,
+  created,
+  executed,
+}: {
+  hash?: string
+  nonce?: number
+  created?: number
+  executed: number
+}): ReactElement => {
+  const explorerUrl = hash ? getExplorerInfo(hash) : null
 
   return (
-    <Accordion
-      id={transaction.id}
-      onChange={(event, expanded, transactionId) => {
-        setDetailsView(expanded)
+    <div className="tx-summary">
+      <div className="tx-hash">
+        <Text size="md" strong as="span">
+          Hash:
+        </Text>{' '}
+        {hash ? <InlineEthHashInfo hash={hash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} /> : 'n/a'}
+      </div>
+      {nonce && (
+        <div className="tx-nonce">
+          <Text size="md" strong as="span">
+            Nonce:
+          </Text>{' '}
+          {nonce}
+        </div>
+      )}
+      {created && (
+        <div className="tx-created">
+          <Text size="md" strong as="span">
+            Created:
+          </Text>{' '}
+          {created}
+        </div>
+      )}
+      <div className="tx-executed">
+        <Text size="md" strong as="span">
+          Executed:
+        </Text>{' '}
+        {executed ?? 'n/a'}
+      </div>
+    </div>
+  )
+}
 
-        if (expanded && transactionId) {
-          // lookup tx details
-          dispatch(fetchTransactionDetails({ transactionId, txLocation: 'history' }))
-        }
-      }}
+const TxData = ({
+  txData,
+  txInfo,
+}: {
+  txData: ExpandedTxDetails['txData']
+  txInfo: ExpandedTxDetails['txInfo']
+}): ReactElement => {
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, txData?.to))
+  const explorerUrl = txData?.to ? getExplorerInfo(txData.to) : ''
+
+  if (!txData) {
+    return (
+      <Text size="md" strong>
+        No data available
+      </Text>
+    )
+  }
+
+  const { value, to, operation, hexData } = txData
+
+  return (
+    <div className="tx-data">
+      {isTransferTxInfo(txInfo) && (
+        <div className="tx-value">
+          <Text size="md" strong as="span">
+            {txInfo.direction === 'INCOMING' ? 'Received' : 'Send'} {value} to:
+          </Text>
+        </div>
+      )}
+      <div className="tx-to">
+        <EthHashInfo
+          hash={to}
+          name={recipientName === 'UNKNOWN' ? undefined : recipientName}
+          showIdenticon
+          showCopyBtn
+          explorerUrl={explorerUrl}
+        />
+      </div>
+      {hexData && (
+        <div className="tx-hexData">
+          <Text size="md" strong>
+            Data (hex encoded):
+          </Text>
+          <LegacyTxData data={hexData} />
+        </div>
+      )}
+      <div className="tx-dataDecoded"></div>
+      {operation === 1 && (
+        <div className="tx-operation">
+          <Text size="md" strong as="span">
+            Delegate Call
+          </Text>
+        </div>
+      )}
+    </div>
+  )
+}
+
+const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement => {
+  const { data, loading } = useTransactionDetails(transactionId, 'history')
+
+  if (loading) {
+    return <Loader size="md" />
+  }
+
+  if (!data) {
+    return (
+      <Text size="sm" strong>
+        No data available
+      </Text>
+    )
+  }
+
+  const txSummary = {
+    hash: data.txHash ?? undefined,
+    nonce: isMultiSigExecutionDetails(data.detailedExecutionInfo) ? data.detailedExecutionInfo.nonce : undefined,
+    created: isMultiSigExecutionDetails(data.detailedExecutionInfo)
+      ? data.detailedExecutionInfo.submittedAt
+      : undefined,
+    executed: data.executedAt,
+  }
+
+  return (
+    <TxDetailsContainer>
+      <TxSummary {...txSummary} />
+      <TxData txData={data.txData} txInfo={data.txInfo} />
+      <div className="tx-owners">{JSON.stringify(data.detailedExecutionInfo)}</div>
+    </TxDetailsContainer>
+  )
+}
+
+const NoPaddingAccordion = styled(Accordion)`
+  .MuiAccordionDetails-root {
+    padding: 0;
+  }
+`
+
+const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
+  const dispatch = useDispatch()
+
+  const onChange = (event, expanded, transactionId) => {
+    if (expanded && transactionId) {
+      // lookup tx details
+      dispatch(fetchTransactionDetails({ transactionId, txLocation: 'history' }))
+    }
+  }
+  return (
+    <NoPaddingAccordion
+      id={transaction.id}
+      onChange={onChange}
       summaryContent={
         <StyledTransaction>
           <div className="tx-nonce">
@@ -212,7 +410,7 @@ const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
           </div>
         </StyledTransaction>
       }
-      detailsContent={detailsView && <TxDetails transactionId={transaction.id} />}
+      detailsContent={<TxDetails transactionId={transaction.id} />}
     />
   )
 }
