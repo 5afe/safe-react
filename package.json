@@ -67,7 +67,7 @@
   },
   "productName": "Safe Multisig",
   "build": {
-    "appId": "io.gnosis.safe.macos",
+    "appId": "io.gnosis.safe",
     "afterSign": "scripts/notarize.js",
     "extends": null,
     "productName": "Safe Multisig",
@@ -95,19 +95,10 @@
       ]
     },
     "files": [
-      "**/*",
-      "!src${/*}",
-      "!config${/*}",
-      "!contracts${/*}",
-      "!migrations${/*}",
-      "!flow-typed${/*}",
-      "!apps${/*}",
-      "!out${/*}",
-      "!.editorconfig",
-      "!.gitignore",
-      "!README.md",
-      "!yarn-error.log",
-      "!yarn.lock"
+      "build/",
+      "public",
+      "scripts",
+      "package.json"
     ],
     "directories": {
       "buildResources": "public/build"
@@ -134,12 +125,12 @@
       "deleteAppDataOnUninstall": true
     },
     "linux": {
+      "category": "Finance",
       "target": [
         "AppImage",
         "deb",
         "zip"
-      ],
-      "icon": "./public/build/safe.png"
+      ]
     },
     "win": {
       "target": [
@@ -170,7 +161,7 @@
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#bf3a84486b7353bd25447ddff39c406f6fafecc6",
     "@gnosis.pm/util-contracts": "2.0.6",
-    "@ledgerhq/hw-transport-node-hid-singleton": "5.34.0",
+    "@ledgerhq/hw-transport-node-hid-singleton": "5.36.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.11.0",
     "@material-ui/lab": "4.0.0-alpha.56",
