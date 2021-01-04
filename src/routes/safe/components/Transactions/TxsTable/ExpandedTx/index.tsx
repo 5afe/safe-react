@@ -73,13 +73,11 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): ReactElement =
           </Block>
           <Hairline />
           <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-            {recipient && (
-              <TransferDescription
-                amountWithSymbol={amountWithSymbol}
-                isTokenTransfer={!sameAddress(amountWithSymbol, NOT_AVAILABLE)}
-                recipient={recipient}
-              />
-            )}
+            <TransferDescription
+              amountWithSymbol={amountWithSymbol}
+              isTokenTransfer={!sameAddress(amountWithSymbol, NOT_AVAILABLE)}
+              recipient={recipient}
+            />
           </Block>
         </Col>
       </Row>
