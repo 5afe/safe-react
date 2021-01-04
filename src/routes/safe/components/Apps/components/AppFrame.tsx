@@ -32,7 +32,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import ConfirmTransactionModal from '../components/ConfirmTransactionModal'
+import { ConfirmTransactionModal } from '../components/ConfirmTransactionModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
