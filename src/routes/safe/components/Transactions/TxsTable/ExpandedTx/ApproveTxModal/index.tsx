@@ -63,7 +63,7 @@ type Props = {
 }
 const { nativeCoin } = getNetworkInfo()
 
-const ApproveTxModal = ({
+export const ApproveTxModal = ({
   canExecute,
   isCancelTx = false,
   isOpen,
@@ -170,5 +170,3 @@ const ApproveTxModal = ({
     </Modal>
   )
 }
-
-export default ApproveTxModal
