@@ -30,7 +30,7 @@ type NativeTransfer = {
 
 type TransferInfo = Erc20Transfer | Erc721Transfer | NativeTransfer
 
-export type Transfer = {
+type Transfer = {
   type: 'Transfer'
   sender: string
   recipient: string
@@ -38,7 +38,7 @@ export type Transfer = {
   transferInfo: TransferInfo // Polymorphic: Erc20, Erc721, Ether
 }
 
-enum Operation {
+export enum Operation {
   CALL,
   DELEGATE,
 }
@@ -148,7 +148,7 @@ type ExecutionInfo = {
   confirmationsSubmitted: number
 }
 
-export type TransactionSummary = {
+type TransactionSummary = {
   id: string
   timestamp: number
   txStatus: TransactionStatus
@@ -297,4 +297,16 @@ export const isCustomTxInfo = (value: TransactionInfo): value is Custom => {
 
 export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
   return value.type === 'Creation'
+}
+
+export const isMultiSigExecutionDetails = (
+  value: ExpandedTxDetails['detailedExecutionInfo'],
+): value is MultiSigExecutionDetails => {
+  return value === null ? false : typeof value.safeTxHash !== 'undefined'
+}
+
+export const isModuleExecutionDetails = (
+  value: ExpandedTxDetails['detailedExecutionInfo'],
+): value is ModuleExecutionDetails => {
+  return value === null ? false : typeof value.safeTxHash === 'undefined'
 }
