@@ -1,9 +1,9 @@
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 import { WelcomeLayout } from 'src/routes/welcome/components'
 
 import Page from 'src/components/layout/Page'
 
-const Welcome = (): React.ReactElement => (
+const Welcome = (): ReactElement => (
   <Page align="center">
     <WelcomeLayout />
   </Page>
