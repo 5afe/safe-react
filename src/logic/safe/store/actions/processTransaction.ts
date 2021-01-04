@@ -22,6 +22,7 @@ import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/ac
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { Dispatch, DispatchReturn } from './types'
+import { getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -54,12 +55,9 @@ const processTransaction = ({
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
-  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+
   if (!sigs) {
-    sigs = `0x000000000000000000000000${from.replace(
-      '0x',
-      '',
-    )}000000000000000000000000000000000000000000000000000000000000000001`
+    sigs = getPreValidatedSignatures(from)
   }
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
