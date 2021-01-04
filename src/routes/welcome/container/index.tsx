@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { WelcomeLayout } from 'src/routes/welcome/components/index'
+import { WelcomeLayout } from 'src/routes/welcome/components'
 
 import Page from 'src/components/layout/Page'
 
