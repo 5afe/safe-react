@@ -37,6 +37,7 @@ export type TransactionEstimationProps = {
   txRecipient: string
   isExecution: boolean
   txAmount?: string
+  operation?: number
 }
 
 export const estimateTransactionGas = async ({
@@ -45,6 +46,7 @@ export const estimateTransactionGas = async ({
   txRecipient,
   isExecution,
   safeAddress,
+  operation = CALL,
 }: TransactionEstimationProps): Promise<number> => {
   const web3 = getWeb3()
   const from = await getAccountFrom(web3)
@@ -55,13 +57,24 @@ export const estimateTransactionGas = async ({
 
   if (isExecution) {
     // Gas of executing a transaction within the safe (threshold reached and transaction executed)
-    return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', CALL)
+    return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', operation)
   }
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods
-    .getTransactionHash(txRecipient, txAmount || '0', txData, CALL, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
+    .getTransactionHash(
+      txRecipient,
+      txAmount || '0',
+      txData,
+      operation as number,
+      0,
+      0,
+      0,
+      ZERO_ADDRESS,
+      ZERO_ADDRESS,
+      nonce,
+    )
     .call({
       from,
     })

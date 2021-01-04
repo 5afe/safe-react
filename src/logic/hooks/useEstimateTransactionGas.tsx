@@ -22,6 +22,7 @@ type UseEstimateTransactionGasProps = {
   txConfirmations?: number
   txAmount?: string
   preApprovingOwner?: string
+  operation?: number
 }
 
 type TransactionGasEstimationResult = {
@@ -39,6 +40,7 @@ export const useEstimateTransactionGas = ({
   txConfirmations,
   txAmount,
   preApprovingOwner,
+  operation,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
@@ -69,6 +71,7 @@ export const useEstimateTransactionGas = ({
           txData,
           txAmount,
           isExecution,
+          operation,
         })
         const gasPrice = await calculateGasPrice()
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
