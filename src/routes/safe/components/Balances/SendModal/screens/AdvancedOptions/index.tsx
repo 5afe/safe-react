@@ -2,15 +2,18 @@ import React from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
-import { Title, Text, Divider, TextField, Link, Icon } from '@gnosis.pm/safe-react-components'
+import { Title, Text, Divider, Link, Icon } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
+import Field from 'src/components/forms/Field'
+import TextField from 'src/components/forms/TextField'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { composeValidators, minValue } from 'src/components/forms/validator'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -31,10 +34,10 @@ const EthereumOptions = styled.div`
   }
 `
 
-const StyledTextField = styled(TextField)`
-  width: 216px !important;
-  margin: 10px 0;
-`
+// const StyledTextField = styled(TextField)`
+//   width: 216px !important;
+//   margin: 10px 0;
+// `
 
 const StyledLink = styled(Link)`
   margin-top: 10px;
@@ -59,9 +62,35 @@ interface Props {
   onClose: () => void
 }
 
+const formValidation = (values) => {
+  const { ethGasLimit, ethGasPrice, ethNonce, safeNonce, safeTxGas } = values ?? {}
+
+  const ethGasLimitValidation = minValue(0, true)(ethGasLimit)
+
+  const ethGasPriceValidation = minValue(0, true)(ethGasPrice)
+
+  const ethNonceValidation = minValue(0, true)(ethNonce)
+
+  const safeNonceValidation = minValue(0, true)(safeNonce)
+
+  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
+    if (Number(value) < Number(ethGasLimit)) {
+      return 'Lower than Ethereum gas limit.'
+    }
+  })(safeTxGas)
+
+  return {
+    ethGasLimit: ethGasLimitValidation,
+    ethGasPrice: ethGasPriceValidation,
+    ethNonce: ethNonceValidation,
+    safeNonce: safeNonceValidation,
+    safeTxGas: safeTxGasValidation,
+  }
+}
+
 const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
-
+  const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
   return (
     <>
       {/* Header */}
@@ -79,9 +108,15 @@ const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement =
       <Block className={classes.container}>
         <GnoForm
           /* formMutators={formMutators} */
-          /* initialValues={{ amount, recipientAddress, token: selectedToken }} */
+          initialValues={{
+            safeNonce: safeNonce || 0,
+            safeTxGas: safeTxGas || '',
+            ethNonce: ethNonce || '',
+            ethGasLimit: ethGasLimit || '',
+            ethGasPrice: ethGasPrice || '',
+          }}
           onSubmit={() => {}}
-          /* validation={sendFundsValidation} */
+          validation={formValidation}
         >
           {() => (
             <>
@@ -90,8 +125,24 @@ const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement =
               </StyledText>
 
               <SafeOptions>
-                <StyledTextField value={txParameters.safeNonce?.toString() || ''} label="Safe nonce" />
-                <StyledTextField value={txParameters.safeTxGas?.toString() || ''} label="SafeTxGas" />
+                <Field
+                  name="safeNonce"
+                  defaultValue={safeNonce}
+                  placeholder="Safe nonce"
+                  text="Safe nonce"
+                  type="number"
+                  min="0"
+                  component={TextField}
+                />
+                <Field
+                  name="safeTxGas"
+                  defaultValue={safeTxGas}
+                  placeholder="SafeTxGas"
+                  text="SafeTxGas"
+                  type="number"
+                  min="0"
+                  component={TextField}
+                />
               </SafeOptions>
 
               <StyledText size="xl" strong>
@@ -99,9 +150,30 @@ const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement =
               </StyledText>
 
               <EthereumOptions>
-                <StyledTextField value={txParameters.ethNonce?.toString() || ''} label="Ethereum nonce" />
-                <StyledTextField value={txParameters.ethGasLimit?.toString() || ''} label="Ethereum gas limit" />
-                <StyledTextField value={txParameters.ethGasPrice?.toString() || ''} label="Ethereum gas price (GWEI)" />
+                <Field
+                  name="ethNonce"
+                  defaultValue={ethNonce}
+                  placeholder="Ethereum nonce"
+                  text="Ethereum nonce"
+                  type="number"
+                  component={TextField}
+                />
+                <Field
+                  name="ethGasLimit"
+                  defaultValue={ethGasLimit}
+                  placeholder="Ethereum gas limit"
+                  text="Ethereum gas limit"
+                  type="number"
+                  component={TextField}
+                />
+                <Field
+                  name="ethGasPrice"
+                  defaultValue={ethGasPrice}
+                  type="number"
+                  placeholder="Ethereum gas price (GWEI)"
+                  text="Ethereum gas price (GWEI)"
+                  component={TextField}
+                />
               </EthereumOptions>
             </>
           )}

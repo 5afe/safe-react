@@ -10,16 +10,16 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 
 export type TxParameters = {
-  safeNonce: number | null
+  safeNonce: number | undefined
   setSafeNonce: (safeNonce: number) => void
   safeTxGas: number
   setSafeTxGas: (gas: number) => void
-  ethNonce: number | null
-  setEthNonce: (ethNonce: number | null) => void
-  ethGasLimit: number | null
-  setEthGasLimit: (ethGasLimit: number | null) => void
-  ethGasPrice: number | null
-  setEthGasPrice: (ethGasPrice: number | null) => void
+  ethNonce: number | undefined
+  setEthNonce: (ethNonce: number | undefined) => void
+  ethGasLimit: number | undefined
+  setEthGasLimit: (ethGasLimit: number | undefined) => void
+  ethGasPrice: number | undefined
+  setEthGasPrice: (ethGasPrice: number | undefined) => void
 }
 
 /**
@@ -32,12 +32,12 @@ export const useTransactionParameters = (): TxParameters => {
   const { address: safeAddress } = useSelector(safeSelector) || {}
 
   /* Safe Params */
-  const [safeNonce, setSafeNonce] = useState<number | null>(null)
+  const [safeNonce, setSafeNonce] = useState<number | undefined>(undefined)
   const [safeTxGas, setSafeTxGas] = useState(0) // for a new Tx call requiredTxGas, for an existing tx get it from the backend.
   /* ETH Params */
-  const [ethNonce, setEthNonce] = useState<number | null>(null) // we delegate it to the wallet
-  const [ethGasLimit, setEthGasLimit] = useState<number | null>(null) // call execTx until it returns a number > 0
-  const [ethGasPrice, setEthGasPrice] = useState<number | null>(null) // get fast gas price
+  const [ethNonce, setEthNonce] = useState<number | undefined>(undefined) // we delegate it to the wallet
+  const [ethGasLimit, setEthGasLimit] = useState<number | undefined>(20) // call execTx until it returns a number > 0
+  const [ethGasPrice, setEthGasPrice] = useState<number | undefined>(undefined) // get fast gas price
 
   /* get nonce for connected wallet */
   useEffect(() => {
