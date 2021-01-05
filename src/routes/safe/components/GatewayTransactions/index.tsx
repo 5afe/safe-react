@@ -1,7 +1,7 @@
 import { Accordion, EthHashInfo, Loader, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { format } from 'date-fns'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getExplorerInfo } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -15,6 +15,7 @@ import {
   isSettingsChangeTxInfo,
   isTransferTxInfo,
   Operation,
+  SettingsChange,
   Transaction,
   Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
@@ -286,6 +287,32 @@ const TxSummary = ({
   )
 }
 
+const InfoDetails = ({ children, title }: { children: ReactNode; title: string }): ReactElement => {
+  return (
+    <>
+      <Text size="md" strong>
+        {title}
+      </Text>
+      {children}
+    </>
+  )
+}
+
+const AddressInfo = ({ address }: { address: string }): ReactElement => {
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+  const explorerUrl = getExplorerInfo(address)
+
+  return (
+    <EthHashInfo
+      hash={address}
+      name={recipientName === 'UNKNOWN' ? undefined : recipientName}
+      showIdenticon
+      showCopyBtn
+      explorerUrl={explorerUrl}
+    />
+  )
+}
+
 const TxInfoDetails = ({
   title,
   address,
@@ -293,30 +320,12 @@ const TxInfoDetails = ({
 }: {
   title: string
   address: string
-  addressActions: any[]
-}): ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
-  const explorerUrl = getExplorerInfo(address)
-
-  return (
-    <>
-      <div className="tx-value">
-        <Text size="md" strong>
-          {title}
-        </Text>
-      </div>
-      <div className="tx-to">
-        <EthHashInfo
-          hash={address}
-          name={recipientName === 'UNKNOWN' ? undefined : recipientName}
-          showIdenticon
-          showCopyBtn
-          explorerUrl={explorerUrl}
-        />
-      </div>
-    </>
-  )
-}
+  addressActions?: any[]
+}): ReactElement => (
+  <InfoDetails title={title}>
+    <AddressInfo address={address} />
+  </InfoDetails>
+)
 
 const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement | null => {
   const assetInfo = useAssetInfo(txInfo)
@@ -326,7 +335,71 @@ const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement | null =
       ? `Received ${assetInfo.amountWithSymbol} from:`
       : `Send ${assetInfo.amountWithSymbol} to:`
 
-  return <TxInfoDetails title={title} address={txInfo.sender} addressActions={[]} />
+  return <TxInfoDetails title={title} address={txInfo.sender} />
+}
+
+const TxInfoSettings = ({ settingsInfo }: { settingsInfo: SettingsChange['settingsInfo'] }): ReactElement | null => {
+  if (!settingsInfo) {
+    return null
+  }
+
+  switch (settingsInfo.type) {
+    case 'SET_FALLBACK_HANDLER': {
+      return <InfoDetails title="Set fallback handler:">{settingsInfo.handler}</InfoDetails>
+    }
+    case 'ADD_OWNER': {
+      return (
+        <InfoDetails title="Add owner:">
+          <AddressInfo address={settingsInfo.owner} />
+          <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
+        </InfoDetails>
+      )
+    }
+    case 'REMOVE_OWNER': {
+      return (
+        <InfoDetails title="Remove owner:">
+          <AddressInfo address={settingsInfo.owner} />
+          <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
+        </InfoDetails>
+      )
+    }
+    case 'SWAP_OWNER': {
+      return (
+        <InfoDetails title="Swap owner:">
+          <TxInfoDetails title="Old owner" address={settingsInfo.oldOwner} />
+          <TxInfoDetails title="New owner" address={settingsInfo.newOwner} />
+        </InfoDetails>
+      )
+    }
+    case 'CHANGE_THRESHOLD': {
+      return <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
+    }
+    case 'CHANGE_IMPLEMENTATION': {
+      return (
+        <InfoDetails title="Change implementation:">
+          <Text size="md" strong>
+            {settingsInfo.implementation}
+          </Text>
+        </InfoDetails>
+      )
+    }
+    case 'ENABLE_MODULE': {
+      return (
+        <InfoDetails title="Enable module:">
+          <AddressInfo address={settingsInfo.module} />
+        </InfoDetails>
+      )
+    }
+    case 'DISABLE_MODULE': {
+      return (
+        <InfoDetails title="Disable module:">
+          <AddressInfo address={settingsInfo.module} />
+        </InfoDetails>
+      )
+    }
+    default:
+      return null
+  }
 }
 
 type TxInfoProps = {
@@ -342,7 +415,7 @@ const TxInfo = ({ txInfo }: TxInfoProps): ReactElement | null => {
   }
 
   if (isSettingsChangeTxInfo(txInfo)) {
-    return null
+    return <TxInfoSettings settingsInfo={txInfo.settingsInfo} />
   }
 
   if (isTransferTxInfo(txInfo)) {
