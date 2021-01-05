@@ -237,19 +237,13 @@ const InlineEthHashInfo = styled(EthHashInfo)`
 `
 
 const TxSummary = ({
-  hash,
-  nonce,
-  created,
-  executed,
-  operation,
+  txDetails: { txHash, detailedExecutionInfo, executedAt, txData },
 }: {
-  hash?: string
-  nonce?: number
-  created?: number
-  executed: number
-  operation?: Operation
+  txDetails: ExpandedTxDetails
 }): ReactElement => {
-  const explorerUrl = hash ? getExplorerInfo(hash) : null
+  const explorerUrl = txHash ? getExplorerInfo(txHash) : null
+  const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
+  const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
 
   return (
     <>
@@ -257,7 +251,7 @@ const TxSummary = ({
         <Text size="md" strong as="span">
           Hash:
         </Text>{' '}
-        {hash ? <InlineEthHashInfo hash={hash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} /> : 'n/a'}
+        {txHash ? <InlineEthHashInfo hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} /> : 'n/a'}
       </div>
       {nonce && (
         <div className="tx-nonce">
@@ -279,9 +273,9 @@ const TxSummary = ({
         <Text size="md" strong as="span">
           Executed:
         </Text>{' '}
-        {executed ? formatDateTime(executed) : 'n/a'}
+        {executedAt ? formatDateTime(executedAt) : 'n/a'}
       </div>
-      {operation === Operation.DELEGATE && (
+      {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <Text size="md" strong as="span">
             Delegate Call
@@ -430,21 +424,10 @@ const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement =
     )
   }
 
-  // TODO: move into TxSummary component?
-  const txSummary = {
-    hash: data.txHash ?? undefined,
-    nonce: isMultiSigExecutionDetails(data.detailedExecutionInfo) ? data.detailedExecutionInfo.nonce : undefined,
-    created: isMultiSigExecutionDetails(data.detailedExecutionInfo)
-      ? data.detailedExecutionInfo.submittedAt
-      : undefined,
-    executed: data.executedAt,
-    operation: data.txData?.operation,
-  }
-
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
-        <TxSummary {...txSummary} />
+        <TxSummary txDetails={data} />
       </div>
       <div className="tx-data">
         <TxInfo txInfo={data.txInfo} />
@@ -473,6 +456,7 @@ const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
     }
   }
 
+  // TODO: summary and details as children
   return (
     <NoPaddingAccordion
       id={transaction.id}
