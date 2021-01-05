@@ -163,6 +163,6 @@ export const estimateGasForTransactionCreation = async (
     )
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)
-    return 0
+    throw error
   }
 }

@@ -90,8 +90,13 @@ const createTransaction = (
   const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas =
-    safeTxGasArg || (await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation))
+  let safeTxGas
+  try {
+    safeTxGas =
+      safeTxGasArg || (await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation))
+  } catch (error) {
+    safeTxGas = safeTxGasArg || 0
+  }
 
   const sigs = getPreValidatedSignatures(from)
 
