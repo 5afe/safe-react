@@ -3,7 +3,7 @@ import IconButton from '@material-ui/core/IconButton'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import cn from 'classnames'
@@ -25,7 +25,10 @@ import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 export const TRANSACTION_ROW_TEST_ID = 'transaction-row'
 
-const TxsTable = ({ classes }) => {
+const useStyles = makeStyles(styles)
+
+const TxsTable = (): React.ReactElement => {
+  const classes = useStyles()
   const [expandedTx, setExpandedTx] = useState(null)
   const cancellationTransactions = useSelector(safeCancellationTransactionsSelector)
   const transactions = useSelector(extendedTransactionsSelector)
@@ -95,10 +98,7 @@ const TxsTable = ({ classes }) => {
                     {autoColumns.map((column) => (
                       <TableCell
                         align={column.align}
-                        className={cn(
-                          classes.cell,
-                          ['cancelled', 'failed'].includes(row.status) && classes.cancelledRow,
-                        )}
+                        className={cn(['cancelled', 'failed'].includes(row.status) && classes.cancelledRow)}
                         component="td"
                         key={column.id}
                         style={cellWidth(column.width)}
@@ -121,12 +121,9 @@ const TxsTable = ({ classes }) => {
                       colSpan={6}
                       style={{ paddingBottom: 0, paddingTop: 0 }}
                     >
-                      <Collapse
-                        component={() => <ExpandedTx row={row} />}
-                        in={expandedTx === rowId}
-                        timeout="auto"
-                        unmountOnExit
-                      />
+                      <Collapse in={expandedTx === rowId} unmountOnExit>
+                        <ExpandedTx row={row} />
+                      </Collapse>
                     </TableCell>
                   </TableRow>
                 </React.Fragment>
@@ -139,4 +136,4 @@ const TxsTable = ({ classes }) => {
   )
 }
 
-export default withStyles(styles as any)(TxsTable)
+export default TxsTable
