@@ -1,8 +1,10 @@
 import { BigNumber } from 'bignumber.js'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
+import { CALL } from './send'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -165,4 +167,126 @@ export const estimateGasForTransactionCreation = async (
     console.info('Error calculating tx gas estimation', error.message)
     throw error
   }
+}
+
+type TransactionExecutionEstimationProps = {
+  txData: string
+  safeAddress: string
+  txRecipient: string
+  txAmount?: string
+  operation?: number
+  gasPrice?: string
+  gasToken?: string
+  refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
+  safeTxGas?: string
+  from: string
+}
+
+export const estimateGasForTransactionExecution = async ({
+  safeAddress,
+  txRecipient,
+  txAmount = '0',
+  txData,
+  operation = CALL,
+  from,
+  gasPrice = '0',
+  gasToken = ZERO_ADDRESS,
+  refundReceiver = ZERO_ADDRESS,
+  safeTxGas = '0',
+}: TransactionExecutionEstimationProps): Promise<number> => {
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const sigs = getPreValidatedSignatures(from)
+  const baseGas = await calculateGasOf(txData, from, safeAddress)
+
+  const executeTransactionTxData = await safeInstance.methods
+    .execTransaction(
+      txRecipient,
+      txAmount as string,
+      txData,
+      operation as number,
+      safeTxGas as string,
+      baseGas as number,
+      gasPrice as string,
+      gasToken as string,
+      refundReceiver as string,
+      sigs,
+    )
+    .encodeABI()
+
+  const gasEstimation = await calculateGasOf(executeTransactionTxData, from, safeAddress)
+
+  const gasBatches = [gasEstimation, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
+    .filter((currentGas) => currentGas < gasEstimation)
+    // Reorders gas from lowest to highest
+    .sort((a, b) => b - a)
+
+  for (const baseGasIterator of gasBatches) {
+    const executeTransactionGasCheck = await safeInstance.methods
+      .execTransaction(
+        txRecipient,
+        txAmount as string,
+        txData,
+        operation as number,
+        safeTxGas as string,
+        gasEstimation,
+        gasPrice as string,
+        gasToken as string,
+        refundReceiver as string,
+        sigs,
+      )
+      .call()
+
+    if (executeTransactionGasCheck) {
+      return baseGasIterator
+    }
+  }
+
+  // In there is no gasBatches available that could run successfully execTransaction we need to inform the user
+  throw new Error('There was no valid value of gas to execute the transaction, the transaction may fail')
+}
+
+type TransactionApprovalEstimationProps = {
+  txData: string
+  safeAddress: string
+  txRecipient: string
+  txAmount?: string
+  operation?: number
+  from: string
+  isOffChainSignature: boolean
+}
+
+export const estimateGasForTransactionApproval = async ({
+  safeAddress,
+  txRecipient,
+  txAmount,
+  txData,
+  operation,
+  from,
+  isOffChainSignature,
+}: TransactionApprovalEstimationProps): Promise<number> => {
+  if (isOffChainSignature) {
+    return 0
+  }
+
+  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+
+  const nonce = await safeInstance.methods.nonce().call()
+  const txHash = await safeInstance.methods
+    .getTransactionHash(
+      txRecipient,
+      txAmount || '0',
+      txData,
+      operation as number,
+      0,
+      0,
+      0,
+      ZERO_ADDRESS,
+      ZERO_ADDRESS,
+      nonce,
+    )
+    .call({
+      from,
+    })
+  const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
+  return calculateGasOf(approveTransactionTxData, from, safeAddress)
 }
