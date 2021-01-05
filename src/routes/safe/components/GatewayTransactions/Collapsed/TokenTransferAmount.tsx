@@ -14,13 +14,11 @@ const Amount = styled(Text)`
 `
 
 export type TokenTransferAmountProps = {
-  direction: Transfer['direction']
-  transferInfo: Transfer['transferInfo']
-  amountWithSymbol: string
+  txInfo: Transfer
 }
 
-export const TokenTransferAmount: FC<TokenTransferAmountProps & HTMLAttributes<unknown>> = (props) => {
-  const assetInfo = useAssetInfo(props)
+export const TokenTransferAmount: FC<TokenTransferAmountProps & HTMLAttributes<unknown>> = ({ txInfo }) => {
+  const assetInfo = useAssetInfo(txInfo)
 
   return (
     <Block justify="left">
@@ -33,7 +31,7 @@ export const TokenTransferAmount: FC<TokenTransferAmountProps & HTMLAttributes<u
         }}
         src={assetInfo.logoUri}
       />
-      <Amount size="lg">{assetInfo.amountWithSymbol}</Amount>
+      <Amount size="lg">{`${assetInfo.directionSign}${assetInfo.amountWithSymbol}`}</Amount>
     </Block>
   )
 }

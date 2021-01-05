@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { TokenTransferAmountProps } from 'src/routes/safe/components/GatewayTransactions/Collapsed/TokenTransferAmount'
+import { Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { getTxAmount } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
 type TokenTransferAsset = {
   name: string
   logoUri: string
+  directionSign: '+' | '-' | ''
   amountWithSymbol: string
   type: string
 }
@@ -14,16 +16,15 @@ type TokenTransferAsset = {
 const defaultAssetValues: TokenTransferAsset = {
   name: NOT_AVAILABLE,
   logoUri: NOT_AVAILABLE,
+  directionSign: '',
   amountWithSymbol: NOT_AVAILABLE,
   type: 'UNKNOWN',
 }
 
-export const useAssetInfo = ({
-  direction,
-  transferInfo,
-  amountWithSymbol,
-}: TokenTransferAmountProps): TokenTransferAsset => {
+export const useAssetInfo = (txInfo: Transfer): TokenTransferAsset => {
   const [asset, setAsset] = useState<TokenTransferAsset>(defaultAssetValues)
+  const { direction, transferInfo } = txInfo
+  const amountWithSymbol = getTxAmount(txInfo)
 
   useEffect(() => {
     const directionSign = direction === 'INCOMING' ? '+' : '-'
@@ -33,7 +34,8 @@ export const useAssetInfo = ({
         setAsset({
           name: transferInfo.tokenName ?? defaultAssetValues.name,
           logoUri: transferInfo.logoUri ?? defaultAssetValues.logoUri,
-          amountWithSymbol: `${directionSign}${amountWithSymbol}`,
+          directionSign,
+          amountWithSymbol,
           type: transferInfo.type,
         })
         break
@@ -42,7 +44,8 @@ export const useAssetInfo = ({
         setAsset({
           name: transferInfo.tokenName ?? defaultAssetValues.name,
           logoUri: transferInfo.logoUri ?? defaultAssetValues.logoUri,
-          amountWithSymbol: `${directionSign}${amountWithSymbol}`,
+          directionSign: directionSign,
+          amountWithSymbol,
           type: transferInfo.type,
         })
         break
@@ -53,7 +56,8 @@ export const useAssetInfo = ({
         setAsset({
           name: nativeCoin.name ?? defaultAssetValues.name,
           logoUri: nativeCoin.logoUri ?? defaultAssetValues.logoUri,
-          amountWithSymbol: `${directionSign}${amountWithSymbol}`,
+          directionSign: directionSign,
+          amountWithSymbol,
           type: transferInfo.type,
         })
         break

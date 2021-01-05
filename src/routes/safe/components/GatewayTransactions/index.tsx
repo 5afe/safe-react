@@ -5,25 +5,31 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getExplorerInfo } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { fetchTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
-import { getTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/selectors/getTransactionDetails'
-import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
+  isCreationTxInfo,
+  isCustomTxInfo,
+  isModuleExecutionDetails,
   isMultiSigExecutionDetails,
+  isSettingsChangeTxInfo,
   isTransferTxInfo,
+  Operation,
   Transaction,
+  Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import {
   historyTransactions,
   nextTransactions,
   queuedTransactions,
 } from 'src/logic/safe/store/selectors/gatewayTransactions'
-import { getTxAmount } from './utils'
-import { TxType } from './TxType'
-import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
+import { useAssetInfo } from 'src/routes/safe/components/GatewayTransactions/Collapsed/hooks/useAssetInfo'
+import { fetchTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
+import { getTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/selectors/getTransactionDetails'
 import { TxData as LegacyTxData } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/CustomDescription'
+import styled from 'styled-components'
+import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
+import { TxType } from './TxType'
 
 const Wrapper = styled.div`
   display: flex;
@@ -94,6 +100,10 @@ const StyledTransaction = styled.div`
     margin-right: 8px;
   }
 `
+
+const formatDateTime = (timestamp: number): string => {
+  return format(timestamp, 'MMM d, yyyy - h:mm:ss a')
+}
 
 type QueueTxListProps = {
   title: string
@@ -174,19 +184,19 @@ const useTransactionDetails = (
   transactionId: string,
   txLocation: 'history' | 'queued' | 'next',
 ): { data?: ExpandedTxDetails; loading: boolean } => {
-  const [loading, setLoading] = useState(true)
+  const [txDetails, setTxDetails] = useState<{ data?: ExpandedTxDetails; loading: boolean }>({
+    loading: true,
+    data: undefined,
+  })
   const data = useSelector((state) => getTransactionDetails(state, transactionId, txLocation))
 
   useEffect(() => {
     if (data) {
-      setLoading(false)
+      setTxDetails({ loading: false, data })
     }
   }, [data])
 
-  return {
-    data,
-    loading,
-  }
+  return txDetails
 }
 
 const TxDetailsContainer = styled.div`
@@ -195,6 +205,8 @@ const TxDetailsContainer = styled.div`
   column-gap: 2px;
   row-gap: 2px;
   background-color: lightgray;
+  width: 100%;
+  min-height: 200px;
 
   & > div {
     overflow: hidden;
@@ -229,16 +241,18 @@ const TxSummary = ({
   nonce,
   created,
   executed,
+  operation,
 }: {
   hash?: string
   nonce?: number
   created?: number
   executed: number
+  operation?: Operation
 }): ReactElement => {
   const explorerUrl = hash ? getExplorerInfo(hash) : null
 
   return (
-    <div className="tx-summary">
+    <>
       <div className="tx-hash">
         <Text size="md" strong as="span">
           Hash:
@@ -258,74 +272,144 @@ const TxSummary = ({
           <Text size="md" strong as="span">
             Created:
           </Text>{' '}
-          {created}
+          {formatDateTime(created)}
         </div>
       )}
       <div className="tx-executed">
         <Text size="md" strong as="span">
           Executed:
         </Text>{' '}
-        {executed ?? 'n/a'}
+        {executed ? formatDateTime(executed) : 'n/a'}
       </div>
-    </div>
-  )
-}
-
-const TxData = ({
-  txData,
-  txInfo,
-}: {
-  txData: ExpandedTxDetails['txData']
-  txInfo: ExpandedTxDetails['txInfo']
-}): ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, txData?.to))
-  const explorerUrl = txData?.to ? getExplorerInfo(txData.to) : ''
-
-  if (!txData) {
-    return (
-      <Text size="md" strong>
-        No data available
-      </Text>
-    )
-  }
-
-  const { value, to, operation, hexData } = txData
-
-  return (
-    <div className="tx-data">
-      {isTransferTxInfo(txInfo) && (
-        <div className="tx-value">
-          <Text size="md" strong as="span">
-            {txInfo.direction === 'INCOMING' ? 'Received' : 'Send'} {value} to:
-          </Text>
-        </div>
-      )}
-      <div className="tx-to">
-        <EthHashInfo
-          hash={to}
-          name={recipientName === 'UNKNOWN' ? undefined : recipientName}
-          showIdenticon
-          showCopyBtn
-          explorerUrl={explorerUrl}
-        />
-      </div>
-      {hexData && (
-        <div className="tx-hexData">
-          <Text size="md" strong>
-            Data (hex encoded):
-          </Text>
-          <LegacyTxData data={hexData} />
-        </div>
-      )}
-      <div className="tx-dataDecoded"></div>
-      {operation === 1 && (
+      {operation === Operation.DELEGATE && (
         <div className="tx-operation">
           <Text size="md" strong as="span">
             Delegate Call
           </Text>
         </div>
       )}
-    </div>
+    </>
+  )
+}
+
+const TxInfoDetails = ({
+  title,
+  address,
+  addressActions,
+}: {
+  title: string
+  address: string
+  addressActions: any[]
+}): ReactElement => {
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+  const explorerUrl = getExplorerInfo(address)
+
+  return (
+    <>
+      <div className="tx-value">
+        <Text size="md" strong>
+          {title}
+        </Text>
+      </div>
+      <div className="tx-to">
+        <EthHashInfo
+          hash={address}
+          name={recipientName === 'UNKNOWN' ? undefined : recipientName}
+          showIdenticon
+          showCopyBtn
+          explorerUrl={explorerUrl}
+        />
+      </div>
+    </>
+  )
+}
+
+const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement | null => {
+  const assetInfo = useAssetInfo(txInfo)
+
+  const title =
+    txInfo.direction === 'INCOMING'
+      ? `Received ${assetInfo.amountWithSymbol} from:`
+      : `Send ${assetInfo.amountWithSymbol} to:`
+
+  return <TxInfoDetails title={title} address={txInfo.sender} addressActions={[]} />
+}
+
+type TxInfoProps = {
+  txInfo: ExpandedTxDetails['txInfo']
+}
+const TxInfo = ({ txInfo }: TxInfoProps): ReactElement | null => {
+  if (isCreationTxInfo(txInfo)) {
+    return null
+  }
+
+  if (isCustomTxInfo(txInfo)) {
+    return null
+  }
+
+  if (isSettingsChangeTxInfo(txInfo)) {
+    return null
+  }
+
+  if (isTransferTxInfo(txInfo)) {
+    return <TxInfoTransfer txInfo={txInfo} />
+  }
+
+  return null
+}
+
+type TxDataProps = {
+  txData: ExpandedTxDetails['txData']
+}
+const TxData = ({ txData }: TxDataProps): ReactElement | null => {
+  return (
+    <>
+      {txData?.hexData && (
+        <div className="tx-hexData">
+          <Text size="md" strong>
+            Data (hex encoded):
+          </Text>
+          <LegacyTxData data={txData.hexData} />
+        </div>
+      )}
+      <div className="tx-dataDecoded"></div>
+    </>
+  )
+}
+
+const OwnerRow = ({ ownerAddress }: { ownerAddress: string }) => {
+  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, ownerAddress))
+
+  return (
+    <EthHashInfo
+      hash={ownerAddress}
+      shortenHash={4}
+      showCopyBtn
+      showIdenticon
+      name={ownerName}
+      explorerUrl={getExplorerInfo(ownerAddress)}
+    />
+  )
+}
+
+const TxOwners = ({
+  detailedExecutionInfo,
+}: {
+  detailedExecutionInfo: ExpandedTxDetails['detailedExecutionInfo']
+}): ReactElement | null => {
+  if (!detailedExecutionInfo || isModuleExecutionDetails(detailedExecutionInfo)) {
+    return null
+  }
+
+  return (
+    <ul>
+      <li>Created</li>
+      {detailedExecutionInfo.confirmations.map(({ signer }) => (
+        <li key={signer}>
+          <OwnerRow ownerAddress={signer} />
+        </li>
+      ))}
+    </ul>
   )
 }
 
@@ -338,12 +422,15 @@ const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement =
 
   if (!data) {
     return (
-      <Text size="sm" strong>
-        No data available
-      </Text>
+      <TxDetailsContainer>
+        <Text size="sm" strong>
+          No data available
+        </Text>
+      </TxDetailsContainer>
     )
   }
 
+  // TODO: move into TxSummary component?
   const txSummary = {
     hash: data.txHash ?? undefined,
     nonce: isMultiSigExecutionDetails(data.detailedExecutionInfo) ? data.detailedExecutionInfo.nonce : undefined,
@@ -351,13 +438,21 @@ const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement =
       ? data.detailedExecutionInfo.submittedAt
       : undefined,
     executed: data.executedAt,
+    operation: data.txData?.operation,
   }
 
   return (
     <TxDetailsContainer>
-      <TxSummary {...txSummary} />
-      <TxData txData={data.txData} txInfo={data.txInfo} />
-      <div className="tx-owners">{JSON.stringify(data.detailedExecutionInfo)}</div>
+      <div className="tx-summary">
+        <TxSummary {...txSummary} />
+      </div>
+      <div className="tx-data">
+        <TxInfo txInfo={data.txInfo} />
+        <TxData txData={data.txData} />
+      </div>
+      <div className="tx-owners">
+        <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
+      </div>
     </TxDetailsContainer>
   )
 }
@@ -377,6 +472,7 @@ const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
       dispatch(fetchTransactionDetails({ transactionId, txLocation: 'history' }))
     }
   }
+
   return (
     <NoPaddingAccordion
       id={transaction.id}
@@ -390,13 +486,7 @@ const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
             <TxType tx={transaction} />
           </div>
           <div className="tx-info">
-            {isTransferTxInfo(transaction.txInfo) && (
-              <TokenTransferAmount
-                direction={transaction.txInfo.direction}
-                transferInfo={transaction.txInfo.transferInfo}
-                amountWithSymbol={getTxAmount(transaction.txInfo)}
-              />
-            )}
+            {isTransferTxInfo(transaction.txInfo) && <TokenTransferAmount txInfo={transaction.txInfo} />}
           </div>
           <div className="tx-time">
             <Text size="lg">{format(transaction.timestamp, 'h:mm a')}</Text>
