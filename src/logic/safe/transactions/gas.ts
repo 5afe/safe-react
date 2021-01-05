@@ -1,9 +1,7 @@
 import { BigNumber } from 'bignumber.js'
-import { CALL } from '.'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA, calculateGasOf } from 'src/logic/wallets/ethTransactions'
-import { getAccountFrom, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
@@ -29,58 +27,6 @@ export const getPreValidatedSignatures = (from: string): string => {
     EMPTY_DATA,
     '',
   )}000000000000000000000000000000000000000000000000000000000000000001`
-}
-
-export type TransactionEstimationProps = {
-  txData: string
-  safeAddress: string
-  txRecipient: string
-  isExecution: boolean
-  txAmount?: string
-  operation?: number
-}
-
-export const estimateTransactionGas = async ({
-  txAmount,
-  txData,
-  txRecipient,
-  isExecution,
-  safeAddress,
-  operation = CALL,
-}: TransactionEstimationProps): Promise<number> => {
-  const web3 = getWeb3()
-  const from = await getAccountFrom(web3)
-
-  if (!from) {
-    return 0
-  }
-
-  if (isExecution) {
-    // Gas of executing a transaction within the safe (threshold reached and transaction executed)
-    return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', operation)
-  }
-
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const nonce = await safeInstance.methods.nonce().call()
-  const txHash = await safeInstance.methods
-    .getTransactionHash(
-      txRecipient,
-      txAmount || '0',
-      txData,
-      operation as number,
-      0,
-      0,
-      0,
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-      nonce,
-    )
-    .call({
-      from,
-    })
-  // Gas of approving the transaction (threshold not reached or user did not executed the transaction)
-  const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return await calculateGasOf(approveTransactionTxData, from, safeAddress)
 }
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
@@ -185,7 +131,7 @@ const calculateMinimumGasForTransaction = async (
   return 0
 }
 
-export const estimateExecTransactionGas = async (
+export const estimateGasForTransactionCreation = async (
   safeAddress: string,
   data: string,
   to: string,

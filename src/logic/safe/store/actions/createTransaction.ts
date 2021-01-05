@@ -14,7 +14,7 @@ import {
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateExecTransactionGas, getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
+import { estimateGasForTransactionCreation, getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -90,7 +90,8 @@ const createTransaction = (
   const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas = safeTxGasArg || (await estimateExecTransactionGas(safeAddress, txData, to, valueInWei, operation))
+  const safeTxGas =
+    safeTxGasArg || (await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation))
 
   const sigs = getPreValidatedSignatures(from)
 
