@@ -156,7 +156,7 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "1.0.0-beta.4",
+    "@gnosis.pm/safe-apps-sdk": "1.0.2",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#bf3a84486b7353bd25447ddff39c406f6fafecc6",
@@ -216,7 +216,7 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "semver": "7.3.2",
+    "semver": "^7.3.2",
     "styled-components": "^5.2.1",
     "web3": "1.2.11",
     "web3-core": "^1.2.11",
@@ -245,7 +245,6 @@
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
-    "autoprefixer": "9.8.6",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
