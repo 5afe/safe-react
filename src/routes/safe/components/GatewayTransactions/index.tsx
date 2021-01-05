@@ -32,6 +32,11 @@ import styled from 'styled-components'
 import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
 import { TxType } from './TxType'
 
+import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
+import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
+
+import Img from 'src/components/layout/Img'
+
 const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
@@ -232,6 +237,40 @@ const TxDetailsContainer = styled.div`
     grid-row-end: span 2;
   }
 `
+const OwnerList = styled.ul`
+  list-style: none;
+  margin: 1em;
+  width: 50%;
+  .legend {
+    padding: 0 1.5em 1.5em 1.5em;
+    position: relative;
+    &::before {
+      content: '';
+      position: absolute;
+      z-index: 1;
+      left: 0;
+      height: 100%;
+      border-left: 1px #ccc solid;
+    }
+    .owner-info {
+      margin: 5px;
+    }
+    span {
+      color: #008c73;
+      font-weight: bold;
+    }
+  }
+  .icon {
+    position: absolute;
+    width: 16px;
+    z-index: 2;
+    left: -8px;
+  }
+`
+const OwnerListItem = styled.li`
+  display: flex;
+  position: relative;
+`
 
 const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
@@ -316,7 +355,6 @@ const AddressInfo = ({ address }: { address: string }): ReactElement => {
 const TxInfoDetails = ({
   title,
   address,
-  addressActions,
 }: {
   title: string
   address: string
@@ -453,6 +491,7 @@ const OwnerRow = ({ ownerAddress }: { ownerAddress: string }) => {
       shortenHash={4}
       showCopyBtn
       showIdenticon
+      className="owner-info"
       name={ownerName}
       explorerUrl={getExplorerInfo(ownerAddress)}
     />
@@ -469,14 +508,27 @@ const TxOwners = ({
   }
 
   return (
-    <ul>
-      <li>Created</li>
+    <OwnerList>
+      <OwnerListItem>
+        <span className="icon">
+          <Img alt="" src={CheckLargeFilledGreenCircle} />
+        </span>
+        <div className="legend">
+          <span>Created</span>
+        </div>
+      </OwnerListItem>
       {detailedExecutionInfo.confirmations.map(({ signer }) => (
-        <li key={signer}>
-          <OwnerRow ownerAddress={signer} />
-        </li>
+        <OwnerListItem key={signer}>
+          <span className="icon">
+            <Img alt="" src={ConfirmLargeGreenCircle} />
+          </span>
+          <div className="legend">
+            <span>Confirmed</span>
+            <OwnerRow ownerAddress={signer} />
+          </div>
+        </OwnerListItem>
       ))}
-    </ul>
+    </OwnerList>
   )
 }
 
