@@ -153,6 +153,9 @@ const StyledCloseIcon = styled(Icon)`
     margin: 8px 34px 0 16px;
   }
 `
+const StyledLink = styled.a`
+  text-decoration: none;
+`
 
 type Props = {
   sidebarItems: ListItemType[]
@@ -163,6 +166,7 @@ type Props = {
   onToggleSafeList: () => void
   onReceiveClick: () => void
   onNewTransactionClick: () => void
+  /* onClose: () => void */
 }
 
 const Layout: React.FC<Props> = ({
@@ -175,6 +179,7 @@ const Layout: React.FC<Props> = ({
   onNewTransactionClick,
   children,
   sidebarItems,
+  /* onClose, */
 }): React.ReactElement => (
   <Container>
     <HeaderWrapper>
@@ -205,13 +210,18 @@ const Layout: React.FC<Props> = ({
             <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
             <Text size="lg">Get the mobile app for a better experience.</Text>
             <Button size="md" color="primary" variant="contained">
-              Get the App {/* https://gnosis-safe.io/#mobile */}
+              <StyledLink target="_blank" href="https://gnosis-safe.io/#mobile" rel="noopener noreferrer">
+                <Text color="white" size="xl">
+                  Get the App
+                </Text>
+              </StyledLink>
             </Button>
           </StyledCard>
 
           <StyledImg src={Phone} alt="Phone" />
-
+          {/* <Button onClick={onClose}>*/}
           <StyledCloseIcon size="md" type="cross" />
+          {/* </Button>  */}
         </ModalApp>
       </Overlay>
     </MobileView>
