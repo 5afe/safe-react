@@ -18,6 +18,9 @@ import { CALL, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES } from '../safe/transactions
 import semverSatisfies from 'semver/functions/satisfies'
 import { providerSelector } from '../wallets/store/selectors'
 
+import { List } from 'immutable'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
@@ -43,6 +46,7 @@ type TransactionEstimationProps = {
   txData: string
   safeAddress: string
   txRecipient: string
+  txConfirmations?: List<Confirmation>
   isExecution: boolean
   isCreation: boolean
   isOffChainSignature?: boolean
@@ -55,6 +59,7 @@ const estimateTransactionGas = async ({
   txAmount,
   txData,
   txRecipient,
+  txConfirmations,
   isExecution,
   isCreation,
   isOffChainSignature = false,
@@ -71,7 +76,15 @@ const estimateTransactionGas = async ({
   }
 
   if (isExecution) {
-    return estimateGasForTransactionExecution({ safeAddress, txRecipient, txAmount, txData, operation, from })
+    return estimateGasForTransactionExecution({
+      safeAddress,
+      txRecipient,
+      txConfirmations,
+      txAmount,
+      txData,
+      operation,
+      from,
+    })
   }
 
   return estimateGasForTransactionApproval({
@@ -88,7 +101,7 @@ const estimateTransactionGas = async ({
 type UseEstimateTransactionGasProps = {
   txData: string
   txRecipient: string
-  txConfirmations?: number
+  txConfirmations?: List<Confirmation>
   txAmount?: string
   preApprovingOwner?: string
   operation?: number
@@ -137,8 +150,8 @@ export const useEstimateTransactionGas = ({
         return
       }
 
-      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations)
-      const isCreation = checkIfTxIsCreation(txConfirmations || 0)
+      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size)
+      const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0)
 
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
@@ -148,6 +161,7 @@ export const useEstimateTransactionGas = ({
           txRecipient,
           txData,
           txAmount,
+          txConfirmations,
           isExecution,
           isCreation,
           isOffChainSignature,

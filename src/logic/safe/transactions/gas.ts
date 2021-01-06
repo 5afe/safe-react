@@ -5,6 +5,9 @@ import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
 import { CALL } from './send'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { List } from 'immutable'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -21,14 +24,6 @@ const parseRequiredTxGasResponse = (data: string): number => {
   }
 
   return data.match(/.{2}/g)?.reduce(reducer, 0)
-}
-
-// https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-export const getPreValidatedSignatures = (from: string): string => {
-  return `0x000000000000000000000000${from.replace(
-    EMPTY_DATA,
-    '',
-  )}000000000000000000000000000000000000000000000000000000000000000001`
 }
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
@@ -173,6 +168,7 @@ type TransactionExecutionEstimationProps = {
   txData: string
   safeAddress: string
   txRecipient: string
+  txConfirmations?: List<Confirmation>
   txAmount?: string
   operation?: number
   gasPrice?: string
@@ -185,6 +181,7 @@ type TransactionExecutionEstimationProps = {
 export const estimateGasForTransactionExecution = async ({
   safeAddress,
   txRecipient,
+  txConfirmations,
   txAmount = '0',
   txData,
   operation = CALL,
@@ -195,8 +192,8 @@ export const estimateGasForTransactionExecution = async ({
   safeTxGas = '0',
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-  const sigs = getPreValidatedSignatures(from)
-  const baseGas = await calculateGasOf(txData, from, safeAddress)
+
+  const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
 
   const executeTransactionTxData = await safeInstance.methods
     .execTransaction(
@@ -205,7 +202,7 @@ export const estimateGasForTransactionExecution = async ({
       txData,
       operation as number,
       safeTxGas as string,
-      baseGas as number,
+      0,
       gasPrice as string,
       gasToken as string,
       refundReceiver as string,
@@ -215,7 +212,7 @@ export const estimateGasForTransactionExecution = async ({
 
   const gasEstimation = await calculateGasOf(executeTransactionTxData, from, safeAddress)
 
-  const gasBatches = [gasEstimation, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
+  const gasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
     .filter((currentGas) => currentGas < gasEstimation)
     // Reorders gas from lowest to highest
     .sort((a, b) => b - a)
