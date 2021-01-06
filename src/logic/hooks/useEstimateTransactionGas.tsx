@@ -155,8 +155,6 @@ export const useEstimateTransactionGas = ({
   const { account: from, smartContractWallet } = useSelector(providerSelector)
 
   useEffect(() => {
-    let isCurrent = true
-
     const estimateGas = async () => {
       if (!txData.length) {
         return
@@ -185,24 +183,22 @@ export const useEstimateTransactionGas = ({
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
 
-        if (isCurrent) {
-          let txEstimationExecutionStatus = EstimationStatus.SUCCESS
+        let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
-          if (gasEstimation <= 0) {
-            txEstimationExecutionStatus = isOffChainSignature ? EstimationStatus.SUCCESS : EstimationStatus.FAILURE
-          }
-
-          setGasEstimation({
-            txEstimationExecutionStatus,
-            gasEstimation,
-            gasCost,
-            gasCostFormatted,
-            gasPrice,
-            isExecution,
-            isCreation,
-            isOffChainSignature,
-          })
+        if (gasEstimation <= 0) {
+          txEstimationExecutionStatus = isOffChainSignature ? EstimationStatus.SUCCESS : EstimationStatus.FAILURE
         }
+
+        setGasEstimation({
+          txEstimationExecutionStatus,
+          gasEstimation,
+          gasCost,
+          gasCostFormatted,
+          gasPrice,
+          isExecution,
+          isCreation,
+          isOffChainSignature,
+        })
       } catch (error) {
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
         const gasEstimation = 10000
@@ -222,10 +218,6 @@ export const useEstimateTransactionGas = ({
     }
 
     estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
   }, [
     txData,
     safeAddress,
