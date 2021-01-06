@@ -41,7 +41,7 @@ export const TransactionFailText = ({
   if (isExecution) {
     errorMessage =
       threshold && threshold > 1
-        ? `To save gas costs, collect rejections and cancel this transaction.`
+        ? `To save gas cost, cancel this transaction`
         : `To save gas costs, avoid executing the transaction.`
   }
 

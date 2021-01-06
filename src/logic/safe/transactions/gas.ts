@@ -23,7 +23,7 @@ const parseRequiredTxGasResponse = (data: string): number => {
   return data.match(/.{2}/g)?.reduce(reducer, 0)
 }
 
-// https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+// https://docs.gnosis.io/safe/docs/contracts_signatures/#pre-validated-signatures
 export const getPreValidatedSignatures = (from: string): string => {
   return `0x000000000000000000000000${from.replace(
     EMPTY_DATA,
