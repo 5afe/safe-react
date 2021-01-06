@@ -88,7 +88,7 @@ const formValidation = (values) => {
   }
 }
 
-const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement => {
+const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
   return (
@@ -215,4 +215,4 @@ const AdvancedOptions = ({ onClose, txParameters }: Props): React.ReactElement =
   )
 }
 
-export default AdvancedOptions
+export default EditTxParametersForm

@@ -41,7 +41,7 @@ export type CustomTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
-  onAdvancedOptions: () => void
+  onEditTxParameters: () => void
   tx: CustomTx
   txParameters: TxParameters
 }
@@ -50,7 +50,7 @@ const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewCustomTx = ({ onClose, onPrev, onAdvancedOptions, tx, txParameters }: Props): React.ReactElement => {
+const ReviewCustomTx = ({ onClose, onPrev, onEditTxParameters, tx, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -166,7 +166,7 @@ const ReviewCustomTx = ({ onClose, onPrev, onAdvancedOptions, tx, txParameters }
         </Row>
 
         {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
 
         <Row>
           <Paragraph>

@@ -54,7 +54,7 @@ export type ReviewTxProp = {
 type ReviewTxProps = {
   onClose: () => void
   onPrev: () => void
-  onAdvancedOptions: () => void
+  onEditTxParameters: () => void
   tx: ReviewTxProp
   txParameters: TxParameters
 }
@@ -63,7 +63,7 @@ const ReviewSendFundsTx = ({
   onClose,
   onPrev,
   tx,
-  onAdvancedOptions,
+  onEditTxParameters,
   txParameters,
 }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
@@ -227,7 +227,7 @@ const ReviewSendFundsTx = ({
         </Row>
 
         {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
 
         {/* Disclaimer */}
         <Row>

@@ -2,21 +2,22 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { OwnerForm } from './screens/OwnerForm'
-import ReviewAddOwner from './screens/Review'
-import ThresholdForm from './screens/ThresholdForm'
-
 import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
+import { OwnerForm } from './screens/OwnerForm'
+import ReviewAddOwner from './screens/Review'
+import ThresholdForm from './screens/ThresholdForm'
+import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -28,7 +29,7 @@ const styles = createStyles({
 
 const useStyles = makeStyles(styles)
 
-type OwnerValues = {
+export type OwnerValues = {
   ownerAddress: string
   ownerName: string
   threshold: string
@@ -61,14 +62,15 @@ type Props = {
 const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('selectOwner')
-  const [values, setValues] = useState<any>({})
+  const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
       setActiveScreen('selectOwner')
-      setValues({})
+      setValues({ ownerName: '', ownerAddress: '', threshold: '' })
     },
     [isOpen],
   )
@@ -111,6 +113,10 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     }
   }
 
+  const openEditTxParameters = () => setActiveScreen('editTxAdvancedOptions')
+
+  const closeEditTxParameters = () => setActiveScreen('reviewAddOwner')
+
   return (
     <Modal
       description="Add owner to Safe"
@@ -125,7 +131,17 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
           <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewAddOwner' && (
-          <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />
+          <ReviewAddOwner
+            onClickBack={onClickBack}
+            onClose={onClose}
+            onSubmit={onAddOwner}
+            values={values}
+            onEditTxParameters={openEditTxParameters}
+            txParameters={txParameters}
+          />
+        )}
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
         )}
       </>
     </Modal>

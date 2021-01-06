@@ -1,9 +1,11 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { makeStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
@@ -18,19 +20,42 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
+import { OwnerValues } from '../..'
 
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
+const useStyles = makeStyles(styles)
+
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
+type Props = {
+  onClickBack: () => void
+  onClose: () => void
+  onSubmit: () => void
+  onEditTxParameters: () => void
+  values: OwnerValues
+  txParameters: TxParameters
+}
+
+const ReviewAddOwner = ({
+  onClickBack,
+  onClose,
+  onSubmit,
+  onEditTxParameters,
+  values,
+  txParameters,
+}: Props): React.ReactElement => {
+  const classes = useStyles()
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
+
   useEffect(() => {
     let isCurrent = true
     const estimateGas = async () => {
@@ -68,7 +93,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.formContainer}>
+      <Block>
         <Row className={classes.root}>
           <Col layout="column" xs={4}>
             <Block className={classes.details}>
@@ -156,6 +181,10 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
         </Row>
       </Block>
       <Hairline />
+
+      {/* Tx Parameters */}
+      <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={false} />
+
       <Block className={classes.gasCostsContainer}>
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
@@ -184,4 +213,4 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
   )
 }
 
-export default withStyles(styles as any)(ReviewAddOwner)
+export default ReviewAddOwner

@@ -40,7 +40,7 @@ export type TransactionReviewType = {
 type Props = {
   onClose: () => void
   onPrev: () => void
-  onAdvancedOptions: () => void
+  onEditTxParameters: () => void
   tx: TransactionReviewType
   txParameters: TxParameters
 }
@@ -51,7 +51,7 @@ const ContractInteractionReview = ({
   onClose,
   onPrev,
   tx,
-  onAdvancedOptions,
+  onEditTxParameters,
   txParameters,
 }: Props): React.ReactElement => {
   const classes = useStyles()
@@ -174,7 +174,7 @@ const ContractInteractionReview = ({
         </Row>
 
         {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
 
         <Row>
           <Paragraph>

@@ -48,12 +48,12 @@ export type CollectibleTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
-  onAdvancedOptions: () => void
+  onEditTxParameters: () => void
   tx: CollectibleTx
   txParameters: TxParameters
 }
 
-const ReviewCollectible = ({ onClose, onPrev, onAdvancedOptions, tx, txParameters }: Props): React.ReactElement => {
+const ReviewCollectible = ({ onClose, onPrev, onEditTxParameters, tx, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
@@ -169,7 +169,7 @@ const ReviewCollectible = ({ onClose, onPrev, onAdvancedOptions, tx, txParameter
         )}
 
         {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
 
         <Row>
           <Paragraph>

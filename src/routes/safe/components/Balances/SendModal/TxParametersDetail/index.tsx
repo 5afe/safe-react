@@ -25,12 +25,13 @@ const StyledButtonLink = styled(ButtonLink)`
 
 type Props = {
   txParameters: TxParameters
-  onAdvancedOptions: () => void
+  onEdit: () => void
+  compact?: boolean
 }
 
-export const TxParametersDetail = ({ onAdvancedOptions, txParameters }: Props): React.ReactElement => (
+export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Props): React.ReactElement => (
   <Accordion
-    compact
+    compact={compact}
     summaryContent={<Text size="lg">Advanced options</Text>}
     detailsContent={
       <AccordionDetails>
@@ -89,7 +90,7 @@ export const TxParametersDetail = ({ onAdvancedOptions, txParameters }: Props): 
           </Text>
         </TxParameterWrapper>
 
-        <StyledButtonLink color="primary" onClick={onAdvancedOptions}>
+        <StyledButtonLink color="primary" onClick={onEdit}>
           Edit
         </StyledButtonLink>
       </AccordionDetails>

@@ -1,6 +1,7 @@
 import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core/styles'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     height: '372px',
   },

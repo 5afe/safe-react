@@ -31,7 +31,7 @@ const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/Send
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
-const AdvancedOptions = React.lazy(() => import('./screens/AdvancedOptions'))
+const EditTxParametersForm = React.lazy(() => import('./screens/EditTxParametersForm'))
 
 const useStyles = makeStyles({
   scalableModalWindow: {
@@ -58,7 +58,7 @@ export type TxType =
   | 'reviewCustomTx'
   | 'sendCollectible'
   | 'reviewCollectible'
-  | 'editTxAdvancedOptions'
+  | 'editTxParameters'
   | ''
 
 type Props = {
@@ -117,12 +117,12 @@ const SendModal = ({
     setIsABI(!isABI)
   }
 
-  const goToEditTxAdvancedOptions = () => {
+  const openEditTxParameters = () => {
     setPrevScreen(activeScreen)
-    setActiveScreen('editTxAdvancedOptions')
+    setActiveScreen('editTxParameters')
   }
 
-  const closeAdvancedOptions = () => {
+  const closeEditTxParameters = () => {
     setActiveScreen(prevScreen || '')
   }
 
@@ -160,7 +160,7 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('sendFunds')}
             tx={tx as ReviewTxProp}
-            onAdvancedOptions={goToEditTxAdvancedOptions}
+            onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
           />
         )}
@@ -181,7 +181,7 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('contractInteraction')}
             tx={tx}
-            onAdvancedOptions={goToEditTxAdvancedOptions}
+            onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
           />
         )}
@@ -202,7 +202,7 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('contractInteraction')}
             tx={tx as CustomTx}
-            onAdvancedOptions={goToEditTxAdvancedOptions}
+            onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
           />
         )}
@@ -222,13 +222,13 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('sendCollectible')}
             tx={tx as CollectibleTx}
-            onAdvancedOptions={goToEditTxAdvancedOptions}
+            onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
           />
         )}
 
-        {activeScreen === 'editTxAdvancedOptions' && (
-          <AdvancedOptions txParameters={txParameters} onClose={closeAdvancedOptions} />
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
         )}
       </Suspense>
     </Modal>
