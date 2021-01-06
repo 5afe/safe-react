@@ -13,7 +13,7 @@ import {
   StoreStructure,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { UPDATE_TRANSACTION_DETAILS } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
+import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
 import { AppReduxState } from 'src/store'
 import { sameString } from 'src/utils/strings'

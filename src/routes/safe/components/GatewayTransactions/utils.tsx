@@ -1,11 +1,13 @@
 import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
-import parseISO from 'date-fns/parseISO'
+
 import { getNetworkInfo } from 'src/config'
+import { Custom, Transaction, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
+import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { Transaction, Transfer } from 'src/logic/safe/store/models/types/gateway'
-import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { sameString } from 'src/utils/strings'
 
 export const TX_TABLE_ID = 'id'
 export const TX_TABLE_TYPE_ID = 'type'
@@ -16,7 +18,7 @@ export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
 
-export const formatDate = (date: string): string => format(parseISO(date), 'MMM d, yyyy - HH:mm:ss')
+export const formatDateTime = (timestamp: number): string => format(timestamp, 'MMM d, yyyy - h:mm:ss a')
 
 export const NOT_AVAILABLE = 'n/a'
 
@@ -77,3 +79,9 @@ export interface TableData {
   tx: Transaction | SafeModuleTransaction
   type: any
 }
+
+export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; safeAddress: string }): boolean =>
+  sameAddress(txInfo.to, safeAddress) &&
+  sameString(txInfo.dataSize, '0') &&
+  sameString(txInfo.value, '0') &&
+  txInfo.methodName === null
