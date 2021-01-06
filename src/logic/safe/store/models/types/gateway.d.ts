@@ -134,7 +134,7 @@ type Creation = {
   type: 'Creation'
   creator: string
   transactionHash: string
-  masterCopy: string | null
+  implementation: string | null
   factory: string | null
 }
 
