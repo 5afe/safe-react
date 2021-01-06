@@ -56,7 +56,7 @@ export const estimateTransactionGas = async ({
   }
 
   if (isExecution) {
-    // Gas of executing a transaction within the safe (threshold reached and transaction executed)
+    // Gas of executing a transaction within the safe (threshold reached and transaction ready to be executed)
     return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', operation)
   }
 
