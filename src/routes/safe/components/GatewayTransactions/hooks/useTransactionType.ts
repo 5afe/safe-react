@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import CustomTxIcon from 'src/routes/safe/components/GatewayTransactions/assets/custom.svg'
 import IncomingTxIcon from 'src/routes/safe/components/GatewayTransactions/assets/incoming.svg'
@@ -9,13 +9,13 @@ import OutgoingTxIcon from 'src/routes/safe/components/GatewayTransactions/asset
 import SettingsTxIcon from 'src/routes/safe/components/GatewayTransactions/assets/settings.svg'
 import { isCancelTransaction } from 'src/routes/safe/components/GatewayTransactions/utils'
 
-type TxType = {
+export type TxTypeProps = {
   icon: string
   text: string
 }
 
-export const useTransactionType = (tx: Transaction): TxType => {
-  const [type, setType] = useState<TxType>({ icon: CustomTxIcon, text: 'Custom transaction' })
+export const useTransactionType = (tx: Transaction): TxTypeProps => {
+  const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Custom transaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useEffect(() => {

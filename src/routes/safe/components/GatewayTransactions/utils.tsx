@@ -2,7 +2,7 @@ import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 
 import { getNetworkInfo } from 'src/config'
-import { Custom, Transaction, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
+import { Custom, isTransferTxInfo, Transaction, TransactionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -17,6 +17,8 @@ export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
+
+export const formatTime = (timestamp: number) => format(timestamp, 'h:mm a')
 
 export const formatDateTime = (timestamp: number): string => format(timestamp, 'MMM d, yyyy - h:mm:ss a')
 
@@ -39,7 +41,11 @@ const getAmountWithSymbol = (
   return `${txAmount} ${symbol}`
 }
 
-export const getTxAmount = (txInfo: Transfer, formatted = true): string => {
+export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string => {
+  if (!txInfo || !isTransferTxInfo(txInfo)) {
+    return NOT_AVAILABLE
+  }
+
   switch (txInfo.transferInfo.type) {
     case 'ERC20':
       return getAmountWithSymbol(
