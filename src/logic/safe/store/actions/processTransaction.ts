@@ -4,7 +4,7 @@ import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import { generateSignaturesFromTxConfirmations, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
@@ -22,7 +22,6 @@ import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/ac
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { Dispatch, DispatchReturn } from './types'
-import { getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -54,7 +53,8 @@ const processTransaction = ({
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
-  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
+  const preApprovingOwner = approveAndExecute ? userAddress : undefined
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
 
   if (!sigs) {
     sigs = getPreValidatedSignatures(from)

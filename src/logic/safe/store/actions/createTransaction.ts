@@ -14,7 +14,7 @@ import {
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateGasForTransactionCreation, getPreValidatedSignatures } from 'src/logic/safe/transactions/gas'
+import { estimateGasForTransactionCreation } from 'src/logic/safe/transactions/gas'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -40,6 +40,7 @@ import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
+import { getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
