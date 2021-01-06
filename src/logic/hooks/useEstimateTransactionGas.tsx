@@ -55,8 +55,6 @@ export const useEstimateTransactionGas = ({
   const threshold = useSelector(safeThresholdSelector)
 
   useEffect(() => {
-    let isCurrent = true
-
     const estimateGas = async () => {
       if (!txData.length) {
         return
@@ -77,16 +75,15 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        if (isCurrent) {
-          setGasEstimation({
-            txEstimationExecutionStatus: gasEstimation <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
-            gasEstimation,
-            gasCost,
-            gasCostFormatted,
-            gasPrice,
-            isExecution,
-          })
-        }
+
+        setGasEstimation({
+          txEstimationExecutionStatus: gasEstimation <= 0 ? EstimationStatus.FAILURE : EstimationStatus.SUCCESS,
+          gasEstimation,
+          gasCost,
+          gasCostFormatted,
+          gasPrice,
+          isExecution,
+        })
       } catch (error) {
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
         const gasEstimation = 10000
@@ -104,11 +101,17 @@ export const useEstimateTransactionGas = ({
     }
 
     estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [txData, safeAddress, txRecipient, txConfirmations, txAmount, preApprovingOwner, nativeCoin.decimals, threshold])
+  }, [
+    txData,
+    safeAddress,
+    txRecipient,
+    txConfirmations,
+    txAmount,
+    preApprovingOwner,
+    nativeCoin.decimals,
+    threshold,
+    operation,
+  ])
 
   return gasEstimation
 }
