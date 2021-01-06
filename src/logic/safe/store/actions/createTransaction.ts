@@ -88,7 +88,7 @@ const createTransaction = (
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
+  const nonce = txNonce ? txNonce.toString() : await getNewTxNonce(lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
   let safeTxGas
