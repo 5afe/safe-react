@@ -1,12 +1,13 @@
 import { Accordion, EthHashInfo, Loader, Menu, Tab, Text } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import { format } from 'date-fns'
-import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
+import React, { ReactElement, ReactNode, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { getExplorerInfo } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import {
+  Creation,
   ExpandedTxDetails,
   isCreationTxInfo,
   isCustomTxInfo,
@@ -27,6 +28,7 @@ import {
 import { useAssetInfo } from 'src/routes/safe/components/GatewayTransactions/Collapsed/hooks/useAssetInfo'
 import { fetchTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/routes/safe/components/GatewayTransactions/Expanded/selectors/getTransactionDetails'
+import { NOT_AVAILABLE } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { TxData as LegacyTxData } from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/CustomDescription'
 import styled from 'styled-components'
 import { TokenTransferAmount } from './Collapsed/TokenTransferAmount'
@@ -187,8 +189,9 @@ const QueueTransactions = (): ReactElement => {
 
 const useTransactionDetails = (
   transactionId: string,
-  txLocation: 'history' | 'queued' | 'next',
+  txLocation: 'history' | 'queued.next' | 'queued.queued',
 ): { data?: ExpandedTxDetails; loading: boolean } => {
+  const dispatch = useRef(useDispatch())
   const [txDetails, setTxDetails] = useState<{ data?: ExpandedTxDetails; loading: boolean }>({
     loading: true,
     data: undefined,
@@ -198,8 +201,11 @@ const useTransactionDetails = (
   useEffect(() => {
     if (data) {
       setTxDetails({ loading: false, data })
+    } else {
+      // lookup tx details
+      dispatch.current(fetchTransactionDetails({ transactionId, txLocation }))
     }
-  }, [data])
+  }, [data, transactionId, txLocation])
 
   return txDetails
 }
@@ -211,7 +217,7 @@ const TxDetailsContainer = styled.div`
   row-gap: 2px;
   background-color: lightgray;
   width: 100%;
-  min-height: 200px;
+  min-height: 115px;
 
   & > div {
     overflow: hidden;
@@ -299,7 +305,11 @@ const TxSummary = ({
         <Text size="md" strong as="span">
           Hash:
         </Text>{' '}
-        {txHash ? <InlineEthHashInfo hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} /> : 'n/a'}
+        {txHash ? (
+          <InlineEthHashInfo hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
+        ) : (
+          NOT_AVAILABLE
+        )}
       </div>
       {nonce && (
         <div className="tx-nonce">
@@ -321,7 +331,7 @@ const TxSummary = ({
         <Text size="md" strong as="span">
           Executed:
         </Text>{' '}
-        {executedAt ? formatDateTime(executedAt) : 'n/a'}
+        {executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE}
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
@@ -448,14 +458,81 @@ const TxInfoSettings = ({ settingsInfo }: { settingsInfo: SettingsChange['settin
   }
 }
 
+const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
+  const txInfo = transaction.txInfo as Creation
+  const timestamp = transaction.timestamp
+
+  return (
+    <TxDetailsContainer>
+      <div className="tx-summary">
+        <div className="tx-hash">
+          <Text size="md" strong as="span">
+            Hash:
+          </Text>{' '}
+          <InlineEthHashInfo
+            hash={txInfo.transactionHash}
+            shortenHash={8}
+            showCopyBtn
+            explorerUrl={getExplorerInfo(txInfo.transactionHash)}
+          />
+        </div>
+        <div className="tx-created">
+          <Text size="md" strong as="span">
+            Created:
+          </Text>{' '}
+          {formatDateTime(timestamp)}
+        </div>
+        <div className="tx-creator">
+          <Text size="md" strong as="span">
+            Creator:
+          </Text>{' '}
+          <InlineEthHashInfo
+            hash={txInfo.creator}
+            shortenHash={4}
+            showCopyBtn
+            explorerUrl={getExplorerInfo(txInfo.creator)}
+          />
+        </div>
+        <div className="tx-factory">
+          <Text size="md" strong as="span">
+            Factory:
+          </Text>{' '}
+          {txInfo.factory ? (
+            <InlineEthHashInfo
+              hash={txInfo.factory}
+              shortenHash={4}
+              showCopyBtn
+              explorerUrl={getExplorerInfo(txInfo.factory)}
+            />
+          ) : (
+            NOT_AVAILABLE
+          )}
+        </div>
+        <div className="tx-mastercopy">
+          <Text size="md" strong as="span">
+            Mastercopy:
+          </Text>{' '}
+          {txInfo.implementation ? (
+            <InlineEthHashInfo
+              hash={txInfo.implementation}
+              shortenHash={4}
+              showCopyBtn
+              explorerUrl={getExplorerInfo(txInfo.implementation)}
+            />
+          ) : (
+            NOT_AVAILABLE
+          )}
+        </div>
+      </div>
+      <div />
+    </TxDetailsContainer>
+  )
+}
+
 type TxInfoProps = {
   txInfo: ExpandedTxDetails['txInfo']
 }
 const TxInfo = ({ txInfo }: TxInfoProps): ReactElement | null => {
-  if (isCreationTxInfo(txInfo)) {
-    return null
-  }
-
   if (isCustomTxInfo(txInfo)) {
     return null
   }
@@ -589,20 +666,9 @@ const NoPaddingAccordion = styled(Accordion)`
 `
 
 const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
-  const dispatch = useDispatch()
-
-  const onChange = (event, expanded, transactionId) => {
-    if (expanded && transactionId) {
-      // lookup tx details
-      dispatch(fetchTransactionDetails({ transactionId, txLocation: 'history' }))
-    }
-  }
-
   // TODO: summary and details as children
   return (
     <NoPaddingAccordion
-      id={transaction.id}
-      onChange={onChange}
       summaryContent={
         <StyledTransaction>
           <div className="tx-nonce">
@@ -626,7 +692,13 @@ const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
           </div>
         </StyledTransaction>
       }
-      detailsContent={<TxDetails transactionId={transaction.id} />}
+      detailsContent={
+        isCreationTxInfo(transaction.txInfo) ? (
+          <TxInfoCreation transaction={transaction} />
+        ) : (
+          <TxDetails transactionId={transaction.id} />
+        )
+      }
     />
   )
 }
