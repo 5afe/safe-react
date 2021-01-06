@@ -261,6 +261,11 @@ type QueuedGatewayResponse = GatewayResponse & {
   results: QueuedGatewayResult[]
 }
 
+export type TransactionDetails = {
+  count: number
+  transactions: Array<[nonce: string, transactions: Transaction[]]>
+}
+
 /**
  * Helper functions
  */

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { Transfer } from 'src/logic/safe/store/models/types/gateway'
+import { Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 

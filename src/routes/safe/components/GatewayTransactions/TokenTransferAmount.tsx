@@ -7,7 +7,7 @@ import Img from 'src/components/layout/Img'
 import { Transfer } from 'src/logic/safe/store/models/types/gateway'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
-import { useAssetInfo } from 'src/routes/safe/components/GatewayTransactions/Collapsed/hooks/useAssetInfo'
+import { useAssetInfo } from './hooks/useAssetInfo'
 
 const Amount = styled(Text)`
   margin-left: 10px;
