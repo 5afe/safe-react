@@ -34,7 +34,6 @@ import { TxType } from './TxType'
 
 import CheckLargeFilledGreenCircle from './assets/check-large-filled-green.svg'
 import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
-
 import Img from 'src/components/layout/Img'
 
 const Wrapper = styled.div`
@@ -241,35 +240,44 @@ const OwnerList = styled.ul`
   list-style: none;
   margin: 1em;
   width: 50%;
+
   .legend {
     padding: 0 1.5em 1.5em 1.5em;
     position: relative;
-    &::before {
-      content: '';
-      position: absolute;
-      z-index: 1;
-      left: 0;
-      height: 100%;
-      border-left: 1px #ccc solid;
-    }
+
     .owner-info {
       margin: 5px;
     }
+
     span {
       color: #008c73;
       font-weight: bold;
     }
   }
+
   .icon {
     position: absolute;
     width: 16px;
     z-index: 2;
-    left: -8px;
+    left: -7px;
   }
 `
 const OwnerListItem = styled.li`
   display: flex;
   position: relative;
+
+  &::before {
+    content: '';
+    position: absolute;
+    z-index: 1;
+    left: 0;
+    height: 100%;
+    border-left: 2px #919191 solid;
+  }
+
+  &:last-child::before {
+    border-left: none;
+  }
 `
 
 const InlineEthHashInfo = styled(EthHashInfo)`
@@ -520,7 +528,7 @@ const TxOwners = ({
       {detailedExecutionInfo.confirmations.map(({ signer }) => (
         <OwnerListItem key={signer}>
           <span className="icon">
-            <Img alt="" src={ConfirmLargeGreenCircle} />
+            <Img alt="" src={CheckLargeFilledGreenCircle} />
           </span>
           <div className="legend">
             <span>Confirmed</span>
@@ -528,6 +536,15 @@ const TxOwners = ({
           </div>
         </OwnerListItem>
       ))}
+      <OwnerListItem>
+        <span className="icon">
+          <Img alt="" src={detailedExecutionInfo.executor ? CheckLargeFilledGreenCircle : ConfirmLargeGreenCircle} />
+        </span>
+        <div className="legend">
+          <span>Executed</span>
+          {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
+        </div>
+      </OwnerListItem>
     </OwnerList>
   )
 }
