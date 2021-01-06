@@ -30,12 +30,23 @@ import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 
 import { styles } from './style'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
+const ReviewRemoveOwner = ({
+  classes,
+  onClickBack,
+  onClose,
+  onSubmit,
+  ownerAddress,
+  ownerName,
+  values,
+  onEditTxParameters,
+  txParameters,
+}) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
@@ -194,6 +205,10 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
         </Row>
       </Block>
       <Hairline />
+
+      {/* Tx Parameters */}
+      <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={false} />
+
       <Block className={classes.gasCostsContainer}>
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.

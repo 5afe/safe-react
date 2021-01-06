@@ -113,7 +113,7 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     }
   }
 
-  const openEditTxParameters = () => setActiveScreen('editTxAdvancedOptions')
+  const openEditTxParameters = () => setActiveScreen('editTxParameters')
 
   const closeEditTxParameters = () => setActiveScreen('reviewAddOwner')
 

@@ -14,6 +14,8 @@ import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -76,6 +78,7 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
+  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
@@ -108,6 +111,10 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
     sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
   }
 
+  const openEditTxParameters = () => setActiveScreen('editTxParameters')
+
+  const closeEditTxParameters = () => setActiveScreen('reviewRemoveOwner')
+
   return (
     <Modal
       description="Remove owner from Safe"
@@ -131,7 +138,12 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
             ownerAddress={ownerAddress}
             ownerName={ownerName}
             values={values}
+            onEditTxParameters={openEditTxParameters}
+            txParameters={txParameters}
           />
+        )}
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
         )}
       </>
     </Modal>

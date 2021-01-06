@@ -16,6 +16,8 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -82,6 +84,7 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
+  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
@@ -115,6 +118,10 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
     }
   }
 
+  const openEditTxParameters = () => setActiveScreen('editTxParameters')
+
+  const closeEditTxParameters = () => setActiveScreen('reviewReplaceOwner')
+
   return (
     <Modal
       description="Replace owner from Safe"
@@ -135,7 +142,12 @@ const ReplaceOwner = ({ isOpen, onClose, ownerAddress, ownerName }: ReplaceOwner
             ownerAddress={ownerAddress}
             ownerName={ownerName}
             values={values}
+            onEditTxParameters={openEditTxParameters}
+            txParameters={txParameters}
           />
+        )}
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
         )}
       </>
     </Modal>

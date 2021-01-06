@@ -24,12 +24,23 @@ import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { List } from 'immutable'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
+const ReviewRemoveOwner = ({
+  classes,
+  onClickBack,
+  onClose,
+  onSubmit,
+  ownerAddress,
+  ownerName,
+  values,
+  onEditTxParameters,
+  txParameters,
+}): React.ReactElement => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
@@ -164,6 +175,10 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
         </Row>
       </Block>
       <Hairline />
+
+      {/* Tx Parameters */}
+      <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={false} />
+
       <Block className={classes.gasCostsContainer}>
         <Paragraph>
           You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
