@@ -26,6 +26,8 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -46,10 +48,12 @@ export type CollectibleTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
+  onAdvancedOptions: () => void
   tx: CollectibleTx
+  txParameters: TxParameters
 }
 
-const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+const ReviewCollectible = ({ onClose, onPrev, onAdvancedOptions, tx, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
@@ -163,6 +167,10 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             </Paragraph>
           </Row>
         )}
+
+        {/* Tx Parameters */}
+        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+
         <Row>
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
