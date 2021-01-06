@@ -177,7 +177,13 @@ const SendModal = ({
         )}
 
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
-          <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
+          <ContractInteractionReview
+            onClose={onClose}
+            onPrev={() => setActiveScreen('contractInteraction')}
+            tx={tx}
+            onAdvancedOptions={goToEditTxAdvancedOptions}
+            txParameters={txParameters}
+          />
         )}
 
         {activeScreen === 'contractInteraction' && !isABI && (

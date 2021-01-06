@@ -22,6 +22,9 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeSelector } from 'src/logic/safe/store/selectors'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
+
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 
 const useStyles = makeStyles(styles)
@@ -37,12 +40,20 @@ export type TransactionReviewType = {
 type Props = {
   onClose: () => void
   onPrev: () => void
+  onAdvancedOptions: () => void
   tx: TransactionReviewType
+  txParameters: TxParameters
 }
 
 const { nativeCoin } = getNetworkInfo()
 
-const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+const ContractInteractionReview = ({
+  onClose,
+  onPrev,
+  tx,
+  onAdvancedOptions,
+  txParameters,
+}: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -161,6 +172,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             </Row>
           </Col>
         </Row>
+
+        {/* Tx Parameters */}
+        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+
         <Row>
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}

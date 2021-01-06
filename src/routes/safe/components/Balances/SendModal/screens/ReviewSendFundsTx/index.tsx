@@ -32,11 +32,11 @@ import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { TxParametersDetail } from '../../TxParametersDetail'
 
 const useStyles = makeStyles(styles)
 
