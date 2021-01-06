@@ -1,5 +1,5 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useMemo } from 'react'
+import React, { useState, ReactElement, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -26,8 +26,11 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/component
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { ActionCallback, CREATE } from '.'
+import { TxParametersDetail } from '../../../Balances/SendModal/TxParametersDetail'
+import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -79,6 +82,12 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
+  const txParameters = useTransactionParameters()
+
+  const [showEditTxParams, setShowEditTxParams] = useState(false)
+
+  const openEditTxParameters = () => setShowEditTxParams(true)
+  const closeEditTxParameters = () => setShowEditTxParams(false)
 
   const handleSubmit = () => {
     const isSpendingLimitEnabled = spendingLimits !== null
@@ -129,6 +138,10 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
       ?.label ?? 'One-time spending limit'
 
+  if (showEditTxParams) {
+    return <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+  }
+
   return (
     <>
       <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
@@ -165,6 +178,9 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
             You are about to replace an existent spending limit
           </Text>
         )}
+
+        {/* Tx Parameters */}
+        <TxParametersDetail txParameters={txParameters} onEdit={openEditTxParameters} />
       </Block>
 
       <Modal.Footer>
