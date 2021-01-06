@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -21,8 +20,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -32,14 +30,18 @@ type Props = {
   tx: Transaction
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const classes = useStyles()
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
     txRecipient: safeAddress,
   })
@@ -81,10 +83,13 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
           </Paragraph>
         </Row>
         <Row>
-          <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
-          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Row align="center" className={classes.buttonRow}>

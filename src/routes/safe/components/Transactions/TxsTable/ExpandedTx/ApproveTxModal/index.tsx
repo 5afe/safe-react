@@ -22,8 +22,7 @@ import { processTransaction } from 'src/logic/safe/store/actions/processTransact
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
-import { TransactionFeesText } from 'src/components/TransactionsFeesText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -145,14 +144,13 @@ export const ApproveTxModal = ({
             </>
           )}
         </Row>
-        <TransactionFeesText
+        <TransactionFees
           gasCostFormatted={gasCostFormatted}
           isExecution={isExecution}
           isCreation={isCreation}
           isOffChainSignature={isOffChainSignature}
           txEstimationExecutionStatus={txEstimationExecutionStatus}
         />
-        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Row align="center" className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>

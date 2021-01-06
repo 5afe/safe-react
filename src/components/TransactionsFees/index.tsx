@@ -2,6 +2,7 @@ import React from 'react'
 import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
@@ -12,11 +13,12 @@ type TransactionFailTextProps = {
 }
 const { nativeCoin } = getNetworkInfo()
 
-export const TransactionFeesText = ({
+export const TransactionFees = ({
   gasCostFormatted,
   isExecution,
   isCreation,
   isOffChainSignature,
+  txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
   let transactionAction
   if (isCreation) {
@@ -28,11 +30,14 @@ export const TransactionFeesText = ({
   }
 
   return (
-    <Paragraph>
-      You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently connected
-      wallet.
-      {!isOffChainSignature &&
-        ` Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-    </Paragraph>
+    <>
+      <Paragraph>
+        You&apos;re about to {transactionAction} a transaction and will have to confirm it with your currently connected
+        wallet.
+        {!isOffChainSignature &&
+          ` Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+      </Paragraph>
+      <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+    </>
   )
 }

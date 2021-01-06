@@ -3,7 +3,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
-import { getNetworkInfo } from 'src/config'
 import { styles } from './style'
 
 import Field from 'src/components/forms/Field'
@@ -21,11 +20,9 @@ import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { List } from 'immutable'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
-
-const { nativeCoin } = getNetworkInfo()
 
 const useStyles = makeStyles(styles)
 
@@ -47,7 +44,13 @@ export const ChangeThresholdModal = ({
   const classes = useStyles()
   const [data, setData] = useState('')
 
-  const { gasCostFormatted, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isCreation,
+    isExecution,
+    isOffChainSignature,
+  } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
   })
@@ -124,10 +127,13 @@ export const ChangeThresholdModal = ({
                 </Col>
               </Row>
               <Row>
-                <Paragraph>
-                  {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-                </Paragraph>
-                <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={false} />
+                <TransactionFees
+                  gasCostFormatted={gasCostFormatted}
+                  isExecution={isExecution}
+                  isCreation={isCreation}
+                  isOffChainSignature={isOffChainSignature}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
+                />
               </Row>
             </Block>
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
