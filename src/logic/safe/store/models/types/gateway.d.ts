@@ -304,6 +304,10 @@ export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
   return value.type === 'Creation'
 }
 
+export const isStatusSuccess = (value: Transaction['txStatus']): value is 'SUCCESS' => {
+  return value === 'SUCCESS'
+}
+
 export const isMultiSigExecutionDetails = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
 ): value is MultiSigExecutionDetails => {

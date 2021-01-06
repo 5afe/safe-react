@@ -1,69 +1,82 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { Transfer } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTransferTxInfo, TransactionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
-type TokenTransferAsset = {
+export type TokenTransferAsset = {
+  type: 'Transfer'
   name: string
   logoUri: string
   directionSign: '+' | '-' | ''
   amountWithSymbol: string
-  type: string
+  tokenType: string
 }
 
-const defaultAssetValues: TokenTransferAsset = {
+export type AssetInfo = TokenTransferAsset
+
+export const isTokenTransferAsset = (value: AssetInfo): value is TokenTransferAsset => {
+  return value.type === 'Transfer'
+}
+
+const defaultTokenTransferAsset: TokenTransferAsset = {
+  type: 'Transfer',
   name: NOT_AVAILABLE,
   logoUri: NOT_AVAILABLE,
   directionSign: '',
   amountWithSymbol: NOT_AVAILABLE,
-  type: 'UNKNOWN',
+  tokenType: 'UNKNOWN',
 }
 
-export const useAssetInfo = (txInfo: Transfer): TokenTransferAsset => {
-  const [asset, setAsset] = useState<TokenTransferAsset>(defaultAssetValues)
-  const { direction, transferInfo } = txInfo
+export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => {
+  const [asset, setAsset] = useState<AssetInfo>()
   const amountWithSymbol = getTxAmount(txInfo)
 
   useEffect(() => {
-    const directionSign = direction === 'INCOMING' ? '+' : '-'
+    if (isTransferTxInfo(txInfo)) {
+      const { direction, transferInfo } = txInfo
+      const directionSign = direction === 'INCOMING' ? '+' : '-'
 
-    switch (transferInfo.type) {
-      case 'ERC20': {
-        setAsset({
-          name: transferInfo.tokenName ?? defaultAssetValues.name,
-          logoUri: transferInfo.logoUri ?? defaultAssetValues.logoUri,
-          directionSign,
-          amountWithSymbol,
-          type: transferInfo.type,
-        })
-        break
-      }
-      case 'ERC721': {
-        setAsset({
-          name: transferInfo.tokenName ?? defaultAssetValues.name,
-          logoUri: transferInfo.logoUri ?? defaultAssetValues.logoUri,
-          directionSign: directionSign,
-          amountWithSymbol,
-          type: transferInfo.type,
-        })
-        break
-      }
-      case 'ETHER': {
-        const { nativeCoin } = getNetworkInfo()
+      switch (transferInfo.type) {
+        case 'ERC20': {
+          setAsset({
+            type: 'Transfer',
+            name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
+            logoUri: transferInfo.logoUri ?? defaultTokenTransferAsset.logoUri,
+            directionSign,
+            amountWithSymbol,
+            tokenType: transferInfo.type,
+          })
+          break
+        }
+        case 'ERC721': {
+          setAsset({
+            type: 'Transfer',
+            name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
+            logoUri: transferInfo.logoUri ?? defaultTokenTransferAsset.logoUri,
+            directionSign: directionSign,
+            amountWithSymbol,
+            tokenType: transferInfo.type,
+          })
+          break
+        }
+        case 'ETHER': {
+          const { nativeCoin } = getNetworkInfo()
 
-        setAsset({
-          name: nativeCoin.name ?? defaultAssetValues.name,
-          logoUri: nativeCoin.logoUri ?? defaultAssetValues.logoUri,
-          directionSign: directionSign,
-          amountWithSymbol,
-          type: transferInfo.type,
-        })
-        break
+          setAsset({
+            type: 'Transfer',
+            name: nativeCoin.name ?? defaultTokenTransferAsset.name,
+            logoUri: nativeCoin.logoUri ?? defaultTokenTransferAsset.logoUri,
+            directionSign: directionSign,
+            amountWithSymbol,
+            tokenType: transferInfo.type,
+          })
+          break
+        }
       }
     }
-  }, [direction, transferInfo, amountWithSymbol])
+  }, [txInfo, amountWithSymbol])
 
   return asset
 }
