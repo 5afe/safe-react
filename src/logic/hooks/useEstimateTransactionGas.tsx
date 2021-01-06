@@ -47,25 +47,33 @@ type TransactionEstimationProps = {
   safeAddress: string
   txRecipient: string
   txConfirmations?: List<Confirmation>
+  txAmount?: string
+  operation?: number
+  gasPrice?: string
+  gasToken?: string
+  refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
+  safeTxGas?: string
+  from?: string
   isExecution: boolean
   isCreation: boolean
   isOffChainSignature?: boolean
-  txAmount?: string
-  operation?: number
-  from?: string
 }
 
 const estimateTransactionGas = async ({
-  txAmount,
   txData,
+  safeAddress,
   txRecipient,
   txConfirmations,
+  txAmount,
+  operation = CALL,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  safeTxGas,
+  from,
   isExecution,
   isCreation,
   isOffChainSignature = false,
-  safeAddress,
-  operation = CALL,
-  from,
 }: TransactionEstimationProps): Promise<number> => {
   if (isCreation) {
     return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation)
@@ -84,6 +92,10 @@ const estimateTransactionGas = async ({
       txData,
       operation,
       from,
+      gasPrice,
+      gasToken,
+      refundReceiver,
+      safeTxGas,
     })
   }
 
