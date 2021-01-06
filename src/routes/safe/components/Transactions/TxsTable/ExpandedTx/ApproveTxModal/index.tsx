@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -24,6 +23,7 @@ import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/lo
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFeesText } from 'src/components/TransactionsFeesText'
 
 const useStyles = makeStyles(styles)
 
@@ -61,7 +61,6 @@ type Props = {
   thresholdReached: boolean
   tx: Transaction
 }
-const { nativeCoin } = getNetworkInfo()
 
 export const ApproveTxModal = ({
   canExecute,
@@ -81,10 +80,16 @@ export const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txRecipient: tx.recipient,
     txData: tx.data || '',
-    txConfirmations: tx.confirmations.size,
+    txConfirmations: tx.confirmations,
     txAmount: tx.value,
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
   })
@@ -140,15 +145,13 @@ export const ApproveTxModal = ({
             </>
           )}
         </Row>
-        <Row>
-          <Paragraph>
-            {`You're about to ${
-              approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${
-              nativeCoin.name
-            } in this wallet to fund this confirmation.`}
-          </Paragraph>
-        </Row>
+        <TransactionFeesText
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
         <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Row align="center" className={classes.buttonRow}>
