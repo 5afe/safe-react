@@ -20,12 +20,22 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { TxParametersDetail } from '../../../Balances/SendModal/TxParametersDetail'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
 const { nativeCoin } = getNetworkInfo()
 
-const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddress, threshold }) => {
+const ChangeThreshold = ({
+  classes,
+  onChangeThreshold,
+  onClose,
+  owners,
+  safeAddress,
+  threshold,
+  txParameters,
+  onEditTxParameters,
+}) => {
   const [gasCosts, setGasCosts] = useState('< 0.001')
 
   useEffect(() => {
@@ -103,13 +113,19 @@ const ChangeThreshold = ({ classes, onChangeThreshold, onClose, owners, safeAddr
                   </Paragraph>
                 </Col>
               </Row>
+
+              {/* Tx Parameters */}
+              <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={true} />
+
               <Row>
                 <Paragraph>
                   {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
                 </Paragraph>
               </Row>
             </Block>
+
             <Hairline style={{ position: 'absolute', bottom: 85 }} />
+
             <Row align="center" className={classes.buttonRow}>
               <Button minWidth={140} onClick={onClose}>
                 Back

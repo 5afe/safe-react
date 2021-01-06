@@ -2,9 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import ChangeThreshold from './ChangeThreshold'
-import { styles } from './style'
-
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -22,6 +19,11 @@ import {
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
+import ChangeThreshold from './ChangeThreshold'
+import { styles } from './style'
+import EditTxParametersForm from '../../Balances/SendModal/screens/EditTxParametersForm'
 
 const useStyles = makeStyles(styles)
 
@@ -33,6 +35,8 @@ const ThresholdSettings = (): React.ReactElement => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const owners = useSelector(safeOwnersSelector)
   const granted = useSelector(grantedSelector)
+  const txParameters = useTransactionParameters()
+  const [activeScreen, setActiveScreen] = useState('form')
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
@@ -58,6 +62,10 @@ const ThresholdSettings = (): React.ReactElement => {
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
   }, [trackEvent])
+
+  const openEditTxParameters = () => setActiveScreen('editTxParameters')
+
+  const closeEditTxParameters = () => setActiveScreen('form')
 
   return (
     <>
@@ -87,13 +95,20 @@ const ThresholdSettings = (): React.ReactElement => {
         open={isModalOpen}
         title="Change Required Confirmations"
       >
-        <ChangeThreshold
-          onChangeThreshold={onChangeThreshold}
-          onClose={toggleModal}
-          owners={owners}
-          safeAddress={safeAddress}
-          threshold={threshold}
-        />
+        {activeScreen === 'form' && (
+          <ChangeThreshold
+            onChangeThreshold={onChangeThreshold}
+            onClose={toggleModal}
+            owners={owners}
+            safeAddress={safeAddress}
+            threshold={threshold}
+            onEditTxParameters={openEditTxParameters}
+            txParameters={txParameters}
+          />
+        )}
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+        )}
       </Modal>
     </>
   )
