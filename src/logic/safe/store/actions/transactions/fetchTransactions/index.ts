@@ -1,6 +1,5 @@
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { backOff } from 'exponential-backoff'
 
 import {
   addHistoryTransactions,
@@ -13,8 +12,8 @@ export default (safeAddress: string) => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
 ): Promise<void> => {
   const [history, queued] = await Promise.allSettled([
-    backOff(() => loadHistoryTransactions(safeAddress)),
-    backOff(() => loadQueuedTransactions(safeAddress)),
+    loadHistoryTransactions(safeAddress),
+    loadQueuedTransactions(safeAddress),
   ])
 
   if (history.status === 'fulfilled') {
