@@ -14,12 +14,12 @@ import {
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
-import { CALL, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES } from '../safe/transactions'
-import semverSatisfies from 'semver/functions/satisfies'
+import { CALL } from 'src/logic/safe/transactions'
 import { providerSelector } from '../wallets/store/selectors'
 
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -31,16 +31,6 @@ const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txC
   txConfirmations === threshold || !!preApprovingOwner || threshold === 1
 
 const checkIfTxIsCreation = (txConfirmations: number): boolean => txConfirmations === 0
-
-const checkIfOffChainSignatureIsPossible = (
-  isExecution: boolean,
-  isSmartContractWallet: boolean,
-  safeVersion?: string,
-): boolean =>
-  !isExecution &&
-  !isSmartContractWallet &&
-  !!safeVersion &&
-  semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
 
 type TransactionEstimationProps = {
   txData: string
