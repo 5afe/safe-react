@@ -198,7 +198,13 @@ const SendModal = ({
         )}
 
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
+          <ReviewCustomTx
+            onClose={onClose}
+            onPrev={() => setActiveScreen('contractInteraction')}
+            tx={tx as CustomTx}
+            onAdvancedOptions={goToEditTxAdvancedOptions}
+            txParameters={txParameters}
+          />
         )}
 
         {activeScreen === 'sendCollectible' && (
@@ -216,6 +222,8 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('sendCollectible')}
             tx={tx as CollectibleTx}
+            onAdvancedOptions={goToEditTxAdvancedOptions}
+            txParameters={txParameters}
           />
         )}
 

@@ -24,6 +24,8 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 import ArrowDown from '../../assets/arrow-down.svg'
 
@@ -39,14 +41,16 @@ export type CustomTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
+  onAdvancedOptions: () => void
   tx: CustomTx
+  txParameters: TxParameters
 }
 
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+const ReviewCustomTx = ({ onClose, onPrev, onAdvancedOptions, tx, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -160,6 +164,10 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
             </Row>
           </Col>
         </Row>
+
+        {/* Tx Parameters */}
+        <TxParametersDetail txParameters={txParameters} onAdvancedOptions={onAdvancedOptions} />
+
         <Row>
           <Paragraph>
             {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
