@@ -22,23 +22,18 @@ const StyledDivider = styled(Divider)`
 const SafeOptions = styled.div`
   display: flex;
   justify-content: space-between;
+  gap: 20px;
 `
 
 const EthereumOptions = styled.div`
   display: flex;
   justify-content: space-between;
-  flex-wrap: wrap;
+  gap: 10px 20px;
 
-  div:nth-child(3) {
-    margin-top: 10px;
-  }
+  /* div:nth-child(3) {
+    flex-flow: column nowrap;
+  } */
 `
-
-// const StyledTextField = styled(TextField)`
-//   width: 216px !important;
-//   margin: 10px 0;
-// `
-
 const StyledLink = styled(Link)`
   margin-top: 10px;
   display: flex;
@@ -52,7 +47,10 @@ const StyledIconButton = styled(IconButton)`
   margin: 10px 0 0 0;
 `
 const StyledText = styled(Text)`
-  margin-top: 10px;
+  margin: 0 0 4px 0;
+`
+const StyledTextMt = styled(Text)`
+  margin: 16px 0 4px 0;
 `
 
 const useStyles = makeStyles(styles)
@@ -145,9 +143,9 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                 />
               </SafeOptions>
 
-              <StyledText size="xl" strong>
+              <StyledTextMt size="xl" strong>
                 Ethereum transactions parameters
-              </StyledText>
+              </StyledTextMt>
 
               <EthereumOptions>
                 <Field
