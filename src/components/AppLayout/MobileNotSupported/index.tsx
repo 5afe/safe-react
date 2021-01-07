@@ -74,6 +74,9 @@ const StyledCloseIcon = styled(Icon)`
   margin: 0 34px;
   width: 32px;
   height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
   &:hover {
     background: ${({ theme }) => theme.colors.separator};
@@ -84,6 +87,15 @@ const StyledCloseIcon = styled(Icon)`
     margin: 8px 34px 0 16px;
   }
 `
+const StyledButton = styled(Button)`
+  background-color: transparent;
+  min-width: 0;
+
+  :hover {
+    background-color: transparent;
+  }
+`
+
 const StyledLink = styled.a`
   text-decoration: none;
 `
@@ -110,9 +122,9 @@ export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
           </StyledCard>
 
           <StyledImg src={Phone} alt="Phone" />
-          <Button size="md" variant="outlined" color="primary" onClick={onClose}>
+          <StyledButton size="md" variant="outlined" color="primary" onClick={onClose}>
             <StyledCloseIcon size="md" type="cross" />
-          </Button>
+          </StyledButton>
         </ModalApp>
       </Overlay>
     </MobileView>
