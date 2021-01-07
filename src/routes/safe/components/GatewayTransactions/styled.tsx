@@ -1,11 +1,18 @@
-import { Accordion, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Accordion, AccordionDetails, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 export const NoPaddingAccordion = styled(Accordion)`
-  .MuiAccordionDetails-root {
-    padding: 0;
+  &.MuiAccordion-root {
+    & .MuiAccordionDetails-root {
+      padding: 0;
+    }
   }
 `
+
+export const ColumnLikeAccordionDetails = styled(AccordionDetails)`
+  flex-flow: column;
+`
+
 export const StyledTransaction = styled.div`
   display: grid;
   grid-template-columns: 1fr 3fr 3fr 1fr 2fr 2fr 2fr;
@@ -42,7 +49,7 @@ export const StyledTransactions = styled.div`
   overflow: hidden;
   width: 100%;
 
-  & .MuiAccordion-root {
+  & > .MuiAccordion-root {
     &:first-child {
       border-top: none;
     }
@@ -79,9 +86,10 @@ export const ContentWrapper = styled.div`
 export const TxDetailsContainer = styled.div`
   display: grid;
   grid-template-columns: 1fr 1fr;
+  grid-template-rows: [first] 115px;
   column-gap: 2px;
   row-gap: 2px;
-  background-color: lightgray;
+  background-color: #e8e7e6;
   width: 100%;
   min-height: 115px;
 
@@ -94,12 +102,12 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-summary {
-    grid-row-start: 1;
-    grid-row-end: row1-end;
   }
 
-  .tx-data {
-    grid-row-start: 2;
+  .tx-details {
+    &.no-padding {
+      padding: 0;
+    }
   }
 
   .tx-owners {

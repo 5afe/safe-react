@@ -1,4 +1,5 @@
 import { Loader, Text } from '@gnosis.pm/safe-react-components'
+import cn from 'classnames'
 import React, { ReactElement } from 'react'
 import {
   ExpandedTxDetails,
@@ -49,12 +50,14 @@ export const TxDetails = ({ transactionId }: { transactionId: string }): ReactEl
     )
   }
 
+  const isMultiSend = data.txInfo.type === 'Custom' && data.txInfo.methodName === 'multiSend'
+
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
         <TxSummary txDetails={data} />
       </div>
-      <div className="tx-data">
+      <div className={cn('tx-details', { 'no-padding': isMultiSend })}>
         <TxDataGroup txInfo={data.txInfo} txData={data.txData} />
       </div>
       <div className="tx-owners">
