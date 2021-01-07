@@ -125,7 +125,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               color="primary"
               variant="contained"
               onClick={onConnectButtonClick}
-              disabled={provider}
+              disabled={provider !== undefined}
               data-testid="connect-btn"
             >
               <Text size="xl" color="white">
