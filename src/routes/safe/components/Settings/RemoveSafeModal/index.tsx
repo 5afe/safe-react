@@ -18,10 +18,16 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  defaultSafeSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
+import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 const openIconStyle = {
   height: md,
@@ -39,12 +45,17 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
+  const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
   const explorerInfo = getExplorerInfo(safeAddress)
   const { url } = explorerInfo()
 
-  const onRemoveSafeHandler = () => {
-    dispatch(removeSafe(safeAddress))
+  const onRemoveSafeHandler = async () => {
+    await dispatch(removeLocalSafe(safeAddress))
+    if (sameAddress(safeAddress, defaultSafe)) {
+      await saveDefaultSafe('')
+    }
+
     onClose()
     // using native redirect in order to avoid problems in several components
     // trying to access references of the removed safe.
