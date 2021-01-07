@@ -14,10 +14,6 @@ type TxInfoProps = {
 }
 
 export const TxInfo = ({ txInfo }: TxInfoProps): ReactElement | null => {
-  if (isCustomTxInfo(txInfo)) {
-    return null
-  }
-
   if (isSettingsChangeTxInfo(txInfo)) {
     return <TxInfoSettings settingsInfo={txInfo.settingsInfo} />
   }

@@ -6,17 +6,17 @@ import { TxInfoDetails } from './TxInfoDetails'
 
 export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement | null => {
   const assetInfo = useAssetInfo(txInfo)
-  const [title, setTitle] = useState('')
+  const [details, setDetails] = useState<{ title: string; address: string } | undefined>()
 
   useEffect(() => {
     if (assetInfo && assetInfo.type === 'Transfer') {
       if (txInfo.direction === 'INCOMING') {
-        setTitle(`Received ${assetInfo.amountWithSymbol} from:`)
+        setDetails({ title: `Received ${assetInfo.amountWithSymbol} from:`, address: txInfo.sender })
       } else {
-        setTitle(`Send ${assetInfo.amountWithSymbol} to:`)
+        setDetails({ title: `Send ${assetInfo.amountWithSymbol} to:`, address: txInfo.recipient })
       }
     }
-  }, [assetInfo, txInfo.direction])
+  }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])
 
-  return <TxInfoDetails title={title} address={txInfo.sender} />
+  return details ? <TxInfoDetails title={details.title} address={details.address} /> : null
 }

@@ -5,8 +5,12 @@ import { getExplorerInfo } from 'src/config'
 
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
-export const AddressInfo = ({ address }: { address: string }): ReactElement => {
+export const AddressInfo = ({ address }: { address: string }): ReactElement | null => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+
+  if (address === '') {
+    return null
+  }
 
   return (
     <EthHashInfo

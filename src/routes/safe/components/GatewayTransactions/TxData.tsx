@@ -18,6 +18,8 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => (
         <LegacyTxData data={txData.hexData} />
       </div>
     )}
-    <div className="tx-dataDecoded" />
+    <div className="tx-dataDecoded">
+      <pre>{JSON.stringify(txData, null, 2)}</pre>
+    </div>
   </>
 )
