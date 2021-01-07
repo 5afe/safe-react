@@ -90,7 +90,8 @@ export const getRpcServiceUrl = (): string => {
 
 export const getSafeClientGatewayBaseUrl = (safeAddress: string) => `${getClientGatewayUrl()}/safes/${safeAddress}`
 
-export const getTxDetailsUrl = (clientGatewayTxId: string) => `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
+export const getTxDetailsUrl = (clientGatewayTxId: string) =>
+  `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
