@@ -57,7 +57,7 @@ export const estimateTransactionGas = async ({
 
   if (isExecution) {
     // Gas of executing a transaction within the safe (threshold reached and transaction ready to be executed)
-    return await estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', operation)
+    return estimateExecTransactionGas(safeAddress, txData, txRecipient, txAmount || '0', operation)
   }
 
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -80,7 +80,7 @@ export const estimateTransactionGas = async ({
     })
   // Gas of approving the transaction (threshold not reached or user did not executed the transaction)
   const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return await calculateGasOf(approveTransactionTxData, from, safeAddress)
+  return calculateGasOf(approveTransactionTxData, from, safeAddress)
 }
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
