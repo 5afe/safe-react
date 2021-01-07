@@ -1,7 +1,14 @@
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { isTransferTxInfo, TransactionInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  Custom,
+  isCustomTxInfo,
+  isSettingsChangeTxInfo,
+  isTransferTxInfo,
+  SettingsChange,
+  TransactionInfo,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 
@@ -14,7 +21,7 @@ export type TokenTransferAsset = {
   tokenType: string
 }
 
-export type AssetInfo = TokenTransferAsset
+export type AssetInfo = TokenTransferAsset | SettingsChange | Custom
 
 export const isTokenTransferAsset = (value: AssetInfo): value is TokenTransferAsset => {
   return value.type === 'Transfer'
@@ -75,6 +82,16 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           break
         }
       }
+      return
+    }
+
+    if (isSettingsChangeTxInfo(txInfo)) {
+      setAsset(txInfo)
+      return
+    }
+
+    if (isCustomTxInfo(txInfo)) {
+      setAsset(txInfo)
     }
   }, [txInfo, amountWithSymbol])
 
