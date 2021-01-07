@@ -9,7 +9,7 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
   const [title, setTitle] = useState('')
 
   useEffect(() => {
-    if (assetInfo) {
+    if (assetInfo && assetInfo.type === 'Transfer') {
       if (txInfo.direction === 'INCOMING') {
         setTitle(`Received ${assetInfo.amountWithSymbol} from:`)
       } else {
