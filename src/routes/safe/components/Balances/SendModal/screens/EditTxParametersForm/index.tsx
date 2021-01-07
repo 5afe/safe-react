@@ -27,16 +27,17 @@ const SafeOptions = styled.div`
 
 const EthereumOptions = styled.div`
   display: flex;
-  justify-content: space-between;
+  /* justify-content: space-between; */
+  flex-wrap: wrap;
   gap: 10px 20px;
 
-  /* div:nth-child(3) {
-    flex-flow: column nowrap;
-  } */
+  div {
+    width: 216px !important;
+  }
 `
 const StyledLink = styled(Link)`
-  margin-top: 10px;
-  display: flex;
+  margin: 16px 0;
+  display: inline-flex;
   align-items: center;
 
   > :first-of-type {
@@ -181,7 +182,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
           href="https://docs.gnosis.io/safe/docs/contracts_tx_execution/#safe-transaction-gas-limit-estimation"
           target="_blank"
         >
-          <Text size="lg" color="primary">
+          <Text size="xl" color="primary">
             How can I configure the gas price manually?
           </Text>
           <Icon size="sm" type="externalLink" color="primary" />

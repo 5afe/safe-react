@@ -14,9 +14,13 @@ const AccordionDetails = styled.div`
   display: flex;
   flex-direction: column;
 `
+const StyledText = styled(Text)`
+  margin: 8px 0 0 0;
+`
 
 const StyledButtonLink = styled(ButtonLink)`
   padding-left: 0;
+  margin: 8px 0 0 0;
 
   > p {
     margin-left: 0;
@@ -35,9 +39,9 @@ export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Pro
     summaryContent={<Text size="lg">Advanced options</Text>}
     detailsContent={
       <AccordionDetails>
-        <Text size="md" color="secondaryLight">
+        <StyledText size="md" color="placeHolder">
           Safe transactions parameters
-        </Text>
+        </StyledText>
 
         <TxParameterWrapper>
           <Text size="lg" color="text">
@@ -58,9 +62,9 @@ export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Pro
         </TxParameterWrapper>
 
         <TxParameterWrapper>
-          <Text size="lg" color="secondaryLight">
+          <StyledText size="md" color="placeHolder">
             Ethereum transaction parameters
-          </Text>
+          </StyledText>
         </TxParameterWrapper>
 
         <TxParameterWrapper>
@@ -90,7 +94,7 @@ export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Pro
           </Text>
         </TxParameterWrapper>
 
-        <StyledButtonLink color="primary" onClick={onEdit}>
+        <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
           Edit
         </StyledButtonLink>
       </AccordionDetails>
