@@ -40,7 +40,7 @@ export const generateSignaturesFromTxConfirmations = (
     }) || List([])
 
   if (preApprovingOwner) {
-    confirmationsMap.push({ owner: preApprovingOwner, signature: null })
+    confirmationsMap = confirmationsMap.push({ owner: preApprovingOwner, signature: null })
   }
 
   // The constant parts need to be sorted so that the recovered signers are sorted ascending
