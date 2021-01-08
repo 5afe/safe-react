@@ -31,6 +31,9 @@ export enum EstimationStatus {
 const checkIfTxIsExecution = (threshold: number, preApprovingOwner?: string, txConfirmations?: number): boolean =>
   txConfirmations === threshold || !!preApprovingOwner || threshold === 1
 
+const checkIfTxIsApproveAndExecution = (threshold: number, txConfirmations: number): boolean =>
+  txConfirmations + 1 === threshold
+
 const checkIfTxIsCreation = (txConfirmations: number): boolean => txConfirmations === 0
 
 type TransactionEstimationProps = {
@@ -48,6 +51,7 @@ type TransactionEstimationProps = {
   isExecution: boolean
   isCreation: boolean
   isOffChainSignature?: boolean
+  approvalAndExecution?: boolean
 }
 
 const estimateTransactionGas = async ({
@@ -65,6 +69,7 @@ const estimateTransactionGas = async ({
   isExecution,
   isCreation,
   isOffChainSignature = false,
+  approvalAndExecution,
 }: TransactionEstimationProps): Promise<number> => {
   if (isCreation) {
     return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation || CALL)
@@ -87,6 +92,7 @@ const estimateTransactionGas = async ({
       gasToken: gasToken || ZERO_ADDRESS,
       refundReceiver: refundReceiver || ZERO_ADDRESS,
       safeTxGas: safeTxGas || 0,
+      approvalAndExecution,
     })
   }
 
@@ -155,6 +161,7 @@ export const useEstimateTransactionGas = ({
 
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0)
+      const approvalAndExecution = checkIfTxIsApproveAndExecution(Number(threshold), txConfirmations?.size || 0)
 
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
@@ -171,6 +178,7 @@ export const useEstimateTransactionGas = ({
           operation,
           from,
           safeTxGas,
+          approvalAndExecution,
         })
         const gasPrice = await calculateGasPrice()
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)

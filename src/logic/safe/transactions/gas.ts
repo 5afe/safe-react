@@ -175,6 +175,7 @@ type TransactionExecutionEstimationProps = {
   refundReceiver: string // Address of receiver of gas payment (or 0 if tx.origin).
   safeTxGas: number
   from: string
+  approvalAndExecution?: boolean
 }
 
 export const estimateGasForTransactionExecution = async ({
@@ -188,11 +189,19 @@ export const estimateGasForTransactionExecution = async ({
   gasToken,
   refundReceiver,
   safeTxGas,
+  approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
-  const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
+  if (approvalAndExecution) {
+    console.info(`Estimating transaction success for execution & approval...`)
+    // @todo (agustin) once we solve the problem with the preApprovingOwner, we need to use the method bellow (execTransaction) with sigs = generateSignaturesFromTxConfirmations(txConfirmations,from)
+    const safeTxGas = await estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount, operation)
+    console.info(`Gas estimation successfully finished with gas amount: ${safeTxGas}`)
+    return safeTxGas
+  }
 
+  const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
   console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
   await safeInstance.methods
     .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
