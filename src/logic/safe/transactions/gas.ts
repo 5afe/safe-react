@@ -184,7 +184,6 @@ export const estimateGasForTransactionExecution = async ({
   txAmount,
   txData,
   operation,
-  from,
   gasPrice,
   gasToken,
   refundReceiver,
@@ -194,40 +193,16 @@ export const estimateGasForTransactionExecution = async ({
 
   const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
 
-  const executeTransactionTxData = await safeInstance.methods
+  console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
+  await safeInstance.methods
     .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
-    .encodeABI()
+    .call()
+    .catch(() => {
+      throw new Error(`Gas estimation failed with gas amount: ${safeTxGas}`)
+    })
 
-  const gasEstimation = await calculateGasOf(executeTransactionTxData, from, safeAddress)
-
-  const gasBatches = [gasEstimation, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
-    .filter((currentGas) => currentGas >= gasEstimation)
-    // Reorders gas from lowest to highest
-    .sort((a, b) => a - b)
-
-  for (const baseGasIterator of gasBatches) {
-    safeInstance.methods
-      .execTransaction(
-        txRecipient,
-        txAmount,
-        txData,
-        operation,
-        safeTxGas,
-        gasEstimation,
-        gasPrice,
-        gasToken,
-        refundReceiver,
-        sigs,
-      )
-      .call()
-      .then(() => {
-        return Promise.resolve(baseGasIterator)
-      })
-      .catch(() => console.warn(`Gas estimation failed with gas amount: ${baseGasIterator}`))
-  }
-
-  // In there is no gasBatches available that could run successfully execTransaction we need to inform the user
-  throw new Error('There was no valid value of gas to execute the transaction, the transaction may fail')
+  console.info(`Gas estimation successfully finished with gas amount: ${safeTxGas}`)
+  return safeTxGas
 }
 
 type TransactionApprovalEstimationProps = {
