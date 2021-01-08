@@ -5,7 +5,6 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import {
   HistoryGatewayResponse,
-  isDateLabel,
   isLabel,
   isTransactionSummary,
   Label,
@@ -16,6 +15,7 @@ import {
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
 import { AppReduxState } from 'src/store'
+import { getUTCStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
@@ -55,30 +55,21 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
       const { safeAddress, values } = action.payload
-      const history: StoreStructure['history'] = {}
+      const history: StoreStructure['history'] = Object.assign({}, state[safeAddress]?.history)
 
-      let currentTimestamp
       values.forEach((value) => {
-        if (isDateLabel(value)) {
-          currentTimestamp = value.timestamp
-          history[currentTimestamp] = []
-        }
+        if (isTransactionSummary(value)) {
+          const startOfDate = getUTCStartOfDate(value.transaction.timestamp)
 
-        if (isTransactionSummary(value) && currentTimestamp) {
-          const txExist = state[safeAddress]?.['history']?.[currentTimestamp]?.some(({ id }) =>
-            sameString(id, value.transaction.id),
-          )
+          if (typeof history[startOfDate] === 'undefined') {
+            history[startOfDate] = []
+          }
+
+          const txExist = history[startOfDate].some(({ id }) => sameString(id, value.transaction.id))
 
           if (!txExist) {
-            history[currentTimestamp] = [...history[currentTimestamp], value.transaction]
+            history[startOfDate].push(value.transaction)
           }
-        }
-      })
-
-      const _hist = {}
-      Object.entries(history).forEach(([timestamp, txs]) => {
-        if (txs.length) {
-          _hist[timestamp] = txs
         }
       })
 
@@ -90,7 +81,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           // keep queued list
           ...state[safeAddress],
           // extend history list
-          history: { ...state[safeAddress]?.history, ..._hist },
+          history,
         },
       }
     },
