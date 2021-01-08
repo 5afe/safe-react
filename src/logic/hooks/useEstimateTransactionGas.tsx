@@ -20,6 +20,7 @@ import { providerSelector } from '../wallets/store/selectors'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -42,7 +43,7 @@ type TransactionEstimationProps = {
   gasPrice?: string
   gasToken?: string
   refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
-  safeTxGas?: string
+  safeTxGas?: number
   from?: string
   isExecution: boolean
   isCreation: boolean
@@ -55,7 +56,7 @@ const estimateTransactionGas = async ({
   txRecipient,
   txConfirmations,
   txAmount,
-  operation = CALL,
+  operation,
   gasPrice,
   gasToken,
   refundReceiver,
@@ -66,7 +67,7 @@ const estimateTransactionGas = async ({
   isOffChainSignature = false,
 }: TransactionEstimationProps): Promise<number> => {
   if (isCreation) {
-    return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation)
+    return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation || CALL)
   }
 
   if (!from) {
@@ -78,22 +79,22 @@ const estimateTransactionGas = async ({
       safeAddress,
       txRecipient,
       txConfirmations,
-      txAmount,
+      txAmount: txAmount || '0',
       txData,
-      operation,
+      operation: operation || CALL,
       from,
-      gasPrice,
-      gasToken,
-      refundReceiver,
-      safeTxGas,
+      gasPrice: gasPrice || '0',
+      gasToken: gasToken || ZERO_ADDRESS,
+      refundReceiver: refundReceiver || ZERO_ADDRESS,
+      safeTxGas: safeTxGas || 0,
     })
   }
 
   return estimateGasForTransactionApproval({
     safeAddress,
-    operation,
+    operation: operation || CALL,
     txData,
-    txAmount,
+    txAmount: txAmount || '0',
     txRecipient,
     from,
     isOffChainSignature,
@@ -107,6 +108,7 @@ type UseEstimateTransactionGasProps = {
   txAmount?: string
   preApprovingOwner?: string
   operation?: number
+  safeTxGas?: number
 }
 
 type TransactionGasEstimationResult = {
@@ -127,6 +129,7 @@ export const useEstimateTransactionGas = ({
   txAmount,
   preApprovingOwner,
   operation,
+  safeTxGas,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
@@ -167,6 +170,7 @@ export const useEstimateTransactionGas = ({
           isOffChainSignature,
           operation,
           from,
+          safeTxGas,
         })
         const gasPrice = await calculateGasPrice()
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)

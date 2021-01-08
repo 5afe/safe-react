@@ -3,7 +3,6 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { sameString } from 'src/utils/strings'
-import { CALL } from './send'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
@@ -169,12 +168,12 @@ type TransactionExecutionEstimationProps = {
   safeAddress: string
   txRecipient: string
   txConfirmations?: List<Confirmation>
-  txAmount?: string
-  operation?: number
-  gasPrice?: string
-  gasToken?: string
-  refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
-  safeTxGas?: string
+  txAmount: string
+  operation: number
+  gasPrice: string
+  gasToken: string
+  refundReceiver: string // Address of receiver of gas payment (or 0 if tx.origin).
+  safeTxGas: number
   from: string
 }
 
@@ -182,53 +181,42 @@ export const estimateGasForTransactionExecution = async ({
   safeAddress,
   txRecipient,
   txConfirmations,
-  txAmount = '0',
+  txAmount,
   txData,
-  operation = CALL,
+  operation,
   from,
-  gasPrice = '0',
-  gasToken = ZERO_ADDRESS,
-  refundReceiver = ZERO_ADDRESS,
-  safeTxGas = '0',
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  safeTxGas,
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
   const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
 
   const executeTransactionTxData = await safeInstance.methods
-    .execTransaction(
-      txRecipient,
-      txAmount as string,
-      txData,
-      operation as number,
-      safeTxGas as string,
-      0,
-      gasPrice as string,
-      gasToken as string,
-      refundReceiver as string,
-      sigs,
-    )
+    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
     .encodeABI()
 
   const gasEstimation = await calculateGasOf(executeTransactionTxData, from, safeAddress)
 
-  const gasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
-    .filter((currentGas) => currentGas < gasEstimation)
+  const gasBatches = [gasEstimation, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
+    .filter((currentGas) => currentGas >= gasEstimation)
     // Reorders gas from lowest to highest
-    .sort((a, b) => b - a)
+    .sort((a, b) => a - b)
 
   for (const baseGasIterator of gasBatches) {
     const executeTransactionGasCheck = await safeInstance.methods
       .execTransaction(
         txRecipient,
-        txAmount as string,
+        txAmount,
         txData,
-        operation as number,
-        safeTxGas as string,
+        operation,
+        safeTxGas,
         gasEstimation,
-        gasPrice as string,
-        gasToken as string,
-        refundReceiver as string,
+        gasPrice,
+        gasToken,
+        refundReceiver,
         sigs,
       )
       .call()
@@ -246,8 +234,8 @@ type TransactionApprovalEstimationProps = {
   txData: string
   safeAddress: string
   txRecipient: string
-  txAmount?: string
-  operation?: number
+  txAmount: string
+  operation: number
   from: string
   isOffChainSignature: boolean
 }
@@ -269,18 +257,7 @@ export const estimateGasForTransactionApproval = async ({
 
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods
-    .getTransactionHash(
-      txRecipient,
-      txAmount || '0',
-      txData,
-      operation as number,
-      0,
-      0,
-      0,
-      ZERO_ADDRESS,
-      ZERO_ADDRESS,
-      nonce,
-    )
+    .getTransactionHash(txRecipient, txAmount, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, nonce)
     .call({
       from,
     })
