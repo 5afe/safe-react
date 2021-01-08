@@ -1,11 +1,10 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Button from 'src/components/layout/Button'
+import { Button } from '@gnosis.pm/safe-react-components'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
@@ -14,6 +13,7 @@ import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { loadIntercom } from 'src/utils/intercom'
+import styled from 'styled-components'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -53,7 +53,7 @@ const useStyles = makeStyles({
     rowGap: '10px',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr',
+      gridTemplateColumns: '1fr 1fr 1fr 1fr',
       paddingBottom: '0',
     },
   },
@@ -68,22 +68,11 @@ const useStyles = makeStyles({
       textDecoration: 'none',
     },
   },
-  acceptPreferences: {
-    bottom: '-20px',
-    cursor: 'pointer',
-    position: 'absolute',
-    right: '20px',
-    textDecoration: 'underline',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      bottom: '-10px',
-    },
-
-    '&:hover': {
-      textDecoration: 'none',
-    },
-  },
 } as any)
+
+const StyledButton = styled(Button)`
+  width: 208px;
+`
 
 const CookiesBanner = () => {
   const classes = useStyles()
@@ -138,16 +127,6 @@ const CookiesBanner = () => {
 
   const cookieBannerContent = (
     <div className={classes.container}>
-      <span
-        className={cn(classes.acceptPreferences, classes.text)}
-        onClick={closeCookiesBannerHandler}
-        onKeyDown={closeCookiesBannerHandler}
-        role="button"
-        tabIndex={0}
-        data-testid="accept-preferences"
-      >
-        Accept preferences &gt;
-      </span>
       <div className={classes.content}>
         <p className={classes.text}>
           We use cookies to give you the best experience and to help improve our website. Please read our{' '}
@@ -179,15 +158,22 @@ const CookiesBanner = () => {
             />
           </div>
           <div className={classes.formItem}>
-            <Button
-              color="primary"
-              component={Link}
-              minWidth={180}
-              onClick={() => acceptCookiesHandler()}
-              variant="outlined"
-            >
+            <Button size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
               Accept All
             </Button>
+          </div>
+          <div className={classes.formItem}>
+            <StyledButton
+              size="md"
+              color="primary"
+              variant="contained"
+              onClick={closeCookiesBannerHandler}
+              onKeyDown={closeCookiesBannerHandler}
+              tabIndex={1}
+              data-testid="accept-preferences"
+            >
+              Accept preferences
+            </StyledButton>
           </div>
         </div>
       </div>
