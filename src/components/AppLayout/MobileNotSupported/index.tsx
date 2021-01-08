@@ -72,8 +72,8 @@ const StyledImg = styled.img`
 
 const StyledCloseIcon = styled(Icon)`
   margin: 0 34px;
-  width: 32px;
-  height: 32px;
+  width: 24px;
+  height: 24px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -81,6 +81,8 @@ const StyledCloseIcon = styled(Icon)`
   &:hover {
     background: ${({ theme }) => theme.colors.separator};
     border-radius: 16px;
+    padding: 4px;
+    box-sizing: border-box;
   }
 
   @media (max-width: 340px) {
