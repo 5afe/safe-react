@@ -36,10 +36,10 @@ export const H2 = styled.h2`
 export const StyledTransactionsGroup = styled.div`
   display: flex;
   flex-direction: column;
-  width: 100%;
+  width: 98%;
   align-items: flex-start;
   justify-content: flex-start;
-  margin: 16px 0;
+  margin: 16px 8px;
 `
 
 export const StyledTransactions = styled.div`

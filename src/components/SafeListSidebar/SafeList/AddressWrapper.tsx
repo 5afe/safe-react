@@ -62,7 +62,7 @@ export const AddressWrapper = (props: Props): React.ReactElement => {
 
   return (
     <div className={classes.wrapper}>
-      <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} />
+      {safe.address && <EthHashInfo hash={safe.address} name={safe.name} showIdenticon shortenHash={4} />}
 
       <div className={classes.addressDetails}>
         <Text size="xl">{`${formatAmount(safe.ethBalance)} ${nativeCoin.name}`}</Text>

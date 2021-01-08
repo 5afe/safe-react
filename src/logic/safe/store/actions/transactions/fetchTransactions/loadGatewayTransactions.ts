@@ -9,23 +9,39 @@ const getHistoryTransactionsUrl = (safeAddress: string): string => {
   return `${getSafeClientGatewayBaseUrl(address)}/transactions/history/`
 }
 
-const historyPointers: { next: string | null; previous: string | null } = {
-  next: null,
-  previous: null,
+const historyPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
+
+export const loadPagedTransactions = async (
+  safeAddress: string,
+): Promise<HistoryGatewayResponse['results'] | undefined> => {
+  if (!historyPointers[safeAddress]?.next) {
+    return
+  }
+
+  const {
+    data: { results, ...pointers },
+  } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(
+    historyPointers[safeAddress].next ?? '',
+  )
+
+  historyPointers[safeAddress] = pointers
+
+  return results
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const historyTransactionsUrl = getHistoryTransactionsUrl(safeAddress)
-  // requests the first 100 incoming txs
   const params = {
     page_url: 'limit=100',
   }
+
   const {
     data: { results, ...pointers },
   } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl, { params })
 
-  historyPointers.next = pointers.next
-  historyPointers.previous = pointers.previous
+  if (!historyPointers[safeAddress]) {
+    historyPointers[safeAddress] = pointers
+  }
 
   return results
 }
