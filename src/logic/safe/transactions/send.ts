@@ -30,10 +30,7 @@ export const getTransactionHash = async ({
   return txHash
 }
 
-export const getApprovalTransaction = async (
-  safeInstance: GnosisSafe,
-  txHash: string,
-): Promise<NonPayableTransactionObject<void>> => {
+export const getApprovalTransaction = (safeInstance: GnosisSafe, txHash: string): NonPayableTransactionObject<void> => {
   try {
     return safeInstance.methods.approveHash(txHash)
   } catch (err) {
