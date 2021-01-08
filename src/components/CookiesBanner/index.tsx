@@ -4,13 +4,13 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
-import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
+import { screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { loadIntercom } from 'src/utils/intercom'
 import styled from 'styled-components'
@@ -35,15 +35,6 @@ const useStyles = makeStyles({
   content: {
     maxWidth: '100%',
     width: '830px',
-  },
-  text: {
-    color: primary,
-    fontFamily: mainFontFamily,
-    fontSize: md,
-    fontWeight: 'normal',
-    lineHeight: '1.38',
-    margin: '0 0 25px',
-    textAlign: 'center',
   },
   form: {
     columnGap: '10px',
@@ -70,6 +61,9 @@ const useStyles = makeStyles({
   },
 } as any)
 
+const StyledText = styled(Text)`
+  margin: 0 0 24px;
+`
 const StyledButton = styled(Button)`
   width: 208px;
 `
@@ -128,14 +122,14 @@ const CookiesBanner = () => {
   const cookieBannerContent = (
     <div className={classes.container}>
       <div className={classes.content}>
-        <p className={classes.text}>
+        <StyledText size="xl" color="text" center>
           We use cookies to give you the best experience and to help improve our website. Please read our{' '}
           <Link className={classes.link} to="https://gnosis-safe.io/cookie">
             Cookie Policy
           </Link>{' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
           to enhance site navigation, analyze site usage and provide customer support.
-        </p>
+        </StyledText>
         <div className={classes.form}>
           <div className={classes.formItem}>
             <FormControlLabel
