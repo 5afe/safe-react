@@ -202,6 +202,7 @@ export const useEstimateTransactionGas = ({
           isOffChainSignature,
         })
       } catch (error) {
+        console.warn(error.message)
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
         const gasEstimation = 10000
         const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)

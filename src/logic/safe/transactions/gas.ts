@@ -192,26 +192,31 @@ export const estimateGasForTransactionExecution = async ({
   approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  try {
+    if (approvalAndExecution) {
+      console.info(`Estimating transaction success for execution & approval...`)
+      // @todo (agustin) once we solve the problem with the preApprovingOwner, we need to use the method bellow (execTransaction) with sigs = generateSignaturesFromTxConfirmations(txConfirmations,from)
+      const gasEstimation = await estimateGasForTransactionCreation(
+        safeAddress,
+        txData,
+        txRecipient,
+        txAmount,
+        operation,
+      )
+      console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
+      return gasEstimation
+    }
+    const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
+    console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
+    await safeInstance.methods
+      .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
+      .call()
 
-  if (approvalAndExecution) {
-    console.info(`Estimating transaction success for execution & approval...`)
-    // @todo (agustin) once we solve the problem with the preApprovingOwner, we need to use the method bellow (execTransaction) with sigs = generateSignaturesFromTxConfirmations(txConfirmations,from)
-    const safeTxGas = await estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount, operation)
     console.info(`Gas estimation successfully finished with gas amount: ${safeTxGas}`)
     return safeTxGas
+  } catch (error) {
+    throw new Error(`Gas estimation failed with gas amount: ${safeTxGas}`)
   }
-
-  const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
-  console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
-  await safeInstance.methods
-    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
-    .call()
-    .catch(() => {
-      throw new Error(`Gas estimation failed with gas amount: ${safeTxGas}`)
-    })
-
-  console.info(`Gas estimation successfully finished with gas amount: ${safeTxGas}`)
-  return safeTxGas
 }
 
 type TransactionApprovalEstimationProps = {
