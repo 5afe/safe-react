@@ -11,9 +11,11 @@ const getHistoryTransactionsUrl = (safeAddress: string): string => {
 
 const historyPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
 
-export const loadPagedTransactions = async (
+export const loadPagedHistoryTransactions = async (
   safeAddress: string,
-): Promise<HistoryGatewayResponse['results'] | undefined> => {
+): Promise<{ values: HistoryGatewayResponse['results']; next: string | null } | undefined> => {
+  // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
+  // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!historyPointers[safeAddress]?.next) {
     return
   }
@@ -26,7 +28,7 @@ export const loadPagedTransactions = async (
 
   historyPointers[safeAddress] = pointers
 
-  return results
+  return { values: results, next: historyPointers[safeAddress].next }
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
