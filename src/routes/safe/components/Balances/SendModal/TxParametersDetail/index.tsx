@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Text, ButtonLink, Accordion } from '@gnosis.pm/safe-react-components'
+import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
@@ -9,7 +9,7 @@ const TxParameterWrapper = styled.div`
   justify-content: space-between;
 `
 
-const AccordionDetails = styled.div`
+const AccordionDetailsWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;
@@ -34,11 +34,12 @@ type Props = {
 }
 
 export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Props): React.ReactElement => (
-  <Accordion
-    compact={compact}
-    summaryContent={<Text size="lg">Advanced options</Text>}
-    detailsContent={
-      <AccordionDetails>
+  <Accordion compact={compact}>
+    <AccordionSummary>
+      <Text size="lg">Advanced options</Text>
+    </AccordionSummary>
+    <AccordionDetails>
+      <AccordionDetailsWrapper>
         <StyledText size="md" color="placeHolder">
           Safe transactions parameters
         </StyledText>
@@ -97,7 +98,7 @@ export const TxParametersDetail = ({ onEdit, txParameters, compact = true }: Pro
         <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
           Edit
         </StyledButtonLink>
-      </AccordionDetails>
-    }
-  />
+      </AccordionDetailsWrapper>
+    </AccordionDetails>
+  </Accordion>
 )
