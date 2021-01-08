@@ -103,9 +103,7 @@ export const processTransaction = ({
       }
     }
 
-    transaction = isExecution
-      ? await getExecutionTransaction(txArgs)
-      : await getApprovalTransaction(safeInstance, tx.safeTxHash)
+    transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
 
     const sendParams: any = { from, value: 0 }
 

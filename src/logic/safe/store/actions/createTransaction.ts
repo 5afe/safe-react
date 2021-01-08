@@ -136,9 +136,7 @@ const createTransaction = (
       }
     }
 
-    const tx = isExecution
-      ? await getExecutionTransaction(txArgs)
-      : await getApprovalTransaction(safeInstance, safeTxHash)
+    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
     const sendParams: PayableTx = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache
