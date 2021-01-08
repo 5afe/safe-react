@@ -5,7 +5,7 @@ import InfiniteScroll from 'react-infinite-scroll-component'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import { loadPagedTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
+import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useHistoryTransactions } from './hooks/useHistoryTransactions'
@@ -20,7 +20,18 @@ const usePagedTransactions = () => {
   const [hasMore, setHasMore] = useState(true)
 
   const fetchMoreData = async () => {
-    const values = await loadPagedTransactions(safeAddress)
+    const results = await loadPagedHistoryTransactions(safeAddress)
+
+    if (!results) {
+      setHasMore(false)
+      return
+    }
+
+    const { values, next } = results
+
+    if (next === null) {
+      setHasMore(false)
+    }
 
     if (values) {
       dispatch(addHistoryTransactions({ safeAddress, values }))
@@ -54,7 +65,6 @@ export const HistoryTxList = (): ReactElement => {
         next={fetchMoreData}
         hasMore={hasMore}
         loader={<Loader size="md" />}
-        endMessage="all set"
         scrollThreshold="120px"
         scrollableTarget="scrollableDiv"
       >
