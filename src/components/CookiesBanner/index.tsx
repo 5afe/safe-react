@@ -166,7 +166,7 @@ const CookiesBanner = () => {
               tabIndex={1}
               data-testid="accept-preferences"
             >
-              Accept preferences
+              Accept Preferences
             </StyledButton>
           </div>
         </div>
