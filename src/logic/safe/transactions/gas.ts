@@ -206,7 +206,7 @@ export const estimateGasForTransactionExecution = async ({
     .sort((a, b) => a - b)
 
   for (const baseGasIterator of gasBatches) {
-    const executeTransactionGasCheck = await safeInstance.methods
+    safeInstance.methods
       .execTransaction(
         txRecipient,
         txAmount,
@@ -220,10 +220,10 @@ export const estimateGasForTransactionExecution = async ({
         sigs,
       )
       .call()
-
-    if (executeTransactionGasCheck) {
-      return baseGasIterator
-    }
+      .then(() => {
+        return Promise.resolve(baseGasIterator)
+      })
+      .catch(() => console.warn(`Gas estimation failed with gas amount: ${baseGasIterator}`))
   }
 
   // In there is no gasBatches available that could run successfully execTransaction we need to inform the user
