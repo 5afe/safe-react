@@ -123,7 +123,7 @@ const ReviewSendFundsTx = ({
   /* Get GasInfo */
   const {
     gasCostFormatted,
-    gasPrice,
+    gasPriceFormatted,
     txEstimationExecutionStatus,
     isExecution,
     isCreation,
@@ -135,9 +135,9 @@ const ReviewSendFundsTx = ({
 
   /* Update TxParameters */
   useEffect(() => {
-    txParameters.setEthGasPrice(gasPrice)
+    txParameters.setEthGasPrice(gasPriceFormatted)
     txParameters.setEthGasLimit(gasCostFormatted)
-  }, [gasCostFormatted, gasPrice, txParameters])
+  }, [gasCostFormatted, gasPriceFormatted, txParameters])
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
