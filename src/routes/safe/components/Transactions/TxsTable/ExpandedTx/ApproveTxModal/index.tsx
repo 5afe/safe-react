@@ -3,9 +3,8 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
@@ -18,13 +17,13 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import processTransaction from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const useStyles = makeStyles(styles)
 
@@ -76,37 +75,19 @@ const ApproveTxModal = ({
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async () => {
-      const estimatedGasCosts = await estimateTxGasCosts(
-        safeAddress,
-        tx.recipient,
-        tx.data as string,
-        tx,
-        approveAndExecute ? userAddress : undefined,
-      )
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [approveAndExecute, safeAddress, tx, userAddress])
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+    txRecipient: tx.recipient,
+    txData: tx.data || '',
+    txConfirmations: tx.confirmations.size,
+    txAmount: tx.value,
+    preApprovingOwner: approveAndExecute ? userAddress : undefined,
+  })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
@@ -163,11 +144,12 @@ const ApproveTxModal = ({
           <Paragraph>
             {`You're about to ${
               approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${
+            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${
               nativeCoin.name
             } in this wallet to fund this confirmation.`}
           </Paragraph>
         </Row>
+        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
       </Block>
       <Row align="center" className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>

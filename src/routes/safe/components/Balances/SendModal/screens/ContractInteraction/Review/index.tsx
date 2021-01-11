@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { getNetworkInfo } from 'src/config'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -14,18 +14,18 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 const useStyles = makeStyles(styles)
 
@@ -56,41 +56,35 @@ const ContractInteractionReview = ({
 }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
-  const [gasCosts, setGasCosts] = useState('< 0.001')
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [txInfo, setTxInfo] = useState<{
+    txRecipient: string
+    txData: string
+    txAmount: string
+  }>({ txData: '', txAmount: '', txRecipient: '' })
+
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+    txRecipient: txInfo?.txRecipient,
+    txAmount: txInfo?.txAmount,
+    txData: txInfo?.txData,
+  })
+
   useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async (): Promise<void> => {
-      const txData = tx.data ? tx.data.trim() : ''
-
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [safeAddress, tx.contractAddress, tx.data])
+    setTxInfo({
+      txRecipient: tx.contractAddress as string,
+      txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
+      txData: tx.data ? tx.data.trim() : '',
+    })
+  }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
   const submitTx = async () => {
-    const txRecipient = tx.contractAddress
-    const txData = tx.data ? tx.data.trim() : ''
-    const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
-    if (safeAddress) {
+    if (safeAddress && txInfo) {
       dispatch(
         createTransaction({
           safeAddress,
-          to: txRecipient as string,
-          valueInWei: txValue,
-          txData,
+          to: txInfo?.txRecipient,
+          valueInWei: txInfo?.txAmount,
+          txData: txInfo?.txData,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
@@ -178,8 +172,9 @@ const ContractInteractionReview = ({
 
         <Row>
           <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
       <Hairline />

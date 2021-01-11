@@ -1,6 +1,7 @@
 import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     height: '372px',
   },
@@ -76,7 +77,9 @@ export const styles = () => ({
     },
   },
   gasCostsContainer: {
-    padding: `0 ${lg}`,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     textAlign: 'center',
     width: '100%',
   },

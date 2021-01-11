@@ -1,11 +1,10 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNetworkInfo } from 'src/config'
-import { styles } from './style'
+import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -18,45 +17,62 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
+
+import { styles } from './style'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParametersDetail } from '../../../Balances/SendModal/TxParametersDetail'
+import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
 const { nativeCoin } = getNetworkInfo()
 
-const ChangeThreshold = ({
-  classes,
+const useStyles = makeStyles(styles)
+
+type ChangeThresholdModalProps = {
+  onChangeThreshold: (newThreshold: number) => void
+  onClose: () => void
+  onEditTxParameters: () => void
+  owners?: List<SafeOwner>
+  safeAddress: string
+  threshold?: number
+  txParameters: TxParameters
+}
+
+export const ChangeThresholdModal = ({
   onChangeThreshold,
   onClose,
   owners,
   safeAddress,
-  threshold,
+  threshold = 1,
   txParameters,
   onEditTxParameters,
-}) => {
-  const [gasCosts, setGasCosts] = useState('< 0.001')
+}: ChangeThresholdModalProps): React.ReactElement => {
+  const classes = useStyles()
+  const [data, setData] = useState('')
+
+  const { gasCostFormatted, txEstimationExecutionStatus } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient: safeAddress,
+  })
 
   useEffect(() => {
     let isCurrent = true
-    const estimateGasCosts = async () => {
+    const calculateChangeThresholdData = async () => {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      const txData = safeInstance.methods.changeThreshold('1').encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
-      const gasCostsAsEth = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const txData = safeInstance.methods.changeThreshold(threshold).encodeABI()
       if (isCurrent) {
-        setGasCosts(formattedGasCosts)
+        setData(txData)
       }
     }
 
-    estimateGasCosts()
-
+    calculateChangeThresholdData()
     return () => {
       isCurrent = false
     }
-  }, [safeAddress])
+  }, [safeAddress, threshold])
 
   const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
@@ -91,7 +107,7 @@ const ChangeThreshold = ({
                     render={(props) => (
                       <>
                         <SelectField {...props} disableError>
-                          {[...Array(Number(owners.size))].map((x, index) => (
+                          {[...Array(Number(owners?.size))].map((x, index) => (
                             <MenuItem key={index} value={`${index + 1}`}>
                               {index + 1}
                             </MenuItem>
@@ -109,7 +125,7 @@ const ChangeThreshold = ({
                 </Col>
                 <Col xs={10}>
                   <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                    {`out of ${owners.size} owner(s)`}
+                    {`out of ${owners?.size} owner(s)`}
                   </Paragraph>
                 </Col>
               </Row>
@@ -119,8 +135,9 @@ const ChangeThreshold = ({
 
               <Row>
                 <Paragraph>
-                  {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+                  {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
                 </Paragraph>
+                <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={false} />
               </Row>
             </Block>
 
@@ -140,5 +157,3 @@ const ChangeThreshold = ({
     </>
   )
 }
-
-export default withStyles(styles as any)(ChangeThreshold)

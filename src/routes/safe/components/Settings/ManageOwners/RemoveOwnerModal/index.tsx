@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CheckOwner from './screens/CheckOwner'
-import ReviewRemoveOwner from './screens/Review'
+import { ReviewRemoveOwnerModal } from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
 import Modal from 'src/components/Modal'
@@ -71,7 +71,12 @@ type RemoveOwnerProps = {
   ownerName: string
 }
 
-const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerProps): React.ReactElement => {
+export const RemoveOwnerModal = ({
+  isOpen,
+  onClose,
+  ownerAddress,
+  ownerName,
+}: RemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
@@ -131,7 +136,7 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
           <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
-          <ReviewRemoveOwner
+          <ReviewRemoveOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onRemoveOwner}
@@ -140,6 +145,7 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
             values={values}
             onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
+            threshold={threshold}
           />
         )}
         {activeScreen === 'editTxParameters' && (
@@ -149,5 +155,3 @@ const RemoveOwner = ({ isOpen, onClose, ownerAddress, ownerName }: RemoveOwnerPr
     </Modal>
   )
 }
-
-export default RemoveOwner

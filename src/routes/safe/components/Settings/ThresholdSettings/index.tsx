@@ -21,7 +21,7 @@ import {
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-import ChangeThreshold from './ChangeThreshold'
+import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
 import EditTxParametersForm from '../../Balances/SendModal/screens/EditTxParametersForm'
 
@@ -32,7 +32,7 @@ const ThresholdSettings = (): React.ReactElement => {
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
   const threshold = useSelector(safeThresholdSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
   const granted = useSelector(grantedSelector)
   const txParameters = useTransactionParameters()
@@ -42,7 +42,7 @@ const ThresholdSettings = (): React.ReactElement => {
     setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const onChangeThreshold = async (newThreshold) => {
+  const onChangeThreshold = async (newThreshold: number) => {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
     const txData = safeInstance.methods.changeThreshold(newThreshold).encodeABI()
 
@@ -96,7 +96,7 @@ const ThresholdSettings = (): React.ReactElement => {
         title="Change Required Confirmations"
       >
         {activeScreen === 'form' && (
-          <ChangeThreshold
+          <ChangeThresholdModal
             onChangeThreshold={onChangeThreshold}
             onClose={toggleModal}
             owners={owners}

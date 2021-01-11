@@ -5,7 +5,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ExplorerButton, Button } from '@gnosis.pm/safe-react-components'
 
-import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
@@ -17,12 +17,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { estimateTxGasCosts2, GasEstimationInfo } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -33,9 +30,12 @@ import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
+import { TokenProps } from 'src/logic/tokens/store/model/token'
+import { RecordOf } from 'immutable'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFailText } from 'src/components/TransactionFailText'
 
 import ArrowDown from '../assets/arrow-down.svg'
-
 import { styles } from './style'
 
 const useStyles = makeStyles(styles)
@@ -59,66 +59,74 @@ type ReviewTxProps = {
   txParameters: TxParameters
 }
 
-const ReviewSendFundsTx = ({
-  onClose,
-  onPrev,
-  tx,
-  onEditTxParameters,
-  txParameters,
-}: ReviewTxProps): React.ReactElement => {
-  const classes = useStyles()
-  const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
-  const userAddress = useSelector(userAccountSelector)
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const [gasInfo, setGasInfo] = useState<(GasEstimationInfo & { formattedTotalGas: string }) | undefined>()
+const useTxAmount = (tx: ReviewTxProp, isSendingNativeToken: boolean, txToken?: RecordOf<TokenProps>): string => {
+  const [txAmount, setTxAmount] = useState('0')
+
+  // txAmount should be 0 if we send tokens
+  // the real value is encoded in txData and will be used by the contract
+  // if txAmount > 0 it would send ETH from the Safe (and the data will be empty)
+  useEffect(() => {
+    const txAmount = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
+    setTxAmount(txAmount)
+  }, [tx.amount, txToken, isSendingNativeToken])
+
+  return txAmount
+}
+
+const useTxData = (
+  isSendingNativeToken: boolean,
+  txAmount: string,
+  recipientAddress: string,
+  txToken?: RecordOf<TokenProps>,
+): string => {
   const [data, setData] = useState('')
-  const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
-  const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
 
   useEffect(() => {
-    let isCurrent = true
-
-    /* TODO: move to generic place */
-    const estimateGas = async () => {
+    const updateTxDataAsync = async () => {
       if (!txToken) {
         return
       }
 
       let txData = EMPTY_DATA
-
-      if (!isSendingETH) {
+      if (!isSendingNativeToken) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
-        const txAmount = toTokenUnit(tx.amount, txToken.decimals)
-
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
+        txData = tokenInstance.contract.methods.transfer(recipientAddress, txAmount).encodeABI()
       }
-
-      const estimation = await estimateTxGasCosts2(safeAddress as string, txRecipient as string, txData)
-      const gasCosts = fromTokenUnit(estimation.total, nativeCoin.decimals)
-      const formattedTotalGas = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasInfo({ ...estimation, formattedTotalGas })
-        setData(txData)
-      }
+      setData(txData)
     }
-    estimateGas()
 
-    /* TODO: Refactor */
-    return () => {
-      isCurrent = false
-    }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken, userAddress])
+    updateTxDataAsync()
+  }, [isSendingNativeToken, recipientAddress, txAmount, txToken])
+
+  return data
+}
+
+const ReviewSendFundsTx = ({
+  onClose,
+  onPrev,
+  onEditTxParameters,
+  txParameters,
+  tx,
+}: ReviewTxProps): React.ReactElement => {
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
+  const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
+  const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
+
+  const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
+  const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
+
+  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient,
+  })
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
-    // txAmount should be 0 if we send tokens
-    // the real value is encoded in txData and will be used by the contract
-    // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     if (!safeAddress) {
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
@@ -126,11 +134,12 @@ const ReviewSendFundsTx = ({
     }
 
     if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
+      const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
       spendingLimit.methods
         .executeAllowanceTransfer(
           safeAddress,
-          sameAddress(txToken.address, nativeCoin.address) ? ZERO_ADDRESS : txToken.address,
+          spendingLimitTokenAddress,
           tx.recipientAddress,
           toTokenUnit(tx.amount, txToken.decimals),
           ZERO_ADDRESS,
@@ -232,10 +241,9 @@ const ReviewSendFundsTx = ({
         {/* Disclaimer */}
         <Row>
           <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${
-              gasInfo?.formattedTotalGas || '< 0.001'
-            } (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
+            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
           </Paragraph>
+          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
         </Row>
       </Block>
 
