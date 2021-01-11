@@ -142,7 +142,6 @@ export const RemoveOwnerModal = ({
             onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            values={values}
             onEditTxParameters={openEditTxParameters}
             txParameters={txParameters}
             threshold={threshold}

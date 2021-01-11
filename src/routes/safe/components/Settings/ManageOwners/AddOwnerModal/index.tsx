@@ -15,7 +15,7 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { OwnerForm } from './screens/OwnerForm'
-import ReviewAddOwner from './screens/Review'
+import { ReviewAddOwner } from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
