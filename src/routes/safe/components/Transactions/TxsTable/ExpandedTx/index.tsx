@@ -34,6 +34,7 @@ import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import TransferDescription from './TxDescription/TransferDescription'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { safeNonceSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): ReactElement => {
   const classes = useStyles()
@@ -92,21 +93,26 @@ interface ExpandedSafeTxProps {
 
 const { nativeCoin } = getNetworkInfo()
 
+type ScreenType = 'approveTx' | 'executeRejectTx' | 'rejectTx'
+
 const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => {
   const { fromWei, toBN } = getWeb3().utils
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const threshold = useSelector(safeThresholdSelector) as number
-  const [openModal, setOpenModal] = useState<'approveTx' | 'executeRejectTx' | 'rejectTx'>()
-  const openApproveModal = () => setOpenModal('approveTx')
-  const closeModal = () => setOpenModal(undefined)
+  const [openModal, setOpenModal] = useState<ScreenType>()
+  const txParameters = useTransactionParameters()
+
   const isIncomingTx = !!INCOMING_TX_TYPES[tx.type]
   const isCreationTx = tx.type === TransactionTypes.CREATION
-
   const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
   const canExecute = !isIncomingTx && nonce === tx.nonce
   const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations?.size
   const canExecuteCancel = nonce === tx.nonce
+
+  const openApproveModal = () => setOpenModal('approveTx')
+
+  const closeModal = () => setOpenModal(undefined)
 
   const openRejectModal = () => {
     if (!!cancelTx && nonce === cancelTx.nonce) {
@@ -168,6 +174,8 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
           )}
         </Row>
       </Block>
+
+      {/* Approve TX */}
       {openModal === 'approveTx' && (
         <ApproveTxModal
           canExecute={canExecute}
@@ -175,17 +183,23 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
           onClose={closeModal}
           thresholdReached={thresholdReached}
           tx={tx}
+          txParameters={txParameters}
         />
       )}
+
+      {/* Reject TX */}
       {openModal === 'rejectTx' && <RejectTxModal isOpen onClose={closeModal} tx={tx} />}
+
+      {/* Execute the rejection TX */}
       {openModal === 'executeRejectTx' && cancelTx && (
         <ApproveTxModal
-          canExecute={canExecuteCancel}
+          onClose={closeModal}
           isCancelTx
           isOpen
-          onClose={closeModal}
+          canExecute={canExecuteCancel}
           thresholdReached={cancelThresholdReached}
           tx={cancelTx}
+          txParameters={txParameters}
         />
       )}
     </>

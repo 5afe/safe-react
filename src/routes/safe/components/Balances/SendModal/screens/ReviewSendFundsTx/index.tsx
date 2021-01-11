@@ -120,8 +120,10 @@ const ReviewSendFundsTx = ({
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
 
+  /* Get GasInfo */
   const {
     gasCostFormatted,
+    gasPrice,
     txEstimationExecutionStatus,
     isExecution,
     isCreation,
@@ -130,6 +132,12 @@ const ReviewSendFundsTx = ({
     txData: data,
     txRecipient,
   })
+
+  /* Update TxParameters */
+  useEffect(() => {
+    txParameters.setEthGasPrice(gasPrice)
+    txParameters.setEthGasLimit(gasCostFormatted)
+  }, [gasCostFormatted, gasPrice, txParameters])
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
