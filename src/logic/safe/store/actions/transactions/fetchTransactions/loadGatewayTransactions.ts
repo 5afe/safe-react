@@ -33,13 +33,10 @@ export const loadPagedHistoryTransactions = async (
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const historyTransactionsUrl = getHistoryTransactionsUrl(safeAddress)
-  const params = {
-    page_url: 'limit=100',
-  }
 
   const {
     data: { results, ...pointers },
-  } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl, { params })
+  } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl)
 
   if (!historyPointers[safeAddress]) {
     historyPointers[safeAddress] = pointers
