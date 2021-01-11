@@ -92,6 +92,7 @@ export const ApproveTxModal = ({
     txAmount: tx.value,
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
     safeTxGas: tx.safeTxGas,
+    operation: tx.operation,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
