@@ -1,13 +1,13 @@
 import Web3 from 'web3'
 import { provider as Provider } from 'web3-core'
 import { ContentHash } from 'web3-eth-ens'
-import UnstoppableResolution from '@unstoppabledomains/resolution'
 import { sameAddress } from './ethAddresses'
 import { EMPTY_DATA } from './ethTransactions'
 import { ProviderProps } from './store/model/provider'
 import { NODE_ENV } from 'src/utils/constants'
 import { getRpcServiceUrl } from 'src/config'
-import { isValidCryptoName } from 'src/logic/wallets/ethAddresses'
+import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
+import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
@@ -87,15 +87,8 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
 }
 
 export const getAddressFromDomain = (name: string): Promise<string> => {
-  if (isValidCryptoName(name)) {
-    const resolution = new UnstoppableResolution({
-      blockchain: {
-        cns: {
-          url: getRpcServiceUrl(),
-        },
-      },
-    })
-    return resolution.addr(name, 'ETH')
+  if (isValidCryptoDomainName(name)) {
+    return getAddressFromUnstoppableDomain(name)
   }
   return web3.eth.ens.getAddress(name)
 }

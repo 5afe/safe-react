@@ -10,7 +10,7 @@ import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
-import { isValidEnsName, isValidCryptoName } from 'src/logic/wallets/ethAddresses'
+import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import {
   useTextFieldInputStyle,
@@ -87,7 +87,7 @@ const BaseAddressBookInput = ({
         // ENS-enabled resolve/validation
         if (
           isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
-          (isValidEnsName(normalizedValue) || isValidCryptoName(normalizedValue))
+          (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
         ) {
           const address = await getAddressFromDomain(normalizedValue)
 

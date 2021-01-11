@@ -5,7 +5,7 @@ import { ContractSendMethod } from 'web3-eth-contract'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
 import { getAddressFromDomain, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
-import { isValidCryptoName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { isValidCryptoDomainName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -15,7 +15,7 @@ export const ensResolver = createDecorator({
     contractAddress: async (contractAddress) => {
       try {
         const resolvedAddress =
-          (isValidEnsName(contractAddress) || isValidCryptoName(contractAddress)) &&
+          (isValidEnsName(contractAddress) || isValidCryptoDomainName(contractAddress)) &&
           (await getAddressFromDomain(contractAddress))
 
         if (resolvedAddress) {

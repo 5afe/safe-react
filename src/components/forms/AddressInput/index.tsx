@@ -6,7 +6,7 @@ import TextField from 'src/components/forms/TextField'
 import { Validator, composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
 import { trimSpaces } from 'src/utils/strings'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
-import { isValidEnsName, isValidCryptoName } from 'src/logic/wallets/ethAddresses'
+import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 // an idea for second field was taken from here
@@ -54,7 +54,7 @@ const AddressInput = ({
     <OnChange name={name}>
       {async (value) => {
         const address = trimSpaces(value)
-        if (isValidEnsName(address) || isValidCryptoName(address)) {
+        if (isValidEnsName(address) || isValidCryptoDomainName(address)) {
           try {
             const resolverAddr = await getAddressFromDomain(address)
             const formattedAddress = checksumAddress(resolverAddr)
