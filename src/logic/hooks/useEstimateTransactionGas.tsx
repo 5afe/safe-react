@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+
 import {
   estimateGasForTransactionApproval,
   estimateGasForTransactionCreation,
@@ -15,12 +16,14 @@ import {
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 import { CALL } from 'src/logic/safe/transactions'
-import { providerSelector } from '../wallets/store/selectors'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+
+import { providerSelector } from '../wallets/store/selectors'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -123,6 +126,7 @@ type TransactionGasEstimationResult = {
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
+  gasPriceFormatted: string // Current gas price formatted
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
@@ -143,6 +147,7 @@ export const useEstimateTransactionGas = ({
     gasCost: '0',
     gasCostFormatted: '< 0.001',
     gasPrice: '0',
+    gasPriceFormatted: '0',
     isExecution: false,
     isCreation: false,
     isOffChainSignature: false,
@@ -181,6 +186,7 @@ export const useEstimateTransactionGas = ({
           approvalAndExecution,
         })
         const gasPrice = await calculateGasPrice()
+        const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
@@ -197,6 +203,7 @@ export const useEstimateTransactionGas = ({
           gasCost,
           gasCostFormatted,
           gasPrice,
+          gasPriceFormatted,
           isExecution,
           isCreation,
           isOffChainSignature,
@@ -213,6 +220,7 @@ export const useEstimateTransactionGas = ({
           gasCost,
           gasCostFormatted,
           gasPrice: '1',
+          gasPriceFormatted: '1',
           isExecution,
           isCreation,
           isOffChainSignature: false,
