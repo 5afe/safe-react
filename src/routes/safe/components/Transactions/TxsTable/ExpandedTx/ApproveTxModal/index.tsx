@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getNetworkInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -18,12 +17,12 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import processTransaction from 'src/logic/safe/store/actions/processTransaction'
+import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -61,9 +60,8 @@ type Props = {
   thresholdReached: boolean
   tx: Transaction
 }
-const { nativeCoin } = getNetworkInfo()
 
-const ApproveTxModal = ({
+export const ApproveTxModal = ({
   canExecute,
   isCancelTx = false,
   isOpen,
@@ -81,12 +79,19 @@ const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txRecipient: tx.recipient,
     txData: tx.data || '',
-    txConfirmations: tx.confirmations.size,
+    txConfirmations: tx.confirmations,
     txAmount: tx.value,
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
+    safeTxGas: tx.safeTxGas,
     operation: tx.operation,
   })
 
@@ -141,16 +146,13 @@ const ApproveTxModal = ({
             </>
           )}
         </Row>
-        <Row>
-          <Paragraph>
-            {`You're about to ${
-              approveAndExecute ? 'execute' : 'approve'
-            } a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${
-              nativeCoin.name
-            } in this wallet to fund this confirmation.`}
-          </Paragraph>
-        </Row>
-        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
       </Block>
       <Row align="center" className={classes.buttonRow}>
         <Button minHeight={42} minWidth={140} onClick={onClose}>
@@ -171,5 +173,3 @@ const ApproveTxModal = ({
     </Modal>
   )
 }
-
-export default ApproveTxModal

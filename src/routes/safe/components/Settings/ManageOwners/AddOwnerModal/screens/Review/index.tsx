@@ -4,7 +4,7 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -19,11 +19,9 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
-
-const { nativeCoin } = getNetworkInfo()
 
 const useStyles = makeStyles(styles)
 
@@ -45,7 +43,13 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
   })
@@ -176,12 +180,13 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       </Block>
       <Hairline />
       <Block className={classes.gasCostsContainer}>
-        <Paragraph>
-          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
-          <br />
-          {`Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-        </Paragraph>
-        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

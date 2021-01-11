@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -28,9 +28,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
-
-const { nativeCoin } = getNetworkInfo()
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -58,7 +56,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   )
   const [data, setData] = useState('')
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txData: data,
     txRecipient: tx.recipientAddress,
   })
@@ -160,10 +164,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Row>
         )}
         <Row>
-          <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
-          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />
