@@ -6,7 +6,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -20,7 +20,7 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
 import { styles } from './style'
@@ -28,8 +28,6 @@ import { styles } from './style'
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
-
-const { nativeCoin } = getNetworkInfo()
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void
@@ -54,7 +52,13 @@ export const ReviewAddOwner = ({
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
   })
@@ -189,12 +193,13 @@ export const ReviewAddOwner = ({
       <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={false} />
 
       <Block className={classes.gasCostsContainer}>
-        <Paragraph>
-          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
-          <br />
-          {`Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-        </Paragraph>
-        <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>

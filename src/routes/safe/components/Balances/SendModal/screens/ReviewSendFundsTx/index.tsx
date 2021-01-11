@@ -33,7 +33,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModa
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
@@ -120,7 +120,13 @@ const ReviewSendFundsTx = ({
   const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
   const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+  } = useEstimateTransactionGas({
     txData: data,
     txRecipient,
   })
@@ -240,10 +246,13 @@ const ReviewSendFundsTx = ({
 
         {/* Disclaimer */}
         <Row>
-          <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
-          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
 

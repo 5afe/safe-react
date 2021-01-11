@@ -56,7 +56,7 @@ export const useTransactionParameters = (): TxParameters => {
     const getSafeNonce = async () => {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress as string)
       const lastTx = await getLastTx(safeAddress as string)
-      const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
+      const nonce = await getNewTxNonce(lastTx, safeInstance)
       setSafeNonce(Number(nonce))
     }
 

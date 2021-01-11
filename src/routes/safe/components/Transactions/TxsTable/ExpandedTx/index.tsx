@@ -3,7 +3,7 @@ import React, { ReactElement, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import ApproveTxModal from './ApproveTxModal'
+import { ApproveTxModal } from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
 import { RejectTxModal } from './RejectTxModal'
 import TxDescription from './TxDescription'

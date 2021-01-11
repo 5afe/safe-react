@@ -25,7 +25,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModa
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TransactionFailText } from 'src/components/TransactionFailText'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -63,7 +63,13 @@ const ContractInteractionReview = ({
     txAmount: string
   }>({ txData: '', txAmount: '', txRecipient: '' })
 
-  const { gasCostFormatted, txEstimationExecutionStatus, isExecution } = useEstimateTransactionGas({
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
     txRecipient: txInfo?.txRecipient,
     txAmount: txInfo?.txAmount,
     txData: txInfo?.txData,
@@ -171,10 +177,13 @@ const ContractInteractionReview = ({
         <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
 
         <Row>
-          <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCostFormatted} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
-          <TransactionFailText txEstimationExecutionStatus={txEstimationExecutionStatus} isExecution={isExecution} />
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Hairline />
