@@ -88,7 +88,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     }
     onClose()
   }
-  console.log('ewview')
 
   return (
     <>
