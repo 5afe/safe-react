@@ -2,7 +2,6 @@ import React, { ReactElement } from 'react'
 
 import {
   ExpandedTxDetails,
-  isCustomTxInfo,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
 } from 'src/logic/safe/store/models/types/gateway.d'
