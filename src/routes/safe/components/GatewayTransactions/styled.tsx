@@ -165,3 +165,10 @@ export const OwnerListItem = styled.li`
 export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 `
+
+export const ScrollableTransactionsContainer = styled.div`
+  height: calc(100vh - 225px);
+  width: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+`
