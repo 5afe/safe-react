@@ -234,6 +234,7 @@ export const useEstimateTransactionGas = ({
     operation,
     safeVersion,
     smartContractWallet,
+    safeTxGas,
   ])
 
   return gasEstimation
