@@ -87,6 +87,7 @@ const ApproveTxModal = ({
     txConfirmations: tx.confirmations.size,
     txAmount: tx.value,
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
+    operation: tx.operation,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
