@@ -2,12 +2,15 @@ import { AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-compon
 import React, { ReactElement } from 'react'
 
 import { isCreationTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxHistoryCollapsed } from 'src/routes/safe/components/GatewayTransactions/TxHistoryCollapsed'
+import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { NoPaddingAccordion } from './styled'
+import { TxHistoryCollapsed } from './TxHistoryCollapsed'
 import { TxDetails } from './TxDetails'
 import { TxInfoCreation } from './TxInfoCreation'
 
-export const TxRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
+export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): ReactElement => {
+  const { data, loading } = useTransactionDetails(transaction.id, 'history')
+
   return (
     <NoPaddingAccordion
       TransitionProps={{
@@ -23,7 +26,7 @@ export const TxRow = ({ transaction }: { transaction: Transaction }): ReactEleme
         {isCreationTxInfo(transaction.txInfo) ? (
           <TxInfoCreation transaction={transaction} />
         ) : (
-          <TxDetails transactionId={transaction.id} />
+          <TxDetails data={data} loading={loading} />
         )}
       </AccordionDetails>
     </NoPaddingAccordion>
