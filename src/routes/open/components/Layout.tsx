@@ -17,7 +17,7 @@ import {
   getOwnerAddressBy,
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
-import Welcome from 'src/routes/welcome/components/Layout'
+import { WelcomeLayout } from 'src/routes/welcome/components/index'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -138,7 +138,7 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
           </Stepper>
         </Block>
       ) : (
-        <Welcome isOldMultisigMigration provider={provider} />
+        <WelcomeLayout isOldMultisigMigration />
       )}
     </>
   )
