@@ -7,13 +7,13 @@ import {
   isTransferTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxSummary } from 'src/routes/safe/components/GatewayTransactions/TxSummary'
 
-import { useTransactionDetails } from './hooks/useTransactionDetails'
+import { LoadTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer } from './styled'
 import { TxData } from './TxData'
 import { TxInfo } from './TxInfo'
 import { TxOwners } from './TxOwners'
+import { TxSummary } from './TxSummary'
 
 const TxDataGroup = ({
   txInfo,
@@ -33,9 +33,7 @@ const TxDataGroup = ({
   return <TxData txData={txData} />
 }
 
-export const TxDetails = ({ transactionId }: { transactionId: string }): ReactElement => {
-  const { data, loading } = useTransactionDetails(transactionId, 'history')
-
+export const TxDetails = ({ data, loading }: LoadTransactionDetails): ReactElement => {
   if (loading) {
     return <Loader size="md" />
   }
