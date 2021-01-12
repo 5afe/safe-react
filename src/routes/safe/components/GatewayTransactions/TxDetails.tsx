@@ -13,7 +13,7 @@ import {
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { isCancelTransaction, NOT_AVAILABLE } from './utils'
-import { LoadTransactionDetails } from './hooks/useTransactionDetails'
+import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer } from './styled'
 import { TxData } from './TxData'
 import { TxInfo } from './TxInfo'
@@ -48,7 +48,15 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   return <TxData txData={txDetails.txData} />
 }
 
-export const TxDetails = ({ data, loading }: LoadTransactionDetails): ReactElement => {
+export const TxDetails = ({
+  transactionId,
+  txLocation,
+}: {
+  transactionId: string
+  txLocation: 'history' | 'queued.next' | 'queued.queued'
+}): ReactElement => {
+  const { data, loading } = useTransactionDetails(transactionId, txLocation)
+
   if (loading) {
     return <Loader size="md" />
   }
