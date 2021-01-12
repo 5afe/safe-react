@@ -13,26 +13,22 @@ export const TxQueueRow = ({
 }: {
   transaction: Transaction
   txLocation: 'queued.next' | 'queued.queued'
-}): ReactElement => {
-  const { data, loading } = useTransactionDetails(transaction.id, txLocation)
-
-  return (
-    <NoPaddingAccordion
-      TransitionProps={{
-        mountOnEnter: false,
-        unmountOnExit: true,
-        appear: true,
-      }}
-    >
-      <AccordionSummary>
-        <TxQueuedCollapsed transaction={transaction} />
-      </AccordionSummary>
-      <AccordionDetails>
-        <TxDetails data={data} loading={loading} />
-      </AccordionDetails>
-    </NoPaddingAccordion>
-  )
-}
+}): ReactElement => (
+  <NoPaddingAccordion
+    TransitionProps={{
+      mountOnEnter: false,
+      unmountOnExit: true,
+      appear: true,
+    }}
+  >
+    <AccordionSummary>
+      <TxQueuedCollapsed transaction={transaction} />
+    </AccordionSummary>
+    <AccordionDetails>
+      <TxDetails transactionId={transaction.id} txLocation={txLocation} />
+    </AccordionDetails>
+  </NoPaddingAccordion>
+)
 
 export const TxQueueGroupedRow = ({
   className,
@@ -42,24 +38,20 @@ export const TxQueueGroupedRow = ({
   className: string
   transaction: Transaction
   txLocation: 'queued.next' | 'queued.queued'
-}): ReactElement => {
-  const { data, loading } = useTransactionDetails(transaction.id, txLocation)
-
-  return (
-    <NoPaddingAccordion
-      className={className}
-      TransitionProps={{
-        mountOnEnter: false,
-        unmountOnExit: true,
-        appear: true,
-      }}
-    >
-      <AccordionSummary>
-        <TxQueuedGroupedCollapsed transaction={transaction} />
-      </AccordionSummary>
-      <AccordionDetails>
-        <TxDetails data={data} loading={loading} />
-      </AccordionDetails>
-    </NoPaddingAccordion>
-  )
-}
+}): ReactElement => (
+  <NoPaddingAccordion
+    className={className}
+    TransitionProps={{
+      mountOnEnter: false,
+      unmountOnExit: true,
+      appear: true,
+    }}
+  >
+    <AccordionSummary>
+      <TxQueuedGroupedCollapsed transaction={transaction} />
+    </AccordionSummary>
+    <AccordionDetails>
+      <TxDetails transactionId={transaction.id} txLocation={txLocation} />
+    </AccordionDetails>
+  </NoPaddingAccordion>
+)
