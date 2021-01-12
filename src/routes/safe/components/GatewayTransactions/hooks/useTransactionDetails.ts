@@ -5,12 +5,17 @@ import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
 
+export type LoadTransactionDetails = {
+  data?: ExpandedTxDetails
+  loading: boolean
+}
+
 export const useTransactionDetails = (
   transactionId: string,
   txLocation: 'history' | 'queued.next' | 'queued.queued',
-): { data?: ExpandedTxDetails; loading: boolean } => {
+): LoadTransactionDetails => {
   const dispatch = useRef(useDispatch())
-  const [txDetails, setTxDetails] = useState<{ data?: ExpandedTxDetails; loading: boolean }>({
+  const [txDetails, setTxDetails] = useState<LoadTransactionDetails>({
     loading: true,
     data: undefined,
   })
