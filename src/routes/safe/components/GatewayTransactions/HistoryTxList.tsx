@@ -5,7 +5,7 @@ import React, { ReactElement } from 'react'
 import { InfiniteScroll } from 'src/components/InfiniteScroll'
 import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
 import { H2, ScrollableTransactionsContainer, StyledTransactions, StyledTransactionsGroup } from './styled'
-import { TxRow } from './TxRow'
+import { TxHistoryRow } from './TxHistoryRow'
 
 export const HistoryTxList = (): ReactElement => {
   const { count, hasMore, next, transactions } = usePagedHistoryTransactions()
@@ -22,7 +22,7 @@ export const HistoryTxList = (): ReactElement => {
             <H2>{format(Number(timestamp), 'MMM d, yyyy')}</H2>
             <StyledTransactions>
               {txs.map((transaction) => (
-                <TxRow key={transaction.id} transaction={transaction} />
+                <TxHistoryRow key={transaction.id} transaction={transaction} />
               ))}
             </StyledTransactions>
           </StyledTransactionsGroup>
