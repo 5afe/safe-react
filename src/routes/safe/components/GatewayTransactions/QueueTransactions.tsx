@@ -10,8 +10,8 @@ export const QueueTransactions = (): ReactElement => {
     <div>No txs</div>
   ) : (
     <>
-      {next.count !== 0 && <QueueTxList title="Next Transaction" transactions={next.transactions} />}
-      {queue.count !== 0 && <QueueTxList title="Queue" transactions={queue.transactions} />}
+      {next.count !== 0 && <QueueTxList txLocation="queued.next" transactions={next.transactions} />}
+      {queue.count !== 0 && <QueueTxList txLocation="queued.queued" transactions={queue.transactions} />}
     </>
   )
 }
