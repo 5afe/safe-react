@@ -26,7 +26,6 @@ const TransferDescription = ({
 }: TransferDescriptionProps): ReactElement | null => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, recipient))
   const [sendModalOpen, setSendModalOpen] = React.useState(false)
-
   const sendModalOpenHandler = () => {
     setSendModalOpen(true)
   }
