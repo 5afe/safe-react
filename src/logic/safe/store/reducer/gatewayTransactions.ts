@@ -1,3 +1,4 @@
+import get from 'lodash.get'
 import { Action, handleActions } from 'redux-actions'
 import {
   ADD_HISTORY_TRANSACTIONS,
@@ -33,14 +34,14 @@ export type TransactionDetailsPayload = {
 type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
 
 const findTransactionLocation = (
-  history: { [p: number]: Transaction[] },
+  transactionsGroup: { [p: number]: Transaction[] },
   transactionId: string,
 ): { key: string; index: number } => {
   let key
   let index
   let transactions
 
-  for ([key, transactions] of Object.entries(history)) {
+  for ([key, transactions] of Object.entries(transactionsGroup)) {
     index = transactions.findIndex(({ id }) => sameString(id, transactionId))
 
     if (index !== -1) {
@@ -128,8 +129,10 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       let { history } = state[safeAddress]
 
       // get the tx group (it will be `queued.next`, `queued.queued` or `history`)
-      const txGroup: StoreStructure['queued']['next' | 'queued'] | StoreStructure['history'] =
-        state[safeAddress][txLocation]
+      const txGroup: StoreStructure['queued']['next' | 'queued'] | StoreStructure['history'] = get(
+        state[safeAddress],
+        txLocation,
+      )
 
       // find the transaction location
       const { key, index } = findTransactionLocation(txGroup, transactionId)

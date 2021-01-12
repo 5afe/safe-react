@@ -1,3 +1,4 @@
+import get from 'lodash.get'
 import { createSelector } from 'reselect'
 
 import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway'
@@ -23,7 +24,7 @@ export const getTransactionDetails = createSelector(
   (transactions, { transactionId, txLocation }): Transaction['txDetails'] => {
     if (transactions && transactionId) {
       for (const [, txs] of Object.entries(
-        transactions[txLocation] as StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
+        get(transactions, txLocation) as StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
       )) {
         const txDetails = txs.find(({ id }) => sameString(id, transactionId))?.txDetails
 
