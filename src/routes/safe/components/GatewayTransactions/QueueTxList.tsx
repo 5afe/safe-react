@@ -1,9 +1,81 @@
-import { Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import React, { Fragment, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxQueueRow, TxQueueGroupedRow } from 'src/routes/safe/components/GatewayTransactions/TxQueueRow'
+import { TxQueueRow, TxQueueGroupedRow } from './TxQueueRow'
+
+const GroupedTransactions = styled.div`
+  display: grid;
+  grid-template-columns: 0.5fr 3fr 3fr 1fr 2fr 2fr 2fr;
+  width: 100%;
+
+  .tree-lines {
+    height: 100%;
+    width: 20%;
+    margin-left: 50%;
+    position: relative;
+    
+    p {
+      top: -33px;
+      position: absolute;
+      width: 100%;
+
+      &::before {
+        content: '';
+        position: absolute;
+        height: 30px;
+        width: 100%;
+        top: 0;
+        border-left: 2px solid ${({ theme }) => theme.colors.separator};
+        border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+      }
+    }
+
+    &:not(:last-of-type) {
+      &::before {
+        content: '';
+        position: absolute;
+        border-left: 2px solid ${({ theme }) => theme.colors.separator};
+        border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+        margin-top: 10px;
+        width: 100%;
+        height: 100%;
+      }
+    }
+  }
+
+  .MuiAccordion-root {
+    grid-column-start: 2;
+    grid-column-end: span 6;
+    border: 0;
+
+    &:first-child {
+      border: 0;
+    }
+
+    &.Mui-expanded {
+      &:not(:last-of-type) {
+        border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+      }
+
+      &:not(:first-of-type) {
+        margin-top: -2px;
+        border-top: 2px solid ${({ theme }) => theme.colors.separator};
+      }
+
+      .MuiAccordionSummary-root {
+        background-color: ${({ theme }) => theme.colors.white};
+      }
+    }
+  }
+
+  .tx-status {
+    justify-self: end;
+  }
+}
+`
+
 import { H2, StyledTransactions, StyledTransactionsGroup } from './styled'
 
 const Disclaimer = styled.div`
@@ -23,34 +95,6 @@ const Disclaimer = styled.div`
   .disclaimer {
     grid-column-start: 2;
     grid-column-end: span 6;
-  }
-`
-
-const GroupedTransactions = styled.div`
-  display: grid;
-  grid-template-columns: 0.5fr 3fr 3fr 1fr 2fr 2fr 2fr;
-  width: 100%;
-
-  .tx-row {
-    grid-column-start: 2;
-    grid-column-end: span 6;
-    border: 0;
-
-    &:first-child {
-      border: 0;
-    }
-
-    &.Mui-expanded:not(:last-child) {
-      border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
-    }
-
-    .MuiAccordionSummary-root.Mui-expanded {
-      background-color: transparent;
-    }
-
-    .tx-status {
-      justify-self: end;
-    }
   }
 `
 
@@ -76,19 +120,20 @@ export const QueueTxList = ({ txLocation, transactions }: QueueTxListProps): Rea
                 <Text size="lg" className="disclaimer">
                   These transactions conflict as they use the same nonce. Executing one will automatically replace the
                   other(s).{' '}
-                  <Text size="lg" as="span" color="primary">
-                    Learn more
-                  </Text>
+                  <Link href="https://gnosis.io" target="_blank" rel="noreferrer" title="nonces">
+                    <Text size="lg" as="span" color="primary">
+                      Learn more
+                    </Text>
+                    <Icon size="sm" type="externalLink" color="primary" />
+                  </Link>
                 </Text>
               </Disclaimer>
               <GroupedTransactions key={nonce}>
-                {txs.map((transaction) => (
-                  <TxQueueGroupedRow
-                    className="tx-row"
-                    key={`${nonce}-${transaction.id}`}
-                    transaction={transaction}
-                    txLocation={txLocation}
-                  />
+                {txs.map((transaction, index) => (
+                  <Fragment key={`${nonce}-${transaction.id}`}>
+                    <p className="tree-lines">{!index ? <p /> : null}</p>
+                    <TxQueueGroupedRow transaction={transaction} txLocation={txLocation} />
+                  </Fragment>
                 ))}
               </GroupedTransactions>
             </>

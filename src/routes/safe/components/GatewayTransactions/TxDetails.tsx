@@ -33,6 +33,8 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   }
 
   if (
+    // TODO: find a better way to identify a pending cancelling transaction
+    //  I'm not comfortable with where this nested `&&` is going
     !txDetails.executedAt &&
     isCustomTxInfo(txDetails.txInfo) &&
     isCancelTransaction({ safeAddress, txInfo: txDetails.txInfo })
