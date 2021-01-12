@@ -18,9 +18,16 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  defaultSafeSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
+import { WELCOME_ADDRESS } from 'src/routes/routes'
+import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 const openIconStyle = {
   height: md,
@@ -29,13 +36,32 @@ const openIconStyle = {
 
 const useStyles = makeStyles(styles)
 
-const RemoveSafeComponent = ({ isOpen, onClose }) => {
+type RemoveSafeModalProps = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
+  const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
   const explorerInfo = getExplorerInfo(safeAddress)
   const { url } = explorerInfo()
+
+  const onRemoveSafeHandler = async () => {
+    await dispatch(removeLocalSafe(safeAddress))
+    if (sameAddress(safeAddress, defaultSafe)) {
+      await saveDefaultSafe('')
+    }
+
+    onClose()
+    // using native redirect in order to avoid problems in several components
+    // trying to access references of the removed safe.
+    const relativePath = window.location.href.split('/#/')[0]
+    window.location.href = `${relativePath}/#/${WELCOME_ADDRESS}`
+  }
 
   return (
     <Modal
@@ -91,13 +117,7 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
         <Button
           className={classes.buttonRemove}
           minWidth={140}
-          onClick={() => {
-            dispatch(removeSafe(safeAddress))
-            onClose()
-            // using native redirect in order to avoid problems in several components
-            // trying to access references of the removed safe.
-            window.location.href = '/app/'
-          }}
+          onClick={onRemoveSafeHandler}
           type="submit"
           variant="contained"
         >
@@ -107,5 +127,3 @@ const RemoveSafeComponent = ({ isOpen, onClose }) => {
     </Modal>
   )
 }
-
-export const RemoveSafeModal = RemoveSafeComponent

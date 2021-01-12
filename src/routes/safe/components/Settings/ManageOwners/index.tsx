@@ -9,7 +9,7 @@ import { List } from 'immutable'
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
 import AddOwnerModal from './AddOwnerModal'
-import EditOwnerModal from './EditOwnerModal'
+import { EditOwnerModal } from './EditOwnerModal'
 import OwnerAddressTableCell from './OwnerAddressTableCell'
 import RemoveOwnerModal from './RemoveOwnerModal'
 import ReplaceOwnerModal from './ReplaceOwnerModal'

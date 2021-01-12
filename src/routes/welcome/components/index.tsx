@@ -16,6 +16,8 @@ import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
 import { LOAD_ADDRESS, OPEN_ADDRESS } from 'src/routes/routes'
 import { onConnectButtonClick } from 'src/components/ConnectButton'
+import { useSelector } from 'react-redux'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 
 const Wrapper = styled.div`
   display: flex;
@@ -67,10 +69,10 @@ const StyledButtonLink = styled(ButtonLink)`
 
 type Props = {
   isOldMultisigMigration?: boolean
-  provider: any
 }
 
-const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElement => {
+export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactElement => {
+  const provider = useSelector(providerNameSelector)
   return (
     <Block>
       {/* Title */}
@@ -125,7 +127,7 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
               color="primary"
               variant="contained"
               onClick={onConnectButtonClick}
-              disabled={provider}
+              disabled={!!provider}
               data-testid="connect-btn"
             >
               <Text size="xl" color="white">
@@ -187,5 +189,3 @@ const Welcome = ({ isOldMultisigMigration, provider }: Props): React.ReactElemen
     </Block>
   )
 }
-
-export default Welcome
