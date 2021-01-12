@@ -1,4 +1,4 @@
-import { Text } from '@gnosis.pm/safe-react-components'
+import { IconText, Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
@@ -78,7 +78,9 @@ export const TxCollapsed = ({ nonce, type, info, time, votes, actions, status }:
     <div className="tx-time">
       <Text size="lg">{time}</Text>
     </div>
-    <div className="tx-votes">{votes}</div>
+    <div className="tx-votes">
+      {votes && <IconText color="primary" iconType="owners" iconSize="sm" text={`${votes}`} textSize="sm" />}
+    </div>
     <div className="tx-actions">{actions}</div>
     <div className="tx-status">
       <Text size="lg" color={status.color} className="col" strong>
