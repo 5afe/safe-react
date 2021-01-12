@@ -105,7 +105,7 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
 
   const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
   const canExecute = !isIncomingTx && nonce === tx.nonce
-  const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
+  const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations?.size
   const canExecuteCancel = nonce === tx.nonce
 
   const openRejectModal = () => {
