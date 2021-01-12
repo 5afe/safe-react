@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -22,15 +23,13 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
-
-import ArrowDown from '../../assets/arrow-down.svg'
-
-import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+
+import ArrowDown from '../../assets/arrow-down.svg'
+import { styles } from './style'
 
 export type CustomTx = {
   contractAddress?: string
@@ -41,21 +40,21 @@ export type CustomTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
-  onEditTxParameters: () => void
   tx: CustomTx
-  txParameters: TxParameters
 }
 
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewCustomTx = ({ onClose, onPrev, onEditTxParameters, tx, txParameters }: Props): React.ReactElement => {
+const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const {
+    gasLimit,
+    gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
     isExecution,
@@ -90,102 +89,106 @@ const ReviewCustomTx = ({ onClose, onPrev, onEditTxParameters, tx, txParameters 
   }
 
   return (
-    <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Send Custom Tx
-        </Paragraph>
-        <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
-      <Hairline />
-      <Block className={classes.container}>
-        <SafeInfo />
-        <Row margin="md">
-          <Col xs={1}>
-            <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-          </Col>
-          <Col center="xs" layout="column" xs={11}>
-            <Hairline />
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Recipient
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Col xs={1}>
-            <Identicon address={tx.contractAddress as string} diameter={32} />
-          </Col>
-          <Col layout="column" xs={11}>
-            <Block justify="left">
-              <Paragraph noMargin weight="bolder">
-                {tx.contractAddress}
-              </Paragraph>
-              <CopyBtn content={tx.contractAddress as string} />
-              <ExplorerButton explorerUrl={getExplorerInfo(tx.contractAddress as string)} />
-            </Block>
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Value
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
-          <Paragraph className={classes.value} noMargin size="md">
-            {tx.value || 0}
-            {' ' + nativeCoin.name}
-          </Paragraph>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Data (hex encoded)
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Col className={classes.outerData}>
-            <Row className={classes.data} size="md">
-              {tx.data}
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+      {(txParameters, toggleEditMode) => (
+        <>
+          <Row align="center" className={classes.heading} grow>
+            <Paragraph className={classes.headingText} noMargin weight="bolder">
+              Send Custom Tx
+            </Paragraph>
+            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
+            <IconButton disableRipple onClick={onClose}>
+              <Close className={classes.closeIcon} />
+            </IconButton>
+          </Row>
+          <Hairline />
+          <Block className={classes.container}>
+            <SafeInfo />
+            <Row margin="md">
+              <Col xs={1}>
+                <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
+              </Col>
+              <Col center="xs" layout="column" xs={11}>
+                <Hairline />
+              </Col>
             </Row>
-          </Col>
-        </Row>
+            <Row margin="xs">
+              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                Recipient
+              </Paragraph>
+            </Row>
+            <Row align="center" margin="md">
+              <Col xs={1}>
+                <Identicon address={tx.contractAddress as string} diameter={32} />
+              </Col>
+              <Col layout="column" xs={11}>
+                <Block justify="left">
+                  <Paragraph noMargin weight="bolder">
+                    {tx.contractAddress}
+                  </Paragraph>
+                  <CopyBtn content={tx.contractAddress as string} />
+                  <ExplorerButton explorerUrl={getExplorerInfo(tx.contractAddress as string)} />
+                </Block>
+              </Col>
+            </Row>
+            <Row margin="xs">
+              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                Value
+              </Paragraph>
+            </Row>
+            <Row align="center" margin="md">
+              <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+              <Paragraph className={classes.value} noMargin size="md">
+                {tx.value || 0}
+                {' ' + nativeCoin.name}
+              </Paragraph>
+            </Row>
+            <Row margin="xs">
+              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                Data (hex encoded)
+              </Paragraph>
+            </Row>
+            <Row align="center" margin="md">
+              <Col className={classes.outerData}>
+                <Row className={classes.data} size="md">
+                  {tx.data}
+                </Row>
+              </Col>
+            </Row>
 
-        {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
+            {/* Tx Parameters */}
+            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
 
-        <Row>
-          <TransactionFees
-            gasCostFormatted={gasCostFormatted}
-            isExecution={isExecution}
-            isCreation={isCreation}
-            isOffChainSignature={isOffChainSignature}
-            txEstimationExecutionStatus={txEstimationExecutionStatus}
-          />
-        </Row>
-      </Block>
-      <Hairline />
-      <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={onPrev}>
-          Back
-        </Button>
-        <Button
-          className={classes.submitButton}
-          color="primary"
-          data-testid="submit-tx-btn"
-          minWidth={140}
-          onClick={submitTx}
-          type="submit"
-          variant="contained"
-        >
-          Submit
-        </Button>
-      </Row>
-    </>
+            <Row>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Row>
+          </Block>
+          <Hairline />
+          <Row align="center" className={classes.buttonRow}>
+            <Button minWidth={140} onClick={onPrev}>
+              Back
+            </Button>
+            <Button
+              className={classes.submitButton}
+              color="primary"
+              data-testid="submit-tx-btn"
+              minWidth={140}
+              onClick={submitTx}
+              type="submit"
+              variant="contained"
+            >
+              Submit
+            </Button>
+          </Row>
+        </>
+      )}
+    </EditableTxParameters>
   )
 }
 

@@ -11,7 +11,6 @@ import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 
@@ -30,8 +29,6 @@ const ContractInteractionReview: any = React.lazy(() => import('./screens/Contra
 const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
 
 const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
-
-const EditTxParametersForm = React.lazy(() => import('./screens/EditTxParametersForm'))
 
 const useStyles = makeStyles({
   scalableModalWindow: {
@@ -58,7 +55,6 @@ export type TxType =
   | 'reviewCustomTx'
   | 'sendCollectible'
   | 'reviewCollectible'
-  | 'editTxParameters'
   | ''
 
 type Props = {
@@ -82,8 +78,6 @@ const SendModal = ({
   const [activeScreen, setActiveScreen] = useState<TxType>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
-  const [prevScreen, setPrevScreen] = useState<TxType | undefined>()
-  const txParameters = useTransactionParameters()
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
@@ -117,15 +111,6 @@ const SendModal = ({
     setIsABI(!isABI)
   }
 
-  const openEditTxParameters = () => {
-    setPrevScreen(activeScreen)
-    setActiveScreen('editTxParameters')
-  }
-
-  const closeEditTxParameters = () => {
-    setActiveScreen(prevScreen || '')
-  }
-
   return (
     <Modal
       description="Send Tokens Form"
@@ -156,13 +141,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'sendFundsReviewTx' && (
-          <ReviewSendFundsTx
-            onClose={onClose}
-            onPrev={() => setActiveScreen('sendFunds')}
-            tx={tx as ReviewTxProp}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
-          />
+          <ReviewSendFundsTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx as ReviewTxProp} />
         )}
 
         {activeScreen === 'contractInteraction' && isABI && (
@@ -177,13 +156,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
-          <ContractInteractionReview
-            onClose={onClose}
-            onPrev={() => setActiveScreen('contractInteraction')}
-            tx={tx}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
-          />
+          <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
         )}
 
         {activeScreen === 'contractInteraction' && !isABI && (
@@ -198,13 +171,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx
-            onClose={onClose}
-            onPrev={() => setActiveScreen('contractInteraction')}
-            tx={tx as CustomTx}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
-          />
+          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
         )}
 
         {activeScreen === 'sendCollectible' && (
@@ -222,13 +189,7 @@ const SendModal = ({
             onClose={onClose}
             onPrev={() => setActiveScreen('sendCollectible')}
             tx={tx as CollectibleTx}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
           />
-        )}
-
-        {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
         )}
       </Suspense>
     </Modal>

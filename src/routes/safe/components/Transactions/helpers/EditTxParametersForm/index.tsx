@@ -73,6 +73,10 @@ const formValidation = (values) => {
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
   const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
+    if (!value) {
+      return
+    }
+
     if (Number(value) < Number(ethGasLimit)) {
       return 'Lower than Ethereum gas limit.'
     }
@@ -90,6 +94,16 @@ const formValidation = (values) => {
 const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
+
+  const onSubmit = (values: TxParameters) => {
+    txParameters?.setSafeNonce(values.safeNonce ?? undefined)
+    txParameters?.setSafeTxGas(values.safeTxGas ?? undefined)
+    txParameters?.setEthGasLimit(values.ethGasLimit ?? undefined)
+    txParameters?.setEthGasPrice(values.ethGasPrice ?? undefined)
+    txParameters?.setEthNonce(values.ethNonce ?? undefined)
+    onClose()
+  }
+
   return (
     <>
       {/* Header */}
@@ -106,7 +120,6 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
 
       <Block className={classes.container}>
         <GnoForm
-          /* formMutators={formMutators} */
           initialValues={{
             safeNonce: safeNonce || 0,
             safeTxGas: safeTxGas || '',
@@ -114,7 +127,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
             ethGasLimit: ethGasLimit || '',
             ethGasPrice: ethGasPrice || '',
           }}
-          onSubmit={() => {}}
+          onSubmit={onSubmit}
           validation={formValidation}
         >
           {() => (
@@ -174,42 +187,41 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   component={TextField}
                 />
               </EthereumOptions>
+
+              <StyledLink
+                href="https://docs.gnosis.io/safe/docs/contracts_tx_execution/#safe-transaction-gas-limit-estimation"
+                target="_blank"
+              >
+                <Text size="xl" color="primary">
+                  How can I configure the gas price manually?
+                </Text>
+                <Icon size="sm" type="externalLink" color="primary" />
+              </StyledLink>
+
+              <StyledDivider />
+
+              {/* Footer */}
+              <Row align="center" className={classes.buttonRow}>
+                <Button minWidth={140} onClick={onClose}>
+                  Back
+                </Button>
+                <Button
+                  className={classes.submitButton}
+                  color="primary"
+                  data-testid="submit-tx-btn"
+                  /* disabled={!data} */
+                  minWidth={140}
+                  /* onClick={submitTx} */
+                  type="submit"
+                  variant="contained"
+                >
+                  Confirm
+                </Button>
+              </Row>
             </>
           )}
         </GnoForm>
-
-        <StyledLink
-          href="https://docs.gnosis.io/safe/docs/contracts_tx_execution/#safe-transaction-gas-limit-estimation"
-          target="_blank"
-        >
-          <Text size="xl" color="primary">
-            How can I configure the gas price manually?
-          </Text>
-          <Icon size="sm" type="externalLink" color="primary" />
-        </StyledLink>
       </Block>
-
-      <StyledDivider />
-
-      {/* Footer */}
-      <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={onClose}>
-          Back
-        </Button>
-        <Button
-          className={classes.submitButton}
-          color="primary"
-          data-testid="submit-tx-btn"
-          /* disabled={!data} */
-          minWidth={140}
-          /* onClick={submitTx} */
-          /* type="submit" */
-          variant="contained"
-          onClick={onClose}
-        >
-          Confirm
-        </Button>
-      </Row>
     </>
   )
 }

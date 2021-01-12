@@ -27,10 +27,10 @@ import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { ActionCallback, CREATE } from '.'
-import { TxParametersDetail } from '../../../Balances/SendModal/TxParametersDetail'
-import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
 
 const { nativeCoin } = getNetworkInfo()
 

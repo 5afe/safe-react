@@ -17,7 +17,7 @@ import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTra
 
 import OwnerForm from './screens/OwnerForm'
 import { ReviewReplaceOwnerModal } from './screens/Review'
-import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {

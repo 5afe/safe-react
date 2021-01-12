@@ -20,9 +20,9 @@ import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { styles } from './style'
-import { TxParametersDetail } from '../../../Balances/SendModal/TxParametersDetail'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 

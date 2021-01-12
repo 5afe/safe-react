@@ -9,9 +9,9 @@ import { safeSelector } from 'src/logic/safe/store/selectors'
 
 export type TxParameters = {
   safeNonce: string | undefined
-  setSafeNonce: (safeNonce: string) => void
+  setSafeNonce: (safeNonce: string | undefined) => void
   safeTxGas: string | undefined
-  setSafeTxGas: (gas: string) => void
+  setSafeTxGas: (gas: string | undefined) => void
   ethNonce: string | undefined
   setEthNonce: (ethNonce: string | undefined) => void
   ethGasLimit: string | undefined

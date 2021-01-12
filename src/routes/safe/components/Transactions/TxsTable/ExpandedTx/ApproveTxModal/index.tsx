@@ -24,8 +24,8 @@ import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
-import EditTxParametersForm from 'src/routes/safe/components/Balances/SendModal/screens/EditTxParametersForm'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 const useStyles = makeStyles(styles)
 

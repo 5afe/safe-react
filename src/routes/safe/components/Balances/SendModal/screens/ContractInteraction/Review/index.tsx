@@ -20,7 +20,7 @@ import Header from 'src/routes/safe/components/Balances/SendModal/screens/Contra
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'

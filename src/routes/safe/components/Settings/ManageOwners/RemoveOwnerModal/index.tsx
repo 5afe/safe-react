@@ -11,11 +11,10 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
-
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import EditTxParametersForm from '../../../Balances/SendModal/screens/EditTxParametersForm'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {

@@ -22,8 +22,6 @@ import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils
 import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { TxParametersDetail } from 'src/routes/safe/components/Balances/SendModal/TxParametersDetail'
 
 import ArrowDown from '../assets/arrow-down.svg'
 
@@ -31,6 +29,8 @@ import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { EditableTxParameters } from '../../../../Transactions/helpers/EditableTxParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 const useStyles = makeStyles(styles)
 
@@ -44,12 +44,10 @@ export type CollectibleTx = {
 type Props = {
   onClose: () => void
   onPrev: () => void
-  onEditTxParameters: () => void
   tx: CollectibleTx
-  txParameters: TxParameters
 }
 
-const ReviewCollectible = ({ onClose, onPrev, onEditTxParameters, tx, txParameters }: Props): React.ReactElement => {
+const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
@@ -61,6 +59,8 @@ const ReviewCollectible = ({ onClose, onPrev, onEditTxParameters, tx, txParamete
   const [data, setData] = useState('')
 
   const {
+    gasLimit,
+    gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
     isExecution,
@@ -114,92 +114,96 @@ const ReviewCollectible = ({ onClose, onPrev, onEditTxParameters, tx, txParamete
   }
 
   return (
-    <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Send Funds
-        </Paragraph>
-        <Paragraph className={classes.annotation}>2 of 2</Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
-      <Hairline />
-      <Block className={classes.container}>
-        <SafeInfo />
-        <Row margin="md">
-          <Col xs={1}>
-            <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-          </Col>
-          <Col center="xs" layout="column" xs={11}>
-            <Hairline />
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            Recipient
-          </Paragraph>
-        </Row>
-        <Row align="center" margin="md">
-          <Col xs={1}>
-            <Identicon address={tx.recipientAddress} diameter={32} />
-          </Col>
-          <Col layout="column" xs={11}>
-            <Block justify="left">
-              <Paragraph className={classes.address} noMargin weight="bolder">
-                {tx.recipientAddress}
-              </Paragraph>
-              <CopyBtn content={tx.recipientAddress} />
-              <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
-            </Block>
-          </Col>
-        </Row>
-        <Row margin="xs">
-          <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-            {textShortener({ charsStart: 40, charsEnd: 0 })(tx.assetName)}
-          </Paragraph>
-        </Row>
-        {txToken && (
-          <Row align="center" margin="md">
-            <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.image} />
-            <Paragraph className={classes.amount} noMargin size="md">
-              {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId as string)})
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+      {(txParameters, toggleEditMode) => (
+        <>
+          <Row align="center" className={classes.heading} grow>
+            <Paragraph className={classes.headingText} noMargin weight="bolder">
+              Send Funds
             </Paragraph>
+            <Paragraph className={classes.annotation}>2 of 2</Paragraph>
+            <IconButton disableRipple onClick={onClose}>
+              <Close className={classes.closeIcon} />
+            </IconButton>
           </Row>
-        )}
+          <Hairline />
+          <Block className={classes.container}>
+            <SafeInfo />
+            <Row margin="md">
+              <Col xs={1}>
+                <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
+              </Col>
+              <Col center="xs" layout="column" xs={11}>
+                <Hairline />
+              </Col>
+            </Row>
+            <Row margin="xs">
+              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                Recipient
+              </Paragraph>
+            </Row>
+            <Row align="center" margin="md">
+              <Col xs={1}>
+                <Identicon address={tx.recipientAddress} diameter={32} />
+              </Col>
+              <Col layout="column" xs={11}>
+                <Block justify="left">
+                  <Paragraph className={classes.address} noMargin weight="bolder">
+                    {tx.recipientAddress}
+                  </Paragraph>
+                  <CopyBtn content={tx.recipientAddress} />
+                  <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
+                </Block>
+              </Col>
+            </Row>
+            <Row margin="xs">
+              <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
+                {textShortener({ charsStart: 40, charsEnd: 0 })(tx.assetName)}
+              </Paragraph>
+            </Row>
+            {txToken && (
+              <Row align="center" margin="md">
+                <Img alt={txToken.name} height={28} onError={setImageToPlaceholder} src={txToken.image} />
+                <Paragraph className={classes.amount} noMargin size="md">
+                  {shortener(txToken.name)} (Token ID: {shortener(txToken.tokenId as string)})
+                </Paragraph>
+              </Row>
+            )}
 
-        {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} />
+            {/* Tx Parameters */}
+            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
 
-        <Row>
-          <TransactionFees
-            gasCostFormatted={gasCostFormatted}
-            isExecution={isExecution}
-            isCreation={isCreation}
-            isOffChainSignature={isOffChainSignature}
-            txEstimationExecutionStatus={txEstimationExecutionStatus}
-          />
-        </Row>
-      </Block>
-      <Hairline style={{ position: 'absolute', bottom: 85 }} />
-      <Row align="center" className={classes.buttonRow}>
-        <Button minWidth={140} onClick={onPrev}>
-          Back
-        </Button>
-        <Button
-          className={classes.submitButton}
-          color="primary"
-          data-testid="submit-tx-btn"
-          disabled={!data}
-          minWidth={140}
-          onClick={submitTx}
-          type="submit"
-          variant="contained"
-        >
-          Submit
-        </Button>
-      </Row>
-    </>
+            <Row>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Row>
+          </Block>
+          <Hairline style={{ position: 'absolute', bottom: 85 }} />
+          <Row align="center" className={classes.buttonRow}>
+            <Button minWidth={140} onClick={onPrev}>
+              Back
+            </Button>
+            <Button
+              className={classes.submitButton}
+              color="primary"
+              data-testid="submit-tx-btn"
+              disabled={!data}
+              minWidth={140}
+              onClick={submitTx}
+              type="submit"
+              variant="contained"
+            >
+              Submit
+            </Button>
+          </Row>
+        </>
+      )}
+    </EditableTxParameters>
   )
 }
 

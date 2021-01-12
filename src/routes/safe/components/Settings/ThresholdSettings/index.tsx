@@ -20,10 +20,10 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
 import { styles } from './style'
-import EditTxParametersForm from '../../Balances/SendModal/screens/EditTxParametersForm'
 
 const useStyles = makeStyles(styles)
 
