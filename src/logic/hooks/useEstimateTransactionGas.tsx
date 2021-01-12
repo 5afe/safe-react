@@ -127,6 +127,7 @@ type TransactionGasEstimationResult = {
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
   gasPriceFormatted: string // Current gas price formatted
+  gasLimit: string // Minimum gas requited to execute the Tx
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
@@ -148,6 +149,7 @@ export const useEstimateTransactionGas = ({
     gasCostFormatted: '< 0.001',
     gasPrice: '0',
     gasPriceFormatted: '0',
+    gasLimit: '0',
     isExecution: false,
     isCreation: false,
     isOffChainSignature: false,
@@ -190,6 +192,7 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
+        const gasLimit = gasEstimation.toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
@@ -204,6 +207,7 @@ export const useEstimateTransactionGas = ({
           gasCostFormatted,
           gasPrice,
           gasPriceFormatted,
+          gasLimit,
           isExecution,
           isCreation,
           isOffChainSignature,
@@ -221,6 +225,7 @@ export const useEstimateTransactionGas = ({
           gasCostFormatted,
           gasPrice: '1',
           gasPriceFormatted: '1',
+          gasLimit: '0',
           isExecution,
           isCreation,
           isOffChainSignature: false,
