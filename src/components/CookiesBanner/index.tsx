@@ -123,8 +123,9 @@ const CookiesBanner = () => {
     <div className={classes.container}>
       <div className={classes.content}>
         <StyledText size="xl" color="text" center>
-          We use cookies to give you the best experience and to help improve our website. Please read our{' '}
-          <Link className={classes.link} to="https://gnosis-safe.io/cookie">
+          We use cookies to provide you with the best experience and to help improve our website and application. Please
+          read our{' '}
+          <Link className={classes.link} to="https://gnosis-safe.io/cookie" target="_blank" rel="noopener noreferrer">
             Cookie Policy
           </Link>{' '}
           for more information. By clicking &quot;Accept all&quot;, you agree to the storing of cookies on your device
@@ -152,9 +153,9 @@ const CookiesBanner = () => {
             />
           </div>
           <div className={classes.formItem}>
-            <Button size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
+            <StyledButton size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
               Accept All
-            </Button>
+            </StyledButton>
           </div>
           <div className={classes.formItem}>
             <StyledButton
