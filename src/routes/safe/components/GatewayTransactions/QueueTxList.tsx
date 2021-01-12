@@ -1,24 +1,27 @@
 import React, { ReactElement } from 'react'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { H2 } from './styled'
+import { TxQueueRow } from 'src/routes/safe/components/GatewayTransactions/TxQueueRow'
+import { H2, StyledTransactions, StyledTransactionsGroup } from './styled'
 
 type QueueTxListProps = {
-  title: string
+  txLocation: 'queued.next' | 'queued.queued'
   transactions: TransactionDetails['transactions']
 }
 
-export const QueueTxList = ({ title, transactions }: QueueTxListProps): ReactElement => (
-  <>
-    <H2>{title}</H2>
-    {transactions.map(([nonce, txs]) => (
-      <React.Fragment key={nonce}>
-        {txs.length === 1 ? (
-          <div>{JSON.stringify(txs[0])}</div>
-        ) : (
-          txs.map((transaction) => <div key={transaction.id}>{JSON.stringify(transaction)}</div>)
+export const QueueTxList = ({ txLocation, transactions }: QueueTxListProps): ReactElement => {
+  const title = txLocation === 'queued.next' ? 'Next Transaction' : 'Queue'
+
+  return (
+    <StyledTransactionsGroup>
+      <H2>{title}</H2>
+      <StyledTransactions>
+        {transactions.map(([nonce, txs]) =>
+          txs.map((transaction) => (
+            <TxQueueRow key={`${nonce}-${transaction.id}`} transaction={transaction} txLocation={txLocation} />
+          )),
         )}
-      </React.Fragment>
-    ))}
-  </>
-)
+      </StyledTransactions>
+    </StyledTransactionsGroup>
+  )
+}
