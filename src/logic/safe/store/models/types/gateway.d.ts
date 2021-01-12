@@ -146,6 +146,7 @@ type ExecutionInfo = {
   nonce: number
   confirmationsRequired: number
   confirmationsSubmitted: number
+  missingSigners?: string[]
 }
 
 type TransactionSummary = {
@@ -306,6 +307,14 @@ export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {
 
 export const isStatusSuccess = (value: Transaction['txStatus']): value is 'SUCCESS' => {
   return value === 'SUCCESS'
+}
+
+export const isStatusFailed = (value: Transaction['txStatus']): value is 'FAILED' => {
+  return value === 'FAILED'
+}
+
+export const isStatusCancelled = (value: Transaction['txStatus']): value is 'CANCELLED' => {
+  return value === 'CANCELLED'
 }
 
 export const isMultiSigExecutionDetails = (
