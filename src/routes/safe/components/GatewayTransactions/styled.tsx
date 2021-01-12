@@ -78,7 +78,6 @@ export const Breadcrumb = styled.div`
 export const ContentWrapper = styled.div`
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   flex-grow: 1;
   align-items: center;
 `
