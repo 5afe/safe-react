@@ -7,7 +7,7 @@ import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
-import { StyledTransaction } from './styled'
+import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
@@ -88,4 +88,41 @@ export const TxCollapsed = ({ nonce, type, info, time, votes, actions, status }:
       </Text>
     </div>
   </StyledTransaction>
+)
+
+type TxCollapsedGroupedProps = {
+  type: TxTypeProps
+  info?: AssetInfo
+  time: string
+  votes?: string
+  actions?: string
+  status: TransactionStatusProps
+}
+
+export const TxCollapsedGrouped = ({
+  type,
+  info,
+  time,
+  votes,
+  actions,
+  status,
+}: TxCollapsedGroupedProps): ReactElement => (
+  <StyledGroupedTransactions>
+    <div className="tx-type">
+      <CustomIconText iconUrl={type.icon} text={type.text} />
+    </div>
+    <div className="tx-info">{info && <TxInfo info={info} />}</div>
+    <div className="tx-time">
+      <Text size="lg">{time}</Text>
+    </div>
+    <div className="tx-votes">
+      {votes && <IconText color="primary" iconType="owners" iconSize="sm" text={`${votes}`} textSize="sm" />}
+    </div>
+    <div className="tx-actions">{actions}</div>
+    <div className="tx-status">
+      <Text size="lg" color={status.color} className="col" strong>
+        {status.text}
+      </Text>
+    </div>
+  </StyledGroupedTransactions>
 )

@@ -13,9 +13,15 @@ export const ColumnLikeAccordionDetails = styled(AccordionDetails)`
   flex-flow: column;
 `
 
+export const StyledGroupedTransactions = styled.div`
+  display: grid;
+  grid-template-columns: 3fr 3fr 1fr 2fr 2fr 2fr;
+  width: 100%;
+`
+
 export const StyledTransaction = styled.div`
   display: grid;
-  grid-template-columns: 1fr 3fr 3fr 1fr 2fr 2fr 2fr;
+  grid-template-columns: 0.5fr 3fr 3fr 1fr 2fr 2fr 2fr;
   width: 100%;
 
   & > div {
