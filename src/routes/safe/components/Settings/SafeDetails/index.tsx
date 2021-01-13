@@ -19,7 +19,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import UpdateSafeModal from 'src/routes/safe/components/Settings/UpdateSafeModal'
+import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import Link from 'src/components/layout/Link'
