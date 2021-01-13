@@ -117,6 +117,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 Recipient
               </Paragraph>
             </Row>
+
             <Row align="center" margin="md">
               <Col xs={1}>
                 <Identicon address={tx.contractAddress as string} diameter={32} />

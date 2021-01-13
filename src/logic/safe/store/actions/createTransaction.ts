@@ -141,7 +141,6 @@ const createTransaction = (
     }
 
     const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    debugger
     const sendParams: PayableTx = {
       from,
       value: 0,
@@ -149,11 +148,6 @@ const createTransaction = (
       gasPrice: ethParameters?.ethGasPriceInGWei,
       nonce: ethParameters?.ethNonce,
     }
-
-    // // if not set owner management tests will fail on ganache
-    // if (process.env.NODE_ENV === 'test') {
-    //   sendParams.gas = '7000000'
-    // }
 
     const txToMock: TxToMock = {
       ...txArgs,

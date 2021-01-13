@@ -28,9 +28,9 @@ import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { styles } from './style'
-import { TransactionFees } from 'src/components/TransactionsFees'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 

@@ -17,13 +17,12 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { CALL } from 'src/logic/safe/transactions'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { providerSelector } from 'src/logic/wallets/store/selectors'
 
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-
-import { providerSelector } from '../wallets/store/selectors'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',

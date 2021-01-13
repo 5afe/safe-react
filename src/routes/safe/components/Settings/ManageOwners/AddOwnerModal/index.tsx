@@ -13,11 +13,11 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 const styles = createStyles({
   biggerModalWindow: {
