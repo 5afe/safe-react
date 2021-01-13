@@ -12,7 +12,7 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParameters, useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 
 import { OwnerForm } from './screens/OwnerForm'
@@ -35,7 +35,12 @@ export type OwnerValues = {
   threshold: string
 }
 
-export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dispatch: Dispatch): Promise<void> => {
+export const sendAddOwner = async (
+  values: OwnerValues,
+  safeAddress: string,
+  txParameters: TxParameters,
+  dispatch: Dispatch,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
@@ -45,6 +50,9 @@ export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dis
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -100,11 +108,11 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     setActiveScreen('reviewAddOwner')
   }
 
-  const onAddOwner = async () => {
+  const onAddOwner = async (txParameters: TxParameters) => {
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, dispatch)
+      await sendAddOwner(values, safeAddress, txParameters, dispatch)
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
       )
