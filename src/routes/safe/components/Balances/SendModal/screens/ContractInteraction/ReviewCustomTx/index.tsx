@@ -24,7 +24,7 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
@@ -186,6 +186,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               minWidth={140}
               onClick={() => submitTx(txParameters)}
               variant="contained"
+              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
             >
               Submit
             </Button>

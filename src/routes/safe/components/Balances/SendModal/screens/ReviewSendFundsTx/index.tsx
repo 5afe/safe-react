@@ -30,7 +30,7 @@ import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import ArrowDown from '../assets/arrow-down.svg'
@@ -269,7 +269,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
-              disabled={!data}
+              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
               onClick={() => submitTx(txParameters)}
               variant="contained"
             >

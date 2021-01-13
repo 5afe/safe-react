@@ -24,7 +24,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
@@ -200,6 +200,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               minWidth={140}
               onClick={() => submitTx(txParameters)}
               variant="contained"
+              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
             >
               Submit
             </Button>
