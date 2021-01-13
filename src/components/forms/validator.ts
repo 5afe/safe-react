@@ -64,8 +64,8 @@ export const mustBeEthereumAddress = memoize(
     const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
 
-    const errorMessage = `Address should be a valid Ethereum address${
-      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS name or Unstoppable domain' : ''
+    const errorMessage = `Input must be a valid Ethereum address${
+      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
     }`
 
     return startsWith0x && isAddress ? undefined : errorMessage
@@ -76,8 +76,8 @@ export const mustBeEthereumContractAddress = memoize(
   async (address: string): Promise<ValidatorReturnType> => {
     const contractCode = await getWeb3().eth.getCode(address)
 
-    const errorMessage = `Address should be a valid Ethereum contract address${
-      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS name or Unstoppable domain' : ''
+    const errorMessage = `Input must be a valid Ethereum contract address${
+      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
     }`
 
     return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '' ? errorMessage : undefined
