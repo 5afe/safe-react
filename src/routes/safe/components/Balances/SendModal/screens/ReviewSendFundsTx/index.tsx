@@ -37,6 +37,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { EditableTxParameters } from '../../../../Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
 
@@ -126,7 +127,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     txRecipient,
   })
 
-  const submitTx = async () => {
+  const submitTx = async (txParameters: TxParameters) => {
+    debugger
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
     if (!safeAddress) {
@@ -158,7 +160,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           to: txRecipient as string,
           valueInWei: txAmount,
           txData: data,
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+          ethParameters: txParameters,
         }),
       )
       onClose()
@@ -266,8 +271,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               color="primary"
               data-testid="submit-tx-btn"
               disabled={!data}
-              onClick={submitTx}
-              type="submit"
+              onClick={() => submitTx(txParameters)}
               variant="contained"
             >
               Submit

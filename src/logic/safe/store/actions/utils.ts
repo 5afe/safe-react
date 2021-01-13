@@ -26,17 +26,25 @@ export const shouldExecuteTransaction = async (
   nonce: string,
   lastTx: TxServiceModel | null,
 ): Promise<boolean> => {
-  const threshold = await safeInstance.methods.getThreshold().call()
+  const thresholdAsString = await safeInstance.methods.getThreshold().call()
+  const threshold = Number.parseInt(thresholdAsString)
 
-  // Tx will automatically be executed if and only if the threshold is 1
-  if (Number.parseInt(threshold) === 1) {
-    const isFirstTransaction = Number.parseInt(nonce) === 0
-    // if the previous tx is not executed, it's delayed using the approval mechanisms,
-    // once the previous tx is executed, the current tx will be available to be executed
-    // by the user using the exec button.
-    const canExecuteCurrentTransaction = lastTx && lastTx.isExecuted
+  // Needs to collect owners signatures
+  if (threshold > 1) {
+    return false
+  }
 
-    return isFirstTransaction || !!canExecuteCurrentTransaction
+  // Allow first tx.
+  if (Number.parseInt(nonce) === 0) {
+    return true
+  }
+
+  // If the previous tx is not executed or the different between lastTx.nonce and nonce is > 1
+  // it's delayed using the approval mechanisms.
+  // Once the previous tx is executed, the current tx will be available to be executed
+  // by the user using the exec button.
+  if (lastTx) {
+    return lastTx.isExecuted && lastTx.nonce + 1 === Number(nonce)
   }
 
   return false

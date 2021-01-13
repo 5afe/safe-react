@@ -39,6 +39,7 @@ import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -51,6 +52,7 @@ export interface CreateTransactionArgs {
   txNonce?: number | string
   valueInWei: string
   safeTxGas?: number
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPrice'>
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
@@ -70,6 +72,7 @@ const createTransaction = (
     navigateToTransactionsTab = true,
     origin = null,
     safeTxGas: safeTxGasArg,
+    ethParameters,
   }: CreateTransactionArgs,
   onUserConfirm?: ConfirmEventHandler,
   onError?: ErrorEventHandler,
@@ -86,7 +89,8 @@ const createTransaction = (
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = txNonce ? txNonce.toString() : await getNewTxNonce(lastTx, safeInstance)
+  const nextNonce = await getNewTxNonce(lastTx, safeInstance)
+  const nonce = txNonce ? txNonce.toString() : nextNonce
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
   let safeTxGas
@@ -137,12 +141,18 @@ const createTransaction = (
     }
 
     const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    const sendParams: PayableTx = { from, value: 0 }
-
-    // if not set owner management tests will fail on ganache
-    if (process.env.NODE_ENV === 'test') {
-      sendParams.gas = '7000000'
+    const sendParams: PayableTx = {
+      from,
+      value: 0,
+      gas: ethParameters?.ethGasLimit,
+      gasPrice: ethParameters?.ethGasPrice,
+      nonce: ethParameters?.ethNonce,
     }
+
+    // // if not set owner management tests will fail on ganache
+    // if (process.env.NODE_ENV === 'test') {
+    //   sendParams.gas = '7000000'
+    // }
 
     const txToMock: TxToMock = {
       ...txArgs,
