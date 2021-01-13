@@ -67,7 +67,7 @@
   },
   "productName": "Safe Multisig",
   "build": {
-    "appId": "io.gnosis.safe.macos",
+    "appId": "io.gnosis.safe",
     "afterSign": "scripts/notarize.js",
     "extends": null,
     "productName": "Safe Multisig",
@@ -95,19 +95,10 @@
       ]
     },
     "files": [
-      "**/*",
-      "!src${/*}",
-      "!config${/*}",
-      "!contracts${/*}",
-      "!migrations${/*}",
-      "!flow-typed${/*}",
-      "!apps${/*}",
-      "!out${/*}",
-      "!.editorconfig",
-      "!.gitignore",
-      "!README.md",
-      "!yarn-error.log",
-      "!yarn.lock"
+      "build/",
+      "public",
+      "scripts",
+      "package.json"
     ],
     "directories": {
       "buildResources": "public/build"
@@ -134,12 +125,12 @@
       "deleteAppDataOnUninstall": true
     },
     "linux": {
+      "category": "Finance",
       "target": [
         "AppImage",
         "deb",
         "zip"
-      ],
-      "icon": "./public/build/safe.png"
+      ]
     },
     "win": {
       "target": [
@@ -165,22 +156,22 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "1.0.0-beta.4",
+    "@gnosis.pm/safe-apps-sdk": "1.0.2",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#bf3a84486b7353bd25447ddff39c406f6fafecc6",
     "@gnosis.pm/util-contracts": "2.0.6",
-    "@ledgerhq/hw-transport-node-hid-singleton": "5.34.0",
+    "@ledgerhq/hw-transport-node-hid-singleton": "5.36.0",
     "@material-ui/core": "^4.11.0",
-    "@material-ui/icons": "4.9.1",
+    "@material-ui/icons": "^4.11.0",
     "@material-ui/lab": "4.0.0-alpha.56",
     "@openzeppelin/contracts": "3.1.0",
     "@sentry/react": "^5.28.0",
     "@sentry/tracing": "^5.28.0",
-    "@truffle/contract": "4.2.30",
     "@unstoppabledomains/resolution": "^1.11.1",
+    "@truffle/contract": "^4.3.0",
     "async-sema": "^3.1.0",
-    "axios": "0.21.0",
+    "axios": "0.21.1",
     "bignumber.js": "9.0.1",
     "bnc-onboard": "^1.16.1",
     "classnames": "^2.2.6",
@@ -191,7 +182,7 @@
     "date-fns": "2.16.1",
     "detect-port": "^1.3.0",
     "electron-is-dev": "^1.2.0",
-    "electron-log": "4.3.0",
+    "electron-log": "^4.3.0",
     "electron-settings": "^4.0.2",
     "electron-updater": "4.3.5",
     "eth-sig-util": "^2.5.3",
@@ -209,9 +200,10 @@
     "lodash.memoize": "^4.1.2",
     "material-ui-search-bar": "^1.0.0",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
-    "qrcode.react": "1.0.0",
-    "query-string": "6.13.7",
+    "qrcode.react": "1.0.1",
+    "query-string": "6.13.8",
     "react": "16.13.1",
+    "react-device-detect": "^1.15.0",
     "react-dom": "16.13.1",
     "react-final-form": "^6.5.2",
     "react-final-form-listeners": "^1.0.2",
@@ -226,7 +218,7 @@
     "redux-actions": "^2.6.5",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
-    "semver": "7.3.2",
+    "semver": "^7.3.2",
     "styled-components": "^5.2.1",
     "web3": "1.2.11",
     "web3-core": "^1.2.11",
@@ -241,8 +233,8 @@
     "@storybook/addons": "^5.3.19",
     "@storybook/preset-create-react-app": "^3.1.5",
     "@storybook/react": "^5.3.19",
-    "@testing-library/jest-dom": "5.11.6",
-    "@testing-library/react": "11.2.2",
+    "@testing-library/jest-dom": "^5.11.6",
+    "@testing-library/react": "^11.2.2",
     "@typechain/web3-v1": "^2.0.0",
     "@types/history": "4.6.2",
     "@types/jest": "^26.0.16",
@@ -255,7 +247,6 @@
     "@types/styled-components": "^5.1.4",
     "@typescript-eslint/eslint-plugin": "^4.6.0",
     "@typescript-eslint/parser": "^4.6.0",
-    "autoprefixer": "9.8.6",
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
@@ -263,13 +254,12 @@
     "electron-builder": "22.9.1",
     "electron-notarize": "1.0.0",
     "eslint": "^7.11.0",
-    "eslint-config-prettier": "^6.14.0",
+    "eslint-config-prettier": "^7.0.0",
     "eslint-plugin-import": "^2.22.1",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.21.5",
     "eslint-plugin-sort-destructure-keys": "^1.3.5",
-    "ethereumjs-abi": "0.6.8",
     "husky": "^4.3.0",
     "lint-staged": "^10.5.2",
     "patch-package": "^6.2.2",
@@ -277,7 +267,7 @@
     "prettier": "^2.2.0",
     "sass": "^1.29.0",
     "typechain": "^4.0.0",
-    "typescript": "4.0.5",
-    "wait-on": "5.2.0"
+    "typescript": "4.1.3",
+    "wait-on": "5.2.1"
   }
 }

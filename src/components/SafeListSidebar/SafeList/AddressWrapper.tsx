@@ -6,9 +6,10 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import DefaultBadge from './DefaultBadge'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
-import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
+import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { makeStyles } from '@material-ui/core/styles'
 import { getNetworkInfo } from 'src/config'
+import { useDispatch } from 'react-redux'
 
 const StyledButtonLink = styled(ButtonLink)`
   visibility: hidden;
@@ -46,14 +47,18 @@ const useStyles = makeStyles({
 type Props = {
   safe: SafeRecordProps
   defaultSafe: DefaultSafe
-  setDefaultSafe: SetDefaultSafe
 }
 
 const { nativeCoin } = getNetworkInfo()
 
 export const AddressWrapper = (props: Props): React.ReactElement => {
   const classes = useStyles()
-  const { safe, defaultSafe, setDefaultSafe } = props
+  const { safe, defaultSafe } = props
+  const dispatch = useDispatch()
+
+  const setDefaultSafeAction = (safeAddress: string) => {
+    dispatch(setDefaultSafe(safeAddress))
+  }
 
   return (
     <div className={classes.wrapper}>
@@ -68,7 +73,7 @@ export const AddressWrapper = (props: Props): React.ReactElement => {
             className="safeListMakeDefaultButton"
             textSize="sm"
             onClick={() => {
-              setDefaultSafe(safe.address)
+              setDefaultSafeAction(safe.address)
             }}
             color="primary"
           >
