@@ -199,7 +199,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 }
 `
 
-export const Disclaimer = styled(StyledTransaction)`
+export const DisclaimerContainer = styled(StyledTransaction)`
   background-color: ${({ theme }) => theme.colors.background};
   border-radius: 5px;
   margin: 8px;
