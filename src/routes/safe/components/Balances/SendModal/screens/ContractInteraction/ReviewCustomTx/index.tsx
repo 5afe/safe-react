@@ -30,6 +30,7 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 
 import ArrowDown from '../../assets/arrow-down.svg'
 import { styles } from './style'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 export type CustomTx = {
   contractAddress?: string
@@ -66,7 +67,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
   })
 
-  const submitTx = async (): Promise<void> => {
+  const submitTx = async (txParameters: TxParameters): Promise<void> => {
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
@@ -78,6 +79,9 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           to: txRecipient as string,
           valueInWei: txValue,
           txData,
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
@@ -180,8 +184,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               color="primary"
               data-testid="submit-tx-btn"
               minWidth={140}
-              onClick={submitTx}
-              type="submit"
+              onClick={() => submitTx(txParameters)}
               variant="contained"
             >
               Submit

@@ -161,8 +161,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           txData: data,
           txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           ethParameters: txParameters,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
       )
       onClose()
