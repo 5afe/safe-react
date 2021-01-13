@@ -120,6 +120,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient,
+    txType: tx.txType,
   })
 
   const submitTx = async () => {
