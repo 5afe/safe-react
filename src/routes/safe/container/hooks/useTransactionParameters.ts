@@ -6,6 +6,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeSelector } from 'src/logic/safe/store/selectors'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 
 export type TxParameters = {
   safeNonce: string | undefined
@@ -18,6 +19,7 @@ export type TxParameters = {
   setEthGasLimit: (ethGasLimit: string | undefined) => void
   ethGasPrice: string | undefined
   setEthGasPrice: (ethGasPrice: string | undefined) => void
+  ethGasPriceInGWei: string | undefined
 }
 
 /**
@@ -38,6 +40,7 @@ export const useTransactionParameters = (): TxParameters => {
   const [ethNonce, setEthNonce] = useState<string | undefined>(undefined) // we delegate it to the wallet
   const [ethGasLimit, setEthGasLimit] = useState<string | undefined>(undefined) // call execTx until it returns a number > 0
   const [ethGasPrice, setEthGasPrice] = useState<string | undefined>(undefined) // get fast gas price
+  const [ethGasPriceInGWei, setEthGasPriceInGWei] = useState<string | undefined>(undefined) // get fast gas price
 
   /* get nonce for connected wallet */
   useEffect(() => {
@@ -50,6 +53,14 @@ export const useTransactionParameters = (): TxParameters => {
       getNonce()
     }
   }, [connectedWalletAddress])
+
+  useEffect(() => {
+    if (!ethGasPrice) {
+      setEthGasPriceInGWei(undefined)
+    } else {
+      setEthGasPriceInGWei(web3.utils.toWei(ethGasPrice, 'Gwei'))
+    }
+  }, [ethGasPrice])
 
   /* calc safe nonce */
   useEffect(() => {
@@ -76,5 +87,6 @@ export const useTransactionParameters = (): TxParameters => {
     setEthGasLimit,
     ethGasPrice,
     setEthGasPrice,
+    ethGasPriceInGWei,
   }
 }

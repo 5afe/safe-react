@@ -52,7 +52,7 @@ export interface CreateTransactionArgs {
   txNonce?: number | string
   valueInWei: string
   safeTxGas?: number
-  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPrice'>
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
 }
 
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
@@ -141,11 +141,12 @@ const createTransaction = (
     }
 
     const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+    debugger
     const sendParams: PayableTx = {
       from,
       value: 0,
       gas: ethParameters?.ethGasLimit,
-      gasPrice: ethParameters?.ethGasPrice,
+      gasPrice: ethParameters?.ethGasPriceInGWei,
       nonce: ethParameters?.ethNonce,
     }
 

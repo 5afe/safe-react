@@ -128,7 +128,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   })
 
   const submitTx = async (txParameters: TxParameters) => {
-    debugger
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
     if (!safeAddress) {
