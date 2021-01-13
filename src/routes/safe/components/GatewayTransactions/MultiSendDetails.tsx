@@ -1,32 +1,13 @@
-import { Accordion, AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
+import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, ReactNode } from 'react'
-import styled from 'styled-components'
 
 import { getNetworkInfo } from 'src/config'
 import { TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { ColumnLikeAccordionDetails } from './styled'
-import { TxInfoDetails } from './TxInfoDetails'
-import { MethodDetails } from './MethodDetails'
 import { HexEncodedData } from './HexEncodedData'
-
-const MultiSendAccordion = styled(Accordion)`
-  &.MuiAccordion-root {
-    &:first-child {
-      border-top: none;
-    }
-
-    &.Mui-expanded {
-      &:last-child {
-        border-bottom: none;
-      }
-    }
-
-    & .MuiAccordionDetails-root {
-      padding: 16px;
-    }
-  }
-`
+import { MethodDetails } from './MethodDetails'
+import { ColumnDisplayAccordionDetails, ActionAccordion } from './styled'
+import { TxInfoDetails } from './TxInfoDetails'
 
 type MultiSendTxGroupProps = {
   actionTitle: string
@@ -39,15 +20,15 @@ type MultiSendTxGroupProps = {
 
 const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroupProps): ReactElement => {
   return (
-    <MultiSendAccordion>
+    <ActionAccordion>
       <AccordionSummary>
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="lg" />
       </AccordionSummary>
-      <ColumnLikeAccordionDetails>
+      <ColumnDisplayAccordionDetails>
         <TxInfoDetails title={txDetails.title} address={txDetails.address} />
         {children}
-      </ColumnLikeAccordionDetails>
-    </MultiSendAccordion>
+      </ColumnDisplayAccordionDetails>
+    </ActionAccordion>
   )
 }
 
