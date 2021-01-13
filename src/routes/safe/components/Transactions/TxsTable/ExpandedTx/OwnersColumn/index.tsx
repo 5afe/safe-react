@@ -33,7 +33,7 @@ function getOwnersConfirmations(tx: Transaction, userAddress: string): [string[]
   const ownersWhoConfirmed: string[] = []
   let currentUserAlreadyConfirmed = false
 
-  tx.confirmations.forEach((conf) => {
+  tx.confirmations?.forEach((conf) => {
     if (conf.owner === userAddress) {
       currentUserAlreadyConfirmed = true
     }

@@ -46,7 +46,7 @@ const generateBatchRequests = <ReturnValues>({
     return new Promise((resolve) => {
       const resolver = (error, result) => {
         if (error) {
-          resolve()
+          resolve(undefined)
         } else {
           resolve(result)
         }
@@ -58,7 +58,7 @@ const generateBatchRequests = <ReturnValues>({
           request = web3[type][method].request(...args, resolver)
         } else {
           if (address === null) {
-            resolve()
+            resolve(undefined)
             return
           }
           request = contractInstance.methods[method](...args).call.request(resolver)
@@ -68,7 +68,7 @@ const generateBatchRequests = <ReturnValues>({
         batch ? batch.add(request) : localBatch.add(request)
       } catch (e) {
         console.warn('There was an error trying to batch request from web3.', e)
-        resolve()
+        resolve(undefined)
       }
     })
   })
