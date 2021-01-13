@@ -8,7 +8,6 @@ import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { useRouteMatch, Link } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { fontColor } from 'src/theme/variables'
 
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types.d'
@@ -22,7 +21,6 @@ const Wrapper = styled.div`
 
 const StyledLink = styled(Link)`
   text-decoration: none;
-  color: ${fontColor};
 `
 
 const centerCSS = css`

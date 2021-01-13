@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
+import { fontColor } from 'src/theme/variables'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { AppIconSK, DescriptionSK, TitleSK } from './skeleton'
 
@@ -15,6 +16,7 @@ const StyledAppCard = styled(Card)`
   height: 232px !important;
   box-sizing: border-box;
   cursor: pointer;
+  color: ${fontColor};
 
   :hover {
     box-shadow: 1px 2px 16px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.35)};
