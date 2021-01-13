@@ -1,11 +1,10 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -16,50 +15,84 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { List } from 'immutable'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
-const { nativeCoin } = getNetworkInfo()
+const useStyles = makeStyles(styles)
 
-const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddress, ownerName, values }) => {
-  const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+type ReviewRemoveOwnerProps = {
+  onClickBack: () => void
+  onClose: () => void
+  onSubmit: () => void
+  ownerAddress: string
+  ownerName: string
+  threshold?: number
+}
+
+export const ReviewRemoveOwnerModal = ({
+  onClickBack,
+  onClose,
+  onSubmit,
+  ownerAddress,
+  ownerName,
+  threshold,
+}: ReviewRemoveOwnerProps): React.ReactElement => {
+  const classes = useStyles()
+  const [data, setData] = useState('')
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+  } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient: safeAddress,
+  })
+
   useEffect(() => {
     let isCurrent = true
 
-    const estimateGas = async () => {
-      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-      const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
-      const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, values.threshold).encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
+    if (!threshold) {
+      console.error("Threshold value was not define, tx can't be executed")
+      return
     }
 
-    estimateGas()
+    const calculateRemoveOwnerData = async () => {
+      try {
+        const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+        const safeOwners = await gnosisSafe.methods.getOwners().call()
+        const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+        const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
+
+        if (isCurrent) {
+          setData(txData)
+        }
+      } catch (error) {
+        console.error('Error calculating ERC721 transfer data:', error.message)
+      }
+    }
+    calculateRemoveOwnerData()
+
     return () => {
       isCurrent = false
     }
-  }, [ownerAddress, safeAddress, values.threshold])
+  }, [safeAddress, ownerAddress, threshold])
 
   return (
     <>
@@ -95,7 +128,7 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
                   Any transaction requires the confirmation of:
                 </Paragraph>
                 <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                  {`${values.threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                  {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
                 </Paragraph>
               </Block>
             </Block>
@@ -165,11 +198,13 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
       </Block>
       <Hairline />
       <Block className={classes.gasCostsContainer}>
-        <Paragraph>
-          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
-          <br />
-          {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-        </Paragraph>
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
@@ -191,5 +226,3 @@ const ReviewRemoveOwner = ({ classes, onClickBack, onClose, onSubmit, ownerAddre
     </>
   )
 }
-
-export default withStyles(styles as any)(ReviewRemoveOwner)

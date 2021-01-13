@@ -1,12 +1,15 @@
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
-import semverSatisfies from 'semver/functions/satisfies'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
+import {
+  checkIfOffChainSignatureIsPossible,
+  generateSignaturesFromTxConfirmations,
+  getPreValidatedSignatures,
+} from 'src/logic/safe/safeTxSigner'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
-import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES, tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
+import { tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -33,7 +36,7 @@ interface ProcessTransactionArgs {
 
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 
-const processTransaction = ({
+export const processTransaction = ({
   approveAndExecute,
   notifiedTransaction,
   safeAddress,
@@ -49,17 +52,15 @@ const processTransaction = ({
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(undefined, lastTx, safeInstance)
+  const nonce = await getNewTxNonce(lastTx, safeInstance)
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
-  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, approveAndExecute && userAddress)
-  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
+  const preApprovingOwner = approveAndExecute ? userAddress : undefined
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
+
   if (!sigs) {
-    sigs = `0x000000000000000000000000${from.replace(
-      '0x',
-      '',
-    )}000000000000000000000000000000000000000000000000000000000000000001`
+    sigs = getPreValidatedSignatures(from)
   }
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
@@ -86,14 +87,7 @@ const processTransaction = ({
   }
 
   try {
-    // Here we're checking that safe contract version is greater or equal 1.1.1, but
-    // theoretically EIP712 should also work for 1.0.0 contracts
-    // Also, offchain signatures are not working for ledger/trezor wallet because of a bug in their library:
-    // https://github.com/LedgerHQ/ledgerjs/issues/378
-    // Couldn't find an issue for trezor but the error is almost the same
-    const canTryOffchainSigning =
-      !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
-    if (canTryOffchainSigning) {
+    if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
       const signature = await tryOffchainSigning(tx.safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
@@ -109,9 +103,7 @@ const processTransaction = ({
       }
     }
 
-    transaction = isExecution
-      ? await getExecutionTransaction(txArgs)
-      : await getApprovalTransaction(safeInstance, tx.safeTxHash)
+    transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
 
     const sendParams: any = { from, value: 0 }
 
@@ -196,5 +188,3 @@ const processTransaction = ({
 
   return txHash
 }
-
-export default processTransaction

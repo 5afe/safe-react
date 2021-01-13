@@ -1,11 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -16,10 +16,8 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -29,6 +27,8 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 export type CustomTx = {
   contractAddress?: string
@@ -49,29 +49,19 @@ const { nativeCoin } = getNetworkInfo()
 const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
-  const [gasCosts, setGasCosts] = useState<string>('< 0.001')
-  useEffect(() => {
-    let isCurrent = true
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-    const estimateGas = async () => {
-      const txData = tx.data ? tx.data.trim() : ''
-
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, tx.contractAddress as string, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-      }
-    }
-
-    estimateGas()
-
-    return () => {
-      isCurrent = false
-    }
-  }, [safeAddress, tx.data, tx.contractAddress])
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+  } = useEstimateTransactionGas({
+    txRecipient: tx.contractAddress as string,
+    txData: tx.data ? tx.data.trim() : '',
+    txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
+  })
 
   const submitTx = async (): Promise<void> => {
     const txRecipient = tx.contractAddress
@@ -161,9 +151,13 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
           </Col>
         </Row>
         <Row>
-          <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Hairline />
