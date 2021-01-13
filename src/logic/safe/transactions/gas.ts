@@ -118,7 +118,7 @@ const calculateMinimumGasForTransaction = async (
         gasPrice: 0,
         gas: amountOfGasToTryTx,
       })
-      return txGasEstimation + additionalGas
+      return amountOfGasToTryTx
     } catch (error) {
       console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
     }
@@ -144,8 +144,6 @@ export const estimateGasForTransactionCreation = async (
       data: estimateData,
     })
 
-    const txGasEstimation = gasEstimationResponse + 10000
-
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + 21000
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
@@ -154,7 +152,7 @@ export const estimateGasForTransactionCreation = async (
       additionalGasBatches,
       safeAddress,
       estimateData,
-      txGasEstimation,
+      gasEstimationResponse,
       dataGasEstimation,
     )
   } catch (error) {
