@@ -66,7 +66,7 @@ describe('getNewTxNonce', () => {
     const expectedResult = '2'
 
     // when
-    const result = await getNewTxNonce(undefined, lastTx, safeInstance)
+    const result = await getNewTxNonce(lastTx, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
@@ -82,7 +82,7 @@ describe('getNewTxNonce', () => {
     safeInstance.methods.nonce = mockFnNonce
 
     // when
-    const result = await getNewTxNonce(undefined, null, safeInstance)
+    const result = await getNewTxNonce(null, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
@@ -98,19 +98,7 @@ describe('getNewTxNonce', () => {
     const lastTx = getMockedTxServiceModel({ nonce: 10 })
 
     // when
-    const result = await getNewTxNonce(undefined, lastTx, safeInstance)
-
-    // then
-    expect(result).toBe(expectedResult)
-  })
-  it('Given a pre-calculated nonce number should return it', async () => {
-    // given
-    const safeInstance = getMockedSafeInstance({})
-    const expectedResult = '114'
-    const nextNonce = '114'
-
-    // when
-    const result = await getNewTxNonce(nextNonce, null, safeInstance)
+    const result = await getNewTxNonce(lastTx, safeInstance)
 
     // then
     expect(result).toBe(expectedResult)
