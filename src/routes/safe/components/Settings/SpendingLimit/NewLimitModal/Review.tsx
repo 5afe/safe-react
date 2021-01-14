@@ -160,7 +160,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     to: '',
     txData: '',
   })
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   const {
     gasCostFormatted,
@@ -224,7 +224,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
       ?.label ?? 'One-time spending limit'
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <EditableTxParameters

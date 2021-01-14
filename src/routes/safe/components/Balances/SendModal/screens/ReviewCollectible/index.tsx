@@ -54,7 +54,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nftTokens = useSelector(nftTokensSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
@@ -119,7 +119,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <EditableTxParameters

@@ -65,7 +65,7 @@ export const ReviewReplaceOwnerModal = ({
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
 
@@ -99,7 +99,7 @@ export const ReviewReplaceOwnerModal = ({
     }
   }, [ownerAddress, safeAddress, values.newOwnerAddress])
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <>

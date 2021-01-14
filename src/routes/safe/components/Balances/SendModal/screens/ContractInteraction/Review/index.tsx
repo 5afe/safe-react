@@ -52,7 +52,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -82,7 +82,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   const submitTx = async (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {

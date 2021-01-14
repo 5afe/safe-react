@@ -48,7 +48,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   const {
     gasLimit,
@@ -85,7 +85,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     }
   }, [safeAddress, values.ownerAddress, values.threshold])
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <EditableTxParameters

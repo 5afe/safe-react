@@ -76,7 +76,7 @@ export const ApproveTxModal = ({
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
@@ -116,7 +116,7 @@ export const ApproveTxModal = ({
     onClose()
   }
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>

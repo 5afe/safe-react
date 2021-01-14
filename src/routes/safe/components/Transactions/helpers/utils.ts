@@ -1,6 +1,7 @@
 export type ParametersStatus = 'ENABLED' | 'DISABLED' | 'SAFE_DISABLED' | 'ETH_DISABLED'
 
 export const areEthereumParamsEnabled = (parametersStatus: ParametersStatus): boolean => {
+  debugger
   return parametersStatus === 'ENABLED' || !(parametersStatus === 'ETH_DISABLED')
 }
 

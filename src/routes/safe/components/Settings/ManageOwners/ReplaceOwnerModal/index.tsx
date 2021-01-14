@@ -90,7 +90,7 @@ export const ReplaceOwnerModal = ({
   })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const txParameters = useTransactionParameters()
 
   useEffect(
@@ -135,7 +135,7 @@ export const ReplaceOwnerModal = ({
 
   const closeEditTxParameters = () => setActiveScreen('reviewReplaceOwner')
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <Modal

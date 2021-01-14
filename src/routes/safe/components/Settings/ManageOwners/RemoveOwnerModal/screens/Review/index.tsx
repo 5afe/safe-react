@@ -48,7 +48,7 @@ export const ReviewRemoveOwnerModal = ({
   onSubmit,
   ownerAddress,
   ownerName,
-  threshold,
+  threshold = 1,
   onEditTxParameters,
   txParameters,
 }: ReviewRemoveOwnerProps): React.ReactElement => {
@@ -101,7 +101,7 @@ export const ReviewRemoveOwnerModal = ({
     }
   }, [safeAddress, ownerAddress, threshold])
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <>

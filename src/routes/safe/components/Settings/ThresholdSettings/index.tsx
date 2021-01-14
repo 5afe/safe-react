@@ -31,7 +31,7 @@ const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
   const granted = useSelector(grantedSelector)
@@ -70,7 +70,7 @@ const ThresholdSettings = (): React.ReactElement => {
 
   const closeEditTxParameters = () => setActiveScreen('form')
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <>

@@ -52,7 +52,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   const {
     gasLimit,
@@ -68,7 +68,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
   })
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   const submitTx = async (txParameters: TxParameters): Promise<void> => {
     const txRecipient = tx.contractAddress

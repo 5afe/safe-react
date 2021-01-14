@@ -81,7 +81,7 @@ export const RemoveOwnerModal = ({
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const txParameters = useTransactionParameters()
 
   useEffect(
@@ -115,7 +115,7 @@ export const RemoveOwnerModal = ({
     sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
   }
 
-  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   const openEditTxParameters = () => setActiveScreen('editTxParameters')
 
