@@ -34,17 +34,17 @@ const useStyles = makeStyles({
   },
   content: {
     maxWidth: '100%',
-    width: '830px',
+    width: '980px',
   },
   form: {
-    columnGap: '10px',
+    columnGap: '4px',
     display: 'grid',
     gridTemplateColumns: '1fr',
     paddingBottom: '30px',
     rowGap: '10px',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr',
+      gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
       paddingBottom: '0',
     },
   },
@@ -62,10 +62,10 @@ const useStyles = makeStyles({
 } as any)
 
 const StyledText = styled(Text)`
-  margin: 0 0 24px;
+  margin: 0 80px 24px 80px;
 `
 const StyledButton = styled(Button)`
-  width: 208px;
+  width: 174px;
 `
 
 const CookiesBanner = () => {
@@ -143,6 +143,16 @@ const CookiesBanner = () => {
               value={localNecessary}
             />
           </div>
+          {/* Add Funcionality for Custome Support */}
+          <div className={classes.formItem}>
+            <FormControlLabel
+              control={<Checkbox checked={localAnalytics} />}
+              label="Customer support"
+              name="Analytics"
+              onChange={() => setLocalAnalytics((prev) => !prev)}
+              value={localAnalytics}
+            />
+          </div>
           <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={localAnalytics} />}
@@ -153,21 +163,21 @@ const CookiesBanner = () => {
             />
           </div>
           <div className={classes.formItem}>
-            <StyledButton size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
-              Accept All
-            </StyledButton>
-          </div>
-          <div className={classes.formItem}>
             <StyledButton
               size="md"
-              color="primary"
-              variant="contained"
+              color="secondary"
+              variant="outlined"
               onClick={closeCookiesBannerHandler}
               onKeyDown={closeCookiesBannerHandler}
               tabIndex={1}
               data-testid="accept-preferences"
             >
               Accept Selection
+            </StyledButton>
+          </div>
+          <div className={classes.formItem}>
+            <StyledButton size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
+              Accept All
             </StyledButton>
           </div>
         </div>
