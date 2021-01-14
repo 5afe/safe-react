@@ -1,5 +1,5 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useMemo } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -31,6 +31,8 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 
 import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { TransactionFees } from 'src/components/TransactionsFees'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -66,6 +68,74 @@ const useExistentSpendingLimit = ({
   }, [spendingLimits, txToken.decimals, values.beneficiary, values.token])
 }
 
+const calculateSpendingLimitsTxData = (
+  safeAddress: string,
+  spendingLimits: SpendingLimit[] | null | undefined,
+  existentSpendingLimit: SpendingLimit | null,
+  txToken: Token,
+  values: Record<string, string>,
+  txParameters?: TxParameters,
+): {
+  spendingLimitTxData: CreateTransactionArgs
+  transactions: MultiSendTx[]
+  spendingLimitArgs: {
+    beneficiary: string
+    token: string
+    spendingLimitInWei: string
+    resetTimeMin: number
+    resetBaseMin: number
+  }
+} => {
+  const isSpendingLimitEnabled = spendingLimits !== null
+  const transactions: MultiSendTx[] = []
+
+  // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
+  if (!isSpendingLimitEnabled && safeAddress) {
+    transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress))
+  }
+
+  // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
+  //                                  ^ - shall we rely on this or query the list of delegates once again?
+  const isDelegateAlreadyAdded =
+    spendingLimits?.some(({ delegate }) => sameAddress(delegate, values?.beneficiary)) ?? false
+
+  // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
+  if (!isDelegateAlreadyAdded && values?.beneficiary) {
+    transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
+  }
+
+  // prepare the setAllowance tx
+  const startTime = currentMinutes() - 30
+  const spendingLimitArgs = {
+    beneficiary: values.beneficiary,
+    token: values.token,
+    spendingLimitInWei: toTokenUnit(values.amount, txToken.decimals),
+    resetTimeMin: values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+    resetBaseMin: values.withResetTime ? startTime : 0,
+  }
+
+  let spendingLimitTxData
+  if (safeAddress) {
+    // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
+    if (transactions.length === 0) {
+      spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress })
+    } else {
+      spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress })
+    }
+
+    if (txParameters) {
+      spendingLimitTxData.txNonce = txParameters.safeNonce
+      spendingLimitTxData.safeTxGas = txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined
+      spendingLimitTxData.ethParameters = txParameters
+    }
+  }
+  return {
+    spendingLimitTxData,
+    transactions,
+    spendingLimitArgs,
+  }
+}
+
 interface ReviewSpendingLimitProps {
   onBack: ActionCallback
   onClose: () => void
@@ -82,67 +152,54 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
+  const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
+    to: '',
+    txData: '',
+  })
 
-  const calculateSpendingLimitsTxData = (
-    txParameters: TxParameters,
-  ): {
-    spendingLimitTxData: CreateTransactionArgs
-    transactions: MultiSendTx[]
-    spendingLimitArgs: {
-      beneficiary: string
-      token: string
-      spendingLimitInWei: string
-      resetTimeMin: number
-      resetBaseMin: number
-    }
-  } => {
-    const isSpendingLimitEnabled = spendingLimits !== null
-    const transactions: MultiSendTx[] = []
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+    gasPrice,
+    gasPriceFormatted,
+    gasLimit,
+  } = useEstimateTransactionGas({
+    txData: estimateGasArgs.txData as string,
+    txRecipient: estimateGasArgs.to as string,
+    operation: estimateGasArgs.operation,
+  })
 
-    // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
-    if (!isSpendingLimitEnabled && safeAddress) {
-      transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress))
-    }
-
-    // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
-    //                                  ^ - shall we rely on this or query the list of delegates once again?
-    const isDelegateAlreadyAdded =
-      spendingLimits?.some(({ delegate }) => sameAddress(delegate, values?.beneficiary)) ?? false
-
-    // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
-    if (!isDelegateAlreadyAdded && values?.beneficiary) {
-      transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
-    }
-
-    // prepare the setAllowance tx
-    const startTime = currentMinutes() - 30
-    const spendingLimitArgs = {
-      beneficiary: values.beneficiary,
-      token: values.token,
-      spendingLimitInWei: toTokenUnit(values.amount, txToken.decimals),
-      resetTimeMin: values.withResetTime ? +values.resetTime * 60 * 24 : 0,
-      resetBaseMin: values.withResetTime ? startTime : 0,
-    }
-
-    let spendingLimitTxData
-    if (safeAddress) {
-      // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
-      if (transactions.length === 0) {
-        spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress, txParameters })
-      } else {
-        spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress, txParameters })
-      }
-    }
-    return {
-      spendingLimitTxData,
-      transactions,
-      spendingLimitArgs,
-    }
-  }
+  useEffect(() => {
+    const { spendingLimitTxData } = calculateSpendingLimitsTxData(
+      safeAddress,
+      spendingLimits,
+      existentSpendingLimit,
+      txToken,
+      values,
+    )
+    setEstimateGasArgs(spendingLimitTxData)
+  }, [safeAddress, spendingLimits, existentSpendingLimit, txToken, values])
 
   const handleSubmit = (txParameters: TxParameters): void => {
+    const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
+    const advancedOptionsTxParameters = {
+      ...txParameters,
+      ethGasPrice: ethGasPrice || gasPrice,
+      ethGasPriceInGWei: ethGasPriceInGWei || gasPriceFormatted,
+      ethGasLimit: ethGasLimit || gasLimit,
+    }
     if (safeAddress) {
-      const { spendingLimitTxData, transactions, spendingLimitArgs } = calculateSpendingLimitsTxData(txParameters)
+      const { spendingLimitTxData, transactions, spendingLimitArgs } = calculateSpendingLimitsTxData(
+        safeAddress,
+        spendingLimits,
+        existentSpendingLimit,
+        txToken,
+        values,
+        advancedOptionsTxParameters,
+      )
       // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
       if (transactions.length === 0) {
         dispatch(createTransaction(spendingLimitTxData))
@@ -163,7 +220,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ?.label ?? 'One-time spending limit'
 
   return (
-    <EditableTxParameters ethGasLimit={'1'} ethGasPrice={'1'}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
@@ -200,9 +257,17 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
                 You are about to replace an existent spending limit
               </Text>
             )}
-
             {/* Tx Parameters */}
             <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <Row>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Row>
           </Block>
 
           <Modal.Footer>
