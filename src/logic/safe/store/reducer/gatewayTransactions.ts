@@ -70,6 +70,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
 
           if (!txExist) {
             history[startOfDate].push(value.transaction)
+            // pushing a newer transaction to the existing list messes the transactions order
+            // this happens when most recent transactions are added to the existing txs in the store
+            history[startOfDate] = history[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
           }
         }
       })
