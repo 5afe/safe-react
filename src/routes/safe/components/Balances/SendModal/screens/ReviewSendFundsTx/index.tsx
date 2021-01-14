@@ -125,6 +125,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient,
+    txType: tx.txType,
   })
 
   const submitTx = async (txParameters: TxParameters) => {
