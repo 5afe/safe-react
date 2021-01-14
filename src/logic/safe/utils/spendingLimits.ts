@@ -16,7 +16,6 @@ import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
@@ -182,13 +181,11 @@ type SpendingLimitTxParams = {
     resetBaseMin: number
   }
   safeAddress: string
-  txParameters?: TxParameters
 }
 
 export const setSpendingLimitTx = ({
   spendingLimitArgs: { beneficiary, token, spendingLimitInWei, resetTimeMin, resetBaseMin },
   safeAddress,
-  txParameters,
 }: SpendingLimitTxParams): CreateTransactionArgs => {
   const spendingLimitContract = getSpendingLimitContract()
   const { nativeCoin } = getNetworkInfo()
@@ -210,12 +207,6 @@ export const setSpendingLimitTx = ({
     notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   }
 
-  if (txParameters) {
-    txArgs.txNonce = txParameters.safeNonce
-    txArgs.safeTxGas = txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined
-    txArgs.ethParameters = txParameters
-  }
-
   return txArgs
 }
 
@@ -233,7 +224,6 @@ export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiS
 type SpendingLimitMultiSendTx = {
   transactions: Array<MultiSendTx>
   safeAddress: string
-  txParameters: TxParameters
 }
 export const spendingLimitMultiSendTx = ({
   transactions,
