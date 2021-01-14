@@ -4,6 +4,8 @@ import { default as ReactInfiniteScroll, Props as ReactInfiniteScrollProps } fro
 
 import { Overwrite } from 'src/types/helpers'
 
+export const SCROLLABLE_TARGET_ID = 'scrollableDiv'
+
 type InfiniteScrollProps = Overwrite<ReactInfiniteScrollProps, { loader?: ReactInfiniteScrollProps['loader'] }>
 
 export const InfiniteScroll = ({ dataLength, next, hasMore, ...props }: InfiniteScrollProps): ReactElement => {
@@ -15,7 +17,7 @@ export const InfiniteScroll = ({ dataLength, next, hasMore, ...props }: Infinite
       hasMore={hasMore}
       loader={<Loader size="md" />}
       scrollThreshold="120px"
-      scrollableTarget="scrollableDiv"
+      scrollableTarget={SCROLLABLE_TARGET_ID}
     >
       {props.children}
     </ReactInfiniteScroll>
