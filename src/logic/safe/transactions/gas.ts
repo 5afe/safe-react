@@ -110,6 +110,7 @@ const calculateMinimumGasForTransaction = async (
 ): Promise<number> => {
   for (const additionalGas of additionalGasBatches) {
     const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
+    console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
     try {
       await getGasEstimationTxResponse({
         to: safeAddress,
@@ -118,6 +119,7 @@ const calculateMinimumGasForTransaction = async (
         gasPrice: 0,
         gas: amountOfGasToTryTx,
       })
+      console.info(`Gas estimation successfully finished with gas amount: ${amountOfGasToTryTx}`)
       return amountOfGasToTryTx
     } catch (error) {
       console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
