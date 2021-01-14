@@ -34,6 +34,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         break
       }
       case 'Custom': {
+        // TODO: is this the only way to identify a 'module' transaction?
         if (!tx.executionInfo) {
           setType({ icon: SettingsTxIcon, text: 'Module' })
           break
@@ -41,6 +42,11 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         if (isCancelTransaction({ txInfo: tx.txInfo, safeAddress })) {
           setType({ icon: CustomTxIcon, text: 'Cancelling transaction' })
+          break
+        }
+
+        if (tx.safeAppInfo) {
+          setType({ icon: tx.safeAppInfo.logoUrl, text: tx.safeAppInfo.name })
           break
         }
 

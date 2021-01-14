@@ -149,12 +149,19 @@ type ExecutionInfo = {
   missingSigners?: string[]
 }
 
+type SafeAppInfo = {
+  name: string
+  url: string
+  logoUrl: string
+}
+
 type TransactionSummary = {
   id: string
   timestamp: number
   txStatus: TransactionStatus
   txInfo: TransactionInfo // Polymorphic: Transfer, SettingsChange, Custom, Creation
   executionInfo: ExecutionInfo | null
+  safeAppInfo: SafeAppInfo | null
 }
 
 type TransactionData = {
