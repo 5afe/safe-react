@@ -52,6 +52,9 @@ const ThresholdSettings = (): React.ReactElement => {
         to: safeAddress,
         valueInWei: '0',
         txData,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
     )

@@ -12,8 +12,7 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
@@ -35,7 +34,12 @@ export type OwnerValues = {
   threshold: string
 }
 
-export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dispatch: Dispatch): Promise<void> => {
+export const sendAddOwner = async (
+  values: OwnerValues,
+  safeAddress: string,
+  txParameters: TxParameters,
+  dispatch: Dispatch,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
@@ -45,6 +49,9 @@ export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dis
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -65,7 +72,6 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
@@ -100,11 +106,11 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     setActiveScreen('reviewAddOwner')
   }
 
-  const onAddOwner = async () => {
+  const onAddOwner = async (txParameters: TxParameters) => {
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, dispatch)
+      await sendAddOwner(values, safeAddress, txParameters, dispatch)
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
       )
@@ -112,10 +118,6 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
       console.error('Error while removing an owner', error)
     }
   }
-
-  const openEditTxParameters = () => setActiveScreen('editTxParameters')
-
-  const closeEditTxParameters = () => setActiveScreen('reviewAddOwner')
 
   return (
     <Modal
@@ -131,17 +133,7 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
           <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewAddOwner' && (
-          <ReviewAddOwner
-            onClickBack={onClickBack}
-            onClose={onClose}
-            onSubmit={onAddOwner}
-            values={values}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
-          />
-        )}
-        {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+          <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />
         )}
       </>
     </Modal>
