@@ -161,7 +161,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
   }
 
   // overrides Accordion styles, as grouped txs behave differently
-  .MuiAccordion-root {
+  > .MuiAccordion-root {
     transition: none;
     border: 0;
     grid-column-end: span 6;
@@ -172,7 +172,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
     }
 
     &.Mui-expanded {
-      margin-left: 16px;
+      justify-self: center;
       width: calc(100% - 32px);
       
       &:not(:last-of-type) {
@@ -186,7 +186,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         margin-top: -2px;
       }
 
-      .MuiAccordionSummary-root {
+      > .MuiAccordionSummary-root {
         padding: 0;
         background-color: ${({ theme }) => theme.colors.white};
 
@@ -299,7 +299,29 @@ export const InlineEthHashInfo = styled(EthHashInfo)`
   display: inline-flex;
 `
 
-export const ScrollableTransactionsContainer = styled.div`
+export const StyledScrollableBar = styled.div`
+  &::-webkit-scrollbar {
+    width: 0.7em;
+    scroll-behavior: smooth;
+  }
+
+  &::-webkit-scrollbar-track {
+    box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+    border-radius: 20px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: darkgrey;
+    outline: 1px solid #dadada;
+    border-radius: 20px;
+  }
+
+  // firefox experimental
+  scrollbar-color: darkgrey #dadada;
+  scrollbar-width: thin;
+`
+
+export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
   height: calc(100vh - 225px);
   overflow-x: hidden;
   overflow-y: auto;
