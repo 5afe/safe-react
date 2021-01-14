@@ -2,7 +2,7 @@ import { Loader } from '@gnosis.pm/safe-react-components'
 import { format } from 'date-fns'
 import React, { ReactElement } from 'react'
 
-import { InfiniteScroll } from 'src/components/InfiniteScroll'
+import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
 import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
 import { H2, ScrollableTransactionsContainer, StyledTransactions, StyledTransactionsGroup } from './styled'
 import { TxHistoryRow } from './TxHistoryRow'
@@ -15,7 +15,7 @@ export const HistoryTxList = (): ReactElement => {
   }
 
   return (
-    <ScrollableTransactionsContainer id="scrollableDiv">
+    <ScrollableTransactionsContainer id={SCROLLABLE_TARGET_ID}>
       <InfiniteScroll dataLength={transactions.length} next={next} hasMore={hasMore}>
         {transactions?.map(([timestamp, txs]) => (
           <StyledTransactionsGroup key={timestamp}>
