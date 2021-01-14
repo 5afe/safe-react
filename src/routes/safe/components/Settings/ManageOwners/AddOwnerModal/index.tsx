@@ -12,8 +12,7 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
-import { TxParameters, useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
@@ -73,7 +72,6 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
@@ -121,10 +119,6 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     }
   }
 
-  const openEditTxParameters = () => setActiveScreen('editTxParameters')
-
-  const closeEditTxParameters = () => setActiveScreen('reviewAddOwner')
-
   return (
     <Modal
       description="Add owner to Safe"
@@ -139,17 +133,7 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
           <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewAddOwner' && (
-          <ReviewAddOwner
-            onClickBack={onClickBack}
-            onClose={onClose}
-            onSubmit={onAddOwner}
-            values={values}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
-          />
-        )}
-        {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+          <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />
         )}
       </>
     </Modal>

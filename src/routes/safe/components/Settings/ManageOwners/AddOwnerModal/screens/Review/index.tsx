@@ -34,9 +34,7 @@ type ReviewAddOwnerProps = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (txParameters: TxParameters) => void
-  onEditTxParameters: () => void
   values: OwnerValues
-  txParameters: TxParameters
 }
 
 export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): React.ReactElement => {
