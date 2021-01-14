@@ -115,6 +115,8 @@ export const RemoveOwnerModal = ({
     sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
   }
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   const openEditTxParameters = () => setActiveScreen('editTxParameters')
 
   const closeEditTxParameters = () => setActiveScreen('reviewRemoveOwner')
@@ -147,7 +149,11 @@ export const RemoveOwnerModal = ({
           />
         )}
         {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+          <EditTxParametersForm
+            txParameters={txParameters}
+            onClose={closeEditTxParameters}
+            parametersStatus={getParametersStatus()}
+          />
         )}
       </>
     </Modal>

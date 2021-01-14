@@ -22,7 +22,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -52,6 +52,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const threshold = useSelector(safeThresholdSelector)
+
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
     txData: string
@@ -80,6 +82,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   const submitTx = async (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
       dispatch(
@@ -101,7 +105,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      parametersStatus={getParametersStatus()}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
@@ -176,7 +184,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             </Row>
 
             {/* Tx Parameters */}
-            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              parametersStatus={getParametersStatus()}
+            />
 
             <Row>
               <TransactionFees

@@ -15,6 +15,8 @@ import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { composeValidators, minValue } from 'src/components/forms/validator'
 
+import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
+
 const StyledDivider = styled(Divider)`
   margin: 0px;
 `
@@ -59,6 +61,7 @@ const useStyles = makeStyles(styles)
 interface Props {
   txParameters: TxParameters
   onClose: () => void
+  parametersStatus: ParametersStatus
 }
 
 const formValidation = (values) => {
@@ -91,7 +94,7 @@ const formValidation = (values) => {
   }
 }
 
-const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElement => {
+const EditTxParametersForm = ({ onClose, txParameters, parametersStatus = 'ENABLED' }: Props): React.ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
@@ -145,6 +148,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   type="number"
                   min="0"
                   component={TextField}
+                  disabled={!areSafeParamsEnabled(parametersStatus)}
                 />
                 <Field
                   name="safeTxGas"
@@ -154,6 +158,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   type="number"
                   min="0"
                   component={TextField}
+                  disabled={!areSafeParamsEnabled(parametersStatus)}
                 />
               </SafeOptions>
 
@@ -169,6 +174,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   text="Ethereum nonce"
                   type="number"
                   component={TextField}
+                  disabled={!areEthereumParamsEnabled(parametersStatus)}
                 />
                 <Field
                   name="ethGasLimit"
@@ -177,6 +183,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   text="Ethereum gas limit"
                   type="number"
                   component={TextField}
+                  disabled={!areEthereumParamsEnabled(parametersStatus)}
                 />
                 <Field
                   name="ethGasPrice"
@@ -185,6 +192,7 @@ const EditTxParametersForm = ({ onClose, txParameters }: Props): React.ReactElem
                   placeholder="Ethereum gas price (GWEI)"
                   text="Ethereum gas price (GWEI)"
                   component={TextField}
+                  disabled={!areEthereumParamsEnabled(parametersStatus)}
                 />
               </EthereumOptions>
 

@@ -135,6 +135,8 @@ export const ReplaceOwnerModal = ({
 
   const closeEditTxParameters = () => setActiveScreen('reviewReplaceOwner')
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
     <Modal
       description="Replace owner from Safe"
@@ -160,7 +162,11 @@ export const ReplaceOwnerModal = ({
           />
         )}
         {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+          <EditTxParametersForm
+            txParameters={txParameters}
+            onClose={closeEditTxParameters}
+            parametersStatus={getParametersStatus()}
+          />
         )}
       </>
     </Modal>

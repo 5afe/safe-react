@@ -16,7 +16,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeNameSelector,
+  safeOwnersSelector,
+  safeParamAddressFromStateSelector,
+  safeThresholdSelector,
+} from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -43,6 +48,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
+  const threshold = useSelector(safeThresholdSelector)
 
   const {
     gasLimit,
@@ -79,8 +85,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     }
   }, [safeAddress, values.ownerAddress, values.threshold])
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      parametersStatus={getParametersStatus()}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -183,7 +195,12 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           <Hairline />
 
           {/* Tx Parameters */}
-          <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
+          <TxParametersDetail
+            txParameters={txParameters}
+            onEdit={toggleEditMode}
+            compact={false}
+            parametersStatus={getParametersStatus()}
+          />
 
           <Block className={classes.gasCostsContainer}>
             <TransactionFees

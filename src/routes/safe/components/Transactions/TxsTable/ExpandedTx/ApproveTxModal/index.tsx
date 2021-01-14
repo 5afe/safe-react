@@ -25,7 +25,7 @@ import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactio
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { EditableTxParameters } from '../../../helpers/EditableTxParameters'
 
 const useStyles = makeStyles(styles)
 
@@ -72,7 +72,6 @@ export const ApproveTxModal = ({
   isOpen,
   thresholdReached,
   tx,
-  txParameters,
 }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
@@ -83,9 +82,10 @@ export const ApproveTxModal = ({
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && tx.confirmations.size + 1 === threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
-  const [editTxParameters, setEditTxParameters] = useState(false)
 
   const {
+    gasLimit,
+    gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
     isExecution,
@@ -100,14 +100,6 @@ export const ApproveTxModal = ({
     safeTxGas: tx.safeTxGas,
     operation: tx.operation,
   })
-
-  const openEditTxParameters = () => {
-    setEditTxParameters(true)
-  }
-
-  const closeEditTxParameters = () => {
-    setEditTxParameters(false)
-  }
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
@@ -124,86 +116,98 @@ export const ApproveTxModal = ({
     onClose()
   }
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
-      {editTxParameters ? (
-        <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
-      ) : (
-        <>
-          {/* Header */}
-          <Row align="center" className={classes.heading} grow>
-            <Paragraph className={classes.headingText} noMargin weight="bolder">
-              {title}
-            </Paragraph>
-            <IconButton disableRipple onClick={onClose}>
-              <Close className={classes.closeIcon} />
-            </IconButton>
-          </Row>
-
-          <Hairline />
-
-          {/* Tx info */}
-          <Block className={classes.container}>
-            <Row style={{ flexDirection: 'column' }}>
-              <Paragraph>{description}</Paragraph>
-              <Paragraph color="medium" size="sm">
-                Transaction nonce:
-                <br />
-                <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        parametersStatus={getParametersStatus()}
+      >
+        {(txParameters, toggleEditMode) => (
+          <>
+            {/* Header */}
+            <Row align="center" className={classes.heading} grow>
+              <Paragraph className={classes.headingText} noMargin weight="bolder">
+                {title}
               </Paragraph>
-
-              {oneConfirmationLeft && canExecute && (
-                <>
-                  <Paragraph color="error">
-                    Approving this transaction executes it right away.
-                    {!isCancelTx &&
-                      ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
-                  </Paragraph>
-
-                  {!isCancelTx && (
-                    <FormControlLabel
-                      control={
-                        <Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />
-                      }
-                      label="Execute transaction"
-                      data-testid="execute-checkbox"
-                    />
-                  )}
-                </>
-              )}
-
-              {/* Tx Parameters */}
-              {approveAndExecute && <TxParametersDetail txParameters={txParameters} onEdit={openEditTxParameters} />}
+              <IconButton disableRipple onClick={onClose}>
+                <Close className={classes.closeIcon} />
+              </IconButton>
             </Row>
 
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </Block>
+            <Hairline />
 
-          {/* Footer */}
-          <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClose}>
-              Exit
-            </Button>
-            <Button
-              color={isCancelTx ? 'secondary' : 'primary'}
-              minHeight={42}
-              minWidth={214}
-              onClick={approveTx}
-              testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
-              type="submit"
-              variant="contained"
-            >
-              {title}
-            </Button>
-          </Row>
-        </>
-      )}
+            {/* Tx info */}
+            <Block className={classes.container}>
+              <Row style={{ flexDirection: 'column' }}>
+                <Paragraph>{description}</Paragraph>
+                <Paragraph color="medium" size="sm">
+                  Transaction nonce:
+                  <br />
+                  <Bold className={classes.nonceNumber}>{tx.nonce}</Bold>
+                </Paragraph>
+
+                {oneConfirmationLeft && canExecute && (
+                  <>
+                    <Paragraph color="error">
+                      Approving this transaction executes it right away.
+                      {!isCancelTx &&
+                        ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
+                    </Paragraph>
+
+                    {!isCancelTx && (
+                      <FormControlLabel
+                        control={
+                          <Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />
+                        }
+                        label="Execute transaction"
+                        data-testid="execute-checkbox"
+                      />
+                    )}
+                  </>
+                )}
+
+                {/* Tx Parameters */}
+                {approveAndExecute && (
+                  <TxParametersDetail
+                    txParameters={txParameters}
+                    onEdit={toggleEditMode}
+                    parametersStatus={getParametersStatus()}
+                  />
+                )}
+              </Row>
+
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Block>
+
+            {/* Footer */}
+            <Row align="center" className={classes.buttonRow}>
+              <Button minHeight={42} minWidth={140} onClick={onClose}>
+                Exit
+              </Button>
+              <Button
+                color={isCancelTx ? 'secondary' : 'primary'}
+                minHeight={42}
+                minWidth={214}
+                onClick={approveTx}
+                testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
+                type="submit"
+                variant="contained"
+              >
+                {title}
+              </Button>
+            </Row>
+          </>
+        )}
+      </EditableTxParameters>
     </Modal>
   )
 }

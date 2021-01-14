@@ -117,14 +117,13 @@ const createTransaction = (
     nonce: Number.parseInt(nonce),
     safeTxGas,
     baseGas: 0,
-    gasPrice: '0',
+    gasPrice: ethParameters?.ethGasPriceInGWei || '0',
     gasToken: ZERO_ADDRESS,
     refundReceiver: ZERO_ADDRESS,
     sender: from,
     sigs,
   }
   const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
-
   try {
     if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
       const signature = await tryOffchainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)

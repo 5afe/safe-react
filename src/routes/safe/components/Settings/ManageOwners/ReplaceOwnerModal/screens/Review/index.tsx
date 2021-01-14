@@ -99,6 +99,8 @@ export const ReviewReplaceOwnerModal = ({
     }
   }, [ownerAddress, safeAddress, values.newOwnerAddress])
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
     <>
       <Row align="center" className={classes.heading} grow>
@@ -229,7 +231,12 @@ export const ReviewReplaceOwnerModal = ({
       <Hairline />
 
       {/* Tx Parameters */}
-      <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={false} />
+      <TxParametersDetail
+        txParameters={txParameters}
+        onEdit={onEditTxParameters}
+        compact={false}
+        parametersStatus={getParametersStatus()}
+      />
 
       <Block className={classes.gasCostsContainer}>
         <TransactionFees

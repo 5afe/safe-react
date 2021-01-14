@@ -70,6 +70,8 @@ const ThresholdSettings = (): React.ReactElement => {
 
   const closeEditTxParameters = () => setActiveScreen('form')
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
     <>
       <Block className={classes.container}>
@@ -110,7 +112,11 @@ const ThresholdSettings = (): React.ReactElement => {
           />
         )}
         {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
+          <EditTxParametersForm
+            txParameters={txParameters}
+            onClose={closeEditTxParameters}
+            parametersStatus={getParametersStatus()}
+          />
         )}
       </Modal>
     </>

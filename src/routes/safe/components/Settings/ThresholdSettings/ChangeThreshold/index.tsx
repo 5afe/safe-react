@@ -77,6 +77,8 @@ export const ChangeThresholdModal = ({
     }
   }, [safeAddress, threshold])
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   const handleSubmit = (values) => {
     const newThreshold = values[THRESHOLD_FIELD_NAME]
 
@@ -134,7 +136,12 @@ export const ChangeThresholdModal = ({
               </Row>
 
               {/* Tx Parameters */}
-              <TxParametersDetail txParameters={txParameters} onEdit={onEditTxParameters} compact={true} />
+              <TxParametersDetail
+                txParameters={txParameters}
+                onEdit={onEditTxParameters}
+                compact={true}
+                parametersStatus={getParametersStatus()}
+              />
 
               <Row>
                 <TransactionFees

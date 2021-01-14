@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
@@ -31,6 +31,7 @@ import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactio
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from '../../../../Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
 
@@ -53,6 +54,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nftTokens = useSelector(nftTokensSelector)
+  const threshold = useSelector(safeThresholdSelector)
+
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
@@ -91,7 +94,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }, [safeAddress, tx])
 
-  const submitTx = async () => {
+  const submitTx = async (txParameters: TxParameters) => {
     try {
       if (safeAddress) {
         dispatch(
@@ -100,6 +103,9 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             to: tx.assetAddress,
             valueInWei: '0',
             txData: data,
+            txNonce: txParameters.safeNonce,
+            safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+            ethParameters: txParameters,
             notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           }),
         )
@@ -113,13 +119,19 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }
 
+  const getParametersStatus = () => (threshold || 1 > 1 ? 'ETH_DISABLED' : 'ENABLED')
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      parametersStatus={getParametersStatus()}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
             <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send Funds
+              Send Collectible
             </Paragraph>
             <Paragraph className={classes.annotation}>2 of 2</Paragraph>
             <IconButton disableRipple onClick={onClose}>
@@ -171,7 +183,11 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             )}
 
             {/* Tx Parameters */}
-            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              parametersStatus={getParametersStatus()}
+            />
 
             <Row>
               <TransactionFees
@@ -194,7 +210,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               data-testid="submit-tx-btn"
               disabled={!data}
               minWidth={140}
-              onClick={submitTx}
+              onClick={() => submitTx(txParameters)}
               type="submit"
               variant="contained"
             >
