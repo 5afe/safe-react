@@ -1,5 +1,5 @@
 import { Button, Text } from '@gnosis.pm/safe-react-components'
-import React, { useState, ReactElement, useMemo } from 'react'
+import React, { ReactElement, useMemo } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
@@ -26,11 +26,11 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/component
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { ActionCallback, CREATE } from '.'
+import { EditableTxParameters } from '../../../Transactions/helpers/EditableTxParameters'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -82,14 +82,8 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
-  const txParameters = useTransactionParameters()
 
-  const [showEditTxParams, setShowEditTxParams] = useState(false)
-
-  const openEditTxParameters = () => setShowEditTxParams(true)
-  const closeEditTxParameters = () => setShowEditTxParams(false)
-
-  const handleSubmit = () => {
+  const handleSubmit = (txParameters: TxParameters) => {
     const isSpendingLimitEnabled = spendingLimits !== null
     const transactions: MultiSendTx[] = []
 
@@ -121,10 +115,10 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     if (safeAddress) {
       // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
       if (transactions.length === 0) {
-        dispatch(createTransaction(setSpendingLimitTx({ spendingLimitArgs, safeAddress })))
+        dispatch(createTransaction(setSpendingLimitTx({ spendingLimitArgs, safeAddress, txParameters })))
       } else {
         transactions.push(setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress }))
-        dispatch(createTransaction(spendingLimitMultiSendTx({ transactions, safeAddress })))
+        dispatch(createTransaction(spendingLimitMultiSendTx({ transactions, safeAddress, txParameters })))
       }
     }
   }
@@ -138,67 +132,71 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
       ?.label ?? 'One-time spending limit'
 
-  if (showEditTxParams) {
-    return <EditTxParametersForm txParameters={txParameters} onClose={closeEditTxParameters} />
-  }
-
   return (
-    <>
-      <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
+    <EditableTxParameters ethGasLimit={'1'} ethGasPrice={'1'}>
+      {(txParameters, toggleEditMode) => (
+        <>
+          <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
 
-      <Block className={classes.container}>
-        <Col margin="lg">
-          <AddressInfo address={values.beneficiary} title="Beneficiary" />
-        </Col>
-        <Col margin="lg">
-          <TokenInfo
-            amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
-            title="Amount"
-            token={txToken}
-          />
-          {existentSpendingLimit && (
-            <Text size="lg" color="error">
-              Previous Amount: {existentSpendingLimit.amount}
-            </Text>
-          )}
-        </Col>
-        <Col margin="lg">
-          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
-          {existentSpendingLimit && (
-            <Row align="center" margin="md">
-              <Text size="lg" color="error">
-                Previous Reset Time: {previousResetTime(existentSpendingLimit)}
+          <Block className={classes.container}>
+            <Col margin="lg">
+              <AddressInfo address={values.beneficiary} title="Beneficiary" />
+            </Col>
+            <Col margin="lg">
+              <TokenInfo
+                amount={fromTokenUnit(toTokenUnit(values.amount, txToken.decimals), txToken.decimals)}
+                title="Amount"
+                token={txToken}
+              />
+              {existentSpendingLimit && (
+                <Text size="lg" color="error">
+                  Previous Amount: {existentSpendingLimit.amount}
+                </Text>
+              )}
+            </Col>
+            <Col margin="lg">
+              <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+              {existentSpendingLimit && (
+                <Row align="center" margin="md">
+                  <Text size="lg" color="error">
+                    Previous Reset Time: {previousResetTime(existentSpendingLimit)}
+                  </Text>
+                </Row>
+              )}
+            </Col>
+
+            {existentSpendingLimit && (
+              <Text size="xl" color="error" center strong>
+                You are about to replace an existent spending limit
               </Text>
-            </Row>
-          )}
-        </Col>
+            )}
 
-        {existentSpendingLimit && (
-          <Text size="xl" color="error" center strong>
-            You are about to replace an existent spending limit
-          </Text>
-        )}
+            {/* Tx Parameters */}
+            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+          </Block>
 
-        {/* Tx Parameters */}
-        <TxParametersDetail txParameters={txParameters} onEdit={openEditTxParameters} />
-      </Block>
+          <Modal.Footer>
+            <Button
+              color="primary"
+              size="md"
+              onClick={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}
+            >
+              Back
+            </Button>
 
-      <Modal.Footer>
-        <Button color="primary" size="md" onClick={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}>
-          Back
-        </Button>
-
-        <Button
-          color="primary"
-          size="md"
-          variant="contained"
-          onClick={handleSubmit}
-          disabled={existentSpendingLimit === undefined}
-        >
-          Submit
-        </Button>
-      </Modal.Footer>
-    </>
+            <Button
+              color="primary"
+              size="md"
+              variant="contained"
+              onClick={() => handleSubmit(txParameters)}
+              disabled={existentSpendingLimit === undefined}
+            >
+              Submit
+            </Button>
+          </Modal.Footer>
+        </>
+      )}
+    </EditableTxParameters>
   )
 }
 
