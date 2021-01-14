@@ -24,7 +24,7 @@ interface RemoveSpendingLimitModalProps {
   open: boolean
 }
 
-const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
+export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
   const classes = useStyles()
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
@@ -98,5 +98,3 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
     </Modal>
   )
 }
-
-export default RemoveLimitModal

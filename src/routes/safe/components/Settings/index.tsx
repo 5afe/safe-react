@@ -7,7 +7,7 @@ import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import Advanced from './Advanced'
-import SpendingLimitSettings from './SpendingLimit'
+import { SpendingLimitSettings } from './SpendingLimit'
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'

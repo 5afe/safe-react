@@ -30,7 +30,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { ActionCallback, CREATE } from '.'
-import { EditableTxParameters } from '../../../Transactions/helpers/EditableTxParameters'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -74,7 +74,7 @@ interface ReviewSpendingLimitProps {
   existentSpendingLimit?: SpendingLimitRow
 }
 
-const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
+export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
   const classes = useStyles()
 
   const dispatch = useDispatch()
@@ -199,5 +199,3 @@ const Review = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps):
     </EditableTxParameters>
   )
 }
-
-export default Review
