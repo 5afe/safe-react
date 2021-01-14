@@ -6,7 +6,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import createTransaction, { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,
@@ -83,7 +83,19 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
 
-  const handleSubmit = (txParameters: TxParameters) => {
+  const calculateSpendingLimitsTxData = (
+    txParameters: TxParameters,
+  ): {
+    spendingLimitTxData: CreateTransactionArgs
+    transactions: MultiSendTx[]
+    spendingLimitArgs: {
+      beneficiary: string
+      token: string
+      spendingLimitInWei: string
+      resetTimeMin: number
+      resetBaseMin: number
+    }
+  } => {
     const isSpendingLimitEnabled = spendingLimits !== null
     const transactions: MultiSendTx[] = []
 
@@ -112,14 +124,32 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       resetBaseMin: values.withResetTime ? startTime : 0,
     }
 
+    let spendingLimitTxData
     if (safeAddress) {
       // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
       if (transactions.length === 0) {
-        dispatch(createTransaction(setSpendingLimitTx({ spendingLimitArgs, safeAddress, txParameters })))
+        spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress, txParameters })
       } else {
-        transactions.push(setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress }))
-        dispatch(createTransaction(spendingLimitMultiSendTx({ transactions, safeAddress, txParameters })))
+        spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress, txParameters })
       }
+    }
+    return {
+      spendingLimitTxData,
+      transactions,
+      spendingLimitArgs,
+    }
+  }
+
+  const handleSubmit = (txParameters: TxParameters): void => {
+    if (safeAddress) {
+      const { spendingLimitTxData, transactions, spendingLimitArgs } = calculateSpendingLimitsTxData(txParameters)
+      // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
+      if (transactions.length === 0) {
+        dispatch(createTransaction(spendingLimitTxData))
+        return
+      }
+      transactions.push(setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress }))
+      dispatch(createTransaction(spendingLimitTxData))
     }
   }
 
