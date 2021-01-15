@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState, useCallback } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Text, IconText } from '@gnosis.pm/safe-react-components'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
@@ -14,7 +14,8 @@ import { screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
 import { loadIntercom } from 'src/utils/intercom'
 import styled from 'styled-components'
-
+/* import { Icon } from '@material-ui/core'
+ */
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
 const useStyles = makeStyles({
@@ -44,7 +45,7 @@ const useStyles = makeStyles({
     rowGap: '10px',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      gridTemplateColumns: '1fr 1fr 1fr 1fr 1fr',
+      gridTemplateColumns: '.7fr .7fr .7fr 1fr 1fr',
       paddingBottom: '0',
     },
   },
@@ -61,11 +62,21 @@ const useStyles = makeStyles({
   },
 } as any)
 
+const StyledIconText = styled(IconText)`
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 0 16px 0;
+  p {
+    color: ${({ theme }) => theme.colors.text};
+    font-weight: bold;
+  }
+`
 const StyledText = styled(Text)`
   margin: 0 80px 24px 80px;
 `
 const StyledButton = styled(Button)`
-  width: 174px;
+  width: 192px;
 `
 
 const CookiesBanner = () => {
@@ -122,6 +133,13 @@ const CookiesBanner = () => {
   const cookieBannerContent = (
     <div className={classes.container}>
       <div className={classes.content}>
+        <StyledIconText
+          iconSize="sm"
+          textSize="xl"
+          color="error"
+          iconType="alert"
+          text="You attempted to open the customer support chat. Please accept the customer support cookie."
+        />
         <StyledText size="xl" color="text" center>
           We use cookies to provide you with the best experience and to help improve our website and application. Please
           read our{' '}
@@ -143,7 +161,7 @@ const CookiesBanner = () => {
               value={localNecessary}
             />
           </div>
-          {/* Add Funcionality for Custome Support */}
+          {/* Add Functionality for Customer Support */}
           <div className={classes.formItem}>
             <FormControlLabel
               control={<Checkbox checked={localAnalytics} />}
@@ -166,18 +184,18 @@ const CookiesBanner = () => {
             <StyledButton
               size="md"
               color="secondary"
-              variant="outlined"
+              variant="bordered"
               onClick={closeCookiesBannerHandler}
               onKeyDown={closeCookiesBannerHandler}
               tabIndex={1}
               data-testid="accept-preferences"
             >
-              Accept Selection
+              Accept selection
             </StyledButton>
           </div>
           <div className={classes.formItem}>
             <StyledButton size="md" color="primary" variant="contained" onClick={() => acceptCookiesHandler()}>
-              Accept All
+              Accept all
             </StyledButton>
           </div>
         </div>
