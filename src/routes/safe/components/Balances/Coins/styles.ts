@@ -46,7 +46,6 @@ export const styles = createStyles({
     marginRight: sm,
   },
   currencyValueRow: {
-    maxWidth: '125px',
     textAlign: 'right',
   },
 })
