@@ -24,7 +24,7 @@ interface MethodsDropdownProps {
   onChange: (method: AbiItem) => void
 }
 
-const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement | null => {
+export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement | null => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
@@ -67,7 +67,11 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement
     handleClose()
   }
 
-  return !valid || !abi || abi === NO_CONTRACT ? null : (
+  if (!valid || !abi || abi === NO_CONTRACT) {
+    return null
+  }
+
+  return (
     <Row margin="sm">
       <Col>
         <MuiThemeProvider theme={DropdownListTheme}>
@@ -145,5 +149,3 @@ const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement
     </Row>
   )
 }
-
-export default MethodsDropdown

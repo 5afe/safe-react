@@ -15,7 +15,7 @@ interface HeaderProps {
   title: string
 }
 
-const Header = ({ onClose, subTitle, title }: HeaderProps) => {
+export const Header = ({ onClose, subTitle, title }: HeaderProps): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -30,5 +30,3 @@ const Header = ({ onClose, subTitle, title }: HeaderProps) => {
     </Row>
   )
 }
-
-export default Header

@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 })
 
-const RenderOutputParams = () => {
+export const RenderOutputParams = (): React.ReactElement | null => {
   const classes = useStyles()
   const {
     input: { value: method },
@@ -27,7 +27,11 @@ const RenderOutputParams = () => {
   }: any = useField('callResults', { subscription: { value: true } })
   const multipleResults = !!method && method.outputs.length > 1
 
-  return results ? (
+  if (!results) {
+    return null
+  }
+
+  return (
     <>
       <Row align="left" margin="xs">
         <Paragraph color="primary" size="lg" style={{ letterSpacing: '-0.5px' }}>
@@ -57,7 +61,5 @@ const RenderOutputParams = () => {
         )
       })}
     </>
-  ) : null
+  )
 }
-
-export default RenderOutputParams

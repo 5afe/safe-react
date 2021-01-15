@@ -15,7 +15,7 @@ type Props = {
   placeholder: string
 }
 
-const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElement | null => {
+export const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElement | null => {
   if (!type) {
     return null
   }
@@ -67,5 +67,3 @@ const InputComponent = ({ type, keyValue, placeholder }: Props): React.ReactElem
     }
   }
 }
-
-export default InputComponent
