@@ -37,7 +37,6 @@ import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
-import BigNumber from 'bignumber.js'
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
@@ -75,8 +74,7 @@ const useTxData = (
       if (!isSendingNativeToken) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
-        const decimals = await tokenInstance.decimals()
-        const erc20TransferAmount = new BigNumber(txAmount).times(10 ** decimals.toNumber()).toString()
+        const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
         txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
       }
       setData(txData)
