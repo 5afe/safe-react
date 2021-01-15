@@ -238,6 +238,10 @@ export const TxDetailsContainer = styled.div`
   }
 
   .tx-details {
+    &.not-executed {
+      grid-row-end: span 2;
+    }
+
     &.no-padding {
       padding: 0;
     }
@@ -247,6 +251,25 @@ export const TxDetailsContainer = styled.div`
     grid-column-start: 2;
     grid-row-end: span 2;
     grid-row-start: 1;
+  }
+
+  .tx-actions {
+    align-items: center;
+    display: flex;
+    height: 60px;
+    justify-content: center;
+
+    button {
+      margin: 0 8px;
+
+      &.error {
+        background-color: #db3a3d;
+
+        &:hover {
+          background-color: #c31717;
+        }
+      }
+    }
   }
 `
 
