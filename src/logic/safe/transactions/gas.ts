@@ -82,7 +82,7 @@ export const getGasEstimationTxResponse = async (txConfig: {
     // In case that the gas is not enough we will receive an EMPTY data
     // Otherwise we will receive the gas amount as hash data -> this is valid for old versions of GETH nodes ( < v1.9.24)
 
-    if (!sameString(result, EMPTY_DATA)) {
+    if (result && !sameString(result, EMPTY_DATA)) {
       return new BigNumber(result.substring(138), 16).toNumber()
     }
   } catch (error) {
@@ -110,6 +110,7 @@ const calculateMinimumGasForTransaction = async (
 ): Promise<number> => {
   for (const additionalGas of additionalGasBatches) {
     const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
+    console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
     try {
       await getGasEstimationTxResponse({
         to: safeAddress,
@@ -118,7 +119,8 @@ const calculateMinimumGasForTransaction = async (
         gasPrice: 0,
         gas: amountOfGasToTryTx,
       })
-      return txGasEstimation + additionalGas
+      console.info(`Gas estimation successfully finished with gas amount: ${amountOfGasToTryTx}`)
+      return amountOfGasToTryTx
     } catch (error) {
       console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
     }
