@@ -13,8 +13,7 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
-import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -38,6 +37,7 @@ export const sendRemoveOwner = async (
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   dispatch: Dispatch,
+  txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
@@ -54,6 +54,9 @@ export const sendRemoveOwner = async (
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -82,7 +85,6 @@ export const RemoveOwnerModal = ({
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector) || 1
-  const txParameters = useTransactionParameters()
 
   useEffect(
     () => () => {
@@ -110,16 +112,10 @@ export const RemoveOwnerModal = ({
     setActiveScreen('reviewRemoveOwner')
   }
 
-  const onRemoveOwner = () => {
+  const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
+    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, txParameters, threshold)
   }
-
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
-  const openEditTxParameters = () => setActiveScreen('editTxParameters')
-
-  const closeEditTxParameters = () => setActiveScreen('reviewRemoveOwner')
 
   return (
     <Modal
@@ -143,16 +139,7 @@ export const RemoveOwnerModal = ({
             onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
             threshold={threshold}
-          />
-        )}
-        {activeScreen === 'editTxParameters' && (
-          <EditTxParametersForm
-            txParameters={txParameters}
-            onClose={closeEditTxParameters}
-            parametersStatus={getParametersStatus()}
           />
         )}
       </>
