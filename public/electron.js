@@ -90,9 +90,10 @@ function createWindow(port = DEFAULT_PORT) {
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
       allowRunningInsecureContent: true,
+      enableRemoteModule: true,
       nativeWindowOpen: true, // need to be set in order to display modal
     },
-    icon: electron.nativeImage.createFromPath(path.join(__dirname, './build/safe.png')),
+    icon: electron.nativeImage.createFromPath(path.join(__dirname, '../build/resources/safe.png')),
   })
 
   mainWindow.once('ready-to-show', () => {
