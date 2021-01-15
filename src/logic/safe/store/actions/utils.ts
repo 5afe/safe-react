@@ -28,7 +28,7 @@ export const shouldExecuteTransaction = async (
 ): Promise<boolean> => {
   const safeNonce = (await safeInstance.methods.nonce().call()).toString()
   const thresholdAsString = await safeInstance.methods.getThreshold().call()
-  const threshold = Number.parseInt(thresholdAsString)
+  const threshold = Number(thresholdAsString)
 
   // Needs to collect owners signatures
   if (threshold > 1) {
@@ -36,11 +36,11 @@ export const shouldExecuteTransaction = async (
   }
 
   // Allow first tx.
-  if (Number.parseInt(nonce) === 0) {
+  if (Number(nonce) === 0) {
     return true
   }
 
-  // Allow if nonce === safeNonce and threshold = 1
+  // Allow if nonce === safeNonce and threshold === 1
   if (nonce === safeNonce) {
     return true
   }
