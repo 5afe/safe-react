@@ -161,7 +161,6 @@ export type GasPriceOracle = {
 - **REACT_APP_GOOGLE_ANALYTICS**: Used for enabling google analytics
 - **REACT_APP_PORTIS_ID**: Portis ID for enabling it on given network
 - **REACT_APP_FORTMATIC_KEY**: Formatic yey for given network
-- **REACT_APP_BLOCKNATIVE_KEY**: Blocknative key for given network
 
 ---
 ## How to add a network 
@@ -190,7 +189,6 @@ export enum ETHEREUM_NETWORK {
 * REACT_APP_GOOGLE_ANALYTICS
 * REACT_APP_PORTIS_ID
 * REACT_APP_FORTMATIC_KEY
-* REACT_APP_BLOCKNATIVE_KEY
 
 3) Add the **NetworkSettings** in [`src/config/networks`](/src/config/networks) as `<network_name>.ts`:
 
