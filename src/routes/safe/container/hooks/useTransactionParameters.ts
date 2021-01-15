@@ -22,11 +22,17 @@ export type TxParameters = {
   ethGasPriceInGWei: string | undefined
 }
 
+type Props = {
+  calculateSafeNonce: boolean
+}
+
 /**
  * This hooks is used to store tx parameter
  * It needs to be initialized calling setGasEstimation.
  */
-export const useTransactionParameters = (): TxParameters => {
+export const useTransactionParameters = (
+  { calculateSafeNonce }: Props = { calculateSafeNonce: true },
+): TxParameters => {
   //const [gasEstimation, setGasEstimation] = useState<GasEstimationInfo | undefined>()
   const connectedWalletAddress = useSelector(userAccountSelector)
   const { address: safeAddress } = useSelector(safeSelector) || {}
@@ -71,10 +77,10 @@ export const useTransactionParameters = (): TxParameters => {
       setSafeNonce(nonce)
     }
 
-    if (safeAddress) {
+    if (safeAddress && calculateSafeNonce) {
       getSafeNonce()
     }
-  }, [safeAddress])
+  }, [safeAddress, calculateSafeNonce])
 
   return {
     safeNonce,

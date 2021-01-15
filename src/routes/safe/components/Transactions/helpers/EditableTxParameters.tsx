@@ -3,28 +3,34 @@ import { TxParameters, useTransactionParameters } from 'src/routes/safe/containe
 import EditTxParametersForm from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'
 
-type GasInfo = Pick<TxParameters, 'ethGasLimit' | 'ethGasPrice'>
-
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: () => void) => any
   parametersStatus: ParametersStatus
-} & GasInfo
+  ethGasLimit?: TxParameters['ethGasLimit']
+  ethGasPrice?: TxParameters['ethGasPrice']
+  safeNonce?: TxParameters['safeNonce']
+  safeTxGas?: TxParameters['safeTxGas']
+}
 
 export const EditableTxParameters = ({
   children,
   ethGasLimit,
   ethGasPrice,
+  safeNonce,
+  safeTxGas,
   parametersStatus,
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
-  const txParameters = useTransactionParameters()
-  const { setEthGasPrice, setEthGasLimit } = txParameters
+  const txParameters = useTransactionParameters({ calculateSafeNonce: false })
+  const { setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas } = txParameters
 
   /* Update TxParameters */
   useEffect(() => {
     setEthGasPrice(ethGasPrice)
     setEthGasLimit(ethGasLimit)
-  }, [ethGasLimit, ethGasPrice, setEthGasPrice, setEthGasLimit])
+    setSafeNonce(safeNonce)
+    setSafeTxGas(safeTxGas)
+  }, [ethGasLimit, ethGasPrice, safeNonce, safeTxGas, setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas])
 
   const toggleStatus = () => {
     toggleEditMode((prev) => !prev)

@@ -103,7 +103,7 @@ export const ApproveTxModal = ({
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
-  const approveTx = () => {
+  const approveTx = (txParameters: TxParameters) => {
     dispatch(
       processTransaction({
         safeAddress,
@@ -111,23 +111,34 @@ export const ApproveTxModal = ({
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+        ethParameters: txParameters,
       }),
     )
     onClose()
   }
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
+  const getParametersStatus = () => {
+    if (canExecute || approveAndExecute) {
+      return 'SAFE_DISABLED'
+    }
+
+    return 'DISABLED'
+  }
 
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
+        safeNonce={tx.nonce.toString()}
+        safeTxGas={tx.safeTxGas.toString()}
         parametersStatus={getParametersStatus()}
       >
         {(txParameters, toggleEditMode) => (
           <>
             {/* Header */}
+            {tx.nonce.toString()}
+            {tx.safeTxGas.toString()}
             <Row align="center" className={classes.heading} grow>
               <Paragraph className={classes.headingText} noMargin weight="bolder">
                 {title}
@@ -197,7 +208,7 @@ export const ApproveTxModal = ({
                 color={isCancelTx ? 'secondary' : 'primary'}
                 minHeight={42}
                 minWidth={214}
-                onClick={approveTx}
+                onClick={() => approveTx(txParameters)}
                 testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
                 type="submit"
                 variant="contained"
