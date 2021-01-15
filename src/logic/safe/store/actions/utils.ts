@@ -26,6 +26,7 @@ export const shouldExecuteTransaction = async (
   nonce: string,
   lastTx: TxServiceModel | null,
 ): Promise<boolean> => {
+  const safeNonce = (await safeInstance.methods.nonce().call()).toString()
   const thresholdAsString = await safeInstance.methods.getThreshold().call()
   const threshold = Number.parseInt(thresholdAsString)
 
@@ -36,6 +37,11 @@ export const shouldExecuteTransaction = async (
 
   // Allow first tx.
   if (Number.parseInt(nonce) === 0) {
+    return true
+  }
+
+  // Allow if nonce === safeNonce and threshold = 1
+  if (nonce === safeNonce) {
     return true
   }
 
