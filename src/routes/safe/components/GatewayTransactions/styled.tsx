@@ -81,15 +81,19 @@ export const StyledTransactions = styled.div`
   }
 `
 
+const gridColumns = {
+  nonce: '0.5fr',
+  type: '3fr',
+  info: '3fr',
+  time: '1fr',
+  votes: '2fr',
+  actions: '2fr',
+  status: '3fr',
+}
+
 export const StyledTransaction = styled.div`
   display: grid;
-  grid-template-columns: 0.5fr // tx-nonce
-    3fr // tx-type
-    3fr // tx-info
-    1fr // tx-time
-    2fr // tx-votes
-    2fr // tx-actions
-    2fr; // tx-status
+  grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
 
   & > div {
@@ -104,12 +108,7 @@ export const StyledTransaction = styled.div`
 
 export const StyledGroupedTransactions = styled(StyledTransaction)`
   // no \`tx-nonce\` column required
-  grid-template-columns: 3fr // tx-type
-    3fr // tx-info
-    1fr // tx-time
-    2fr // tx-votes
-    2fr // tx-actions
-    2fr; // tx-status
+  grid-template-columns: ${Object.values(gridColumns).slice(1).join(' ')};
 `
 
 export const GroupedTransactions = styled(StyledTransaction)`
