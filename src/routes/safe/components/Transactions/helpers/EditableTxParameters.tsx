@@ -5,6 +5,7 @@ import { ParametersStatus } from './utils'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: () => void) => any
+  calculateSafeNonce?: boolean
   parametersStatus: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
   ethGasPrice?: TxParameters['ethGasPrice']
@@ -14,22 +15,23 @@ type Props = {
 
 export const EditableTxParameters = ({
   children,
+  calculateSafeNonce = true,
+  parametersStatus,
   ethGasLimit,
   ethGasPrice,
   safeNonce,
   safeTxGas,
-  parametersStatus,
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
-  const txParameters = useTransactionParameters({ calculateSafeNonce: false })
+  const txParameters = useTransactionParameters({ calculateSafeNonce })
   const { setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas } = txParameters
 
   /* Update TxParameters */
   useEffect(() => {
     setEthGasPrice(ethGasPrice)
     setEthGasLimit(ethGasLimit)
-    setSafeNonce(safeNonce)
-    setSafeTxGas(safeTxGas)
+    safeNonce && setSafeNonce(safeNonce)
+    safeTxGas && setSafeTxGas(safeTxGas)
   }, [ethGasLimit, ethGasPrice, safeNonce, safeTxGas, setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas])
 
   const toggleStatus = () => {

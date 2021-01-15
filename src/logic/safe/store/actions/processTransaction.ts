@@ -123,7 +123,6 @@ export const processTransaction = ({
     }
     const mockedTx = await mockTransaction(txToMock, safeAddress, state)
 
-    debugger
     await transaction
       .send(sendParams)
       .once('transactionHash', async (hash: string) => {

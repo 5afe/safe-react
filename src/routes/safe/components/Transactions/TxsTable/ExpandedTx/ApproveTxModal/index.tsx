@@ -128,11 +128,12 @@ export const ApproveTxModal = ({
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
+        calculateSafeNonce={false}
+        parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeNonce={tx.nonce.toString()}
         safeTxGas={tx.safeTxGas.toString()}
-        parametersStatus={getParametersStatus()}
       >
         {(txParameters, toggleEditMode) => (
           <>

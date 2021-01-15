@@ -60,6 +60,7 @@ export const useTransactionParameters = (
     }
   }, [connectedWalletAddress])
 
+  /* Get ETH gas price */
   useEffect(() => {
     if (!ethGasPrice) {
       setEthGasPriceInGWei(undefined)
