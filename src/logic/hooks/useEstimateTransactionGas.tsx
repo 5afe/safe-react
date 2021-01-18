@@ -168,6 +168,7 @@ export const useEstimateTransactionGas = ({
       if (!txData.length) {
         return
       }
+      // FIXME this should be removed when estimating with WalletConnect correctly
       if (!providerName || sameString(providerName, WALLETS.WALLET_CONNECT)) {
         return null
       }
