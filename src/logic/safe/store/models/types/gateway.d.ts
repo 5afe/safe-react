@@ -130,6 +130,15 @@ type Custom = {
   methodName: string | null
 }
 
+type MultiSend = {
+  type: 'Custom'
+  to: string
+  dataSize: string
+  value: string
+  methodName: 'multiSend'
+  actionCount: number
+}
+
 type Creation = {
   type: 'Creation'
   creator: string
@@ -140,7 +149,7 @@ type Creation = {
 
 type TransactionStatus = 'AWAITING_CONFIRMATIONS' | 'AWAITING_EXECUTION' | 'CANCELLED' | 'FAILED' | 'SUCCESS'
 
-type TransactionInfo = Transfer | SettingsChange | Custom | Creation
+type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation
 
 type ExecutionInfo = {
   nonce: number
@@ -306,6 +315,10 @@ export const isSettingsChangeTxInfo = (value: TransactionInfo): value is Setting
 
 export const isCustomTxInfo = (value: TransactionInfo): value is Custom => {
   return value.type === 'Custom'
+}
+
+export const isMultiSendTxInfo = (value: TransactionInfo): value is MultiSend => {
+  return isCustomTxInfo(value) && value.methodName === 'multiSend'
 }
 
 export const isCreationTxInfo = (value: TransactionInfo): value is Creation => {

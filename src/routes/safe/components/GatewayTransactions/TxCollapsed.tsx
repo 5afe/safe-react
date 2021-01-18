@@ -2,7 +2,7 @@ import { IconText, Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
-import { isCustomTxInfo, isSettingsChangeTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, isMultiSendTxInfo, isSettingsChangeTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
@@ -50,6 +50,14 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
     //
     //   return <span>1 action</span>
     // }
+
+    if (isMultiSendTxInfo(info)) {
+      return (
+        <span>
+          {info.actionCount} {`action${info.actionCount > 1 ? 's' : ''}`}
+        </span>
+      )
+    }
 
     return <span>{info.methodName}</span>
   }
