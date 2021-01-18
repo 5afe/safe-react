@@ -105,6 +105,7 @@ export const generateColumns = (): List<TableColumn> => {
 
   const value: TableColumn = {
     id: BALANCE_TABLE_VALUE_ID,
+    align: 'right',
     order: true,
     label: 'Value',
     custom: false,
