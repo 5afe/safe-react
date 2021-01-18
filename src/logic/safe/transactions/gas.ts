@@ -251,5 +251,9 @@ export const estimateGasForTransactionApproval = async ({
       from,
     })
   const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return calculateGasOf(approveTransactionTxData, from, safeAddress)
+  return calculateGasOf({
+    data: approveTransactionTxData,
+    from,
+    to: safeAddress,
+  })
 }
