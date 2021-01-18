@@ -102,11 +102,11 @@ function createWindow(port = DEFAULT_PORT) {
 
   mainWindow.loadURL(isDev ? 'http://localhost:3000' : `https://localhost:${port}`)
 
-  // if (isDev) {
+  if (isDev) {
     // Open the DevTools.
     mainWindow.webContents.openDevTools()
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
-  // }
+  }
 
   mainWindow.setMenu(null)
   mainWindow.setMenuBarVisibility(false)
