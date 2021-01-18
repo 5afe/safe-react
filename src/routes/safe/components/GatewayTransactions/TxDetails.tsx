@@ -1,28 +1,28 @@
-import { Loader, Text, Button } from '@gnosis.pm/safe-react-components'
+import { Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
   isCustomTxInfo,
-  isMultiSigExecutionDetails,
+  isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
   MultiSigExecutionDetails,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector, safeSelector } from 'src/logic/safe/store/selectors'
-import { isCancelTransaction, NOT_AVAILABLE } from './utils'
-import { LoadTransactionDetails, useTransactionDetails } from './hooks/useTransactionDetails'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { TxExpandedActions } from './TxExpandedActions'
+import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer } from './styled'
 import { TxData } from './TxData'
 import { TxInfo } from './TxInfo'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { isCancelTransaction, NOT_AVAILABLE } from './utils'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -67,6 +67,15 @@ export const TxDetails = ({
 }): ReactElement => {
   const { data, loading } = useTransactionDetails(transactionId, txLocation)
 
+  const currentUser = useSelector(userAccountSelector)
+  const currentSafe = useSelector(safeSelector)
+  const [isOwner, setIsOwner] = useState(false)
+  useEffect(() => {
+    if (currentSafe && currentUser) {
+      setIsOwner(currentSafe.owners.some(({ address }) => sameAddress(address, currentUser)))
+    }
+  }, [currentSafe, currentUser])
+
   if (loading) {
     return <Loader size="md" />
   }
@@ -81,102 +90,24 @@ export const TxDetails = ({
     )
   }
 
-  const isMultiSend = data.txInfo.type === 'Custom' && data.txInfo.methodName === 'multiSend'
-
   return (
     <TxDetailsContainer>
       <div className="tx-summary">
         <TxSummary txDetails={data} />
       </div>
-      <div className={cn('tx-details', { 'no-padding': isMultiSend, 'not-executed': !data.executedAt })}>
+      <div
+        className={cn('tx-details', { 'no-padding': isMultiSendTxInfo(data.txInfo), 'not-executed': !data.executedAt })}
+      >
         <TxDataGroup txDetails={data} />
       </div>
-      <div className="tx-owners">
+      <div className={cn('tx-owners', { 'no-owner': !isOwner })}>
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && (
+      {!data.executedAt && txLocation !== 'history' && isOwner && (
         <div className="tx-actions">
-          <TxActionButtons data={data} txLocation={txLocation} />
+          <TxExpandedActions data={data} currentUser={currentUser} txLocation={txLocation} />
         </div>
       )}
     </TxDetailsContainer>
-  )
-}
-
-const TxActionButtons = ({
-  data,
-  txLocation,
-}: {
-  data: LoadTransactionDetails['data']
-  txLocation: 'queued.next' | 'queued.queued'
-}): ReactElement | null => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const currentUser = useSelector(userAccountSelector)
-  const currentSafe = useSelector(safeSelector)
-  const transactionsByNonce = useSelector((state) =>
-    getQueuedTransactionsByNonceAndLocation(
-      state,
-      (data?.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? -1,
-      txLocation,
-    ),
-  )
-  const [hasCancelTransaction, setHashCancelTransaction] = useState<boolean | undefined>()
-
-  useEffect(() => {
-    if (transactionsByNonce) {
-      console.log(transactionsByNonce)
-      if (
-        transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && isCancelTransaction({ txInfo, safeAddress }))
-      ) {
-        setHashCancelTransaction(true)
-      } else {
-        setHashCancelTransaction(false)
-      }
-    }
-  }, [safeAddress, transactionsByNonce])
-
-  if (currentUser && currentSafe) {
-    // if `currentUser` is not an owner, then no actions
-    if (!currentSafe.owners.some(({ address }) => sameAddress(address, currentUser))) {
-      return null
-    }
-  }
-
-  // not the data we need
-  if (!data || !isMultiSigExecutionDetails(data.detailedExecutionInfo)) {
-    return null
-  }
-
-  // still loading information
-  if (typeof hasCancelTransaction === 'undefined') {
-    return <Loader size="sm" />
-  }
-
-  // current Transaction is 'Cancellation Transaction'
-  const currentIsCancelTransaction = isCustomTxInfo(data.txInfo)
-  // current user didn't sign
-  const currentUserSigned = data.detailedExecutionInfo.confirmations.some(({ signer }) =>
-    sameAddress(signer, currentUser),
-  )
-  // we've reached the threshold
-  // or we are 1 sign from reaching the threshold
-  const canExecute =
-    data.detailedExecutionInfo.confirmations.length >= data.detailedExecutionInfo.confirmationsRequired - 1
-
-  return (
-    <>
-      <Button size="md" color="primary" variant="contained" disabled={currentUserSigned}>
-        <Text size="xl" color="white">
-          {canExecute ? 'Execute' : 'Confirm'}
-        </Text>
-      </Button>
-      {hasCancelTransaction || currentIsCancelTransaction ? null : (
-        <Button size="md" color="error" variant="contained" className="error">
-          <Text size="xl" color="white">
-            Cancel
-          </Text>
-        </Button>
-      )}
-    </>
   )
 }

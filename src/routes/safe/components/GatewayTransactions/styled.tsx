@@ -250,6 +250,10 @@ export const TxDetailsContainer = styled.div`
     grid-column-start: 2;
     grid-row-end: span 2;
     grid-row-start: 1;
+
+    &.no-owner {
+      grid-row-end: span 3;
+    }
   }
 
   .tx-actions {
@@ -260,14 +264,6 @@ export const TxDetailsContainer = styled.div`
 
     button {
       margin: 0 8px;
-
-      &.error {
-        background-color: #db3a3d;
-
-        &:hover {
-          background-color: #c31717;
-        }
-      }
     }
   }
 `
