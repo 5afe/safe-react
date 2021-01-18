@@ -55,7 +55,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
 
     // Trezor wallet returns the error not as an JSON object but directly as string
     if (!errorAsJSON) {
-      return errorAsString
+      return errorAsString.length ? errorAsString : undefined
     }
 
     // For new GETH nodes they will return the data as error in the format:
