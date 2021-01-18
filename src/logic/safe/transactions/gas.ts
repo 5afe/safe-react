@@ -98,7 +98,6 @@ export const getGasEstimationTxResponse = async (txConfig: {
   const web3 = getWeb3()
   try {
     const result = await web3.eth.call(txConfig)
-    debugger
 
     // GETH Nodes (geth version < v1.9.24)
     // In case that the gas is not enough we will receive an EMPTY data
