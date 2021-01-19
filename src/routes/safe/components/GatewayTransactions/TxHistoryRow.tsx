@@ -22,7 +22,7 @@ export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): Rea
       {isCreationTxInfo(transaction.txInfo) ? (
         <TxInfoCreation transaction={transaction} />
       ) : (
-        <TxDetails transactionId={transaction.id} txLocation="history" />
+        <TxDetails transaction={transaction} txLocation="history" />
       )}
     </AccordionDetails>
   </NoPaddingAccordion>
