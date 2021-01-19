@@ -3,9 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -17,10 +15,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { sm } from 'src/theme/variables'
@@ -31,8 +27,8 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-
-const { nativeCoin } = getNetworkInfo()
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const useStyles = makeStyles(styles)
 
@@ -53,34 +49,38 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nftTokens = useSelector(nftTokensSelector)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
   )
   const [data, setData] = useState('')
 
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient: tx.assetAddress,
+  })
+
   useEffect(() => {
     let isCurrent = true
 
-    const estimateGas = async () => {
+    const calculateERC721TransferData = async () => {
       try {
         const txData = await generateERC721TransferTxData(tx, safeAddress)
-        const estimatedGasCosts = await estimateTxGasCosts(safeAddress ?? '', tx.recipientAddress, txData)
-        const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-        const formattedGasCosts = formatAmount(gasCosts)
-
         if (isCurrent) {
-          setGasCosts(formattedGasCosts)
           setData(txData)
         }
       } catch (error) {
-        console.error('Error while calculating estimated gas:', error)
+        console.error('Error calculating ERC721 transfer data:', error.message)
       }
     }
-
-    estimateGas()
+    calculateERC721TransferData()
 
     return () => {
       isCurrent = false
@@ -164,9 +164,13 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </Row>
         )}
         <Row>
-          <Paragraph>
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />

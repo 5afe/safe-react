@@ -6,12 +6,11 @@ import * as React from 'react'
 import styled from 'styled-components'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
-import { SetDefaultSafe } from 'src/logic/safe/store/actions/setDefaultSafe'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { AddressWrapper } from './AddresWrapper'
+import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
 
 const StyledIcon = styled(Icon)`
@@ -46,10 +45,9 @@ type Props = {
   defaultSafe: DefaultSafe
   safes: SafeRecord[]
   onSafeClick: () => void
-  setDefaultSafe: SetDefaultSafe
 }
 
-const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe }: Props): React.ReactElement => {
+export const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes }: Props): React.ReactElement => {
   const classes = useStyles()
 
   return (
@@ -67,7 +65,7 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
               ) : (
                 <div className={classes.noIcon}>placeholder</div>
               )}
-              <AddressWrapper safe={safe} defaultSafe={defaultSafe} setDefaultSafe={setDefaultSafe} />
+              <AddressWrapper safe={safe} defaultSafe={defaultSafe} />
             </ListItem>
           </Link>
           <Hairline />
@@ -76,5 +74,3 @@ const SafeList = ({ currentSafe, defaultSafe, onSafeClick, safes, setDefaultSafe
     </MuiList>
   )
 }
-
-export default SafeList

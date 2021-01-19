@@ -40,17 +40,18 @@ type OwnProps = {
   selectedOwnerName: string
 }
 
-const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
+export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
-  const handleSubmit = (values) => {
-    const { ownerName } = values
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-    dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
-    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
-    dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
-
+  const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
+    // Update the value only if the ownerName really changed
+    if (ownerName !== selectedOwnerName) {
+      dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
+      dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
+      dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
+    }
     onClose()
   }
 
@@ -71,54 +72,56 @@ const EditOwnerComponent = ({ isOpen, onClose, ownerAddress, selectedOwnerName }
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm onSubmit={handleSubmit}>
-        {() => (
-          <>
-            <Block className={classes.container}>
-              <Row margin="md">
-                <Field
-                  component={TextField}
-                  initialValue={selectedOwnerName}
-                  name="ownerName"
-                  placeholder="Owner name*"
-                  testId={RENAME_OWNER_INPUT_TEST_ID}
-                  text="Owner name*"
-                  type="text"
-                  validate={composeValidators(required, minMaxLength(1, 50))}
-                />
+      <GnoForm onSubmit={handleSubmit} subscription={{ pristine: true }}>
+        {(...args) => {
+          const pristine = args[2].pristine
+          return (
+            <>
+              <Block className={classes.container}>
+                <Row margin="md">
+                  <Field
+                    component={TextField}
+                    initialValue={selectedOwnerName}
+                    name="ownerName"
+                    placeholder="Owner name*"
+                    testId={RENAME_OWNER_INPUT_TEST_ID}
+                    text="Owner name*"
+                    type="text"
+                    validate={composeValidators(required, minMaxLength(1, 50))}
+                  />
+                </Row>
+                <Row>
+                  <Block justify="center">
+                    <Identicon address={ownerAddress} diameter={32} />
+                    <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
+                      {ownerAddress}
+                    </Paragraph>
+                    <CopyBtn content={ownerAddress} />
+                    <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
+                  </Block>
+                </Row>
+              </Block>
+              <Hairline />
+              <Row align="center" className={classes.buttonRow}>
+                <Button minHeight={42} minWidth={140} onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  color="primary"
+                  minHeight={42}
+                  minWidth={140}
+                  testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
+                  type="submit"
+                  variant="contained"
+                  disabled={pristine}
+                >
+                  Save
+                </Button>
               </Row>
-              <Row>
-                <Block justify="center">
-                  <Identicon address={ownerAddress} diameter={32} />
-                  <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
-                    {ownerAddress}
-                  </Paragraph>
-                  <CopyBtn content={ownerAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
-                </Block>
-              </Row>
-            </Block>
-            <Hairline />
-            <Row align="center" className={classes.buttonRow}>
-              <Button minHeight={42} minWidth={140} onClick={onClose}>
-                Cancel
-              </Button>
-              <Button
-                color="primary"
-                minHeight={42}
-                minWidth={140}
-                testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
-                type="submit"
-                variant="contained"
-              >
-                Save
-              </Button>
-            </Row>
-          </>
-        )}
+            </>
+          )
+        }}
       </GnoForm>
     </Modal>
   )
 }
-
-export default EditOwnerComponent

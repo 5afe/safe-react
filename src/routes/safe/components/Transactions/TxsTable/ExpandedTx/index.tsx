@@ -3,9 +3,9 @@ import React, { ReactElement, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import ApproveTxModal from './ApproveTxModal'
+import { ApproveTxModal } from './ApproveTxModal'
 import OwnersColumn from './OwnersColumn'
-import RejectTxModal from './RejectTxModal'
+import { RejectTxModal } from './RejectTxModal'
 import TxDescription from './TxDescription'
 import { IncomingTx } from './IncomingTx'
 import { CreationTx } from './CreationTx'
@@ -73,13 +73,11 @@ const ExpandedModuleTx = ({ tx }: { tx: SafeModuleTransaction }): ReactElement =
           </Block>
           <Hairline />
           <Block className={cn(classes.txDataContainer, classes.incomingTxBlock)}>
-            {recipient && (
-              <TransferDescription
-                amountWithSymbol={amountWithSymbol}
-                isTokenTransfer={!sameAddress(amountWithSymbol, NOT_AVAILABLE)}
-                recipient={recipient}
-              />
-            )}
+            <TransferDescription
+              amountWithSymbol={amountWithSymbol}
+              isTokenTransfer={!sameAddress(amountWithSymbol, NOT_AVAILABLE)}
+              recipient={recipient}
+            />
           </Block>
         </Col>
       </Row>
@@ -107,7 +105,7 @@ const ExpandedSafeTx = ({ cancelTx, tx }: ExpandedSafeTxProps): ReactElement => 
 
   const thresholdReached = !isIncomingTx && threshold <= tx.confirmations.size
   const canExecute = !isIncomingTx && nonce === tx.nonce
-  const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations.size
+  const cancelThresholdReached = !!cancelTx && threshold <= cancelTx.confirmations?.size
   const canExecuteCancel = nonce === tx.nonce
 
   const openRejectModal = () => {

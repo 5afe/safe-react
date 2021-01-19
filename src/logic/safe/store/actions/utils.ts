@@ -16,15 +16,7 @@ export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | n
   }
 }
 
-export const getNewTxNonce = async (
-  txNonce: string | undefined,
-  lastTx: TxServiceModel | null,
-  safeInstance: GnosisSafe,
-): Promise<string> => {
-  if (txNonce) {
-    return txNonce
-  }
-
+export const getNewTxNonce = async (lastTx: TxServiceModel | null, safeInstance: GnosisSafe): Promise<string> => {
   // use current's safe nonce as fallback
   return lastTx ? `${lastTx.nonce + 1}` : (await safeInstance.methods.nonce().call()).toString()
 }
