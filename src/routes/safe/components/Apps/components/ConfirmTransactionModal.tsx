@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { GenericModal, Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import styled from 'styled-components'
@@ -95,9 +95,10 @@ export const ConfirmTransactionModal = ({
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+  const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
 
   const { gasEstimation, txEstimationExecutionStatus } = useEstimateTransactionGas({
-    txData: encodeMultiSendCall(txs),
+    txData: txData || '',
     txRecipient: MULTI_SEND_ADDRESS,
     operation: DELEGATE_CALL,
   })
@@ -124,11 +125,6 @@ export const ConfirmTransactionModal = ({
   }
 
   const confirmTransactions = async () => {
-    let txData = txs[0].data
-    if (txs.length > 1) {
-      txData = encodeMultiSendCall(txs)
-    }
-
     await dispatch(
       createTransaction(
         {
