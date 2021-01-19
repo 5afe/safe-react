@@ -124,7 +124,10 @@ export const ConfirmTransactionModal = ({
   }
 
   const confirmTransactions = async () => {
-    const txData = encodeMultiSendCall(txs)
+    let txData = txs[0].data
+    if (txs.length > 1) {
+      txData = encodeMultiSendCall(txs)
+    }
 
     await dispatch(
       createTransaction(
