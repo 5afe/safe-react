@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { toTokenUnit, fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 
 import CopyBtn from 'src/components/CopyBtn'
@@ -17,11 +17,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -35,7 +33,10 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-
+import { TokenProps } from 'src/logic/tokens/store/model/token'
+import { RecordOf } from 'immutable'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
@@ -55,59 +56,61 @@ type ReviewTxProps = {
   tx: ReviewTxProp
 }
 
-const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
-  const classes = useStyles()
-  const dispatch = useDispatch()
-  const { address: safeAddress } = useSelector(safeSelector) || {}
-  const tokens = useSelector(extendedSafeTokensSelector)
-  const [gasCosts, setGasCosts] = useState('< 0.001')
+const useTxData = (
+  isSendingNativeToken: boolean,
+  txAmount: string,
+  recipientAddress: string,
+  txToken?: RecordOf<TokenProps>,
+): string => {
   const [data, setData] = useState('')
 
-  const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
-  const isSendingETH = sameAddress(txToken?.address, nativeCoin.address)
-  const txRecipient = isSendingETH ? tx.recipientAddress : txToken?.address
-
   useEffect(() => {
-    let isCurrent = true
-
-    const estimateGas = async () => {
+    const updateTxDataAsync = async () => {
       if (!txToken) {
         return
       }
 
       let txData = EMPTY_DATA
-
-      if (!isSendingETH) {
+      if (!isSendingNativeToken) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
-        const txAmount = toTokenUnit(tx.amount, txToken.decimals)
-
-        txData = tokenInstance.contract.methods.transfer(tx.recipientAddress, txAmount).encodeABI()
+        const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
+        txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
       }
-
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress as string, txRecipient as string, txData)
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
-        setData(txData)
-      }
+      setData(txData)
     }
 
-    estimateGas()
+    updateTxDataAsync()
+  }, [isSendingNativeToken, recipientAddress, txAmount, txToken])
 
-    return () => {
-      isCurrent = false
-    }
-  }, [isSendingETH, safeAddress, tx.amount, tx.recipientAddress, txRecipient, txToken])
+  return data
+}
+
+const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
+  const classes = useStyles()
+  const dispatch = useDispatch()
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const tokens = useSelector(extendedSafeTokensSelector)
+  const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
+  const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
+  const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
+  const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
+  const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
+
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+  } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient,
+    txType: tx.txType,
+  })
 
   const submitTx = async () => {
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
-    // txAmount should be 0 if we send tokens
-    // the real value is encoded in txData and will be used by the contract
-    // if txAmount > 0 it would send ETH from the Safe
-    const txAmount = isSendingETH ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
 
     if (!safeAddress) {
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
@@ -115,11 +118,12 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
     }
 
     if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
+      const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
       spendingLimit.methods
         .executeAllowanceTransfer(
           safeAddress,
-          sameAddress(txToken.address, nativeCoin.address) ? ZERO_ADDRESS : txToken.address,
+          spendingLimitTokenAddress,
           tx.recipientAddress,
           toTokenUnit(tx.amount, txToken.decimals),
           ZERO_ADDRESS,
@@ -135,7 +139,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
         createTransaction({
           safeAddress: safeAddress,
           to: txRecipient as string,
-          valueInWei: txAmount,
+          valueInWei: txValue,
           txData: data,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
@@ -207,9 +211,13 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
           </Paragraph>
         </Row>
         <Row>
-          <Paragraph data-testid="fee-meg-review-step">
-            {`You're about to create a transaction and will have to confirm it with your currently connected wallet. Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-          </Paragraph>
+          <TransactionFees
+            gasCostFormatted={gasCostFormatted}
+            isExecution={isExecution}
+            isCreation={isCreation}
+            isOffChainSignature={isOffChainSignature}
+            txEstimationExecutionStatus={txEstimationExecutionStatus}
+          />
         </Row>
       </Block>
       <Hairline style={{ position: 'absolute', bottom: 85 }} />

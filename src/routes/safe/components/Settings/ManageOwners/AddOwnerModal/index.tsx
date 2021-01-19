@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { OwnerForm } from './screens/OwnerForm'
-import ReviewAddOwner from './screens/Review'
+import { ReviewAddOwner } from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
 import Modal from 'src/components/Modal'
