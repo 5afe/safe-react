@@ -1,6 +1,6 @@
 import { Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -11,14 +11,14 @@ import {
   isSettingsChangeTxInfo,
   isTransferTxInfo,
   MultiSigExecutionDetails,
+  Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeParamAddressFromStateSelector, safeSelector } from 'src/logic/safe/store/selectors'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { TxExpandedActions } from './TxExpandedActions'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { useTransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer } from './styled'
 import { TxData } from './TxData'
+import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
@@ -58,23 +58,14 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   return <TxData txData={txDetails.txData} />
 }
 
-export const TxDetails = ({
-  transactionId,
-  txLocation,
-}: {
-  transactionId: string
+type TxDetailsProps = {
+  transaction: Transaction
   txLocation: 'history' | 'queued.next' | 'queued.queued'
-}): ReactElement => {
-  const { data, loading } = useTransactionDetails(transactionId, txLocation)
+}
 
-  const currentUser = useSelector(userAccountSelector)
-  const currentSafe = useSelector(safeSelector)
-  const [isOwner, setIsOwner] = useState(false)
-  useEffect(() => {
-    if (currentSafe && currentUser) {
-      setIsOwner(currentSafe.owners.some(({ address }) => sameAddress(address, currentUser)))
-    }
-  }, [currentSafe, currentUser])
+export const TxDetails = ({ transaction, txLocation }: TxDetailsProps): ReactElement => {
+  const { isUserAnOwner, ...actions } = useTransactionActions({ transaction, txLocation })
+  const { data, loading } = useTransactionDetails(transaction.id, txLocation)
 
   if (loading) {
     return <Loader size="md" />
@@ -100,12 +91,12 @@ export const TxDetails = ({
       >
         <TxDataGroup txDetails={data} />
       </div>
-      <div className={cn('tx-owners', { 'no-owner': !isOwner })}>
+      <div className={cn('tx-owners', { 'no-owner': !isUserAnOwner })}>
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && isOwner && (
-        <div className="tx-actions">
-          <TxExpandedActions data={data} currentUser={currentUser} txLocation={txLocation} />
+      {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
+        <div className="tx-details-actions">
+          <TxExpandedActions actions={actions} />
         </div>
       )}
     </TxDetailsContainer>

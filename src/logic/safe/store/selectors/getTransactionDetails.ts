@@ -1,9 +1,9 @@
 import get from 'lodash.get'
 import { createSelector } from 'reselect'
 
-import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors/index'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
 import { sameString } from 'src/utils/strings'
 
@@ -15,25 +15,30 @@ const getSafeTransactions = createSelector(
   (transactionsBySafe, safeAddress) => transactionsBySafe[safeAddress],
 )
 
-export const getTransactionDetails = createSelector(
+export const getTransactionById = createSelector(
   getSafeTransactions,
   (_, transactionId: Transaction['id'], txLocation: 'history' | 'queued.next' | 'queued.queued') => ({
     transactionId,
     txLocation,
   }),
-  (transactions, { transactionId, txLocation }): Transaction['txDetails'] => {
+  (transactions, { transactionId, txLocation }): Transaction | undefined => {
     if (transactions && transactionId) {
       for (const [, txs] of Object.entries(
         get(transactions, txLocation) as StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
       )) {
-        const txDetails = txs.find(({ id }) => sameString(id, transactionId))?.txDetails
+        const foundTx = txs.find(({ id }) => sameString(id, transactionId))
 
-        if (txDetails) {
-          return txDetails
+        if (foundTx) {
+          return foundTx
         }
       }
     }
   },
+)
+
+export const getTransactionDetails = createSelector(
+  getTransactionById,
+  (transaction): Transaction['txDetails'] => transaction?.txDetails,
 )
 
 export const getQueuedTransactionsByNonceAndLocation = createSelector(

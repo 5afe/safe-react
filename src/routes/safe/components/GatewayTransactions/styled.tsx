@@ -100,7 +100,11 @@ export const StyledTransaction = styled.div`
     align-self: center;
   }
 
-  & .tx-status {
+  .tx-actions {
+    justify-self: end;
+  }
+
+  .tx-status {
     justify-self: end;
     margin-right: 8px;
   }
@@ -256,7 +260,7 @@ export const TxDetailsContainer = styled.div`
     }
   }
 
-  .tx-actions {
+  .tx-details-actions {
     align-items: center;
     display: flex;
     height: 60px;

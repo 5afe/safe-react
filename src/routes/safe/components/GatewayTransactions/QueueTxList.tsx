@@ -3,7 +3,7 @@ import React, { Fragment, ReactElement } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, StyledTransactionsGroup } from './styled'
-import { TxQueueGroupedRow, TxQueueRow } from './TxQueueRow'
+import { TxQueueRow } from './TxQueueRow'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <p className="first-node" /> : null}</p>
@@ -42,7 +42,7 @@ const QueueTransaction = ({ nonce, transactions, txLocation }: QueueTransactionP
         {transactions.map((transaction, index) => (
           <Fragment key={`${nonce}-${transaction.id}`}>
             <TreeView firstElement={!index} />
-            <TxQueueGroupedRow transaction={transaction} txLocation={txLocation} />
+            <TxQueueRow isGrouped transaction={transaction} txLocation={txLocation} />
           </Fragment>
         ))}
       </GroupedTransactions>

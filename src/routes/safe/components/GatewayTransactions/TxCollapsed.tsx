@@ -1,14 +1,21 @@
-import { IconText, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, IconText, Text } from '@gnosis.pm/safe-react-components'
+import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { ReactElement } from 'react'
+import styled from 'styled-components'
 
 import CustomIconText from 'src/components/CustomIconText'
 import { isCustomTxInfo, isMultiSendTxInfo, isSettingsChangeTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
+import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
+
+const IconButton = styled(MuiIconButton)`
+  padding: 8px !important;
+`
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -33,24 +40,6 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   }
 
   if (isCustomTxInfo(info)) {
-    // TODO: request amount of actions when `methodName === 'multiSend'`
-    //  if `actions === 1`, we need the `actionName`
-    // const actions = txDetails.txData.dataDecoded.parameters.valueDecoded
-    //
-    // if (info.methodName === 'multiSend') {
-    //   if (actions.length > 1) {
-    //     return <span>{actions.length} actions</span>
-    //   }
-    //
-    //   const { dataDecoded } = actions[0]
-    //
-    //   if (dataDecoded) {
-    //     return <span>{dataDecoded.method}</span>
-    //   }
-    //
-    //   return <span>1 action</span>
-    // }
-
     if (isMultiSendTxInfo(info)) {
       return (
         <span>
@@ -64,73 +53,104 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   return null
 }
 
+const CollapsedActionButtons = ({ actions }: { actions: TransactionActions }): ReactElement => (
+  <>
+    {(actions.canConfirm || actions.canExecute) && (
+      <IconButton size="small" type="button">
+        <Icon
+          type={actions.canExecute ? 'rocket' : 'check'}
+          color="primary"
+          size="sm"
+          tooltip={actions.canExecute ? 'Execute' : 'Confirm'}
+        />
+      </IconButton>
+    )}
+    {actions.canCancel && (
+      <IconButton size="small" type="button">
+        <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
+      </IconButton>
+    )}
+  </>
+)
+
 type TxCollapsedProps = {
+  isGrouped?: boolean
   nonce?: number
   type: TxTypeProps
   info?: AssetInfo
   time: string
   votes?: string
-  actions?: string
+  actions?: TransactionActions
   status: TransactionStatusProps
 }
 
-export const TxCollapsed = ({ nonce, type, info, time, votes, actions, status }: TxCollapsedProps): ReactElement => (
-  <StyledTransaction>
-    <div className="tx-nonce">
-      <Text size="lg">{nonce}</Text>
-    </div>
-    <div className="tx-type">
-      <CustomIconText iconUrl={type.icon} text={type.text} />
-    </div>
-    <div className="tx-info">{info && <TxInfo info={info} />}</div>
-    <div className="tx-time">
-      <Text size="lg">{time}</Text>
-    </div>
-    <div className="tx-votes">
-      {votes && <IconText color="primary" iconType="owners" iconSize="sm" text={`${votes}`} textSize="sm" />}
-    </div>
-    <div className="tx-actions">{actions}</div>
-    <div className="tx-status">
-      <Text size="lg" color={status.color} className="col" strong>
-        {status.text}
-      </Text>
-    </div>
-  </StyledTransaction>
-)
-
-type TxCollapsedGroupedProps = {
-  type: TxTypeProps
-  info?: AssetInfo
-  time: string
-  votes?: string
-  actions?: string
-  status: TransactionStatusProps
-}
-
-export const TxCollapsedGrouped = ({
+export const TxCollapsed = ({
+  isGrouped = false,
+  nonce,
   type,
   info,
   time,
   votes,
   actions,
   status,
-}: TxCollapsedGroupedProps): ReactElement => (
-  <StyledGroupedTransactions>
+}: TxCollapsedProps): ReactElement => {
+  const TxCollapsedNonce = (
+    <div className="tx-nonce">
+      <Text size="lg">{nonce}</Text>
+    </div>
+  )
+
+  const TxCollapsedType = (
     <div className="tx-type">
       <CustomIconText iconUrl={type.icon} text={type.text} />
     </div>
-    <div className="tx-info">{info && <TxInfo info={info} />}</div>
+  )
+
+  const TxCollapsedInfo = <div className="tx-info">{info && <TxInfo info={info} />}</div>
+
+  const TxCollapsedTime = (
     <div className="tx-time">
       <Text size="lg">{time}</Text>
     </div>
+  )
+
+  const TxCollapsedVotes = (
     <div className="tx-votes">
       {votes && <IconText color="primary" iconType="owners" iconSize="sm" text={`${votes}`} textSize="sm" />}
     </div>
-    <div className="tx-actions">{actions}</div>
+  )
+
+  const TxCollapsedActions = (
+    <div className="tx-actions">{actions?.isUserAnOwner && <CollapsedActionButtons actions={actions} />}</div>
+  )
+
+  const TxCollapsedStatus = (
     <div className="tx-status">
       <Text size="lg" color={status.color} className="col" strong>
         {status.text}
       </Text>
     </div>
-  </StyledGroupedTransactions>
-)
+  )
+
+  return isGrouped ? (
+    <StyledGroupedTransactions>
+      {/* no nonce */}
+      {TxCollapsedType}
+      {TxCollapsedInfo}
+      {TxCollapsedTime}
+      {TxCollapsedVotes}
+      {TxCollapsedActions}
+      {TxCollapsedStatus}
+    </StyledGroupedTransactions>
+  ) : (
+    <StyledTransaction>
+      {TxCollapsedNonce}
+      {TxCollapsedType}
+      {TxCollapsedInfo}
+      {TxCollapsedTime}
+      {TxCollapsedVotes}
+      {TxCollapsedActions}
+      {TxCollapsedStatus}
+    </StyledTransaction>
+  )
+}
