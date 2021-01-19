@@ -131,13 +131,13 @@ const BaseAddressBookInput = ({
       onChange={onChange}
       onInputChange={onInputChange}
       options={addressBookEntries}
+      id="address-book-input"
       renderInput={(params) => (
         <MuiTextField
           {...params}
           autoFocus={true}
           error={!!validationText}
           fullWidth
-          id="filled-error-helper-text"
           variant="filled"
           label={validationText ? validationText : label}
           InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
