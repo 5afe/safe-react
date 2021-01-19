@@ -94,20 +94,13 @@
         }
       ]
     },
-    "files": [
-      "**/*",
-      "!src${/*}",
-      "!config${/*}",
-      "!contracts${/*}",
-      "!migrations${/*}",
-      "!flow-typed${/*}",
-      "!apps${/*}",
-      "!out${/*}",
-      "!.editorconfig",
-      "!.gitignore",
-      "!README.md",
-      "!yarn-error.log",
-      "!yarn.lock"
+   "files": [
+      "build",
+      "patches",
+      "public",
+      "scripts",
+      "dev-app-update.yml",
+      "package.json"
     ],
     "directories": {
       "buildResources": "public/resources"
