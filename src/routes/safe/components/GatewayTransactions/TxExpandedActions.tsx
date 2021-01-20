@@ -10,7 +10,7 @@ export const TxExpandedActions = ({ actions }: TxExpandedActionsProps): ReactEle
 
   return (
     <>
-      <Button size="md" disabled={!canExecute && !canConfirm}>
+      <Button size="md" color="primary" disabled={!canExecute && !canConfirm}>
         <Text size="xl" color="white">
           {canExecute ? 'Execute' : 'Confirm'}
         </Text>
