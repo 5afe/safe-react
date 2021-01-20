@@ -37,8 +37,24 @@ export const getTransactionById = createSelector(
 )
 
 export const getTransactionDetails = createSelector(
-  getTransactionById,
-  (transaction): Transaction['txDetails'] => transaction?.txDetails,
+  getSafeTransactions,
+  (_, transactionId: Transaction['id'], txLocation: 'history' | 'queued.next' | 'queued.queued') => ({
+    transactionId,
+    txLocation,
+  }),
+  (transactions, { transactionId, txLocation }): Transaction['txDetails'] | undefined => {
+    if (transactions && transactionId) {
+      for (const [, txs] of Object.entries(
+        get(transactions, txLocation) as StoreStructure['history'] | StoreStructure['queued']['next' | 'queued'],
+      )) {
+        const txDetails = txs.find(({ id }) => sameString(id, transactionId))?.txDetails
+
+        if (txDetails) {
+          return txDetails
+        }
+      }
+    }
+  },
 )
 
 export const getQueuedTransactionsByNonceAndLocation = createSelector(
