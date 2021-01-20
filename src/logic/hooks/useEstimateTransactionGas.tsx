@@ -126,7 +126,7 @@ type UseEstimateTransactionGasProps = {
   txType?: string
 }
 
-type TransactionGasEstimationResult = {
+export type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
   gasEstimation: number // Amount of gas needed for execute or approve the transaction
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)

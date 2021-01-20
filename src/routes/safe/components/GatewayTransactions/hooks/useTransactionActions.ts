@@ -38,7 +38,7 @@ export const useTransactionActions = ({
   })
 
   useEffect(() => {
-    if (isUserAnOwner && transaction.executionInfo) {
+    if (isUserAnOwner && txLocation !== 'history' && transaction.executionInfo) {
       const { executionInfo } = transaction
       const { confirmationsSubmitted, confirmationsRequired } = executionInfo
       const currentUserSigned = !executionInfo.missingSigners?.some((missingSigner) =>
