@@ -130,7 +130,11 @@ export const estimateGasForDeployingSafe = async (
   const proxyFactoryData = proxyFactoryMaster.methods
     .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
     .encodeABI()
-  const gas = await calculateGasOf(proxyFactoryData, userAccount, proxyFactoryMaster.options.address)
+  const gas = await calculateGasOf({
+    data: proxyFactoryData,
+    from: userAccount,
+    to: proxyFactoryMaster.options.address,
+  })
   const gasPrice = await calculateGasPrice()
 
   return gas * parseInt(gasPrice, 10)
