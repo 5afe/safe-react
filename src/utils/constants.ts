@@ -7,7 +7,6 @@ export const GOOGLE_ANALYTICS_ID = process.env.REACT_APP_GOOGLE_ANALYTICS || ''
 export const SENTRY_DSN = process.env.REACT_APP_SENTRY_DSN || ''
 export const PORTIS_ID = process.env.REACT_APP_PORTIS_ID ?? '852b763d-f28b-4463-80cb-846d7ec5806b'
 export const FORTMATIC_KEY = process.env.REACT_APP_FORTMATIC_KEY ?? 'pk_test_CAD437AA29BE0A40'
-export const BLOCKNATIVE_KEY = process.env.REACT_APP_BLOCKNATIVE_KEY ?? '7fbb9cee-7e97-4436-8770-8b29a9a8814c'
 /*
  * Not being used
 export const SQUARELINK_ID = {

@@ -56,20 +56,6 @@ type ReviewTxProps = {
   tx: ReviewTxProp
 }
 
-const useTxAmount = (tx: ReviewTxProp, isSendingNativeToken: boolean, txToken?: RecordOf<TokenProps>): string => {
-  const [txAmount, setTxAmount] = useState('0')
-
-  // txAmount should be 0 if we send tokens
-  // the real value is encoded in txData and will be used by the contract
-  // if txAmount > 0 it would send ETH from the Safe (and the data will be empty)
-  useEffect(() => {
-    const txAmount = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
-    setTxAmount(txAmount)
-  }, [tx.amount, txToken, isSendingNativeToken])
-
-  return txAmount
-}
-
 const useTxData = (
   isSendingNativeToken: boolean,
   txAmount: string,
@@ -88,7 +74,8 @@ const useTxData = (
       if (!isSendingNativeToken) {
         const StandardToken = await getHumanFriendlyToken()
         const tokenInstance = await StandardToken.at(txToken.address as string)
-        txData = tokenInstance.contract.methods.transfer(recipientAddress, txAmount).encodeABI()
+        const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
+        txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
       }
       setData(txData)
     }
@@ -107,9 +94,8 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = sameAddress(txToken?.address, nativeCoin.address)
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
-
-  const txAmount = useTxAmount(tx, isSendingNativeToken, txToken)
-  const data = useTxData(isSendingNativeToken, txAmount, tx.recipientAddress, txToken)
+  const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
+  const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
 
   const {
     gasCostFormatted,
@@ -120,6 +106,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient,
+    txType: tx.txType,
   })
 
   const submitTx = async () => {
@@ -152,7 +139,7 @@ const ReviewTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement =>
         createTransaction({
           safeAddress: safeAddress,
           to: txRecipient as string,
-          valueInWei: txAmount,
+          valueInWei: txValue,
           txData: data,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         }),
