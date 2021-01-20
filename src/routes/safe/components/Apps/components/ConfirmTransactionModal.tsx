@@ -25,6 +25,8 @@ import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
 import { TransactionParams } from './AppFrame'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import Row from 'src/components/layout/Row'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -67,6 +69,10 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
+const Container = styled.div`
+  max-width: 480px;
+`
+
 type OwnProps = {
   isOpen: boolean
   app: SafeApp
@@ -97,7 +103,14 @@ export const ConfirmTransactionModal = ({
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
   const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
 
-  const { gasEstimation, txEstimationExecutionStatus } = useEstimateTransactionGas({
+  const {
+    gasEstimation,
+    isOffChainSignature,
+    isCreation,
+    isExecution,
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+  } = useEstimateTransactionGas({
     txData: txData || '',
     txRecipient: MULTI_SEND_ADDRESS,
     operation: DELEGATE_CALL,
@@ -158,7 +171,7 @@ export const ConfirmTransactionModal = ({
       </Text>
     </>
   ) : (
-    <>
+    <Container>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
       {txs.map((tx, index) => (
@@ -194,7 +207,16 @@ export const ConfirmTransactionModal = ({
           />
         </div>
       )}
-    </>
+      <Row>
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
+      </Row>
+    </Container>
   )
 
   return (
