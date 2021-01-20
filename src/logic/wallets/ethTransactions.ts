@@ -50,10 +50,16 @@ export const calculateGasPrice = async (): Promise<string> => {
   }
 }
 
-export const calculateGasOf = async (data: string, from: string, to: string): Promise<number> => {
+export const calculateGasOf = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
   const web3 = getWeb3()
   try {
-    const gas = await web3.eth.estimateGas({ data, from, to })
+    const gas = await web3.eth.estimateGas(txConfig)
 
     return gas * 2
   } catch (err) {

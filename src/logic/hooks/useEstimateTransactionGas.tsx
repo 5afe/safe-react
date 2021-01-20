@@ -24,6 +24,7 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
+import { WALLETS } from 'src/config/networks/network.d'
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -166,12 +167,16 @@ export const useEstimateTransactionGas = ({
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
   const safeVersion = useSelector(safeCurrentVersionSelector)
-  const { account: from, smartContractWallet } = useSelector(providerSelector)
+  const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
         return
+      }
+      // FIXME this should be removed when estimating with WalletConnect correctly
+      if (!providerName || sameString(providerName, WALLETS.WALLET_CONNECT)) {
+        return null
       }
 
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
@@ -257,6 +262,7 @@ export const useEstimateTransactionGas = ({
     smartContractWallet,
     safeTxGas,
     txType,
+    providerName,
   ])
 
   return gasEstimation

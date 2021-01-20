@@ -112,6 +112,7 @@ export const ApproveTxModal = ({
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
         ethParameters: txParameters,
+        thresholdReached,
       }),
     )
     onClose()

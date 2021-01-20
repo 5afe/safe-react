@@ -25,6 +25,21 @@ const parseRequiredTxGasResponse = (data: string): number => {
   return data.match(/.{2}/g)?.reduce(reducer, 0)
 }
 
+interface ErrorDataJson extends JSON {
+  originalError?: {
+    data?: string
+  }
+  data?: string
+}
+
+const getJSONOrNullFromString = (stringInput: string): ErrorDataJson | null => {
+  try {
+    return JSON.parse(stringInput)
+  } catch (error) {
+    return null
+  }
+}
+
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
 export const getDataFromNodeErrorMessage = (errorMessage: string): string | undefined => {
   // Replace illegal characters that often comes within the error string (like � for example)
@@ -35,7 +50,13 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   const [, ...error] = normalizedErrorString.split('\n')
 
   try {
-    const errorAsJSON = JSON.parse(error.join(''))
+    const errorAsString = error.join('')
+    const errorAsJSON = getJSONOrNullFromString(errorAsString)
+
+    // Trezor wallet returns the error not as an JSON object but directly as string
+    if (!errorAsJSON) {
+      return errorAsString.length ? errorAsString : undefined
+    }
 
     // For new GETH nodes they will return the data as error in the format:
     // {
@@ -251,5 +272,9 @@ export const estimateGasForTransactionApproval = async ({
       from,
     })
   const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return calculateGasOf(approveTransactionTxData, from, safeAddress)
+  return calculateGasOf({
+    data: approveTransactionTxData,
+    from,
+    to: safeAddress,
+  })
 }
