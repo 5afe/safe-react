@@ -35,6 +35,7 @@ export const TxQueueCollapsed = ({
 
   return (
     <TxCollapsed
+      transaction={transaction}
       isGrouped={isGrouped}
       nonce={nonce}
       type={type}

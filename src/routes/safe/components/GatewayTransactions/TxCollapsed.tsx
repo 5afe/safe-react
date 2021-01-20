@@ -1,10 +1,16 @@
 import { Icon, IconText, Text } from '@gnosis.pm/safe-react-components'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
-import React, { ReactElement } from 'react'
+import React, { MouseEvent as ReactMouseEvent, ReactElement, useContext } from 'react'
+import { TxActions } from 'src/routes/safe/components/GatewayTransactions/QueueTransactions'
 import styled from 'styled-components'
 
 import CustomIconText from 'src/components/CustomIconText'
-import { isCustomTxInfo, isMultiSendTxInfo, isSettingsChangeTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  isCustomTxInfo,
+  isMultiSendTxInfo,
+  isSettingsChangeTxInfo,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionActions } from './hooks/useTransactionActions'
@@ -53,27 +59,47 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   return null
 }
 
-const CollapsedActionButtons = ({ actions }: { actions: TransactionActions }): ReactElement => (
-  <>
-    {(actions.canConfirm || actions.canExecute) && (
-      <IconButton size="small" type="button">
-        <Icon
-          type={actions.canExecute ? 'rocket' : 'check'}
-          color="primary"
-          size="sm"
-          tooltip={actions.canExecute ? 'Execute' : 'Confirm'}
-        />
-      </IconButton>
-    )}
-    {actions.canCancel && (
-      <IconButton size="small" type="button">
-        <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
-      </IconButton>
-    )}
-  </>
-)
+const CollapsedActionButtons = ({
+  actions,
+  transaction,
+}: {
+  actions: TransactionActions
+  transaction: Transaction
+}): ReactElement => {
+  const { selectAction } = useContext(TxActions)
+  const handleConfirmButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
+    selectAction?.({ action: actions.canExecute ? 'execute' : 'confirm', transaction })
+  }
+
+  const handleCancelButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
+    event.stopPropagation()
+    selectAction?.({ action: 'cancel', transaction })
+  }
+
+  return (
+    <>
+      {(actions.canConfirm || actions.canExecute) && (
+        <IconButton size="small" type="button" onClick={handleConfirmButtonClick}>
+          <Icon
+            type={actions.canExecute ? 'rocket' : 'check'}
+            color="primary"
+            size="sm"
+            tooltip={actions.canExecute ? 'Execute' : 'Confirm'}
+          />
+        </IconButton>
+      )}
+      {actions.canCancel && (
+        <IconButton size="small" type="button" onClick={handleCancelButtonClick}>
+          <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
+        </IconButton>
+      )}
+    </>
+  )
+}
 
 type TxCollapsedProps = {
+  transaction?: Transaction
   isGrouped?: boolean
   nonce?: number
   type: TxTypeProps
@@ -85,6 +111,7 @@ type TxCollapsedProps = {
 }
 
 export const TxCollapsed = ({
+  transaction,
   isGrouped = false,
   nonce,
   type,
@@ -121,7 +148,9 @@ export const TxCollapsed = ({
   )
 
   const TxCollapsedActions = (
-    <div className="tx-actions">{actions?.isUserAnOwner && <CollapsedActionButtons actions={actions} />}</div>
+    <div className="tx-actions">
+      {actions?.isUserAnOwner && transaction && <CollapsedActionButtons transaction={transaction} actions={actions} />}
+    </div>
   )
 
   const TxCollapsedStatus = (

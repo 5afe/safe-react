@@ -267,7 +267,28 @@ export const TxDetailsContainer = styled.div`
     justify-content: center;
 
     button {
+      color: ${({ theme }) => theme.colors.white};
       margin: 0 8px;
+
+      &:hover {
+        color: ${({ theme }) => theme.colors.white};
+      }
+
+      &.error {
+        background-color: ${({ theme }) => theme.colors.error};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.colors.errorHover};
+        }
+      }
+
+      &.primary {
+        background-color: ${({ theme }) => theme.colors.primary};
+
+        &:hover {
+          background-color: ${({ theme }) => theme.colors.secondary};
+        }
+      }
     }
   }
 `

@@ -96,7 +96,7 @@ export const TxDetails = ({ transaction, txLocation }: TxDetailsProps): ReactEle
       </div>
       {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
         <div className="tx-details-actions">
-          <TxExpandedActions actions={actions} />
+          <TxExpandedActions actions={actions} transaction={transaction} />
         </div>
       )}
     </TxDetailsContainer>
