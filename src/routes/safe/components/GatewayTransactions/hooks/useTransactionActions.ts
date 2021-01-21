@@ -1,13 +1,26 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { isCancelTransaction } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+
+export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {
+  const { confirmationsSubmitted, confirmationsRequired } = executionInfo
+  return confirmationsSubmitted === confirmationsRequired
+}
+
+export const isReadyToExecute = (executionInfo: ExecutionInfo): boolean => {
+  const { confirmationsSubmitted, confirmationsRequired } = executionInfo
+  const thresholdReached = isThresholdReached(executionInfo)
+  const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
+
+  return thresholdReached || oneToGo
+}
 
 export type TransactionActions = {
   canConfirm: boolean
@@ -45,9 +58,13 @@ export const useTransactionActions = ({
         sameAddress(missingSigner, currentUser),
       )
 
+      const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
+      const thresholdReached = confirmationsSubmitted === confirmationsRequired
+      const readyToExecute = thresholdReached || (oneToGo && !currentUserSigned)
+
       setState({
-        canConfirm: !currentUserSigned && confirmationsSubmitted < confirmationsRequired,
-        canExecute: confirmationsSubmitted === confirmationsRequired && txLocation === 'queued.next',
+        canConfirm: txLocation === 'queued.queued' && !currentUserSigned,
+        canExecute: txLocation === 'queued.next' && readyToExecute,
         canCancel: !transactionsByNonce.some(
           ({ txInfo }) =>
             isCustomTxInfo(txInfo) &&
