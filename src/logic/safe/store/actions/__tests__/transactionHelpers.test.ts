@@ -185,7 +185,12 @@ describe('isCancelTransaction', () => {
   })
   it('It should return false if the refundReceiver is not empty', () => {
     // given
-    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null, refundReceiver: mockedETHAccount })
+    const transaction = getMockedTxServiceModel({
+      to: safeAddress,
+      value: '0',
+      data: null,
+      refundReceiver: mockedETHAccount,
+    })
 
     // when
     const result = isCancelTransaction(transaction, safeAddress)
