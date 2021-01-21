@@ -1,15 +1,17 @@
 import axios, { AxiosResponse } from 'axios'
 import React, { createContext, ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+
 import { getSafeServiceBaseUrl } from 'src/config'
 import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
-import { ScrollableTransactionsContainer } from 'src/routes/safe/components/GatewayTransactions/styled'
+import { ScrollableTransactionsContainer } from './styled'
 import { ApproveTxModal } from './modals/ApproveTxModal'
 import { RejectTxModal } from './modals/RejectTxModal'
 import { useQueueTransactions } from './hooks/useQueueTransactions'
+import { isThresholdReached } from './hooks/useTransactionActions'
 import { QueueTxList } from './QueueTxList'
 
 type Action = 'cancel' | 'confirm' | 'execute' | 'none'
@@ -61,7 +63,7 @@ export const QueueTransactions = (): ReactElement => {
       }
     }, [safeAddress])
 
-    if (!transaction) {
+    if (!transaction || !selectedAction.transaction?.executionInfo) {
       return null
     }
 
@@ -73,7 +75,15 @@ export const QueueTransactions = (): ReactElement => {
         return <ApproveTxModal isOpen onClose={onClose} transaction={transaction} />
 
       case 'execute':
-        return <ApproveTxModal canExecute isOpen onClose={onClose} thresholdReached transaction={transaction} />
+        return (
+          <ApproveTxModal
+            canExecute
+            isOpen
+            onClose={onClose}
+            thresholdReached={isThresholdReached(selectedAction.transaction.executionInfo)}
+            transaction={transaction}
+          />
+        )
 
       case 'none':
         return null
