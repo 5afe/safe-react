@@ -7,7 +7,8 @@ import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSign
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import axios from 'axios'
-import { getRpcServiceUrl } from 'src/config'
+import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -89,7 +90,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   }
 }
 
-export const getGasEstimationTxResponse = async (txConfig: {
+const estimateGasWithWeb3Provider = async (txConfig: {
   to: string
   from: string
   data: string
@@ -98,6 +99,37 @@ export const getGasEstimationTxResponse = async (txConfig: {
 }): Promise<number> => {
   const web3 = getWeb3()
   try {
+    const result = await web3.eth.call(txConfig)
+
+    // GETH Nodes (geth version < v1.9.24)
+    // In case that the gas is not enough we will receive an EMPTY data
+    // Otherwise we will receive the gas amount as hash data -> this is valid for old versions of GETH nodes ( < v1.9.24)
+
+    if (!sameString(result, EMPTY_DATA)) {
+      return new BigNumber(result.substring(138), 16).toNumber()
+    }
+  } catch (error) {
+    // So we try to extract the estimation result within the error in case is possible
+    const estimationData = getDataFromNodeErrorMessage(error.message)
+
+    if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
+      throw error
+    }
+
+    return new BigNumber(estimationData.substring(138), 16).toNumber()
+  }
+  throw new Error('Error while estimating the gas required for tx')
+}
+
+const estimateGasWithInfura = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  try {
+    const web3 = getWeb3()
     const { data } = await axios.post(getRpcServiceUrl(), {
       jsonrpc: '2.0',
       method: 'eth_call',
@@ -120,6 +152,21 @@ export const getGasEstimationTxResponse = async (txConfig: {
     console.log('Gas estimation endpoint errored: ', error.message)
   }
   throw new Error('Error while estimating the gas required for tx')
+}
+
+export const getGasEstimationTxResponse = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  // If we are in a infura supported network we estimate using infura
+  if (usesInfuraRPC) {
+    return estimateGasWithInfura(txConfig)
+  }
+  // Otherwise we estimate using the current connected provider
+  return estimateGasWithWeb3Provider(txConfig)
 }
 
 const calculateMinimumGasForTransaction = async (
