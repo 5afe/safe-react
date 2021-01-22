@@ -2,11 +2,12 @@ import { BigNumber } from 'bignumber.js'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { sameString } from 'src/utils/strings'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import axios from 'axios'
+import { getRpcServiceUrl } from 'src/config'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -97,28 +98,27 @@ export const getGasEstimationTxResponse = async (txConfig: {
 }): Promise<number> => {
   const web3 = getWeb3()
   try {
-    const result = await web3.eth.call(txConfig)
+    const { data } = await axios.post(getRpcServiceUrl(), {
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      id: 1,
+      params: [
+        {
+          ...txConfig,
+          gasPrice: web3.utils.toHex(txConfig.gasPrice || 0),
+          gas: txConfig.gas ? web3.utils.toHex(txConfig.gas) : undefined,
+        },
+        'latest',
+      ],
+    })
 
-    // GETH Nodes (geth version < v1.9.24)
-    // In case that the gas is not enough we will receive an EMPTY data
-    // Otherwise we will receive the gas amount as hash data -> this is valid for old versions of GETH nodes ( < v1.9.24)
-
-    if (result && !sameString(result, EMPTY_DATA)) {
-      return new BigNumber(result.substring(138), 16).toNumber()
+    const { error } = data
+    if (error?.data) {
+      return new BigNumber(data.error.data.substring(138), 16).toNumber()
     }
   } catch (error) {
-    // So we try to extract the estimation result within the error in case is possible
-    const estimationData = getDataFromNodeErrorMessage(error.message)
-
-    if (!estimationData || sameString(estimationData, EMPTY_DATA)) {
-      throw error
-    }
-
-    return new BigNumber(estimationData.substring(138), 16).toNumber()
+    console.log('Gas estimation endpoint errored: ', error.message)
   }
-
-  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation (for version < v1.9.24 of geth nodes)
-  // We cannot throw this error above because it will be captured again on the catch block bellow
   throw new Error('Error while estimating the gas required for tx')
 }
 
