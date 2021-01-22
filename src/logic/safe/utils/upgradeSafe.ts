@@ -6,7 +6,6 @@ import {
   SAFE_MASTER_COPY_ADDRESS,
   getGnosisSafeInstanceAt,
 } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { MultiSend } from 'src/types/contracts/MultiSend.d'
 
@@ -49,7 +48,7 @@ export const getEncodedMultiSendCallData = (txs: MultiSendTx[], web3: Web3): str
   return encodedMultiSendCallData
 }
 
-export const upgradeSafeToLatestVersion = async (safeAddress: string, createTransaction): Promise<void> => {
+export const getUpgradeSafeTransactionHash = async (safeAddress: string): Promise<string> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS).encodeABI()
   const updateSafeTxData = safeInstance.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
@@ -69,17 +68,5 @@ export const upgradeSafeToLatestVersion = async (safeAddress: string, createTran
   ]
 
   const web3 = getWeb3()
-  const encodeMultiSendCallData = getEncodedMultiSendCallData(txs, web3)
-  createTransaction({
-    safeAddress,
-    to: MULTI_SEND_ADDRESS,
-    valueInWei: 0,
-    txData: encodeMultiSendCallData,
-    notifiedTransaction: 'STANDARD_TX',
-    enqueueSnackbar: () => {},
-    closeSnackbar: () => {},
-    operation: DELEGATE_CALL,
-  })
-
-  return
+  return getEncodedMultiSendCallData(txs, web3)
 }

@@ -1,11 +1,10 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -16,37 +15,61 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { estimateTxGasCosts } from 'src/logic/safe/transactions/gas'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
-const { nativeCoin } = getNetworkInfo()
+const useStyles = makeStyles(styles)
 
-const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => {
-  const [gasCosts, setGasCosts] = useState('< 0.001')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+type ReviewAddOwnerProps = {
+  onClickBack: () => void
+  onClose: () => void
+  onSubmit: () => void
+  values: {
+    ownerAddress: string
+    threshold: string
+    ownerName: string
+  }
+}
+
+export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): React.ReactElement => {
+  const classes = useStyles()
+  const [data, setData] = useState('')
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
   const owners = useSelector(safeOwnersSelector)
+
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+  } = useEstimateTransactionGas({
+    txData: data,
+    txRecipient: safeAddress,
+  })
+
   useEffect(() => {
     let isCurrent = true
-    const estimateGas = async () => {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
 
-      const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
-      const estimatedGasCosts = await estimateTxGasCosts(safeAddress, safeAddress, txData)
+    const calculateAddOwnerData = async () => {
+      try {
+        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-      if (isCurrent) {
-        setGasCosts(formattedGasCosts)
+        if (isCurrent) {
+          setData(txData)
+        }
+      } catch (error) {
+        console.error('Error calculating ERC721 transfer data:', error.message)
       }
     }
-
-    estimateGas()
+    calculateAddOwnerData()
 
     return () => {
       isCurrent = false
@@ -68,7 +91,7 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
         </IconButton>
       </Row>
       <Hairline />
-      <Block className={classes.formContainer}>
+      <Block>
         <Row className={classes.root}>
           <Col layout="column" xs={4}>
             <Block className={classes.details}>
@@ -157,11 +180,13 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
       </Block>
       <Hairline />
       <Block className={classes.gasCostsContainer}>
-        <Paragraph>
-          You&apos;re about to create a transaction and will have to confirm it with your currently connected wallet.
-          <br />
-          {`Make sure you have ${gasCosts} (fee price) ${nativeCoin.name} in this wallet to fund this confirmation.`}
-        </Paragraph>
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
@@ -183,5 +208,3 @@ const ReviewAddOwner = ({ classes, onClickBack, onClose, onSubmit, values }) => 
     </>
   )
 }
-
-export default withStyles(styles as any)(ReviewAddOwner)

@@ -1,10 +1,10 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { useEffect, useMemo, useState, ReactElement } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
 import SearchBar from 'material-ui-search-bar'
-import { connect } from 'react-redux'
+import { useSelector } from 'react-redux'
 
-import SafeList from './SafeList'
+import { SafeList } from './SafeList'
 import { sortedSafeListSelector } from './selectors'
 import useSidebarStyles from './style'
 
@@ -15,11 +15,9 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Row from 'src/components/layout/Row'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
-import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { AppReduxState } from 'src/store'
 
 export const SafeListSidebarContext = React.createContext({
   isOpen: false,
@@ -34,9 +32,17 @@ const filterBy = (filter, safes) =>
       safe.name.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefaultSafeAction }) => {
+type Props = {
+  children: ReactElement
+}
+
+export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
+  const safes = useSelector(sortedSafeListSelector)
+  const defaultSafe = useSelector(defaultSafeSelector)
+  const currentSafe = useSelector(safeParamAddressFromStateSelector)
+
   const classes = useSidebarStyles()
   const { trackEvent } = useAnalytics()
 
@@ -118,19 +124,9 @@ const SafeListSidebar = ({ children, currentSafe, defaultSafe, safes, setDefault
           defaultSafe={defaultSafe}
           onSafeClick={toggleSidebar}
           safes={filteredSafes}
-          setDefaultSafe={setDefaultSafeAction}
         />
       </Drawer>
       {children}
     </SafeListSidebarContext.Provider>
   )
 }
-
-export default connect(
-  (state: AppReduxState) => ({
-    safes: sortedSafeListSelector(state),
-    defaultSafe: defaultSafeSelector(state),
-    currentSafe: safeParamAddressFromStateSelector(state),
-  }),
-  { setDefaultSafeAction: setDefaultSafe },
-)(SafeListSidebar)
