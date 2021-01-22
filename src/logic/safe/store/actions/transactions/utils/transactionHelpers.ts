@@ -2,7 +2,7 @@ import { List } from 'immutable'
 import { getNetworkInfo } from 'src/config'
 import { getERC20DecimalsAndSymbol, isSendERC20Transaction } from 'src/logic/tokens/utils/tokenHelpers'
 import { getERC721Symbol, isSendERC721Transaction } from 'src/logic/collectibles/utils'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { isEmptyAddress, sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
@@ -31,6 +31,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DataDecoded, DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
+import { CALL } from 'src/logic/safe/transactions'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -48,8 +49,40 @@ export const isInnerTransaction = (tx: TxServiceModel | Transaction, safeAddress
   return isSameAddress && Number(tx.value) === 0
 }
 
-export const isCancelTransaction = (tx: TxServiceModel | Transaction, safeAddress: string): boolean => {
-  return isInnerTransaction(tx, safeAddress) && isEmptyData(tx.data)
+export const isCancelTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
+  if (!sameAddress(tx.to, safeAddress)) {
+    return false
+  }
+
+  if (Number(tx.value)) {
+    return false
+  }
+
+  if (tx.data && !isEmptyData(tx.data)) {
+    return false
+  }
+
+  if (tx.operation !== CALL) {
+    return false
+  }
+
+  if (tx.baseGas) {
+    return false
+  }
+
+  if (Number(tx.gasPrice)) {
+    return false
+  }
+
+  if (tx.gasToken && !isEmptyAddress(tx.gasToken)) {
+    return false
+  }
+
+  if (tx.refundReceiver && !isEmptyAddress(tx.refundReceiver)) {
+    return false
+  }
+
+  return true
 }
 
 export const isPendingTransaction = (tx: Transaction, cancelTx: Transaction): boolean => {
@@ -73,11 +106,11 @@ export const isUpgradeTransaction = (tx: TxServiceModel): boolean => {
   )
 }
 
-export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress?: string): boolean => {
+export const isOutgoingTransaction = (tx: TxServiceModel, safeAddress: string): boolean => {
   return !sameAddress(tx.to, safeAddress) && !isEmptyData(tx.data)
 }
 
-export const isCustomTransaction = async (tx: TxServiceModel, safeAddress?: string): Promise<boolean> => {
+export const isCustomTransaction = async (tx: TxServiceModel, safeAddress: string): Promise<boolean> => {
   const isOutgoing = isOutgoingTransaction(tx, safeAddress)
   const isErc20 = await isSendERC20Transaction(tx)
   const isUpgrade = isUpgradeTransaction(tx)
