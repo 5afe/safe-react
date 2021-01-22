@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "2.17.0",
+  "version": "2.18.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -94,21 +94,23 @@
         }
       ]
     },
-    "files": [
-      "build/",
+   "files": [
+      "build",
+      "patches",
       "public",
       "scripts",
+      "dev-app-update.yml",
       "package.json"
     ],
     "directories": {
-      "buildResources": "public/build"
+      "buildResources": "public/resources"
     },
     "mac": {
       "category": "public.app-category.productivity",
       "hardenedRuntime": true,
-      "entitlements": "public/build/entitlements.mac.plist",
+      "entitlements": "public/resources/entitlements.mac.plist",
       "gatekeeperAssess": false,
-      "entitlementsInherit": "public/build/entitlements.mac.plist",
+      "entitlementsInherit": "public/resources/entitlements.mac.plist",
       "target": [
         "dmg",
         "zip"
@@ -136,7 +138,7 @@
       "target": [
         "nsis"
       ],
-      "icon": "public/build/icon.ico"
+      "icon": "public/resources/icon.ico"
     }
   },
   "resolutions": {
@@ -161,7 +163,7 @@
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#bf3a84486b7353bd25447ddff39c406f6fafecc6",
     "@gnosis.pm/util-contracts": "2.0.6",
-    "@ledgerhq/hw-transport-node-hid-singleton": "5.36.0",
+    "@ledgerhq/hw-transport-node-hid-singleton": "5.38.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.11.0",
     "@material-ui/lab": "4.0.0-alpha.56",
@@ -249,7 +251,7 @@
     "cross-env": "^7.0.3",
     "dotenv": "^8.2.0",
     "dotenv-expand": "^5.1.0",
-    "electron": "^9.3.5",
+    "electron": "^9.4.0",
     "electron-builder": "22.9.1",
     "electron-notarize": "1.0.0",
     "eslint": "^7.11.0",

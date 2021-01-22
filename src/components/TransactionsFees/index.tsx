@@ -3,6 +3,10 @@ import { EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
 import { TransactionFailText } from 'src/components/TransactionFailText'
+import { useSelector } from 'react-redux'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { sameString } from 'src/utils/strings'
+import { WALLETS } from 'src/config/networks/network.d'
 
 type TransactionFailTextProps = {
   txEstimationExecutionStatus: EstimationStatus
@@ -20,6 +24,8 @@ export const TransactionFees = ({
   isOffChainSignature,
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
+  const providerName = useSelector(providerNameSelector)
+
   let transactionAction
   if (isCreation) {
     transactionAction = 'create'
@@ -27,6 +33,11 @@ export const TransactionFees = ({
     transactionAction = 'execute'
   } else {
     transactionAction = 'approve'
+  }
+
+  // FIXME this should be removed when estimating with WalletConnect correctly
+  if (!providerName || sameString(providerName, WALLETS.WALLET_CONNECT)) {
+    return null
   }
 
   return (
