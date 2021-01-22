@@ -30,18 +30,26 @@ export enum EstimationStatus {
   SUCCESS = 'SUCCESS',
 }
 
-const checkIfTxIsExecution = (
+export const checkIfTxIsExecution = (
   threshold: number,
   preApprovingOwner?: string,
   txConfirmations?: number,
   txType?: string,
-): boolean =>
-  txConfirmations === threshold || !!preApprovingOwner || threshold === 1 || sameString(txType, 'spendingLimit')
+): boolean => {
+  if (threshold === 1) return true
+  if (sameString(txType, 'spendingLimit')) return true
+  if (txConfirmations === threshold) return true
+  if (preApprovingOwner && txConfirmations) {
+    return txConfirmations + 1 === threshold
+  }
 
-const checkIfTxIsApproveAndExecution = (threshold: number, txConfirmations: number, txType?: string): boolean =>
+  return false
+}
+
+export const checkIfTxIsApproveAndExecution = (threshold: number, txConfirmations: number, txType?: string): boolean =>
   txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
 
-const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
+export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !sameString(txType, 'spendingLimit')
 
 type TransactionEstimationProps = {
@@ -173,7 +181,7 @@ export const useEstimateTransactionGas = ({
         return null
       }
 
-      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
+      const isExecution = checkIfTxIsExecution(Number(threshold), undefined, txConfirmations?.size, txType)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
       const approvalAndExecution = checkIfTxIsApproveAndExecution(Number(threshold), txConfirmations?.size || 0, txType)
 
