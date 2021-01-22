@@ -78,7 +78,8 @@ export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
 
-export const getRpcServiceUrl = (): string => usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
+export const getRpcServiceUrl = (): string =>
+  usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
