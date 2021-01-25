@@ -29,7 +29,7 @@ import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
-import { EditableTxParameters } from '../../../../Transactions/helpers/EditableTxParameters'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 

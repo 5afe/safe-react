@@ -73,65 +73,63 @@ const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalPro
   }
 
   return (
-    <>
-      <Modal
-        description="Remove the selected Module"
-        handleClose={onClose}
-        paperClassName={classes.modal}
-        title="Remove Module"
-        open
-      >
-        <Row align="center" className={classes.modalHeading} grow>
-          <Paragraph className={classes.modalManage} noMargin weight="bolder">
-            Remove Module
-          </Paragraph>
-          <IconButton disableRipple onClick={onClose}>
-            <Close className={classes.modalClose} />
-          </IconButton>
-        </Row>
-        <Hairline />
-        <Block className={classes.modalContainer}>
-          <Row className={classes.modalOwner}>
-            <Col align="center" xs={1}>
-              <Identicon address={moduleAddress} diameter={32} />
-            </Col>
-            <Col xs={11}>
-              <Block className={cn(classes.modalName, classes.modalUserName)}>
-                <Paragraph noMargin size="lg" weight="bolder">
+    <Modal
+      description="Remove the selected Module"
+      handleClose={onClose}
+      paperClassName={classes.modal}
+      title="Remove Module"
+      open
+    >
+      <Row align="center" className={classes.modalHeading} grow>
+        <Paragraph className={classes.modalManage} noMargin weight="bolder">
+          Remove Module
+        </Paragraph>
+        <IconButton disableRipple onClick={onClose}>
+          <Close className={classes.modalClose} />
+        </IconButton>
+      </Row>
+      <Hairline />
+      <Block className={classes.modalContainer}>
+        <Row className={classes.modalOwner}>
+          <Col align="center" xs={1}>
+            <Identicon address={moduleAddress} diameter={32} />
+          </Col>
+          <Col xs={11}>
+            <Block className={cn(classes.modalName, classes.modalUserName)}>
+              <Paragraph noMargin size="lg" weight="bolder">
+                {moduleAddress}
+              </Paragraph>
+              <Block className={classes.modalUser} justify="center">
+                <Paragraph color="disabled" noMargin size="md">
                   {moduleAddress}
                 </Paragraph>
-                <Block className={classes.modalUser} justify="center">
-                  <Paragraph color="disabled" noMargin size="md">
-                    {moduleAddress}
-                  </Paragraph>
-                  <Link className={classes.modalOpen} target="_blank" to={url}>
-                    <OpenInNew style={openIconStyle} />
-                  </Link>
-                </Block>
+                <Link className={classes.modalOpen} target="_blank" to={url}>
+                  <OpenInNew style={openIconStyle} />
+                </Link>
               </Block>
-            </Col>
-          </Row>
-          <Hairline />
-          <Row className={classes.modalDescription}>
-            <Paragraph noMargin>
-              After removing this module, any feature or app that uses this module might no longer work. If this Safe
-              requires more then one signature, the module removal will have to be confirmed by other owners as well.
-            </Paragraph>
-          </Row>
-        </Block>
-        <Hairline />
-        <Row align="center" className={classes.modalButtonRow}>
-          <FooterWrapper>
-            <Button size="md" color="secondary" onClick={onClose}>
-              Cancel
-            </Button>
-            <Button color="error" size="md" variant="contained" onClick={removeSelectedModule}>
-              Remove
-            </Button>
-          </FooterWrapper>
+            </Block>
+          </Col>
         </Row>
-      </Modal>
-    </>
+        <Hairline />
+        <Row className={classes.modalDescription}>
+          <Paragraph noMargin>
+            After removing this module, any feature or app that uses this module might no longer work. If this Safe
+            requires more then one signature, the module removal will have to be confirmed by other owners as well.
+          </Paragraph>
+        </Row>
+      </Block>
+      <Hairline />
+      <Row align="center" className={classes.modalButtonRow}>
+        <FooterWrapper>
+          <Button size="md" color="secondary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button color="error" size="md" variant="contained" onClick={removeSelectedModule}>
+            Remove
+          </Button>
+        </FooterWrapper>
+      </Row>
+    </Modal>
   )
 }
 

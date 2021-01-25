@@ -35,7 +35,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 
 import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
-import { EditableTxParameters } from '../../../../Transactions/helpers/EditableTxParameters'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 

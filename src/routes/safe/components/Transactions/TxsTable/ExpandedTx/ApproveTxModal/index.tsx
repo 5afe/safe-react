@@ -25,7 +25,7 @@ import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactio
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { EditableTxParameters } from '../../../helpers/EditableTxParameters'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
 const useStyles = makeStyles(styles)
 
