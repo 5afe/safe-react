@@ -24,17 +24,11 @@ import { networkSelector, providerNameSelector, userAccountSelector } from 'src/
 import { useSelector } from 'react-redux'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { SafeProps } from 'src/routes/open/container/Open'
 
 const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
-
-type SafeProps = {
-  name: string
-  ownerAddresses: any
-  ownerNames: string
-  threshold: string
-}
 
 type InitialValuesForm = {
   owner0Address?: string
