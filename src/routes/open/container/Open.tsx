@@ -24,10 +24,26 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
+import { useLocation } from 'react-router-dom'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
-const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) => {
+interface SafeCreationQueryParams {
+  ownerAddresses: string | string[] | null
+  ownerNames: string | string[] | null
+  threshold: string | string[] | null
+  safeName: string | string[] | null
+}
+
+export interface SafeProps {
+  name: string
+  ownerAddresses: string[]
+  ownerNames: string[]
+  threshold: string
+}
+
+const validateQueryParams = (queryParams: SafeCreationQueryParams): boolean => {
+  const { ownerAddresses, ownerNames, threshold, safeName } = queryParams
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
@@ -35,10 +51,25 @@ const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) =>
     return false
   }
 
-  if (Number.isNaN(Number(threshold))) {
+  if (!threshold) {
     return false
   }
-  return threshold <= ownerAddresses.length
+  return Number(threshold) <= ownerAddresses.length
+}
+
+const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams): SafeProps | undefined => {
+  if (!validateQueryParams(queryParams)) {
+    return
+  }
+
+  const { threshold, safeName, ownerAddresses, ownerNames } = queryParams
+
+  return {
+    name: Array.isArray(safeName) ? safeName[0] : (safeName as string),
+    threshold: Array.isArray(threshold) ? threshold[0] : (threshold as string),
+    ownerAddresses: Array.isArray(ownerAddresses) ? ownerAddresses : [ownerAddresses as string],
+    ownerNames: Array.isArray(ownerNames) ? ownerNames : [ownerNames as string],
+  }
 }
 
 export const getSafeProps = async (
@@ -87,23 +118,25 @@ const Open = (): React.ReactElement => {
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
   const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
-  const [safePropsFromUrl, setSafePropsFromUrl] = useState()
+  const [safePropsFromUrl, setSafePropsFromUrl] = useState<SafeProps | undefined>()
   const userAccount = useSelector(userAccountSelector)
   const dispatch = useDispatch()
+  const location = useLocation()
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
-    const query = queryString.parse(window.location.search, { arrayFormat: 'comma' })
+    const query = queryString.parse(location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
-    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
-      setSafePropsFromUrl({
-        name,
-        ownerAddresses: owneraddresses,
-        ownerNames: ownernames,
-        threshold,
-      } as any)
-    }
-  }, [])
+
+    const safeProps = getSafePropsValuesFromQueryParams({
+      ownerAddresses: owneraddresses,
+      ownerNames: ownernames,
+      threshold,
+      safeName: name,
+    })
+
+    setSafePropsFromUrl(safeProps)
+  }, [location])
 
   // check if there is a safe being created
   useEffect(() => {
