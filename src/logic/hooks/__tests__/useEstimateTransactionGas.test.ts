@@ -4,16 +4,14 @@ import {
   checkIfTxIsExecution,
 } from 'src/logic/hooks/useEstimateTransactionGas'
 
-
 describe('checkIfTxIsExecution', () => {
-  const mockedEthAccount = "0x29B1b813b6e84654Ca698ef5d7808E154364900B"
+  const mockedEthAccount = '0x29B1b813b6e84654Ca698ef5d7808E154364900B'
   it(`should return true if the safe threshold is 1`, () => {
     // given
     const threshold = 1
     const preApprovingOwner = undefined
     const transactionConfirmations = 0
     const transactionType = ''
-
 
     // when
     const result = checkIfTxIsExecution(threshold, preApprovingOwner, transactionConfirmations, transactionType)
@@ -28,7 +26,6 @@ describe('checkIfTxIsExecution', () => {
     const transactionConfirmations = 3
     const transactionType = ''
 
-
     // when
     const result = checkIfTxIsExecution(threshold, preApprovingOwner, transactionConfirmations, transactionType)
 
@@ -41,7 +38,6 @@ describe('checkIfTxIsExecution', () => {
     const preApprovingOwner = undefined
     const transactionConfirmations = 0
     const transactionType = 'spendingLimit'
-
 
     // when
     const result = checkIfTxIsExecution(threshold, preApprovingOwner, transactionConfirmations, transactionType)
@@ -56,7 +52,6 @@ describe('checkIfTxIsExecution', () => {
     const transactionConfirmations = 4
     const transactionType = undefined
 
-
     // when
     const result = checkIfTxIsExecution(threshold, preApprovingOwner, transactionConfirmations, transactionType)
 
@@ -69,7 +64,6 @@ describe('checkIfTxIsExecution', () => {
     const preApprovingOwner = undefined
     const transactionConfirmations = 4
     const transactionType = undefined
-
 
     // when
     const result = checkIfTxIsExecution(threshold, preApprovingOwner, transactionConfirmations, transactionType)
@@ -84,7 +78,6 @@ describe('checkIfTxIsCreation', () => {
     const transactionConfirmations = 0
     const transactionType = ''
 
-
     // when
     const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
 
@@ -96,7 +89,6 @@ describe('checkIfTxIsCreation', () => {
     const transactionConfirmations = 0
     const transactionType = 'spendingLimit'
 
-
     // when
     const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
 
@@ -107,7 +99,6 @@ describe('checkIfTxIsCreation', () => {
     // given
     const transactionConfirmations = 2
     const transactionType = ''
-
 
     // when
     const result = checkIfTxIsCreation(transactionConfirmations, transactionType)
@@ -124,7 +115,6 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const safeThreshold = 3
     const transactionType = ''
 
-
     // when
     const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
 
@@ -136,7 +126,6 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const transactionConfirmations = 0
     const transactionType = 'spendingLimit'
     const safeThreshold = 3
-
 
     // when
     const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
@@ -150,7 +139,6 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const transactionType = ''
     const safeThreshold = 3
 
-
     // when
     const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
 
@@ -158,4 +146,3 @@ describe('checkIfTxIsApproveAndExecution', () => {
     expect(result).toBe(false)
   })
 })
-
