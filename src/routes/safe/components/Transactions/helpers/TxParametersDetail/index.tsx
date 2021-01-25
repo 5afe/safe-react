@@ -41,7 +41,7 @@ export const TxParametersDetail = ({
   compact = true,
   parametersStatus,
 }: Props): React.ReactElement => (
-  <Accordion compact={compact}>
+  <Accordion {...compact}>
     <AccordionSummary>
       <Text size="lg">Advanced options</Text>
     </AccordionSummary>
