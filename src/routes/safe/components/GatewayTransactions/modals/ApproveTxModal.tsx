@@ -1,30 +1,38 @@
+import { List } from 'immutable'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
-import { getConfirmations } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
-import { styles } from './style'
-
-import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { processTransaction } from 'src/logic/safe/store/actions/processGatewayTransaction'
-
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import Modal from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { processTransaction } from 'src/logic/safe/store/actions/processGatewayTransaction'
+import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
+import {
+  ExpandedTxDetails,
+  isMultiSigExecutionDetails,
+  Operation,
+  Transaction,
+} from 'src/logic/safe/store/models/types/gateway.d'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { isThresholdReached } from 'src/routes/safe/components/GatewayTransactions/hooks/useTransactionActions'
+import { Overwrite } from 'src/types/helpers'
+
+import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
@@ -59,8 +67,7 @@ type Props = {
   isCancelTx?: boolean
   isOpen: boolean
   onClose: () => void
-  thresholdReached?: boolean
-  transaction: TxServiceModel
+  gwTransaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
 }
 
 export const ApproveTxModal = ({
@@ -68,18 +75,117 @@ export const ApproveTxModal = ({
   isCancelTx = false,
   isOpen,
   onClose,
-  thresholdReached = false,
-  transaction,
+  gwTransaction,
 }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector)
+  const transaction = useRef(gwTransaction)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const oneConfirmationLeft = !thresholdReached && transaction.confirmations.length + 1 === threshold
+  const thresholdReached = !!(
+    transaction.current.executionInfo && isThresholdReached(transaction.current.executionInfo)
+  )
+  const _threshold = transaction.current.executionInfo?.confirmationsRequired ?? 0
+  const _countingCurrentConfirmation = (transaction.current.executionInfo?.confirmationsSubmitted ?? 0) + 1
+  const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
+
+  const confirmations = useMemo(
+    () =>
+      transaction.current.txDetails.detailedExecutionInfo &&
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? List(
+            transaction.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
+              makeConfirmation({ owner: signer, signature }),
+            ),
+          )
+        : List([]),
+    [],
+  )
+
+  const data = useMemo(() => transaction.current.txDetails.txData?.hexData ?? EMPTY_DATA, [])
+
+  const baseGas = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.baseGas
+        : 0,
+    [],
+  )
+
+  const gasPrice = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.gasPrice
+        : '0',
+    [],
+  )
+
+  const safeTxGas = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.safeTxGas
+        : 0,
+    [],
+  )
+
+  const gasToken = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.gasToken
+        : ZERO_ADDRESS,
+    [],
+  )
+
+  const nonce = useMemo(() => transaction.current.executionInfo?.nonce ?? 0, [])
+
+  const refundReceiver = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.refundReceiver
+        : ZERO_ADDRESS,
+    [],
+  )
+
+  const safeTxHash = useMemo(
+    () =>
+      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
+        ? transaction.current.txDetails.detailedExecutionInfo.safeTxHash
+        : EMPTY_DATA,
+    [],
+  )
+
+  const value = useMemo(
+    () =>
+      transaction.current.txInfo.type === 'Transfer'
+        ? transaction.current.txInfo.transferInfo.value
+        : transaction.current.txInfo.type === 'Custom'
+        ? transaction.current.txInfo.value
+        : '0',
+    [],
+  )
+
+  const to = useMemo(
+    () =>
+      transaction.current.txInfo.type === 'Transfer'
+        ? transaction.current.txInfo.recipient
+        : transaction.current.txInfo.type === 'Custom'
+        ? transaction.current.txInfo.to
+        : safeAddress,
+    [],
+  )
+
+  const operation = useMemo(() => transaction.current.txDetails.txData?.operation ?? Operation.CALL, [])
+
+  const origin = useMemo(
+    () =>
+      transaction.current.safeAppInfo
+        ? JSON.stringify({ name: transaction.current.safeAppInfo.name, url: transaction.current.safeAppInfo.url })
+        : '',
+    [],
+  )
 
   const {
     gasCostFormatted,
@@ -88,13 +194,13 @@ export const ApproveTxModal = ({
     isOffChainSignature,
     isCreation,
   } = useEstimateTransactionGas({
-    txRecipient: transaction.to,
-    txData: transaction.data || EMPTY_DATA,
-    txConfirmations: getConfirmations(transaction),
-    txAmount: transaction.value,
+    txRecipient: to,
+    txData: data,
+    txConfirmations: confirmations,
+    txAmount: value,
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
-    safeTxGas: transaction.safeTxGas,
-    operation: transaction.operation,
+    safeTxGas,
+    operation,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
@@ -103,7 +209,21 @@ export const ApproveTxModal = ({
     dispatch(
       processTransaction({
         safeAddress,
-        tx: transaction,
+        tx: {
+          baseGas,
+          confirmations,
+          data,
+          gasPrice,
+          gasToken,
+          nonce,
+          operation,
+          origin,
+          refundReceiver,
+          safeTxGas,
+          safeTxHash,
+          to,
+          value,
+        },
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
@@ -130,7 +250,7 @@ export const ApproveTxModal = ({
           <Paragraph color="medium" size="sm">
             Transaction nonce:
             <br />
-            <Bold className={classes.nonceNumber}>{transaction.nonce}</Bold>
+            <Bold className={classes.nonceNumber}>{nonce}</Bold>
           </Paragraph>
           {oneConfirmationLeft && canExecute && (
             <>

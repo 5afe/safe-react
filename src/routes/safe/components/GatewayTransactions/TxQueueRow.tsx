@@ -1,7 +1,7 @@
 import { AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, TxQueuedLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
 import { NoPaddingAccordion } from './styled'
 import { TxDetails } from './TxDetails'
@@ -9,7 +9,7 @@ import { TxDetails } from './TxDetails'
 type TxQueueRowProps = {
   isGrouped?: boolean
   transaction: Transaction
-  txLocation: 'queued.next' | 'queued.queued'
+  txLocation: TxQueuedLocation
 }
 
 export const TxQueueRow = ({ isGrouped = false, transaction, txLocation }: TxQueueRowProps): ReactElement => (

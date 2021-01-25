@@ -1,7 +1,7 @@
 import get from 'lodash.get'
 import { createSelector } from 'reselect'
 
-import { StoreStructure, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { StoreStructure, Transaction, TxLocation, TxQueuedLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
@@ -17,7 +17,7 @@ const getSafeTransactions = createSelector(
 
 export const getTransactionById = createSelector(
   getSafeTransactions,
-  (_, transactionId: Transaction['id'], txLocation: 'history' | 'queued.next' | 'queued.queued') => ({
+  (_, transactionId: Transaction['id'], txLocation: TxLocation) => ({
     transactionId,
     txLocation,
   }),
@@ -38,7 +38,7 @@ export const getTransactionById = createSelector(
 
 export const getTransactionDetails = createSelector(
   getSafeTransactions,
-  (_, transactionId: Transaction['id'], txLocation: 'history' | 'queued.next' | 'queued.queued') => ({
+  (_, transactionId: Transaction['id'], txLocation: TxLocation) => ({
     transactionId,
     txLocation,
   }),
@@ -59,7 +59,7 @@ export const getTransactionDetails = createSelector(
 
 export const getQueuedTransactionsByNonceAndLocation = createSelector(
   getSafeTransactions,
-  (_, nonce: number, txLocation: 'queued.next' | 'queued.queued') => ({ nonce, txLocation }),
+  (_, nonce: number, txLocation: TxQueuedLocation) => ({ nonce, txLocation }),
   (transactions, { nonce, txLocation }): Transaction[] => {
     if (nonce && transactions) {
       return get(transactions, txLocation)[nonce]

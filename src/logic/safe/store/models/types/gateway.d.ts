@@ -240,6 +240,12 @@ type StoreStructure = {
   history: { [timestamp: number]: Transaction[] } // n Transaction elements
 }
 
+type TxQueuedLocation = 'queued.next' | 'queued.queued'
+
+type TxHistoryLocation = 'history'
+
+type TxLocation = TxHistoryLocation | TxQueuedLocation
+
 type Label = {
   type: 'LABEL'
   label: 'Next' | 'Queued'

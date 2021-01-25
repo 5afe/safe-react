@@ -3,7 +3,7 @@ import { createAction } from 'redux-actions'
 
 import { getTxDetailsUrl } from 'src/config'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { ExpandedTxDetails, Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { ExpandedTxDetails, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionDetailsPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
@@ -17,7 +17,7 @@ export const fetchTransactionDetails = ({
   txLocation,
 }: {
   transactionId: Transaction['id']
-  txLocation: 'history' | 'queued.next' | 'queued.queued'
+  txLocation: TxLocation
 }) => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<Transaction['txDetails']> => {
   const txDetails = getTransactionDetails(getState(), transactionId, txLocation)
   const safeAddress = safeParamAddressFromStateSelector(getState())

@@ -1,6 +1,6 @@
 import React, { ReactElement } from 'react'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, TxQueuedLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { useTransactionActions } from './hooks/useTransactionActions'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
@@ -17,7 +17,7 @@ const calculateVotes = (executionInfo: Transaction['executionInfo']): string | u
 type TxQueuedCollapsedProps = {
   isGrouped?: boolean
   transaction: Transaction
-  txLocation: 'queued.next' | 'queued.queued'
+  txLocation: TxQueuedLocation
 }
 
 export const TxQueueCollapsed = ({
@@ -44,6 +44,7 @@ export const TxQueueCollapsed = ({
       votes={votes}
       actions={actions}
       status={status}
+      txLocation={txLocation}
     />
   )
 }
