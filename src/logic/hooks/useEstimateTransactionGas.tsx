@@ -205,7 +205,7 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = gasEstimation.toString()
+        const gasLimit = (gasEstimation * 2).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
