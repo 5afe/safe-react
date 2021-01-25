@@ -139,8 +139,6 @@ export const ApproveTxModal = ({
         {(txParameters, toggleEditMode) => (
           <>
             {/* Header */}
-            {tx.nonce.toString()}
-            {tx.safeTxGas.toString()}
             <Row align="center" className={classes.heading} grow>
               <Paragraph className={classes.headingText} noMargin weight="bolder">
                 {title}
