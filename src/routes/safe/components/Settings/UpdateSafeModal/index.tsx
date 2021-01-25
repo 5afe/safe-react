@@ -108,7 +108,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                 />
               </Row>
             </Block>
-            <Hairline style={{ position: 'absolute', bottom: 85 }} />
+            <Hairline />
             <Row align="center" className={classes.buttonRow}>
               <Button minWidth={140} onClick={onClose}>
                 Back
