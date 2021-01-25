@@ -181,7 +181,7 @@ export const useEstimateTransactionGas = ({
         return null
       }
 
-      const isExecution = checkIfTxIsExecution(Number(threshold), undefined, txConfirmations?.size, txType)
+      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
       const approvalAndExecution = checkIfTxIsApproveAndExecution(Number(threshold), txConfirmations?.size || 0, txType)
 
