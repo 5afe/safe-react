@@ -45,7 +45,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
 
       setStatus({ color: 'rinkeby', text })
     }
-  }, [currentUser, transaction.txStatus])
+  }, [currentUser, transaction.executionInfo?.missingSigners, transaction.txStatus])
 
   return status
 }

@@ -174,7 +174,7 @@ export const ApproveTxModal = ({
         : transaction.current.txInfo.type === 'Custom'
         ? transaction.current.txInfo.to
         : safeAddress,
-    [],
+    [safeAddress],
   )
 
   const operation = useMemo(() => transaction.current.txDetails.txData?.operation ?? Operation.CALL, [])
