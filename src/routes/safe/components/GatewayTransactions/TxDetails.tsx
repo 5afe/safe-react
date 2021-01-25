@@ -1,6 +1,6 @@
 import { Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -12,7 +12,6 @@ import {
   isTransferTxInfo,
   MultiSigExecutionDetails,
   Transaction,
-  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionActions } from './hooks/useTransactionActions'
@@ -21,6 +20,7 @@ import { TxDetailsContainer } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
+import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTransaction, NOT_AVAILABLE } from './utils'
@@ -61,12 +61,12 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  txLocation: TxLocation
 }
 
-export const TxDetails = ({ transaction, txLocation }: TxDetailsProps): ReactElement => {
-  const { isUserAnOwner, ...actions } = useTransactionActions({ transaction, txLocation })
-  const { data, loading } = useTransactionDetails(transaction.id, txLocation)
+export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
+  const { txLocation } = useContext(TxLocationContext)
+  const { isUserAnOwner, ...actions } = useTransactionActions(transaction)
+  const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
     return <Loader size="md" />

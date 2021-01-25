@@ -1,6 +1,8 @@
 import React, { ReactElement } from 'react'
-import { ActionModal } from 'src/routes/safe/components/GatewayTransactions/ActionModal'
-import { TxActionProvider } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
+
+import { ActionModal } from './ActionModal'
+import { TxActionProvider } from './TxActionProvider'
+import { TxLocationContext } from './TxLocationProvider'
 import { useQueueTransactions } from './hooks/useQueueTransactions'
 import { QueueTxList } from './QueueTxList'
 import { ScrollableTransactionsContainer } from './styled'
@@ -14,11 +16,14 @@ export const QueueTransactions = (): ReactElement => {
   ) : (
     <TxActionProvider>
       <ScrollableTransactionsContainer>
-        {next.count !== 0 && <QueueTxList txLocation="queued.next" transactions={next.transactions} />}
-        {queue.count !== 0 && <QueueTxList txLocation="queued.queued" transactions={queue.transactions} />}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+          {next.count !== 0 && <QueueTxList transactions={next.transactions} />}
+        </TxLocationContext.Provider>
+        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+          {queue.count !== 0 && <QueueTxList transactions={queue.transactions} />}
+        </TxLocationContext.Provider>
       </ScrollableTransactionsContainer>
       <ActionModal />
     </TxActionProvider>
   )
 }
-
