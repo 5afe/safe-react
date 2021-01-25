@@ -1,37 +1,50 @@
-import { fromJS } from 'immutable'
+import { List } from 'immutable'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
+import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import {
   checkIfOffChainSignatureIsPossible,
   generateSignaturesFromTxConfirmations,
   getPreValidatedSignatures,
 } from 'src/logic/safe/safeTxSigner'
-import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
+import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
+// import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-// import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-// import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/actions/transactions/pendingTransactions'
-
 import { Dispatch, DispatchReturn } from './types'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
   notifiedTransaction: string
   safeAddress: string
-  tx: TxServiceModel
+  tx: {
+    confirmations: List<Confirmation>
+    origin: string // json.stringified url, name
+    to: string
+    value: string
+    data: string
+    operation: Operation
+    nonce: number
+    safeTxGas: number
+    safeTxHash: string
+    baseGas: number
+    gasPrice: string
+    gasToken: string
+    refundReceiver: string
+  }
   userAddress: string
   thresholdReached: boolean
 }
@@ -60,7 +73,7 @@ export const processTransaction = ({
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
   const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
-  let sigs = generateSignaturesFromTxConfirmations(fromJS(tx.confirmations), preApprovingOwner)
+  let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
 
   if (!sigs) {
     sigs = getPreValidatedSignatures(from)

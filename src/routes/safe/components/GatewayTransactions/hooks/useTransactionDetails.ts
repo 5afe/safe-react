@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
 
@@ -10,10 +10,7 @@ export type LoadTransactionDetails = {
   loading: boolean
 }
 
-export const useTransactionDetails = (
-  transactionId: string,
-  txLocation: 'history' | 'queued.next' | 'queued.queued',
-): LoadTransactionDetails => {
+export const useTransactionDetails = (transactionId: string, txLocation: TxLocation): LoadTransactionDetails => {
   const dispatch = useRef(useDispatch())
   const [txDetails, setTxDetails] = useState<LoadTransactionDetails>({
     loading: true,

@@ -1,15 +1,16 @@
 import { Icon, IconText, Text } from '@gnosis.pm/safe-react-components'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { MouseEvent as ReactMouseEvent, ReactElement, useContext } from 'react'
-import { TxActions } from 'src/routes/safe/components/GatewayTransactions/QueueTransactions'
 import styled from 'styled-components'
 
+import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
 import CustomIconText from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   Transaction,
+  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
@@ -62,19 +63,25 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
 const CollapsedActionButtons = ({
   actions,
   transaction,
+  txLocation,
 }: {
   actions: TransactionActions
   transaction: Transaction
+  txLocation: TxLocation
 }): ReactElement => {
-  const { selectAction } = useContext(TxActions)
+  const { selectAction } = useContext(TransactionActionStateContext)
   const handleConfirmButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
-    selectAction?.({ action: actions.canExecute ? 'execute' : 'confirm', transaction })
+    selectAction({
+      actionSelected: actions.canExecute ? 'execute' : 'confirm',
+      transactionId: transaction.id,
+      txLocation,
+    })
   }
 
   const handleCancelButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
-    selectAction?.({ action: 'cancel', transaction })
+    selectAction({ actionSelected: 'cancel', transactionId: transaction.id, txLocation })
   }
 
   return (
@@ -108,6 +115,7 @@ type TxCollapsedProps = {
   votes?: string
   actions?: TransactionActions
   status: TransactionStatusProps
+  txLocation?: TxLocation
 }
 
 export const TxCollapsed = ({
@@ -120,6 +128,7 @@ export const TxCollapsed = ({
   votes,
   actions,
   status,
+  txLocation,
 }: TxCollapsedProps): ReactElement => {
   const TxCollapsedNonce = (
     <div className="tx-nonce">
@@ -149,7 +158,9 @@ export const TxCollapsed = ({
 
   const TxCollapsedActions = (
     <div className="tx-actions">
-      {actions?.isUserAnOwner && transaction && <CollapsedActionButtons transaction={transaction} actions={actions} />}
+      {actions?.isUserAnOwner && transaction && txLocation && (
+        <CollapsedActionButtons transaction={transaction} actions={actions} txLocation={txLocation} />
+      )}
     </div>
   )
 

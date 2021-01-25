@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExecutionInfo, isCustomTxInfo, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -34,7 +34,7 @@ export const useTransactionActions = ({
   txLocation,
 }: {
   transaction: Transaction
-  txLocation: 'history' | 'queued.next' | 'queued.queued'
+  txLocation: TxLocation
 }): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)

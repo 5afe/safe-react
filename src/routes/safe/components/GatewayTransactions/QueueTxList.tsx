@@ -1,7 +1,7 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement } from 'react'
 
-import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, TransactionDetails, TxQueuedLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, StyledTransactionsGroup } from './styled'
 import { TxQueueRow } from './TxQueueRow'
 
@@ -31,7 +31,7 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
 type QueueTransactionProps = {
   nonce: string
   transactions: Transaction[]
-  txLocation: 'queued.next' | 'queued.queued'
+  txLocation: TxQueuedLocation
 }
 
 const QueueTransaction = ({ nonce, transactions, txLocation }: QueueTransactionProps): ReactElement => {
@@ -53,7 +53,7 @@ const QueueTransaction = ({ nonce, transactions, txLocation }: QueueTransactionP
 }
 
 type QueueTxListProps = {
-  txLocation: 'queued.next' | 'queued.queued'
+  txLocation: TxQueuedLocation
   transactions: TransactionDetails['transactions']
 }
 

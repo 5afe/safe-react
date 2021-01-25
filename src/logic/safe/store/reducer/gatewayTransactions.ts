@@ -1,5 +1,6 @@
 import get from 'lodash.get'
 import { Action, handleActions } from 'redux-actions'
+
 import {
   ADD_HISTORY_TRANSACTIONS,
   ADD_QUEUED_TRANSACTIONS,
@@ -12,6 +13,7 @@ import {
   QueuedGatewayResponse,
   StoreStructure,
   Transaction,
+  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
@@ -26,7 +28,7 @@ export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['res
 export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['results'] }
 export type TransactionDetailsPayload = {
   safeAddress: string
-  txLocation: 'history' | 'queued.next' | 'queued.queued'
+  txLocation: TxLocation
   transactionId: string
   value: Transaction['txDetails']
 }

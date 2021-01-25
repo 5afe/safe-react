@@ -1,24 +1,33 @@
 import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useContext } from 'react'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxActions } from 'src/routes/safe/components/GatewayTransactions/QueueTransactions'
+import { Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
 
 type TxExpandedActionsProps = {
   actions: { canCancel: boolean; canConfirm: boolean; canExecute: boolean }
   transaction: Transaction
+  txLocation: TxLocation
 }
 
-export const TxExpandedActions = ({ actions, transaction }: TxExpandedActionsProps): ReactElement | null => {
-  const { selectAction } = useContext(TxActions)
+export const TxExpandedActions = ({
+  actions,
+  transaction,
+  txLocation,
+}: TxExpandedActionsProps): ReactElement | null => {
+  const { selectAction } = useContext(TransactionActionStateContext)
   const { canCancel, canConfirm, canExecute } = actions
 
   const handleConfirmButtonClick = () => {
-    selectAction?.({ action: actions.canExecute ? 'execute' : 'confirm', transaction })
+    selectAction({
+      actionSelected: actions.canExecute ? 'execute' : 'confirm',
+      transactionId: transaction.id,
+      txLocation,
+    })
   }
 
   const handleCancelButtonClick = () => {
-    selectAction?.({ action: 'cancel', transaction })
+    selectAction({ actionSelected: 'cancel', transactionId: transaction.id, txLocation })
   }
 
   return (

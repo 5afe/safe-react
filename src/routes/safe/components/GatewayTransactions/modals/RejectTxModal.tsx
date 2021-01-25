@@ -6,7 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -27,10 +27,10 @@ const useStyles = makeStyles(styles)
 type Props = {
   isOpen: boolean
   onClose: () => void
-  transaction: TxServiceModel
+  gwTransaction: Transaction
 }
 
-export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.ReactElement => {
+export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const classes = useStyles()
@@ -46,6 +46,12 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
     txRecipient: safeAddress,
   })
 
+  const origin = gwTransaction.safeAppInfo
+    ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
+    : ''
+
+  const nonce = gwTransaction.executionInfo?.nonce
+
   const sendReplacementTransaction = () => {
     dispatch(
       createTransaction({
@@ -53,8 +59,8 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
         to: safeAddress,
         valueInWei: '0',
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
-        txNonce: transaction.nonce,
-        origin: transaction.origin,
+        txNonce: nonce,
+        origin,
       }),
     )
     onClose()
@@ -79,7 +85,7 @@ export const RejectTxModal = ({ isOpen, onClose, transaction }: Props): React.Re
           <Paragraph color="medium" size="sm">
             Transaction nonce:
             <br />
-            <Bold className={classes.nonceNumber}>{transaction.nonce}</Bold>
+            <Bold className={classes.nonceNumber}>{nonce}</Bold>
           </Paragraph>
         </Row>
         <Row>

@@ -12,6 +12,7 @@ import {
   isTransferTxInfo,
   MultiSigExecutionDetails,
   Transaction,
+  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionActions } from './hooks/useTransactionActions'
@@ -60,7 +61,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
-  txLocation: 'history' | 'queued.next' | 'queued.queued'
+  txLocation: TxLocation
 }
 
 export const TxDetails = ({ transaction, txLocation }: TxDetailsProps): ReactElement => {
@@ -96,7 +97,7 @@ export const TxDetails = ({ transaction, txLocation }: TxDetailsProps): ReactEle
       </div>
       {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
         <div className="tx-details-actions">
-          <TxExpandedActions actions={actions} transaction={transaction} />
+          <TxExpandedActions actions={actions} transaction={transaction} txLocation={txLocation} />
         </div>
       )}
     </TxDetailsContainer>
