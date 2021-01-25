@@ -7,7 +7,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from './dataFetcher'
-import RemoveModuleModal from './RemoveModuleModal'
+import { RemoveModuleModal } from './RemoveModuleModal'
 import { styles } from './style'
 
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -39,7 +39,7 @@ interface ModulesTableProps {
   moduleData: ModuleAddressColumn | null
 }
 
-const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => {
+export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => {
   const classes = useStyles()
 
   const columns = generateColumns()
@@ -124,5 +124,3 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
     </>
   )
 }
-
-export default ModulesTable

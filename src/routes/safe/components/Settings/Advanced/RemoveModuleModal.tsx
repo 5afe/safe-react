@@ -44,7 +44,7 @@ interface RemoveModuleModalProps {
   selectedModulePair: ModulePair
 }
 
-const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): React.ReactElement => {
+export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): React.ReactElement => {
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -132,5 +132,3 @@ const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalPro
     </Modal>
   )
 }
-
-export default RemoveModuleModal
