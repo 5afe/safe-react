@@ -88,7 +88,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
           to: safeAddress,
           valueInWei: '0',
           txData,
-          txNonce: txParameters.safeNonce,
+          txNonce: txParameters.ethNonce,
           safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
