@@ -6,7 +6,7 @@ import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, Style
 import { TxQueueRow } from './TxQueueRow'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
-  return <p className="tree-lines">{firstElement ? <p className="first-node" /> : null}</p>
+  return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
 }
 
 const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {

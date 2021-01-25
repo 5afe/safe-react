@@ -131,8 +131,9 @@ export const GroupedTransactions = styled(StyledTransaction)`
     // this is a special case, the first element in the list needs to have a block child component
     // add tree lines line to the first item of the list
     .first-node {
+      display: block;
       position: absolute;
-      top: -33px;
+      top: -16px;
       width: 100%;
 
       &::before {
@@ -156,7 +157,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
         border-left: 2px solid ${({ theme }) => theme.colors.separator};
         content: '';
         height: 100%;
-        margin-top: 10px;
+        margin-top: 14px;
         position: absolute;
         width: 100%;
       }
