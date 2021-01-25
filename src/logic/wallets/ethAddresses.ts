@@ -1,10 +1,16 @@
 import { List } from 'immutable'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { sameString } from 'src/utils/strings'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const sameAddress = (firstAddress: string | undefined, secondAddress: string | undefined): boolean => {
   return sameString(firstAddress, secondAddress)
+}
+
+export const isEmptyAddress = (address: string | undefined): boolean => {
+  if (!address) return true
+  return sameAddress(address, EMPTY_DATA) || sameAddress(address, ZERO_ADDRESS)
 }
 
 export const shortVersionOf = (value: string, cut: number): string => {

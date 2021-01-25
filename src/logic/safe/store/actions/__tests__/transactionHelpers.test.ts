@@ -23,6 +23,7 @@ import {
   isUpgradeTransaction,
 } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getERC20DecimalsAndSymbol } from 'src/logic/tokens/utils/tokenHelpers'
+import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 
 const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
 const safeAddress2 = '0x344B941b1aAE2e4Be73987212FC4741687Bf0503'
@@ -91,6 +92,7 @@ describe('isInnerTransaction', () => {
 
 describe('isCancelTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
+  const mockedETHAccount = '0xd76e0B566e218a80F4c96458FE09a322EBAa9aF2'
   it('It should return false if given a inner transaction with empty data', () => {
     // given
     const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null })
@@ -110,6 +112,101 @@ describe('isCancelTransaction', () => {
 
     // then
     expect(result).toBe(false)
+  })
+  it('It should return false if the transaction recipient is not the safeAddress', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: mockedETHAccount, value: '0', data: null })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction value is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '100', data: null })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction data is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: mockedETHAccount })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction operation is not call', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null, operation: DELEGATE_CALL })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction baseGas is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null, baseGas: 10 })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction gasPrice is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null, gasPrice: '10' })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the transaction gasToken is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress, value: '0', data: null, gasToken: mockedETHAccount })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return false if the refundReceiver is not empty', () => {
+    // given
+    const transaction = getMockedTxServiceModel({
+      to: safeAddress,
+      value: '0',
+      data: null,
+      refundReceiver: mockedETHAccount,
+    })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(false)
+  })
+  it('It should return true for a transaction with everything empty except for to parameter equals to the safeAddress,', () => {
+    // given
+    const transaction = getMockedTxServiceModel({ to: safeAddress })
+
+    // when
+    const result = isCancelTransaction(transaction, safeAddress)
+
+    // then
+    expect(result).toBe(true)
   })
 })
 
