@@ -1,11 +1,12 @@
-import { useEffect, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ExecutionInfo, isCustomTxInfo, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
 import { isCancelTransaction } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
@@ -29,16 +30,11 @@ export type TransactionActions = {
   isUserAnOwner: boolean
 }
 
-export const useTransactionActions = ({
-  transaction,
-  txLocation,
-}: {
-  transaction: Transaction
-  txLocation: TxLocation
-}): TransactionActions => {
+export const useTransactionActions = (transaction: Transaction): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const isUserAnOwner = useSelector(grantedSelector)
+  const { txLocation } = useContext(TxLocationContext)
   const transactionsByNonce = useSelector((state) =>
     getQueuedTransactionsByNonceAndLocation(state, transaction.executionInfo?.nonce ?? -1, txLocation),
   )

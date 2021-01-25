@@ -3,14 +3,12 @@ import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { MouseEvent as ReactMouseEvent, ReactElement, useContext } from 'react'
 import styled from 'styled-components'
 
-import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
 import CustomIconText from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   Transaction,
-  TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
@@ -19,6 +17,8 @@ import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
+import { TransactionActionStateContext } from './TxActionProvider'
+import { TxLocationContext } from './TxLocationProvider'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
@@ -63,13 +63,12 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
 const CollapsedActionButtons = ({
   actions,
   transaction,
-  txLocation,
 }: {
   actions: TransactionActions
   transaction: Transaction
-  txLocation: TxLocation
 }): ReactElement => {
   const { selectAction } = useContext(TransactionActionStateContext)
+  const { txLocation } = useContext(TxLocationContext)
   const handleConfirmButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
     selectAction({
@@ -115,7 +114,6 @@ type TxCollapsedProps = {
   votes?: string
   actions?: TransactionActions
   status: TransactionStatusProps
-  txLocation?: TxLocation
 }
 
 export const TxCollapsed = ({
@@ -128,7 +126,6 @@ export const TxCollapsed = ({
   votes,
   actions,
   status,
-  txLocation,
 }: TxCollapsedProps): ReactElement => {
   const TxCollapsedNonce = (
     <div className="tx-nonce">
@@ -158,9 +155,7 @@ export const TxCollapsed = ({
 
   const TxCollapsedActions = (
     <div className="tx-actions">
-      {actions?.isUserAnOwner && transaction && txLocation && (
-        <CollapsedActionButtons transaction={transaction} actions={actions} txLocation={txLocation} />
-      )}
+      {actions?.isUserAnOwner && transaction && <CollapsedActionButtons transaction={transaction} actions={actions} />}
     </div>
   )
 

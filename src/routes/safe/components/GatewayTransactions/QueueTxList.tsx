@@ -1,7 +1,8 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import React, { Fragment, ReactElement } from 'react'
+import React, { Fragment, ReactElement, useContext } from 'react'
 
-import { Transaction, TransactionDetails, TxQueuedLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
 import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, StyledTransactionsGroup } from './styled'
 import { TxQueueRow } from './TxQueueRow'
 
@@ -31,10 +32,9 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
 type QueueTransactionProps = {
   nonce: string
   transactions: Transaction[]
-  txLocation: TxQueuedLocation
 }
 
-const QueueTransaction = ({ nonce, transactions, txLocation }: QueueTransactionProps): ReactElement => {
+const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
   return transactions.length > 1 ? (
     <>
       <Disclaimer nonce={nonce} />
@@ -42,22 +42,22 @@ const QueueTransaction = ({ nonce, transactions, txLocation }: QueueTransactionP
         {transactions.map((transaction, index) => (
           <Fragment key={`${nonce}-${transaction.id}`}>
             <TreeView firstElement={!index} />
-            <TxQueueRow isGrouped transaction={transaction} txLocation={txLocation} />
+            <TxQueueRow isGrouped transaction={transaction} />
           </Fragment>
         ))}
       </GroupedTransactions>
     </>
   ) : (
-    <TxQueueRow transaction={transactions[0]} txLocation={txLocation} />
+    <TxQueueRow transaction={transactions[0]} />
   )
 }
 
 type QueueTxListProps = {
-  txLocation: TxQueuedLocation
   transactions: TransactionDetails['transactions']
 }
 
-export const QueueTxList = ({ txLocation, transactions }: QueueTxListProps): ReactElement => {
+export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
+  const { txLocation } = useContext(TxLocationContext)
   const title = txLocation === 'queued.next' ? 'Next Transaction' : 'Queue'
 
   return (
@@ -65,7 +65,7 @@ export const QueueTxList = ({ txLocation, transactions }: QueueTxListProps): Rea
       <H2>{title}</H2>
       <StyledTransactions>
         {transactions.map(([nonce, txs]) => (
-          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} txLocation={txLocation} />
+          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
         ))}
       </StyledTransactions>
     </StyledTransactionsGroup>

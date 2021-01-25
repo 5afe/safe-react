@@ -1,16 +1,18 @@
-import { useEffect, useRef, useState } from 'react'
+import { useContext, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ExpandedTxDetails, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
+import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
 
 export type LoadTransactionDetails = {
   data?: ExpandedTxDetails
   loading: boolean
 }
 
-export const useTransactionDetails = (transactionId: string, txLocation: TxLocation): LoadTransactionDetails => {
+export const useTransactionDetails = (transactionId: string): LoadTransactionDetails => {
+  const { txLocation } = useContext(TxLocationContext)
   const dispatch = useRef(useDispatch())
   const [txDetails, setTxDetails] = useState<LoadTransactionDetails>({
     loading: true,
