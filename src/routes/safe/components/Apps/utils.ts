@@ -123,6 +123,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
+  // Zapper Exchange
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdVF6wvyUkeukB9MQK5DnMm1B9kn4TDC193TA4Z4gptpa`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
