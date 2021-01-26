@@ -36,9 +36,10 @@ export const checkIfTxIsExecution = (
   txConfirmations?: number,
   txType?: string,
 ): boolean => {
-  if (threshold === 1) return true
-  if (sameString(txType, 'spendingLimit')) return true
-  if (txConfirmations === threshold) return true
+  if (threshold === 1 || sameString(txType, 'spendingLimit') || txConfirmations === threshold) {
+    return true
+  }
+
   if (preApprovingOwner && txConfirmations) {
     return txConfirmations + 1 === threshold
   }
