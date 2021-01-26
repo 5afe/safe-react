@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
 import { styles } from './style'
@@ -21,6 +21,8 @@ import { RenderOutputParams } from './RenderOutputParams'
 import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
 import { NativeCoinValue } from './NativeCoinValue'
+import { ButtonLink } from '@gnosis.pm/safe-react-components'
+import { MethodsInputExamples } from './MethodsInputExample'
 
 const useStyles = makeStyles(styles)
 
@@ -54,6 +56,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 }) => {
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [showExamples, setShowExamples] = useState<boolean>(false)
   let setCallResults
 
   React.useMemo(() => {
@@ -104,6 +107,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       >
         {(submitting, validating, rest, mutators) => {
           setCallResults = mutators.setCallResults
+
           return (
             <>
               <Block className={classes.formContainer}>
@@ -119,6 +123,10 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <NativeCoinValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
+                <ButtonLink color="primary" onClick={() => setShowExamples((prev) => !prev)}>
+                  {showExamples ? 'Hide Examples' : 'Show Examples'}
+                </ButtonLink>
+                <MethodsInputExamples showExamples={showExamples} />
                 <FormErrorMessage />
                 <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                   Use custom data (hex encoded)
