@@ -94,7 +94,11 @@ const formValidation = (values) => {
   }
 }
 
-const EditTxParametersForm = ({ onClose, txParameters, parametersStatus = 'ENABLED' }: Props): React.ReactElement => {
+export const EditTxParametersForm = ({
+  onClose,
+  txParameters,
+  parametersStatus = 'ENABLED',
+}: Props): React.ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
@@ -183,7 +187,9 @@ const EditTxParametersForm = ({ onClose, txParameters, parametersStatus = 'ENABL
                   text="Ethereum gas limit"
                   type="number"
                   component={TextField}
-                  disabled={!areEthereumParamsEnabled(parametersStatus)}
+                  disabled={
+                    parametersStatus === 'CANCEL_TRANSACTION' ? false : !areEthereumParamsEnabled(parametersStatus)
+                  }
                 />
                 <Field
                   name="ethGasPrice"
@@ -233,5 +239,3 @@ const EditTxParametersForm = ({ onClose, txParameters, parametersStatus = 'ENABL
     </>
   )
 }
-
-export default EditTxParametersForm
