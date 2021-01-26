@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from 'src/components/forms/TextField'
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 })
 
-export const RenderOutputParams = (): React.ReactElement | null => {
+export const RenderOutputParams = (): ReactElement | null => {
   const classes = useStyles()
   const {
     input: { value: method },

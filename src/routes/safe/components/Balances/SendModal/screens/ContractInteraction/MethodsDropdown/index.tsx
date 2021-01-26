@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useField, useFormState } from 'react-final-form'
 import { AbiItem } from 'web3-utils'
 
@@ -24,7 +24,7 @@ interface MethodsDropdownProps {
   onChange: (method: AbiItem) => void
 }
 
-export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): React.ReactElement | null => {
+export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElement | null => {
   const classes = useDropdownStyles({ buttonWidth: MENU_WIDTH })
   const {
     input: { value: abi },
