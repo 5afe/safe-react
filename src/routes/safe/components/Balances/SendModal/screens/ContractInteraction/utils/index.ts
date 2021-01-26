@@ -63,7 +63,7 @@ export const isInt = (type: string): boolean => type.indexOf('int') === 0
 export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
-export const getArrayParameterIfArray = (parameter: string): unknown[] | null => {
+export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
     return JSON.parse(parameter)
   } catch (err) {
@@ -90,7 +90,7 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
 const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
   const key = generateFormFieldKey(type, signatureHash, index)
 
-  return getArrayParameterIfArray(values[key]) || values[key]
+  return getParsedJSONOrArrayFromString(values[key]) || values[key]
 }
 
 export const createTxObject = (
