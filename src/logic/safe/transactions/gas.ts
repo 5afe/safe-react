@@ -1,7 +1,7 @@
 import { BigNumber } from 'bignumber.js'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
@@ -121,7 +121,7 @@ const estimateGasWithWeb3Provider = async (txConfig: {
   throw new Error('Error while estimating the gas required for tx')
 }
 
-const estimateGasWithInfura = async (txConfig: {
+const estimateGasWithRPCCall = async (txConfig: {
   to: string
   from: string
   data: string
@@ -129,7 +129,6 @@ const estimateGasWithInfura = async (txConfig: {
   gas?: number
 }): Promise<number> => {
   try {
-    const web3 = getWeb3()
     const { data } = await axios.post(getRpcServiceUrl(), {
       jsonrpc: '2.0',
       method: 'eth_call',
@@ -137,8 +136,8 @@ const estimateGasWithInfura = async (txConfig: {
       params: [
         {
           ...txConfig,
-          gasPrice: web3.utils.toHex(txConfig.gasPrice || 0),
-          gas: txConfig.gas ? web3.utils.toHex(txConfig.gas) : undefined,
+          gasPrice: web3ReadOnly.utils.toHex(txConfig.gasPrice || 0),
+          gas: txConfig.gas ? web3ReadOnly.utils.toHex(txConfig.gas) : undefined,
         },
         'latest',
       ],
@@ -163,7 +162,7 @@ export const getGasEstimationTxResponse = async (txConfig: {
 }): Promise<number> => {
   // If we are in a infura supported network we estimate using infura
   if (usesInfuraRPC) {
-    return estimateGasWithInfura(txConfig)
+    return estimateGasWithRPCCall(txConfig)
   }
   // Otherwise we estimate using the current connected provider
   return estimateGasWithWeb3Provider(txConfig)
