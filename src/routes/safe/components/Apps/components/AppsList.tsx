@@ -6,7 +6,7 @@ import { GenericModal, IconText, Loader, Menu } from '@gnosis.pm/safe-react-comp
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
-import { useRouteMatch, useHistory } from 'react-router-dom'
+import { useRouteMatch, Link } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 import { useAppList } from '../hooks/useAppList'
@@ -17,6 +17,10 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
+`
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
 `
 
 const centerCSS = css`
@@ -53,16 +57,10 @@ const Breadcrumb = styled.div`
 `
 
 const AppsList = (): React.ReactElement => {
-  const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const { appList } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
-
-  const onAddAppHandler = (url: string) => () => {
-    const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(url)}`
-    history.push(goToApp)
-  }
 
   const openAddAppModal = () => setIsAddAppModalOpen(true)
 
@@ -92,14 +90,9 @@ const AppsList = (): React.ReactElement => {
           {appList
             .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
             .map((a) => (
-              <AppCard
-                isLoading={isAppLoading(a)}
-                key={a.url}
-                iconUrl={a.iconUrl}
-                name={a.name}
-                description={a.description}
-                onClick={onAddAppHandler(a.url)}
-              />
+              <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
+                <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
+              </StyledLink>
             ))}
         </CardsWrapper>
 

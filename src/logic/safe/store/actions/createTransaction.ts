@@ -1,5 +1,4 @@
 import { push } from 'connected-react-router'
-import semverSatisfies from 'semver/functions/satisfies'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
@@ -10,11 +9,10 @@ import {
   CALL,
   getApprovalTransaction,
   getExecutionTransaction,
-  SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES,
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
+import { estimateGasForTransactionCreation } from 'src/logic/safe/transactions/gas'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -40,6 +38,7 @@ import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
+import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -87,18 +86,18 @@ const createTransaction = (
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
-  const nonce = await getNewTxNonce(txNonce?.toString(), lastTx, safeInstance)
+  const nonce = txNonce ? txNonce.toString() : await getNewTxNonce(lastTx, safeInstance)
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  const safeTxGas =
-    safeTxGasArg || (await estimateSafeTxGas(safeInstance, safeAddress, txData, to, valueInWei, operation))
+  let safeTxGas
+  try {
+    safeTxGas =
+      safeTxGasArg || (await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation))
+  } catch (error) {
+    safeTxGas = safeTxGasArg || 0
+  }
 
-  // https://docs.gnosis.io/safe/docs/docs5/#pre-validated-signatures
-  const sigs = `0x000000000000000000000000${from.replace(
-    '0x',
-    '',
-  )}000000000000000000000000000000000000000000000000000000000000000001`
-
+  const sigs = getPreValidatedSignatures(from)
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
   const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
@@ -123,11 +122,7 @@ const createTransaction = (
   const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
 
   try {
-    // Here we're checking that safe contract version is greater or equal 1.1.1, but
-    // theoretically EIP712 should also work for 1.0.0 contracts
-    const canTryOffchainSigning =
-      !isExecution && !smartContractWallet && semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
-    if (canTryOffchainSigning) {
+    if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
       const signature = await tryOffchainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
 
       if (signature) {
@@ -141,9 +136,7 @@ const createTransaction = (
       }
     }
 
-    const tx = isExecution
-      ? await getExecutionTransaction(txArgs)
-      : await getApprovalTransaction(safeInstance, safeTxHash)
+    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
     const sendParams: PayableTx = { from, value: 0 }
 
     // if not set owner management tests will fail on ganache

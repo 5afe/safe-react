@@ -1,10 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ListItemType } from 'src/components/List'
 
 import Header from './Header'
 import Footer from './Footer'
 import Sidebar from './Sidebar'
+import { MobileNotSupported } from './MobileNotSupported'
 
 const Container = styled.div`
   height: 100vh;
@@ -85,30 +86,38 @@ const Layout: React.FC<Props> = ({
   onNewTransactionClick,
   children,
   sidebarItems,
-}): React.ReactElement => (
-  <Container>
-    <HeaderWrapper>
-      <Header />
-    </HeaderWrapper>
-    <BodyWrapper>
-      <SidebarWrapper>
-        <Sidebar
-          items={sidebarItems}
-          safeAddress={safeAddress}
-          safeName={safeName}
-          balance={balance}
-          granted={granted}
-          onToggleSafeList={onToggleSafeList}
-          onReceiveClick={onReceiveClick}
-          onNewTransactionClick={onNewTransactionClick}
-        />
-      </SidebarWrapper>
-      <ContentWrapper>
-        <div>{children}</div>
-        <Footer />
-      </ContentWrapper>
-    </BodyWrapper>
-  </Container>
-)
+}): React.ReactElement => {
+  const [mobileNotSupportedClosed, setMobileNotSupportedClosed] = useState(false)
+
+  const closeMobileNotSupported = () => setMobileNotSupportedClosed(true)
+
+  return (
+    <Container>
+      <HeaderWrapper>
+        <Header />
+      </HeaderWrapper>
+      <BodyWrapper>
+        <SidebarWrapper data-testid="sidebar">
+          <Sidebar
+            items={sidebarItems}
+            safeAddress={safeAddress}
+            safeName={safeName}
+            balance={balance}
+            granted={granted}
+            onToggleSafeList={onToggleSafeList}
+            onReceiveClick={onReceiveClick}
+            onNewTransactionClick={onNewTransactionClick}
+          />
+        </SidebarWrapper>
+        <ContentWrapper>
+          <div>{children}</div>
+          <Footer />
+        </ContentWrapper>
+      </BodyWrapper>
+
+      {!mobileNotSupportedClosed && <MobileNotSupported onClose={closeMobileNotSupported} />}
+    </Container>
+  )
+}
 
 export default Layout

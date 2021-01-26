@@ -126,7 +126,14 @@ export default handleActions(
     [REMOVE_SAFE]: (state: SafeReducerMap, action) => {
       const safeAddress = action.payload
 
-      return state.deleteIn(['safes', safeAddress])
+      const currentDefaultSafe = state.get('defaultSafe')
+
+      let newState = state.deleteIn(['safes', safeAddress])
+      if (sameAddress(safeAddress, currentDefaultSafe)) {
+        newState = newState.set('defaultSafe', DEFAULT_SAFE_INITIAL_STATE)
+      }
+
+      return newState
     },
     [ADD_SAFE_OWNER]: (state: SafeReducerMap, action) => {
       const { ownerAddress, ownerName, safeAddress } = action.payload

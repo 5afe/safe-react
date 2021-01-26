@@ -11,7 +11,7 @@ import ErrorIcon from 'src/assets/icons/error.svg'
 import InfoIcon from 'src/assets/icons/info.svg'
 
 import AppLayout from 'src/components/AppLayout'
-import SafeListSidebarProvider, { SafeListSidebarContext } from 'src/components/SafeListSidebar'
+import { SafeListSidebar, SafeListSidebarContext } from 'src/components/SafeListSidebar'
 import CookiesBanner from 'src/components/CookiesBanner'
 import Notifier from 'src/components/Notifier'
 import Backdrop from 'src/components/layout/Backdrop'
@@ -159,9 +159,9 @@ const App: React.FC = ({ children }) => {
 }
 
 const WrapperAppWithSidebar: React.FC = ({ children }) => (
-  <SafeListSidebarProvider>
+  <SafeListSidebar>
     <App>{children}</App>
-  </SafeListSidebarProvider>
+  </SafeListSidebar>
 )
 
 export default WrapperAppWithSidebar
