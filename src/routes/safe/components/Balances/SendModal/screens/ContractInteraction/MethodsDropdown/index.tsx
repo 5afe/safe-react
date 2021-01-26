@@ -6,7 +6,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useField, useFormState } from 'react-final-form'
 import { AbiItem } from 'web3-utils'
 
@@ -33,13 +33,14 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
   const {
     initialValues: { selectedMethod: selectedMethodByDefault },
   } = useFormState({ subscription: { initialValues: true } })
-  const [selectedMethod, setSelectedMethod] = React.useState(selectedMethodByDefault ? selectedMethodByDefault : {})
-  const [methodsList, setMethodsList] = React.useState<AbiItemExtended[]>([])
-  const [methodsListFiltered, setMethodsListFiltered] = React.useState<AbiItemExtended[]>([])
-  const [anchorEl, setAnchorEl] = React.useState(null)
-  const [searchParams, setSearchParams] = React.useState('')
+  const [selectedMethod, setSelectedMethod] = useState(selectedMethodByDefault ? selectedMethodByDefault : {})
+  const [methodsList, setMethodsList] = useState<AbiItemExtended[]>([])
+  const [methodsListFiltered, setMethodsListFiltered] = useState<AbiItemExtended[]>([])
 
-  React.useEffect(() => {
+  const [anchorEl, setAnchorEl] = useState(null)
+  const [searchParams, setSearchParams] = useState('')
+
+  useEffect(() => {
     if (abi) {
       try {
         setMethodsList(extractUsefulMethods(JSON.parse(abi)))
@@ -49,7 +50,7 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
     }
   }, [abi])
 
-  React.useEffect(() => {
+  useEffect(() => {
     setMethodsListFiltered(methodsList.filter(({ name }) => name?.toLowerCase().includes(searchParams.toLowerCase())))
   }, [methodsList, searchParams])
 
