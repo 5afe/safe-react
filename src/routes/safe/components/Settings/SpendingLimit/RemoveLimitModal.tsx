@@ -6,7 +6,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -36,7 +36,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector) || 1
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
 
@@ -88,9 +87,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const resetTimeLabel =
     RESET_TIME_OPTIONS.find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin / 24 / 60)?.label ?? ''
 
-  // @todo (agustin) refactor inside EditableTxParameters
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   return (
     <Modal
       handleClose={onClose}
@@ -98,11 +94,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       title="Remove Spending Limit"
       description="Remove the selected Spending Limit"
     >
-      <EditableTxParameters
-        ethGasLimit={gasLimit}
-        ethGasPrice={gasPriceFormatted}
-        parametersStatus={getParametersStatus()}
-      >
+      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
         {(txParameters, toggleEditMode) => {
           return (
             <>
@@ -127,12 +119,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
               </Block>
 
               {/* Tx Parameters */}
-              <TxParametersDetail
-                txParameters={txParameters}
-                onEdit={toggleEditMode}
-                compact={false}
-                parametersStatus={getParametersStatus()}
-              />
+              <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
               <Row className={classes.modalDescription}>
                 <TransactionFees
                   gasCostFormatted={gasCostFormatted}

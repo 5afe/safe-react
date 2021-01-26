@@ -100,14 +100,8 @@ export const ReviewRemoveOwnerModal = ({
     }
   }, [safeAddress, ownerAddress, threshold])
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   return (
-    <EditableTxParameters
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      parametersStatus={getParametersStatus()}
-    >
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -213,12 +207,7 @@ export const ReviewRemoveOwnerModal = ({
           <Hairline />
 
           {/* Tx Parameters */}
-          <TxParametersDetail
-            txParameters={txParameters}
-            onEdit={toggleEditMode}
-            compact={false}
-            parametersStatus={getParametersStatus()}
-          />
+          <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
 
           <Block className={classes.gasCostsContainer}>
             <TransactionFees

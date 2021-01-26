@@ -25,11 +25,7 @@ import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/Spending
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import {
-  safeParamAddressFromStateSelector,
-  safeSpendingLimitsSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
@@ -160,7 +156,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     to: '',
     txData: '',
   })
-  const threshold = useSelector(safeThresholdSelector) || 1
 
   const {
     gasCostFormatted,
@@ -224,14 +219,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
       ?.label ?? 'One-time spending limit'
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   return (
-    <EditableTxParameters
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      parametersStatus={getParametersStatus()}
-    >
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
@@ -269,11 +258,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               </Text>
             )}
             {/* Tx Parameters */}
-            <TxParametersDetail
-              txParameters={txParameters}
-              onEdit={toggleEditMode}
-              parametersStatus={getParametersStatus()}
-            />
+            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
             <Row>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}

@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { styles } from './style'
 
@@ -21,7 +21,6 @@ import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
@@ -35,7 +34,6 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const classes = useStyles()
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
-  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(() => {
     const calculateUpgradeSafeModal = async () => {
@@ -76,15 +74,8 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     txRecipient: safeAddress,
   })
 
-  // @todo (agustin) refactor inside EditableTxParameters
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   return (
-    <EditableTxParameters
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      parametersStatus={getParametersStatus()}
-    >
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -118,12 +109,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     </Paragraph>
                   </Row>
                   {/* Tx Parameters */}
-                  <TxParametersDetail
-                    txParameters={txParameters}
-                    onEdit={toggleEditMode}
-                    compact={false}
-                    parametersStatus={getParametersStatus()}
-                  />
+                  <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
                   <Row>
                     <TransactionFees
                       gasCostFormatted={gasCostFormatted}

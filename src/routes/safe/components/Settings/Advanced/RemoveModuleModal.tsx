@@ -21,7 +21,7 @@ import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { md, secondary } from 'src/theme/variables'
 
@@ -53,7 +53,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector) || 1
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
 
@@ -99,9 +98,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     }
   }
 
-  // @todo (agustin) refactor inside EditableTxParameters
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   return (
     <Modal
       description="Remove the selected Module"
@@ -110,11 +106,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       title="Remove Module"
       open
     >
-      <EditableTxParameters
-        ethGasLimit={gasLimit}
-        ethGasPrice={gasPriceFormatted}
-        parametersStatus={getParametersStatus()}
-      >
+      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
         {(txParameters, toggleEditMode) => {
           return (
             <>
@@ -157,12 +149,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   </Paragraph>
                 </Row>
                 {/* Tx Parameters */}
-                <TxParametersDetail
-                  txParameters={txParameters}
-                  onEdit={toggleEditMode}
-                  compact={false}
-                  parametersStatus={getParametersStatus()}
-                />
+                <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
                 <Row className={classes.modalDescription}>
                   <TransactionFees
                     gasCostFormatted={gasCostFormatted}

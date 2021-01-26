@@ -22,8 +22,11 @@ import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import { generateFormFieldKey, getValueFromTxInputs } from '../utils'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  generateFormFieldKey,
+  getValueFromTxInputs,
+} from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -52,7 +55,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector) || 1
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -82,8 +84,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   const submitTx = async (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
       dispatch(
@@ -105,11 +105,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   return (
-    <EditableTxParameters
-      ethGasLimit={gasLimit}
-      ethGasPrice={gasPriceFormatted}
-      parametersStatus={getParametersStatus()}
-    >
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
       {(txParameters, toggleEditMode) => (
         <>
           <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
@@ -184,11 +180,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             </Row>
 
             {/* Tx Parameters */}
-            <TxParametersDetail
-              txParameters={txParameters}
-              onEdit={toggleEditMode}
-              parametersStatus={getParametersStatus()}
-            />
+            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
 
             <Row>
               <TransactionFees
