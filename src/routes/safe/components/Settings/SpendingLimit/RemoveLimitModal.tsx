@@ -71,7 +71,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
           to: SPENDING_LIMIT_MODULE_ADDRESS,
           valueInWei: '0',
           txData,
-          txNonce: txParameters.ethNonce,
+          txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
