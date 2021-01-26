@@ -20,10 +20,11 @@ import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTr
 import { AppReduxState } from 'src/store'
 import { getUTCStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
+import { sortObject } from 'src/utils/objects'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
-type BasePayload = { safeAddress: string }
+type BasePayload = { safeAddress: string; isTail?: boolean }
 export type HistoryPayload = BasePayload & { values: HistoryGatewayResponse['results'] }
 export type QueuedPayload = BasePayload & { values: QueuedGatewayResponse['results'] }
 export type TransactionDetailsPayload = {
@@ -57,7 +58,7 @@ const findTransactionLocation = (
 export const gatewayTransactions = handleActions<AppReduxState['gatewayTransactions'], Payload>(
   {
     [ADD_HISTORY_TRANSACTIONS]: (state, action: Action<HistoryPayload>) => {
-      const { safeAddress, values } = action.payload
+      const { safeAddress, values, isTail = false } = action.payload
       const history: StoreStructure['history'] = Object.assign({}, state[safeAddress]?.history)
 
       values.forEach((value) => {
@@ -87,7 +88,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           // keep queued list
           ...state[safeAddress],
           // extend history list
-          history,
+          history: isTail ? history : sortObject(history, 'desc'),
         },
       }
     },
