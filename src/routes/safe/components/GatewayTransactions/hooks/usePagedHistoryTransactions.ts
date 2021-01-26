@@ -36,7 +36,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
 
     if (values) {
-      dispatch(addHistoryTransactions({ safeAddress, values }))
+      dispatch(addHistoryTransactions({ safeAddress, values, isTail: true }))
     } else {
       setHasMore(false)
     }
