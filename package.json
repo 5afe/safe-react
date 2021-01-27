@@ -94,7 +94,7 @@
         }
       ]
     },
-   "files": [
+    "files": [
       "build",
       "patches",
       "public",
@@ -200,6 +200,7 @@
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
     "lodash.memoize": "^4.1.2",
+    "lodash.merge": "^4.6.2",
     "material-ui-search-bar": "^1.0.0",
     "notistack": "https://github.com/gnosis/notistack.git#v0.9.4",
     "qrcode.react": "1.0.1",
