@@ -1,6 +1,6 @@
 import { createSelector } from 'reselect'
 
-import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
+import { StoreStructure } from 'src/logic/safe/store/models/types/gateway.d'
 import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
