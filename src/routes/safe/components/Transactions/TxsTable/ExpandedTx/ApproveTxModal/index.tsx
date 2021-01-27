@@ -21,7 +21,7 @@ import { processTransaction } from 'src/logic/safe/store/actions/processTransact
 
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -212,6 +212,7 @@ export const ApproveTxModal = ({
                 testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
                 type="submit"
                 variant="contained"
+                disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
               >
                 {title}
               </Button>
