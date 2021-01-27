@@ -11,13 +11,15 @@ import { Overwrite } from 'src/types/helpers'
 export const ActionModal = (): ReactElement | null => {
   const { selectedAction, selectAction } = useContext(TransactionActionStateContext)
 
+  // TODO: do as with tx-details, load the details on demand?
+
   const transaction = useSelector((state) =>
     getTransactionById(state, selectedAction.transactionId, selectedAction.txLocation),
   )
 
   const onClose = () => selectAction({ actionSelected: 'none', transactionId: '', txLocation: 'history' })
 
-  if (!transaction) {
+  if (!transaction?.txDetails) {
     return null
   }
 
