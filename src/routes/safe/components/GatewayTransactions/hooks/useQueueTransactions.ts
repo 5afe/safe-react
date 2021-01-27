@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { nextTransactions, queuedTransactions } from 'src/logic/safe/store/selectors/gatewayTransactions'
 
-type QueueTransactionsInfo = {
+export type QueueTransactionsInfo = {
   next: TransactionDetails
   queue: TransactionDetails
 }
