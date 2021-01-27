@@ -59,9 +59,7 @@ export const calculateGasOf = async (txConfig: {
 }): Promise<number> => {
   const web3 = getWeb3()
   try {
-    const gas = await web3.eth.estimateGas(txConfig)
-
-    return gas * 2
+    return web3.eth.estimateGas(txConfig)
   } catch (err) {
     return Promise.reject(err)
   }
