@@ -193,6 +193,7 @@
     "express": "^4.17.1",
     "final-form": "^4.20.1",
     "final-form-calculate": "^1.3.2",
+    "flow-type": "^1.0.1",
     "history": "4.10.1",
     "immortal-db": "^1.1.0",
     "immutable": "^4.0.0-rc.12",

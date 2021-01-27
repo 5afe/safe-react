@@ -2,16 +2,16 @@ import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
+  txServiceUrl: 'https://gnosis-safe-transaction.binance.org/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
     gasParameter: 'average',
   },
-  rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
-  networkExplorerName: 'Etherscan',
-  networkExplorerUrl: 'https://etherscan.io',
-  networkExplorerApiUrl: 'https://api.etherscan.io/api',
+  rpcServiceUrl: 'https://bsc-dataseed.binance.org/',
+  networkExplorerName: 'BscScan',
+  networkExplorerUrl: 'https://bscscan.io',
+  networkExplorerApiUrl: 'https://api.bscscan.io/api',
 }
 
 const mainnet: NetworkConfig = {
@@ -25,7 +25,7 @@ const mainnet: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      txServiceUrl: 'https://safe-transaction.mainnet.gnosis.io/api/v1',
+      txServiceUrl: 'https://gnosis-safe-transaction.binance.org/api/v1',
       safeAppsUrl: 'https://apps.gnosis-safe.io',
     },
   },
@@ -37,8 +37,8 @@ const mainnet: NetworkConfig = {
     isTestNet: false,
     nativeCoin: {
       address: '0x000',
-      name: 'Ether',
-      symbol: 'ETH',
+      name: 'BNB',
+      symbol: 'BNB',
       decimals: 18,
       logoUri: EtherLogo,
     },
