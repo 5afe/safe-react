@@ -49,8 +49,18 @@ export const checkIfTxIsExecution = (
   return false
 }
 
-export const checkIfTxIsApproveAndExecution = (threshold: number, txConfirmations: number, txType?: string): boolean =>
-  txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
+export const checkIfTxIsApproveAndExecution = (
+  threshold: number,
+  txConfirmations: number,
+  txType?: string,
+  preApprovingOwner?: string,
+): boolean => {
+  if (preApprovingOwner) {
+    return txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
+  }
+
+  return false
+}
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !sameString(txType, 'spendingLimit')
@@ -190,7 +200,12 @@ export const useEstimateTransactionGas = ({
 
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
-      const approvalAndExecution = checkIfTxIsApproveAndExecution(Number(threshold), txConfirmations?.size || 0, txType)
+      const approvalAndExecution = checkIfTxIsApproveAndExecution(
+        Number(threshold),
+        txConfirmations?.size || 0,
+        txType,
+        preApprovingOwner,
+      )
 
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
