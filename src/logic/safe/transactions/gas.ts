@@ -9,6 +9,10 @@ import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { CALL } from './send'
 
+// We detected using metamask that the node rejects the transaction if estimation if too tight
+// So for avoiding rejections we need to add an extra amount of gas used by the node
+export const EXTRA_NODE_GAS = 10000
+
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
