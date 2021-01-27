@@ -1,4 +1,5 @@
 import get from 'lodash.get'
+import merge from 'lodash.merge'
 import { Action, handleActions } from 'redux-actions'
 
 import {
@@ -93,28 +94,68 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       }
     },
     [ADD_QUEUED_TRANSACTIONS]: (state, action: Action<QueuedPayload>) => {
+      // we're assuming that `next` and `queued` labels will be provided in the first page
+      // as for usage experience there were no more than 5 transactions competing for the same nonce.
+      // Thus, given the client-gateway page size of 20, we have plenty of "room" to be provided with
+      // `next` and `queued` transactions in the first page.
       const { safeAddress, values } = action.payload
-      const queued: StoreStructure['queued'] = {
-        queued: {},
-        next: {},
-      }
+      let next = Object.assign({}, state[safeAddress]?.queued?.next)
+      const queued = Object.assign({}, state[safeAddress]?.queued?.queued)
 
-      let inLabelGroup: Label['label'] = 'Next'
+      let label: 'next' | 'queued' | undefined
       values.forEach((value) => {
         if (isLabel(value)) {
-          inLabelGroup = value.label
-        }
-
-        if (isTransactionSummary(value)) {
+          // we're assuming that the first page will always provide `next` and `queued` labels
+          label = value.label.toLowerCase() as 'next' | 'queued'
+        } else if (isTransactionSummary(value)) {
           const txNonce = value.transaction.executionInfo?.nonce
 
           if (!txNonce) {
+            console.warn('A transaction without nonce was provided by client-gateway:', JSON.stringify(value))
             return
           }
 
-          const label = inLabelGroup.toLowerCase()
-          queued[label][txNonce] = [...(queued[label][txNonce] ?? []), value.transaction]
+          if (typeof label === 'undefined') {
+            label = next[txNonce] ? 'next' : 'queued'
+          }
+
+          switch (label) {
+            case 'next': {
+              if (next[txNonce]) {
+                const txIndex = next[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
+
+                if (txIndex !== -1) {
+                  next[txNonce][txIndex] = merge(next[txNonce][txIndex], value.transaction)
+                  break
+                }
+
+                next[txNonce] = [...next[txNonce], value.transaction]
+                break
+              }
+
+              next = { [txNonce]: [value.transaction] }
+              queued[txNonce] && delete queued[txNonce]
+              break
+            }
+            case 'queued': {
+              if (queued[txNonce]) {
+                const txIndex = queued[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
+
+                if (txIndex !== -1) {
+                  queued[txNonce][txIndex] = merge(queued[txNonce][txIndex], value.transaction)
+                  break
+                }
+
+                queued[txNonce] = [...queued[txNonce], value.transaction]
+                break
+              }
+
+              queued[txNonce] = [value.transaction]
+              break
+            }
+          }
         }
+        // conflict header is discarded
       })
 
       return {
@@ -125,7 +166,10 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           // keep history list
           ...state[safeAddress],
           // overwrites queued lists
-          queued,
+          queued: {
+            next,
+            queued,
+          },
         },
       }
     },
