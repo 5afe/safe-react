@@ -113,8 +113,21 @@ const CookiesBanner = () => {
         dispatch(openCookieBanner(true))
       } else {
         const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
+        if (acceptedIntercom === undefined) {
+          const newState = {
+            acceptedNecessary,
+            acceptedAnalytics,
+            acceptedIntercom: acceptedAnalytics,
+          }
+          const expDays = acceptedAnalytics ? 365 : 7
+          await saveCookie(COOKIES_KEY, newState, expDays)
+          setLocalIntercom(newState.acceptedIntercom)
+          setShowIntercom(newState.acceptedIntercom)
+        } else {
+          setLocalIntercom(acceptedIntercom)
+          setShowIntercom(acceptedIntercom)
+        }
         setLocalAnalytics(acceptedAnalytics)
-        setLocalIntercom(acceptedIntercom)
         setLocalNecessary(acceptedNecessary)
       }
     }
