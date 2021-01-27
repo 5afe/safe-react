@@ -7,6 +7,7 @@ import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { CALL } from './send'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -211,6 +212,7 @@ export const estimateGasForTransactionExecution = async ({
   refundReceiver,
   safeTxGas,
   approvalAndExecution,
+  from,
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   try {
@@ -224,8 +226,26 @@ export const estimateGasForTransactionExecution = async ({
         txAmount,
         operation,
       )
-      console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
-      return gasEstimation
+      console.info(`Gas estimation for create transaction successfully finished with gas amount: ${gasEstimation}`)
+
+      const gasEstimationForApprovingTransaction = await estimateGasForTransactionApproval({
+        safeAddress,
+        operation: operation || CALL,
+        txData,
+        txAmount: txAmount || '0',
+        txRecipient,
+        from,
+        isOffChainSignature: false,
+      })
+
+      console.info(
+        `Gas of approving the transaction successfully finished with gas amount: ${gasEstimationForApprovingTransaction}`,
+      )
+
+      const finalGasForExecuteAndApprove = gasEstimation + gasEstimationForApprovingTransaction
+
+      console.info(`Gas needed for approve and execute: ${finalGasForExecuteAndApprove}`)
+      return finalGasForExecuteAndApprove
     }
     const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
     console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
