@@ -80,8 +80,8 @@ const formValidation = (values) => {
       return
     }
 
-    if (Number(value) < Number(ethGasLimit)) {
-      return 'Lower than Ethereum gas limit.'
+    if (Number(value) > Number(ethGasLimit)) {
+      return 'Bigger than Ethereum gas limit.'
     }
   })(safeTxGas)
 
