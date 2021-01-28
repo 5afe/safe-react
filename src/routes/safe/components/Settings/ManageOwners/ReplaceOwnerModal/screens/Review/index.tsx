@@ -68,6 +68,7 @@ export const ReviewReplaceOwnerModal = ({
 
   const {
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
@@ -99,7 +100,7 @@ export const ReviewReplaceOwnerModal = ({
   }, [ownerAddress, safeAddress, values.newOwnerAddress])
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>

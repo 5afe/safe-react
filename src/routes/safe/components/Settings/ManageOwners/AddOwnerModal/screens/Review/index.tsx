@@ -46,6 +46,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
   const {
     gasLimit,
+    gasEstimation,
     gasCostFormatted,
     gasPriceFormatted,
     txEstimationExecutionStatus,
@@ -80,7 +81,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   }, [safeAddress, values.ownerAddress, values.threshold])
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>

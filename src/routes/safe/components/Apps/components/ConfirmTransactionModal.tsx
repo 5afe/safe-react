@@ -254,6 +254,7 @@ export const ConfirmTransactionModal = ({
       <EditableTxParameters
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
         parametersStatus={getParametersStatus()}
       >
         {(txParameters, toggleEditMode) => (

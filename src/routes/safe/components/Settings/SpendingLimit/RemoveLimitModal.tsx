@@ -55,6 +55,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     isOffChainSignature,
     isCreation,
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
   } = useEstimateTransactionGas({
     txData,
@@ -94,7 +95,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       title="Remove Spending Limit"
       description="Remove the selected Spending Limit"
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
         {(txParameters, toggleEditMode) => {
           return (
             <>

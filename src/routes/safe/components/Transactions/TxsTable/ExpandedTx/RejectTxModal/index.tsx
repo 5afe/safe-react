@@ -46,6 +46,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
     isOffChainSignature,
     isCreation,
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
   } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
@@ -77,6 +78,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
       <EditableTxParameters
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
         parametersStatus={getParametersStatus()}
       >
         {(txParameters, toggleEditMode) => {

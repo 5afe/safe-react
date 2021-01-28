@@ -69,13 +69,14 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     isOffChainSignature,
     gasPriceFormatted,
     gasLimit,
+    gasEstimation,
   } = useEstimateTransactionGas({
     txData: multiSendCallData,
     txRecipient: safeAddress,
   })
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
