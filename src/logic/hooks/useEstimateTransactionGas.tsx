@@ -145,6 +145,7 @@ type UseEstimateTransactionGasProps = {
   operation?: number
   safeTxGas?: number
   txType?: string
+  manualGasPrice?: string
 }
 
 type TransactionGasEstimationResult = {
@@ -169,6 +170,7 @@ export const useEstimateTransactionGas = ({
   operation,
   safeTxGas,
   txType,
+  manualGasPrice,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
@@ -220,7 +222,7 @@ export const useEstimateTransactionGas = ({
           safeTxGas,
           approvalAndExecution,
         })
-        const gasPrice = await calculateGasPrice()
+        const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
@@ -283,6 +285,7 @@ export const useEstimateTransactionGas = ({
     safeTxGas,
     txType,
     providerName,
+    manualGasPrice,
   ])
 
   return gasEstimation
