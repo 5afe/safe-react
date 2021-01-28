@@ -38,7 +38,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   //Balancer Exchange
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmfPLXne1UrY399RQAcjD1dmBhQrPGZWgp311CDLLW3VTn`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRb2VfPVYBrv6gi2zDywgVgTg3A19ZCRMqwL13Ez5f5AS`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
