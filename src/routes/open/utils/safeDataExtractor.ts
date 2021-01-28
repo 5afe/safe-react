@@ -3,7 +3,7 @@ import { List } from 'immutable'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
-export const getAccountsFrom = (values) => {
+export const getAccountsFrom = (values): string[] => {
   const accounts = Object.keys(values)
     .sort()
     .filter((key) => /^owner\d+Address$/.test(key))
@@ -11,7 +11,7 @@ export const getAccountsFrom = (values) => {
   return accounts.map((account) => values[account]).slice(0, values.owners)
 }
 
-export const getNamesFrom = (values) => {
+export const getNamesFrom = (values): string[] => {
   const accounts = Object.keys(values)
     .sort()
     .filter((key) => /^owner\d+Name$/.test(key))
@@ -25,8 +25,8 @@ export const getOwnersFrom = (names, addresses): List<SafeOwner> => {
   return List(owners)
 }
 
-export const getThresholdFrom = (values) => Number(values.confirmations)
+export const getThresholdFrom = (values): number => Number(values.confirmations)
 
-export const getSafeNameFrom = (values) => values.name
+export const getSafeNameFrom = (values): string => values.name
 
-export const getSafeCreationSaltFrom = (values) => values.safeCreationSalt
+export const getSafeCreationSaltFrom = (values): number => values.safeCreationSalt
