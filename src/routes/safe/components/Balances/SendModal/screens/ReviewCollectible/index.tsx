@@ -62,6 +62,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   const {
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
@@ -119,7 +120,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   }
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>

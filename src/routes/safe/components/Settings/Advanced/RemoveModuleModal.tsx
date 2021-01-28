@@ -67,6 +67,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     isOffChainSignature,
     isCreation,
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
   } = useEstimateTransactionGas({
     txData,
@@ -106,7 +107,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       title="Remove Module"
       open
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
         {(txParameters, toggleEditMode) => {
           return (
             <>

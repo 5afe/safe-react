@@ -166,6 +166,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     gasPrice,
     gasPriceFormatted,
     gasLimit,
+    gasEstimation,
   } = useEstimateTransactionGas({
     txData: estimateGasArgs.txData as string,
     txRecipient: estimateGasArgs.to as string,
@@ -220,7 +221,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ?.label ?? 'One-time spending limit'
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />

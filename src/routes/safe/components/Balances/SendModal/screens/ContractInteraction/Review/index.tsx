@@ -64,6 +64,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
 
   const {
     gasLimit,
+    gasEstimation,
     gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
@@ -105,7 +106,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   }
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />

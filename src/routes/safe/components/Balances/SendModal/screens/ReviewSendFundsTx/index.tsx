@@ -104,6 +104,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     gasCostFormatted,
     gasPriceFormatted,
     gasLimit,
+    gasEstimation,
     txEstimationExecutionStatus,
     isExecution,
     isCreation,
@@ -156,8 +157,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     }
   }
 
+  console.log('Review before execute')
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted}>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
       {(txParameters, toggleEditMode) => (
         <>
           {/* Header */}
