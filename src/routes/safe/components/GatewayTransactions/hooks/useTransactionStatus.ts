@@ -6,6 +6,7 @@ import {
   isStatusCancelled,
   isStatusFailed,
   isStatusSuccess,
+  isStatusWillBeReplaced,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -29,6 +30,8 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
       setStatus({ color: 'error', text: 'Fail' })
     } else if (isStatusCancelled(transaction.txStatus)) {
       setStatus({ color: 'error', text: 'Cancelled' })
+    } else if (isStatusWillBeReplaced(transaction.txStatus)) {
+      setStatus({ color: 'placeHolder', text: 'Transaction will be replaced' })
     } else {
       // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS or PENDING
       let text: string

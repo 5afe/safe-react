@@ -2,8 +2,9 @@ import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
 import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, StyledTransactionsGroup } from './styled'
+import { TxHoverProvider } from './TxHoverProvider'
+import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
@@ -36,7 +37,7 @@ type QueueTransactionProps = {
 
 const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
   return transactions.length > 1 ? (
-    <>
+    <TxHoverProvider>
       <Disclaimer nonce={nonce} />
       <GroupedTransactions>
         {transactions.map((transaction, index) => (
@@ -46,7 +47,7 @@ const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): React
           </Fragment>
         ))}
       </GroupedTransactions>
-    </>
+    </TxHoverProvider>
   ) : (
     <TxQueueRow transaction={transactions[0]} />
   )

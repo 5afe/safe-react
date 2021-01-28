@@ -154,6 +154,7 @@ type TransactionStatus =
   | 'FAILED'
   | 'SUCCESS'
   | 'PENDING'
+  | 'WILL_BE_REPLACED'
 
 type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation
 
@@ -347,6 +348,10 @@ export const isStatusFailed = (value: Transaction['txStatus']): value is 'FAILED
 
 export const isStatusCancelled = (value: Transaction['txStatus']): value is 'CANCELLED' => {
   return value === 'CANCELLED'
+}
+
+export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is 'WILL_BE_REPLACED' => {
+  return value === 'WILL_BE_REPLACED'
 }
 
 export const isMultiSigExecutionDetails = (

@@ -103,7 +103,15 @@ const gridColumns = {
   status: '3fr',
 }
 
-export const StyledTransaction = styled.div`
+export const WillBeReplaced = styled.div`
+  .will-be-replaced * {
+    color: gray !important;
+    text-decoration: line-through !important;
+    filter: grayscale(1) opacity(0.8) !important;
+  }
+`
+
+export const StyledTransaction = styled(WillBeReplaced)`
   display: grid;
   grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
@@ -135,6 +143,10 @@ export const StyledTransaction = styled.div`
 
     .tx-actions {
       visibility: visible;
+
+      &.will-be-replaced {
+        visibility: hidden;
+      }
     }
   }
 `
@@ -244,7 +256,7 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled.div`
+export const TxDetailsContainer = styled(WillBeReplaced)`
   background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;

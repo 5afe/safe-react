@@ -84,19 +84,28 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer>
-      <div className="tx-summary">
+      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
         <TxSummary txDetails={data} />
       </div>
       <div
-        className={cn('tx-details', { 'no-padding': isMultiSendTxInfo(data.txInfo), 'not-executed': !data.executedAt })}
+        className={cn('tx-details', {
+          'no-padding': isMultiSendTxInfo(data.txInfo),
+          'not-executed': !data.executedAt,
+          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+        })}
       >
         <TxDataGroup txDetails={data} />
       </div>
-      <div className={cn('tx-owners', { 'no-owner': !isUserAnOwner })}>
+      <div
+        className={cn('tx-owners', {
+          'no-owner': !isUserAnOwner,
+          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+        })}
+      >
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
       {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
-        <div className="tx-details-actions">
+        <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions actions={actions} transaction={transaction} txLocation={txLocation} />
         </div>
       )}
