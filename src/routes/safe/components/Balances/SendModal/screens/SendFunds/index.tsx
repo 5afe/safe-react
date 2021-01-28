@@ -75,6 +75,10 @@ type SendFundsProps = {
   amount?: string
 }
 
+const InputAdornmentChildSymbol = ({ symbol }: { symbol?: string }): ReactElement => {
+  return <>{symbol}</>
+}
+
 const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amount }: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
@@ -295,7 +299,11 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">{selectedToken?.symbol}</InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <InputAdornmentChildSymbol symbol={selectedToken?.symbol} />
+                          </InputAdornment>
+                        ),
                       }}
                       name="amount"
                       placeholder="Amount*"
