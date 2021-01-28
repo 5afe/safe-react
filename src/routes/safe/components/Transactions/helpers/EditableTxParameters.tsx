@@ -13,6 +13,7 @@ type Props = {
   ethGasPrice?: TxParameters['ethGasPrice']
   safeNonce?: TxParameters['safeNonce']
   safeTxGas?: TxParameters['safeTxGas']
+  closeEditModalCallback?: (txParameters: TxParameters) => void
 }
 
 export const EditableTxParameters = ({
@@ -23,6 +24,7 @@ export const EditableTxParameters = ({
   ethGasPrice,
   safeNonce,
   safeTxGas,
+  closeEditModalCallback,
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
   const threshold = useSelector(safeThresholdSelector) || 1
@@ -44,6 +46,12 @@ export const EditableTxParameters = ({
   const toggleStatus = () => {
     toggleEditMode((prev) => !prev)
   }
+
+  useEffect(() => {
+    if (!isEditMode && closeEditModalCallback) {
+      closeEditModalCallback(txParameters)
+    }
+  }, [isEditMode, closeEditModalCallback, txParameters])
 
   return isEditMode ? (
     <EditTxParametersForm
