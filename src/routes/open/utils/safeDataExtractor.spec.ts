@@ -8,6 +8,9 @@ describe('Test JS', () => {
       owner1Address: 'bar',
       owner2Address: 'baz',
       owners: 3,
+      confirmations: '0',
+      name: '',
+      safeCreationSalt: 0,
     }
 
     expect(getAccountsFrom(safe)).toEqual(['foo', 'bar', 'baz'])
@@ -18,6 +21,9 @@ describe('Test JS', () => {
       owner1Name: 'bar',
       owner2Name: 'baz',
       owners: 3,
+      confirmations: '0',
+      name: '',
+      safeCreationSalt: 0,
     }
 
     expect(getNamesFrom(safe)).toEqual(['foo', 'bar', 'baz'])
@@ -31,6 +37,9 @@ describe('Test JS', () => {
       owner2Name: 'bazName',
       owner2Address: 'bazAddress',
       owners: 1,
+      confirmations: '0',
+      name: '',
+      safeCreationSalt: 0,
     }
 
     expect(getNamesFrom(safe)).toEqual(['fooName'])
@@ -45,6 +54,9 @@ describe('Test JS', () => {
       owner2Address: 'bazAddress',
       owner0Address: 'fooAddress',
       owners: 1,
+      confirmations: '0',
+      name: '',
+      safeCreationSalt: 0,
     }
 
     expect(getNamesFrom(safe)).toEqual(['fooName'])
@@ -53,6 +65,8 @@ describe('Test JS', () => {
   it('return the number of required confirmations', () => {
     const safe = {
       confirmations: '1',
+      name: '',
+      safeCreationSalt: 0,
     }
 
     expect(getThresholdFrom(safe)).toEqual(1)

@@ -9,6 +9,7 @@ import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
 import {
+  CreateSafeValues,
   getAccountsFrom,
   getNamesFrom,
   getOwnersFrom,
@@ -52,15 +53,6 @@ export const getSafeProps = async (
   safeProps.owners = owners
 
   return safeProps
-}
-
-type CreateSafeValues = {
-  confirmations: string
-  name: string
-  owner0Address?: string
-  owner0Name?: string
-  safeCreationSalt?: number
-  gasLimit?: number
 }
 
 export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
