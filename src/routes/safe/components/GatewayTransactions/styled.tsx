@@ -24,6 +24,10 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 
 export const NoPaddingAccordion = styled(Accordion)`
   &.MuiAccordion-root {
+    background-color: transparent;
+    .MuiAccordionSummary-root {
+      background-color: transparent;
+    }
     .MuiAccordionDetails-root {
       padding: 0;
     }
@@ -63,7 +67,7 @@ export const H2 = styled.h2`
 `
 
 export const StyledTransactions = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
   box-shadow: #00000026 0 0 8px 2px;
   overflow: hidden;
@@ -77,6 +81,14 @@ export const StyledTransactions = styled.div`
 
     &:last-child {
       border-bottom: none;
+    }
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.inputField};
+
+    div {
+      background-color: ${({ theme }) => theme.colors.inputField};
     }
   }
 `
@@ -101,12 +113,29 @@ export const StyledTransaction = styled.div`
   }
 
   .tx-actions {
+    visibility: hidden;
     justify-self: end;
   }
 
   .tx-status {
     justify-self: end;
     margin-right: 8px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: end;
+
+    p {
+      margin-left: 8px;
+    }
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.inputField};
+
+    .tx-actions {
+      visibility: visible;
+    }
   }
 `
 
@@ -192,11 +221,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
 
       > .MuiAccordionSummary-root {
         padding: 0;
-        background-color: ${({ theme }) => theme.colors.white};
-
-        &:hover {
-          background-color: ${({ theme }) => theme.colors.separator};
-        }
       }
     }
   }
@@ -204,7 +228,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.separator} !important;
   border-radius: 5px;
   margin: 8px;
   padding: 8px;
@@ -221,7 +245,7 @@ export const DisclaimerContainer = styled(StyledTransaction)`
 `
 
 export const TxDetailsContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.separator};
+  background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -231,7 +255,7 @@ export const TxDetailsContainer = styled.div`
   width: 100%;
 
   & > div {
-    background-color: white;
+    background-color: ${({ theme }) => theme.colors.white};
     line-break: anywhere;
     overflow: hidden;
     padding: 8px 16px;

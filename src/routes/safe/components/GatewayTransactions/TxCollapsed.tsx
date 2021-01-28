@@ -120,6 +120,7 @@ const CircularProgressPainter = styled.div<{ color: ThemeColors }>`
 const SmallDot = styled(Dot)`
   height: 8px;
   width: 8px;
+  background-color: ${({ theme, color }) => theme.colors[color]} !important;
 `
 
 type TxCollapsedProps = {
