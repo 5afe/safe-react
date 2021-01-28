@@ -54,7 +54,16 @@ export const getSafeProps = async (
   return safeProps
 }
 
-export const createSafe = (values, userAccount) => {
+type CreateSafeValues = {
+  confirmations: string
+  name: string
+  owner0Address?: string
+  owner0Name?: string
+  safeCreationSalt?: number
+  gasLimit?: number
+}
+
+export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
@@ -62,7 +71,10 @@ export const createSafe = (values, userAccount) => {
   const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-  const promiEvent = deploymentTx.send({ from: userAccount })
+  const promiEvent = deploymentTx.send({
+    from: userAccount,
+    gas: values?.gasLimit,
+  })
 
   promiEvent
     .once('transactionHash', (txHash) => {
@@ -121,15 +133,15 @@ const Open = (): React.ReactElement => {
     load()
   }, [])
 
-  const createSafeProxy = async (formValues?: any) => {
+  const createSafeProxy = async (formValues?: CreateSafeValues) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
-    if (formValues) {
+    if (values) {
       const copy = { ...formValues }
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, copy)
     } else {
-      values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+      values = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeValues
     }
 
     const promiEvent = createSafe(values, userAccount)
