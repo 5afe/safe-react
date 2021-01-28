@@ -1,5 +1,5 @@
 FROM node:14-slim as builder
-WORKDIR /build
+WORKDIR /app
 COPY . .
 RUN apt update && apt install git -y
 RUN yarn
