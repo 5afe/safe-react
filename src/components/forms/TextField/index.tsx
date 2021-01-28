@@ -1,5 +1,5 @@
 import MuiTextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 
 import { lg } from 'src/theme/variables'
@@ -10,65 +10,93 @@ const overflowStyle = {
   width: '100%',
 }
 
-const styles = () => ({
-  root: {
-    paddingTop: lg,
-    paddingBottom: '12px',
-    lineHeight: 0,
-  },
-})
+const styles = () =>
+  createStyles({
+    root: {
+      paddingTop: lg,
+      paddingBottom: '12px',
+      lineHeight: 0,
+    },
+  })
 
-class TextField extends React.PureComponent<any> {
-  render() {
-    const {
-      classes,
-      input: { name, onChange, value, ...restInput },
-      inputAdornment,
-      meta,
-      multiline,
-      rows,
-      testId,
-      text,
-      ...rest
-    } = this.props
-    const helperText = value ? text : undefined
-    const showError = (meta.touched || !meta.pristine) && !meta.valid
-    const hasError = !!meta.error || (!meta.modifiedSinceLastSubmit && !!meta.submitError)
-    const errorMessage = meta.error || meta.submitError
-    const isInactiveAndPristineOrUntouched = !meta.active && (meta.pristine || !meta.touched)
-    const isInvalidAndUntouched = typeof meta.error === 'undefined' ? true : !meta.touched
+const useStyles = makeStyles(styles)
 
-    const disableUnderline = isInactiveAndPristineOrUntouched && isInvalidAndUntouched
-
-    const inputRoot = helperText ? classes.root : ''
-    const statusClasses = meta.valid ? 'isValid' : hasError && showError ? 'isInvalid' : ''
-    const inputProps = {
-      ...restInput,
-      autoComplete: 'off',
-      'data-testid': testId,
-    }
-    const inputRootProps = {
-      ...inputAdornment,
-      className: `${inputRoot} ${statusClasses}`,
-      disableUnderline: disableUnderline,
-    }
-
-    return (
-      <MuiTextField
-        error={hasError && showError}
-        helperText={hasError && showError ? errorMessage : helperText || ' '}
-        inputProps={inputProps} // blank in order to force to have helper text
-        InputProps={inputRootProps}
-        multiline={multiline}
-        name={name}
-        onChange={onChange}
-        rows={rows}
-        style={overflowStyle}
-        value={value}
-        {...rest}
-      />
-    )
+type Props = {
+  input: {
+    name: string
+    onChange?: () => void
+    value: string
+    placeholder: string
+    type: string
   }
+  meta: {
+    touched?: boolean
+    pristine?: boolean
+    valid?: boolean
+    error?: string
+    modifiedSinceLastSubmit?: boolean
+    submitError?: boolean
+    active?: boolean
+  }
+  inputAdornment?: { endAdornment: React.ReactElement } | undefined
+  multiline: boolean
+  rows?: string
+  testId: string
+  text: string
+  disabled?: boolean
+  rowsMax?: number
+  className?: string
 }
 
-export default withStyles(styles as any)(TextField)
+const TextField = (props: Props): React.ReactElement => {
+  const {
+    input: { name, onChange, value, ...restInput },
+    inputAdornment,
+    meta,
+    multiline,
+    rows,
+    testId,
+    text,
+    ...rest
+  } = props
+  const classes = useStyles()
+  const helperText = value ? text : undefined
+  const showError = (meta.touched || !meta.pristine) && !meta.valid
+  const hasError = !!meta.error || (!meta.modifiedSinceLastSubmit && !!meta.submitError)
+  const errorMessage = meta.error || meta.submitError
+  const isInactiveAndPristineOrUntouched = !meta.active && (meta.pristine || !meta.touched)
+  const isInvalidAndUntouched = typeof meta.error === 'undefined' ? true : !meta.touched
+
+  const disableUnderline = isInactiveAndPristineOrUntouched && isInvalidAndUntouched
+
+  const inputRoot = helperText ? classes.root : ''
+  const statusClasses = meta.valid ? 'isValid' : hasError && showError ? 'isInvalid' : ''
+  const inputProps = {
+    ...restInput,
+    autoComplete: 'off',
+    'data-testid': testId,
+  }
+  const inputRootProps = {
+    ...inputAdornment,
+    className: `${inputRoot} ${statusClasses}`,
+    disableUnderline: disableUnderline,
+  }
+
+  return (
+    <MuiTextField
+      error={hasError && showError}
+      helperText={hasError && showError ? errorMessage : helperText || ' '}
+      inputProps={inputProps} // blank in order to force to have helper text
+      InputProps={inputRootProps}
+      multiline={multiline}
+      name={name}
+      onChange={onChange}
+      rows={rows}
+      style={overflowStyle}
+      value={value}
+      {...rest}
+    />
+  )
+}
+
+export default TextField

@@ -1,12 +1,14 @@
 import { BigNumber } from 'bignumber.js'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { sameString } from 'src/utils/strings'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import axios from 'axios'
+import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
 // We detected using metamask that the node rejects the transaction if estimation if too tight
 // So for avoiding rejections we need to add an extra amount of gas used by the node
@@ -92,7 +94,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   }
 }
 
-export const getGasEstimationTxResponse = async (txConfig: {
+const estimateGasWithWeb3Provider = async (txConfig: {
   to: string
   from: string
   data: string
@@ -120,10 +122,54 @@ export const getGasEstimationTxResponse = async (txConfig: {
 
     return new BigNumber(estimationData.substring(138), 16).toNumber()
   }
-
-  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation (for version < v1.9.24 of geth nodes)
-  // We cannot throw this error above because it will be captured again on the catch block bellow
   throw new Error('Error while estimating the gas required for tx')
+}
+
+const estimateGasWithRPCCall = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  try {
+    const { data } = await axios.post(getRpcServiceUrl(), {
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      id: 1,
+      params: [
+        {
+          ...txConfig,
+          gasPrice: web3ReadOnly.utils.toHex(txConfig.gasPrice || 0),
+          gas: txConfig.gas ? web3ReadOnly.utils.toHex(txConfig.gas) : undefined,
+        },
+        'latest',
+      ],
+    })
+
+    const { error } = data
+    if (error?.data) {
+      return new BigNumber(data.error.data.substring(138), 16).toNumber()
+    }
+  } catch (error) {
+    console.log('Gas estimation endpoint errored: ', error.message)
+  }
+  throw new Error('Error while estimating the gas required for tx')
+}
+
+export const getGasEstimationTxResponse = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  // If we are in a infura supported network we estimate using infura
+  if (usesInfuraRPC) {
+    return estimateGasWithRPCCall(txConfig)
+  }
+  // Otherwise we estimate using the current connected provider
+  return estimateGasWithWeb3Provider(txConfig)
 }
 
 const calculateMinimumGasForTransaction = async (
