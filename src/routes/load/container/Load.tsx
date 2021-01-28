@@ -39,6 +39,8 @@ export interface LoadFormValues {
   name: string
   address: string
   threshold: string
+  owner0Address: string
+  owner0Name: string
 }
 
 const Load = (): React.ReactElement => {

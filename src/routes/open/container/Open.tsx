@@ -28,6 +28,8 @@ import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
+type LoadedSafeType = CreateSafeValues & { txHash: string }
+
 const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) => {
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
@@ -142,11 +144,11 @@ const Open = (): React.ReactElement => {
   }
 
   const onSafeCreated = async (safeAddress): Promise<void> => {
-    const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const pendingCreation = await loadFromStorage<LoadedSafeType>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
-    const name = getSafeNameFrom(pendingCreation)
-    const ownersNames = getNamesFrom(pendingCreation)
-    const ownerAddresses = getAccountsFrom(pendingCreation)
+    const name = pendingCreation ? getSafeNameFrom(pendingCreation) : ''
+    const ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
+    const ownerAddresses = pendingCreation ? getAccountsFrom(pendingCreation) : []
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
 
     await dispatch(addOrUpdateSafe(safeProps))
