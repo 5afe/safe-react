@@ -1,4 +1,6 @@
-import { Icon, IconText, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, IconText, Dot, Text } from '@gnosis.pm/safe-react-components'
+import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { MouseEvent as ReactMouseEvent, ReactElement, useContext } from 'react'
 import styled from 'styled-components'
@@ -19,9 +21,14 @@ import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
 import { TransactionActionStateContext } from './TxActionProvider'
 import { TxLocationContext } from './TxLocationProvider'
+import { CalculatedVotes } from './TxQueueCollapsed'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
+
+  &.Mui-disabled {
+    opacity: 0.4;
+  }
 `
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
@@ -83,10 +90,12 @@ const CollapsedActionButtons = ({
     selectAction({ actionSelected: 'cancel', transactionId: transaction.id, txLocation })
   }
 
+  const disabled = transaction.txStatus === 'PENDING'
+
   return (
     <>
       {(actions.canConfirm || actions.canExecute) && (
-        <IconButton size="small" type="button" onClick={handleConfirmButtonClick}>
+        <IconButton size="small" type="button" onClick={handleConfirmButtonClick} disabled={disabled}>
           <Icon
             type={actions.canExecute ? 'rocket' : 'check'}
             color="primary"
@@ -96,13 +105,22 @@ const CollapsedActionButtons = ({
         </IconButton>
       )}
       {actions.canCancel && (
-        <IconButton size="small" type="button" onClick={handleCancelButtonClick}>
+        <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={disabled}>
           <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
         </IconButton>
       )}
     </>
   )
 }
+
+const CircularProgressPainter = styled.div<{ color: ThemeColors }>`
+  color: ${({ theme, color }) => theme.colors[color]};
+`
+
+const SmallDot = styled(Dot)`
+  height: 8px;
+  width: 8px;
+`
 
 type TxCollapsedProps = {
   transaction?: Transaction
@@ -111,7 +129,7 @@ type TxCollapsedProps = {
   type: TxTypeProps
   info?: AssetInfo
   time: string
-  votes?: string
+  votes?: CalculatedVotes
   actions?: TransactionActions
   status: TransactionStatusProps
 }
@@ -149,7 +167,15 @@ export const TxCollapsed = ({
 
   const TxCollapsedVotes = (
     <div className="tx-votes">
-      {votes && <IconText color="primary" iconType="owners" iconSize="sm" text={`${votes}`} textSize="sm" />}
+      {votes && (
+        <IconText
+          color={votes.required > votes.submitted ? 'secondaryLight' : 'primary'}
+          iconType="owners"
+          iconSize="sm"
+          text={`${votes.votes}`}
+          textSize="sm"
+        />
+      )}
     </div>
   )
 
@@ -161,6 +187,15 @@ export const TxCollapsed = ({
 
   const TxCollapsedStatus = (
     <div className="tx-status">
+      {transaction?.txStatus === 'PENDING' ? (
+        <CircularProgressPainter color={status.color}>
+          <CircularProgress size={14} color="inherit" />
+        </CircularProgressPainter>
+      ) : (
+        (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
+          <SmallDot color={status.color} />
+        )
+      )}
       <Text size="lg" color={status.color} className="col" strong>
         {status.text}
       </Text>

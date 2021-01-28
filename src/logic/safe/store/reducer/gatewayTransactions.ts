@@ -6,14 +6,15 @@ import {
   ADD_HISTORY_TRANSACTIONS,
   ADD_QUEUED_TRANSACTIONS,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import { UPDATE_TRANSACTION_STATUS } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import {
   HistoryGatewayResponse,
   isLabel,
   isTransactionSummary,
-  Label,
   QueuedGatewayResponse,
   StoreStructure,
   Transaction,
+  TransactionStatus,
   TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
@@ -34,8 +35,13 @@ export type TransactionDetailsPayload = {
   transactionId: string
   value: Transaction['txDetails']
 }
+export type TransactionStatusPayload = {
+  safeAddress: string
+  nonce: number
+  txStatus: TransactionStatus
+}
 
-type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload
+type Payload = HistoryPayload | QueuedPayload | TransactionDetailsPayload | TransactionStatusPayload
 
 const findTransactionLocation = (
   transactionsGroup: { [p: number]: Transaction[] },
@@ -125,6 +131,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 const txIndex = next[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
 
                 if (txIndex !== -1) {
+                  // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
+                  if (next[txNonce][txIndex].txStatus === 'PENDING') {
+                    value.transaction.txStatus = 'PENDING'
+                  }
+
                   next[txNonce][txIndex] = merge(next[txNonce][txIndex], value.transaction)
                   break
                 }
@@ -133,8 +144,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 break
               }
 
+              // a new tx has arrived to the `next` queue
               next = { [txNonce]: [value.transaction] }
+
+              // we remove the new `next` transaction from the `queue` list, if it exist
               queued[txNonce] && delete queued[txNonce]
+
               break
             }
             case 'queued': {
@@ -158,6 +173,18 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         // conflict header is discarded
       })
 
+      // no new transactions
+      if (!values.length) {
+        // queued list already empty
+        if (!Object.keys(queued).length) {
+          // there was an existing next transaction
+          if (Object.keys(next).length === 1) {
+            // we cleanup the next queue
+            next = {}
+          }
+        }
+      }
+
       return {
         // all the safes with their respective states
         ...state,
@@ -175,12 +202,13 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
     },
     [UPDATE_TRANSACTION_DETAILS]: (state, action: Action<TransactionDetailsPayload>) => {
       const { safeAddress, transactionId, txLocation, value } = action.payload
-      const { queued } = state[safeAddress]
-      let { history } = state[safeAddress]
+      const storedTransactions = Object.assign({}, state[safeAddress])
+      const { queued } = storedTransactions
+      let { history } = storedTransactions
 
       // get the tx group (it will be `queued.next`, `queued.queued` or `history`)
       const txGroup: StoreStructure['queued']['next' | 'queued'] | StoreStructure['history'] = get(
-        state[safeAddress],
+        storedTransactions,
         txLocation,
       )
 
@@ -200,6 +228,69 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         case 'queued.queued':
           queued['queued'] = txGroup
           break
+      }
+
+      // update state
+      return {
+        // all the safes with their respective states
+        ...state,
+        // current safe
+        [safeAddress]: {
+          history,
+          queued,
+        },
+      }
+    },
+    [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
+      const { nonce, safeAddress, txStatus } = action.payload
+      const storedTransactions = Object.assign({}, state[safeAddress])
+      const { queued } = storedTransactions
+      const { history } = storedTransactions
+
+      let txLocation: TxLocation | undefined
+      let historyLocation: string | undefined
+
+      if (queued.next[nonce]) {
+        txLocation = 'queued.next'
+      } else if (queued.queued[nonce]) {
+        txLocation = 'queued.queued'
+      } else {
+        Object.entries(history).forEach(([timestamp, transactions]) => {
+          const txIndex = transactions.findIndex((transaction) => Number(transaction.executionInfo?.nonce) === nonce)
+
+          if (txIndex !== -1) {
+            txLocation = 'history'
+            historyLocation = `${timestamp}[${txIndex}]`
+          }
+        })
+      }
+
+      if (!txLocation) {
+        return state
+      }
+
+      switch (txLocation) {
+        case 'history': {
+          if (historyLocation) {
+            const txToUpdate = get(history, historyLocation)
+            txToUpdate.txStatus = txStatus
+          }
+          break
+        }
+        case 'queued.next': {
+          queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
+            txToUpdate.txStatus = txStatus
+            return txToUpdate
+          })
+          break
+        }
+        case 'queued.queued': {
+          queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
+            txToUpdate.txStatus = txStatus
+            return txToUpdate
+          })
+          break
+        }
       }
 
       // update state

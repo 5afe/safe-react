@@ -13,7 +13,7 @@ import {
 } from 'src/logic/safe/safeTxSigner'
 import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-// import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
@@ -128,12 +128,6 @@ export const processTransaction = ({
       sendParams.gas = '7000000'
     }
 
-    // const txToMock: TxToMock = {
-    //   ...txArgs,
-    //   value: txArgs.valueInWei,
-    // }
-    // const mockedTx = await mockTransaction(txToMock, safeAddress, state)
-
     await transaction
       .send(sendParams)
       .once('transactionHash', async (hash: string) => {
@@ -141,22 +135,22 @@ export const processTransaction = ({
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
+        isExecution && dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce }))
 
         try {
-          await Promise.all([
-            saveTxToHistory({ ...txArgs, txHash }),
-            // storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
-          ])
+          await saveTxToHistory({ ...txArgs, txHash })
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-          // await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-        // storeTx({ transaction: tx, safeAddress, dispatch, state })
+
+        isExecution &&
+          dispatch(updateTransactionStatus({ txStatus: 'AWAITING_EXECUTION', safeAddress, nonce: tx.nonce }))
+
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
@@ -171,8 +165,6 @@ export const processTransaction = ({
               : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           ),
         )
-
-        // await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 

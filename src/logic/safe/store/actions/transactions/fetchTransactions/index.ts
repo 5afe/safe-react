@@ -28,10 +28,7 @@ export default (safeAddress: string) => async (
 
   if (queued.status === 'fulfilled') {
     const values = queued.value
-
-    if (values.length) {
-      dispatch(addQueuedTransactions({ safeAddress, values }))
-    }
+    dispatch(addQueuedTransactions({ safeAddress, values }))
   } else {
     console.error('Failed to load queued transactions', queued.reason)
   }

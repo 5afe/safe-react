@@ -2,7 +2,6 @@ import { push } from 'connected-react-router'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
-import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
@@ -20,16 +19,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import {
-  removeTxFromStore,
-  storeSignedTx,
-  storeExecutedTx,
-} from 'src/logic/safe/store/actions/transactions/pendingTransactions'
-import {
-  generateSafeTxHash,
-  mockTransaction,
-  TxToMock,
-} from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -77,7 +67,7 @@ export const createTransaction = (
   const state = getState()
 
   if (navigateToTransactionsTab) {
-    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/gatewayTransactions`))
   }
 
   const ready = await onboardUser()
@@ -144,38 +134,21 @@ export const createTransaction = (
       sendParams.gas = '7000000'
     }
 
-    const txToMock: TxToMock = {
-      ...txArgs,
-      confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
-      value: txArgs.valueInWei,
-      safeTxHash,
-      dataDecoded: decodeMethods(txArgs.data),
-      submissionDate: new Date().toISOString(),
-    }
-    const mockedTx = await mockTransaction(txToMock, safeAddress, state)
-
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
         onUserConfirm?.(safeTxHash)
-        try {
-          txHash = hash
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
+        txHash = hash
+        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+        pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 
-          await Promise.all([
-            saveTxToHistory({ ...txArgs, txHash, origin }),
-            storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
-          ])
-          dispatch(fetchTransactions(safeAddress))
-        } catch (e) {
-          removeTxFromStore(mockedTx, safeAddress, dispatch, state)
-        }
+        await saveTxToHistory({ ...txArgs, txHash, origin })
+
+        dispatch(fetchTransactions(safeAddress))
       })
       .on('error', (error) => {
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-        removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
 
         onError?.()
@@ -192,8 +165,6 @@ export const createTransaction = (
               : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           ),
         )
-
-        await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 

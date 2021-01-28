@@ -31,7 +31,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
       setStatus({ color: 'error', text: 'Cancelled' })
     } else {
       // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS or PENDING
-      let text = 'Pending'
+      let text: string
       const signaturePending = addressInList(transaction.executionInfo?.missingSigners)
 
       switch (transaction.txStatus) {
@@ -40,6 +40,9 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
           break
         case 'AWAITING_EXECUTION':
           text = signaturePending(currentUser) ? 'Awaiting your execution' : 'Awaiting execution'
+          break
+        default:
+          text = 'Pending'
           break
       }
 

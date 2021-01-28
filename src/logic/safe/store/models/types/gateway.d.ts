@@ -147,7 +147,13 @@ type Creation = {
   factory: string | null
 }
 
-type TransactionStatus = 'AWAITING_CONFIRMATIONS' | 'AWAITING_EXECUTION' | 'CANCELLED' | 'FAILED' | 'SUCCESS'
+type TransactionStatus =
+  | 'AWAITING_CONFIRMATIONS'
+  | 'AWAITING_EXECUTION'
+  | 'CANCELLED'
+  | 'FAILED'
+  | 'SUCCESS'
+  | 'PENDING'
 
 type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation
 

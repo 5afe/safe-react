@@ -61,6 +61,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         notifiedTransaction: TX_NOTIFICATION_TYPES.CANCELLATION_TX,
         txNonce: nonce,
         origin,
+        navigateToTransactionsTab: false,
       }),
     )
     onClose()
