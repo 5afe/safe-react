@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
-  children: (txParameters: TxParameters, toggleStatus: () => void) => any
+  children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
   calculateSafeNonce?: boolean
   parametersStatus?: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
@@ -27,36 +27,54 @@ export const EditableTxParameters = ({
   closeEditModalCallback,
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
+  const [useManualValues, setUseManualValues] = useState(false)
   const threshold = useSelector(safeThresholdSelector) || 1
   const defaultParameterStatus = threshold > 1 ? 'ETH_DISABLED' : 'ENABLED'
   const txParameters = useTransactionParameters({
     calculateSafeNonce,
     parameterStatus: parametersStatus || defaultParameterStatus,
+    initialEthGasLimit: ethGasLimit,
+    initialEthGasPrice: ethGasPrice,
+    initialSafeNonce: safeNonce,
+    initialSafeTxGas: safeTxGas,
   })
-  const { setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas } = txParameters
+  const { setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas, setEthNonce } = txParameters
 
   // Update TxParameters
   useEffect(() => {
-    setEthGasPrice(ethGasPrice)
-    setEthGasLimit(ethGasLimit)
-    safeNonce && setSafeNonce(safeNonce)
-    safeTxGas && setSafeTxGas(safeTxGas)
-  }, [ethGasLimit, ethGasPrice, safeNonce, safeTxGas, setEthGasPrice, setEthGasLimit, setSafeNonce, setSafeTxGas])
+    if (!useManualValues) {
+      setEthGasLimit(ethGasLimit)
+      setEthGasPrice(ethGasPrice)
+    }
+  }, [ethGasLimit, setEthGasLimit, ethGasPrice, setEthGasPrice, useManualValues])
 
   const toggleStatus = () => {
     toggleEditMode((prev) => !prev)
   }
 
+  // Sends a callback with the last values of txParameters
   useEffect(() => {
     if (!isEditMode && closeEditModalCallback) {
       closeEditModalCallback(txParameters)
     }
   }, [isEditMode, closeEditModalCallback, txParameters])
 
+  const closeEditFormHandler = (txParameters?: TxParameters) => {
+    if (txParameters) {
+      setUseManualValues(true)
+      setSafeNonce(txParameters.safeNonce)
+      setSafeTxGas(txParameters.safeTxGas)
+      setEthGasLimit(txParameters.ethGasLimit)
+      setEthGasPrice(txParameters.ethGasPrice)
+      setEthNonce(txParameters.ethNonce)
+    }
+    toggleStatus()
+  }
+
   return isEditMode ? (
     <EditTxParametersForm
       txParameters={txParameters}
-      onClose={toggleStatus}
+      onClose={closeEditFormHandler}
       parametersStatus={parametersStatus ? parametersStatus : defaultParameterStatus}
     />
   ) : (

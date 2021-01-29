@@ -60,7 +60,7 @@ const useStyles = makeStyles(styles)
 
 interface Props {
   txParameters: TxParameters
-  onClose: () => void
+  onClose: (txParameters?: TxParameters) => void
   parametersStatus: ParametersStatus
 }
 
@@ -103,11 +103,10 @@ export const EditTxParametersForm = ({
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
   const onSubmit = (values: TxParameters) => {
-    txParameters?.setSafeNonce(values.safeNonce ?? undefined)
-    txParameters?.setSafeTxGas(values.safeTxGas ?? undefined)
-    txParameters?.setEthGasLimit(values.ethGasLimit ?? undefined)
-    txParameters?.setEthGasPrice(values.ethGasPrice ?? undefined)
-    txParameters?.setEthNonce(values.ethNonce ?? undefined)
+    onClose(values)
+  }
+
+  const onCloseFormHandler = () => {
     onClose()
   }
 
@@ -118,7 +117,7 @@ export const EditTxParametersForm = ({
         <Title size="sm" withoutMargin>
           Advanced options
         </Title>
-        <StyledIconButton disableRipple onClick={onClose}>
+        <StyledIconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
         </StyledIconButton>
       </Row>
@@ -216,7 +215,7 @@ export const EditTxParametersForm = ({
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onCloseFormHandler}>
                   Back
                 </Button>
                 <Button
