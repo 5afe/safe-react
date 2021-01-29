@@ -117,7 +117,7 @@ const createTransaction = (
     nonce: Number.parseInt(nonce),
     safeTxGas,
     baseGas: 0,
-    gasPrice: ethParameters?.ethGasPriceInGWei || '0',
+    gasPrice: '0',
     gasToken: ZERO_ADDRESS,
     refundReceiver: ZERO_ADDRESS,
     sender: from,
