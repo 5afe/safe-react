@@ -129,6 +129,9 @@ const calculateMinimumGasForTransaction = async (
   txGasEstimation: number,
   dataGasEstimation: number,
 ): Promise<number> => {
+  // Disable gas estimate
+  return 0
+
   for (const additionalGas of additionalGasBatches) {
     const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
     console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
