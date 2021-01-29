@@ -5,7 +5,6 @@ import {
   estimateGasForTransactionCreation,
   estimateGasForTransactionExecution,
   MINIMUM_TRANSACTION_GAS,
-  EXTRA_NODE_GAS,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -228,7 +227,7 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = (gasEstimation * 2 + EXTRA_NODE_GAS).toString()
+        const gasLimit = (gasEstimation * 2 + MINIMUM_TRANSACTION_GAS).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
