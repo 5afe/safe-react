@@ -25,31 +25,33 @@ export type TxParameters = {
 }
 
 type Props = {
-  calculateSafeNonce: boolean
-  parameterStatus: ParametersStatus
+  calculateSafeNonce?: boolean
+  parameterStatus?: ParametersStatus
+  initialSafeNonce?: string
+  initialSafeTxGas?: string
+  initialEthGasLimit?: string
+  initialEthGasPrice?: string
 }
 
 /**
  * This hooks is used to store tx parameter
  * It needs to be initialized calling setGasEstimation.
  */
-export const useTransactionParameters = (
-  { calculateSafeNonce, parameterStatus }: Props = { calculateSafeNonce: true, parameterStatus: 'ENABLED' },
-): TxParameters => {
-  const isCancelTransaction = sameString(parameterStatus, 'CANCEL_TRANSACTION')
+export const useTransactionParameters = (props?: Props): TxParameters => {
+  const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const { address: safeAddress } = useSelector(safeSelector) || {}
 
   // Safe Params
-  const [safeNonce, setSafeNonce] = useState<string | undefined>(undefined)
+  const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
   // SafeTxGas: for a new Tx call requiredTxGas, for an existing tx get it from the backend.
-  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(isCancelTransaction ? '0' : undefined)
+  const [safeTxGas, setSafeTxGas] = useState<string | undefined>(isCancelTransaction ? '0' : props?.initialSafeTxGas)
 
-  /* ETH Params */
-  const [ethNonce, setEthNonce] = useState<string | undefined>(undefined) // we delegate it to the wallet
-  const [ethGasLimit, setEthGasLimit] = useState<string | undefined>(undefined) // call execTx until it returns a number > 0
-  const [ethGasPrice, setEthGasPrice] = useState<string | undefined>(undefined) // get fast gas price
-  const [ethGasPriceInGWei, setEthGasPriceInGWei] = useState<string | undefined>(undefined) // get fast gas price
+  // ETH Params
+  const [ethNonce, setEthNonce] = useState<string | undefined>() // we delegate it to the wallet
+  const [ethGasLimit, setEthGasLimit] = useState<string | undefined>(props?.initialEthGasLimit) // call execTx until it returns a number > 0
+  const [ethGasPrice, setEthGasPrice] = useState<string | undefined>(props?.initialEthGasPrice) // get fast gas price
+  const [ethGasPriceInGWei, setEthGasPriceInGWei] = useState<string | undefined>() // get fast gas price
 
   // Get nonce for connected wallet
   useEffect(() => {
@@ -85,10 +87,12 @@ export const useTransactionParameters = (
       setSafeNonce(nonce)
     }
 
-    if (safeAddress && calculateSafeNonce) {
-      getSafeNonce()
+    if (safeAddress) {
+      if (props?.calculateSafeNonce ? props.calculateSafeNonce : true) {
+        getSafeNonce()
+      }
     }
-  }, [safeAddress, calculateSafeNonce])
+  }, [safeAddress, props?.calculateSafeNonce])
 
   return {
     safeNonce,
