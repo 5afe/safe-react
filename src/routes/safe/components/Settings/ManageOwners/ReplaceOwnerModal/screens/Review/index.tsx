@@ -26,7 +26,7 @@ import {
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -261,6 +261,7 @@ export const ReviewReplaceOwnerModal = ({
               testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
               type="submit"
               variant="contained"
+              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
             >
               Submit
             </Button>

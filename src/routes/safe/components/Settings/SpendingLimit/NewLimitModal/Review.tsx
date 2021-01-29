@@ -32,7 +32,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -290,7 +290,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               size="md"
               variant="contained"
               onClick={() => handleSubmit(txParameters)}
-              disabled={existentSpendingLimit === undefined}
+              disabled={existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING}
             >
               Submit
             </Button>

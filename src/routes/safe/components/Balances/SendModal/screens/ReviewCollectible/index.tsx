@@ -27,7 +27,7 @@ import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -203,7 +203,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
-              disabled={!data}
+              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
               minWidth={140}
               onClick={() => submitTx(txParameters)}
               type="submit"

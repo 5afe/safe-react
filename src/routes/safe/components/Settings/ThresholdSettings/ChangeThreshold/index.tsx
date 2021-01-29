@@ -17,7 +17,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -162,7 +162,13 @@ export const ChangeThresholdModal = ({
               <Button minWidth={140} onClick={onClose}>
                 Back
               </Button>
-              <Button color="primary" minWidth={140} type="submit" variant="contained">
+              <Button
+                color="primary"
+                minWidth={140}
+                type="submit"
+                variant="contained"
+                disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+              >
                 Change
               </Button>
             </Row>
