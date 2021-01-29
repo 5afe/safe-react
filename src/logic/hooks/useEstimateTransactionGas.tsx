@@ -4,6 +4,7 @@ import {
   estimateGasForTransactionApproval,
   estimateGasForTransactionCreation,
   estimateGasForTransactionExecution,
+  MINIMUM_TRANSACTION_GAS,
   EXTRA_NODE_GAS,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -250,7 +251,7 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const gasEstimation = 10000
+        const gasEstimation = MINIMUM_TRANSACTION_GAS
         const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
         setGasEstimation({

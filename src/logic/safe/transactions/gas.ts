@@ -10,6 +10,9 @@ import axios from 'axios'
 import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
 import { sameString } from 'src/utils/strings'
 
+// 21000 - additional gas costs (e.g. base tx costs, transfer costs)
+export const MINIMUM_TRANSACTION_GAS = 21000
+
 // We detected using metamask that the node rejects the transaction if estimation if too tight
 // So for avoiding rejections we need to add an extra amount of gas used by the node
 export const EXTRA_NODE_GAS = 10000
@@ -217,8 +220,7 @@ export const estimateGasForTransactionCreation = async (
       data: estimateData,
     })
 
-    // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
-    const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + 21000
+    const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + MINIMUM_TRANSACTION_GAS
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(
