@@ -25,12 +25,21 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 export const NoPaddingAccordion = styled(Accordion)`
   &.MuiAccordion-root {
     background-color: transparent;
-    .MuiAccordionSummary-root {
-      background-color: transparent;
-    }
+
     .MuiAccordionDetails-root {
       padding: 0;
     }
+  }
+
+  .MuiAccordionSummary-root {
+    &:hover {
+      background-color: ${({ theme }) => theme.colors.inputField};
+    }
+  }
+
+  &:hover,
+  &.Mui-expanded {
+    background-color: ${({ theme }) => theme.colors.inputField};
   }
 `
 
@@ -38,6 +47,12 @@ export const ActionAccordion = styled(Accordion)`
   &.MuiAccordion-root {
     &:first-child {
       border-top: none;
+    }
+
+    .MuiAccordionSummary-root {
+      &:hover {
+        background-color: ${({ theme }) => theme.colors.inputField};
+      }
     }
 
     &.Mui-expanded {
@@ -69,7 +84,7 @@ export const H2 = styled.h2`
 export const StyledTransactions = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
-  box-shadow: #00000026 0 0 8px 2px;
+  box-shadow: #00000026 0 4px 12px 0;
   overflow: hidden;
   width: 100%;
 
@@ -83,12 +98,36 @@ export const StyledTransactions = styled.div`
       border-bottom: none;
     }
   }
+`
+
+export const GroupedTransactionsCard = styled(StyledTransactions)`
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+
+  &:not(:last-child) {
+    border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+  }
+
+  .MuiAccordion-root,
+  .MuiAccordionSummary-root,
+  .MuiAccordionDetails-root {
+    background-color: transparent;
+
+    &:hover,
+    &.Mui-expanded {
+      background-color: transparent;
+    }
+  }
 
   &:hover {
     background-color: ${({ theme }) => theme.colors.inputField};
 
-    div {
-      background-color: ${({ theme }) => theme.colors.inputField};
+    .MuiAccordionDetails-root {
+      div[class^='tx-'] {
+        background-color: ${({ theme }) => theme.colors.inputField};
+      }
     }
   }
 `
@@ -139,8 +178,6 @@ export const StyledTransaction = styled(WillBeReplaced)`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.inputField};
-
     .tx-actions {
       visibility: visible;
 
