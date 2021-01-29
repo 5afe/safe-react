@@ -9,7 +9,7 @@ import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
 import { AddressInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import RemoveLimitModal from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
+import { RemoveLimitModal } from 'src/routes/safe/components/Settings/SpendingLimit/RemoveLimitModal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
@@ -20,7 +20,7 @@ import {
   SPENDING_LIMIT_TABLE_SPENT_ID,
   SpendingLimitTable,
 } from './dataFetcher'
-import SpentVsAmount from './SpentVsAmount'
+import { SpentVsAmount } from './SpentVsAmount'
 
 const TableActionButton = styled(Button)`
   background-color: transparent;
@@ -35,7 +35,7 @@ interface SpendingLimitTableProps {
   data?: SpendingLimitTable[]
 }
 
-const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => {
+export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
 
@@ -106,5 +106,3 @@ const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => {
     </>
   )
 }
-
-export default LimitsTable

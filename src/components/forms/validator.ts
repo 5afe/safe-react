@@ -42,6 +42,10 @@ export const mustBeUrl = (value: string): ValidatorReturnType => {
 }
 
 export const minValue = (min: number | string, inclusive = true) => (value: string): ValidatorReturnType => {
+  if (!value) {
+    return undefined
+  }
+
   if (Number.parseFloat(value) > Number(min) || (inclusive && Number.parseFloat(value) >= Number(min))) {
     return undefined
   }

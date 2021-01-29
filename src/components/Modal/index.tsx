@@ -9,15 +9,14 @@ const useStyles = makeStyles(
   createStyles({
     root: {
       alignItems: 'center',
-      justifyContent: 'center',
+      flexDirection: 'column',
       display: 'flex',
       overflowY: 'scroll',
     },
     paper: {
-      position: 'absolute',
-      top: '120px',
+      position: 'relative',
+      top: '68px',
       width: '500px',
-      height: '580px',
       borderRadius: sm,
       backgroundColor: '#ffffff',
       boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
@@ -62,7 +61,7 @@ const GnoModal = ({
       onClose={handleClose}
       open={open}
     >
-      <div className={cn(classes.paper, paperClassName)}>{children}</div>
+      <div className={cn(classes.paper, paperClassName, 'classpep')}>{children}</div>
     </Modal>
   )
 }

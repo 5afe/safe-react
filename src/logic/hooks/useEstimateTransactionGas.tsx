@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react'
+
 import {
   estimateGasForTransactionApproval,
   estimateGasForTransactionCreation,
   estimateGasForTransactionExecution,
+  MINIMUM_TRANSACTION_GAS,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -15,7 +17,8 @@ import {
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 import { CALL } from 'src/logic/safe/transactions'
-import { providerSelector } from '../wallets/store/selectors'
+import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
+import { providerSelector } from 'src/logic/wallets/store/selectors'
 
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
@@ -46,8 +49,18 @@ export const checkIfTxIsExecution = (
   return false
 }
 
-export const checkIfTxIsApproveAndExecution = (threshold: number, txConfirmations: number, txType?: string): boolean =>
-  txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
+export const checkIfTxIsApproveAndExecution = (
+  threshold: number,
+  txConfirmations: number,
+  txType?: string,
+  preApprovingOwner?: string,
+): boolean => {
+  if (preApprovingOwner) {
+    return txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
+  }
+
+  return false
+}
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !sameString(txType, 'spendingLimit')
@@ -132,6 +145,7 @@ type UseEstimateTransactionGasProps = {
   operation?: number
   safeTxGas?: number
   txType?: string
+  manualGasPrice?: string
 }
 
 type TransactionGasEstimationResult = {
@@ -140,6 +154,8 @@ type TransactionGasEstimationResult = {
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)
   gasCostFormatted: string // Cost of gas in format '< | > 100'
   gasPrice: string // Current price of gas unit
+  gasPriceFormatted: string // Current gas price formatted
+  gasLimit: string // Minimum gas requited to execute the Tx
   isExecution: boolean // Returns true if the user will execute the tx or false if it just signs it
   isCreation: boolean // Returns true if the transaction is a creation transaction
   isOffChainSignature: boolean // Returns true if offChainSignature is available
@@ -154,6 +170,7 @@ export const useEstimateTransactionGas = ({
   operation,
   safeTxGas,
   txType,
+  manualGasPrice,
 }: UseEstimateTransactionGasProps): TransactionGasEstimationResult => {
   const [gasEstimation, setGasEstimation] = useState<TransactionGasEstimationResult>({
     txEstimationExecutionStatus: EstimationStatus.LOADING,
@@ -161,6 +178,8 @@ export const useEstimateTransactionGas = ({
     gasCost: '0',
     gasCostFormatted: '< 0.001',
     gasPrice: '0',
+    gasPriceFormatted: '0',
+    gasLimit: '0',
     isExecution: false,
     isCreation: false,
     isOffChainSignature: false,
@@ -179,7 +198,12 @@ export const useEstimateTransactionGas = ({
 
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
-      const approvalAndExecution = checkIfTxIsApproveAndExecution(Number(threshold), txConfirmations?.size || 0, txType)
+      const approvalAndExecution = checkIfTxIsApproveAndExecution(
+        Number(threshold),
+        txConfirmations?.size || 0,
+        txType,
+        preApprovingOwner,
+      )
 
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
@@ -198,10 +222,12 @@ export const useEstimateTransactionGas = ({
           safeTxGas,
           approvalAndExecution,
         })
-        const gasPrice = await calculateGasPrice()
+        const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
+        const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
+        const gasLimit = (gasEstimation * 2 + MINIMUM_TRANSACTION_GAS).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
@@ -215,6 +241,8 @@ export const useEstimateTransactionGas = ({
           gasCost,
           gasCostFormatted,
           gasPrice,
+          gasPriceFormatted,
+          gasLimit,
           isExecution,
           isCreation,
           isOffChainSignature,
@@ -222,7 +250,7 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const gasEstimation = 10000
+        const gasEstimation = MINIMUM_TRANSACTION_GAS
         const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
         setGasEstimation({
@@ -231,6 +259,8 @@ export const useEstimateTransactionGas = ({
           gasCost,
           gasCostFormatted,
           gasPrice: '1',
+          gasPriceFormatted: '1',
+          gasLimit: '0',
           isExecution,
           isCreation,
           isOffChainSignature: false,
@@ -255,6 +285,7 @@ export const useEstimateTransactionGas = ({
     safeTxGas,
     txType,
     providerName,
+    manualGasPrice,
   ])
 
   return gasEstimation

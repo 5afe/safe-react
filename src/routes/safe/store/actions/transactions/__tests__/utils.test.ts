@@ -19,9 +19,9 @@ describe('shouldExecuteTransaction', () => {
   })
   it('It should return true if given a safe with a threshold === 1 and the previous transaction is already executed', async () => {
     // given
-    const nonce = '0'
+    const nonce = '1'
     const threshold = '1'
-    const safeInstance = getMockedSafeInstance({ threshold })
+    const safeInstance = getMockedSafeInstance({ threshold, nonce })
     const lastTx = getMockedTxServiceModel({})
 
     // when
@@ -34,7 +34,7 @@ describe('shouldExecuteTransaction', () => {
     // given
     const nonce = '10'
     const threshold = '1'
-    const safeInstance = getMockedSafeInstance({ threshold })
+    const safeInstance = getMockedSafeInstance({ threshold, nonce })
     const lastTx = getMockedTxServiceModel({ isExecuted: true })
 
     // when
