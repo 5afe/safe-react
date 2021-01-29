@@ -18,11 +18,11 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
 import { styles } from './style'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
@@ -31,11 +31,9 @@ const useStyles = makeStyles(styles)
 type ChangeThresholdModalProps = {
   onChangeThreshold: (newThreshold: number) => void
   onClose: () => void
-  onEditTxParameters: () => void
   owners?: List<SafeOwner>
   safeAddress: string
   threshold?: number
-  txParameters: TxParameters
 }
 
 export const ChangeThresholdModal = ({
@@ -44,8 +42,6 @@ export const ChangeThresholdModal = ({
   owners,
   safeAddress,
   threshold = 1,
-  txParameters,
-  onEditTxParameters,
 }: ChangeThresholdModalProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
@@ -56,6 +52,9 @@ export const ChangeThresholdModal = ({
     isCreation,
     isExecution,
     isOffChainSignature,
+    gasLimit,
+    gasPriceFormatted,
+    gasEstimation,
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
@@ -87,94 +86,98 @@ export const ChangeThresholdModal = ({
   }
 
   return (
-    <>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.headingText} noMargin weight="bolder">
-          Change required confirmations
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.close} />
-        </IconButton>
-      </Row>
-      <Hairline />
-      <GnoForm initialValues={{ threshold: threshold.toString() }} onSubmit={handleSubmit}>
-        {() => (
-          <>
-            <Block className={classes.modalContent}>
-              <Row>
-                <Paragraph weight="bolder">Any transaction requires the confirmation of:</Paragraph>
-              </Row>
-              <Row align="center" className={classes.inputRow} margin="xl">
-                <Col xs={2}>
-                  <Field
-                    data-testid="threshold-select-input"
-                    name={THRESHOLD_FIELD_NAME}
-                    render={(props) => (
-                      <>
-                        <SelectField {...props} disableError>
-                          {[...Array(Number(owners?.size))].map((x, index) => (
-                            <MenuItem key={index} value={`${index + 1}`}>
-                              {index + 1}
-                            </MenuItem>
-                          ))}
-                        </SelectField>
-                        {props.meta.error && props.meta.touched && (
-                          <Paragraph className={classes.errorText} color="error" noMargin>
-                            {props.meta.error}
-                          </Paragraph>
+    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+      {(txParameters, toggleEditMode) => (
+        <>
+          <Row align="center" className={classes.heading} grow>
+            <Paragraph className={classes.headingText} noMargin weight="bolder">
+              Change required confirmations
+            </Paragraph>
+            <IconButton disableRipple onClick={onClose}>
+              <Close className={classes.close} />
+            </IconButton>
+          </Row>
+          <Hairline />
+          <GnoForm initialValues={{ threshold: threshold.toString() }} onSubmit={handleSubmit}>
+            {() => (
+              <>
+                <Block className={classes.modalContent}>
+                  <Row>
+                    <Paragraph weight="bolder">Any transaction requires the confirmation of:</Paragraph>
+                  </Row>
+                  <Row align="center" className={classes.inputRow} margin="xl">
+                    <Col xs={2}>
+                      <Field
+                        data-testid="threshold-select-input"
+                        name={THRESHOLD_FIELD_NAME}
+                        render={(props) => (
+                          <>
+                            <SelectField {...props} disableError>
+                              {[...Array(Number(owners?.size))].map((x, index) => (
+                                <MenuItem key={index} value={`${index + 1}`}>
+                                  {index + 1}
+                                </MenuItem>
+                              ))}
+                            </SelectField>
+                            {props.meta.error && props.meta.touched && (
+                              <Paragraph className={classes.errorText} color="error" noMargin>
+                                {props.meta.error}
+                              </Paragraph>
+                            )}
+                          </>
                         )}
-                      </>
-                    )}
-                    validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
+                        validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
+                      />
+                    </Col>
+                    <Col xs={10}>
+                      <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
+                        {`out of ${owners?.size} owner(s)`}
+                      </Paragraph>
+                    </Col>
+                  </Row>
+
+                  {/* Tx Parameters */}
+                  <TxParametersDetail
+                    txParameters={txParameters}
+                    onEdit={toggleEditMode}
+                    compact={true}
+                    parametersStatus={getParametersStatus()}
+                    isTransactionCreation={isCreation}
+                    isTransactionExecution={isExecution}
                   />
-                </Col>
-                <Col xs={10}>
-                  <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                    {`out of ${owners?.size} owner(s)`}
-                  </Paragraph>
-                </Col>
-              </Row>
 
-              {/* Tx Parameters */}
-              <TxParametersDetail
-                txParameters={txParameters}
-                onEdit={onEditTxParameters}
-                compact={true}
-                parametersStatus={getParametersStatus()}
-                isTransactionCreation={isCreation}
-                isTransactionExecution={isExecution}
-              />
+                  <Row>
+                    <TransactionFees
+                      gasCostFormatted={gasCostFormatted}
+                      isExecution={isExecution}
+                      isCreation={isCreation}
+                      isOffChainSignature={isOffChainSignature}
+                      txEstimationExecutionStatus={txEstimationExecutionStatus}
+                    />
+                  </Row>
+                </Block>
 
-              <Row>
-                <TransactionFees
-                  gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
-                  isCreation={isCreation}
-                  isOffChainSignature={isOffChainSignature}
-                  txEstimationExecutionStatus={txEstimationExecutionStatus}
-                />
-              </Row>
-            </Block>
+                <Hairline style={{ position: 'absolute', bottom: 85 }} />
 
-            <Hairline style={{ position: 'absolute', bottom: 85 }} />
-
-            <Row align="center" className={classes.buttonRow}>
-              <Button minWidth={140} onClick={onClose}>
-                Back
-              </Button>
-              <Button
-                color="primary"
-                minWidth={140}
-                type="submit"
-                variant="contained"
-                disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-              >
-                Change
-              </Button>
-            </Row>
-          </>
-        )}
-      </GnoForm>
-    </>
+                <Row align="center" className={classes.buttonRow}>
+                  <Button minWidth={140} onClick={onClose}>
+                    Back
+                  </Button>
+                  <Button
+                    color="primary"
+                    minWidth={140}
+                    type="submit"
+                    variant="contained"
+                    disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                  >
+                    Change
+                  </Button>
+                </Row>
+              </>
+            )}
+          </GnoForm>
+        </>
+      )}
+    </EditableTxParameters>
   )
 }

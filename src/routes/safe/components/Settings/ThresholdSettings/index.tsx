@@ -66,8 +66,6 @@ const ThresholdSettings = (): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
   }, [trackEvent])
 
-  const openEditTxParameters = () => setActiveScreen('editTxParameters')
-
   const closeEditTxParameters = () => setActiveScreen('form')
 
   const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
@@ -107,8 +105,6 @@ const ThresholdSettings = (): React.ReactElement => {
             owners={owners}
             safeAddress={safeAddress}
             threshold={threshold}
-            onEditTxParameters={openEditTxParameters}
-            txParameters={txParameters}
           />
         )}
         {activeScreen === 'editTxParameters' && (
