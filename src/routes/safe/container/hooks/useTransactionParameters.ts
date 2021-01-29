@@ -25,7 +25,6 @@ export type TxParameters = {
 }
 
 type Props = {
-  calculateSafeNonce?: boolean
   parameterStatus?: ParametersStatus
   initialSafeNonce?: string
   initialSafeTxGas?: string
@@ -81,18 +80,19 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   // Calc safe nonce
   useEffect(() => {
     const getSafeNonce = async () => {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress as string)
-      const lastTx = await getLastTx(safeAddress as string)
-      const nonce = await getNewTxNonce(lastTx, safeInstance)
-      setSafeNonce(nonce)
-    }
-
-    if (safeAddress) {
-      if (props?.calculateSafeNonce ? props.calculateSafeNonce : true) {
-        getSafeNonce()
+      if (safeAddress) {
+        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const lastTx = await getLastTx(safeAddress)
+        const nonce = await getNewTxNonce(lastTx, safeInstance)
+        setSafeNonce(nonce)
       }
     }
-  }, [safeAddress, props?.calculateSafeNonce])
+
+    const safeNonce = Number(props?.initialSafeNonce || 0)
+    if (!safeNonce) {
+      getSafeNonce()
+    }
+  }, [safeAddress, props?.initialSafeNonce])
 
   return {
     safeNonce,

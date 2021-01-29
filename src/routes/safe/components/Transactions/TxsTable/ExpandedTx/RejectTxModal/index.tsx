@@ -79,6 +79,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
+        safeNonce={tx.nonce.toString()}
         parametersStatus={getParametersStatus()}
       >
         {(txParameters, toggleEditMode) => {

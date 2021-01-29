@@ -7,7 +7,6 @@ import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
-  calculateSafeNonce?: boolean
   parametersStatus?: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
   ethGasPrice?: TxParameters['ethGasPrice']
@@ -18,7 +17,6 @@ type Props = {
 
 export const EditableTxParameters = ({
   children,
-  calculateSafeNonce = true,
   parametersStatus,
   ethGasLimit,
   ethGasPrice,
@@ -31,7 +29,6 @@ export const EditableTxParameters = ({
   const threshold = useSelector(safeThresholdSelector) || 1
   const defaultParameterStatus = threshold > 1 ? 'ETH_DISABLED' : 'ENABLED'
   const txParameters = useTransactionParameters({
-    calculateSafeNonce,
     parameterStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
     initialEthGasPrice: ethGasPrice,
