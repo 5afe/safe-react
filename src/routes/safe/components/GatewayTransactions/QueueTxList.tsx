@@ -26,7 +26,12 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
       </Text>
       <Text size="lg" className="disclaimer">
         These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
-        <Link href="https://gnosis.io" target="_blank" rel="noreferrer" title="nonces">
+        <Link
+          href="https://help.gnosis-safe.io/en/articles/4730252-why-are-transactions-with-the-same-nonce-conflicting-with-each-other"
+          target="_blank"
+          rel="noreferrer"
+          title="Why are transactions with the same nonce conflicting with each other?"
+        >
           <Text size="lg" as="span" color="primary">
             Learn more
           </Text>
