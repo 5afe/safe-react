@@ -45,8 +45,9 @@ export const EditableTxParameters = ({
     if (!useManualValues) {
       setEthGasLimit(ethGasLimit)
       setEthGasPrice(ethGasPrice)
+      setSafeTxGas(safeTxGas)
     }
-  }, [ethGasLimit, setEthGasLimit, ethGasPrice, setEthGasPrice, useManualValues])
+  }, [ethGasLimit, setEthGasLimit, ethGasPrice, setEthGasPrice, useManualValues, safeTxGas, setSafeTxGas])
 
   const toggleStatus = () => {
     toggleEditMode((prev) => !prev)
