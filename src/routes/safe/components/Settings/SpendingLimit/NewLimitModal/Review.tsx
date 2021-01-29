@@ -259,7 +259,12 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               </Text>
             )}
             {/* Tx Parameters */}
-            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
+            />
             <Row>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}

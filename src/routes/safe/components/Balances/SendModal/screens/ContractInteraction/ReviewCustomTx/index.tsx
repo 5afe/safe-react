@@ -163,7 +163,12 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
             </Row>
 
             {/* Tx Parameters */}
-            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
+            />
 
             <Row>
               <TransactionFees

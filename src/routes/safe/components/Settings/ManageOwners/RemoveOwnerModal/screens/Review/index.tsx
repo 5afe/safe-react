@@ -208,7 +208,13 @@ export const ReviewRemoveOwnerModal = ({
           <Hairline />
 
           {/* Tx Parameters */}
-          <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
+          <TxParametersDetail
+            txParameters={txParameters}
+            onEdit={toggleEditMode}
+            compact={false}
+            isTransactionCreation={isCreation}
+            isTransactionExecution={isExecution}
+          />
 
           <Block className={classes.gasCostsContainer}>
             <TransactionFees

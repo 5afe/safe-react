@@ -235,6 +235,8 @@ export const ConfirmTransactionModal = ({
               txParameters={txParameters}
               onEdit={toggleEditMode}
               parametersStatus={getParametersStatus()}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
             />
             <Row>
               <TransactionFees

@@ -141,6 +141,8 @@ export const ChangeThresholdModal = ({
                 onEdit={onEditTxParameters}
                 compact={true}
                 parametersStatus={getParametersStatus()}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={isExecution}
               />
 
               <Row>

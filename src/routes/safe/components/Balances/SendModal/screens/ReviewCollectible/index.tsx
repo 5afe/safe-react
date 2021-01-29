@@ -177,7 +177,12 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             )}
 
             {/* Tx Parameters */}
-            <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} />
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
+            />
 
             <Row>
               <TransactionFees

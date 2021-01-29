@@ -150,7 +150,13 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   </Paragraph>
                 </Row>
                 {/* Tx Parameters */}
-                <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
+                <TxParametersDetail
+                  txParameters={txParameters}
+                  onEdit={toggleEditMode}
+                  compact={false}
+                  isTransactionCreation={isCreation}
+                  isTransactionExecution={isExecution}
+                />
                 <Row className={classes.modalDescription}>
                   <TransactionFees
                     gasCostFormatted={gasCostFormatted}

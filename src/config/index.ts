@@ -20,7 +20,7 @@ export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
 
 const getCurrentEnvironment = (): string => {
-  switch (NODE_ENV) {
+  /*  switch (NODE_ENV) {
     case 'test': {
       return 'test'
     }
@@ -30,7 +30,9 @@ const getCurrentEnvironment = (): string => {
     default: {
       return 'dev'
     }
-  }
+  }*/
+
+  return 'production'
 }
 
 type NetworkSpecificConfiguration = EnvironmentSettings & {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
@@ -35,6 +35,8 @@ type Props = {
   onEdit: () => void
   compact?: boolean
   parametersStatus?: ParametersStatus
+  isTransactionExecution: boolean
+  isTransactionCreation: boolean
 }
 
 export const TxParametersDetail = ({
@@ -42,9 +44,16 @@ export const TxParametersDetail = ({
   txParameters,
   compact = true,
   parametersStatus,
-}: Props): React.ReactElement => {
+  isTransactionCreation,
+  isTransactionExecution,
+}: Props): ReactElement | null => {
   const threshold = useSelector(safeThresholdSelector) || 1
   const defaultParameterStatus = threshold > 1 ? 'ETH_DISABLED' : 'ENABLED'
+
+  if (!isTransactionExecution && !isTransactionCreation) {
+    return null
+  }
+
   return (
     <Accordion {...compact}>
       <AccordionSummary>

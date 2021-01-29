@@ -120,7 +120,13 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
               </Block>
 
               {/* Tx Parameters */}
-              <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
+              <TxParametersDetail
+                txParameters={txParameters}
+                onEdit={toggleEditMode}
+                compact={false}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={isExecution}
+              />
               <Row className={classes.modalDescription}>
                 <TransactionFees
                   gasCostFormatted={gasCostFormatted}

@@ -112,6 +112,8 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                   onEdit={toggleEditMode}
                   compact={false}
                   parametersStatus={getParametersStatus()}
+                  isTransactionCreation={isCreation}
+                  isTransactionExecution={isExecution}
                 />
                 <Row>
                   <TransactionFees

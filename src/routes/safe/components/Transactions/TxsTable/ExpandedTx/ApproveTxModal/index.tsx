@@ -198,6 +198,8 @@ export const ApproveTxModal = ({
                       txParameters={txParameters}
                       onEdit={toggleEditMode}
                       parametersStatus={getParametersStatus()}
+                      isTransactionCreation={isCreation}
+                      isTransactionExecution={isExecution}
                     />
                   )}
                 </Row>

@@ -110,7 +110,13 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     </Paragraph>
                   </Row>
                   {/* Tx Parameters */}
-                  <TxParametersDetail txParameters={txParameters} onEdit={toggleEditMode} compact={false} />
+                  <TxParametersDetail
+                    txParameters={txParameters}
+                    onEdit={toggleEditMode}
+                    compact={false}
+                    isTransactionCreation={isCreation}
+                    isTransactionExecution={isExecution}
+                  />
                   <Row>
                     <TransactionFees
                       gasCostFormatted={gasCostFormatted}
