@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useMemo } from 'react'
 import { GenericModal, Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import styled from 'styled-components'
@@ -18,13 +18,15 @@ import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
 import { TransactionParams } from './AppFrame'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import Row from 'src/components/layout/Row'
+import { TransactionFees } from 'src/components/TransactionsFees'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -67,6 +69,10 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
+const Container = styled.div`
+  max-width: 480px;
+`
+
 type OwnProps = {
   isOpen: boolean
   app: SafeApp
@@ -95,11 +101,21 @@ export const ConfirmTransactionModal = ({
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+  const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
+  const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
+  const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
 
-  const { gasEstimation, txEstimationExecutionStatus } = useEstimateTransactionGas({
-    txData: encodeMultiSendCall(txs),
-    txRecipient: MULTI_SEND_ADDRESS,
-    operation: DELEGATE_CALL,
+  const {
+    gasEstimation,
+    isOffChainSignature,
+    isCreation,
+    isExecution,
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+  } = useEstimateTransactionGas({
+    txData: txData || '',
+    txRecipient,
+    operation,
   })
 
   useEffect(() => {
@@ -124,16 +140,14 @@ export const ConfirmTransactionModal = ({
   }
 
   const confirmTransactions = async () => {
-    const txData = encodeMultiSendCall(txs)
-
     await dispatch(
       createTransaction(
         {
           safeAddress,
-          to: MULTI_SEND_ADDRESS,
+          to: txRecipient,
           valueInWei: '0',
           txData,
-          operation: DELEGATE_CALL,
+          operation,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
@@ -159,7 +173,7 @@ export const ConfirmTransactionModal = ({
       </Text>
     </>
   ) : (
-    <>
+    <Container>
       <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
       <DividerLine withArrow />
       {txs.map((tx, index) => (
@@ -195,7 +209,16 @@ export const ConfirmTransactionModal = ({
           />
         </div>
       )}
-    </>
+      <Row>
+        <TransactionFees
+          gasCostFormatted={gasCostFormatted}
+          isExecution={isExecution}
+          isCreation={isCreation}
+          isOffChainSignature={isOffChainSignature}
+          txEstimationExecutionStatus={txEstimationExecutionStatus}
+        />
+      </Row>
+    </Container>
   )
 
   return (

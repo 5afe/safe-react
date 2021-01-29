@@ -32,6 +32,7 @@ interface ProcessTransactionArgs {
   safeAddress: string
   tx: Transaction
   userAddress: string
+  thresholdReached: boolean
 }
 
 type ProcessTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
@@ -42,6 +43,7 @@ export const processTransaction = ({
   safeAddress,
   tx,
   userAddress,
+  thresholdReached,
 }: ProcessTransactionArgs): ProcessTransactionAction => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
@@ -56,7 +58,7 @@ export const processTransaction = ({
   const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
   const safeVersion = await getCurrentSafeVersion(safeInstance)
 
-  const preApprovingOwner = approveAndExecute ? userAddress : undefined
+  const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
   let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
 
   if (!sigs) {

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useField } from 'react-final-form'
 import { makeStyles } from '@material-ui/core/styles'
 import TextField from 'src/components/forms/TextField'
@@ -17,7 +17,7 @@ const useStyles = makeStyles({
   },
 })
 
-const RenderOutputParams = () => {
+export const RenderOutputParams = (): ReactElement | null => {
   const classes = useStyles()
   const {
     input: { value: method },
@@ -27,7 +27,11 @@ const RenderOutputParams = () => {
   }: any = useField('callResults', { subscription: { value: true } })
   const multipleResults = !!method && method.outputs.length > 1
 
-  return results ? (
+  if (!results) {
+    return null
+  }
+
+  return (
     <>
       <Row align="left" margin="xs">
         <Paragraph color="primary" size="lg" style={{ letterSpacing: '-0.5px' }}>
@@ -57,7 +61,5 @@ const RenderOutputParams = () => {
         )
       })}
     </>
-  ) : null
+  )
 }
-
-export default RenderOutputParams

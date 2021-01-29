@@ -1,12 +1,14 @@
 import { BigNumber } from 'bignumber.js'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { sameString } from 'src/utils/strings'
+import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import axios from 'axios'
+import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -25,6 +27,21 @@ const parseRequiredTxGasResponse = (data: string): number => {
   return data.match(/.{2}/g)?.reduce(reducer, 0)
 }
 
+interface ErrorDataJson extends JSON {
+  originalError?: {
+    data?: string
+  }
+  data?: string
+}
+
+const getJSONOrNullFromString = (stringInput: string): ErrorDataJson | null => {
+  try {
+    return JSON.parse(stringInput)
+  } catch (error) {
+    return null
+  }
+}
+
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
 export const getDataFromNodeErrorMessage = (errorMessage: string): string | undefined => {
   // Replace illegal characters that often comes within the error string (like � for example)
@@ -35,7 +52,13 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   const [, ...error] = normalizedErrorString.split('\n')
 
   try {
-    const errorAsJSON = JSON.parse(error.join(''))
+    const errorAsString = error.join('')
+    const errorAsJSON = getJSONOrNullFromString(errorAsString)
+
+    // Trezor wallet returns the error not as an JSON object but directly as string
+    if (!errorAsJSON) {
+      return errorAsString.length ? errorAsString : undefined
+    }
 
     // For new GETH nodes they will return the data as error in the format:
     // {
@@ -67,7 +90,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
   }
 }
 
-export const getGasEstimationTxResponse = async (txConfig: {
+const estimateGasWithWeb3Provider = async (txConfig: {
   to: string
   from: string
   data: string
@@ -95,10 +118,54 @@ export const getGasEstimationTxResponse = async (txConfig: {
 
     return new BigNumber(estimationData.substring(138), 16).toNumber()
   }
-
-  // This will fail in case that we receive an EMPTY_DATA on the GETH node gas estimation (for version < v1.9.24 of geth nodes)
-  // We cannot throw this error above because it will be captured again on the catch block bellow
   throw new Error('Error while estimating the gas required for tx')
+}
+
+const estimateGasWithRPCCall = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  try {
+    const { data } = await axios.post(getRpcServiceUrl(), {
+      jsonrpc: '2.0',
+      method: 'eth_call',
+      id: 1,
+      params: [
+        {
+          ...txConfig,
+          gasPrice: web3ReadOnly.utils.toHex(txConfig.gasPrice || 0),
+          gas: txConfig.gas ? web3ReadOnly.utils.toHex(txConfig.gas) : undefined,
+        },
+        'latest',
+      ],
+    })
+
+    const { error } = data
+    if (error?.data) {
+      return new BigNumber(data.error.data.substring(138), 16).toNumber()
+    }
+  } catch (error) {
+    console.log('Gas estimation endpoint errored: ', error.message)
+  }
+  throw new Error('Error while estimating the gas required for tx')
+}
+
+export const getGasEstimationTxResponse = async (txConfig: {
+  to: string
+  from: string
+  data: string
+  gasPrice?: number
+  gas?: number
+}): Promise<number> => {
+  // If we are in a infura supported network we estimate using infura
+  if (usesInfuraRPC) {
+    return estimateGasWithRPCCall(txConfig)
+  }
+  // Otherwise we estimate using the current connected provider
+  return estimateGasWithWeb3Provider(txConfig)
 }
 
 const calculateMinimumGasForTransaction = async (
@@ -110,6 +177,7 @@ const calculateMinimumGasForTransaction = async (
 ): Promise<number> => {
   for (const additionalGas of additionalGasBatches) {
     const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
+    console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
     try {
       await getGasEstimationTxResponse({
         to: safeAddress,
@@ -118,7 +186,8 @@ const calculateMinimumGasForTransaction = async (
         gasPrice: 0,
         gas: amountOfGasToTryTx,
       })
-      return txGasEstimation + additionalGas
+      console.info(`Gas estimation successfully finished with gas amount: ${amountOfGasToTryTx}`)
+      return amountOfGasToTryTx
     } catch (error) {
       console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
     }
@@ -144,8 +213,6 @@ export const estimateGasForTransactionCreation = async (
       data: estimateData,
     })
 
-    const txGasEstimation = gasEstimationResponse + 10000
-
     // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + 21000
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
@@ -154,7 +221,7 @@ export const estimateGasForTransactionCreation = async (
       additionalGasBatches,
       safeAddress,
       estimateData,
-      txGasEstimation,
+      gasEstimationResponse,
       dataGasEstimation,
     )
   } catch (error) {
@@ -251,5 +318,9 @@ export const estimateGasForTransactionApproval = async ({
       from,
     })
   const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
-  return calculateGasOf(approveTransactionTxData, from, safeAddress)
+  return calculateGasOf({
+    data: approveTransactionTxData,
+    from,
+    to: safeAddress,
+  })
 }

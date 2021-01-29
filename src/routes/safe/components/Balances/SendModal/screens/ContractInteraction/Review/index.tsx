@@ -16,7 +16,7 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import Header from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
+import { Header } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'

@@ -64,7 +64,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     isCreation,
   } = useEstimateTransactionGas({
     txData: data,
-    txRecipient: tx.recipientAddress,
+    txRecipient: tx.assetAddress,
   })
 
   useEffect(() => {
