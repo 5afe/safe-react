@@ -30,29 +30,12 @@ export const NoPaddingAccordion = styled(Accordion)`
       padding: 0;
     }
   }
-
-  .MuiAccordionSummary-root {
-    &:hover {
-      background-color: ${({ theme }) => theme.colors.inputField};
-    }
-  }
-
-  &:hover,
-  &.Mui-expanded {
-    background-color: ${({ theme }) => theme.colors.inputField};
-  }
 `
 
 export const ActionAccordion = styled(Accordion)`
   &.MuiAccordion-root {
     &:first-child {
       border-top: none;
-    }
-
-    .MuiAccordionSummary-root {
-      &:hover {
-        background-color: ${({ theme }) => theme.colors.inputField};
-      }
     }
 
     &.Mui-expanded {
@@ -122,11 +105,11 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 
   &:hover {
-    background-color: ${({ theme }) => theme.colors.inputField};
+    background-color: ${({ theme }) => theme.colors.background};
 
     .MuiAccordionDetails-root {
       div[class^='tx-'] {
-        background-color: ${({ theme }) => theme.colors.inputField};
+        background-color: ${({ theme }) => theme.colors.background};
       }
     }
   }
@@ -277,7 +260,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
-  background-color: ${({ theme }) => theme.colors.separator} !important;
+  background-color: ${({ theme }) => theme.colors.inputField} !important;
   border-radius: 5px;
   margin: 8px;
   padding: 8px;
