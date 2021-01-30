@@ -45,11 +45,13 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
     isCancelTransaction({ safeAddress, txInfo: txDetails.txInfo })
   ) {
     return (
-      <NormalBreakingText size="lg">
-        {`This is an empty cancelling transaction that doesn't send any funds.
+      <>
+        <NormalBreakingText size="lg">
+          {`This is an empty cancelling transaction that doesn't send any funds.
        Executing this transaction will replace all currently awaiting transactions with nonce ${
          (txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE
        }.`}
+        </NormalBreakingText>
         <Link
           href="https://help.gnosis-safe.io/en/articles/4738501-why-do-i-need-to-pay-for-cancelling-a-transaction"
           target="_blank"
@@ -61,7 +63,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
             <Icon size="sm" type="externalLink" color="primary" />
           </Text>
         </Link>
-      </NormalBreakingText>
+      </>
     )
   }
 
