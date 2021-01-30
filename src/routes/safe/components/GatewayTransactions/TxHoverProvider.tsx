@@ -2,7 +2,7 @@ import React, { createContext, ReactElement, ReactNode, useState } from 'react'
 
 export const TxHoverContext = createContext<{
   activeHover?: string
-  setActiveHover?: (activeHover?: string) => void
+  setActiveHover: (activeHover?: string) => void
 }>({
   activeHover: undefined,
   setActiveHover: () => {},

@@ -96,12 +96,12 @@ const CollapsedActionButtons = ({
 
   const handleOnMouseEnter = () => {
     if (canExecute) {
-      setActiveHover?.(transaction.id)
+      setActiveHover(transaction.id)
     }
   }
 
   const handleOnMouseLeave = () => {
-    setActiveHover?.()
+    setActiveHover()
   }
 
   const disabled = transaction.txStatus === 'PENDING'
