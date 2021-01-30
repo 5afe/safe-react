@@ -23,7 +23,7 @@ export const TxExpandedActions = ({
 
   const handleConfirmButtonClick = () => {
     selectAction({
-      actionSelected: canExecute || canConfirmThenExecute? 'execute' : 'confirm',
+      actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
       transactionId: transaction.id,
       txLocation,
     })

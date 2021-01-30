@@ -2,9 +2,9 @@ import { List, Map } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { Token } from 'src/logic/tokens/store/model/token'
-import { tokenListSelector, tokensSelector } from 'src/logic/tokens/store/selectors'
+import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { isUserAnOwner, sameAddress } from 'src/logic/wallets/ethAddresses'
+import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import {
@@ -17,12 +17,12 @@ import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
 import { MODULE_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/moduleTransactions'
 import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
-import {
-  SafeModuleTransaction,
-  TransactionStatus,
-  TransactionTypes,
-} from 'src/logic/safe/store/models/types/transaction'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
+// import {
+//   SafeModuleTransaction,
+//   TransactionStatus,
+//   TransactionTypes,
+// } from 'src/logic/safe/store/models/types/transaction'
+// import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 export const grantedSelector = createSelector(
   userAccountSelector,
