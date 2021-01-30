@@ -2,11 +2,12 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useContext } from 'react'
 
 import { Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionActionStateContext } from './TxActionProvider'
 import { TxHoverContext } from './TxHoverProvider'
 
 type TxExpandedActionsProps = {
-  actions: { canCancel: boolean; canConfirm: boolean; canExecute: boolean }
+  actions: TransactionActions
   transaction: Transaction
   txLocation: TxLocation
 }
@@ -18,11 +19,11 @@ export const TxExpandedActions = ({
 }: TxExpandedActionsProps): ReactElement | null => {
   const { selectAction } = useContext(TransactionActionStateContext)
   const { setActiveHover } = useContext(TxHoverContext)
-  const { canCancel, canConfirm, canExecute } = actions
+  const { canCancel, canConfirm, canConfirmThenExecute, canExecute } = actions
 
   const handleConfirmButtonClick = () => {
     selectAction({
-      actionSelected: actions.canExecute ? 'execute' : 'confirm',
+      actionSelected: canExecute || canConfirmThenExecute? 'execute' : 'confirm',
       transactionId: transaction.id,
       txLocation,
     })
@@ -33,7 +34,7 @@ export const TxExpandedActions = ({
   }
 
   const handleOnMouseEnter = () => {
-    if (actions.canExecute) {
+    if (canExecute) {
       setActiveHover?.(transaction.id)
     }
   }

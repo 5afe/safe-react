@@ -78,10 +78,12 @@ const CollapsedActionButtons = ({
   const { selectAction } = useContext(TransactionActionStateContext)
   const { setActiveHover } = useContext(TxHoverContext)
   const { txLocation } = useContext(TxLocationContext)
+  const { canCancel, canConfirm, canConfirmThenExecute, canExecute } = actions
+
   const handleConfirmButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
     event.stopPropagation()
     selectAction({
-      actionSelected: actions.canExecute ? 'execute' : 'confirm',
+      actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
       transactionId: transaction.id,
       txLocation,
     })
@@ -93,7 +95,7 @@ const CollapsedActionButtons = ({
   }
 
   const handleOnMouseEnter = () => {
-    if (actions.canExecute) {
+    if (canExecute) {
       setActiveHover?.(transaction.id)
     }
   }
@@ -106,7 +108,7 @@ const CollapsedActionButtons = ({
 
   return (
     <>
-      {(actions.canConfirm || actions.canExecute) && (
+      {(canConfirm || canExecute) && (
         <IconButton
           size="small"
           type="button"
@@ -116,14 +118,14 @@ const CollapsedActionButtons = ({
           onMouseLeave={handleOnMouseLeave}
         >
           <Icon
-            type={actions.canExecute ? 'rocket' : 'check'}
+            type={canExecute ? 'rocket' : 'check'}
             color="primary"
             size="sm"
-            tooltip={actions.canExecute ? 'Execute' : 'Confirm'}
+            tooltip={canExecute ? 'Execute' : 'Confirm'}
           />
         </IconButton>
       )}
-      {actions.canCancel && (
+      {canCancel && (
         <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={disabled}>
           <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
         </IconButton>

@@ -25,9 +25,11 @@ export const isReadyToExecute = (executionInfo: ExecutionInfo): boolean => {
 
 export type TransactionActions = {
   canConfirm: boolean
+  canConfirmThenExecute: boolean
   canExecute: boolean
   canCancel: boolean
   isUserAnOwner: boolean
+  oneToGo: boolean
 }
 
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
@@ -35,32 +37,32 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const isUserAnOwner = useSelector(grantedSelector)
   const { txLocation } = useContext(TxLocationContext)
+  const { confirmationsSubmitted = 0, confirmationsRequired = 0, missingSigners } = transaction.executionInfo ?? {}
   const transactionsByNonce = useSelector((state) =>
     getQueuedTransactionsByNonceAndLocation(state, transaction.executionInfo?.nonce ?? -1, txLocation),
   )
 
   const [state, setState] = useState<TransactionActions>({
     canConfirm: false,
+    canConfirmThenExecute: false,
     canExecute: false,
     canCancel: false,
     isUserAnOwner,
+    oneToGo: false,
   })
 
   useEffect(() => {
     if (isUserAnOwner && txLocation !== 'history' && transaction.executionInfo) {
-      const { executionInfo } = transaction
-      const { confirmationsSubmitted, confirmationsRequired } = executionInfo
-      const currentUserSigned = !executionInfo.missingSigners?.some((missingSigner) =>
-        sameAddress(missingSigner, currentUser),
-      )
+      const currentUserSigned = !missingSigners?.some((missingSigner) => sameAddress(missingSigner, currentUser))
 
       const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
-      const thresholdReached = confirmationsSubmitted === confirmationsRequired
-      const readyToExecute = thresholdReached || (oneToGo && !currentUserSigned)
+      const canConfirm = ['queued.next', 'queued.queued'].includes(txLocation) && !currentUserSigned
+      const thresholdReached = confirmationsSubmitted >= confirmationsRequired
 
       setState({
-        canConfirm: txLocation === 'queued.queued' && !currentUserSigned,
-        canExecute: txLocation === 'queued.next' && readyToExecute,
+        canConfirm,
+        canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo,
+        canExecute: txLocation === 'queued.next' && thresholdReached,
         canCancel: !transactionsByNonce.some(
           ({ txInfo }) =>
             isCustomTxInfo(txInfo) &&
@@ -70,11 +72,22 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
             }),
         ),
         isUserAnOwner,
+        oneToGo,
       })
     } else {
       setState((prev) => ({ ...prev, isUserAnOwner }))
     }
-  }, [currentUser, isUserAnOwner, safeAddress, transaction, transactionsByNonce, txLocation])
+  }, [
+    confirmationsRequired,
+    confirmationsSubmitted,
+    currentUser,
+    isUserAnOwner,
+    missingSigners,
+    safeAddress,
+    transaction,
+    transactionsByNonce,
+    txLocation,
+  ])
 
   return state
 }

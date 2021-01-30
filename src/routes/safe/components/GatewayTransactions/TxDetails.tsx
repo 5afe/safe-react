@@ -78,7 +78,7 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { isUserAnOwner, ...actions } = useTransactionActions(transaction)
+  const actions = useTransactionActions(transaction)
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
@@ -111,13 +111,13 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': !isUserAnOwner,
+          'no-owner': !actions.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && actions.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions actions={actions} transaction={transaction} txLocation={txLocation} />
         </div>
