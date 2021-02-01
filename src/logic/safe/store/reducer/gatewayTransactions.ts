@@ -38,6 +38,7 @@ export type TransactionDetailsPayload = {
 export type TransactionStatusPayload = {
   safeAddress: string
   nonce: number
+  id?: string
   txStatus: TransactionStatus
 }
 
@@ -131,20 +132,28 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 const txIndex = next[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
 
                 if (txIndex !== -1) {
-                  // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
-                  if (next[txNonce][txIndex].txStatus === 'PENDING') {
+                  const storedTransaction = next[txNonce][txIndex]
+                  const updateFromService =
+                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    value.transaction.executionInfo?.confirmationsSubmitted
+
+                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
                     value.transaction.txStatus = 'PENDING'
                   }
 
-                  next[txNonce][txIndex] = merge(next[txNonce][txIndex], value.transaction)
+                  // we replace the stored transaction with the data returned by the service
+                  next[txNonce][txIndex] = merge(storedTransaction, value.transaction)
                   break
                 }
 
+                // we add the transaction returned by the service to the list of transactions
                 next[txNonce] = [...next[txNonce], value.transaction]
                 break
               }
 
               // a new tx has arrived to the `next` queue
+              // we re-create the `next` object with the new transaction
               next = { [txNonce]: [value.transaction] }
 
               // we remove the new `next` transaction from the `queue` list, if it exist
@@ -157,10 +166,21 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                 const txIndex = queued[txNonce].findIndex(({ id }) => sameString(id, value.transaction.id))
 
                 if (txIndex !== -1) {
-                  queued[txNonce][txIndex] = merge(queued[txNonce][txIndex], value.transaction)
+                  const storedTransaction = queued[txNonce][txIndex]
+                  const updateFromService =
+                    storedTransaction.executionInfo?.confirmationsSubmitted !==
+                    value.transaction.executionInfo?.confirmationsSubmitted
+
+                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
+                    value.transaction.txStatus = 'PENDING'
+                  }
+
+                  queued[txNonce][txIndex] = merge(storedTransaction, value.transaction)
                   break
                 }
 
+                // we add the transaction returned by the service to the list of transactions
                 queued[txNonce] = [...queued[txNonce], value.transaction]
                 break
               }
@@ -242,7 +262,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       }
     },
     [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
-      const { nonce, safeAddress, txStatus } = action.payload
+      const { nonce, id, safeAddress, txStatus } = action.payload
       const storedTransactions = Object.assign({}, state[safeAddress])
       const { queued } = storedTransactions
       const { history } = storedTransactions
@@ -279,14 +299,26 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.next': {
           queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
-            txToUpdate.txStatus = txStatus
+            if (typeof id !== 'undefined') {
+              if (sameString(txToUpdate.id, id)) {
+                txToUpdate.txStatus = txStatus
+              }
+            } else {
+              txToUpdate.txStatus = txStatus
+            }
             return txToUpdate
           })
           break
         }
         case 'queued.queued': {
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
-            txToUpdate.txStatus = txStatus
+            if (typeof id !== 'undefined') {
+              if (sameString(txToUpdate.id, id)) {
+                txToUpdate.txStatus = txStatus
+              }
+            } else {
+              txToUpdate.txStatus = txStatus
+            }
             return txToUpdate
           })
           break

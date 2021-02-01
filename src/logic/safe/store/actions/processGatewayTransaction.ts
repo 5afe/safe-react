@@ -31,6 +31,7 @@ interface ProcessTransactionArgs {
   notifiedTransaction: string
   safeAddress: string
   tx: {
+    id: string
     confirmations: List<Confirmation>
     origin: string // json.stringified url, name
     to: string
@@ -109,6 +110,7 @@ export const processTransaction = ({
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+        dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
@@ -135,7 +137,16 @@ export const processTransaction = ({
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
-        isExecution && dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce }))
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING',
+            safeAddress,
+            nonce: tx.nonce,
+            // if we provide the tx ID that sole tx will has the _pending_ status.
+            // if not, all the txs that share the same nonce will have the _pending_ status.
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
 
         try {
           await saveTxToHistory({ ...txArgs, txHash })
@@ -148,8 +159,7 @@ export const processTransaction = ({
       .on('error', (error) => {
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
 
-        isExecution &&
-          dispatch(updateTransactionStatus({ txStatus: 'AWAITING_EXECUTION', safeAddress, nonce: tx.nonce }))
+        dispatch(updateTransactionStatus({ txStatus: 'PENDING_FAILED', safeAddress, nonce: tx.nonce }))
 
         console.error('Processing transaction error: ', error)
       })
@@ -185,6 +195,7 @@ export const processTransaction = ({
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
+    dispatch(updateTransactionStatus({ nonce: tx.nonce, safeAddress, txStatus: 'PENDING_FAILED' }))
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     if (txHash) {

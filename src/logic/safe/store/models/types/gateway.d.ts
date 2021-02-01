@@ -154,6 +154,7 @@ type TransactionStatus =
   | 'FAILED'
   | 'SUCCESS'
   | 'PENDING'
+  | 'PENDING_FAILED'
   | 'WILL_BE_REPLACED'
 
 type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation

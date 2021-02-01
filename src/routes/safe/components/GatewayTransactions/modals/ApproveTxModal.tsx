@@ -187,6 +187,8 @@ export const ApproveTxModal = ({
     [],
   )
 
+  const id = useMemo(() => transaction.current.id, [])
+
   const {
     gasCostFormatted,
     txEstimationExecutionStatus,
@@ -210,6 +212,7 @@ export const ApproveTxModal = ({
       processTransaction({
         safeAddress,
         tx: {
+          id,
           baseGas,
           confirmations,
           data,

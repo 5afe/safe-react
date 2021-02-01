@@ -44,6 +44,8 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
         case 'AWAITING_EXECUTION':
           text = signaturePending(currentUser) ? 'Awaiting your execution' : 'Awaiting execution'
           break
+        case 'PENDING':
+        case 'PENDING_FAILED':
         default:
           text = 'Pending'
           break
