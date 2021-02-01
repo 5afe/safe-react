@@ -113,7 +113,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': !actions.isUserAnOwner,
+          'no-owner': txLocation !== 'history' && !actions.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
