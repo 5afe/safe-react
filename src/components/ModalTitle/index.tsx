@@ -1,8 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import IconButton from '@material-ui/core/IconButton'
+import Close from '@material-ui/icons/Close'
 
 import Paragraph from 'src/components/layout/Paragraph'
-import { lg } from 'src/theme/variables'
+import { md, lg } from 'src/theme/variables'
+import Row from 'src/components/layout/Row'
 
 const StyledParagraph = styled(Paragraph)`
   && {
@@ -18,14 +21,39 @@ const TitleWrapper = styled.div`
   align-items: center;
 `
 
-const ModalTitle = ({ iconUrl, title }: { title: string; iconUrl: string }) => {
+const StyledRow = styled(Row)`
+  padding: ${md} ${lg};
+  justify-content: space-between;
+  box-sizing: border-box;
+  max-height: 75px;
+`
+
+const StyledClose = styled(Close)`
+  height: 35px;
+  width: 35px;
+`
+
+const ModalTitle = ({
+  iconUrl,
+  title,
+  onClose,
+}: {
+  title: string
+  iconUrl: string
+  onClose?: () => void
+}): React.ReactElement => {
   return (
-    <TitleWrapper>
-      {iconUrl && <IconImg alt={title} src={iconUrl} />}
-      <StyledParagraph noMargin weight="bolder">
-        {title}
-      </StyledParagraph>
-    </TitleWrapper>
+    <StyledRow align="center" grow>
+      <TitleWrapper>
+        {iconUrl && <IconImg alt={title} src={iconUrl} />}
+        <StyledParagraph noMargin weight="bolder">
+          {title}
+        </StyledParagraph>
+      </TitleWrapper>
+      <IconButton disableRipple onClick={onClose}>
+        <StyledClose />
+      </IconButton>
+    </StyledRow>
   )
 }
 

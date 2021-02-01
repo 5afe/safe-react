@@ -109,7 +109,26 @@ describe('checkIfTxIsCreation', () => {
 })
 
 describe('checkIfTxIsApproveAndExecution', () => {
-  it(`should return true if there is only one confirmation left to reach the safe threshold`, () => {
+  const mockedEthAccount = '0x29B1b813b6e84654Ca698ef5d7808E154364900B'
+  it(`should return true if there is only one confirmation left to reach the safe threshold and there is a preApproving account`, () => {
+    // given
+    const transactionConfirmations = 2
+    const safeThreshold = 3
+    const transactionType = ''
+    const preApprovingOwner = mockedEthAccount
+
+    // when
+    const result = checkIfTxIsApproveAndExecution(
+      safeThreshold,
+      transactionConfirmations,
+      transactionType,
+      preApprovingOwner,
+    )
+
+    // then
+    expect(result).toBe(true)
+  })
+  it(`should return false if there is only one confirmation left to reach the safe threshold and but there is no preApproving account`, () => {
     // given
     const transactionConfirmations = 2
     const safeThreshold = 3
@@ -119,16 +138,40 @@ describe('checkIfTxIsApproveAndExecution', () => {
     const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
 
     // then
-    expect(result).toBe(true)
+    expect(result).toBe(false)
   })
-  it(`should return true if the transaction is spendingLimit`, () => {
+  it(`should return true if the transaction is spendingLimit and there is a preApproving account`, () => {
     // given
     const transactionConfirmations = 0
     const transactionType = 'spendingLimit'
     const safeThreshold = 3
+    const preApprovingOwner = mockedEthAccount
 
     // when
-    const result = checkIfTxIsApproveAndExecution(safeThreshold, transactionConfirmations, transactionType)
+    const result = checkIfTxIsApproveAndExecution(
+      safeThreshold,
+      transactionConfirmations,
+      transactionType,
+      preApprovingOwner,
+    )
+
+    // then
+    expect(result).toBe(true)
+  })
+  it(`should return false if the transaction is spendingLimit and there is no preApproving account`, () => {
+    // given
+    const transactionConfirmations = 0
+    const transactionType = 'spendingLimit'
+    const safeThreshold = 3
+    const preApprovingOwner = mockedEthAccount
+
+    // when
+    const result = checkIfTxIsApproveAndExecution(
+      safeThreshold,
+      transactionConfirmations,
+      transactionType,
+      preApprovingOwner,
+    )
 
     // then
     expect(result).toBe(true)

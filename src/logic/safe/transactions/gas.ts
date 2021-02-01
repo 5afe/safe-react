@@ -10,6 +10,9 @@ import axios from 'axios'
 import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
 import { sameString } from 'src/utils/strings'
 
+// 21000 - additional gas costs (e.g. base tx costs, transfer costs)
+export const MINIMUM_TRANSACTION_GAS = 21000
+
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
   const reducer = (accumulator, currentValue) => {
@@ -213,8 +216,7 @@ export const estimateGasForTransactionCreation = async (
       data: estimateData,
     })
 
-    // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
-    const dataGasEstimation = parseRequiredTxGasResponse(estimateData) + 21000
+    const dataGasEstimation = parseRequiredTxGasResponse(estimateData)
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(

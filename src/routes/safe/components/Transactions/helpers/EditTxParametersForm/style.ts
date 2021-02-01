@@ -3,10 +3,10 @@ import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
   heading: {
-    padding: `${sm} ${lg}`,
+    padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
-    height: '74px',
+    maxHeight: '75px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -15,30 +15,31 @@ export const styles = createStyles({
     marginLeft: '20px',
   },
   headingText: {
-    fontSize: '20px',
+    fontSize: lg,
   },
-  close: {
+  closeIcon: {
     height: '35px',
     width: '35px',
   },
-  modalContent: {
+  container: {
     padding: `${md} ${lg}`,
   },
-  ownersText: {
+  amount: {
     marginLeft: sm,
+  },
+  address: {
+    marginRight: sm,
   },
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    position: 'relative',
-    bottom: 0,
-    width: '100%',
+    '& > button': {
+      fontFamily: 'Averta',
+      fontSize: md,
+    },
   },
-  inputRow: {
-    position: 'relative',
-  },
-  errorText: {
-    position: 'absolute',
-    bottom: '-25px',
+  submitButton: {
+    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
+    marginLeft: '15px',
   },
 })
