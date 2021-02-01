@@ -27,15 +27,11 @@ const NOTIFICATION_IDS = {
   UNLOCK_WALLET_MSG: 'UNLOCK_WALLET_MSG',
   CONNECT_WALLET_ERROR_MSG: 'CONNECT_WALLET_ERROR_MSG',
   SIGN_TX_MSG: 'SIGN_TX_MSG',
-  TX_PENDING_MSG: 'TX_PENDING_MSG',
   TX_REJECTED_MSG: 'TX_REJECTED_MSG',
   TX_EXECUTED_MSG: 'TX_EXECUTED_MSG',
   TX_CANCELLATION_EXECUTED_MSG: 'TX_CANCELLATION_EXECUTED_MSG',
   TX_FAILED_MSG: 'TX_FAILED_MSG',
-  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: 'TX_EXECUTED_MORE_CONFIRMATIONS_MSG',
   TX_WAITING_MSG: 'TX_WAITING_MSG',
-  TX_INCOMING_MSG: 'TX_INCOMING_MSG',
-  TX_CONFIRMATION_PENDING_MSG: 'TX_CONFIRMATION_PENDING_MSG',
   TX_CONFIRMATION_EXECUTED_MSG: 'TX_CONFIRMATION_EXECUTED_MSG',
   TX_CONFIRMATION_FAILED_MSG: 'TX_CONFIRMATION_FAILED_MSG',
   SAFE_NAME_CHANGED_MSG: 'SAFE_NAME_CHANGED_MSG',
@@ -108,62 +104,40 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Please sign the transaction',
     options: { variant: INFO, persist: true },
   },
-  TX_PENDING_MSG: {
-    message: 'Transaction pending',
-    options: { variant: INFO, persist: true },
-  },
   TX_REJECTED_MSG: {
     message: 'Transaction rejected',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
   TX_EXECUTED_MSG: {
     message: 'Transaction successfully executed',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+    options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
   TX_CANCELLATION_EXECUTED_MSG: {
     message: 'Rejection successfully submitted',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
-  },
-  TX_EXECUTED_MORE_CONFIRMATIONS_MSG: {
-    message: 'Transaction successfully created. More confirmations needed to execute',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+    options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
   TX_FAILED_MSG: {
     message: 'Transaction failed',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
   TX_WAITING_MSG: {
-    message: 'A pending transaction requires your confirmation!',
+    message: 'A transaction requires your confirmation',
     key: 'TX_WAITING_MSG',
     options: {
       variant: WARNING,
-      persist: true,
-      preventDuplicate: true,
-    },
-  },
-  TX_INCOMING_MSG: {
-    message: 'Incoming transfer: ',
-    key: 'TX_INCOMING_MSG',
-    options: {
-      variant: SUCCESS,
       persist: false,
-      autoHideDuration: longDuration,
+      autoHideDuration: shortDuration,
       preventDuplicate: true,
     },
   },
 
-  // Approval Transactions
-  TX_CONFIRMATION_PENDING_MSG: {
-    message: 'Confirmation transaction pending',
-    options: { variant: INFO, persist: true },
-  },
   TX_CONFIRMATION_EXECUTED_MSG: {
     message: 'Confirmation transaction was successful',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+    options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
   TX_CONFIRMATION_FAILED_MSG: {
     message: 'Confirmation transaction failed',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
 
   // Safe Name

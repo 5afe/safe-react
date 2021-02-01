@@ -7,7 +7,6 @@ import { getAwaitingTransactions } from 'src/logic/safe/transactions/awaitingTra
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { getIncomingTxAmount } from 'src/routes/safe/components/Transactions/TxsTable/columns'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADD_INCOMING_TRANSACTIONS } from 'src/logic/safe/store/actions/addIncomingTransactions'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
@@ -104,36 +103,8 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       case ADD_INCOMING_TRANSACTIONS: {
         action.payload.forEach((incomingTransactions, safeAddress) => {
           const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress, {})
-          const viewedSafes = state.currentSession['viewedSafes']
-          const recurringUser = viewedSafes?.includes(safeAddress)
 
           const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
-
-          const { message, ...TX_INCOMING_MSG } = NOTIFICATIONS.TX_INCOMING_MSG
-
-          if (recurringUser) {
-            if (newIncomingTransactions.size > 3) {
-              dispatch(
-                enqueueSnackbar(
-                  enhanceSnackbarForAction({
-                    ...TX_INCOMING_MSG,
-                    message: 'Multiple incoming transfers',
-                  }),
-                ),
-              )
-            } else {
-              newIncomingTransactions.forEach((tx) => {
-                dispatch(
-                  enqueueSnackbar(
-                    enhanceSnackbarForAction({
-                      ...TX_INCOMING_MSG,
-                      message: `${message}${getIncomingTxAmount(tx)}`,
-                    }),
-                  ),
-                )
-              })
-            }
-          }
 
           dispatch(
             updateSafe({
