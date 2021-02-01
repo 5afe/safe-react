@@ -10,22 +10,23 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { getAccountsFrom, getNamesFrom, getSafeCreationSaltFrom } from 'src/routes/open/utils/safeDataExtractor'
+import {
+  CreateSafeValues,
+  getAccountsFrom,
+  getNamesFrom,
+  getSafeCreationSaltFrom,
+} from 'src/routes/open/utils/safeDataExtractor'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import { FormApi } from 'final-form'
+import { StepperPageFormProps } from 'src/components/Stepper'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
 type ReviewComponentProps = {
-  values: {
-    confirmations: string
-    name: string
-    owner0Address: string
-    owner0Name: string
-    safeCreationSalt: number
-  }
+  values: LoadFormValues
   form: FormApi
 }
 
@@ -38,7 +39,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
   const addresses = useMemo(() => getAccountsFrom(values), [values])
 
   const numOwners = getNumOwnersFrom(values)
-  const safeCreationSalt = getSafeCreationSaltFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values as CreateSafeValues)
   const { gasCostFormatted, gasLimit } = useEstimateSafeCreationGas({ addresses, numOwners, safeCreationSalt })
 
   useEffect(() => {
@@ -138,7 +139,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
 }
 
 export const Review = () =>
-  function ReviewPage(controls, props): React.ReactElement {
+  function ReviewPage(controls: React.ReactNode, props: StepperPageFormProps): React.ReactElement {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
