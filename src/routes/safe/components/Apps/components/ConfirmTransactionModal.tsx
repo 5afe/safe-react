@@ -1,8 +1,8 @@
-import React, { useEffect, useState } from 'react'
-import { GenericModal, Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
+import React, { useEffect, useMemo, useState } from 'react'
+import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import styled from 'styled-components'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
@@ -18,15 +18,21 @@ import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
 import { TransactionParams } from './AppFrame'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import Modal from 'src/components/Modal'
 import Row from 'src/components/layout/Row'
+import Hairline from 'src/components/layout/Hairline'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { md, lg } from 'src/theme/variables'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -71,6 +77,12 @@ const StyledTextBox = styled(TextBox)`
 
 const Container = styled.div`
   max-width: 480px;
+  padding: ${md} ${lg};
+`
+
+const ModalFooter = styled(Row)`
+  padding: ${md} ${lg};
+  justify-content: center;
 `
 
 type OwnProps = {
@@ -101,8 +113,14 @@ export const ConfirmTransactionModal = ({
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+  const threshold = useSelector(safeThresholdSelector) || 1
+  const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
+  const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
+  const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
 
   const {
+    gasLimit,
+    gasPriceFormatted,
     gasEstimation,
     isOffChainSignature,
     isCreation,
@@ -110,9 +128,9 @@ export const ConfirmTransactionModal = ({
     gasCostFormatted,
     txEstimationExecutionStatus,
   } = useEstimateTransactionGas({
-    txData: encodeMultiSendCall(txs),
-    txRecipient: MULTI_SEND_ADDRESS,
-    operation: DELEGATE_CALL,
+    txData: txData || '',
+    txRecipient,
+    operation,
   })
 
   useEffect(() => {
@@ -136,17 +154,17 @@ export const ConfirmTransactionModal = ({
     onClose()
   }
 
-  const confirmTransactions = async () => {
-    const txData = encodeMultiSendCall(txs)
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
+  const confirmTransactions = async () => {
     await dispatch(
       createTransaction(
         {
           safeAddress,
-          to: MULTI_SEND_ADDRESS,
+          to: txRecipient,
           valueInWei: '0',
           txData,
-          operation: DELEGATE_CALL,
+          operation,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
@@ -160,80 +178,108 @@ export const ConfirmTransactionModal = ({
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
 
-  const body = areTxsMalformed ? (
-    <>
-      <IconText>
-        <Icon color="error" size="md" type="info" />
-        <Title size="xs">Transaction error</Title>
-      </IconText>
-      <Text size="lg">
-        This Safe App initiated a transaction which cannot be processed. Please get in touch with the developer of this
-        Safe App for more information.
-      </Text>
-    </>
-  ) : (
-    <Container>
-      <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
-      <DividerLine withArrow />
-      {txs.map((tx, index) => (
-        <Wrapper key={index}>
-          <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
-            <CollapseContent>
+  const body = areTxsMalformed
+    ? () => (
+        <>
+          <IconText>
+            <Icon color="error" size="md" type="info" />
+            <Title size="xs">Transaction error</Title>
+          </IconText>
+          <Text size="lg">
+            This Safe App initiated a transaction which cannot be processed. Please get in touch with the developer of
+            this Safe App for more information.
+          </Text>
+        </>
+      )
+    : (txParameters, toggleEditMode) => {
+        return (
+          <Container>
+            <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+            <DividerLine withArrow />
+            {txs.map((tx, index) => (
+              <Wrapper key={index}>
+                <Collapse description={<AddressInfo safeAddress={tx.to} />} title={`Transaction ${index + 1}`}>
+                  <CollapseContent>
+                    <div className="section">
+                      <Heading tag="h3">Value</Heading>
+                      <div className="value-section">
+                        <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
+                        <Bold>
+                          {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name}
+                        </Bold>
+                      </div>
+                    </div>
+                    <div className="section">
+                      <Heading tag="h3">Data (hex encoded)*</Heading>
+                      <StyledTextBox>{tx.data}</StyledTextBox>
+                    </div>
+                  </CollapseContent>
+                </Collapse>
+              </Wrapper>
+            ))}
+            <DividerLine withArrow={false} />
+            {params?.safeTxGas && (
               <div className="section">
-                <Heading tag="h3">Value</Heading>
-                <div className="value-section">
-                  <Img alt="Ether" height={40} src={getEthAsToken('0').logoUri} />
-                  <Bold>
-                    {fromTokenUnit(tx.value, nativeCoin.decimals)} {nativeCoin.name}
-                  </Bold>
-                </div>
+                <Heading tag="h3">SafeTxGas</Heading>
+                <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
+                <GasEstimationInfo
+                  appEstimation={params.safeTxGas}
+                  internalEstimation={estimatedSafeTxGas}
+                  loading={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                />
               </div>
-              <div className="section">
-                <Heading tag="h3">Data (hex encoded)*</Heading>
-                <StyledTextBox>{tx.data}</StyledTextBox>
-              </div>
-            </CollapseContent>
-          </Collapse>
-        </Wrapper>
-      ))}
-      <DividerLine withArrow={false} />
-      {params?.safeTxGas && (
-        <div className="section">
-          <Heading tag="h3">SafeTxGas</Heading>
-          <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
-          <GasEstimationInfo
-            appEstimation={params.safeTxGas}
-            internalEstimation={estimatedSafeTxGas}
-            loading={txEstimationExecutionStatus === EstimationStatus.LOADING}
-          />
-        </div>
-      )}
-      <Row>
-        <TransactionFees
-          gasCostFormatted={gasCostFormatted}
-          isExecution={isExecution}
-          isCreation={isCreation}
-          isOffChainSignature={isOffChainSignature}
-          txEstimationExecutionStatus={txEstimationExecutionStatus}
-        />
-      </Row>
-    </Container>
-  )
+            )}
+
+            {/* Tx Parameters */}
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              parametersStatus={getParametersStatus()}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
+            />
+            <Row>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Row>
+          </Container>
+        )
+      }
 
   return (
-    <GenericModal
-      title={<ModalTitle title={app.name} iconUrl={app.iconUrl} />}
-      body={body}
-      footer={
-        <ModalFooterConfirmation
-          cancelText="Cancel"
-          handleCancel={handleTxRejection}
-          handleOk={confirmTransactions}
-          okDisabled={areTxsMalformed}
-          okText="Submit"
-        />
-      }
-      onClose={handleTxRejection}
-    />
+    <Modal description="Safe App transaction" title="Safe App transaction" open>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        parametersStatus={getParametersStatus()}
+      >
+        {(txParameters, toggleEditMode) => (
+          <>
+            <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+
+            <Hairline />
+
+            {body(txParameters, toggleEditMode)}
+
+            <Hairline />
+            <ModalFooter align="center" grow>
+              <ModalFooterConfirmation
+                cancelText="Cancel"
+                handleCancel={handleTxRejection}
+                handleOk={confirmTransactions}
+                okDisabled={areTxsMalformed}
+                okText="Submit"
+              />
+            </ModalFooter>
+          </>
+        )}
+      </EditableTxParameters>
+    </Modal>
   )
 }

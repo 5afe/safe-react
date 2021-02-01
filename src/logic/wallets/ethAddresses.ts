@@ -1,10 +1,16 @@
 import { List } from 'immutable'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { sameString } from 'src/utils/strings'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 export const ZERO_ADDRESS = '0x0000000000000000000000000000000000000000'
 
 export const sameAddress = (firstAddress: string | undefined, secondAddress: string | undefined): boolean => {
   return sameString(firstAddress, secondAddress)
+}
+
+export const isEmptyAddress = (address: string | undefined): boolean => {
+  if (!address) return true
+  return sameAddress(address, EMPTY_DATA) || sameAddress(address, ZERO_ADDRESS)
 }
 
 export const shortVersionOf = (value: string, cut: number): string => {
@@ -41,3 +47,5 @@ export const isUserAnOwnerOfAnySafe = (safes: List<SafeRecord> | SafeRecord[], u
   safes.some((safe: SafeRecord) => isUserAnOwner(safe, userAccount))
 
 export const isValidEnsName = (name: string): boolean => /^([\w-]+\.)+(eth|test|xyz|luxe|ewc)$/.test(name)
+
+export const isValidCryptoDomainName = (name: string): boolean => /^([\w-]+\.)+(crypto)$/.test(name)

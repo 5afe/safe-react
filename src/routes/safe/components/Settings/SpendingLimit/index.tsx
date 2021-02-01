@@ -9,17 +9,17 @@ import Row from 'src/components/layout/Row'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-import LimitsTable from './LimitsTable'
+import { LimitsTable } from './LimitsTable'
 import { getSpendingLimitData } from './LimitsTable/dataFetcher'
-import NewLimitModal from './NewLimitModal'
-import NewLimitSteps from './NewLimitSteps'
+import { NewLimitModal } from './NewLimitModal'
+import { NewLimitSteps } from './NewLimitSteps'
 import { useStyles } from './style'
 
 const InfoText = styled(Text)`
   margin-top: 16px;
 `
 
-const SpendingLimitSettings = (): ReactElement => {
+export const SpendingLimitSettings = (): ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
   const allowances = useSelector(safeSpendingLimitsSelector)
@@ -68,5 +68,3 @@ const SpendingLimitSettings = (): ReactElement => {
     </>
   )
 }
-
-export default SpendingLimitSettings

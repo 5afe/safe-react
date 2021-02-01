@@ -11,9 +11,9 @@ import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/s
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import createTransaction from 'src/logic/safe/store/actions/createTransaction'
 import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
-
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -37,6 +37,7 @@ export const sendRemoveOwner = async (
   ownerAddressToRemove: string,
   ownerNameToRemove: string,
   dispatch: Dispatch,
+  txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
@@ -53,6 +54,9 @@ export const sendRemoveOwner = async (
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -80,7 +84,7 @@ export const RemoveOwnerModal = ({
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(
     () => () => {
@@ -108,9 +112,9 @@ export const RemoveOwnerModal = ({
     setActiveScreen('reviewRemoveOwner')
   }
 
-  const onRemoveOwner = () => {
+  const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, threshold)
+    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, txParameters, threshold)
   }
 
   return (
