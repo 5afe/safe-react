@@ -1,23 +1,34 @@
 import classNames from 'classnames/bind'
-import * as React from 'react'
+import React, { MouseEventHandler, CSSProperties, ReactElement } from 'react'
 
 import styles from './index.module.scss'
 
 const cx = classNames.bind(styles)
 
-class Paragraph extends React.PureComponent<any> {
-  render() {
-    const { align, children, className, color, dot, noMargin, size, transform, weight, ...props } = this.props
+interface Props {
+  align?: string
+  children: any
+  className?: string
+  color?: string
+  dot?: string
+  noMargin?: boolean
+  size?: string
+  transform?: string
+  weight?: string
+  onClick?: MouseEventHandler<HTMLParagraphElement>
+  style?: CSSProperties
+}
 
-    return (
-      <p
-        className={cx(styles.paragraph, className, weight, { noMargin, dot }, size, color, transform, align)}
-        {...props}
-      >
-        {children}
-      </p>
-    )
-  }
+const Paragraph = (props: Props): ReactElement => {
+  const { align, children, className, color, dot, noMargin, size, transform, weight, ...restProps } = props
+  return (
+    <p
+      className={cx(styles.paragraph, className, weight, { noMargin, dot }, size, color, transform, align)}
+      {...restProps}
+    >
+      {children}
+    </p>
+  )
 }
 
 export default Paragraph
