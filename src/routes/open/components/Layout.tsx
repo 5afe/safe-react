@@ -30,7 +30,7 @@ const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-type InitialValuesForm = {
+export type InitialValuesForm = {
   owner0Address?: string
   owner0Name?: string
   confirmations: string

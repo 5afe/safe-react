@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
 import Opening from 'src/routes/opening'
-import { Layout } from 'src/routes/open/components/Layout'
+import { InitialValuesForm, Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
@@ -85,7 +85,7 @@ export const getSafeProps = async (
   return safeProps
 }
 
-export const createSafe = (values, userAccount) => {
+export const createSafe = (values: InitialValuesForm, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
@@ -154,7 +154,7 @@ const Open = (): React.ReactElement => {
     load()
   }, [])
 
-  const createSafeProxy = async (formValues?: any) => {
+  const createSafeProxy = async (formValues?: InitialValuesForm) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
@@ -165,7 +165,7 @@ const Open = (): React.ReactElement => {
       values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     }
 
-    const promiEvent = createSafe(values, userAccount)
+    const promiEvent = createSafe(values as InitialValuesForm, userAccount)
     setCreationTxPromise(promiEvent)
     setShowProgress(true)
   }
