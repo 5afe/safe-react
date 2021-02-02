@@ -91,3 +91,6 @@ export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; s
   sameString(txInfo.dataSize, '0') &&
   sameString(txInfo.value, '0') &&
   txInfo.methodName === null
+
+export const addressInList = (list: string[] = []) => (address: string): boolean =>
+  list.some((ownerAddress) => sameAddress(ownerAddress, address))

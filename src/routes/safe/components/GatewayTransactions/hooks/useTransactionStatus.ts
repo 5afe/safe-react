@@ -9,10 +9,8 @@ import {
   isStatusWillBeReplaced,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-
-const addressInList = (list: string[] = []) => (address: string): boolean => list.some(sameAddress.bind(null, address))
+import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
 
 export type TransactionStatusProps = {
   color: ThemeColors
