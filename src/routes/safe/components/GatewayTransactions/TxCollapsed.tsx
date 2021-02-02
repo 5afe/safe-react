@@ -134,7 +134,7 @@ export const TxCollapsed = ({
 
   const txCollapsedStatus = (
     <div className="tx-status">
-      {transaction?.txStatus === 'PENDING' ? (
+      {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
         <CircularProgressPainter color={status.color}>
           <CircularProgress size={14} color="inherit" />
         </CircularProgressPainter>

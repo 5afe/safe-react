@@ -159,7 +159,14 @@ export const processTransaction = ({
       .on('error', (error) => {
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
 
-        dispatch(updateTransactionStatus({ txStatus: 'PENDING_FAILED', safeAddress, nonce: tx.nonce }))
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING_FAILED',
+            safeAddress,
+            nonce: tx.nonce,
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
 
         console.error('Processing transaction error: ', error)
       })
@@ -195,7 +202,14 @@ export const processTransaction = ({
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
-    dispatch(updateTransactionStatus({ nonce: tx.nonce, safeAddress, txStatus: 'PENDING_FAILED' }))
+    dispatch(
+      updateTransactionStatus({
+        txStatus: 'PENDING_FAILED',
+        safeAddress,
+        nonce: tx.nonce,
+        id: !isExecution ? tx.id : undefined,
+      }),
+    )
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     if (txHash) {
