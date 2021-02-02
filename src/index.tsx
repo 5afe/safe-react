@@ -26,7 +26,7 @@ Sentry.init({
   dsn: SENTRY_DSN,
   release: `safe-react@${process.env.REACT_APP_APP_VERSION}`,
   integrations: [new Integrations.BrowserTracing()],
-  sampleRate: 0.2,
+  sampleRate: 0.01,
 })
 
 const root = document.getElementById('root')
