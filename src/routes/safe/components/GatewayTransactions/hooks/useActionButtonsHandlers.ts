@@ -1,6 +1,9 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
+import { useSelector } from 'react-redux'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { useTransactionActions } from './useTransactionActions'
 import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
 import { TxHoverContext } from 'src/routes/safe/components/GatewayTransactions/TxHoverProvider'
@@ -17,6 +20,7 @@ type ActionButtonsHandlers = {
 }
 
 export const useActionButtonsHandlers = (transaction: Transaction): ActionButtonsHandlers => {
+  const currentUser = useSelector(userAccountSelector)
   const actionContext = useRef(useContext(TransactionActionStateContext))
   const hoverContext = useRef(useContext(TxHoverContext))
   const locationContext = useRef(useContext(TxLocationContext))
@@ -58,11 +62,14 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
 
   const isPending = useMemo(() => !!transaction.txStatus.match(/^PENDING.*/), [transaction.txStatus])
 
+  const signaturePending = useCallback(addressInList(transaction.executionInfo?.missingSigners), [])
+
   const disabledActions = useMemo(
     () =>
       isPending ||
-      (transaction.txStatus === 'AWAITING_EXECUTION' && locationContext.current.txLocation === 'queued.queued'),
-    [isPending, transaction.txStatus],
+      (transaction.txStatus === 'AWAITING_EXECUTION' && locationContext.current.txLocation === 'queued.queued') ||
+      (transaction.txStatus === 'AWAITING_CONFIRMATIONS' && !signaturePending(currentUser)),
+    [currentUser, isPending, signaturePending, transaction.txStatus],
   )
 
   return {
