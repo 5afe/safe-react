@@ -57,13 +57,17 @@ const Body = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
 `
-const FullParagraph = styled(Paragraph)`
-  background-color: ${(p) => (p.inverseColors ? connected : background)};
-  color: ${(p) => (p.inverseColors ? background : connected)};
+
+interface FullParagraphProps {
+  inversecolors: string
+}
+
+const FullParagraph = styled(Paragraph)<FullParagraphProps>`
+  background-color: ${(p) => (p.inversecolors ? connected : background)};
+  color: ${(p) => (p.inversecolors ? background : connected)};
   padding: 24px;
   font-size: 16px;
   margin-bottom: 16px;
-
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
@@ -332,7 +336,7 @@ export const SafeDeployment = ({
         <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
 
         <BodyInstruction>
-          <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">
+          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>
