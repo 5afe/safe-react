@@ -3,7 +3,7 @@ import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
-import Opening from 'src/routes/opening'
+import { SafeDeployment } from 'src/routes/opening'
 import { InitialValuesForm, Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
@@ -117,7 +117,7 @@ const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
-  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
+  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<{ txHash?: string } | undefined>()
   const [safePropsFromUrl, setSafePropsFromUrl] = useState<SafeProps | undefined>()
   const userAccount = useSelector(userAccountSelector)
   const dispatch = useDispatch()
@@ -219,7 +219,7 @@ const Open = (): React.ReactElement => {
   return (
     <Page>
       {showProgress ? (
-        <Opening
+        <SafeDeployment
           creationTxHash={safeCreationPendingInfo?.txHash}
           onCancel={onCancel}
           onRetry={onRetry}
