@@ -33,7 +33,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
     } else if (isStatusWillBeReplaced(transaction.txStatus)) {
       setStatus({ color: 'placeHolder', text: 'Transaction will be replaced' })
     } else {
-      // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS or PENDING
+      // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS, PENDING or PENDING_FAILED
       let text: string
       const signaturePending = addressInList(transaction.executionInfo?.missingSigners)
 
@@ -42,7 +42,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
           text = signaturePending(currentUser) ? 'Awaiting your confirmation' : 'Awaiting confirmations'
           break
         case 'AWAITING_EXECUTION':
-          text = signaturePending(currentUser) ? 'Awaiting your execution' : 'Awaiting execution'
+          text = 'Awaiting execution'
           break
         case 'PENDING':
         case 'PENDING_FAILED':
