@@ -1,9 +1,7 @@
-import { Icon, IconText, Dot, Text } from '@gnosis.pm/safe-react-components'
+import { Dot, IconText, Text } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { default as MuiIconButton } from '@material-ui/core/IconButton'
-import React, { MouseEvent as ReactMouseEvent, ReactElement, useContext } from 'react'
-import styled from 'styled-components'
+import React, { ReactElement } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
 import {
@@ -12,25 +10,16 @@ import {
   isSettingsChangeTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import { TxCollapsedActions } from 'src/routes/safe/components/GatewayTransactions/TxCollapsedActions'
 import { KNOWN_MODULES } from 'src/utils/constants'
+import styled from 'styled-components'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
-import { TransactionActionStateContext } from './TxActionProvider'
-import { TxHoverContext } from './TxHoverProvider'
-import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-
-const IconButton = styled(MuiIconButton)`
-  padding: 8px !important;
-
-  &.Mui-disabled {
-    opacity: 0.4;
-  }
-`
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -68,72 +57,6 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   return null
 }
 
-const CollapsedActionButtons = ({
-  actions,
-  transaction,
-}: {
-  actions: TransactionActions
-  transaction: Transaction
-}): ReactElement => {
-  const { selectAction } = useContext(TransactionActionStateContext)
-  const { setActiveHover } = useContext(TxHoverContext)
-  const { txLocation } = useContext(TxLocationContext)
-  const { canCancel, canConfirm, canConfirmThenExecute, canExecute } = actions
-
-  const handleConfirmButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation()
-    selectAction({
-      actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
-      transactionId: transaction.id,
-      txLocation,
-    })
-  }
-
-  const handleCancelButtonClick = (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
-    event.stopPropagation()
-    selectAction({ actionSelected: 'cancel', transactionId: transaction.id, txLocation })
-  }
-
-  const handleOnMouseEnter = () => {
-    if (canExecute) {
-      setActiveHover(transaction.id)
-    }
-  }
-
-  const handleOnMouseLeave = () => {
-    setActiveHover()
-  }
-
-  const disabled = transaction.txStatus === 'PENDING'
-
-  return (
-    <>
-      {(canConfirm || canExecute) && (
-        <IconButton
-          size="small"
-          type="button"
-          onClick={handleConfirmButtonClick}
-          disabled={disabled}
-          onMouseEnter={handleOnMouseEnter}
-          onMouseLeave={handleOnMouseLeave}
-        >
-          <Icon
-            type={canExecute ? 'rocket' : 'check'}
-            color="primary"
-            size="sm"
-            tooltip={canExecute ? 'Execute' : 'Confirm'}
-          />
-        </IconButton>
-      )}
-      {canCancel && (
-        <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={disabled}>
-          <Icon type="circleCross" color="error" size="sm" tooltip="Cancel" />
-        </IconButton>
-      )}
-    </>
-  )
-}
-
 const CircularProgressPainter = styled.div<{ color: ThemeColors }>`
   color: ${({ theme, color }) => theme.colors[color]};
 `
@@ -169,27 +92,27 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
 
-  const TxCollapsedNonce = (
+  const txCollapsedNonce = (
     <div className={'tx-nonce' + willBeReplaced}>
       <Text size="lg">{nonce}</Text>
     </div>
   )
 
-  const TxCollapsedType = (
+  const txCollapsedType = (
     <div className={'tx-type' + willBeReplaced}>
       <CustomIconText iconUrl={type.icon} text={type.text} />
     </div>
   )
 
-  const TxCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
+  const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
 
-  const TxCollapsedTime = (
+  const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
       <Text size="lg">{time}</Text>
     </div>
   )
 
-  const TxCollapsedVotes = (
+  const txCollapsedVotes = (
     <div className={'tx-votes' + willBeReplaced}>
       {votes && (
         <IconText
@@ -203,13 +126,13 @@ export const TxCollapsed = ({
     </div>
   )
 
-  const TxCollapsedActions = (
+  const txCollapsedActions = (
     <div className={'tx-actions' + willBeReplaced}>
-      {actions?.isUserAnOwner && transaction && <CollapsedActionButtons transaction={transaction} actions={actions} />}
+      {actions?.isUserAnOwner && transaction && <TxCollapsedActions transaction={transaction} />}
     </div>
   )
 
-  const TxCollapsedStatus = (
+  const txCollapsedStatus = (
     <div className="tx-status">
       {transaction?.txStatus === 'PENDING' ? (
         <CircularProgressPainter color={status.color}>
@@ -229,22 +152,22 @@ export const TxCollapsed = ({
   return isGrouped ? (
     <StyledGroupedTransactions>
       {/* no nonce */}
-      {TxCollapsedType}
-      {TxCollapsedInfo}
-      {TxCollapsedTime}
-      {TxCollapsedVotes}
-      {TxCollapsedActions}
-      {TxCollapsedStatus}
+      {txCollapsedType}
+      {txCollapsedInfo}
+      {txCollapsedTime}
+      {txCollapsedVotes}
+      {txCollapsedActions}
+      {txCollapsedStatus}
     </StyledGroupedTransactions>
   ) : (
     <StyledTransaction>
-      {TxCollapsedNonce}
-      {TxCollapsedType}
-      {TxCollapsedInfo}
-      {TxCollapsedTime}
-      {TxCollapsedVotes}
-      {TxCollapsedActions}
-      {TxCollapsedStatus}
+      {txCollapsedNonce}
+      {txCollapsedType}
+      {txCollapsedInfo}
+      {txCollapsedTime}
+      {txCollapsedVotes}
+      {txCollapsedActions}
+      {txCollapsedStatus}
     </StyledTransaction>
   )
 }
