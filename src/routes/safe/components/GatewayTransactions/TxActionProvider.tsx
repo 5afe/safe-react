@@ -34,11 +34,10 @@ export const TxActionProvider = ({ children }: { children: ReactNode }): ReactEl
 
   const selectAction = useCallback(
     async ({ actionSelected, transactionId, txLocation }: SelectedAction['selectedAction']) => {
-      if (!transactionId) {
-        return
+      if (transactionId) {
+        await dispatch.current(fetchTransactionDetails({ transactionId, txLocation }))
       }
 
-      await dispatch.current(fetchTransactionDetails({ transactionId, txLocation }))
       setSelectedAction({ actionSelected, transactionId, txLocation })
     },
     [],
