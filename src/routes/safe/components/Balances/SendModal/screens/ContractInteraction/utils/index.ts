@@ -3,9 +3,9 @@ import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
 
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
-import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAddressFromDomain, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
-import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { isValidCryptoDomainName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -14,7 +14,9 @@ export const ensResolver = createDecorator({
   updates: {
     contractAddress: async (contractAddress) => {
       try {
-        const resolvedAddress = isValidEnsName(contractAddress) && (await getAddressFromENS(contractAddress))
+        const resolvedAddress =
+          (isValidEnsName(contractAddress) || isValidCryptoDomainName(contractAddress)) &&
+          (await getAddressFromDomain(contractAddress))
 
         if (resolvedAddress) {
           return resolvedAddress
@@ -63,6 +65,13 @@ export const isInt = (type: string): boolean => type.indexOf('int') === 0
 export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
+export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
+  try {
+    return JSON.parse(parameter)
+  } catch (err) {
+    return null
+  }
+}
 
 export const handleSubmitError = (error: SubmissionErrors, values: Record<string, string>): Record<string, string> => {
   for (const key in values) {
@@ -83,11 +92,7 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
 const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
   const key = generateFormFieldKey(type, signatureHash, index)
 
-  if (isArrayParameter(type)) {
-    return JSON.parse(values[key])
-  }
-
-  return values[key]
+  return getParsedJSONOrArrayFromString(values[key]) || values[key]
 }
 
 export const createTxObject = (

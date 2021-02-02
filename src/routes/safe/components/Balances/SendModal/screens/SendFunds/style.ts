@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${md} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -26,10 +26,12 @@ export const styles = createStyles({
   },
   formContainer: {
     padding: `${md} ${lg}`,
+    minHeight: '216px',
   },
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    position: 'relative',
     '& > button': {
       fontFamily: 'Averta',
       fontSize: md,
