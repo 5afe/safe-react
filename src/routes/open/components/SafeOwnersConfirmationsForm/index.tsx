@@ -157,7 +157,8 @@ const SafeOwnersForm = (props): React.ReactElement => {
           <br />
           <br />
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
-          transaction before it gets executed. You can also add/remove owners and change the signature threshold after your Safe is created.
+          transaction before it gets executed. You can also add/remove owners and change the signature threshold after
+          your Safe is created.
         </Paragraph>
       </Block>
       <Hairline />
