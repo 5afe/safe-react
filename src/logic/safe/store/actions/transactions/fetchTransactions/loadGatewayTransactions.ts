@@ -14,6 +14,11 @@ const getHistoryTransactionsUrl = (safeAddress: string): string => {
 
 const historyPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
 
+/**
+ * Fetch next page if there is a next pointer for the safeAddress.
+ * If the fetch was success, updates the pointers.
+ * @param {string} safeAddress
+ */
 export const loadPagedHistoryTransactions = async (
   safeAddress: string,
 ): Promise<{ values: HistoryGatewayResponse['results']; next: string | null } | undefined> => {
@@ -58,6 +63,11 @@ const getQueuedTransactionsUrl = (safeAddress: string): string => {
 
 const queuedPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
 
+/**
+ * Fetch next page if there is a next pointer for the safeAddress.
+ * If the fetch was success, updates the pointers.
+ * @param {string} safeAddress
+ */
 export const loadPagedQueuedTransactions = async (
   safeAddress: string,
 ): Promise<{ values: QueuedGatewayResponse['results']; next: string | null } | undefined> => {

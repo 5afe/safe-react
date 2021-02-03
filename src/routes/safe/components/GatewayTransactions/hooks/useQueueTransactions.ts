@@ -9,6 +9,9 @@ export type QueueTransactionsInfo = {
   queue: TransactionDetails
 }
 
+/**
+ * Get transactions (next and queue) from nextTransactions and queuedTransactions selectors
+ */
 export const useQueueTransactions = (): QueueTransactionsInfo => {
   const nextTxs = useSelector(nextTransactions)
   const queuedTxs = useSelector(queuedTransactions)
