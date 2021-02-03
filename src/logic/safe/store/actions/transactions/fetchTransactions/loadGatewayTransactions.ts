@@ -26,7 +26,7 @@ export const loadPagedHistoryTransactions = async (
   const {
     data: { results, ...pointers },
   } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(
-    historyPointers[safeAddress].next ?? '',
+    historyPointers[safeAddress].next as string,
   )
 
   historyPointers[safeAddress] = pointers
@@ -61,8 +61,8 @@ const queuedPointers: { [safeAddress: string]: { next: string | null; previous: 
 export const loadPagedQueuedTransactions = async (
   safeAddress: string,
 ): Promise<{ values: QueuedGatewayResponse['results']; next: string | null } | undefined> => {
-  // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
-  // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
+  // if `queuedPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
+  // if `queuedPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!queuedPointers[safeAddress]?.next) {
     return
   }
@@ -70,7 +70,7 @@ export const loadPagedQueuedTransactions = async (
   const {
     data: { results, ...pointers },
   } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(
-    queuedPointers[safeAddress].next ?? '',
+    queuedPointers[safeAddress].next as string,
   )
 
   queuedPointers[safeAddress] = pointers
