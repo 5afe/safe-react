@@ -9,6 +9,8 @@ import {
 import { UPDATE_TRANSACTION_STATUS } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import {
   HistoryGatewayResponse,
+  isConflictHeader,
+  isDateLabel,
   isLabel,
   isTransactionSummary,
   QueuedGatewayResponse,
@@ -70,6 +72,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       const history: StoreStructure['history'] = Object.assign({}, state[safeAddress]?.history)
 
       values.forEach((value) => {
+        if (isDateLabel(value)) {
+          // DATE_LABEL is discarded as it's not needed for the current implementation
+          return
+        }
+
         if (isTransactionSummary(value)) {
           const startOfDate = getUTCStartOfDate(value.transaction.timestamp)
 
@@ -85,6 +92,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
             // this happens when most recent transactions are added to the existing txs in the store
             history[startOfDate] = history[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
           }
+          return
         }
       })
 
@@ -114,7 +122,15 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         if (isLabel(value)) {
           // we're assuming that the first page will always provide `next` and `queued` labels
           label = value.label.toLowerCase() as 'next' | 'queued'
-        } else if (isTransactionSummary(value)) {
+          return
+        }
+
+        if (isConflictHeader(value)) {
+          // conflict header is discarded as it's not needed for the current implementation
+          return
+        }
+
+        if (isTransactionSummary(value)) {
           const txNonce = value.transaction.executionInfo?.nonce
 
           if (!txNonce) {
@@ -189,8 +205,8 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
               break
             }
           }
+          return
         }
-        // conflict header is discarded
       })
 
       // no new transactions
