@@ -21,7 +21,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
     height: 'auto',
   },
 })

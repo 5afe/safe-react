@@ -216,16 +216,18 @@ export const ReviewRemoveOwnerModal = ({
             isTransactionExecution={isExecution}
           />
 
-          <Block className={classes.gasCostsContainer}>
-            <TransactionFees
-              gasCostFormatted={gasCostFormatted}
-              isExecution={isExecution}
-              isCreation={isCreation}
-              isOffChainSignature={isOffChainSignature}
-              txEstimationExecutionStatus={txEstimationExecutionStatus}
-            />
-          </Block>
-          <Hairline />
+          {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+            <Block className={classes.gasCostsContainer}>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+              <Hairline />
+            </Block>
+          )}
           <Row align="center" className={classes.buttonRow}>
             <Button minHeight={42} minWidth={140} onClick={onClickBack}>
               Back

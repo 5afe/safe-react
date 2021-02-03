@@ -21,7 +21,6 @@ import ThresholdForm from './screens/ThresholdForm'
 const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
     height: 'auto',
   },
 })
