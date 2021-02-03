@@ -31,7 +31,7 @@ const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 interface SafeCreationQueryParams {
   ownerAddresses: string | string[] | null
   ownerNames: string | string[] | null
-  threshold: string | null
+  threshold: number | null
   safeName: string | null
 }
 
@@ -49,10 +49,11 @@ const validateQueryParams = (queryParams: SafeCreationQueryParams): boolean => {
     return false
   }
 
-  if (!threshold || Number.isNaN(Number(threshold))) {
+  if (Number.isNaN(threshold)) {
     return false
   }
-  return Number(threshold) <= ownerAddresses.length
+
+  return threshold > 0 && threshold <= ownerAddresses.length
 }
 
 const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams): SafeProps | undefined => {
@@ -63,8 +64,8 @@ const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams)
   const { threshold, safeName, ownerAddresses, ownerNames } = queryParams
 
   return {
-    name: Array.isArray(safeName) ? safeName[0] : (safeName as string),
-    threshold: Array.isArray(threshold) ? threshold[0] : (threshold as string),
+    name: safeName as string,
+    threshold: (threshold as number).toString(),
     ownerAddresses: Array.isArray(ownerAddresses) ? ownerAddresses : [ownerAddresses as string],
     ownerNames: Array.isArray(ownerNames) ? ownerNames : [ownerNames as string],
   }
@@ -129,7 +130,7 @@ const Open = (): React.ReactElement => {
     const safeProps = getSafePropsValuesFromQueryParams({
       ownerAddresses: owneraddresses,
       ownerNames: ownernames,
-      threshold: threshold as string | null,
+      threshold: Number(threshold),
       safeName: name as string | null,
     })
 
