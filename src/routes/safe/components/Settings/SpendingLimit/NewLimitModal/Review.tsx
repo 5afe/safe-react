@@ -120,6 +120,8 @@ const calculateSpendingLimitsTxData = (
     if (transactions.length === 0) {
       spendingLimitTxData = setSpendingLimitTx({ spendingLimitArgs, safeAddress })
     } else {
+      const encodedTxForMultisend = setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress })
+      transactions.push(encodedTxForMultisend)
       spendingLimitTxData = spendingLimitMultiSendTx({ transactions, safeAddress })
     }
 
@@ -193,7 +195,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ethGasLimit: ethGasLimit || gasLimit,
     }
     if (safeAddress) {
-      const { spendingLimitTxData, transactions, spendingLimitArgs } = calculateSpendingLimitsTxData(
+      const { spendingLimitTxData } = calculateSpendingLimitsTxData(
         safeAddress,
         spendingLimits,
         existentSpendingLimit,
@@ -201,12 +203,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         values,
         advancedOptionsTxParameters,
       )
-      // if there's no tx for enable module or adding a delegate, then we avoid using multiSend Tx
-      if (transactions.length === 0) {
-        dispatch(createTransaction(spendingLimitTxData))
-        return
-      }
-      transactions.push(setSpendingLimitMultiSendTx({ spendingLimitArgs, safeAddress }))
+
       dispatch(createTransaction(spendingLimitTxData))
     }
   }

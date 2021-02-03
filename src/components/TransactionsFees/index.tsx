@@ -21,6 +21,9 @@ export const TransactionFees = ({
   txEstimationExecutionStatus,
 }: TransactionFailTextProps): React.ReactElement | null => {
   let transactionAction
+  if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+    return null
+  }
   if (isCreation) {
     transactionAction = 'create'
   } else if (isExecution) {
