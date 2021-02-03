@@ -15,6 +15,7 @@ import {
   TransactionTypeValues,
   TxArgs,
   RefundParams,
+  isStoredTransaction,
 } from 'src/logic/safe/store/models/types/transaction'
 import { AppReduxState, store } from 'src/store'
 import {
@@ -49,9 +50,15 @@ export const isInnerTransaction = (tx: BuildTx['tx'] | Transaction, safeAddress:
   return isSameAddress && Number(tx.value) === 0
 }
 
-export const isCancelTransaction = (tx: BuildTx['tx'] | Transaction, safeAddress: string): boolean => {
-  if (!sameAddress(tx.to, safeAddress)) {
-    return false
+export const isCancelTransaction = (tx: BuildTx['tx'], safeAddress: string): boolean => {
+  if (isStoredTransaction(tx)) {
+    if (!sameAddress(tx.recipient, safeAddress)) {
+      return false
+    }
+  } else {
+    if (!sameAddress(tx.to, safeAddress)) {
+      return false
+    }
   }
 
   if (Number(tx.value)) {
