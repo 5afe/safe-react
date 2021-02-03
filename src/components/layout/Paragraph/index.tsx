@@ -1,5 +1,5 @@
 import classNames from 'classnames/bind'
-import React, { MouseEventHandler, CSSProperties, ReactElement } from 'react'
+import React, { MouseEventHandler, CSSProperties, ReactElement, ReactNode } from 'react'
 
 import styles from './index.module.scss'
 
@@ -7,7 +7,7 @@ const cx = classNames.bind(styles)
 
 interface Props {
   align?: string
-  children: any
+  children: ReactNode
   className?: string
   color?: string
   dot?: string
