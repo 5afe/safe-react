@@ -182,15 +182,17 @@ const calculateMinimumGasForTransaction = async (
     const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
     console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
     try {
-      await getGasEstimationTxResponse({
+      const estimation = await getGasEstimationTxResponse({
         to: safeAddress,
         from: safeAddress,
         data: estimateData,
         gasPrice: 0,
         gas: amountOfGasToTryTx,
       })
-      console.info(`Gas estimation successfully finished with gas amount: ${amountOfGasToTryTx}`)
-      return amountOfGasToTryTx
+      if (estimation > 0) {
+        console.info(`Gas estimation successfully finished with gas amount: ${amountOfGasToTryTx}`)
+        return amountOfGasToTryTx
+      }
     } catch (error) {
       console.log(`Error trying to estimate gas with amount: ${amountOfGasToTryTx}`)
     }
