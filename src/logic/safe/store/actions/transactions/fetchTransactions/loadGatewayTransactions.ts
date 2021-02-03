@@ -85,7 +85,7 @@ export const loadQueuedTransactions = async (safeAddress: string): Promise<Queue
     data: { results, ...pointers },
   } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(queuedTransactionsUrl)
 
-  if (!queuedPointers[safeAddress]) {
+  if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
     queuedPointers[safeAddress] = pointers
   }
 
