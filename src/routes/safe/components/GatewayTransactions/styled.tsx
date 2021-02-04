@@ -356,12 +356,12 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
 
 export const OwnerList = styled.ul`
   list-style: none;
-  margin: 1em;
+  margin: 1em 0 0 1em;
   width: 50%;
   padding-left: 0;
 
   .legend {
-    padding: 0 1.5em 1.5em 1.5em;
+    padding: 0 1.5em 1em 1.5em;
     position: relative;
 
     .owner-info {
