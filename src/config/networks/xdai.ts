@@ -52,7 +52,7 @@ const xDai: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
   ],
-  disabledFeatures: [FEATURES.ENS_LOOKUP],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
 }
 
 export default xDai

@@ -180,7 +180,7 @@ type SpendingLimitTxParams = {
     resetTimeMin: number
     resetBaseMin: number
   }
-  safeAddress
+  safeAddress: string
 }
 
 export const setSpendingLimitTx = ({
@@ -190,7 +190,7 @@ export const setSpendingLimitTx = ({
   const spendingLimitContract = getSpendingLimitContract()
   const { nativeCoin } = getNetworkInfo()
 
-  return {
+  const txArgs: CreateTransactionArgs = {
     safeAddress,
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     valueInWei: ZERO_VALUE,
@@ -206,6 +206,8 @@ export const setSpendingLimitTx = ({
     operation: CALL,
     notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   }
+
+  return txArgs
 }
 
 export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiSendTx => {

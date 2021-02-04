@@ -8,10 +8,21 @@ import { useTransactionType } from './hooks/useTransactionType'
 import { TxCollapsed } from './TxCollapsed'
 import { formatTime } from './utils'
 
-const calculateVotes = (executionInfo: Transaction['executionInfo']): string | undefined => {
-  return executionInfo
-    ? `${executionInfo.confirmationsSubmitted} out of ${executionInfo.confirmationsRequired}`
-    : undefined
+export type CalculatedVotes = { votes: string; submitted: number; required: number }
+
+const calculateVotes = (executionInfo: Transaction['executionInfo']): CalculatedVotes | undefined => {
+  if (!executionInfo) {
+    return
+  }
+
+  const submitted = executionInfo.confirmationsSubmitted
+  const required = executionInfo.confirmationsRequired
+
+  return {
+    votes: `${submitted} out of ${required}`,
+    submitted,
+    required,
+  }
 }
 
 type TxQueuedCollapsedProps = {

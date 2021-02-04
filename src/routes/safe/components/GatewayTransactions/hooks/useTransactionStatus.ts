@@ -6,12 +6,11 @@ import {
   isStatusCancelled,
   isStatusFailed,
   isStatusSuccess,
+  isStatusWillBeReplaced,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-
-const addressInList = (list: string[] = []) => (address: string): boolean => list.some(sameAddress.bind(null, address))
+import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
 
 export type TransactionStatusProps = {
   color: ThemeColors
@@ -29,9 +28,11 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
       setStatus({ color: 'error', text: 'Fail' })
     } else if (isStatusCancelled(transaction.txStatus)) {
       setStatus({ color: 'error', text: 'Cancelled' })
+    } else if (isStatusWillBeReplaced(transaction.txStatus)) {
+      setStatus({ color: 'placeHolder', text: 'Transaction will be replaced' })
     } else {
-      // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS or PENDING
-      let text = 'Pending'
+      // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS, PENDING or PENDING_FAILED
+      let text: string
       const signaturePending = addressInList(transaction.executionInfo?.missingSigners)
 
       switch (transaction.txStatus) {
@@ -39,7 +40,12 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
           text = signaturePending(currentUser) ? 'Awaiting your confirmation' : 'Awaiting confirmations'
           break
         case 'AWAITING_EXECUTION':
-          text = signaturePending(currentUser) ? 'Awaiting your execution' : 'Awaiting execution'
+          text = 'Awaiting execution'
+          break
+        case 'PENDING':
+        case 'PENDING_FAILED':
+        default:
+          text = 'Pending'
           break
       }
 

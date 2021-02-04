@@ -1,4 +1,4 @@
-import { Loader, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import React, { ReactElement, useContext } from 'react'
 import { useSelector } from 'react-redux'
@@ -45,10 +45,25 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
     isCancelTransaction({ safeAddress, txInfo: txDetails.txInfo })
   ) {
     return (
-      <NormalBreakingText size="lg">{`This is an empty cancelling transaction that doesn't send any funds.
+      <>
+        <NormalBreakingText size="lg">
+          {`This is an empty cancelling transaction that doesn't send any funds.
        Executing this transaction will replace all currently awaiting transactions with nonce ${
          (txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE
-       }.`}</NormalBreakingText>
+       }.`}
+        </NormalBreakingText>
+        <Link
+          href="https://help.gnosis-safe.io/en/articles/4738501-why-do-i-need-to-pay-for-cancelling-a-transaction"
+          target="_blank"
+          rel="noreferrer"
+          title="Why do I need to pay for cancelling a transaction?"
+        >
+          <Text size="lg" color="primary">
+            Why do I need to pay for cancelling a transaction?
+            <Icon size="sm" type="externalLink" color="primary" />
+          </Text>
+        </Link>
+      </>
     )
   }
 
@@ -65,7 +80,7 @@ type TxDetailsProps = {
 
 export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const { isUserAnOwner, ...actions } = useTransactionActions(transaction)
+  const actions = useTransactionActions(transaction)
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
@@ -84,20 +99,29 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
 
   return (
     <TxDetailsContainer>
-      <div className="tx-summary">
+      <div className={cn('tx-summary', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
         <TxSummary txDetails={data} />
       </div>
       <div
-        className={cn('tx-details', { 'no-padding': isMultiSendTxInfo(data.txInfo), 'not-executed': !data.executedAt })}
+        className={cn('tx-details', {
+          'no-padding': isMultiSendTxInfo(data.txInfo),
+          'not-executed': !data.executedAt,
+          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+        })}
       >
         <TxDataGroup txDetails={data} />
       </div>
-      <div className={cn('tx-owners', { 'no-owner': !isUserAnOwner })}>
+      <div
+        className={cn('tx-owners', {
+          'no-owner': txLocation !== 'history' && !actions.isUserAnOwner,
+          'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
+        })}
+      >
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && isUserAnOwner && (
-        <div className="tx-details-actions">
-          <TxExpandedActions actions={actions} transaction={transaction} txLocation={txLocation} />
+      {!data.executedAt && txLocation !== 'history' && actions.isUserAnOwner && (
+        <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
+          <TxExpandedActions transaction={transaction} />
         </div>
       )}
     </TxDetailsContainer>

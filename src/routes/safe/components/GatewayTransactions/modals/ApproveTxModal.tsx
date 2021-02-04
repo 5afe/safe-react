@@ -160,7 +160,9 @@ export const ApproveTxModal = ({
   const value = useMemo(
     () =>
       transaction.current.txInfo.type === 'Transfer'
-        ? transaction.current.txInfo.transferInfo.value
+        ? transaction.current.txInfo.transferInfo.type === 'ETHER'
+          ? transaction.current.txInfo.transferInfo.value
+          : transaction.current.txDetails.txData?.value ?? '0'
         : transaction.current.txInfo.type === 'Custom'
         ? transaction.current.txInfo.value
         : '0',
@@ -170,7 +172,9 @@ export const ApproveTxModal = ({
   const to = useMemo(
     () =>
       transaction.current.txInfo.type === 'Transfer'
-        ? transaction.current.txInfo.recipient
+        ? transaction.current.txInfo.transferInfo.type === 'ETHER'
+          ? transaction.current.txInfo.recipient
+          : transaction.current.txInfo.transferInfo.tokenAddress
         : transaction.current.txInfo.type === 'Custom'
         ? transaction.current.txInfo.to
         : safeAddress,
@@ -186,6 +190,8 @@ export const ApproveTxModal = ({
         : '',
     [],
   )
+
+  const id = useMemo(() => transaction.current.id, [])
 
   const {
     gasCostFormatted,
@@ -210,6 +216,7 @@ export const ApproveTxModal = ({
       processTransaction({
         safeAddress,
         tx: {
+          id,
           baseGas,
           confirmations,
           data,

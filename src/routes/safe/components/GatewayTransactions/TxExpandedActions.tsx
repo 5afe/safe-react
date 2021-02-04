@@ -1,51 +1,42 @@
 import { Button } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 
-import { Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { useActionButtonsHandlers } from 'src/routes/safe/components/GatewayTransactions/hooks/useActionButtonsHandlers'
 
 type TxExpandedActionsProps = {
-  actions: { canCancel: boolean; canConfirm: boolean; canExecute: boolean }
   transaction: Transaction
-  txLocation: TxLocation
 }
 
-export const TxExpandedActions = ({
-  actions,
-  transaction,
-  txLocation,
-}: TxExpandedActionsProps): ReactElement | null => {
-  const { selectAction } = useContext(TransactionActionStateContext)
-  const { canCancel, canConfirm, canExecute } = actions
-
-  const handleConfirmButtonClick = () => {
-    selectAction({
-      actionSelected: actions.canExecute ? 'execute' : 'confirm',
-      transactionId: transaction.id,
-      txLocation,
-    })
-  }
-
-  const handleCancelButtonClick = () => {
-    selectAction({ actionSelected: 'cancel', transactionId: transaction.id, txLocation })
-  }
+export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): ReactElement | null => {
+  const {
+    canCancel,
+    handleConfirmButtonClick,
+    handleCancelButtonClick,
+    handleOnMouseEnter,
+    handleOnMouseLeave,
+    isPending,
+    disabledActions,
+  } = useActionButtonsHandlers(transaction)
 
   return (
     <>
       <Button
         size="md"
         color="primary"
-        disabled={!canExecute && !canConfirm}
+        disabled={disabledActions}
         onClick={handleConfirmButtonClick}
+        onMouseEnter={handleOnMouseEnter}
+        onMouseLeave={handleOnMouseLeave}
         className="primary"
       >
-        {canExecute ? 'Execute' : 'Confirm'}
+        {transaction.txStatus === 'AWAITING_EXECUTION' ? 'Execute' : 'Confirm'}
       </Button>
-      {canCancel ? (
-        <Button size="md" color="error" onClick={handleCancelButtonClick} className="error">
+      {canCancel && (
+        <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
           Cancel
         </Button>
-      ) : null}
+      )}
     </>
   )
 }

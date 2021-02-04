@@ -147,7 +147,15 @@ type Creation = {
   factory: string | null
 }
 
-type TransactionStatus = 'AWAITING_CONFIRMATIONS' | 'AWAITING_EXECUTION' | 'CANCELLED' | 'FAILED' | 'SUCCESS'
+type TransactionStatus =
+  | 'AWAITING_CONFIRMATIONS'
+  | 'AWAITING_EXECUTION'
+  | 'CANCELLED'
+  | 'FAILED'
+  | 'SUCCESS'
+  | 'PENDING'
+  | 'PENDING_FAILED'
+  | 'WILL_BE_REPLACED'
 
 type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation
 
@@ -341,6 +349,18 @@ export const isStatusFailed = (value: Transaction['txStatus']): value is 'FAILED
 
 export const isStatusCancelled = (value: Transaction['txStatus']): value is 'CANCELLED' => {
   return value === 'CANCELLED'
+}
+
+export const isStatusPending = (value: Transaction['txStatus']): value is 'PENDING' => {
+  return value === 'PENDING'
+}
+
+export const isStatusAwaitingConfirmation = (value: Transaction['txStatus']): value is 'AWAITING_CONFIRMATIONS' => {
+  return value === 'AWAITING_CONFIRMATIONS'
+}
+
+export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is 'WILL_BE_REPLACED' => {
+  return value === 'WILL_BE_REPLACED'
 }
 
 export const isMultiSigExecutionDetails = (

@@ -13,7 +13,7 @@ import {
 } from 'src/logic/safe/safeTxSigner'
 import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-// import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
@@ -31,6 +31,7 @@ interface ProcessTransactionArgs {
   notifiedTransaction: string
   safeAddress: string
   tx: {
+    id: string
     confirmations: List<Confirmation>
     origin: string // json.stringified url, name
     to: string
@@ -109,6 +110,7 @@ export const processTransaction = ({
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+        dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
@@ -128,12 +130,6 @@ export const processTransaction = ({
       sendParams.gas = '7000000'
     }
 
-    // const txToMock: TxToMock = {
-    //   ...txArgs,
-    //   value: txArgs.valueInWei,
-    // }
-    // const mockedTx = await mockTransaction(txToMock, safeAddress, state)
-
     await transaction
       .send(sendParams)
       .once('transactionHash', async (hash: string) => {
@@ -141,22 +137,37 @@ export const processTransaction = ({
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING',
+            safeAddress,
+            nonce: tx.nonce,
+            // if we provide the tx ID that sole tx will has the _pending_ status.
+            // if not, all the txs that share the same nonce will have the _pending_ status.
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
 
         try {
-          await Promise.all([
-            saveTxToHistory({ ...txArgs, txHash }),
-            // storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
-          ])
+          await saveTxToHistory({ ...txArgs, txHash })
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-          // await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
         dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-        // storeTx({ transaction: tx, safeAddress, dispatch, state })
+
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING_FAILED',
+            safeAddress,
+            nonce: tx.nonce,
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
+
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
@@ -171,8 +182,6 @@ export const processTransaction = ({
               : notificationsQueue.afterExecution.moreConfirmationsNeeded,
           ),
         )
-
-        // await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 
@@ -193,6 +202,14 @@ export const processTransaction = ({
       dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
     }
 
+    dispatch(
+      updateTransactionStatus({
+        txStatus: 'PENDING_FAILED',
+        safeAddress,
+        nonce: tx.nonce,
+        id: !isExecution ? tx.id : undefined,
+      }),
+    )
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     if (txHash) {

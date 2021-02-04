@@ -2,8 +2,16 @@ import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
-import { DisclaimerContainer, GroupedTransactions, H2, StyledTransactions, StyledTransactionsGroup } from './styled'
+import {
+  DisclaimerContainer,
+  GroupedTransactions,
+  GroupedTransactionsCard,
+  H2,
+  StyledTransactions,
+  StyledTransactionsGroup,
+} from './styled'
+import { TxHoverProvider } from './TxHoverProvider'
+import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
@@ -18,7 +26,12 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
       </Text>
       <Text size="lg" className="disclaimer">
         These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
-        <Link href="https://gnosis.io" target="_blank" rel="noreferrer" title="nonces">
+        <Link
+          href="https://help.gnosis-safe.io/en/articles/4730252-why-are-transactions-with-the-same-nonce-conflicting-with-each-other"
+          target="_blank"
+          rel="noreferrer"
+          title="Why are transactions with the same nonce conflicting with each other?"
+        >
           <Text size="lg" as="span" color="primary">
             Learn more
           </Text>
@@ -36,17 +49,19 @@ type QueueTransactionProps = {
 
 const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
   return transactions.length > 1 ? (
-    <>
-      <Disclaimer nonce={nonce} />
-      <GroupedTransactions>
-        {transactions.map((transaction, index) => (
-          <Fragment key={`${nonce}-${transaction.id}`}>
-            <TreeView firstElement={!index} />
-            <TxQueueRow isGrouped transaction={transaction} />
-          </Fragment>
-        ))}
-      </GroupedTransactions>
-    </>
+    <GroupedTransactionsCard>
+      <TxHoverProvider>
+        <Disclaimer nonce={nonce} />
+        <GroupedTransactions>
+          {transactions.map((transaction, index) => (
+            <Fragment key={`${nonce}-${transaction.id}`}>
+              <TreeView firstElement={!index} />
+              <TxQueueRow isGrouped transaction={transaction} />
+            </Fragment>
+          ))}
+        </GroupedTransactions>
+      </TxHoverProvider>
+    </GroupedTransactionsCard>
   ) : (
     <TxQueueRow transaction={transactions[0]} />
   )

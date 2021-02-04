@@ -8,15 +8,14 @@ import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransacti
 
 type PagedQueuedTransactions = {
   count: number
-  transactions: QueueTransactionsInfo
+  loading: boolean
+  transactions?: QueueTransactionsInfo
   hasMore: boolean
   next: () => Promise<void>
 }
 
 export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
-  const { next, queue } = useQueueTransactions()
-  const count = next.count + queue.count
-
+  const transactions = useQueueTransactions()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [hasMore, setHasMore] = useState(true)
@@ -42,5 +41,8 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
     }
   }
 
-  return { count, transactions: { next, queue }, hasMore, next: nextPage }
+  const count = transactions ? transactions.next.count + transactions.queue.count : 0
+  const loading = typeof transactions === 'undefined'
+
+  return { count, loading, transactions, hasMore, next: nextPage }
 }

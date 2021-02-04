@@ -2,8 +2,6 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import OwnerForm from './screens/OwnerForm'
-
 import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -15,12 +13,14 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+
+import OwnerForm from './screens/OwnerForm'
 import { ReviewReplaceOwnerModal } from './screens/Review'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
     height: 'auto',
   },
 })
@@ -37,6 +37,7 @@ export const sendReplaceOwner = async (
   safeAddress: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
+  txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
@@ -51,6 +52,9 @@ export const sendReplaceOwner = async (
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -88,7 +92,7 @@ export const ReplaceOwnerModal = ({
   })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(
     () => () => {
@@ -113,10 +117,10 @@ export const ReplaceOwnerModal = ({
     setActiveScreen('reviewReplaceOwner')
   }
 
-  const onReplaceOwner = async () => {
+  const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, threshold)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters, threshold)
 
       dispatch(
         addOrUpdateAddressBookEntry(

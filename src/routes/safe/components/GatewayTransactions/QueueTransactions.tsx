@@ -1,3 +1,4 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
@@ -9,11 +10,20 @@ import { QueueTxList } from './QueueTxList'
 import { ScrollableTransactionsContainer } from './styled'
 
 export const QueueTransactions = (): ReactElement => {
-  const { count, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const { count, loading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
-  return count === 0 ? (
-    <div>No txs</div>
-  ) : (
+  // `loading` is, actually `!transactions`
+  // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
+  if (loading || !transactions) {
+    return <Loader size="md" />
+  }
+
+  if (count === 0) {
+    // TODO: add `Transactions will appear here` image
+    return <div>Transactions will appear here</div>
+  }
+
+  return (
     <TxActionProvider>
       <ScrollableTransactionsContainer id={SCROLLABLE_TARGET_ID}>
         <InfiniteScroll dataLength={count} next={next} hasMore={hasMore}>

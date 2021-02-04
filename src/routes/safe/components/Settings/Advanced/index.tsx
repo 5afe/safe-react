@@ -6,7 +6,7 @@ import styled from 'styled-components'
 
 import { getModuleData } from './dataFetcher'
 import { styles } from './style'
-import ModulesTable from './ModulesTable'
+import { ModulesTable } from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
 import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
@@ -38,7 +38,7 @@ const LoadingModules = (): React.ReactElement => {
   )
 }
 
-const Advanced = (): React.ReactElement => {
+export const Advanced = (): React.ReactElement => {
   const classes = useStyles()
   const nonce = useSelector(safeNonceSelector)
   const modules = useSelector(safeModulesSelector)
@@ -94,5 +94,3 @@ const Advanced = (): React.ReactElement => {
     </>
   )
 }
-
-export default Advanced

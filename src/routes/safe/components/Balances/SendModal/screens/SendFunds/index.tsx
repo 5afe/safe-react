@@ -69,13 +69,23 @@ export type SendFundsTx = {
 
 type SendFundsProps = {
   onClose: () => void
-  onNext: (txInfo: unknown) => void
+  onReview: (txInfo: unknown) => void
   recipientAddress?: string
   selectedToken?: string
   amount?: string
 }
 
-const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amount }: SendFundsProps): ReactElement => {
+const InputAdornmentChildSymbol = ({ symbol }: { symbol?: string }): ReactElement => {
+  return <>{symbol}</>
+}
+
+const SendFunds = ({
+  onClose,
+  onReview,
+  recipientAddress,
+  selectedToken = '',
+  amount,
+}: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
@@ -115,7 +125,7 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry?.address
     }
-    onNext({ ...submitValues, tokenSpendingLimit })
+    onReview({ ...submitValues, tokenSpendingLimit })
   }
 
   const spendingLimits = useSelector(safeSpendingLimitsSelector)
@@ -295,7 +305,11 @@ const SendFunds = ({ onClose, onNext, recipientAddress, selectedToken = '', amou
                     <Field
                       component={TextField}
                       inputAdornment={{
-                        endAdornment: <InputAdornment position="end">{selectedToken?.symbol || ''}</InputAdornment>,
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <InputAdornmentChildSymbol symbol={selectedToken?.symbol} />
+                          </InputAdornment>
+                        ),
                       }}
                       name="amount"
                       placeholder="Amount*"

@@ -2,7 +2,7 @@ import { List } from 'immutable'
 import { getNetworkInfo } from 'src/config'
 import { getERC20DecimalsAndSymbol, isSendERC20Transaction } from 'src/logic/tokens/utils/tokenHelpers'
 import { getERC721Symbol, isSendERC721Transaction } from 'src/logic/collectibles/utils'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { isEmptyAddress, sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
@@ -15,6 +15,7 @@ import {
   TransactionTypeValues,
   TxArgs,
   RefundParams,
+  isStoredTransaction,
 } from 'src/logic/safe/store/models/types/transaction'
 import { AppReduxState, store } from 'src/store'
 import {
@@ -31,6 +32,7 @@ import { TypedDataUtils } from 'eth-sig-util'
 import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
+import { CALL } from 'src/logic/safe/transactions'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -48,8 +50,46 @@ export const isInnerTransaction = (tx: BuildTx['tx'] | Transaction, safeAddress:
   return isSameAddress && Number(tx.value) === 0
 }
 
-export const isCancelTransaction = (tx: BuildTx['tx'] | Transaction, safeAddress: string): boolean => {
-  return isInnerTransaction(tx, safeAddress) && isEmptyData(tx.data)
+export const isCancelTransaction = (tx: BuildTx['tx'], safeAddress: string): boolean => {
+  if (isStoredTransaction(tx)) {
+    if (!sameAddress(tx.recipient, safeAddress)) {
+      return false
+    }
+  } else {
+    if (!sameAddress(tx.to, safeAddress)) {
+      return false
+    }
+  }
+
+  if (Number(tx.value)) {
+    return false
+  }
+
+  if (tx.data && !isEmptyData(tx.data)) {
+    return false
+  }
+
+  if (tx.operation !== CALL) {
+    return false
+  }
+
+  if (tx.baseGas) {
+    return false
+  }
+
+  if (Number(tx.gasPrice)) {
+    return false
+  }
+
+  if (tx.gasToken && !isEmptyAddress(tx.gasToken)) {
+    return false
+  }
+
+  if (tx.refundReceiver && !isEmptyAddress(tx.refundReceiver)) {
+    return false
+  }
+
+  return true
 }
 
 export const isPendingTransaction = (tx: Transaction, cancelTx: Transaction): boolean => {

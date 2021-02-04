@@ -24,6 +24,8 @@ export const ColumnDisplayAccordionDetails = styled(AccordionDetails)`
 
 export const NoPaddingAccordion = styled(Accordion)`
   &.MuiAccordion-root {
+    background-color: transparent;
+
     .MuiAccordionDetails-root {
       padding: 0;
     }
@@ -63,9 +65,9 @@ export const H2 = styled.h2`
 `
 
 export const StyledTransactions = styled.div`
-  background-color: white;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
-  box-shadow: #00000026 0 0 8px 2px;
+  box-shadow: #00000026 0 4px 12px 0;
   overflow: hidden;
   width: 100%;
 
@@ -81,6 +83,38 @@ export const StyledTransactions = styled.div`
   }
 `
 
+export const GroupedTransactionsCard = styled(StyledTransactions)`
+  transition: all 150ms cubic-bezier(0.4, 0, 0.2, 1) 0ms;
+  background-color: transparent;
+  border-radius: 0;
+  box-shadow: none;
+
+  &:not(:last-child) {
+    border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+  }
+
+  .MuiAccordion-root,
+  .MuiAccordionSummary-root,
+  .MuiAccordionDetails-root {
+    background-color: transparent;
+
+    &:hover,
+    &.Mui-expanded {
+      background-color: transparent;
+    }
+  }
+
+  &:hover {
+    background-color: ${({ theme }) => theme.colors.background};
+
+    .MuiAccordionDetails-root {
+      div[class^='tx-'] {
+        background-color: ${({ theme }) => theme.colors.background};
+      }
+    }
+  }
+`
+
 const gridColumns = {
   nonce: '0.5fr',
   type: '3fr',
@@ -91,7 +125,15 @@ const gridColumns = {
   status: '3fr',
 }
 
-export const StyledTransaction = styled.div`
+export const WillBeReplaced = styled.div`
+  .will-be-replaced * {
+    color: gray !important;
+    text-decoration: line-through !important;
+    filter: grayscale(1) opacity(0.8) !important;
+  }
+`
+
+export const StyledTransaction = styled(WillBeReplaced)`
   display: grid;
   grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
@@ -101,12 +143,31 @@ export const StyledTransaction = styled.div`
   }
 
   .tx-actions {
+    visibility: hidden;
     justify-self: end;
   }
 
   .tx-status {
     justify-self: end;
     margin-right: 8px;
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    justify-content: end;
+
+    p {
+      margin-left: 8px;
+    }
+  }
+
+  &:hover {
+    .tx-actions {
+      visibility: visible;
+
+      &.will-be-replaced {
+        visibility: hidden;
+      }
+    }
   }
 `
 
@@ -192,11 +253,6 @@ export const GroupedTransactions = styled(StyledTransaction)`
 
       > .MuiAccordionSummary-root {
         padding: 0;
-        background-color: ${({ theme }) => theme.colors.white};
-
-        &:hover {
-          background-color: ${({ theme }) => theme.colors.separator};
-        }
       }
     }
   }
@@ -204,7 +260,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 `
 
 export const DisclaimerContainer = styled(StyledTransaction)`
-  background-color: ${({ theme }) => theme.colors.background};
+  background-color: ${({ theme }) => theme.colors.inputField} !important;
   border-radius: 5px;
   margin: 8px;
   padding: 8px;
@@ -220,8 +276,8 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled.div`
-  background-color: ${({ theme }) => theme.colors.separator};
+export const TxDetailsContainer = styled(WillBeReplaced)`
+  background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
@@ -231,7 +287,7 @@ export const TxDetailsContainer = styled.div`
   width: 100%;
 
   & > div {
-    background-color: white;
+    background-color: ${({ theme }) => theme.colors.white};
     line-break: anywhere;
     overflow: hidden;
     padding: 8px 16px;
