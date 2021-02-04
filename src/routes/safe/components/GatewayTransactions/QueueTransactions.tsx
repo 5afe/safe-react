@@ -1,13 +1,22 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
+import { Loader, Title } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
+import style from 'styled-components'
 
 import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
+import Img from 'src/components/layout/Img'
 import { usePagedQueuedTransactions } from './hooks/usePagedQueuedTransactions'
 import { ActionModal } from './ActionModal'
 import { TxActionProvider } from './TxActionProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { QueueTxList } from './QueueTxList'
 import { ScrollableTransactionsContainer, Centered } from './styled'
+import NoTransactionsImage from './assets/no-transactions.svg'
+
+const NoTransactions = style.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px;
+`
 
 export const QueueTransactions = (): ReactElement => {
   const { count, loading, hasMore, next, transactions } = usePagedQueuedTransactions()
@@ -22,9 +31,13 @@ export const QueueTransactions = (): ReactElement => {
     )
   }
 
-  if (count === 0) {
-    // TODO: add `Transactions will appear here` image
-    return <div>Transactions will appear here</div>
+  if (count !== 0) {
+    return (
+      <NoTransactions>
+        <Img alt="No Transactions yet" src={NoTransactionsImage} />
+        <Title size="xs">Transactions will appear here </Title>
+      </NoTransactions>
+    )
   }
 
   return (
