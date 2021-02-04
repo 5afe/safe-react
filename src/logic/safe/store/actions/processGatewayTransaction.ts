@@ -4,27 +4,31 @@ import { ThunkAction } from 'redux-thunk'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import {
   checkIfOffChainSignatureIsPossible,
   generateSignaturesFromTxConfirmations,
   getPreValidatedSignatures,
 } from 'src/logic/safe/safeTxSigner'
-import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
-import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
-import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
+import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
+import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
+import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
 import { Dispatch, DispatchReturn } from './types'
+import { PayableTx } from 'src/types/contracts/types'
+
+import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -47,6 +51,7 @@ interface ProcessTransactionArgs {
     refundReceiver: string
   }
   userAddress: string
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
   thresholdReached: boolean
 }
 
@@ -58,6 +63,7 @@ export const processTransaction = ({
   safeAddress,
   tx,
   userAddress,
+  ethParameters,
   thresholdReached,
 }: ProcessTransactionArgs): ProcessTransactionAction => async (
   dispatch: Dispatch,
@@ -123,11 +129,12 @@ export const processTransaction = ({
 
     transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
 
-    const sendParams: any = { from, value: 0 }
-
-    // if not set owner management tests will fail on ganache
-    if (process.env.NODE_ENV === 'test') {
-      sendParams.gas = '7000000'
+    const sendParams: PayableTx = {
+      from,
+      value: 0,
+      gas: ethParameters?.ethGasLimit,
+      gasPrice: ethParameters?.ethGasPriceInGWei,
+      nonce: ethParameters?.ethNonce,
     }
 
     await transaction
