@@ -65,6 +65,8 @@ export const ReviewReplaceOwnerModal = ({
   const threshold = useSelector(safeThresholdSelector) || 1
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -78,6 +80,8 @@ export const ReviewReplaceOwnerModal = ({
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -99,8 +103,28 @@ export const ReviewReplaceOwnerModal = ({
     }
   }, [ownerAddress, safeAddress, values.newOwnerAddress])
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>

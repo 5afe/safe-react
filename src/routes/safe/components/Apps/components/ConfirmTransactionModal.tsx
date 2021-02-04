@@ -33,6 +33,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg } from 'src/theme/variables'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -122,6 +123,8 @@ export const ConfirmTransactionModal = ({
   const txRecipient: string | undefined = MULTI_SEND_ADDRESS
   const txData: string | undefined = useMemo(() => encodeMultiSendCall(txs), [txs])
   const operation = DELEGATE_CALL
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -136,6 +139,8 @@ export const ConfirmTransactionModal = ({
     txData: txData || '',
     txRecipient,
     operation,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -179,6 +184,21 @@ export const ConfirmTransactionModal = ({
         handleTxRejection,
       ),
     )
+  }
+
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
@@ -263,6 +283,7 @@ export const ConfirmTransactionModal = ({
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
         parametersStatus={getParametersStatus()}
+        closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => (
           <>
