@@ -7,16 +7,28 @@ import Close from '@material-ui/icons/Close'
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { styles } from './style'
+
+import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import Modal from 'src/components/Modal'
-import { TransactionFees } from 'src/components/TransactionsFees'
-import { useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processGatewayTransaction'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { TransactionFees } from 'src/components/TransactionsFees'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { isThresholdReached } from 'src/routes/safe/components/GatewayTransactions/hooks/useTransactionActions'
+import { Overwrite } from 'src/types/helpers'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import {
   ExpandedTxDetails,
@@ -24,15 +36,6 @@ import {
   Operation,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { isThresholdReached } from 'src/routes/safe/components/GatewayTransactions/hooks/useTransactionActions'
-import { Overwrite } from 'src/types/helpers'
-
-import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
@@ -63,34 +66,36 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 }
 
 type Props = {
+  onClose: () => void
   canExecute?: boolean
   isCancelTx?: boolean
   isOpen: boolean
-  onClose: () => void
   gwTransaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
+  txParameters: TxParameters
 }
 
 export const ApproveTxModal = ({
+  onClose,
   canExecute = false,
   isCancelTx = false,
   isOpen,
-  onClose,
   gwTransaction,
 }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const transaction = useRef(gwTransaction)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
+  const transaction = useRef(gwTransaction)
   const thresholdReached = !!(
     transaction.current.executionInfo && isThresholdReached(transaction.current.executionInfo)
   )
   const _threshold = transaction.current.executionInfo?.confirmationsRequired ?? 0
   const _countingCurrentConfirmation = (transaction.current.executionInfo?.confirmationsSubmitted ?? 0) + 1
+  const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
-  const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const confirmations = useMemo(
     () =>
@@ -194,6 +199,8 @@ export const ApproveTxModal = ({
   const id = useMemo(() => transaction.current.id, [])
 
   const {
+    gasLimit,
+    gasPriceFormatted,
     gasCostFormatted,
     txEstimationExecutionStatus,
     isExecution,
@@ -207,11 +214,12 @@ export const ApproveTxModal = ({
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
     safeTxGas,
     operation,
+    manualGasPrice: manualGasPrice,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
-  const approveTx = () => {
+  const approveTx = (txParameters: TxParameters) => {
     dispatch(
       processTransaction({
         safeAddress,
@@ -234,72 +242,128 @@ export const ApproveTxModal = ({
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+        ethParameters: txParameters,
         thresholdReached,
       }),
     )
     onClose()
   }
 
+  const getParametersStatus = () => {
+    if (canExecute || approveAndExecute) {
+      return 'SAFE_DISABLED'
+    }
+
+    return 'DISABLED'
+  }
+
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(newGasPrice.toString())
+    }
+  }
+
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.headingText} noMargin weight="bolder">
-          {title}
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.closeIcon} />
-        </IconButton>
-      </Row>
-      <Hairline />
-      <Block className={classes.container}>
-        <Row style={{ flexDirection: 'column' }}>
-          <Paragraph>{description}</Paragraph>
-          <Paragraph color="medium" size="sm">
-            Transaction nonce:
-            <br />
-            <Bold className={classes.nonceNumber}>{nonce}</Bold>
-          </Paragraph>
-          {oneConfirmationLeft && canExecute && (
+      <EditableTxParameters
+        parametersStatus={getParametersStatus()}
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeNonce={nonce.toString()}
+        safeTxGas={safeTxGas.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
+        {(txParameters, toggleEditMode) => {
+          return (
             <>
-              <Paragraph color="error">
-                Approving this transaction executes it right away.
-                {!isCancelTx &&
-                  ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
-              </Paragraph>
-              {!isCancelTx && (
-                <FormControlLabel
-                  control={<Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />}
-                  label="Execute transaction"
-                  data-testid="execute-checkbox"
+              {/* Header */}
+              <Row align="center" className={classes.heading} grow>
+                <Paragraph className={classes.headingText} noMargin weight="bolder">
+                  {title}
+                </Paragraph>
+                <IconButton disableRipple onClick={onClose}>
+                  <Close className={classes.closeIcon} />
+                </IconButton>
+              </Row>
+
+              <Hairline />
+
+              {/* Tx info */}
+              <Block className={classes.container}>
+                <Row style={{ flexDirection: 'column' }}>
+                  <Paragraph>{description}</Paragraph>
+                  <Paragraph color="medium" size="sm">
+                    Transaction nonce:
+                    <br />
+                    <Bold className={classes.nonceNumber}>{nonce}</Bold>
+                  </Paragraph>
+
+                  {oneConfirmationLeft && canExecute && (
+                    <>
+                      <Paragraph color="error">
+                        Approving this transaction executes it right away.
+                        {!isCancelTx &&
+                          ' If you want approve but execute the transaction manually later, click on the checkbox below.'}
+                      </Paragraph>
+
+                      {!isCancelTx && (
+                        <FormControlLabel
+                          control={
+                            <Checkbox checked={approveAndExecute} color="primary" onChange={handleExecuteCheckbox} />
+                          }
+                          label="Execute transaction"
+                          data-testid="execute-checkbox"
+                        />
+                      )}
+                    </>
+                  )}
+
+                  {/* Tx Parameters */}
+                  {approveAndExecute && (
+                    <TxParametersDetail
+                      txParameters={txParameters}
+                      onEdit={toggleEditMode}
+                      parametersStatus={getParametersStatus()}
+                      isTransactionCreation={isCreation}
+                      isTransactionExecution={isExecution}
+                    />
+                  )}
+                </Row>
+
+                <TransactionFees
+                  gasCostFormatted={gasCostFormatted}
+                  isExecution={isExecution}
+                  isCreation={isCreation}
+                  isOffChainSignature={isOffChainSignature}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
-              )}
+              </Block>
+
+              {/* Footer */}
+              <Row align="center" className={classes.buttonRow}>
+                <Button minHeight={42} minWidth={140} onClick={onClose}>
+                  Exit
+                </Button>
+                <Button
+                  color={isCancelTx ? 'secondary' : 'primary'}
+                  minHeight={42}
+                  minWidth={214}
+                  onClick={() => approveTx(txParameters)}
+                  testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
+                  type="submit"
+                  variant="contained"
+                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                >
+                  {title}
+                </Button>
+              </Row>
             </>
-          )}
-        </Row>
-        <TransactionFees
-          gasCostFormatted={gasCostFormatted}
-          isExecution={isExecution}
-          isCreation={isCreation}
-          isOffChainSignature={isOffChainSignature}
-          txEstimationExecutionStatus={txEstimationExecutionStatus}
-        />
-      </Block>
-      <Row align="center" className={classes.buttonRow}>
-        <Button minHeight={42} minWidth={140} onClick={onClose}>
-          Exit
-        </Button>
-        <Button
-          color={isCancelTx ? 'secondary' : 'primary'}
-          minHeight={42}
-          minWidth={214}
-          onClick={approveTx}
-          testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
-          type="submit"
-          variant="contained"
-        >
-          {title}
-        </Button>
-      </Row>
+          )
+        }}
+      </EditableTxParameters>
     </Modal>
   )
 }
