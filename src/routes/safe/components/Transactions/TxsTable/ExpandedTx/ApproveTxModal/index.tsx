@@ -100,7 +100,7 @@ export const ApproveTxModal = ({
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
     safeTxGas: tx.safeTxGas,
     operation: tx.operation,
-    manualGasPrice: manualGasPrice,
+    manualGasPrice,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
@@ -133,7 +133,7 @@ export const ApproveTxModal = ({
     const newGasPrice = Number(txParameters.ethGasPrice)
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(newGasPrice.toString())
+      setManualGasPrice(txParameters.ethGasPrice)
     }
   }
 
