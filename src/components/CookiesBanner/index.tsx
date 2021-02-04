@@ -1,7 +1,7 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
@@ -94,7 +94,7 @@ interface CookiesBannerFormProps {
   alertMessage: boolean
 }
 
-const CookiesBanner = () => {
+const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
@@ -250,14 +250,16 @@ const CookiesBanner = () => {
 
   return (
     <>
-      {!showIntercom && (
+      {!isDesktop && !showIntercom && (
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
           onClick={() => dispatch(openCookieBanner(true, true))}
         />
       )}
-      {showBanner?.cookieBannerOpen && <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />}
+      {!isDesktop && showBanner?.cookieBannerOpen && (
+        <CookiesBannerForm alertMessage={showBanner?.intercomAlertDisplayed} />
+      )}
     </>
   )
 }
