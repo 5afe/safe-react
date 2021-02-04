@@ -41,8 +41,13 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
     }
   }
 
-  const count = transactions ? transactions.next.count + transactions.queue.count : 0
-  const loading = typeof transactions === 'undefined'
+  let count
+  if (transactions) {
+    count = transactions.next.count + transactions.queue.count
+  }
+
+  const loading = typeof transactions === 'undefined' || typeof count === 'undefined'
+  console.log({ loading, count, transactions })
 
   return { count, loading, transactions, hasMore, next: nextPage }
 }
