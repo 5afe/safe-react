@@ -23,8 +23,10 @@ import { AppReduxState } from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/actions/transactions/pendingTransactions'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { Dispatch, DispatchReturn } from './types'
+import { PayableTx } from 'src/types/contracts/types'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -32,6 +34,7 @@ interface ProcessTransactionArgs {
   safeAddress: string
   tx: Transaction
   userAddress: string
+  ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
   thresholdReached: boolean
 }
 
@@ -43,6 +46,7 @@ export const processTransaction = ({
   safeAddress,
   tx,
   userAddress,
+  ethParameters,
   thresholdReached,
 }: ProcessTransactionArgs): ProcessTransactionAction => async (
   dispatch: Dispatch,
@@ -107,11 +111,12 @@ export const processTransaction = ({
 
     transaction = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, tx.safeTxHash)
 
-    const sendParams: any = { from, value: 0 }
-
-    // if not set owner management tests will fail on ganache
-    if (process.env.NODE_ENV === 'test') {
-      sendParams.gas = '7000000'
+    const sendParams: PayableTx = {
+      from,
+      value: 0,
+      gas: ethParameters?.ethGasLimit,
+      gasPrice: ethParameters?.ethGasPriceInGWei,
+      nonce: ethParameters?.ethNonce,
     }
 
     const txToMock: TxToMock = {

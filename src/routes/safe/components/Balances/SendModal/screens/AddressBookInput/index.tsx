@@ -10,8 +10,8 @@ import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
-import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
+import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
+import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
 import {
   useTextFieldInputStyle,
   useTextFieldLabelStyle,
@@ -85,8 +85,11 @@ const BaseAddressBookInput = ({
         }
 
         // ENS-enabled resolve/validation
-        if (isFeatureEnabled(FEATURES.ENS_LOOKUP) && isValidEnsName(normalizedValue)) {
-          const address = await getAddressFromENS(normalizedValue).catch(() => normalizedValue)
+        if (
+          isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
+          (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
+        ) {
+          const address = await getAddressFromDomain(normalizedValue)
 
           const validatedAddress = validateAddress(address)
 
@@ -131,13 +134,13 @@ const BaseAddressBookInput = ({
       onChange={onChange}
       onInputChange={onInputChange}
       options={addressBookEntries}
+      id="address-book-input"
       renderInput={(params) => (
         <MuiTextField
           {...params}
           autoFocus={true}
           error={!!validationText}
           fullWidth
-          id="filled-error-helper-text"
           variant="filled"
           label={validationText ? validationText : label}
           InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}

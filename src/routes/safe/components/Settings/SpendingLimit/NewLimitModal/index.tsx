@@ -8,7 +8,7 @@ import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
-import Review from './Review'
+import { ReviewSpendingLimits } from './Review'
 
 export const CREATE = 'CREATE' as const
 export const REVIEW = 'REVIEW' as const
@@ -81,7 +81,7 @@ interface SpendingLimitModalProps {
   open: boolean
 }
 
-const NewLimitModal = ({ close, open }: SpendingLimitModalProps): ReactElement => {
+export const NewLimitModal = ({ close, open }: SpendingLimitModalProps): ReactElement => {
   // state and dispatch
   const [{ step, txToken, values }, { create, review }] = useNewLimitModal(CREATE)
 
@@ -98,9 +98,7 @@ const NewLimitModal = ({ close, open }: SpendingLimitModalProps): ReactElement =
       description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
     >
       {step === CREATE && <Create initialValues={values} onCancel={close} onReview={handleReview} />}
-      {step === REVIEW && <Review onBack={create} onClose={close} txToken={txToken} values={values} />}
+      {step === REVIEW && <ReviewSpendingLimits onBack={create} onClose={close} txToken={txToken} values={values} />}
     </Modal>
   )
 }
-
-export default NewLimitModal
