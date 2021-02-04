@@ -117,7 +117,7 @@ export const ConfirmTransactionModal = ({
 
   const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
   const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
-  const txValue: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.value), [txs])
+  const txValue: string | undefined = useMemo(() => (txs.length > 1 ? '0' : txs[0]?.value), [txs])
   const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
 
   const {
