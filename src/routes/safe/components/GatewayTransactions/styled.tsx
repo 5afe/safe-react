@@ -216,9 +216,9 @@ export const GroupedTransactions = styled(StyledTransaction)`
         border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
         border-left: 2px solid ${({ theme }) => theme.colors.separator};
         content: '';
-        height: 30px;
+        height: 22px;
         position: absolute;
-        top: 0;
+        top: 8px;
         width: 100%;
       }
     }
@@ -277,7 +277,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
 export const DisclaimerContainer = styled(StyledTransaction)`
   background-color: ${({ theme }) => theme.colors.inputField} !important;
   border-radius: 5px;
-  margin: 8px;
+  margin: 8px 8px 0 8px;
   padding: 8px;
   width: calc(100% - 32px);
 
