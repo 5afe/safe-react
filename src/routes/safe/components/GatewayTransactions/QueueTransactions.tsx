@@ -31,7 +31,7 @@ export const QueueTransactions = (): ReactElement => {
     )
   }
 
-  if (count !== 0) {
+  if (count === 0) {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />

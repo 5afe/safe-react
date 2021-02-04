@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 
 import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
 import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
-import { H2, ScrollableTransactionsContainer, StyledTransactions, StyledTransactionsGroup } from './styled'
+import { H2, ScrollableTransactionsContainer, StyledTransactions, StyledTransactionsGroup, Centered } from './styled'
 import { TxHistoryRow } from './TxHistoryRow'
 import { TxLocationContext } from './TxLocationProvider'
 
@@ -12,7 +12,11 @@ export const HistoryTxList = (): ReactElement => {
   const { count, hasMore, next, transactions } = usePagedHistoryTransactions()
 
   if (count === 0) {
-    return <Loader size="lg" />
+    return (
+      <Centered>
+        <Loader size="md" />
+      </Centered>
+    )
   }
 
   return (
