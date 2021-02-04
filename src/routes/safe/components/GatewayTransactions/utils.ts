@@ -2,7 +2,13 @@ import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
 
 import { getNetworkInfo } from 'src/config'
-import { Custom, isTransferTxInfo, Transaction, TransactionInfo } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  Custom,
+  isCustomTxInfo,
+  isTransferTxInfo,
+  Transaction,
+  TransactionInfo,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -86,11 +92,25 @@ export interface TableData {
   type: any
 }
 
+// TODO: how can we be sure that it's a cancel tx without asking for tx-details?
+//  can the client-gateway service provide info about the tx, Like: `isCancelTransaction: boolean`?
 export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; safeAddress: string }): boolean =>
   sameAddress(txInfo.to, safeAddress) &&
   sameString(txInfo.dataSize, '0') &&
   sameString(txInfo.value, '0') &&
   txInfo.methodName === null
+
+type IsCancelTxDetailsProps = {
+  executedAt: number | null
+  txInfo: Transaction['txInfo']
+  safeAddress: string
+}
+export const isCancelTxDetails = ({ executedAt, txInfo, safeAddress }: IsCancelTxDetailsProps): boolean =>
+  !executedAt &&
+  // custom transaction
+  isCustomTxInfo(txInfo) &&
+  // verify that it's a cancel tx based on it's info
+  isCancelTransaction({ safeAddress, txInfo })
 
 export const addressInList = (list: string[] = []) => (address: string): boolean =>
   list.some((ownerAddress) => sameAddress(ownerAddress, address))
