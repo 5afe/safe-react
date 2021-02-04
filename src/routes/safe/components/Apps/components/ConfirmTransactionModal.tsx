@@ -166,7 +166,7 @@ export const ConfirmTransactionModal = ({
 
   const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
-  const confirmTransactions = async () => {
+  const confirmTransactions = async (txParameters: TxParameters) => {
     await dispatch(
       createTransaction(
         {
@@ -175,10 +175,14 @@ export const ConfirmTransactionModal = ({
           valueInWei: '0',
           txData,
           operation,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
-          safeTxGas: Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas
+            ? Number(txParameters.safeTxGas)
+            : Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
+          ethParameters: txParameters,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
         handleUserConfirmation,
         handleTxRejection,
@@ -298,7 +302,7 @@ export const ConfirmTransactionModal = ({
               <ModalFooterConfirmation
                 cancelText="Cancel"
                 handleCancel={handleTxRejection}
-                handleOk={confirmTransactions}
+                handleOk={() => confirmTransactions(txParameters)}
                 okDisabled={areTxsMalformed}
                 okText="Submit"
               />
