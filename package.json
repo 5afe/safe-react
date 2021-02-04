@@ -200,6 +200,7 @@
     "js-cookie": "^2.2.1",
     "lodash.debounce": "^4.0.8",
     "lodash.get": "^4.4.2",
+    "lodash.isequal": "^4.5.0",
     "lodash.memoize": "^4.1.2",
     "lodash.merge": "^4.6.2",
     "material-ui-search-bar": "^1.0.0",

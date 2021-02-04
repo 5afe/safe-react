@@ -85,7 +85,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
     )
 
     batch(() => {
-      dispatch(updateSafe({ safeAddress, activeTokens, balances, ethBalance }))
+      dispatch(updateSafe({ address: safeAddress, activeTokens, balances, ethBalance }))
       dispatch(setCurrencyBalances(safeAddress, currencyList))
       dispatch(addTokens(tokens))
     })
