@@ -6,7 +6,7 @@ import {
   DisclaimerContainer,
   GroupedTransactions,
   GroupedTransactionsCard,
-  H2,
+  SubTitle,
   StyledTransactions,
   StyledTransactionsGroup,
 } from './styled'
@@ -73,11 +73,11 @@ type QueueTxListProps = {
 
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const title = txLocation === 'queued.next' ? 'Next Transaction' : 'Queue'
+  const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
 
   return (
     <StyledTransactionsGroup>
-      <H2>{title}</H2>
+      <SubTitle size="lg">{title}</SubTitle>
       <StyledTransactions>
         {transactions.map(([nonce, txs]) => (
           <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />

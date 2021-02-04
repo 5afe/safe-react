@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -62,6 +62,10 @@ export const StyledTransactionsGroup = styled.div`
 export const H2 = styled.h2`
   text-transform: uppercase;
   font-size: smaller;
+`
+
+export const SubTitle = styled(Text)`
+  margin-bottom: 8px;
 `
 
 export const StyledTransactions = styled.div`
