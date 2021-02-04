@@ -1,5 +1,6 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
+import styled from 'styled-components'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import {
@@ -14,6 +15,15 @@ import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
 
+const AlignItemsWithMargin = styled.div`
+  display: flex;
+  align-items: center;
+
+  span:first-child {
+    margin-right: 2px;
+  }
+`
+
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
 }
@@ -24,20 +34,24 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
       <Text size="lg" className="nonce">
         {nonce}
       </Text>
-      <Text size="lg" className="disclaimer">
-        These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
+      <AlignItemsWithMargin className="disclaimer">
+        <Text as="span" size="xl">
+          These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
+        </Text>
         <Link
           href="https://help.gnosis-safe.io/en/articles/4730252-why-are-transactions-with-the-same-nonce-conflicting-with-each-other"
           target="_blank"
           rel="noreferrer"
           title="Why are transactions with the same nonce conflicting with each other?"
         >
-          <Text size="lg" as="span" color="primary">
-            Learn more
-          </Text>
-          <Icon size="sm" type="externalLink" color="primary" />
+          <AlignItemsWithMargin>
+            <Text size="xl" as="span" color="primary">
+              Learn more
+            </Text>
+            <Icon size="sm" type="externalLink" color="primary" />
+          </AlignItemsWithMargin>
         </Link>
-      </Text>
+      </AlignItemsWithMargin>
     </DisclaimerContainer>
   )
 }
