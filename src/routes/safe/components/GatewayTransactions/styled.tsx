@@ -431,3 +431,11 @@ export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
   overflow-y: auto;
   width: 100%;
 `
+export const Centered = styled.div<{ padding?: number }>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: ${({ padding }) => `${padding}px`};
+  justify-content: center;
+  align-items: center;
+`

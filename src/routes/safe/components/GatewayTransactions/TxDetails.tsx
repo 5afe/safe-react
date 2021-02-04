@@ -16,7 +16,7 @@ import {
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
-import { TxDetailsContainer } from './styled'
+import { TxDetailsContainer, Centered } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
@@ -84,7 +84,11 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
-    return <Loader size="md" />
+    return (
+      <Centered padding={10}>
+        <Loader size="sm" />
+      </Centered>
+    )
   }
 
   if (!data) {

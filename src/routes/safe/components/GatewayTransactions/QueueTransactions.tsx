@@ -7,7 +7,7 @@ import { ActionModal } from './ActionModal'
 import { TxActionProvider } from './TxActionProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { QueueTxList } from './QueueTxList'
-import { ScrollableTransactionsContainer } from './styled'
+import { ScrollableTransactionsContainer, Centered } from './styled'
 
 export const QueueTransactions = (): ReactElement => {
   const { count, loading, hasMore, next, transactions } = usePagedQueuedTransactions()
@@ -15,7 +15,11 @@ export const QueueTransactions = (): ReactElement => {
   // `loading` is, actually `!transactions`
   // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
   if (loading || !transactions) {
-    return <Loader size="md" />
+    return (
+      <Centered>
+        <Loader size="md" />
+      </Centered>
+    )
   }
 
   if (count === 0) {
@@ -27,9 +31,12 @@ export const QueueTransactions = (): ReactElement => {
     <TxActionProvider>
       <ScrollableTransactionsContainer id={SCROLLABLE_TARGET_ID}>
         <InfiniteScroll dataLength={count} next={next} hasMore={hasMore}>
+          {/* Next list */}
           <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
             {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
           </TxLocationContext.Provider>
+
+          {/* Queue list */}
           <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
             {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
           </TxLocationContext.Provider>
