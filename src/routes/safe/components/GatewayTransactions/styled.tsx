@@ -1,4 +1,4 @@
-import { Text, Accordion, AccordionDetails, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -66,6 +66,13 @@ export const H2 = styled.h2`
 
 export const SubTitle = styled(Text)`
   margin-bottom: 8px;
+
+  font-size: 0.76em;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  color: ${({ theme }) => theme.colors.placeHolder};
+  text-transform: uppercase;
 `
 
 export const StyledTransactions = styled.div`
@@ -115,6 +122,10 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
       div[class^='tx-'] {
         background-color: ${({ theme }) => theme.colors.background};
       }
+    }
+
+    .disclaimer-container {
+      background-color: ${({ theme }) => theme.colors.inputField};
     }
   }
 `
@@ -312,6 +323,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   }
 
   .tx-owners {
+    padding: 24px;
     grid-column-start: 2;
     grid-row-end: span 2;
     grid-row-start: 1;
@@ -439,4 +451,8 @@ export const Centered = styled.div<{ padding?: number }>`
   padding: ${({ padding }) => `${padding}px`};
   justify-content: center;
   align-items: center;
+`
+
+export const StyledAccordionSummary = styled(AccordionSummary)`
+  height: 52px;
 `

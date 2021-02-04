@@ -30,7 +30,7 @@ const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => 
 
 const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
   return (
-    <DisclaimerContainer>
+    <DisclaimerContainer className="disclaimer-container">
       <Text size="lg" className="nonce">
         {nonce}
       </Text>
