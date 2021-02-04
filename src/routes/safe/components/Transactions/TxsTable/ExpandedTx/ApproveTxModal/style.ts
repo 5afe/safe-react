@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core'
-import { border, lg, md, sm } from 'src/theme/variables'
+import { background, border, lg, md, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   heading: {
@@ -29,5 +29,9 @@ export const styles = createStyles({
   nonceNumber: {
     marginTop: sm,
     fontSize: md,
+  },
+  gasCostsContainer: {
+    backgroundColor: background,
+    padding: `0 ${lg}`,
   },
 })
