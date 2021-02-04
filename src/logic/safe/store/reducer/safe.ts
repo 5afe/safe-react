@@ -82,7 +82,7 @@ type ReplaceOwnerPayload = FullOwnerPayload & { oldOwnerAddress: string }
 
 type OwnerPayloads = BaseOwnerPayload | FullOwnerPayload | ReplaceOwnerPayload
 
-type SafeWithAddressPayload = SafeRecord & { safeAddress: string }
+type SafeWithAddressPayload = SafeRecord
 
 type Payloads = SafePayloads | OwnerPayloads | SafeWithAddressPayload
 
@@ -197,21 +197,21 @@ export default handleActions<AppReduxState['safes'], Payloads>(
     },
     [UPDATE_TOKENS_LIST]: (state, action: Action<SafeWithAddressPayload>) => {
       // Only activeTokens or blackListedTokens is required
-      const { safeAddress, activeTokens, blacklistedTokens } = action.payload
+      const { address, activeTokens, blacklistedTokens } = action.payload
 
       const key = activeTokens ? 'activeTokens' : 'blacklistedTokens'
       const list = activeTokens ?? blacklistedTokens
 
-      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set(key, list))
+      return state.updateIn(['safes', address], (prevSafe) => prevSafe.set(key, list))
     },
     [UPDATE_ASSETS_LIST]: (state, action: Action<SafeWithAddressPayload>) => {
       // Only activeAssets or blackListedAssets is required
-      const { safeAddress, activeAssets, blacklistedAssets } = action.payload
+      const { address, activeAssets, blacklistedAssets } = action.payload
 
       const key = activeAssets ? 'activeAssets' : 'blacklistedAssets'
       const list = activeAssets ?? blacklistedAssets
 
-      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set(key, list))
+      return state.updateIn(['safes', address], (prevSafe) => prevSafe.set(key, list))
     },
     [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>
