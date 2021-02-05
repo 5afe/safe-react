@@ -82,7 +82,7 @@ export const aMinedSafe = async (
     [FIELD_NAME]: name,
     [FIELD_CONFIRMATIONS]: `${threshold}`,
     [FIELD_OWNERS]: `${owners}`,
-    safeCreationSalt: 0,
+    safeCreationSalt: 0
   }
 
   for (let i = 0; i < owners; i += 1) {

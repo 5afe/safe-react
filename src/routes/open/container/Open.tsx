@@ -3,7 +3,7 @@ import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
-import Opening from 'src/routes/opening'
+import { SafeDeployment } from 'src/routes/opening'
 import { Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
@@ -25,23 +25,53 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
+import { useLocation } from 'react-router-dom'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
 type LoadedSafeType = CreateSafeValues & { txHash: string }
 
-const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) => {
+interface SafeCreationQueryParams {
+  ownerAddresses: string | string[] | null
+  ownerNames: string | string[] | null
+  threshold: number | null
+  safeName: string | null
+}
+
+export interface SafeProps {
+  name: string
+  ownerAddresses: string[]
+  ownerNames: string[]
+  threshold: string
+}
+
+const validateQueryParams = (queryParams: SafeCreationQueryParams): boolean => {
+  const { ownerAddresses, ownerNames, threshold, safeName } = queryParams
+
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
-  if (!ownerAddresses.length || ownerNames.length === 0) {
+
+  if (Number.isNaN(threshold)) {
     return false
   }
 
-  if (Number.isNaN(Number(threshold))) {
-    return false
+  return threshold > 0 && threshold <= ownerAddresses.length
+}
+
+const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams): SafeProps | undefined => {
+  if (!validateQueryParams(queryParams)) {
+    return
   }
-  return threshold <= ownerAddresses.length
+
+  const { threshold, safeName, ownerAddresses, ownerNames } = queryParams
+
+  return {
+    name: safeName as string,
+    threshold: (threshold as number).toString(),
+    ownerAddresses: Array.isArray(ownerAddresses) ? ownerAddresses : [ownerAddresses as string],
+    ownerNames: Array.isArray(ownerNames) ? ownerNames : [ownerNames as string],
+  }
 }
 
 export const getSafeProps = async (
@@ -92,24 +122,26 @@ const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
-  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
-  const [safePropsFromUrl, setSafePropsFromUrl] = useState()
+  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<{ txHash?: string } | undefined>()
+  const [safePropsFromUrl, setSafePropsFromUrl] = useState<SafeProps | undefined>()
   const userAccount = useSelector(userAccountSelector)
   const dispatch = useDispatch()
+  const location = useLocation()
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
-    const query = queryString.parse(window.location.search, { arrayFormat: 'comma' })
+    const query = queryString.parse(location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
-    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
-      setSafePropsFromUrl({
-        name,
-        ownerAddresses: owneraddresses,
-        ownerNames: ownernames,
-        threshold,
-      } as any)
-    }
-  }, [])
+
+    const safeProps = getSafePropsValuesFromQueryParams({
+      ownerAddresses: owneraddresses,
+      ownerNames: ownernames,
+      threshold: Number(threshold),
+      safeName: name as string | null,
+    })
+
+    setSafePropsFromUrl(safeProps)
+  }, [location])
 
   // check if there is a safe being created
   useEffect(() => {
@@ -132,7 +164,7 @@ const Open = (): React.ReactElement => {
 
     // save form values, used when the user rejects the TX and wants to retry
     if (values) {
-      const copy = { ...formValues }
+      const copy = { ...values }
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, copy)
     } else {
       values = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeValues
@@ -192,7 +224,7 @@ const Open = (): React.ReactElement => {
   return (
     <Page>
       {showProgress ? (
-        <Opening
+        <SafeDeployment
           creationTxHash={safeCreationPendingInfo?.txHash}
           onCancel={onCancel}
           onRetry={onRetry}
