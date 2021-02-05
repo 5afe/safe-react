@@ -31,7 +31,6 @@ const getStandardTxNotificationsQueue = (
 
 const waitingTransactionNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: NOTIFICATIONS.TX_WAITING_MSG,
   afterExecution: null,
@@ -64,7 +63,6 @@ const getCancellationTxNotificationsQueue = (origin: string) => {
 
 const safeNameChangeNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
@@ -75,7 +73,6 @@ const safeNameChangeNotificationsQueue = {
 
 const ownerNameChangeNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG,
@@ -86,7 +83,6 @@ const ownerNameChangeNotificationsQueue = {
 
 const settingsChangeTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_SETTINGS_CHANGE_MSG,
-  pendingExecution: NOTIFICATIONS.SETTINGS_CHANGE_PENDING_MSG,
   afterRejection: NOTIFICATIONS.SETTINGS_CHANGE_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.SETTINGS_CHANGE_EXECUTED_MSG,
@@ -97,7 +93,6 @@ const settingsChangeTxNotificationsQueue = {
 
 const newSpendingLimitTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_NEW_SPENDING_LIMIT_MSG,
-  pendingExecution: NOTIFICATIONS.NEW_SPENDING_LIMIT_PENDING_MSG,
   afterRejection: NOTIFICATIONS.NEW_SPENDING_LIMIT_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.NEW_SPENDING_LIMIT_EXECUTED_MSG,
@@ -108,7 +103,6 @@ const newSpendingLimitTxNotificationsQueue = {
 
 const removeSpendingLimitTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_REMOVE_SPENDING_LIMIT_MSG,
-  pendingExecution: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_PENDING_MSG,
   afterRejection: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
@@ -128,7 +122,6 @@ const defaultNotificationsQueue = {
 
 const addressBookNewEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {
@@ -140,7 +133,6 @@ const addressBookNewEntry = {
 
 const addressBookEditEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {
@@ -152,7 +144,6 @@ const addressBookEditEntry = {
 
 const addressBookDeleteEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {

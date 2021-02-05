@@ -71,7 +71,6 @@ export const processTransaction = ({
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
   const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
-  let pendingExecutionKey
 
   let txHash
   let transaction
@@ -130,8 +129,6 @@ export const processTransaction = ({
         txHash = hash
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-        pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
-
         try {
           await Promise.all([
             saveTxToHistory({ ...txArgs, txHash }),
@@ -139,21 +136,15 @@ export const processTransaction = ({
           ])
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
           await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
-        dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         storeTx({ transaction: tx, safeAddress, dispatch, state })
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
-        if (pendingExecutionKey) {
-          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-        }
-
         if (isExecution) {
           dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
         }
@@ -174,10 +165,6 @@ export const processTransaction = ({
       : notificationsQueue.afterExecutionError.message
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-    if (pendingExecutionKey) {
-      dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-    }
 
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
