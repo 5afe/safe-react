@@ -6,7 +6,6 @@ import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
-  isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
@@ -23,7 +22,7 @@ import { TxInfo } from './TxInfo'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
-import { isCancelTransaction, NOT_AVAILABLE } from './utils'
+import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
 
 const NormalBreakingText = styled(Text)`
   line-break: normal;
@@ -37,13 +36,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
     return <TxInfo txInfo={txDetails.txInfo} />
   }
 
-  if (
-    // TODO: find a better way to identify a pending cancelling transaction
-    //  I'm not comfortable with where this nested `&&` is going
-    !txDetails.executedAt &&
-    isCustomTxInfo(txDetails.txInfo) &&
-    isCancelTransaction({ safeAddress, txInfo: txDetails.txInfo })
-  ) {
+  if (isCancelTxDetails({ executedAt: txDetails.executedAt, txInfo: txDetails.txInfo, safeAddress })) {
     return (
       <>
         <NormalBreakingText size="lg">

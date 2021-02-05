@@ -1,6 +1,7 @@
 import React, { ReactElement } from 'react'
 
 import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
@@ -27,7 +28,7 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
   }
 
   // known data and particularly `multiSend` data type
-  if (txData.dataDecoded.method === 'multiSend') {
+  if (sameString(txData.dataDecoded.method, 'multiSend')) {
     return <MultiSendDetails txData={txData} />
   }
 

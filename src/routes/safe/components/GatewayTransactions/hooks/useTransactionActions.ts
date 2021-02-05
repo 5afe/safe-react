@@ -15,14 +15,6 @@ export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {
   return confirmationsSubmitted === confirmationsRequired
 }
 
-export const isReadyToExecute = (executionInfo: ExecutionInfo): boolean => {
-  const { confirmationsSubmitted, confirmationsRequired } = executionInfo
-  const thresholdReached = isThresholdReached(executionInfo)
-  const oneToGo = confirmationsSubmitted === confirmationsRequired - 1
-
-  return thresholdReached || oneToGo
-}
-
 export type TransactionActions = {
   canConfirm: boolean
   canConfirmThenExecute: boolean

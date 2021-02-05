@@ -22,11 +22,9 @@ const getStandardTxNotificationsQueue = (
   origin: string,
 ): Record<string, Record<string, Notification> | Notification> => ({
   beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-  pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
   afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
   afterExecution: {
     noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
-    moreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG, origin),
   },
   afterExecutionError: setNotificationOrigin(NOTIFICATIONS.TX_FAILED_MSG, origin),
 })
@@ -43,7 +41,6 @@ const waitingTransactionNotificationsQueue = {
 const getConfirmationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
     afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
     afterExecution: {
       noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
@@ -56,7 +53,6 @@ const getConfirmationTxNotificationsQueue = (origin: string) => {
 const getCancellationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
     afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
     afterExecution: {
       noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
@@ -123,11 +119,9 @@ const removeSpendingLimitTxNotificationsQueue = {
 
 const defaultNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
   },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }

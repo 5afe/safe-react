@@ -15,7 +15,7 @@ export type QueueTransactionsInfo = {
 export const useQueueTransactions = (): QueueTransactionsInfo | undefined => {
   const nextTxs = useSelector(nextTransactions)
   const queuedTxs = useSelector(queuedTransactions)
-  const [txsCount, setTxsCount] = useState({ next: 0, queued: 0 })
+  const [txsCount, setTxsCount] = useState<{ next: number; queued: number } | undefined>()
 
   useEffect(() => {
     const next = nextTxs
@@ -28,7 +28,7 @@ export const useQueueTransactions = (): QueueTransactionsInfo | undefined => {
   }, [nextTxs, queuedTxs])
 
   // no data loaded to the store yet
-  if (!nextTxs && !queuedTxs) {
+  if ((!nextTxs && !queuedTxs) || typeof txsCount === 'undefined') {
     return
   }
 

@@ -351,6 +351,14 @@ export const isStatusCancelled = (value: Transaction['txStatus']): value is 'CAN
   return value === 'CANCELLED'
 }
 
+export const isStatusPending = (value: Transaction['txStatus']): value is 'PENDING' => {
+  return value === 'PENDING'
+}
+
+export const isStatusAwaitingConfirmation = (value: Transaction['txStatus']): value is 'AWAITING_CONFIRMATIONS' => {
+  return value === 'AWAITING_CONFIRMATIONS'
+}
+
 export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is 'WILL_BE_REPLACED' => {
   return value === 'WILL_BE_REPLACED'
 }
