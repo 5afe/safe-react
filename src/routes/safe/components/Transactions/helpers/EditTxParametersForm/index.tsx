@@ -13,7 +13,7 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { composeValidators, minValue } from 'src/components/forms/validator'
+import { minValue } from 'src/components/forms/validator'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
 
@@ -75,15 +75,7 @@ const formValidation = (values) => {
 
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
-  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
-    if (!value) {
-      return
-    }
-
-    if (Number(value) > Number(ethGasLimit)) {
-      return 'Bigger than Ethereum gas limit.'
-    }
-  })(safeTxGas)
+  const safeTxGasValidation = minValue(0, true)(safeTxGas)
 
   return {
     ethGasLimit: ethGasLimitValidation,
