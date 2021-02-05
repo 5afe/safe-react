@@ -15,6 +15,7 @@ type TxOwnersProps = {
 
 const StyledImg = styled(Img)`
   background-color: ${({ theme }) => theme.colors.white};
+  border-radius: 50%;
 `
 
 export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement | null => {
