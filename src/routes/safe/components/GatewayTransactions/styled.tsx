@@ -368,9 +368,9 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
 
 export const OwnerList = styled.ul`
   list-style: none;
-  margin: 1em 0 0 1em;
+  margin: 0;
   width: 50%;
-  padding-left: 0;
+  padding-left: 6px;
 
   .legend {
     padding: 0 1.5em 1em 1.5em;
@@ -384,6 +384,10 @@ export const OwnerList = styled.ul`
       color: #008c73;
       font-weight: bold;
     }
+  }
+
+  ul {
+    margin-top: 0;
   }
 
   .icon {
@@ -461,6 +465,6 @@ export const AlignItemsWithMargin = styled.div`
   align-items: center;
 
   span:first-child {
-    margin-right: 2px;
+    margin-right: 6px;
   }
 `
