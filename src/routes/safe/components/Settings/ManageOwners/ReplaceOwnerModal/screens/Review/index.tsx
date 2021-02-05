@@ -248,7 +248,6 @@ export const ReviewReplaceOwnerModal = ({
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           </Block>
-          <Hairline />
           <Row align="center" className={classes.buttonRow}>
             <Button minHeight={42} minWidth={140} onClick={onClickBack}>
               Back

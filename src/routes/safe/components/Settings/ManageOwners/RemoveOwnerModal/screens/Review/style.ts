@@ -82,5 +82,6 @@ export const styles = createStyles({
     alignItems: 'center',
     textAlign: 'center',
     width: '100%',
+    backgroundColor: background,
   },
 })
