@@ -20,6 +20,7 @@ import LoaderDotsSvg from './assets/loader-dots.svg'
 import SuccessSvg from './assets/success.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultSvg from './assets/vault.svg'
+import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const Wrapper = styled.div`
   display: grid;
@@ -56,13 +57,17 @@ const Body = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
 `
-const FullParagraph = styled(Paragraph)`
-  background-color: ${(p) => (p.inverseColors ? connected : background)};
-  color: ${(p) => (p.inverseColors ? background : connected)};
+
+interface FullParagraphProps {
+  inversecolors: string
+}
+
+const FullParagraph = styled(Paragraph)<FullParagraphProps>`
+  background-color: ${(p) => (p.inversecolors ? connected : background)};
+  color: ${(p) => (p.inversecolors ? background : connected)};
   padding: 24px;
   font-size: 16px;
   margin-bottom: 16px;
-
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
@@ -95,16 +100,21 @@ const BackButton = styled(Button)`
   margin: 20px auto 0;
 `
 
-// type Props = {
-//   provider: string
-//   creationTxHash: Promise<any>
-//   submittedPromise: Promise<any>
-//   onRetry: () => void
-//   onSuccess: () => void
-//   onCancel: () => void
-// }
+type Props = {
+  creationTxHash?: string
+  submittedPromise?: PromiEvent<TransactionReceipt>
+  onRetry: () => void
+  onSuccess: (createdSafeAddress: string) => void
+  onCancel: () => void
+}
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submittedPromise }): React.ReactElement => {
+export const SafeDeployment = ({
+  creationTxHash,
+  onCancel,
+  onRetry,
+  onSuccess,
+  submittedPromise,
+}: Props): React.ReactElement => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
   const [safeCreationTxHash, setSafeCreationTxHash] = useState('')
@@ -326,7 +336,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
         <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
 
         <BodyInstruction>
-          <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">
+          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>
@@ -350,5 +360,3 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, submitte
     </Wrapper>
   )
 }
-
-export default SafeDeployment
