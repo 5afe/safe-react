@@ -121,7 +121,6 @@ export const createTransaction = (
 
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
         dispatch(fetchTransactions(safeAddress))
 
         await saveTxToHistory({ ...txArgs, signature, origin })
@@ -163,13 +162,9 @@ export const createTransaction = (
           dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         }
 
-        dispatch(
-          enqueueSnackbar(
-            isExecution
-              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          ),
-        )
+        if (isExecution) {
+          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
+        }
 
         dispatch(fetchTransactions(safeAddress))
 

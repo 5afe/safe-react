@@ -120,7 +120,6 @@ export const processTransaction = ({
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
-        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -182,13 +181,9 @@ export const processTransaction = ({
           dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         }
 
-        dispatch(
-          enqueueSnackbar(
-            isExecution
-              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          ),
-        )
+        if (isExecution) {
+          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
+        }
 
         dispatch(fetchTransactions(safeAddress))
 
