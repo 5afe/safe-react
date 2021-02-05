@@ -456,3 +456,11 @@ export const Centered = styled.div<{ padding?: number }>`
 export const StyledAccordionSummary = styled(AccordionSummary)`
   height: 52px;
 `
+export const AlignItemsWithMargin = styled.div`
+  display: flex;
+  align-items: center;
+
+  span:first-child {
+    margin-right: 2px;
+  }
+`

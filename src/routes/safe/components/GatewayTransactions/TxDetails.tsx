@@ -16,7 +16,7 @@ import {
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
-import { TxDetailsContainer, Centered } from './styled'
+import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
@@ -58,10 +58,12 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
           rel="noreferrer"
           title="Why do I need to pay for cancelling a transaction?"
         >
-          <Text size="lg" color="primary">
-            Why do I need to pay for cancelling a transaction?
+          <AlignItemsWithMargin>
+            <Text size="lg" as="span" color="primary">
+              Why do I need to pay for cancelling a transaction?
+            </Text>
             <Icon size="sm" type="externalLink" color="primary" />
-          </Text>
+          </AlignItemsWithMargin>
         </Link>
       </>
     )

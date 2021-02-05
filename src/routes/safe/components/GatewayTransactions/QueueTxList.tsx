@@ -1,6 +1,5 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
-import styled from 'styled-components'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import {
@@ -10,19 +9,11 @@ import {
   SubTitle,
   StyledTransactions,
   StyledTransactionsGroup,
+  AlignItemsWithMargin,
 } from './styled'
 import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
-
-const AlignItemsWithMargin = styled.div`
-  display: flex;
-  align-items: center;
-
-  span:first-child {
-    margin-right: 2px;
-  }
-`
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
