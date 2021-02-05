@@ -8,7 +8,9 @@ import {
   isTransferTxInfo,
   Transaction,
   TransactionInfo,
+  Erc721Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import { Token } from 'src/config/networks/network.d'
 import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -78,6 +80,25 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
     }
     default:
       return NOT_AVAILABLE
+  }
+}
+
+type txTokenData = {
+  address?: string | Erc721Transfer
+  decimals?: number
+}
+export const getTxTokenData = (txInfo?: TransactionInfo, nativeCoin?: Token): txTokenData => {
+  if (!txInfo || !isTransferTxInfo(txInfo)) {
+    return { address: nativeCoin?.address, decimals: nativeCoin?.decimals }
+  }
+
+  switch (txInfo.transferInfo.type) {
+    case 'ERC20':
+      return { address: txInfo.transferInfo.tokenAddress, decimals: txInfo.transferInfo.decimals || 16 }
+    case 'ERC721':
+      return { address: txInfo.transferInfo, decimals: 1 }
+    default:
+      return { address: nativeCoin?.address, decimals: nativeCoin?.decimals }
   }
 }
 

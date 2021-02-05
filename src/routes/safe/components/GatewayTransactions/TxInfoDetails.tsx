@@ -7,6 +7,7 @@ import styled from 'styled-components'
 
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { Transfer } from 'src/logic/safe/store/models/types/gateway.d'
+import { getTxTokenData } from 'src/routes/safe/components/GatewayTransactions/utils'
 import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 
@@ -25,7 +26,6 @@ type TxInfoDetailsProps = {
   address: string
   canRepeatTransaction?: boolean
   transfer?: Transfer
-  addressActions?: any[]
 }
 
 export const TxInfoDetails = ({ title, address, canRepeatTransaction, transfer }: TxInfoDetailsProps): ReactElement => {
@@ -50,31 +50,17 @@ export const TxInfoDetails = ({ title, address, canRepeatTransaction, transfer }
           }
         />
       </ARow>
-      {canRepeatTransaction && transfer && txLocation === 'history' && transfer.direction === 'OUTGOING' && (
-        <SendModal
-          activeScreenType={transfer.transferInfo.type === 'ERC721' ? 'sendCollectible' : 'sendFunds'}
-          isOpen={sendModalOpen}
-          onClose={() => setSendModalOpen(false)}
-          recipientAddress={address}
-          selectedToken={
-            transfer.transferInfo.type === 'ERC20'
-              ? transfer.transferInfo.tokenAddress
-              : transfer.transferInfo.type === 'ERC721'
-              ? transfer.transferInfo
-              : nativeCoin.address
-          }
-          tokenAmount={fromTokenUnit(
-            transfer.transferInfo.value,
-            Number(
-              transfer.transferInfo.type === 'ERC20'
-                ? transfer.transferInfo.decimals
-                : transfer.transferInfo.type === 'ERC721'
-                ? 1
-                : nativeCoin.decimals,
-            ),
-          )}
-        />
-      )}
+      <SendModal
+        activeScreenType={transfer?.transferInfo.type === 'ERC721' ? 'sendCollectible' : 'sendFunds'}
+        isOpen={sendModalOpen}
+        onClose={() => setSendModalOpen(false)}
+        recipientAddress={address}
+        selectedToken={getTxTokenData(transfer, nativeCoin).address}
+        tokenAmount={fromTokenUnit(
+          transfer?.transferInfo.value || '',
+          Number(getTxTokenData(transfer, nativeCoin).decimals),
+        )}
+      />
     </InfoDetails>
   )
 }
