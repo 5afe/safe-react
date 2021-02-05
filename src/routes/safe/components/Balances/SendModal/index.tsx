@@ -4,6 +4,7 @@ import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
+import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { CollectibleTx } from './screens/ReviewCollectible'
 import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
@@ -62,7 +63,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
-  selectedToken?: string | NFTToken
+  selectedToken?: string | NFTToken | Erc721Transfer
   tokenAmount?: string
 }
 

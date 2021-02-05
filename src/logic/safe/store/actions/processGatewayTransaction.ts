@@ -146,7 +146,7 @@ export const processTransaction = ({
             txStatus: 'PENDING',
             safeAddress,
             nonce: tx.nonce,
-            // if we provide the tx ID that sole tx will has the _pending_ status.
+            // if we provide the tx ID that sole tx will have the _pending_ status.
             // if not, all the txs that share the same nonce will have the _pending_ status.
             id: !isExecution ? tx.id : undefined,
           }),

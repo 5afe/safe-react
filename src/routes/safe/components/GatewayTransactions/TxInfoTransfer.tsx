@@ -18,5 +18,7 @@ export const TxInfoTransfer = ({ txInfo }: { txInfo: Transfer }): ReactElement |
     }
   }, [assetInfo, txInfo.direction, txInfo.recipient, txInfo.sender])
 
-  return details ? <TxInfoDetails title={details.title} address={details.address} /> : null
+  return details ? (
+    <TxInfoDetails title={details.title} address={details.address} canRepeatTransaction transfer={txInfo} />
+  ) : null
 }
