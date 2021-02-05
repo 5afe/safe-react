@@ -6,7 +6,6 @@ import styled from 'styled-components'
 
 import {
   ExpandedTxDetails,
-  isCustomTxInfo,
   isMultiSendTxInfo,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
