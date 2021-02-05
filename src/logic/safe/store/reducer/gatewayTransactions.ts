@@ -158,8 +158,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                     value.transaction.txStatus = 'PENDING'
                   }
 
-                  // we replace the stored transaction with the data returned by the service
-                  next[txNonce][txIndex] = merge(storedTransaction, value.transaction)
+                  next[txNonce][txIndex] = updateFromService
+                    ? // by replacing the current transaction with the one returned by the service
+                      // we remove the `txDetails`, so this will force a re-request of the data
+                      value.transaction
+                    : // we merge, to keep the current unchanged information
+                      merge(storedTransaction, value.transaction)
                   break
                 }
 
@@ -192,7 +196,12 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                     value.transaction.txStatus = 'PENDING'
                   }
 
-                  queued[txNonce][txIndex] = merge(storedTransaction, value.transaction)
+                  queued[txNonce][txIndex] = updateFromService
+                    ? // by replacing the current transaction with the one returned by the service
+                      // we remove the `txDetails`, so this will force a re-request of the data
+                      value.transaction
+                    : // we merge, to keep the current unchanged information
+                      merge(storedTransaction, value.transaction)
                   break
                 }
 
