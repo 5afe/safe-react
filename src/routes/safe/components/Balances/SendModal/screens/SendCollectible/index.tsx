@@ -19,6 +19,7 @@ import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
+import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
@@ -52,7 +53,7 @@ type SendCollectibleProps = {
   onClose: () => void
   onNext: (txInfo: SendCollectibleTxInfo) => void
   recipientAddress?: string
-  selectedToken?: NFTToken
+  selectedToken?: NFTToken | Erc721Transfer
 }
 
 export type SendCollectibleTxInfo = {
@@ -243,7 +244,12 @@ const SendCollectible = ({
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={selectedToken?.assetAddress} />
+                    <TokenSelectField
+                      assets={nftAssets}
+                      initialValue={
+                        (selectedToken as NFTToken)?.assetAddress ?? (selectedToken as Erc721Transfer)?.tokenAddress
+                      }
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">

@@ -88,7 +88,6 @@ export const processTransaction = ({
 
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, tx.origin)
   const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
-  let pendingExecutionKey
 
   let txHash
   let transaction
@@ -120,7 +119,6 @@ export const processTransaction = ({
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
-        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -143,13 +141,12 @@ export const processTransaction = ({
         txHash = hash
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-        pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
         dispatch(
           updateTransactionStatus({
             txStatus: 'PENDING',
             safeAddress,
             nonce: tx.nonce,
-            // if we provide the tx ID that sole tx will has the _pending_ status.
+            // if we provide the tx ID that sole tx will have the _pending_ status.
             // if not, all the txs that share the same nonce will have the _pending_ status.
             id: !isExecution ? tx.id : undefined,
           }),
@@ -159,13 +156,10 @@ export const processTransaction = ({
           await saveTxToHistory({ ...txArgs, txHash })
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
           console.error(e)
         }
       })
       .on('error', (error) => {
-        dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-
         dispatch(
           updateTransactionStatus({
             txStatus: 'PENDING_FAILED',
@@ -178,17 +172,9 @@ export const processTransaction = ({
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
-        if (pendingExecutionKey) {
-          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
+        if (isExecution) {
+          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
         }
-
-        dispatch(
-          enqueueSnackbar(
-            isExecution
-              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          ),
-        )
 
         dispatch(fetchTransactions(safeAddress))
 
@@ -204,10 +190,6 @@ export const processTransaction = ({
       : notificationsQueue.afterExecutionError.message
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-    if (pendingExecutionKey) {
-      dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-    }
 
     dispatch(
       updateTransactionStatus({

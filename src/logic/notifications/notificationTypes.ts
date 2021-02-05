@@ -20,10 +20,6 @@ export type Notification = {
 }
 
 const NOTIFICATION_IDS = {
-  CONNECT_WALLET_MSG: 'CONNECT_WALLET_MSG',
-  CONNECT_WALLET_READ_MODE_MSG: 'CONNECT_WALLET_READ_MODE_MSG',
-  WALLET_CONNECTED_MSG: 'WALLET_CONNECTED_MSG',
-  WALLET_DISCONNECTED_MSG: 'WALLET_DISCONNECTED_MSG',
   UNLOCK_WALLET_MSG: 'UNLOCK_WALLET_MSG',
   CONNECT_WALLET_ERROR_MSG: 'CONNECT_WALLET_ERROR_MSG',
   SIGN_TX_MSG: 'SIGN_TX_MSG',
@@ -37,20 +33,17 @@ const NOTIFICATION_IDS = {
   SAFE_NAME_CHANGED_MSG: 'SAFE_NAME_CHANGED_MSG',
   OWNER_NAME_CHANGE_EXECUTED_MSG: 'OWNER_NAME_CHANGE_EXECUTED_MSG',
   SIGN_SETTINGS_CHANGE_MSG: 'SIGN_SETTINGS_CHANGE_MSG',
-  SETTINGS_CHANGE_PENDING_MSG: 'SETTINGS_CHANGE_PENDING_MSG',
   SETTINGS_CHANGE_REJECTED_MSG: 'SETTINGS_CHANGE_REJECTED_MSG',
   SETTINGS_CHANGE_EXECUTED_MSG: 'SETTINGS_CHANGE_EXECUTED_MSG',
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: 'SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG',
   SETTINGS_CHANGE_FAILED_MSG: 'SETTINGS_CHANGE_FAILED_MSG',
   TESTNET_VERSION_MSG: 'TESTNET_VERSION_MSG',
   SIGN_NEW_SPENDING_LIMIT_MSG: 'SIGN_NEW_SPENDING_LIMIT_MSG',
-  NEW_SPENDING_LIMIT_PENDING_MSG: 'NEW_SPENDING_LIMIT_PENDING_MSG',
   NEW_SPENDING_LIMIT_REJECTED_MSG: 'NEW_SPENDING_LIMIT_REJECTED_MSG',
   NEW_SPENDING_LIMIT_EXECUTED_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MSG',
   NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
   NEW_SPENDING_LIMIT_FAILED_MSG: 'NEW_SPENDING_LIMIT_FAILED_MSG',
   SIGN_REMOVE_SPENDING_LIMIT_MSG: 'SIGN_REMOVE_SPENDING_LIMIT_MSG',
-  REMOVE_SPENDING_LIMIT_PENDING_MSG: 'REMOVE_SPENDING_LIMIT_PENDING_MSG',
   REMOVE_SPENDING_LIMIT_REJECTED_MSG: 'REMOVE_SPENDING_LIMIT_REJECTED_MSG',
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MSG',
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: 'REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG',
@@ -64,32 +57,6 @@ const NOTIFICATION_IDS = {
 
 export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   // Wallet Connection
-  CONNECT_WALLET_MSG: {
-    message: 'Please connect wallet to continue',
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
-  },
-  CONNECT_WALLET_READ_MODE_MSG: {
-    message: 'You are in read-only mode: Please connect wallet',
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
-  },
-  WALLET_CONNECTED_MSG: {
-    message: 'Wallet connected',
-    options: {
-      variant: SUCCESS,
-      persist: false,
-      autoHideDuration: shortDuration,
-    },
-  },
-  WALLET_DISCONNECTED_MSG: {
-    message: 'Wallet disconnected',
-    key: 'WALLET_DISCONNECTED_MSG',
-    options: {
-      variant: SUCCESS,
-      persist: false,
-      autoHideDuration: shortDuration,
-      preventDuplicate: true,
-    },
-  },
   UNLOCK_WALLET_MSG: {
     message: 'Unlock your wallet to connect',
     options: { variant: WARNING, persist: true, preventDuplicate: true },
@@ -157,17 +124,13 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Please sign the settings change',
     options: { variant: INFO, persist: true },
   },
-  SETTINGS_CHANGE_PENDING_MSG: {
-    message: 'Settings change pending',
-    options: { variant: INFO, persist: true },
-  },
   SETTINGS_CHANGE_REJECTED_MSG: {
     message: 'Settings change rejected',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
   SETTINGS_CHANGE_EXECUTED_MSG: {
     message: 'Settings change successfully executed',
-    options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
+    options: { variant: SUCCESS, persist: false, autoHideDuration: shortDuration },
   },
   SETTINGS_CHANGE_EXECUTED_MORE_CONFIRMATIONS_MSG: {
     message: 'Settings change successfully created. More confirmations needed to execute',
@@ -175,16 +138,12 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   SETTINGS_CHANGE_FAILED_MSG: {
     message: 'Settings change failed',
-    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
 
   // Spending Limit
   SIGN_NEW_SPENDING_LIMIT_MSG: {
     message: 'Please sign the new Spending Limit',
-    options: { variant: INFO, persist: true },
-  },
-  NEW_SPENDING_LIMIT_PENDING_MSG: {
-    message: 'New Spending Limit pending',
     options: { variant: INFO, persist: true },
   },
   NEW_SPENDING_LIMIT_REJECTED_MSG: {
@@ -207,10 +166,6 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Please sign the remove Spending Limit',
     options: { variant: INFO, persist: true },
   },
-  REMOVE_SPENDING_LIMIT_PENDING_MSG: {
-    message: 'Remove Spending Limit pending',
-    options: { variant: INFO, persist: true },
-  },
   REMOVE_SPENDING_LIMIT_REJECTED_MSG: {
     message: 'Remove Spending Limit rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
@@ -231,7 +186,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   // Network
   TESTNET_VERSION_MSG: {
     message: "Testnet Version: Don't send production assets to this Safe",
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
+    options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
   },
   WRONG_NETWORK_MSG: {
     message: `Wrong network: Please use ${getNetworkName()}`,

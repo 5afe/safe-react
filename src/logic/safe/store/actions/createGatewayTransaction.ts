@@ -95,8 +95,6 @@ export const createTransaction = (
   const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
   const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
 
-  let pendingExecutionKey
-
   let txHash
   const txArgs: TxArgs = {
     safeInstance,
@@ -121,7 +119,6 @@ export const createTransaction = (
 
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-        dispatch(enqueueSnackbar(notificationsQueue.afterExecution.moreConfirmationsNeeded))
         dispatch(fetchTransactions(safeAddress))
 
         await saveTxToHistory({ ...txArgs, signature, origin })
@@ -146,30 +143,20 @@ export const createTransaction = (
 
         txHash = hash
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-        pendingExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.pendingExecution))
 
         await saveTxToHistory({ ...txArgs, txHash, origin })
 
         dispatch(fetchTransactions(safeAddress))
       })
       .on('error', (error) => {
-        dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
         console.error('Tx error: ', error)
 
         onError?.()
       })
       .then(async (receipt) => {
-        if (pendingExecutionKey) {
-          dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
+        if (isExecution) {
+          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
         }
-
-        dispatch(
-          enqueueSnackbar(
-            isExecution
-              ? notificationsQueue.afterExecution.noMoreConfirmationsNeeded
-              : notificationsQueue.afterExecution.moreConfirmationsNeeded,
-          ),
-        )
 
         dispatch(fetchTransactions(safeAddress))
 
@@ -181,10 +168,6 @@ export const createTransaction = (
       : notificationsQueue.afterExecutionError.message
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-    if (pendingExecutionKey) {
-      dispatch(closeSnackbarAction({ key: pendingExecutionKey }))
-    }
 
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 

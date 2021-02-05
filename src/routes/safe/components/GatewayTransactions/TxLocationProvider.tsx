@@ -1,10 +1,12 @@
 import React, { createContext, ReactElement, ReactNode, useState } from 'react'
 import { TxLocation } from 'src/logic/safe/store/models/types/gateway'
 
-export const TxLocationContext = createContext<{
+export type TxLocationProps = {
   txLocation: TxLocation
   setTxLocation?: (txLocation: TxLocation) => void
-}>({
+}
+
+export const TxLocationContext = createContext<TxLocationProps>({
   txLocation: 'history',
   setTxLocation: () => {},
 })
