@@ -63,16 +63,14 @@ export const TxInfoDetails = ({ title, address, canRepeatTransaction, transfer }
               ? transfer.transferInfo
               : nativeCoin.address
           }
-          tokenAmount={fromTokenUnit(
-            transfer.transferInfo.value,
-            Number(
-              transfer.transferInfo.type === 'ERC20'
-                ? transfer.transferInfo.decimals
-                : transfer.transferInfo.type === 'ERC721'
-                ? 1
-                : nativeCoin.decimals,
-            ),
-          )}
+          tokenAmount={
+            transfer.transferInfo.type === 'ERC721'
+              ? '1'
+              : fromTokenUnit(
+                  transfer.transferInfo.value,
+                  Number(transfer.transferInfo.type === 'ERC20' ? transfer.transferInfo.decimals : nativeCoin.decimals),
+                )
+          }
         />
       )}
     </InfoDetails>
