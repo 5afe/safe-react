@@ -15,40 +15,48 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
   return (
     <>
       <div className="tx-hash">
-        <Text size="md" strong as="span">
-          Hash:
-        </Text>{' '}
+        <Text size="xl" strong as="span">
+          Hash:{' '}
+        </Text>
         {txHash ? (
-          <InlineEthHashInfo hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
+          <InlineEthHashInfo textSize="xl" hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
         ) : (
-          NOT_AVAILABLE
+          <Text size="xl" as="span">
+            {NOT_AVAILABLE}
+          </Text>
         )}
       </div>
       {nonce && (
         <div className="tx-nonce">
-          <Text size="md" strong as="span">
-            Nonce:
-          </Text>{' '}
-          {nonce}
+          <Text size="xl" strong as="span">
+            Nonce:{' '}
+          </Text>
+          <Text size="xl" as="span">
+            {nonce}
+          </Text>
         </div>
       )}
       {created && (
         <div className="tx-created">
-          <Text size="md" strong as="span">
-            Created:
-          </Text>{' '}
-          {formatDateTime(created)}
+          <Text size="xl" strong as="span">
+            Created:{' '}
+          </Text>
+          <Text size="xl" as="span">
+            {formatDateTime(created)}
+          </Text>
         </div>
       )}
       <div className="tx-executed">
-        <Text size="md" strong as="span">
-          Executed:
-        </Text>{' '}
-        {executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE}
+        <Text size="xl" strong as="span">
+          Executed:{' '}
+        </Text>
+        <Text size="xl" as="span">
+          {executedAt ? formatDateTime(executedAt) : NOT_AVAILABLE}
+        </Text>
       </div>
       {txData?.operation === Operation.DELEGATE && (
         <div className="tx-operation">
-          <Text size="md" strong as="span">
+          <Text size="xl" strong as="span">
             Delegate Call
           </Text>
         </div>

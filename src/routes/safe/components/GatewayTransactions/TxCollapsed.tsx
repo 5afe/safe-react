@@ -1,4 +1,4 @@
-import { Dot, IconText, Text } from '@gnosis.pm/safe-react-components'
+import { Dot, IconText as IconTextSrc, Text } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import React, { ReactElement } from 'react'
@@ -39,20 +39,28 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
-        return <span>{KNOWN_MODULES[info.settingsInfo.module] ?? UNKNOWN_MODULE}</span>
+        return (
+          <Text size="xl" as="span">
+            {KNOWN_MODULES[info.settingsInfo.module] ?? UNKNOWN_MODULE}
+          </Text>
+        )
     }
   }
 
   if (isCustomTxInfo(info)) {
     if (isMultiSendTxInfo(info)) {
       return (
-        <span>
+        <Text size="xl" as="span">
           {info.actionCount} {`action${info.actionCount > 1 ? 's' : ''}`}
-        </span>
+        </Text>
       )
     }
 
-    return <span>{info.methodName}</span>
+    return (
+      <Text size="xl" as="span">
+        {info.methodName}
+      </Text>
+    )
   }
   return null
 }
@@ -65,6 +73,12 @@ const SmallDot = styled(Dot)`
   height: 8px;
   width: 8px;
   background-color: ${({ theme, color }) => theme.colors[color]} !important;
+`
+
+const IconText = styled(IconTextSrc)`
+  p {
+    font-weight: bold;
+  }
 `
 
 type TxCollapsedProps = {
@@ -94,7 +108,7 @@ export const TxCollapsed = ({
 
   const txCollapsedNonce = (
     <div className={'tx-nonce' + willBeReplaced}>
-      <Text size="lg">{nonce}</Text>
+      <Text size="xl">{nonce}</Text>
     </div>
   )
 
@@ -108,7 +122,7 @@ export const TxCollapsed = ({
 
   const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
-      <Text size="lg">{time}</Text>
+      <Text size="xl">{time}</Text>
     </div>
   )
 
@@ -120,7 +134,7 @@ export const TxCollapsed = ({
           iconType="owners"
           iconSize="sm"
           text={`${votes.votes}`}
-          textSize="sm"
+          textSize="md"
         />
       )}
     </div>
@@ -143,7 +157,7 @@ export const TxCollapsed = ({
           <SmallDot color={status.color} />
         )
       )}
-      <Text size="lg" color={status.color} className="col" strong>
+      <Text size="md" color={status.color} className="col" strong>
         {status.text}
       </Text>
     </div>

@@ -22,7 +22,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
   return (
     <ActionAccordion>
       <AccordionSummary>
-        <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="lg" />
+        <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
         <TxInfoDetails title={txDetails.title} address={txDetails.address} />
@@ -63,11 +63,13 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
 
         return (
           details && (
-            <React.Fragment key={`${data ?? to}-${index}`}>
-              <MultiSendTxGroup actionTitle={actionTitle} txDetails={{ title, address: to }}>
-                {details}
-              </MultiSendTxGroup>
-            </React.Fragment>
+            <MultiSendTxGroup
+              key={`${data ?? to}-${index}`}
+              actionTitle={actionTitle}
+              txDetails={{ title, address: to }}
+            >
+              {details}
+            </MultiSendTxGroup>
           )
         )
       })}

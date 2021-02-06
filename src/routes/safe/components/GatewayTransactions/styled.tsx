@@ -129,14 +129,13 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
     }
   }
 `
-
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '0.75fr',
   type: '3fr',
   info: '3fr',
-  time: '1fr',
-  votes: '2fr',
-  actions: '2fr',
+  time: '1.5fr',
+  votes: '1.5fr',
+  actions: '1fr',
   status: '3fr',
 }
 

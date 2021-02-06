@@ -39,7 +39,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   if (isCancelTxDetails({ executedAt: txDetails.executedAt, txInfo: txDetails.txInfo, safeAddress })) {
     return (
       <>
-        <NormalBreakingText size="lg">
+        <NormalBreakingText size="xl">
           {`This is an empty cancelling transaction that doesn't send any funds.
        Executing this transaction will replace all currently awaiting transactions with nonce ${
          (txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE
@@ -52,7 +52,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
           title="Why do I need to pay for cancelling a transaction?"
         >
           <AlignItemsWithMargin>
-            <Text size="lg" as="span" color="primary">
+            <Text size="xl" as="span" color="primary">
               Why do I need to pay for cancelling a transaction?
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
@@ -89,7 +89,7 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   if (!data) {
     return (
       <TxDetailsContainer>
-        <Text size="sm" strong>
+        <Text size="xl" strong>
           No data available
         </Text>
       </TxDetailsContainer>
