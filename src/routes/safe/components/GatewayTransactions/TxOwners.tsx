@@ -1,9 +1,11 @@
+import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import Img from 'src/components/layout/Img'
 import { ExpandedTxDetails, isModuleExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import ConfirmLargeGreenCircle from './assets/confirm-large-green.svg'
+import TransactionListActive from './assets/transactions-list-active.svg'
+import TransactionListInactive from './assets/transactions-list-inactive.svg'
 import CheckCircleGreen from './assets/check-circle-green.svg'
 import PlusCircleGreen from './assets/plus-circle-green.svg'
 import { OwnerRow } from './OwnerRow'
@@ -23,6 +25,8 @@ export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement
     return null
   }
 
+  const confirmationsNeeded = detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length
+
   return (
     <OwnerList>
       <OwnerListItem>
@@ -30,7 +34,9 @@ export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement
           <StyledImg alt="" src={PlusCircleGreen} />
         </span>
         <div className="legend">
-          <span>Created</span>
+          <Text color="primary" size="xl" strong>
+            Created
+          </Text>
         </div>
       </OwnerListItem>
       {detailedExecutionInfo.confirmations.map(({ signer }) => (
@@ -39,20 +45,37 @@ export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement
             <StyledImg alt="" src={CheckCircleGreen} />
           </span>
           <div className="legend">
-            <span>Confirmed</span>
+            <Text color="primary" size="xl" strong>
+              Confirmed
+            </Text>
             <OwnerRow ownerAddress={signer} />
           </div>
         </OwnerListItem>
       ))}
-      <OwnerListItem>
-        <span className="icon">
-          <StyledImg alt="" src={detailedExecutionInfo.executor ? CheckCircleGreen : ConfirmLargeGreenCircle} />
-        </span>
-        <div className="legend">
-          <span>Executed</span>
-          {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
-        </div>
-      </OwnerListItem>
+      {confirmationsNeeded === 0 ? (
+        <OwnerListItem>
+          <span className="icon">
+            <StyledImg alt="" src={detailedExecutionInfo.executor ? CheckCircleGreen : TransactionListActive} />
+          </span>
+          <div className="legend">
+            <Text color="primary" size="xl" strong>
+              {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
+            </Text>
+            {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
+          </div>
+        </OwnerListItem>
+      ) : (
+        <OwnerListItem>
+          <span className="icon">
+            <StyledImg alt="" src={TransactionListInactive} />
+          </span>
+          <div className="legend">
+            <Text color="icon" size="xl" strong>
+              Execute ({confirmationsNeeded} more {confirmationsNeeded === 1 ? 'confirmation' : 'confirmations'} needed)
+            </Text>
+          </div>
+        </OwnerListItem>
+      )}
     </OwnerList>
   )
 }

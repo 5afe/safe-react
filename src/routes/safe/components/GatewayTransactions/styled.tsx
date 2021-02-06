@@ -254,7 +254,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
     &.Mui-expanded {
       justify-self: center;
       width: calc(100% - 32px);
-      
+
       &:not(:last-of-type) {
         border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
       }
@@ -369,12 +369,13 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
 export const OwnerList = styled.ul`
   list-style: none;
   margin: 0;
-  width: 50%;
   padding-left: 6px;
 
   .legend {
-    padding: 0 1.5em 1em 1.5em;
+    left: 15px;
+    padding-bottom: 0.86em;
     position: relative;
+    top: -3px;
 
     .owner-info {
       margin: 5px;
