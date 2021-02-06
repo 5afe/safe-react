@@ -8,9 +8,8 @@ import {
   isTransferTxInfo,
   Transaction,
   TransactionInfo,
-  Erc721Transfer,
+  Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { Token } from 'src/config/networks/network.d'
 import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -83,22 +82,26 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 }
 
-type txTokenData = {
-  address?: string | Erc721Transfer
-  decimals?: number
-}
-export const getTxTokenData = (txInfo?: TransactionInfo, nativeCoin?: Token): txTokenData => {
-  if (!txInfo || !isTransferTxInfo(txInfo)) {
-    return { address: nativeCoin?.address, decimals: nativeCoin?.decimals }
-  }
+const { nativeCoin } = getNetworkInfo()
 
+type txTokenData = {
+  address: string
+  value: string
+  decimals: number | null
+}
+
+export const getTxTokenData = (txInfo: Transfer): txTokenData => {
   switch (txInfo.transferInfo.type) {
     case 'ERC20':
-      return { address: txInfo.transferInfo.tokenAddress, decimals: txInfo.transferInfo.decimals || 16 }
+      return {
+        address: txInfo.transferInfo.tokenAddress,
+        value: txInfo.transferInfo.value,
+        decimals: txInfo.transferInfo.decimals,
+      }
     case 'ERC721':
-      return { address: txInfo.transferInfo, decimals: 1 }
+      return { address: txInfo.transferInfo.tokenAddress, value: txInfo.transferInfo.value, decimals: 0 }
     default:
-      return { address: nativeCoin?.address, decimals: nativeCoin?.decimals }
+      return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }
   }
 }
 
