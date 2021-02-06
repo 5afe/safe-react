@@ -403,10 +403,11 @@ export const OwnerListItem = styled.li`
   position: relative;
 
   &::before {
-    border-left: 2px #919191 solid;
+    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
+    border-radius: 1px;
     content: '';
-    height: calc(100% - 12px);
-    top: 14px;
+    height: calc(100% - 16px);
+    top: 16px;
     left: 0;
     position: absolute;
     z-index: 1;
