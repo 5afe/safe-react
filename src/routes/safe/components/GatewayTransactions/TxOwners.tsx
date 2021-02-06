@@ -14,7 +14,7 @@ type TxOwnersProps = {
 }
 
 const StyledImg = styled(Img)`
-  background-color: ${({ theme }) => theme.colors.white};
+  background-color: transparent;
   border-radius: 50%;
 `
 
