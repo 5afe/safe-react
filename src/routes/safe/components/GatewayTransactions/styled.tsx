@@ -405,7 +405,8 @@ export const OwnerListItem = styled.li`
   &::before {
     border-left: 2px #919191 solid;
     content: '';
-    height: 100%;
+    height: calc(100% - 12px);
+    top: 14px;
     left: 0;
     position: absolute;
     z-index: 1;
