@@ -14,7 +14,7 @@ const DELETE_ALLOWANCE = 'deleteAllowance'
 
 export const isSetAllowance = (method?: string) => sameString(method, SET_ALLOWANCE)
 export const isDeleteAllowance = (method?: string) => sameString(method, DELETE_ALLOWANCE)
-export const isSpendingLimitMethod = (method?: string) => isSetAllowance(method) && isDeleteAllowance(method)
+export const isSpendingLimitMethod = (method?: string) => isSetAllowance(method) || isDeleteAllowance(method)
 
 const SpendingLimitRow = styled.div`
   margin-bottom: 16px;
