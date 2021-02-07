@@ -1,4 +1,4 @@
-import EtherLogo from 'src/config/assets/token_eth.svg'
+import BnbLogo from 'src/config/assets/token_bnb.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
@@ -40,7 +40,7 @@ const mainnet: NetworkConfig = {
       name: 'BNB',
       symbol: 'BNB',
       decimals: 18,
-      logoUri: EtherLogo,
+      logoUri: BnbLogo,
     },
   },
 }
