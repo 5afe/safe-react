@@ -2,10 +2,11 @@ import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
+import { DataDecoded, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
+import { isSpendingLimitMethod } from './SpendingLimitDetails'
 import { ColumnDisplayAccordionDetails, ActionAccordion } from './styled'
 import { TxInfoDetails } from './TxInfoDetails'
 
@@ -15,6 +16,7 @@ type MultiSendTxGroupProps = {
   txDetails: {
     title: string
     address: string
+    dataDecoded: DataDecoded | null
   }
 }
 
@@ -25,7 +27,9 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="xl" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
-        <TxInfoDetails title={txDetails.title} address={txDetails.address} />
+        {isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
+          <TxInfoDetails title={txDetails.title} address={txDetails.address} />
+        )}
         {children}
       </ColumnDisplayAccordionDetails>
     </ActionAccordion>
@@ -66,7 +70,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
             <MultiSendTxGroup
               key={`${data ?? to}-${index}`}
               actionTitle={actionTitle}
-              txDetails={{ title, address: to }}
+              txDetails={{ title, address: to, dataDecoded }}
             >
               {details}
             </MultiSendTxGroup>
