@@ -27,7 +27,7 @@ const MultiSendTxGroup = ({ actionTitle, children, txDetails }: MultiSendTxGroup
         <IconText iconSize="sm" iconType="code" text={actionTitle} textSize="lg" />
       </AccordionSummary>
       <ColumnDisplayAccordionDetails>
-        {isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
+        {!isSpendingLimitMethod(txDetails.dataDecoded?.method) && (
           <TxInfoDetails title={txDetails.title} address={txDetails.address} />
         )}
         {children}
