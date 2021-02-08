@@ -190,6 +190,7 @@ type TransactionData = {
 }
 
 type ModuleExecutionDetails = {
+  type: 'MODULE'
   address: string
 }
 
@@ -210,6 +211,7 @@ type TokenInfo = {
 }
 
 type MultiSigExecutionDetails = {
+  type: 'MULTISIG'
   submittedAt: number
   nonce: number
   safeTxGas: number
@@ -366,11 +368,11 @@ export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is
 export const isMultiSigExecutionDetails = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
 ): value is MultiSigExecutionDetails => {
-  return value === null ? false : typeof value.safeTxHash !== 'undefined'
+  return value?.type === 'MULTISIG'
 }
 
 export const isModuleExecutionDetails = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
 ): value is ModuleExecutionDetails => {
-  return value === null ? false : typeof value.safeTxHash === 'undefined'
+  return value?.type === 'MODULE'
 }

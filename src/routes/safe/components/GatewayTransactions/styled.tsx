@@ -129,14 +129,13 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
     }
   }
 `
-
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '0.75fr',
   type: '3fr',
   info: '3fr',
-  time: '1fr',
-  votes: '2fr',
-  actions: '2fr',
+  time: '1.5fr',
+  votes: '1.5fr',
+  actions: '1fr',
   status: '3fr',
 }
 
@@ -254,7 +253,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
     &.Mui-expanded {
       justify-self: center;
       width: calc(100% - 32px);
-      
+
       &:not(:last-of-type) {
         border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
       }
@@ -296,8 +295,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: [first] 115px;
-  min-height: 115px;
+  grid-template-rows: [tx-summary] minmax(auto, 130px) [tx-details] minmax(100px, auto);
   row-gap: 2px;
   width: 100%;
 
@@ -305,7 +303,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
     background-color: ${({ theme }) => theme.colors.white};
     line-break: anywhere;
     overflow: hidden;
-    padding: 8px 16px;
+    padding: 8px 24px;
     word-break: break-all;
   }
 
@@ -368,13 +366,14 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
 
 export const OwnerList = styled.ul`
   list-style: none;
-  margin: 1em 0 0 1em;
-  width: 50%;
-  padding-left: 0;
+  margin: 0;
+  padding-left: 6px;
 
   .legend {
-    padding: 0 1.5em 1em 1.5em;
+    left: 15px;
+    padding-bottom: 0.86em;
     position: relative;
+    top: -3px;
 
     .owner-info {
       margin: 5px;
@@ -384,6 +383,10 @@ export const OwnerList = styled.ul`
       color: #008c73;
       font-weight: bold;
     }
+  }
+
+  ul {
+    margin-top: 0;
   }
 
   .icon {
@@ -399,9 +402,11 @@ export const OwnerListItem = styled.li`
   position: relative;
 
   &::before {
-    border-left: 2px #919191 solid;
+    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
+    border-radius: 1px;
     content: '';
-    height: 100%;
+    height: calc(100% - 16px);
+    top: 16px;
     left: 0;
     position: absolute;
     z-index: 1;
@@ -461,6 +466,6 @@ export const AlignItemsWithMargin = styled.div`
   align-items: center;
 
   span:first-child {
-    margin-right: 2px;
+    margin-right: 6px;
   }
 `
