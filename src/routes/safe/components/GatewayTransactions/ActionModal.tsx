@@ -32,7 +32,7 @@ export const ActionModal = (): ReactElement | null => {
         <ApproveTxModal
           isOpen
           onClose={onClose}
-          gwTransaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
+          transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
           txParameters={txParameters}
         />
       )
@@ -43,7 +43,7 @@ export const ActionModal = (): ReactElement | null => {
           canExecute
           isOpen
           onClose={onClose}
-          gwTransaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
+          transaction={transaction as Overwrite<Transaction, { txDetails: ExpandedTxDetails }>}
           txParameters={txParameters}
         />
       )

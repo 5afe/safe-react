@@ -7,6 +7,10 @@ import { TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 export type ActionType = 'cancel' | 'confirm' | 'execute' | 'none'
 
 export type SelectedAction = {
+  // FixMe: give proper names to the keys
+  //  for instance:
+  //  `action->{ type; forTransactionId; txLocation; }`
+  //  `setAction` as callback
   selectedAction: {
     actionSelected: ActionType
     transactionId: string
