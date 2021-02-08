@@ -55,7 +55,7 @@ export const TxParametersDetail = ({
   }
 
   return (
-    <Accordion {...compact}>
+    <Accordion compact={compact}>
       <AccordionSummary>
         <Text size="lg">Advanced options</Text>
       </AccordionSummary>

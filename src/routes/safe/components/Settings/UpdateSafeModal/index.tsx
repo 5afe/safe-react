@@ -117,7 +117,9 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
                   />
-                  <Row>
+                </Block>
+                {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                  <Block className={classes.gasCostsContainer}>
                     <TransactionFees
                       gasCostFormatted={gasCostFormatted}
                       isExecution={isExecution}
@@ -125,9 +127,8 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                       isOffChainSignature={isOffChainSignature}
                       txEstimationExecutionStatus={txEstimationExecutionStatus}
                     />
-                  </Row>
-                </Block>
-                <Hairline />
+                  </Block>
+                )}
                 <Row align="center" className={classes.buttonRow}>
                   <Button minWidth={140} onClick={onClose}>
                     Back
