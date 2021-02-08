@@ -1,3 +1,4 @@
+import { Text } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import styled from 'styled-components'
 
@@ -8,16 +9,13 @@ const Wrapper = styled.div`
 const Icon = styled.img`
   max-width: 15px;
   max-height: 15px;
-`
-const Text = styled.span`
-  margin-left: 5px;
-  height: 17px;
+  margin-right: 9px;
 `
 
 const CustomIconText = ({ iconUrl, text }: { iconUrl: string; text?: string }) => (
   <Wrapper>
     <Icon alt={text} src={iconUrl} />
-    {text && <Text>{text}</Text>}
+    {text && <Text size="xl">{text}</Text>}
   </Wrapper>
 )
 

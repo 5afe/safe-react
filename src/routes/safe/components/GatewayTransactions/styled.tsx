@@ -1,4 +1,4 @@
-import { Accordion, AccordionDetails, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -64,6 +64,17 @@ export const H2 = styled.h2`
   font-size: smaller;
 `
 
+export const SubTitle = styled(Text)`
+  margin-bottom: 8px;
+
+  font-size: 0.76em;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 1px;
+  color: ${({ theme }) => theme.colors.placeHolder};
+  text-transform: uppercase;
+`
+
 export const StyledTransactions = styled.div`
   background-color: ${({ theme }) => theme.colors.white};
   border-radius: 8px;
@@ -112,16 +123,19 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
         background-color: ${({ theme }) => theme.colors.background};
       }
     }
+
+    .disclaimer-container {
+      background-color: ${({ theme }) => theme.colors.inputField};
+    }
   }
 `
-
 const gridColumns = {
-  nonce: '0.5fr',
+  nonce: '0.4fr',
   type: '3fr',
   info: '3fr',
-  time: '1fr',
-  votes: '2fr',
-  actions: '2fr',
+  time: '1.5fr',
+  votes: '1.5fr',
+  actions: '1fr',
   status: '3fr',
 }
 
@@ -185,7 +199,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
   // builds the tree-view layout
   .tree-lines {
     height: 100%;
-    margin-left: 50%;
+    margin-left: 70%;
     position: relative;
     width: 20%;
 
@@ -201,9 +215,9 @@ export const GroupedTransactions = styled(StyledTransaction)`
         border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
         border-left: 2px solid ${({ theme }) => theme.colors.separator};
         content: '';
-        height: 30px;
+        height: 22px;
         position: absolute;
-        top: 0;
+        top: 8px;
         width: 100%;
       }
     }
@@ -239,7 +253,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
     &.Mui-expanded {
       justify-self: center;
       width: calc(100% - 32px);
-      
+
       &:not(:last-of-type) {
         border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
       }
@@ -261,10 +275,10 @@ export const GroupedTransactions = styled(StyledTransaction)`
 
 export const DisclaimerContainer = styled(StyledTransaction)`
   background-color: ${({ theme }) => theme.colors.inputField} !important;
-  border-radius: 5px;
-  margin: 8px;
+  border-radius: 4px;
+  margin: 12px 8px 0 12px;
   padding: 8px;
-  width: calc(100% - 32px);
+  width: calc(100% - 40px);
 
   .nonce {
     grid-column-start: 1;
@@ -281,8 +295,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: [first] 115px;
-  min-height: 115px;
+  grid-template-rows: [tx-summary] minmax(auto, 130px) [tx-details] minmax(100px, auto);
   row-gap: 2px;
   width: 100%;
 
@@ -290,7 +303,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
     background-color: ${({ theme }) => theme.colors.white};
     line-break: anywhere;
     overflow: hidden;
-    padding: 8px 16px;
+    padding: 8px 24px;
     word-break: break-all;
   }
 
@@ -308,6 +321,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   }
 
   .tx-owners {
+    padding: 24px;
     grid-column-start: 2;
     grid-row-end: span 2;
     grid-row-start: 1;
@@ -352,12 +366,14 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
 
 export const OwnerList = styled.ul`
   list-style: none;
-  margin: 1em;
-  width: 50%;
+  margin: 0;
+  padding-left: 6px;
 
   .legend {
-    padding: 0 1.5em 1.5em 1.5em;
+    left: 15px;
+    padding-bottom: 0.86em;
     position: relative;
+    top: -3px;
 
     .owner-info {
       margin: 5px;
@@ -367,6 +383,10 @@ export const OwnerList = styled.ul`
       color: #008c73;
       font-weight: bold;
     }
+  }
+
+  ul {
+    margin-top: 0;
   }
 
   .icon {
@@ -382,9 +402,11 @@ export const OwnerListItem = styled.li`
   position: relative;
 
   &::before {
-    border-left: 2px #919191 solid;
+    border-left: 2px ${({ theme }) => theme.colors.icon} solid;
+    border-radius: 1px;
     content: '';
-    height: 100%;
+    height: calc(100% - 16px);
+    top: 16px;
     left: 0;
     position: absolute;
     z-index: 1;
@@ -426,4 +448,27 @@ export const ScrollableTransactionsContainer = styled(StyledScrollableBar)`
   overflow-x: hidden;
   overflow-y: auto;
   width: 100%;
+`
+export const Centered = styled.div<{ padding?: number }>`
+  width: 100%;
+  height: 100%;
+  display: flex;
+  padding: ${({ padding }) => `${padding}px`};
+  justify-content: center;
+  align-items: center;
+`
+
+export const StyledAccordionSummary = styled(AccordionSummary)`
+  height: 52px;
+  .tx-nonce {
+    margin: 0 16px 0 8px;
+  }
+`
+export const AlignItemsWithMargin = styled.div`
+  display: flex;
+  align-items: center;
+
+  span:first-child {
+    margin-right: 6px;
+  }
 `

@@ -8,7 +8,7 @@ type InfoDetailsProps = {
 
 export const InfoDetails = ({ children, title }: InfoDetailsProps): ReactElement => (
   <>
-    <Text size="md" strong>
+    <Text size="xl" strong>
       {title}
     </Text>
     {children}

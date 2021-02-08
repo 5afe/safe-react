@@ -17,7 +17,7 @@ const TxDetailsMethodName = styled(Text)`
 `
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
-  padding-left: 8px;
+  padding-left: 24px;
   display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
   align-items: center;
 
@@ -47,13 +47,13 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
 
   return (
     <TxInfo>
-      <TxDetailsMethodName size="lg" strong>
+      <TxDetailsMethodName size="xl" strong>
         {data.method}
       </TxDetailsMethodName>
 
       {data.parameters?.map((param, index) => (
         <TxDetailsMethodParam key={`${data.method}_param-${index}`} isArrayParameter={isArrayParameter(param.type)}>
-          <StyledMethodName size="lg" strong>
+          <StyledMethodName size="xl" strong>
             {param.name}({param.type}):
           </StyledMethodName>
           <Value method={data.method} type={param.type} value={param.value} />

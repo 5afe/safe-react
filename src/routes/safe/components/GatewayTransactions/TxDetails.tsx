@@ -15,7 +15,7 @@ import {
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useTransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
-import { TxDetailsContainer } from './styled'
+import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
@@ -39,7 +39,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
   if (isCancelTxDetails({ executedAt: txDetails.executedAt, txInfo: txDetails.txInfo, safeAddress })) {
     return (
       <>
-        <NormalBreakingText size="lg">
+        <NormalBreakingText size="xl">
           {`This is an empty cancelling transaction that doesn't send any funds.
        Executing this transaction will replace all currently awaiting transactions with nonce ${
          (txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE
@@ -51,10 +51,12 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
           rel="noreferrer"
           title="Why do I need to pay for cancelling a transaction?"
         >
-          <Text size="lg" color="primary">
-            Why do I need to pay for cancelling a transaction?
+          <AlignItemsWithMargin>
+            <Text size="xl" as="span" color="primary">
+              Why do I need to pay for cancelling a transaction?
+            </Text>
             <Icon size="sm" type="externalLink" color="primary" />
-          </Text>
+          </AlignItemsWithMargin>
         </Link>
       </>
     )
@@ -77,13 +79,17 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
-    return <Loader size="md" />
+    return (
+      <Centered padding={10}>
+        <Loader size="sm" />
+      </Centered>
+    )
   }
 
   if (!data) {
     return (
       <TxDetailsContainer>
-        <Text size="sm" strong>
+        <Text size="xl" strong>
           No data available
         </Text>
       </TxDetailsContainer>

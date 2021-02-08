@@ -1,8 +1,8 @@
-import { AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { NoPaddingAccordion } from './styled'
+import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
@@ -33,9 +33,9 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         appear: true,
       }}
     >
-      <AccordionSummary>
+      <StyledAccordionSummary>
         <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} />
-      </AccordionSummary>
+      </StyledAccordionSummary>
       <AccordionDetails>
         <TxDetails transaction={tx} />
       </AccordionDetails>
