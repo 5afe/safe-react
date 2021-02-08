@@ -183,18 +183,16 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-
-            <Row>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Row>
           </Block>
-          <Hairline style={{ position: 'absolute', bottom: 85 }} />
+          <div className={classes.gasCostsContainer}>
+            <TransactionFees
+              gasCostFormatted={gasCostFormatted}
+              isExecution={isExecution}
+              isCreation={isCreation}
+              isOffChainSignature={isOffChainSignature}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
+          </div>
           <Row align="center" className={classes.buttonRow}>
             <Button minWidth={140} onClick={onPrev}>
               Back

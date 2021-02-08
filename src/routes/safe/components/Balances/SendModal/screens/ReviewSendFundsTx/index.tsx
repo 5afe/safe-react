@@ -239,7 +239,9 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             />
 
             {/* Disclaimer */}
-            <Row>
+          </Block>
+          {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+            <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
                 isExecution={isExecution}
@@ -247,10 +249,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-            </Row>
-          </Block>
-
-          <Hairline style={{ position: 'absolute', bottom: 85 }} />
+            </div>
+          )}
 
           {/* Footer */}
           <Row align="center" className={classes.buttonRow}>
