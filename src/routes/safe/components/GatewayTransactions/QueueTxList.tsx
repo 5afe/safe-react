@@ -22,7 +22,7 @@ const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => 
 const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
   return (
     <DisclaimerContainer className="disclaimer-container">
-      <Text size="lg" className="nonce">
+      <Text size="xl" className="nonce">
         {nonce}
       </Text>
       <AlignItemsWithMargin className="disclaimer">
