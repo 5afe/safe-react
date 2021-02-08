@@ -1,4 +1,4 @@
-import { lg, md, secondaryText, sm } from 'src/theme/variables'
+import { background, lg, md, secondaryText, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -40,5 +40,9 @@ export const styles = createStyles({
   errorText: {
     position: 'absolute',
     bottom: '-25px',
+  },
+  gasCostsContainer: {
+    backgroundColor: background,
+    padding: `${sm} ${lg}`,
   },
 })
