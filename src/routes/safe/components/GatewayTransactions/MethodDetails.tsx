@@ -56,7 +56,7 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
           <StyledMethodName size="xl" strong>
             {param.name}({param.type}):
           </StyledMethodName>
-          <Value method={data.method} type={param.type} value={param.value}/>
+          <Value method={data.method} type={param.type} value={param.value} />
         </TxDetailsMethodParam>
       ))}
     </TxInfo>
