@@ -16,6 +16,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { composeValidators, minValue } from 'src/components/forms/validator'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
+import { getNetworkInfo } from 'src/config'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -58,6 +59,8 @@ const StyledTextMt = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
+const { label } = getNetworkInfo()
+
 interface Props {
   txParameters: TxParameters
   onClose: (txParameters?: TxParameters) => void
@@ -81,7 +84,7 @@ const formValidation = (values) => {
     }
 
     if (Number(value) > Number(ethGasLimit)) {
-      return 'Bigger than Ethereum gas limit.'
+      return `Bigger than ${label} gas limit.`
     }
   })(safeTxGas)
 
