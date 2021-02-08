@@ -60,9 +60,6 @@ export const styles = createStyles({
     maxHeight: '75px',
     padding: `${sm} ${lg}`,
   },
-  modalContainer: {
-    minHeight: '369px',
-  },
   modalManage: {
     fontSize: lg,
   },
@@ -108,5 +105,12 @@ export const styles = createStyles({
     height: 'auto',
     maxWidth: 'calc(100% - 30px)',
     overflow: 'hidden',
+  },
+  gasCostsContainer: {
+    backgroundColor: background,
+    padding: `0 ${lg}`,
+  },
+  accordionContainer: {
+    margin: `0 ${md}`,
   },
 })
