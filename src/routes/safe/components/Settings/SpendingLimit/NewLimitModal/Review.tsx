@@ -275,9 +275,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             </Col>
 
             {existentSpendingLimit && (
-              <Text size="xl" color="error" center strong>
-                You are about to replace an existent spending limit
-              </Text>
+              <Col margin="md">
+                <Text size="xl" color="error" center strong>
+                  You are about to replace an existent spending limit
+                </Text>
+              </Col>
             )}
             {/* Tx Parameters */}
             <TxParametersDetail
@@ -286,16 +288,16 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-            <Row>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Row>
           </Block>
+          <div className={classes.gasCostsContainer}>
+            <TransactionFees
+              gasCostFormatted={gasCostFormatted}
+              isExecution={isExecution}
+              isCreation={isCreation}
+              isOffChainSignature={isOffChainSignature}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
+          </div>
 
           <Modal.Footer>
             <Button

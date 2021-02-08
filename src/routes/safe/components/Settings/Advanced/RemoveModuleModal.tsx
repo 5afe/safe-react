@@ -144,7 +144,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 </IconButton>
               </Row>
               <Hairline />
-              <Block className={classes.modalContainer}>
+              <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
                     <Identicon address={moduleAddress} diameter={32} />
@@ -173,25 +173,25 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                     as well.
                   </Paragraph>
                 </Row>
+              </Block>
+              <Block className={classes.accordionContainer}>
                 {/* Tx Parameters */}
                 <TxParametersDetail
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
-                  compact={false}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
                 />
-                <Row className={classes.modalDescription}>
-                  <TransactionFees
-                    gasCostFormatted={gasCostFormatted}
-                    isExecution={isExecution}
-                    isCreation={isCreation}
-                    isOffChainSignature={isOffChainSignature}
-                    txEstimationExecutionStatus={txEstimationExecutionStatus}
-                  />
-                </Row>
               </Block>
-              <Hairline />
+              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
+                <TransactionFees
+                  gasCostFormatted={gasCostFormatted}
+                  isExecution={isExecution}
+                  isCreation={isCreation}
+                  isOffChainSignature={isOffChainSignature}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
+                />
+              </Row>
               <Row align="center" className={classes.modalButtonRow}>
                 <FooterWrapper>
                   <Button size="md" color="secondary" onClick={onClose}>

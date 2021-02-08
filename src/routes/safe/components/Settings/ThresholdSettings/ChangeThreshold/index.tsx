@@ -170,8 +170,9 @@ export const ChangeThresholdModal = ({
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
                   />
-
-                  <Row>
+                </Block>
+                {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+                  <div className={classes.gasCostsContainer}>
                     <TransactionFees
                       gasCostFormatted={gasCostFormatted}
                       isExecution={isExecution}
@@ -179,10 +180,8 @@ export const ChangeThresholdModal = ({
                       isOffChainSignature={isOffChainSignature}
                       txEstimationExecutionStatus={txEstimationExecutionStatus}
                     />
-                  </Row>
-                </Block>
-
-                <Hairline style={{ position: 'absolute', bottom: 85 }} />
+                  </div>
+                )}
 
                 <Row align="center" className={classes.buttonRow}>
                   <Button minWidth={140} onClick={onClose}>

@@ -23,6 +23,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import Row from 'src/components/layout/Row'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import cn from 'classnames'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -141,17 +142,16 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 <Col margin="lg">
                   <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
                 </Col>
+                {/* Tx Parameters */}
+                <TxParametersDetail
+                  txParameters={txParameters}
+                  onEdit={toggleEditMode}
+                  isTransactionCreation={isCreation}
+                  isTransactionExecution={isExecution}
+                />
               </Block>
 
-              {/* Tx Parameters */}
-              <TxParametersDetail
-                txParameters={txParameters}
-                onEdit={toggleEditMode}
-                compact={false}
-                isTransactionCreation={isCreation}
-                isTransactionExecution={isExecution}
-              />
-              <Row className={classes.modalDescription}>
+              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
                 <TransactionFees
                   gasCostFormatted={gasCostFormatted}
                   isExecution={isExecution}
