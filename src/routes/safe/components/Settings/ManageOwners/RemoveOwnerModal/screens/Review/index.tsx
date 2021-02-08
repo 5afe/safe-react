@@ -225,7 +225,6 @@ export const ReviewRemoveOwnerModal = ({
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-              <Hairline />
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>
