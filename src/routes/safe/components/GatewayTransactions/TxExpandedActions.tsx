@@ -19,13 +19,20 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
     disabledActions,
   } = useActionButtonsHandlers(transaction)
 
+  const onExecuteOrConfirm = (event) => {
+    handleOnMouseLeave()
+    handleConfirmButtonClick(event)
+  }
+
+  // There is a problem in chrome that produces onMouseLeave event not being triggered properly.
+  // https://github.com/facebook/react/issues/4492
   return (
     <>
       <Button
         size="md"
         color="primary"
         disabled={disabledActions}
-        onClick={handleConfirmButtonClick}
+        onClick={onExecuteOrConfirm}
         onMouseEnter={handleOnMouseEnter}
         onMouseLeave={handleOnMouseLeave}
         className="primary"
