@@ -68,10 +68,9 @@ export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
 export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
-    console.log('Debug isArrayParameter')
+    console.log('Debug isArrayParameter', JSONBig)
     return JSONBig.parse(parameter)
   } catch (err) {
-    console.log('Parse error', err)
     return null
   }
 }
@@ -95,7 +94,13 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
 const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
   const key = generateFormFieldKey(type, signatureHash, index)
 
-  return getParsedJSONOrArrayFromString(values[key]) || values[key]
+  const jsonResult = getParsedJSONOrArrayFromString(values[key]) || values[key]
+  const rawResult = values[key]
+
+  console.log('jsonResult', jsonResult)
+  console.log('rawResult', rawResult)
+
+  return jsonResult
 }
 
 export const createTxObject = (
