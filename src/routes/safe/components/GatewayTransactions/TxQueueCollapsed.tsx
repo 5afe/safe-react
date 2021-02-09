@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useAssetInfo } from './hooks/useAssetInfo'
-import { useTransactionActions } from './hooks/useTransactionActions'
+import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
 import { useTransactionType } from './hooks/useTransactionType'
 import { TxCollapsed } from './TxCollapsed'
@@ -28,15 +28,15 @@ const calculateVotes = (executionInfo: Transaction['executionInfo']): Calculated
 type TxQueuedCollapsedProps = {
   isGrouped?: boolean
   transaction: Transaction
+  actions?: TransactionActions
 }
 
-export const TxQueueCollapsed = ({ isGrouped = false, transaction }: TxQueuedCollapsedProps): ReactElement => {
+export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: TxQueuedCollapsedProps): ReactElement => {
   const nonce = transaction.executionInfo?.nonce
   const type = useTransactionType(transaction)
   const info = useAssetInfo(transaction.txInfo)
   const time = formatTime(transaction.timestamp)
   const votes = calculateVotes(transaction.executionInfo)
-  const actions = useTransactionActions(transaction)
   const status = useTransactionStatus(transaction)
 
   return (

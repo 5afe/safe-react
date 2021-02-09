@@ -1,6 +1,6 @@
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import React, { ReactElement, useContext } from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -13,13 +13,12 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { useTransactionActions } from './hooks/useTransactionActions'
+import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
-import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
@@ -71,11 +70,10 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
 
 type TxDetailsProps = {
   transaction: Transaction
+  actions?: TransactionActions
 }
 
-export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
-  const { txLocation } = useContext(TxLocationContext)
-  const actions = useTransactionActions(transaction)
+export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
@@ -112,13 +110,13 @@ export const TxDetails = ({ transaction }: TxDetailsProps): ReactElement => {
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': txLocation !== 'history' && !actions.isUserAnOwner,
+          'no-owner': !actions?.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && txLocation !== 'history' && actions.isUserAnOwner && (
+      {!data.executedAt && actions?.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>
