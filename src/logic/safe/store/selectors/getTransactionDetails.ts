@@ -61,8 +61,10 @@ export const getQueuedTransactionsByNonceAndLocation = createSelector(
   getSafeTransactions,
   (_, nonce: number, txLocation: TxQueuedLocation) => ({ nonce, txLocation }),
   (transactions, { nonce, txLocation }): Transaction[] => {
-    if (nonce && transactions) {
-      return get(transactions, txLocation)[nonce]
+    const transactionsByLocation = get(transactions, txLocation)
+
+    if (transactionsByLocation) {
+      return transactionsByLocation[nonce] ?? []
     }
 
     return []

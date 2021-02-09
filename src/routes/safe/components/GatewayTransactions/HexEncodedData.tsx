@@ -5,7 +5,7 @@ import { TxData as LegacyTxData } from 'src/routes/safe/components/Transactions/
 
 export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement => (
   <div className="tx-hexData">
-    <Text size="md" strong>
+    <Text size="xl" strong>
       Data (hex encoded):
     </Text>
     <LegacyTxData data={hexData} />

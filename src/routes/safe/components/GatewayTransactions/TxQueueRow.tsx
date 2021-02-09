@@ -1,8 +1,9 @@
-import { AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { NoPaddingAccordion } from './styled'
+import { useTransactionActions } from 'src/routes/safe/components/GatewayTransactions/hooks/useTransactionActions'
+import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'
 import { TxQueueCollapsed } from './TxQueueCollapsed'
@@ -14,6 +15,7 @@ type TxQueueRowProps = {
 
 export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps): ReactElement => {
   const { activeHover } = useContext(TxHoverContext)
+  const actions = useTransactionActions(transaction)
   const [tx, setTx] = useState<Transaction>(transaction)
 
   useEffect(() => {
@@ -33,11 +35,11 @@ export const TxQueueRow = ({ isGrouped = false, transaction }: TxQueueRowProps):
         appear: true,
       }}
     >
-      <AccordionSummary>
-        <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} />
-      </AccordionSummary>
+      <StyledAccordionSummary>
+        <TxQueueCollapsed isGrouped={isGrouped} transaction={tx} actions={actions} />
+      </StyledAccordionSummary>
       <AccordionDetails>
-        <TxDetails transaction={tx} />
+        <TxDetails transaction={tx} actions={actions} />
       </AccordionDetails>
     </NoPaddingAccordion>
   )

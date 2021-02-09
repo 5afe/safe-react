@@ -1,8 +1,8 @@
-import { AccordionDetails, AccordionSummary } from '@gnosis.pm/safe-react-components'
+import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import { isCreationTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { NoPaddingAccordion } from './styled'
+import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxHistoryCollapsed } from './TxHistoryCollapsed'
 import { TxDetails } from './TxDetails'
 import { TxInfoCreation } from './TxInfoCreation'
@@ -15,9 +15,9 @@ export const TxHistoryRow = ({ transaction }: { transaction: Transaction }): Rea
       appear: true,
     }}
   >
-    <AccordionSummary>
+    <StyledAccordionSummary>
       <TxHistoryCollapsed transaction={transaction} />
-    </AccordionSummary>
+    </StyledAccordionSummary>
     <AccordionDetails>
       {isCreationTxInfo(transaction.txInfo) ? (
         <TxInfoCreation transaction={transaction} />

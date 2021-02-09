@@ -6,9 +6,10 @@ import {
   DisclaimerContainer,
   GroupedTransactions,
   GroupedTransactionsCard,
-  H2,
+  SubTitle,
   StyledTransactions,
   StyledTransactionsGroup,
+  AlignItemsWithMargin,
 } from './styled'
 import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
@@ -20,24 +21,28 @@ const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => 
 
 const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
   return (
-    <DisclaimerContainer>
-      <Text size="lg" className="nonce">
+    <DisclaimerContainer className="disclaimer-container">
+      <Text size="xl" className="nonce">
         {nonce}
       </Text>
-      <Text size="lg" className="disclaimer">
-        These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
+      <AlignItemsWithMargin className="disclaimer">
+        <Text as="span" size="xl">
+          These transactions conflict as they use the same nonce. Executing one will automatically replace the other(s).{' '}
+        </Text>
         <Link
           href="https://help.gnosis-safe.io/en/articles/4730252-why-are-transactions-with-the-same-nonce-conflicting-with-each-other"
           target="_blank"
           rel="noreferrer"
           title="Why are transactions with the same nonce conflicting with each other?"
         >
-          <Text size="lg" as="span" color="primary">
-            Learn more
-          </Text>
-          <Icon size="sm" type="externalLink" color="primary" />
+          <AlignItemsWithMargin>
+            <Text size="xl" as="span" color="primary">
+              Learn more
+            </Text>
+            <Icon size="sm" type="externalLink" color="primary" />
+          </AlignItemsWithMargin>
         </Link>
-      </Text>
+      </AlignItemsWithMargin>
     </DisclaimerContainer>
   )
 }
@@ -73,11 +78,11 @@ type QueueTxListProps = {
 
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const title = txLocation === 'queued.next' ? 'Next Transaction' : 'Queue'
+  const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
 
   return (
     <StyledTransactionsGroup>
-      <H2>{title}</H2>
+      <SubTitle size="lg">{title}</SubTitle>
       <StyledTransactions>
         {transactions.map(([nonce, txs]) => (
           <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />

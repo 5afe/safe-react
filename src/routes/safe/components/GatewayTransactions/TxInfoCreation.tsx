@@ -14,10 +14,11 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
     <TxDetailsContainer>
       <div className="tx-summary">
         <div className="tx-hash">
-          <Text size="md" strong as="span">
-            Hash:
-          </Text>{' '}
+          <Text size="xl" strong as="span">
+            Hash:{' '}
+          </Text>
           <InlineEthHashInfo
+            textSize="xl"
             hash={txInfo.transactionHash}
             shortenHash={8}
             showCopyBtn
@@ -25,16 +26,19 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           />
         </div>
         <div className="tx-created">
-          <Text size="md" strong as="span">
-            Created:
-          </Text>{' '}
-          {formatDateTime(timestamp)}
+          <Text size="xl" strong as="span">
+            Created:{' '}
+          </Text>
+          <Text size="xl" as="span">
+            {formatDateTime(timestamp)}
+          </Text>
         </div>
         <div className="tx-creator">
-          <Text size="md" strong as="span">
-            Creator:
-          </Text>{' '}
+          <Text size="xl" strong as="span">
+            Creator:{' '}
+          </Text>
           <InlineEthHashInfo
+            textSize="xl"
             hash={txInfo.creator}
             shortenHash={4}
             showCopyBtn
@@ -42,33 +46,39 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
           />
         </div>
         <div className="tx-factory">
-          <Text size="md" strong as="span">
-            Factory:
-          </Text>{' '}
+          <Text size="xl" strong as="span">
+            Factory:{' '}
+          </Text>
           {txInfo.factory ? (
             <InlineEthHashInfo
+              textSize="xl"
               hash={txInfo.factory}
               shortenHash={4}
               showCopyBtn
               explorerUrl={getExplorerInfo(txInfo.factory)}
             />
           ) : (
-            NOT_AVAILABLE
+            <Text size="xl" as="span">
+              {NOT_AVAILABLE}
+            </Text>
           )}
         </div>
         <div className="tx-mastercopy">
-          <Text size="md" strong as="span">
-            Mastercopy:
-          </Text>{' '}
+          <Text size="xl" strong as="span">
+            Mastercopy:{' '}
+          </Text>
           {txInfo.implementation ? (
             <InlineEthHashInfo
+              textSize="xl"
               hash={txInfo.implementation}
               shortenHash={4}
               showCopyBtn
               explorerUrl={getExplorerInfo(txInfo.implementation)}
             />
           ) : (
-            NOT_AVAILABLE
+            <Text size="xl" as="span">
+              {NOT_AVAILABLE}
+            </Text>
           )}
         </div>
       </div>

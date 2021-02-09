@@ -8,6 +8,7 @@ import {
   isTransferTxInfo,
   Transaction,
   TransactionInfo,
+  Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
@@ -81,6 +82,29 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 }
 
+const { nativeCoin } = getNetworkInfo()
+
+type txTokenData = {
+  address: string
+  value: string
+  decimals: number | null
+}
+
+export const getTxTokenData = (txInfo: Transfer): txTokenData => {
+  switch (txInfo.transferInfo.type) {
+    case 'ERC20':
+      return {
+        address: txInfo.transferInfo.tokenAddress,
+        value: txInfo.transferInfo.value,
+        decimals: txInfo.transferInfo.decimals,
+      }
+    case 'ERC721':
+      return { address: txInfo.transferInfo.tokenAddress, value: txInfo.transferInfo.value, decimals: 0 }
+    default:
+      return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }
+  }
+}
+
 export interface TableData {
   amount: string
   cancelTx?: Transaction
@@ -94,6 +118,7 @@ export interface TableData {
 
 // TODO: how can we be sure that it's a cancel tx without asking for tx-details?
 //  can the client-gateway service provide info about the tx, Like: `isCancelTransaction: boolean`?
+//  it will be solved as part of: https://github.com/gnosis/safe-client-gateway/issues/255
 export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; safeAddress: string }): boolean =>
   sameAddress(txInfo.to, safeAddress) &&
   sameString(txInfo.dataSize, '0') &&

@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -65,12 +65,117 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   return modalInfo
 }
 
+const useTxInfo = (transaction: Props['transaction']) => {
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+
+  const confirmations =
+    transaction.txDetails.detailedExecutionInfo &&
+    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+      ? List(
+          transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
+            makeConfirmation({ owner: signer, signature }),
+          ),
+        )
+      : List([])
+
+  const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
+
+  const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.baseGas
+    : 0
+
+  const gasPrice = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.gasPrice
+    : '0'
+
+  const safeTxGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.safeTxGas
+    : 0
+
+  const gasToken = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.gasToken
+    : ZERO_ADDRESS
+
+  const nonce = transaction.executionInfo?.nonce ?? 0
+
+  const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.refundReceiver
+    : ZERO_ADDRESS
+
+  const safeTxHash = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
+    ? transaction.txDetails.detailedExecutionInfo.safeTxHash
+    : EMPTY_DATA
+
+  let value: string
+  switch (transaction.txInfo.type) {
+    case 'Transfer':
+      if (transaction.txInfo.transferInfo.type === 'ETHER') {
+        value = transaction.txInfo.transferInfo.value
+      } else {
+        value = transaction.txDetails.txData?.value ?? '0'
+      }
+      break
+    case 'Custom':
+      value = transaction.txInfo.value
+      break
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      value = '0'
+      break
+  }
+
+  let to: string
+  switch (transaction.txInfo.type) {
+    case 'Transfer':
+      if (transaction.txInfo.transferInfo.type === 'ETHER') {
+        to = transaction.txInfo.recipient
+      } else {
+        to = transaction.txInfo.transferInfo.tokenAddress
+      }
+      break
+    case 'Custom':
+      to = transaction.txInfo.to
+      break
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      to = safeAddress
+      break
+  }
+
+  const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
+
+  const origin = transaction.safeAppInfo
+    ? JSON.stringify({ name: transaction.safeAppInfo.name, url: transaction.safeAppInfo.url })
+    : ''
+
+  const id = transaction.id
+
+  return {
+    confirmations,
+    data,
+    baseGas,
+    gasPrice,
+    safeTxGas,
+    gasToken,
+    nonce,
+    refundReceiver,
+    safeTxHash,
+    value,
+    to,
+    operation,
+    origin,
+    id,
+  }
+}
+
 type Props = {
   onClose: () => void
   canExecute?: boolean
   isCancelTx?: boolean
   isOpen: boolean
-  gwTransaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
+  transaction: Overwrite<Transaction, { txDetails: ExpandedTxDetails }>
   txParameters: TxParameters
 }
 
@@ -79,124 +184,36 @@ export const ApproveTxModal = ({
   canExecute = false,
   isCancelTx = false,
   isOpen,
-  gwTransaction,
+  transaction,
 }: Props): React.ReactElement => {
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const transaction = useRef(gwTransaction)
-  const thresholdReached = !!(
-    transaction.current.executionInfo && isThresholdReached(transaction.current.executionInfo)
-  )
-  const _threshold = transaction.current.executionInfo?.confirmationsRequired ?? 0
-  const _countingCurrentConfirmation = (transaction.current.executionInfo?.confirmationsSubmitted ?? 0) + 1
+  const thresholdReached = !!(transaction.executionInfo && isThresholdReached(transaction.executionInfo))
+  const _threshold = transaction.executionInfo?.confirmationsRequired ?? 0
+  const _countingCurrentConfirmation = (transaction.executionInfo?.confirmationsSubmitted ?? 0) + 1
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
-
-  const confirmations = useMemo(
-    () =>
-      transaction.current.txDetails.detailedExecutionInfo &&
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? List(
-            transaction.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-              makeConfirmation({ owner: signer, signature }),
-            ),
-          )
-        : List([]),
-    [],
-  )
-
-  const data = useMemo(() => transaction.current.txDetails.txData?.hexData ?? EMPTY_DATA, [])
-
-  const baseGas = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.baseGas
-        : 0,
-    [],
-  )
-
-  const gasPrice = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.gasPrice
-        : '0',
-    [],
-  )
-
-  const safeTxGas = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.safeTxGas
-        : 0,
-    [],
-  )
-
-  const gasToken = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.gasToken
-        : ZERO_ADDRESS,
-    [],
-  )
-
-  const nonce = useMemo(() => transaction.current.executionInfo?.nonce ?? 0, [])
-
-  const refundReceiver = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.refundReceiver
-        : ZERO_ADDRESS,
-    [],
-  )
-
-  const safeTxHash = useMemo(
-    () =>
-      isMultiSigExecutionDetails(transaction.current.txDetails.detailedExecutionInfo)
-        ? transaction.current.txDetails.detailedExecutionInfo.safeTxHash
-        : EMPTY_DATA,
-    [],
-  )
-
-  const value = useMemo(
-    () =>
-      transaction.current.txInfo.type === 'Transfer'
-        ? transaction.current.txInfo.transferInfo.type === 'ETHER'
-          ? transaction.current.txInfo.transferInfo.value
-          : transaction.current.txDetails.txData?.value ?? '0'
-        : transaction.current.txInfo.type === 'Custom'
-        ? transaction.current.txInfo.value
-        : '0',
-    [],
-  )
-
-  const to = useMemo(
-    () =>
-      transaction.current.txInfo.type === 'Transfer'
-        ? transaction.current.txInfo.transferInfo.type === 'ETHER'
-          ? transaction.current.txInfo.recipient
-          : transaction.current.txInfo.transferInfo.tokenAddress
-        : transaction.current.txInfo.type === 'Custom'
-        ? transaction.current.txInfo.to
-        : safeAddress,
-    [safeAddress],
-  )
-
-  const operation = useMemo(() => transaction.current.txDetails.txData?.operation ?? Operation.CALL, [])
-
-  const origin = useMemo(
-    () =>
-      transaction.current.safeAppInfo
-        ? JSON.stringify({ name: transaction.current.safeAppInfo.name, url: transaction.current.safeAppInfo.url })
-        : '',
-    [],
-  )
-
-  const id = useMemo(() => transaction.current.id, [])
+  const {
+    confirmations,
+    data,
+    baseGas,
+    gasPrice,
+    safeTxGas,
+    gasToken,
+    nonce,
+    refundReceiver,
+    safeTxHash,
+    value,
+    to,
+    operation,
+    origin,
+    id,
+  } = useTxInfo(transaction)
 
   const {
     gasLimit,
