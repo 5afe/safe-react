@@ -1,4 +1,11 @@
-import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import {
+  Text,
+  Accordion,
+  AccordionDetails,
+  AccordionSummary,
+  EthHashInfo,
+  IconText,
+} from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 export const Wrapper = styled.div`
@@ -7,8 +14,10 @@ export const Wrapper = styled.div`
   height: 100%;
 `
 
-export const Breadcrumb = styled.div`
-  height: 51px;
+export const Breadcrumb = styled(IconText)`
+  p {
+    font-weight: bold;
+  }
 `
 
 export const ContentWrapper = styled.div`
