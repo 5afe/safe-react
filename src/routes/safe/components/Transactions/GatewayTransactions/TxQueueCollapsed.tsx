@@ -6,7 +6,6 @@ import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
 import { useTransactionType } from './hooks/useTransactionType'
 import { TxCollapsed } from './TxCollapsed'
-import { formatTime } from './utils'
 
 export type CalculatedVotes = { votes: string; submitted: number; required: number }
 
@@ -35,7 +34,6 @@ export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: Tx
   const nonce = transaction.executionInfo?.nonce
   const type = useTransactionType(transaction)
   const info = useAssetInfo(transaction.txInfo)
-  const time = formatTime(transaction.timestamp)
   const votes = calculateVotes(transaction.executionInfo)
   const status = useTransactionStatus(transaction)
 
@@ -46,7 +44,7 @@ export const TxQueueCollapsed = ({ isGrouped = false, transaction, actions }: Tx
       nonce={nonce}
       type={type}
       info={info}
-      time={time}
+      time={transaction.timestamp}
       votes={votes}
       actions={actions}
       status={status}

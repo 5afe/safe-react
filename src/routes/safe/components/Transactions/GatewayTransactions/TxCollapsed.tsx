@@ -1,7 +1,9 @@
 import { Dot, IconText as IconTextSrc, Text } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
+import { Tooltip } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import React, { ReactElement } from 'react'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
+import React, { ReactElement, useRef } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
 import {
@@ -11,6 +13,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
+import { formatDateTime, formatTime } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import styled from 'styled-components'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
@@ -81,13 +84,32 @@ const IconText = styled(IconTextSrc)`
   }
 `
 
+const useTooltipStyles = makeStyles(
+  createStyles(() => ({
+    arrow: {
+      color: 'white',
+    },
+    tooltip: {
+      backgroundColor: 'white',
+      color: 'rgba(0, 0, 0, 0.87)',
+      boxShadow: '#00000026 0 2px 4px 0',
+      fontSize: '14px',
+      lineHeight: '14px',
+    },
+  })),
+)
+
+const TooltipContent = styled.div`
+  width: max-content;
+`
+
 type TxCollapsedProps = {
   transaction?: Transaction
   isGrouped?: boolean
   nonce?: number
   type: TxTypeProps
   info?: AssetInfo
-  time: string
+  time: number
   votes?: CalculatedVotes
   actions?: TransactionActions
   status: TransactionStatusProps
@@ -120,9 +142,16 @@ export const TxCollapsed = ({
 
   const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
 
+  const tooltipStyles = useTooltipStyles()
+  const timestamp = useRef<HTMLDivElement | null>(null)
+
   const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
-      <Text size="xl">{time}</Text>
+      <Tooltip classes={tooltipStyles} title={formatDateTime(time)} arrow>
+        <TooltipContent ref={timestamp}>
+          <Text size="xl">{formatTime(time)}</Text>
+        </TooltipContent>
+      </Tooltip>
     </div>
   )
 
