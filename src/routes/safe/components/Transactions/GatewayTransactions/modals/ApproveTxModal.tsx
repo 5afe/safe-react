@@ -4,7 +4,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -66,91 +66,122 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 }
 
 const useTxInfo = (transaction: Props['transaction']) => {
+  const t = useRef(transaction)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
-  const confirmations =
-    transaction.txDetails.detailedExecutionInfo &&
-    isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-      ? List(
-          transaction.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-            makeConfirmation({ owner: signer, signature }),
-          ),
-        )
-      : List([])
+  const confirmations = useMemo(
+    () =>
+      t.current.txDetails.detailedExecutionInfo && isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? List(
+            t.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
+              makeConfirmation({ owner: signer, signature }),
+            ),
+          )
+        : List([]),
+    [],
+  )
 
-  const data = transaction.txDetails.txData?.hexData ?? EMPTY_DATA
+  const data = useMemo(() => t.current.txDetails.txData?.hexData ?? EMPTY_DATA, [])
 
-  const baseGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.baseGas
-    : 0
+  const baseGas = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.baseGas
+        : 0,
+    [],
+  )
 
-  const gasPrice = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasPrice
-    : '0'
+  const gasPrice = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.gasPrice
+        : '0',
+    [],
+  )
 
-  const safeTxGas = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.safeTxGas
-    : 0
+  const safeTxGas = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.safeTxGas
+        : 0,
+    [],
+  )
 
-  const gasToken = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.gasToken
-    : ZERO_ADDRESS
+  const gasToken = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.gasToken
+        : ZERO_ADDRESS,
+    [],
+  )
 
-  const nonce = transaction.executionInfo?.nonce ?? 0
+  const nonce = useMemo(() => t.current.executionInfo?.nonce ?? 0, [])
 
-  const refundReceiver = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.refundReceiver
-    : ZERO_ADDRESS
+  const refundReceiver = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.refundReceiver
+        : ZERO_ADDRESS,
+    [],
+  )
 
-  const safeTxHash = isMultiSigExecutionDetails(transaction.txDetails.detailedExecutionInfo)
-    ? transaction.txDetails.detailedExecutionInfo.safeTxHash
-    : EMPTY_DATA
+  const safeTxHash = useMemo(
+    () =>
+      isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
+        ? t.current.txDetails.detailedExecutionInfo.safeTxHash
+        : EMPTY_DATA,
+    [],
+  )
 
-  let value: string
-  switch (transaction.txInfo.type) {
-    case 'Transfer':
-      if (transaction.txInfo.transferInfo.type === 'ETHER') {
-        value = transaction.txInfo.transferInfo.value
-      } else {
-        value = transaction.txDetails.txData?.value ?? '0'
-      }
-      break
-    case 'Custom':
-      value = transaction.txInfo.value
-      break
-    case 'Creation':
-    case 'SettingsChange':
-    default:
-      value = '0'
-      break
-  }
+  const value = useMemo(() => {
+    switch (t.current.txInfo.type) {
+      case 'Transfer':
+        if (t.current.txInfo.transferInfo.type === 'ETHER') {
+          return t.current.txInfo.transferInfo.value
+        } else {
+          return t.current.txDetails.txData?.value ?? '0'
+        }
+        break
+      case 'Custom':
+        return t.current.txInfo.value
+        break
+      case 'Creation':
+      case 'SettingsChange':
+      default:
+        return '0'
+        break
+    }
+  }, [])
 
-  let to: string
-  switch (transaction.txInfo.type) {
-    case 'Transfer':
-      if (transaction.txInfo.transferInfo.type === 'ETHER') {
-        to = transaction.txInfo.recipient
-      } else {
-        to = transaction.txInfo.transferInfo.tokenAddress
-      }
-      break
-    case 'Custom':
-      to = transaction.txInfo.to
-      break
-    case 'Creation':
-    case 'SettingsChange':
-    default:
-      to = safeAddress
-      break
-  }
+  const to = useMemo(() => {
+    switch (t.current.txInfo.type) {
+      case 'Transfer':
+        if (t.current.txInfo.transferInfo.type === 'ETHER') {
+          return t.current.txInfo.recipient
+        } else {
+          return t.current.txInfo.transferInfo.tokenAddress
+        }
+        break
+      case 'Custom':
+        return t.current.txInfo.to
+        break
+      case 'Creation':
+      case 'SettingsChange':
+      default:
+        return safeAddress
+        break
+    }
+  }, [safeAddress])
 
-  const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
+  const operation = useMemo(() => t.current.txDetails.txData?.operation ?? Operation.CALL, [])
 
-  const origin = transaction.safeAppInfo
-    ? JSON.stringify({ name: transaction.safeAppInfo.name, url: transaction.safeAppInfo.url })
-    : ''
+  const origin = useMemo(
+    () =>
+      t.current.safeAppInfo ? JSON.stringify({ name: t.current.safeAppInfo.name, url: t.current.safeAppInfo.url }) : '',
+    [],
+  )
 
-  const id = transaction.id
+  const id = useMemo(() => t.current.id, [])
 
   return {
     confirmations,

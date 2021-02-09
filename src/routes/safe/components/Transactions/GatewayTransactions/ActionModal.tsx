@@ -2,8 +2,9 @@ import React, { ReactElement, useContext } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ExpandedTxDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { getTransactionById } from 'src/logic/safe/store/selectors/getTransactionDetails'
+import { getTransactionByAttribute } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { AppReduxState } from 'src/store'
 import { ApproveTxModal } from './modals/ApproveTxModal'
 import { RejectTxModal } from './modals/RejectTxModal'
 import { TransactionActionStateContext } from './TxActionProvider'
@@ -13,8 +14,12 @@ export const ActionModal = (): ReactElement | null => {
   const { selectedAction, selectAction } = useContext(TransactionActionStateContext)
   const txParameters = useTransactionParameters()
 
-  const transaction = useSelector((state) =>
-    getTransactionById(state, selectedAction.transactionId, selectedAction.txLocation),
+  const transaction = useSelector((state: AppReduxState) =>
+    getTransactionByAttribute(state)({
+      attributeValue: selectedAction.transactionId,
+      attributeName: 'id',
+      txLocation: selectedAction.txLocation,
+    }),
   )
 
   const onClose = () => selectAction({ actionSelected: 'none', transactionId: '', txLocation: 'history' })

@@ -3,8 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
-import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
+import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
+import { AppReduxState } from 'src/store'
 
 export type LoadTransactionDetails = {
   data?: ExpandedTxDetails
@@ -18,7 +19,9 @@ export const useTransactionDetails = (transactionId: string): LoadTransactionDet
     loading: true,
     data: undefined,
   })
-  const data = useSelector((state) => getTransactionDetails(state, transactionId, txLocation))
+  const data = useSelector((state: AppReduxState) =>
+    getTransactionDetails(state)({ attributeValue: transactionId, attributeName: 'id', txLocation }),
+  )
 
   useEffect(() => {
     if (data) {
