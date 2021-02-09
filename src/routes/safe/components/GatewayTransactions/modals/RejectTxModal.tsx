@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { createTransaction } from 'src/logic/safe/store/actions/createGatewayTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'

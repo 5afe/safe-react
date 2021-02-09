@@ -1,3 +1,4 @@
+import { List } from 'immutable'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -17,22 +18,38 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
-import { mockTransaction, TxToMock } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
-import { storeExecutedTx, storeSignedTx, storeTx } from 'src/logic/safe/store/actions/transactions/pendingTransactions'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { Dispatch, DispatchReturn } from './types'
 import { PayableTx } from 'src/types/contracts/types'
 
+import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
+import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
+import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
   notifiedTransaction: string
   safeAddress: string
-  tx: Transaction
+  tx: {
+    id: string
+    confirmations: List<Confirmation>
+    origin: string // json.stringified url, name
+    to: string
+    value: string
+    data: string
+    operation: Operation
+    nonce: number
+    safeTxGas: number
+    safeTxHash: string
+    baseGas: number
+    gasPrice: string
+    gasToken: string
+    refundReceiver: string
+  }
   userAddress: string
   ethParameters?: Pick<TxParameters, 'ethNonce' | 'ethGasLimit' | 'ethGasPriceInGWei'>
   thresholdReached: boolean
@@ -75,9 +92,9 @@ export const processTransaction = ({
   let txHash
   let transaction
   const txArgs = {
-    ...tx.toJS(), // merge the previous tx with new data
+    ...tx, // merge the previous tx with new data
     safeInstance,
-    to: tx.recipient,
+    to: tx.to,
     valueInWei: tx.value,
     data: tx.data ?? EMPTY_DATA,
     operation: tx.operation,
@@ -98,6 +115,7 @@ export const processTransaction = ({
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+        dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
@@ -117,39 +135,46 @@ export const processTransaction = ({
       nonce: ethParameters?.ethNonce,
     }
 
-    const txToMock: TxToMock = {
-      ...txArgs,
-      value: txArgs.valueInWei,
-    }
-    const mockedTx = await mockTransaction(txToMock, safeAddress, state)
-
     await transaction
       .send(sendParams)
       .once('transactionHash', async (hash: string) => {
         txHash = hash
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING',
+            safeAddress,
+            nonce: tx.nonce,
+            // if we provide the tx ID that sole tx will have the _pending_ status.
+            // if not, all the txs that share the same nonce will have the _pending_ status.
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
+
         try {
-          await Promise.all([
-            saveTxToHistory({ ...txArgs, txHash }),
-            storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
-          ])
+          await saveTxToHistory({ ...txArgs, txHash })
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
-          await storeTx({ transaction: tx, safeAddress, dispatch, state })
           console.error(e)
         }
       })
       .on('error', (error) => {
-        storeTx({ transaction: tx, safeAddress, dispatch, state })
+        dispatch(
+          updateTransactionStatus({
+            txStatus: 'PENDING_FAILED',
+            safeAddress,
+            nonce: tx.nonce,
+            id: !isExecution ? tx.id : undefined,
+          }),
+        )
+
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
         if (isExecution) {
           dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
         }
-
-        await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 
@@ -166,6 +191,14 @@ export const processTransaction = ({
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+    dispatch(
+      updateTransactionStatus({
+        txStatus: 'PENDING_FAILED',
+        safeAddress,
+        nonce: tx.nonce,
+        id: !isExecution ? tx.id : undefined,
+      }),
+    )
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     if (txHash) {
