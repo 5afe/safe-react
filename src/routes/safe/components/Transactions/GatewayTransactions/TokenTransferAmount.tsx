@@ -9,10 +9,12 @@ import { TokenTransferAsset } from './hooks/useAssetInfo'
 
 const Amount = styled(Text)`
   margin-left: 10px;
+  line-height: 16px;
 `
 
 const AmountWrapper = styled.div`
   display: flex;
+  align-items: center;
 `
 
 export type TokenTransferAmountProps = {
@@ -24,7 +26,7 @@ export const TokenTransferAmount = ({ assetInfo }: TokenTransferAmountProps): Re
     <AmountWrapper>
       <Img
         alt={assetInfo.name}
-        height={18}
+        height={26}
         onError={(error) => {
           error.currentTarget.onerror = null
           error.currentTarget.src = assetInfo.tokenType === 'ERC721' ? NFTIcon : TokenPlaceholder
