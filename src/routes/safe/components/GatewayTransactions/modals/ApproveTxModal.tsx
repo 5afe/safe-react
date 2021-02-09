@@ -106,23 +106,43 @@ const useTxInfo = (transaction: Props['transaction']) => {
     ? transaction.txDetails.detailedExecutionInfo.safeTxHash
     : EMPTY_DATA
 
-  const value =
-    transaction.txInfo.type === 'Transfer'
-      ? transaction.txInfo.transferInfo.type === 'ETHER'
-        ? transaction.txInfo.transferInfo.value
-        : transaction.txDetails.txData?.value ?? '0'
-      : transaction.txInfo.type === 'Custom'
-      ? transaction.txInfo.value
-      : '0'
+  let value: string
+  switch (transaction.txInfo.type) {
+    case 'Transfer':
+      if (transaction.txInfo.transferInfo.type === 'ETHER') {
+        value = transaction.txInfo.transferInfo.value
+      } else {
+        value = transaction.txDetails.txData?.value ?? '0'
+      }
+      break
+    case 'Custom':
+      value = transaction.txInfo.value
+      break
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      value = '0'
+      break
+  }
 
-  const to =
-    transaction.txInfo.type === 'Transfer'
-      ? transaction.txInfo.transferInfo.type === 'ETHER'
-        ? transaction.txInfo.recipient
-        : transaction.txInfo.transferInfo.tokenAddress
-      : transaction.txInfo.type === 'Custom'
-      ? transaction.txInfo.to
-      : safeAddress
+  let to: string
+  switch (transaction.txInfo.type) {
+    case 'Transfer':
+      if (transaction.txInfo.transferInfo.type === 'ETHER') {
+        to = transaction.txInfo.recipient
+      } else {
+        to = transaction.txInfo.transferInfo.tokenAddress
+      }
+      break
+    case 'Custom':
+      to = transaction.txInfo.to
+      break
+    case 'Creation':
+    case 'SettingsChange':
+    default:
+      to = safeAddress
+      break
+  }
 
   const operation = transaction.txDetails.txData?.operation ?? Operation.CALL
 
