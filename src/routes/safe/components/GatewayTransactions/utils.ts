@@ -118,6 +118,7 @@ export interface TableData {
 
 // TODO: how can we be sure that it's a cancel tx without asking for tx-details?
 //  can the client-gateway service provide info about the tx, Like: `isCancelTransaction: boolean`?
+//  it will be solved as part of: https://github.com/gnosis/safe-client-gateway/issues/255
 export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; safeAddress: string }): boolean =>
   sameAddress(txInfo.to, safeAddress) &&
   sameString(txInfo.dataSize, '0') &&
