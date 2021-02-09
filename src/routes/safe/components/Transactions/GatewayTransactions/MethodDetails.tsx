@@ -9,7 +9,7 @@ import {
   isDeleteAllowance,
   isSetAllowance,
   ModifySpendingLimitDetails,
-} from 'src/routes/safe/components/GatewayTransactions/SpendingLimitDetails'
+} from 'src/routes/safe/components/Transactions/GatewayTransactions/SpendingLimitDetails'
 import Value from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/Value'
 
 const TxDetailsMethodName = styled(Text)`

@@ -10,7 +10,7 @@ import {
   isSettingsChangeTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxCollapsedActions } from 'src/routes/safe/components/GatewayTransactions/TxCollapsedActions'
+import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import styled from 'styled-components'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'

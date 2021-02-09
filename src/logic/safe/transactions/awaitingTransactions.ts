@@ -4,7 +4,7 @@ import { isPendingTransaction } from 'src/logic/safe/store/actions/transactions/
 import { isStatusAwaitingConfirmation } from 'src/logic/safe/store/models/types/gateway.d'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { Transaction as GatewayTransaction } from 'src/logic/safe/store/models/types/gateway'
-import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
+import { addressInList } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 
 export const getAwaitingTransactions = (
   allTransactions: List<Transaction>,

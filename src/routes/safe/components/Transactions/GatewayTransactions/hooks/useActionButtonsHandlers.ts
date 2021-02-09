@@ -1,13 +1,13 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
+import { addressInList } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 import { useTransactionActions } from './useTransactionActions'
-import { TransactionActionStateContext } from 'src/routes/safe/components/GatewayTransactions/TxActionProvider'
-import { TxHoverContext } from 'src/routes/safe/components/GatewayTransactions/TxHoverProvider'
-import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
+import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxActionProvider'
+import { TxHoverContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxHoverProvider'
+import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
 
 type ActionButtonsHandlers = {
   canCancel: boolean

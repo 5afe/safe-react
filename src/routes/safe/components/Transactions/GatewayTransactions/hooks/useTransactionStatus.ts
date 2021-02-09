@@ -10,7 +10,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { addressInList } from 'src/routes/safe/components/GatewayTransactions/utils'
+import { addressInList } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 
 export type TransactionStatusProps = {
   color: ThemeColors

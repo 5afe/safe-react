@@ -3,7 +3,7 @@ import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
 
 const IconButton = styled(MuiIconButton)`
