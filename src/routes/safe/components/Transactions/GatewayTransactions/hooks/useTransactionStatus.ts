@@ -25,7 +25,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
     if (isStatusSuccess(transaction.txStatus)) {
       setStatus({ color: 'primary', text: 'Success' })
     } else if (isStatusFailed(transaction.txStatus)) {
-      setStatus({ color: 'error', text: 'Fail' })
+      setStatus({ color: 'error', text: 'Failed' })
     } else if (isStatusCancelled(transaction.txStatus)) {
       setStatus({ color: 'error', text: 'Cancelled' })
     } else if (isStatusWillBeReplaced(transaction.txStatus)) {
