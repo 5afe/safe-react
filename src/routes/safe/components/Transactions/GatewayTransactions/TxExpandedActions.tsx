@@ -2,7 +2,7 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { useActionButtonsHandlers } from 'src/routes/safe/components/GatewayTransactions/hooks/useActionButtonsHandlers'
+import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/GatewayTransactions/hooks/useActionButtonsHandlers'
 
 type TxExpandedActionsProps = {
   transaction: Transaction

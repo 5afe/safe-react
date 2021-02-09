@@ -203,16 +203,18 @@ export const ApproveTxModal = ({
                     />
                   )}
                 </Row>
-
-                <TransactionFees
-                  gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
-                  isCreation={isCreation}
-                  isOffChainSignature={isOffChainSignature}
-                  txEstimationExecutionStatus={txEstimationExecutionStatus}
-                />
               </Block>
-
+              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                <Block className={classes.gasCostsContainer}>
+                  <TransactionFees
+                    gasCostFormatted={gasCostFormatted}
+                    isExecution={isExecution}
+                    isCreation={isCreation}
+                    isOffChainSignature={isOffChainSignature}
+                    txEstimationExecutionStatus={txEstimationExecutionStatus}
+                  />
+                </Block>
+              )}
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
                 <Button minHeight={42} minWidth={140} onClick={onClose}>

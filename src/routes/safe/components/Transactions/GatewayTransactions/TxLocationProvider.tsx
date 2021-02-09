@@ -1,5 +1,5 @@
 import React, { createContext, ReactElement, ReactNode, useState } from 'react'
-import { TxLocation } from 'src/logic/safe/store/models/types/gateway'
+import { TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 
 export type TxLocationProps = {
   txLocation: TxLocation

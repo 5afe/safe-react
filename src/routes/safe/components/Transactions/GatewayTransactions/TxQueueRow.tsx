@@ -2,7 +2,7 @@ import { AccordionDetails } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { useTransactionActions } from 'src/routes/safe/components/GatewayTransactions/hooks/useTransactionActions'
+import { useTransactionActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/hooks/useTransactionActions'
 import { NoPaddingAccordion, StyledAccordionSummary } from './styled'
 import { TxDetails } from './TxDetails'
 import { TxHoverContext } from './TxHoverProvider'

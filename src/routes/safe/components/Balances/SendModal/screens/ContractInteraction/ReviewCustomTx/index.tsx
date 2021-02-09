@@ -169,8 +169,9 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-
-            <Row>
+          </Block>
+          {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+            <Block className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
                 isExecution={isExecution}
@@ -178,9 +179,8 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-            </Row>
-          </Block>
-          <Hairline />
+            </Block>
+          )}
           <Row align="center" className={classes.buttonRow}>
             <Button minWidth={140} onClick={onPrev}>
               Back

@@ -3,9 +3,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway'
+import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { useHistoryTransactions } from 'src/routes/safe/components/GatewayTransactions/hooks/useHistoryTransactions'
+import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/GatewayTransactions/hooks/useHistoryTransactions'
 
 type PagedTransactions = {
   count: number

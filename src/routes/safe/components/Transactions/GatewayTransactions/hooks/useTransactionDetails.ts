@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { fetchTransactionDetails } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
-import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
+import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
 
 export type LoadTransactionDetails = {
   data?: ExpandedTxDetails

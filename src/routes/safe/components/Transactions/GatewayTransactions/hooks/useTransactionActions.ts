@@ -6,8 +6,8 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { TxLocationContext } from 'src/routes/safe/components/GatewayTransactions/TxLocationProvider'
-import { isCancelTransaction } from 'src/routes/safe/components/GatewayTransactions/utils'
+import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
+import { isCancelTransaction } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {

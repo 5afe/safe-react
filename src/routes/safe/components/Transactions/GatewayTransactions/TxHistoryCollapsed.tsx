@@ -1,7 +1,7 @@
 import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { formatTime } from 'src/routes/safe/components/GatewayTransactions/utils'
+import { formatTime } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { useTransactionStatus } from './hooks/useTransactionStatus'
 import { useTransactionType } from './hooks/useTransactionType'
