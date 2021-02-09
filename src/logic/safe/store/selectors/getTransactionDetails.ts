@@ -6,7 +6,7 @@ import { GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTra
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { AppReduxState } from 'src/store'
 import { sameString } from 'src/utils/strings'
-import { createDeepEqualSelector, createDeeplyDeepEqualSelector } from './utils'
+import { createDeepEqualSelector } from './utils'
 
 const getTransactions = (state: AppReduxState): AppReduxState['gatewayTransactions'] => state[GATEWAY_TRANSACTIONS_ID]
 
@@ -58,7 +58,7 @@ export const getTransactionDetails = createDeepEqualSelector(
   },
 )
 
-export const getQueuedTransactionsByNonceAndLocation = createDeeplyDeepEqualSelector(
+export const getQueuedTransactionsByNonceAndLocation = createSelector(
   getSafeTransactions,
   (_, nonce: number, txLocation: TxQueuedLocation) => ({ nonce, txLocation }),
   (transactions, { nonce, txLocation }): Transaction[] => {
