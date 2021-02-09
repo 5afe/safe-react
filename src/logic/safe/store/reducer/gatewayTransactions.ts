@@ -287,6 +287,8 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
       }
     },
     [UPDATE_TRANSACTION_STATUS]: (state, action: Action<TransactionStatusPayload>) => {
+      // if we provide the tx ID that sole tx will have the _pending_ status.
+      // if not, all the txs that share the same nonce will have the _pending_ status.
       const { nonce, id, safeAddress, txStatus } = action.payload
       const storedTransactions = Object.assign({}, state[safeAddress])
       const { queued } = storedTransactions

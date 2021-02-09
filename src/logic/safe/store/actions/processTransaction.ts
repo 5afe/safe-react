@@ -148,7 +148,7 @@ export const processTransaction = ({
             nonce: tx.nonce,
             // if we provide the tx ID that sole tx will have the _pending_ status.
             // if not, all the txs that share the same nonce will have the _pending_ status.
-            id: !isExecution ? tx.id : undefined,
+            id: tx.id,
           }),
         )
 
@@ -165,7 +165,7 @@ export const processTransaction = ({
             txStatus: 'PENDING_FAILED',
             safeAddress,
             nonce: tx.nonce,
-            id: !isExecution ? tx.id : undefined,
+            id: tx.id,
           }),
         )
 
@@ -196,7 +196,7 @@ export const processTransaction = ({
         txStatus: 'PENDING_FAILED',
         safeAddress,
         nonce: tx.nonce,
-        id: !isExecution ? tx.id : undefined,
+        id: tx.id,
       }),
     )
     dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
