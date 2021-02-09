@@ -68,8 +68,10 @@ export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
 export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
+    console.log('Debug isArrayParameter')
     return JSONBig.parse(parameter)
   } catch (err) {
+    console.log('Parse error', err)
     return null
   }
 }
