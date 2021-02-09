@@ -18,7 +18,7 @@ import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 
 import GasEstimationInfo from './GasEstimationInfo'
@@ -118,14 +118,11 @@ export const ConfirmTransactionModal = ({
 }: OwnProps): React.ReactElement | null => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
   const threshold = useSelector(safeThresholdSelector) || 1
-  // FIXME #issue-1848 check why this generates bugs with WalletConnect Safe app and some interactions
-  // const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
-  // const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
-  // const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
-  // #issue-1848 Remove this when non multisend transactions are checked
-  const txRecipient: string | undefined = MULTI_SEND_ADDRESS
-  const txData: string | undefined = useMemo(() => encodeMultiSendCall(txs), [txs])
-  const operation = DELEGATE_CALL
+
+  const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
+  const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
+  const txValue: string | undefined = useMemo(() => (txs.length > 1 ? '0' : txs[0]?.value), [txs])
+  const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
 
   const {
     gasLimit,
@@ -140,6 +137,7 @@ export const ConfirmTransactionModal = ({
     txData: txData || '',
     txRecipient,
     operation,
+    txAmount: txValue,
   })
 
   useEffect(() => {
@@ -171,7 +169,7 @@ export const ConfirmTransactionModal = ({
         {
           safeAddress,
           to: txRecipient,
-          valueInWei: '0',
+          valueInWei: txValue,
           txData,
           operation,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
