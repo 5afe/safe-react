@@ -130,7 +130,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.4fr',
+  nonce: '0.75fr',
   type: '3fr',
   info: '3fr',
   time: '1.5fr',
@@ -199,9 +199,9 @@ export const GroupedTransactions = styled(StyledTransaction)`
   // builds the tree-view layout
   .tree-lines {
     height: 100%;
-    margin-left: 70%;
+    margin-left: 50%;
     position: relative;
-    width: 20%;
+    width: 30%;
 
     // this is a special case, the first element in the list needs to have a block child component
     // add tree lines line to the first item of the list
