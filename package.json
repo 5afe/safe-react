@@ -198,7 +198,6 @@
     "immortal-db": "^1.1.0",
     "immutable": "^4.0.0-rc.12",
     "js-cookie": "^2.2.1",
-    "json-bigint": "^1.0.0",
     "lodash.debounce": "^4.0.8",
     "lodash.memoize": "^4.1.2",
     "material-ui-search-bar": "^1.0.0",

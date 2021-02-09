@@ -6,7 +6,7 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { getAddressFromDomain, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
 import { isValidCryptoDomainName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
-import JSONBig from 'json-bigint'
+import { BigNumber } from 'bignumber.js'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -68,8 +68,13 @@ export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
 export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
-    console.log('Debug isArrayParameter', JSONBig)
-    return JSONBig.parse(parameter)
+    const arrayResult = JSON.parse(parameter)
+    return arrayResult.map((value) => {
+      if (Number.isInteger(value)) {
+        return new BigNumber(value)
+      }
+      return value
+    })
   } catch (err) {
     return null
   }
@@ -94,13 +99,7 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
 const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
   const key = generateFormFieldKey(type, signatureHash, index)
 
-  const jsonResult = getParsedJSONOrArrayFromString(values[key]) || values[key]
-  const rawResult = values[key]
-
-  console.log('jsonResult', jsonResult)
-  console.log('rawResult', rawResult)
-
-  return jsonResult
+  return getParsedJSONOrArrayFromString(values[key]) || values[key]
 }
 
 export const createTxObject = (
