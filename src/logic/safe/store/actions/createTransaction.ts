@@ -70,7 +70,7 @@ export const createTransaction = (
   const state = getState()
 
   if (navigateToTransactionsTab) {
-    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/gatewayTransactions`))
+    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
   }
 
   const ready = await onboardUser()
