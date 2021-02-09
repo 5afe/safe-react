@@ -6,7 +6,7 @@ import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { ExpandedTxDetails, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionDetailsPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getTransactionDetails } from 'src/logic/safe/store/selectors/getTransactionDetails'
+import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
@@ -19,7 +19,11 @@ export const fetchTransactionDetails = ({
   transactionId: Transaction['id']
   txLocation: TxLocation
 }) => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<Transaction['txDetails']> => {
-  const txDetails = getTransactionDetails(getState(), transactionId, txLocation)
+  const txDetails = getTransactionDetails(getState())({
+    attributeValue: transactionId,
+    attributeName: 'id',
+    txLocation,
+  })
   const safeAddress = safeParamAddressFromStateSelector(getState())
 
   if (txDetails) {

@@ -1,6 +1,6 @@
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,6 +19,7 @@ import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
 import { TxData } from './TxData'
 import { TxExpandedActions } from './TxExpandedActions'
 import { TxInfo } from './TxInfo'
+import { TxLocationContext } from './TxLocationProvider'
 import { TxOwners } from './TxOwners'
 import { TxSummary } from './TxSummary'
 import { isCancelTxDetails, NOT_AVAILABLE } from './utils'
@@ -74,6 +75,7 @@ type TxDetailsProps = {
 }
 
 export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElement => {
+  const { txLocation } = useContext(TxLocationContext)
   const { data, loading } = useTransactionDetails(transaction.id)
 
   if (loading) {
@@ -110,13 +112,13 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
       </div>
       <div
         className={cn('tx-owners', {
-          'no-owner': !actions?.isUserAnOwner,
+          'no-owner': txLocation !== 'history' && !actions?.isUserAnOwner,
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
         <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
       </div>
-      {!data.executedAt && actions?.isUserAnOwner && (
+      {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
           <TxExpandedActions transaction={transaction} />
         </div>

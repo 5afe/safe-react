@@ -3,12 +3,13 @@ import { useSelector } from 'react-redux'
 
 import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getQueuedTransactionsByNonceAndLocation } from 'src/logic/safe/store/selectors/getTransactionDetails'
+import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
 import { isCancelTransaction } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { AppReduxState } from 'src/store'
 
 export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {
   const { confirmationsSubmitted, confirmationsRequired } = executionInfo
@@ -30,8 +31,12 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
   const isUserAnOwner = useSelector(grantedSelector)
   const { txLocation } = useContext(TxLocationContext)
   const { confirmationsSubmitted = 0, confirmationsRequired = 0, missingSigners } = transaction.executionInfo ?? {}
-  const transactionsByNonce = useSelector((state) =>
-    getQueuedTransactionsByNonceAndLocation(state, transaction.executionInfo?.nonce ?? -1, txLocation),
+  const transactionsByNonce = useSelector((state: AppReduxState) =>
+    getQueuedTransactionsByNonce(state)({
+      attributeName: 'nonce',
+      attributeValue: transaction.executionInfo?.nonce ?? -1,
+      txLocation,
+    }),
   )
 
   const [state, setState] = useState<TransactionActions>({

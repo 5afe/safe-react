@@ -18,7 +18,7 @@ import Row from 'src/components/layout/Row'
 import Modal from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'

@@ -2,7 +2,6 @@ import { push } from 'connected-react-router'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
-import { decodeMethods } from 'src/logic/contracts/methodIds'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
@@ -20,16 +19,7 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import {
-  removeTxFromStore,
-  storeSignedTx,
-  storeExecutedTx,
-} from 'src/logic/safe/store/actions/transactions/pendingTransactions'
-import {
-  generateSafeTxHash,
-  mockTransaction,
-  TxToMock,
-} from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
@@ -60,7 +50,7 @@ type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
-const createTransaction = (
+export const createTransaction = (
   {
     safeAddress,
     to,
@@ -80,7 +70,7 @@ const createTransaction = (
   const state = getState()
 
   if (navigateToTransactionsTab) {
-    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/gatewayTransactions`))
+    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
   }
 
   const ready = await onboardUser()
@@ -122,6 +112,7 @@ const createTransaction = (
     sigs,
   }
   const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
+
   try {
     if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
       const signature = await tryOffchainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
@@ -145,35 +136,19 @@ const createTransaction = (
       nonce: ethParameters?.ethNonce,
     }
 
-    const txToMock: TxToMock = {
-      ...txArgs,
-      confirmations: [], // this is used to determine if a tx is pending or not. See `calculateTransactionStatus` helper
-      value: txArgs.valueInWei,
-      safeTxHash,
-      dataDecoded: decodeMethods(txArgs.data),
-      submissionDate: new Date().toISOString(),
-    }
-    const mockedTx = await mockTransaction(txToMock, safeAddress, state)
-
     await tx
       .send(sendParams)
       .once('transactionHash', async (hash) => {
         onUserConfirm?.(safeTxHash)
-        try {
-          txHash = hash
-          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await Promise.all([
-            saveTxToHistory({ ...txArgs, txHash, origin }),
-            storeSignedTx({ transaction: mockedTx, from, isExecution, safeAddress, dispatch, state }),
-          ])
-          dispatch(fetchTransactions(safeAddress))
-        } catch (e) {
-          removeTxFromStore(mockedTx, safeAddress, dispatch, state)
-        }
+        txHash = hash
+        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+
+        await saveTxToHistory({ ...txArgs, txHash, origin })
+
+        dispatch(fetchTransactions(safeAddress))
       })
       .on('error', (error) => {
-        removeTxFromStore(mockedTx, safeAddress, dispatch, state)
         console.error('Tx error: ', error)
 
         onError?.()
@@ -182,8 +157,6 @@ const createTransaction = (
         if (isExecution) {
           dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
         }
-
-        await storeExecutedTx({ transaction: mockedTx, from, safeAddress, isExecution, receipt, dispatch, state })
 
         dispatch(fetchTransactions(safeAddress))
 
@@ -209,5 +182,3 @@ const createTransaction = (
 
   return txHash
 }
-
-export default createTransaction

@@ -1,20 +1,13 @@
-import get from 'lodash.get'
+import hash from 'object-hash'
 import isEqual from 'lodash.isequal'
 import memoize from 'lodash.memoize'
 import { createSelectorCreator, defaultMemoize } from 'reselect'
 
-export const createDeepEqualSelector = createSelectorCreator(defaultMemoize, isEqual)
+import { AppReduxState } from 'src/store'
 
-// TODO: enhance this approach
-// TODO: document
-const hashFn = (transactions, { nonce, txLocation }) => {
-  const transactionsByLocation = get(transactions, txLocation)
+export const createIsEqualSelector = createSelectorCreator(defaultMemoize, isEqual)
 
-  if (transactionsByLocation) {
-    const transactionsByNonce = transactionsByLocation[nonce]
-    return `${txLocation}-${nonce}-${transactionsByNonce.reduce((acc, tx) => `${acc}-${JSON.stringify(tx)}`, '')}`
-  }
+const hashFn = (gatewayTransactions: AppReduxState['gatewayTransactions'], safeAddress: string): string =>
+  hash(gatewayTransactions[safeAddress])
 
-  return
-}
-export const createDeeplyDeepEqualSelector = createSelectorCreator(memoize as any, hashFn)
+export const createHashBasedSelector = createSelectorCreator(memoize as any, hashFn)
