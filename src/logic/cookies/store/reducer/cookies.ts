@@ -5,11 +5,14 @@ import { AppReduxState } from 'src/store'
 
 export const COOKIES_REDUCER_ID = 'cookies'
 
-type OpenCookieBannerPayload = { cookieBannerOpen: boolean }
+export type OpenCookieBannerPayload = { cookieBannerOpen: boolean; intercomAlertDisplayed?: boolean }
 
 export default handleActions<AppReduxState['cookies'], OpenCookieBannerPayload>(
   {
-    [OPEN_COOKIE_BANNER]: (state, action) => state.set('cookieBannerOpen', action.payload),
+    [OPEN_COOKIE_BANNER]: (state, action) => {
+      const { intercomAlertDisplayed = false, cookieBannerOpen } = action.payload
+      return state.set('cookieBannerOpen', { intercomAlertDisplayed, cookieBannerOpen })
+    },
   },
   Map(),
 )

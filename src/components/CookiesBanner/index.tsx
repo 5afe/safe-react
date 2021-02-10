@@ -110,7 +110,7 @@ const CookiesBanner = (): ReactElement => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (!cookiesState) {
-        dispatch(openCookieBanner(true))
+        dispatch(openCookieBanner({ cookieBannerOpen: true }))
       } else {
         const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
         if (acceptedIntercom === undefined) {
@@ -143,7 +143,7 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie(COOKIES_KEY, newState, 365)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
-    dispatch(openCookieBanner(false))
+    dispatch(openCookieBanner({ cookieBannerOpen: false }))
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -159,7 +159,7 @@ const CookiesBanner = (): ReactElement => {
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
     }
-    dispatch(openCookieBanner(false))
+    dispatch(openCookieBanner({ cookieBannerOpen: false }))
   }
 
   if (showAnalytics && !isDesktop) {
@@ -254,7 +254,7 @@ const CookiesBanner = (): ReactElement => {
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
-          onClick={() => dispatch(openCookieBanner(true, true))}
+          onClick={() => dispatch(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
         />
       )}
       {!isDesktop && showBanner?.cookieBannerOpen && (
