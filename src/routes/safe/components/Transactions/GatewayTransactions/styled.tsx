@@ -142,7 +142,7 @@ const gridColumns = {
   nonce: '0.75fr',
   type: '3fr',
   info: '3fr',
-  time: '1.5fr',
+  time: '2fr',
   votes: '1.5fr',
   actions: '1fr',
   status: '3fr',
@@ -305,7 +305,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(100px, 1fr);
+  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
   row-gap: 2px;
   width: 100%;
 

@@ -3,7 +3,7 @@ import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import { Tooltip } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement, useRef } from 'react'
+import React, { ReactElement, useContext, useRef } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
 import {
@@ -13,7 +13,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
-import { formatDateTime, formatTime } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
+import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import styled from 'styled-components'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
@@ -22,6 +22,7 @@ import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
+import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
@@ -126,6 +127,8 @@ export const TxCollapsed = ({
   actions,
   status,
 }: TxCollapsedProps): ReactElement => {
+  const { txLocation } = useContext(TxLocationContext)
+
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
 
   const txCollapsedNonce = (
@@ -149,7 +152,7 @@ export const TxCollapsed = ({
     <div className={'tx-time' + willBeReplaced}>
       <Tooltip classes={tooltipStyles} title={formatDateTime(time)} arrow>
         <TooltipContent ref={timestamp}>
-          <Text size="xl">{formatTime(time)}</Text>
+          <Text size="xl">{txLocation === 'history' ? formatTime(time) : formatTimeInWords(time)}</Text>
         </TooltipContent>
       </Tooltip>
     </div>
