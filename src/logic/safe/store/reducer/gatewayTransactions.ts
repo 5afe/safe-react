@@ -133,7 +133,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         if (isTransactionSummary(value)) {
           const txNonce = value.transaction.executionInfo?.nonce
 
-          if (!txNonce) {
+          if (typeof txNonce === 'undefined') {
             console.warn('A transaction without nonce was provided by client-gateway:', JSON.stringify(value))
             return
           }
