@@ -13,11 +13,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
-import {
-  formatDateTime,
-  formatTime,
-  formatTimeInWords,
-} from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
+import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import styled from 'styled-components'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
