@@ -44,7 +44,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Balancer Pool
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQsmxUVtcEWmKcXxKwYsZFKJ2kDdqqjqdExujiGY1g3tV`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVaxypk2FTyfcTS9oZKxmpQziPUTu2VRhhW7sso1mGysf`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
