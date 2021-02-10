@@ -304,7 +304,8 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  grid-template-rows: [tx-summary] minmax(auto, 130px) [tx-details] minmax(100px, auto);
+  grid-auto-rows: minmax(min-content, max-content);
+  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(100px, 1fr);
   row-gap: 2px;
   width: 100%;
 
@@ -312,7 +313,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
     background-color: ${({ theme }) => theme.colors.white};
     line-break: anywhere;
     overflow: hidden;
-    padding: 8px 24px;
+    padding: 20px 24px;
     word-break: break-all;
   }
 
