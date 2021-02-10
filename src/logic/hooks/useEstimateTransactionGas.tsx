@@ -101,7 +101,14 @@ const estimateTransactionGas = async ({
   approvalAndExecution,
 }: TransactionEstimationProps): Promise<number> => {
   if (isCreation) {
-    return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation || CALL)
+    return estimateGasForTransactionCreation(
+      safeAddress,
+      txData,
+      txRecipient,
+      txAmount || '0',
+      operation || CALL,
+      safeTxGas,
+    )
   }
 
   if (!from) {

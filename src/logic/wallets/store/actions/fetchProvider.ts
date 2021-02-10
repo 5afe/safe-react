@@ -1,4 +1,5 @@
 import ReactGA from 'react-ga'
+import { Dispatch } from 'redux'
 
 import addProvider from './addProvider'
 
@@ -8,7 +9,6 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { makeProvider } from 'src/logic/wallets/store/model/provider'
 import { updateStoredTransactionsStatus } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { Dispatch } from 'redux'
 
 export const processProviderResponse = (dispatch, provider) => {
   const walletRecord = makeProvider(provider)

@@ -33,6 +33,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg, sm } from 'src/theme/variables'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const isTxValid = (t: Transaction): boolean => {
   if (!['string', 'number'].includes(typeof t.value)) {
@@ -123,6 +124,8 @@ export const ConfirmTransactionModal = ({
   const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
   const txValue: string | undefined = useMemo(() => (txs.length > 1 ? '0' : txs[0]?.value), [txs])
   const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -138,6 +141,8 @@ export const ConfirmTransactionModal = ({
     txRecipient,
     operation,
     txAmount: txValue,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -163,7 +168,7 @@ export const ConfirmTransactionModal = ({
 
   const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
-  const confirmTransactions = async () => {
+  const confirmTransactions = async (txParameters: TxParameters) => {
     await dispatch(
       createTransaction(
         {
@@ -172,15 +177,34 @@ export const ConfirmTransactionModal = ({
           valueInWei: txValue,
           txData,
           operation,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
           origin: app.id,
           navigateToTransactionsTab: false,
-          safeTxGas: Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas
+            ? Number(txParameters.safeTxGas)
+            : Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
+          ethParameters: txParameters,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
         handleUserConfirmation,
         handleTxRejection,
       ),
     )
+  }
+
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
   }
 
   const areTxsMalformed = txs.some((t) => !isTxValid(t))
@@ -269,6 +293,7 @@ export const ConfirmTransactionModal = ({
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
         parametersStatus={getParametersStatus()}
+        closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => (
           <>
@@ -282,7 +307,7 @@ export const ConfirmTransactionModal = ({
               <ModalFooterConfirmation
                 cancelText="Cancel"
                 handleCancel={handleTxRejection}
-                handleOk={confirmTransactions}
+                handleOk={() => confirmTransactions(txParameters)}
                 okDisabled={areTxsMalformed}
                 okText="Submit"
               />
