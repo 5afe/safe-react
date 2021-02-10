@@ -305,7 +305,7 @@ export const TxDetailsContainer = styled(WillBeReplaced)`
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(100px, 1fr);
+  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
   row-gap: 2px;
   width: 100%;
 
