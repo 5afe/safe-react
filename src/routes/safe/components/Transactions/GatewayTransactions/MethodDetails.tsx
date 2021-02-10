@@ -4,12 +4,6 @@ import styled from 'styled-components'
 
 import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import {
-  DeleteSpendingLimitDetails,
-  isDeleteAllowance,
-  isSetAllowance,
-  ModifySpendingLimitDetails,
-} from 'src/routes/safe/components/Transactions/GatewayTransactions/SpendingLimitDetails'
 import Value from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/Value'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
@@ -31,16 +25,6 @@ const StyledMethodName = styled(Text)`
 `
 
 export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  // FixMe: this way won't scale well
-  if (isSetAllowance(data.method)) {
-    return <ModifySpendingLimitDetails data={data} />
-  }
-
-  // FixMe: this way won't scale well
-  if (isDeleteAllowance(data.method)) {
-    return <DeleteSpendingLimitDetails data={data} />
-  }
-
   return (
     <TxInfo>
       <Text size="xl" strong>

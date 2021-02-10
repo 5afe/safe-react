@@ -3,7 +3,13 @@ import React, { ReactElement, ReactNode } from 'react'
 import { getNetworkInfo } from 'src/config'
 import { ExpandedTxDetails, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { TxInfoDetails } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxInfoDetails'
+import {
+  DeleteSpendingLimitDetails,
+  isDeleteAllowance,
+  isSetAllowance,
+  ModifySpendingLimitDetails,
+} from './SpendingLimitDetails'
+import { TxInfoDetails } from './TxInfoDetails'
 import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
@@ -54,6 +60,16 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
   // known data and particularly `multiSend` data type
   if (sameString(txData.dataDecoded.method, 'multiSend')) {
     return <MultiSendDetails txData={txData} />
+  }
+
+  // FixMe: this way won't scale well
+  if (isSetAllowance(txData.dataDecoded.method)) {
+    return <ModifySpendingLimitDetails data={txData.dataDecoded} />
+  }
+
+  // FixMe: this way won't scale well
+  if (isDeleteAllowance(txData.dataDecoded.method)) {
+    return <DeleteSpendingLimitDetails data={txData.dataDecoded} />
   }
 
   // we render the decoded data
