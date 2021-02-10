@@ -13,7 +13,7 @@ const Tooltip = withStyles(() => ({
     zIndex: 2001,
   },
   tooltip: {
-    marginBottom: 0,
+    marginBottom: '4px',
     backgroundColor: theme.colors.overlay.color,
     border: `1px solid ${theme.colors.icon}`,
     boxShadow: `1px 2px 4px ${theme.colors.shadow.color}14`,
