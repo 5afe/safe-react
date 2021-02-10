@@ -13,9 +13,10 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { minValue } from 'src/components/forms/validator'
+import { composeValidators, minValue } from 'src/components/forms/validator'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
+import { getNetworkInfo } from 'src/config'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
@@ -58,6 +59,8 @@ const StyledTextMt = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
+const { label } = getNetworkInfo()
+
 interface Props {
   txParameters: TxParameters
   onClose: (txParameters?: TxParameters) => void
@@ -75,7 +78,15 @@ const formValidation = (values) => {
 
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
-  const safeTxGasValidation = minValue(0, true)(safeTxGas)
+  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
+    if (!value) {
+      return
+    }
+
+    if (Number(value) > Number(ethGasLimit)) {
+      return `Bigger than ${label} gas limit.`
+    }
+  })(safeTxGas)
 
   return {
     ethGasLimit: ethGasLimitValidation,
@@ -178,9 +189,7 @@ export const EditTxParametersForm = ({
                   text="Ethereum gas limit"
                   type="number"
                   component={TextField}
-                  disabled={
-                    parametersStatus === 'CANCEL_TRANSACTION' ? false : !areEthereumParamsEnabled(parametersStatus)
-                  }
+                  disabled={parametersStatus === 'CANCEL_TRANSACTION'}
                 />
                 <Field
                   name="ethGasPrice"

@@ -54,6 +54,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const nftTokens = useSelector(nftTokensSelector)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const txToken = nftTokens.find(
     ({ assetAddress, tokenId }) => assetAddress === tx.assetAddress && tokenId === tx.nftTokenId,
@@ -72,6 +74,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient: tx.assetAddress,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -119,8 +123,28 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
