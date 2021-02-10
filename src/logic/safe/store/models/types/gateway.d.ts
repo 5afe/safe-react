@@ -122,19 +122,25 @@ type SettingsChange = {
   settingsInfo: SettingsInfo | null
 }
 
-type Custom = {
+type AddressInfo = {
+  name: string
+  logoUri: string | null
+}
+
+type BaseCustom = {
   type: 'Custom'
   to: string
   dataSize: string
   value: string
+  isCancellation: boolean
+  toInfo: AddressInfo
+}
+
+type Custom = BaseCustom & {
   methodName: string | null
 }
 
-type MultiSend = {
-  type: 'Custom'
-  to: string
-  dataSize: string
-  value: string
+type MultiSend = BaseCustom & {
   methodName: 'multiSend'
   actionCount: number
 }
