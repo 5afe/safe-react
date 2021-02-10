@@ -55,6 +55,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const [, moduleAddress] = selectedModulePair
   const explorerInfo = getExplorerInfo(moduleAddress)
@@ -73,6 +75,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     txData,
     txRecipient: safeAddress,
     txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -99,6 +103,21 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     }
   }
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
     <Modal
       description="Remove the selected Module"
@@ -107,7 +126,12 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       title="Remove Module"
       open
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
         {(txParameters, toggleEditMode) => {
           return (
             <>
