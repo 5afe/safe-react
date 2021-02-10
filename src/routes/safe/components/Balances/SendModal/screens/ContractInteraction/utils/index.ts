@@ -71,7 +71,7 @@ export const getParsedJSONOrArrayFromString = (parameter: string): (string | num
     const arrayResult = JSON.parse(parameter)
     return arrayResult.map((value) => {
       if (Number.isInteger(value)) {
-        return new BigNumber(value)
+        return new BigNumber(value).toString()
       }
       return value
     })
