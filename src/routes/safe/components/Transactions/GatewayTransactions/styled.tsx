@@ -142,7 +142,7 @@ const gridColumns = {
   nonce: '0.75fr',
   type: '3fr',
   info: '3fr',
-  time: '1.5fr',
+  time: '2fr',
   votes: '1.5fr',
   actions: '1fr',
   status: '3fr',

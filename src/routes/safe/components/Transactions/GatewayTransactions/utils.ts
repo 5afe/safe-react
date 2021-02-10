@@ -1,5 +1,6 @@
 import { BigNumber } from 'bignumber.js'
 import format from 'date-fns/format'
+import formatDistanceToNow from 'date-fns/formatDistanceToNow'
 
 import { getNetworkInfo } from 'src/config'
 import {
@@ -28,6 +29,8 @@ export const TX_TABLE_EXPAND_ICON = 'expand'
 export const formatTime = (timestamp: number): string => format(timestamp, 'h:mm a')
 
 export const formatDateTime = (timestamp: number): string => format(timestamp, 'MMM d, yyyy - h:mm:ss a')
+
+export const formatTimeInWords = (timestamp: number): string => formatDistanceToNow(timestamp, { addSuffix: true })
 
 export const NOT_AVAILABLE = 'n/a'
 
