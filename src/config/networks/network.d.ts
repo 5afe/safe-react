@@ -24,7 +24,7 @@ export enum FEATURES {
   ERC1155 = 'ERC1155',
   SAFE_APPS = 'SAFE_APPS',
   CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
-  ENS_LOOKUP = 'ENS_LOOKUP',
+  DOMAIN_LOOKUP = 'DOMAIN_LOOKUP',
 }
 
 type Token = {
@@ -85,8 +85,9 @@ type GasPrice =
     }
 
 export type EnvironmentSettings = GasPrice & {
+  clientGatewayUrl: string
   txServiceUrl: string
-  // Shall we keep a reference to the relay?
+  // TODO: Shall we keep a reference to the relay?
   relayApiUrl?: string
   safeAppsUrl: string
   rpcServiceUrl: string

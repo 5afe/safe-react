@@ -1,11 +1,11 @@
 import { Button } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
@@ -17,6 +17,13 @@ import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import Modal from './Modal'
 import { useStyles } from './style'
+import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import Row from 'src/components/layout/Row'
+import { TransactionFees } from 'src/components/TransactionsFees'
+import cn from 'classnames'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -24,28 +31,54 @@ interface RemoveSpendingLimitModalProps {
   open: boolean
 }
 
-const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
+export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitModalProps): ReactElement => {
   const classes = useStyles()
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
-  const removeSelectedSpendingLimit = async (): Promise<void> => {
+  useEffect(() => {
+    const {
+      beneficiary,
+      spent: { tokenAddress },
+    } = spendingLimit
+    const txData = getDeleteAllowanceTxData({ beneficiary, tokenAddress })
+    setTxData(txData)
+  }, [spendingLimit])
+
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isOffChainSignature,
+    isCreation,
+    gasLimit,
+    gasEstimation,
+    gasPriceFormatted,
+  } = useEstimateTransactionGas({
+    txData,
+    txRecipient: SPENDING_LIMIT_MODULE_ADDRESS,
+    txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
+  })
+
+  const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
     try {
-      const {
-        beneficiary,
-        spent: { tokenAddress },
-      } = spendingLimit
-      const txData = getDeleteAllowanceTxData({ beneficiary, tokenAddress })
-
       dispatch(
         createTransaction({
           safeAddress,
           to: SPENDING_LIMIT_MODULE_ADDRESS,
           valueInWei: '0',
           txData,
+          txNonce: txParameters.safeNonce,
+          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+          ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX,
         }),
       )
@@ -60,6 +93,21 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
   const resetTimeLabel =
     RESET_TIME_OPTIONS.find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin / 24 / 60)?.label ?? ''
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
     <Modal
       handleClose={onClose}
@@ -67,36 +115,70 @@ const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendingLimitM
       title="Remove Spending Limit"
       description="Remove the selected Spending Limit"
     >
-      <Modal.TopBar title="Remove Spending Limit" onClose={onClose} />
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
+        {(txParameters, toggleEditMode) => {
+          return (
+            <>
+              <Modal.TopBar title="Remove Spending Limit" onClose={onClose} />
 
-      <Block className={classes.container}>
-        <Col margin="lg">
-          <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} />
-        </Col>
-        <Col margin="lg">
-          {tokenInfo && (
-            <TokenInfo
-              amount={fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)}
-              title="Amount"
-              token={tokenInfo}
-            />
-          )}
-        </Col>
-        <Col margin="lg">
-          <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
-        </Col>
-      </Block>
+              <Block className={classes.container}>
+                <Col margin="lg">
+                  <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} />
+                </Col>
+                <Col margin="lg">
+                  {tokenInfo && (
+                    <TokenInfo
+                      amount={fromTokenUnit(spendingLimit.spent.amount, tokenInfo.decimals)}
+                      title="Amount"
+                      token={tokenInfo}
+                    />
+                  )}
+                </Col>
+                <Col margin="lg">
+                  <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
+                </Col>
+                {/* Tx Parameters */}
+                <TxParametersDetail
+                  txParameters={txParameters}
+                  onEdit={toggleEditMode}
+                  isTransactionCreation={isCreation}
+                  isTransactionExecution={isExecution}
+                />
+              </Block>
 
-      <Modal.Footer>
-        <Button size="md" color="secondary" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button color="error" size="md" variant="contained" onClick={removeSelectedSpendingLimit}>
-          Remove
-        </Button>
-      </Modal.Footer>
+              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
+                <TransactionFees
+                  gasCostFormatted={gasCostFormatted}
+                  isExecution={isExecution}
+                  isCreation={isCreation}
+                  isOffChainSignature={isOffChainSignature}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
+                />
+              </Row>
+
+              <Modal.Footer>
+                <Button size="md" color="secondary" onClick={onClose}>
+                  Cancel
+                </Button>
+                <Button
+                  color="error"
+                  size="md"
+                  variant="contained"
+                  onClick={() => removeSelectedSpendingLimit(txParameters)}
+                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                >
+                  Remove
+                </Button>
+              </Modal.Footer>
+            </>
+          )
+        }}
+      </EditableTxParameters>
     </Modal>
   )
 }
-
-export default RemoveLimitModal

@@ -2,39 +2,43 @@ import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { OwnerForm } from './screens/OwnerForm'
-import { ReviewAddOwner } from './screens/Review'
-import ThresholdForm from './screens/ThresholdForm'
-
 import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
-
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
+import { OwnerForm } from './screens/OwnerForm'
+import { ReviewAddOwner } from './screens/Review'
+import ThresholdForm from './screens/ThresholdForm'
 
 const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
     height: 'auto',
   },
 })
 
 const useStyles = makeStyles(styles)
 
-type OwnerValues = {
+export type OwnerValues = {
   ownerAddress: string
   ownerName: string
   threshold: string
 }
 
-export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dispatch: Dispatch): Promise<void> => {
+export const sendAddOwner = async (
+  values: OwnerValues,
+  safeAddress: string,
+  txParameters: TxParameters,
+  dispatch: Dispatch,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
@@ -44,6 +48,9 @@ export const sendAddOwner = async (values: OwnerValues, safeAddress: string, dis
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
     }),
   )
@@ -61,14 +68,14 @@ type Props = {
 const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('selectOwner')
-  const [values, setValues] = useState<any>({})
+  const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useEffect(
     () => () => {
       setActiveScreen('selectOwner')
-      setValues({})
+      setValues({ ownerName: '', ownerAddress: '', threshold: '' })
     },
     [isOpen],
   )
@@ -98,11 +105,11 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     setActiveScreen('reviewAddOwner')
   }
 
-  const onAddOwner = async () => {
+  const onAddOwner = async (txParameters: TxParameters) => {
     onClose()
 
     try {
-      await sendAddOwner(values, safeAddress, dispatch)
+      await sendAddOwner(values, safeAddress, txParameters, dispatch)
       dispatch(
         addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
       )

@@ -10,6 +10,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { xs } from 'src/theme/variables'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const useStyles = makeStyles(
   createStyles({
@@ -48,6 +49,7 @@ export const EllipsisTransactionDetails = ({
 
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
+  const isOwnerConnected = useSelector(grantedSelector)
 
   const handleClick = (event) => setAnchorEl(event.currentTarget)
 
@@ -65,7 +67,7 @@ export const EllipsisTransactionDetails = ({
         <Menu anchorEl={anchorEl} id="simple-menu" keepMounted onClose={closeMenuHandler} open={Boolean(anchorEl)}>
           {sendModalOpenHandler
             ? [
-                <MenuItem key="send-again-button" onClick={sendModalOpenHandler}>
+                <MenuItem key="send-again-button" onClick={sendModalOpenHandler} disabled={!isOwnerConnected}>
                   Send Again
                 </MenuItem>,
                 <Divider key="divider" />,

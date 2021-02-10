@@ -17,6 +17,8 @@ export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
+export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
     case 'test': {
@@ -66,6 +68,8 @@ const configuration = (): NetworkSpecificConfiguration => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
+export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
+
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
 export const getRelayUrl = (): string | undefined => getConfig().relayApiUrl
@@ -76,15 +80,13 @@ export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
 
-export const getRpcServiceUrl = (): string => {
-  const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+export const getRpcServiceUrl = (): string =>
+  usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
-  if (usesInfuraRPC) {
-    return `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}`
-  }
+export const getSafeClientGatewayBaseUrl = (safeAddress: string) => `${getClientGatewayUrl()}/safes/${safeAddress}`
 
-  return getConfig().rpcServiceUrl
-}
+export const getTxDetailsUrl = (clientGatewayTxId: string) =>
+  `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 

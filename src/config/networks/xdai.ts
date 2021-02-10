@@ -2,6 +2,7 @@ import xDaiLogo from 'src/config/assets/token_xdai.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
+  clientGatewayUrl: 'https://safe-client.xdai.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
   safeAppsUrl: 'https://safe-apps-xdai.staging.gnosisdev.com',
   gasPrice: 1e9,
@@ -51,7 +52,7 @@ const xDai: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
   ],
-  disabledFeatures: [FEATURES.ENS_LOOKUP],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
 }
 
 export default xDai

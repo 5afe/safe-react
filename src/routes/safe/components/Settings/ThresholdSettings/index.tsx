@@ -2,9 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ChangeThresholdModal } from './ChangeThreshold'
-import { styles } from './style'
-
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
@@ -15,13 +12,18 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { useTransactionParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
+
+import { ChangeThresholdModal } from './ChangeThreshold'
+import { styles } from './style'
 
 const useStyles = makeStyles(styles)
 
@@ -29,10 +31,12 @@ const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
   const dispatch = useDispatch()
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
   const granted = useSelector(grantedSelector)
+  const txParameters = useTransactionParameters()
+  const [activeScreen, setActiveScreen] = useState('form')
 
   const toggleModal = () => {
     setModalOpen((prevOpen) => !prevOpen)
@@ -48,6 +52,9 @@ const ThresholdSettings = (): React.ReactElement => {
         to: safeAddress,
         valueInWei: '0',
         txData,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        ethParameters: txParameters,
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
     )
@@ -58,6 +65,10 @@ const ThresholdSettings = (): React.ReactElement => {
   useEffect(() => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
   }, [trackEvent])
+
+  const closeEditTxParameters = () => setActiveScreen('form')
+
+  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   return (
     <>
@@ -87,13 +98,22 @@ const ThresholdSettings = (): React.ReactElement => {
         open={isModalOpen}
         title="Change Required Confirmations"
       >
-        <ChangeThresholdModal
-          onChangeThreshold={onChangeThreshold}
-          onClose={toggleModal}
-          owners={owners}
-          safeAddress={safeAddress}
-          threshold={threshold}
-        />
+        {activeScreen === 'form' && (
+          <ChangeThresholdModal
+            onChangeThreshold={onChangeThreshold}
+            onClose={toggleModal}
+            owners={owners}
+            safeAddress={safeAddress}
+            threshold={threshold}
+          />
+        )}
+        {activeScreen === 'editTxParameters' && (
+          <EditTxParametersForm
+            txParameters={txParameters}
+            onClose={closeEditTxParameters}
+            parametersStatus={getParametersStatus()}
+          />
+        )}
       </Modal>
     </>
   )

@@ -1,7 +1,7 @@
 import { getNetworkId, getNetworkInfo } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
-import { TxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
+import { BuildTx, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
 import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -31,10 +31,10 @@ export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
 /**
  * Verifies that a tx received by the transaction service is an ERC721 token-related transaction
- * @param {TxServiceModel} tx
+ * @param {BuildTx['tx']} tx
  * @returns boolean
  */
-export const isSendERC721Transaction = (tx: TxServiceModel): boolean => {
+export const isSendERC721Transaction = (tx: BuildTx['tx']): boolean => {
   let hasERC721Transfer = false
 
   if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
@@ -44,7 +44,7 @@ export const isSendERC721Transaction = (tx: TxServiceModel): boolean => {
   // Note: this is only valid with our current case (client rendering), if we move to server side rendering we need to refactor this
   const state = store.getState()
   const knownAssets = nftAssetsListAddressesSelector(state)
-  return knownAssets.includes(tx.to) || hasERC721Transfer
+  return knownAssets.includes((tx as ServiceTx).to) || hasERC721Transfer
 }
 
 /**

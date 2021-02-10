@@ -66,3 +66,12 @@ export const calculateGasOf = async (txConfig: {
     return Promise.reject(err)
   }
 }
+
+export const getUserNonce = async (userAddress: string): Promise<number> => {
+  const web3 = getWeb3()
+  try {
+    return await web3.eth.getTransactionCount(userAddress, 'pending')
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}

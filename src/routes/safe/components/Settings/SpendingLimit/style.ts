@@ -73,7 +73,7 @@ export const useStyles = makeStyles(
     modalHeading: {
       boxSizing: 'border-box',
       justifyContent: 'space-between',
-      maxHeight: '75px',
+      height: '74px',
       padding: `${sm} ${lg}`,
     },
     modalContainer: {
@@ -123,10 +123,13 @@ export const useStyles = makeStyles(
     modal: {
       height: 'auto',
       maxWidth: 'calc(100% - 30px)',
-      overflow: 'hidden',
     },
     amountInput: {
       width: '100% !important',
+    },
+    gasCostsContainer: {
+      backgroundColor: background,
+      padding: `0 ${lg}`,
     },
   }),
 )
