@@ -44,7 +44,7 @@ matrix:
       if: (branch = master AND NOT type = pull_request) OR tag IS present
 cache:
   npm: false
-  yarn: false
+  yarn: true
 before_script:
   - if [[ -n "$TRAVIS_TAG" ]]; then export REACT_APP_ENV='production'; fi;
   - if [ $TRAVIS_PULL_REQUEST != "false" ]; then export PUBLIC_URL="/${REACT_APP_NETWORK}/app"; fi;
@@ -54,7 +54,6 @@ before_install:
   - sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
   - pip install awscli --upgrade --user
 script:
-  - yarn lint:check
   - yarn prettier:check
   - yarn test:coverage
   - yarn build

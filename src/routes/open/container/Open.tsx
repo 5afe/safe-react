@@ -1,8 +1,10 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
-import ReactGA from 'react-ga'
 import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { PromiEvent, TransactionReceipt } from 'web3-core'
+
 import { SafeDeployment } from 'src/routes/opening'
 import { Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
@@ -24,8 +26,7 @@ import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/sto
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { PromiEvent, TransactionReceipt } from 'web3-core'
-import { useLocation } from 'react-router-dom'
+import { useAnalytics } from 'src/utils/googleAnalytics'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -127,6 +128,7 @@ const Open = (): React.ReactElement => {
   const userAccount = useSelector(userAccountSelector)
   const dispatch = useDispatch()
   const location = useLocation()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
@@ -185,7 +187,7 @@ const Open = (): React.ReactElement => {
 
     await dispatch(addOrUpdateSafe(safeProps))
 
-    ReactGA.event({
+    trackEvent({
       category: 'User',
       action: 'Created a safe',
     })
