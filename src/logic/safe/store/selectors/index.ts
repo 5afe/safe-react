@@ -93,7 +93,7 @@ export const safeCancellationTransactionsSelector = createSelector(
       return Map()
     }
 
-    return cancellationTransactions.get(address, Map({}))
+    return cancellationTransactions.get(address, Map())
   },
 )
 
@@ -109,7 +109,7 @@ export const safeIncomingTransactionsSelector = createSelector(
       return List([])
     }
 
-    return incomingTransactions.get(address, List([]))
+    return incomingTransactions.get(address, List())
   },
 )
 

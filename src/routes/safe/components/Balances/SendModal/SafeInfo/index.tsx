@@ -14,7 +14,7 @@ const { nativeCoin } = getNetworkInfo()
 const StyledBlock = styled(Block)`
   font-size: 12px;
   line-height: 1.08;
-  letter-spacing: -0.5;
+  letter-spacing: -0.5px;
   background-color: ${border};
   width: fit-content;
   padding: 5px 10px;

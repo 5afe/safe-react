@@ -1,13 +1,18 @@
+import { Action } from 'redux-actions'
+import { ThunkDispatch } from 'redux-thunk'
+
 import fetchCurrenciesRates from 'src/logic/currencyValues/api/fetchCurrenciesRates'
 import { setCurrencyRate } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
-import { Dispatch } from 'redux'
+import { CurrencyRatePayload } from 'src/logic/currencyValues/store/reducer/currencyValues'
+import { AppReduxState } from 'src/store'
 
 const fetchCurrencyRate = (safeAddress: string, selectedCurrency: string) => async (
-  dispatch: Dispatch<typeof setCurrencyRate>,
+  dispatch: ThunkDispatch<AppReduxState, undefined, Action<CurrencyRatePayload>>,
 ): Promise<void> => {
   if (AVAILABLE_CURRENCIES.USD === selectedCurrency) {
-    return dispatch(setCurrencyRate(safeAddress, 1))
+    dispatch(setCurrencyRate(safeAddress, 1))
+    return
   }
 
   const selectedCurrencyRateInBaseCurrency: number = await fetchCurrenciesRates(

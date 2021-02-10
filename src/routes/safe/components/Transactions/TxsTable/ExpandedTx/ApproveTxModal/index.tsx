@@ -109,7 +109,7 @@ export const ApproveTxModal = ({
     dispatch(
       processTransaction({
         safeAddress,
-        tx,
+        tx: tx as any,
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
