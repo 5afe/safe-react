@@ -12,10 +12,6 @@ import {
 } from 'src/routes/safe/components/Transactions/GatewayTransactions/SpendingLimitDetails'
 import Value from 'src/routes/safe/components/Transactions/TxsTable/ExpandedTx/TxDescription/Value'
 
-const TxDetailsMethodName = styled(Text)`
-  text-indent: 4px;
-`
-
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;
   display: ${({ isArrayParameter }) => (isArrayParameter ? 'block' : 'flex')};
@@ -27,7 +23,7 @@ const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
 `
 
 const TxInfo = styled.div`
-  padding: 8px 8px 8px 16px;
+  padding: 8px 0;
 `
 
 const StyledMethodName = styled(Text)`
@@ -47,9 +43,9 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
 
   return (
     <TxInfo>
-      <TxDetailsMethodName size="xl" strong>
+      <Text size="xl" strong>
         {data.method}
-      </TxDetailsMethodName>
+      </Text>
 
       {data.parameters?.map((param, index) => (
         <TxDetailsMethodParam key={`${data.method}_param-${index}`} isArrayParameter={isArrayParameter(param.type)}>
