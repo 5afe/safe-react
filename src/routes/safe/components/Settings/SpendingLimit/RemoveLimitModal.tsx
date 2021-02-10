@@ -39,6 +39,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   useEffect(() => {
     const {
@@ -62,6 +64,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     txData,
     txRecipient: SPENDING_LIMIT_MODULE_ADDRESS,
     txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
@@ -89,6 +93,21 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const resetTimeLabel =
     RESET_TIME_OPTIONS.find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin / 24 / 60)?.label ?? ''
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
     <Modal
       handleClose={onClose}
@@ -96,7 +115,12 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       title="Remove Spending Limit"
       description="Remove the selected Spending Limit"
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
         {(txParameters, toggleEditMode) => {
           return (
             <>
