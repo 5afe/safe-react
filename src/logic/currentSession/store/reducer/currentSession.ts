@@ -1,8 +1,9 @@
-import { handleActions } from 'redux-actions'
+import { Action, handleActions } from 'redux-actions'
 
 import { LOAD_CURRENT_SESSION } from 'src/logic/currentSession/store/actions/loadCurrentSession'
 import { UPDATE_VIEWED_SAFES } from 'src/logic/currentSession/store/actions/updateViewedSafes'
 import { saveCurrentSessionToStorage } from 'src/logic/currentSession/utils'
+import { AppReduxState } from 'src/store'
 
 export const CURRENT_SESSION_REDUCER_ID = 'currentSession'
 
@@ -14,13 +15,15 @@ export const initialState = {
   viewedSafes: [],
 }
 
-export default handleActions(
+type CurrentSessionPayloads = CurrentSessionState | string
+
+export default handleActions<AppReduxState['currentSession'], CurrentSessionPayloads>(
   {
-    [LOAD_CURRENT_SESSION]: (state = initialState, action) => ({
+    [LOAD_CURRENT_SESSION]: (state = initialState, action: Action<CurrentSessionState>) => ({
       ...state,
       ...action.payload,
     }),
-    [UPDATE_VIEWED_SAFES]: (state, action) => {
+    [UPDATE_VIEWED_SAFES]: (state, action: Action<string>) => {
       const safeAddress = action.payload
       const viewedSafes = state.viewedSafes
       const newState = {

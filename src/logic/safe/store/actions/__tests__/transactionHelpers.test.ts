@@ -90,7 +90,7 @@ describe('isInnerTransaction', () => {
   })
 })
 
-describe('isCancelTransaction', () => {
+describe.skip('isCancelTransaction', () => {
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
   const mockedETHAccount = '0xd76e0B566e218a80F4c96458FE09a322EBAa9aF2'
   it('It should return false if given a inner transaction with empty data', () => {

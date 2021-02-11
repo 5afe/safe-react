@@ -195,7 +195,7 @@ const MultiSendCustomData = ({ txDetails }: { txDetails: MultiSendDetails[] }): 
   )
 }
 
-const TxData = ({ data }: { data: string }): React.ReactElement => {
+export const TxData = ({ data }: { data: string }): React.ReactElement => {
   const classes = useStyles()
   const [showTxData, setShowTxData] = React.useState(false)
   const showExpandBtn = data.length > 20

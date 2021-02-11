@@ -44,7 +44,6 @@ const handleProviderNotification = (provider, dispatch) => {
       action: 'Connect a wallet',
       label: provider.name,
     })
-    dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.WALLET_CONNECTED_MSG)))
   } else {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.UNLOCK_WALLET_MSG)))
   }
