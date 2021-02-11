@@ -142,10 +142,10 @@ const gridColumns = {
   nonce: '0.5fr',
   type: '3fr',
   info: '3fr',
-  time: '2fr',
+  time: '2.5fr',
   votes: '1.5fr',
   actions: '1fr',
-  status: '3fr',
+  status: '2.5fr',
 }
 
 export const WillBeReplaced = styled.div`
@@ -163,6 +163,10 @@ export const StyledTransaction = styled(WillBeReplaced)`
 
   & > div {
     align-self: center;
+  }
+
+  .tx-votes {
+    justify-self: center;
   }
 
   .tx-actions {
