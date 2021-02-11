@@ -117,12 +117,14 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 <TxParametersDetail
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
-                  compact={false}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
                 />
-                <Row>
+              </Block>
+
+              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                <Block className={classes.gasCostsContainer}>
                   <TransactionFees
                     gasCostFormatted={gasCostFormatted}
                     isExecution={isExecution}
@@ -130,8 +132,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                     isOffChainSignature={isOffChainSignature}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}
                   />
-                </Row>
-              </Block>
+                </Block>
+              )}
               <Row align="center" className={classes.buttonRow}>
                 <Button minHeight={42} minWidth={140} onClick={onClose}>
                   Exit
