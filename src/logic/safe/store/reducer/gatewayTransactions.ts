@@ -326,6 +326,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.next': {
           queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
+            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
+            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+              return txToUpdate
+            }
+
             if (typeof id !== 'undefined') {
               if (sameString(txToUpdate.id, id)) {
                 txToUpdate.txStatus = txStatus
@@ -339,6 +344,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.queued': {
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
+            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
+            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+              return txToUpdate
+            }
+
             if (typeof id !== 'undefined') {
               if (sameString(txToUpdate.id, id)) {
                 txToUpdate.txStatus = txStatus
