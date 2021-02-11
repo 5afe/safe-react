@@ -115,10 +115,10 @@ export const processTransaction = ({
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
+        dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
         await saveTxToHistory({ ...txArgs, signature })
         // TODO: while we wait for the tx to be stored in the service and later update the tx info
         //  we should update the tx status in the store to disable owners' action buttons
-        dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
 
         dispatch(fetchTransactions(safeAddress))
         return
