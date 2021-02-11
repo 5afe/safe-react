@@ -6,7 +6,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
-import createTransaction, { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,

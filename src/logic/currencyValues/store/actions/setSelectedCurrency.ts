@@ -1,6 +1,7 @@
-import { createAction } from 'redux-actions'
+import { Action, createAction } from 'redux-actions'
 import { ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
+
+import { CurrencyPayloads } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { AppReduxState } from 'src/store'
 import fetchCurrencyRate from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
 
@@ -12,7 +13,7 @@ const setCurrentCurrency = createAction(SET_CURRENT_CURRENCY, (safeAddress: stri
 }))
 
 export const setSelectedCurrency = (safeAddress: string, selectedCurrency: string) => (
-  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+  dispatch: ThunkDispatch<AppReduxState, undefined, Action<CurrencyPayloads>>,
 ): void => {
   dispatch(setCurrentCurrency(safeAddress, selectedCurrency))
   dispatch(fetchCurrencyRate(safeAddress, selectedCurrency))
