@@ -11,3 +11,9 @@ export const relativeTime = (baseTimeMin: string, resetTimeMin: string): string 
 
   return formatRelative(nextResetTimeMilliseconds, Date.now())
 }
+
+export const getUTCStartOfDate = (timestamp: number): number => {
+  const date = new Date(timestamp)
+
+  return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0)
+}

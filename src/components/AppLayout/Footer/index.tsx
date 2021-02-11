@@ -50,7 +50,7 @@ const Footer = (): React.ReactElement => {
   const dispatch = useDispatch()
 
   const openCookiesHandler = () => {
-    dispatch(openCookieBanner(true))
+    dispatch(openCookieBanner({ cookieBannerOpen: true }))
   }
 
   return (
