@@ -1,8 +1,6 @@
-import { Dot, IconText as IconTextSrc, Text } from '@gnosis.pm/safe-react-components'
+import { Dot, IconText as IconTextSrc, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import { Tooltip } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useContext, useRef } from 'react'
 
 import CustomIconText from 'src/components/CustomIconText'
@@ -85,21 +83,6 @@ const IconText = styled(IconTextSrc)`
   }
 `
 
-const useTooltipStyles = makeStyles(
-  createStyles(() => ({
-    arrow: {
-      color: 'white',
-    },
-    tooltip: {
-      backgroundColor: 'white',
-      color: 'rgba(0, 0, 0, 0.87)',
-      boxShadow: '#00000026 0 2px 4px 0',
-      fontSize: '14px',
-      lineHeight: '14px',
-    },
-  })),
-)
-
 const TooltipContent = styled.div`
   width: max-content;
 `
@@ -145,12 +128,11 @@ export const TxCollapsed = ({
 
   const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
 
-  const tooltipStyles = useTooltipStyles()
   const timestamp = useRef<HTMLDivElement | null>(null)
 
   const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
-      <Tooltip classes={tooltipStyles} title={formatDateTime(time)} arrow>
+      <Tooltip title={formatDateTime(time)} arrow backgroundColor="white">
         <TooltipContent ref={timestamp}>
           <Text size="xl">{txLocation === 'history' ? formatTime(time) : formatTimeInWords(time)}</Text>
         </TooltipContent>
