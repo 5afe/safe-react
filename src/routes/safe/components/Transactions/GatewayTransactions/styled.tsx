@@ -139,7 +139,7 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.75fr',
+  nonce: '0.5fr',
   type: '3fr',
   info: '3fr',
   time: '2fr',
@@ -208,7 +208,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
   // builds the tree-view layout
   .tree-lines {
     height: 100%;
-    margin-left: 50%;
+    margin-left: 30px;
     position: relative;
     width: 30%;
 
@@ -286,8 +286,8 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   background-color: ${({ theme }) => theme.colors.inputField} !important;
   border-radius: 4px;
   margin: 12px 8px 0 12px;
-  padding: 8px;
-  width: calc(100% - 40px);
+  padding: 8px 12px;
+  width: calc(100% - 48px);
 
   .nonce {
     grid-column-start: 1;
