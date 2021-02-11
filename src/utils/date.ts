@@ -20,6 +20,12 @@ export const getUTCStartOfDate = (timestamp: number): number => {
   return Date.UTC(date.getUTCFullYear(), date.getUTCMonth(), date.getUTCDate(), 0, 0, 0, 0)
 }
 
+export const getLocalStartOfDate = (timestamp: number): number => {
+  const date = new Date(timestamp)
+
+  return date.setHours(0, 0, 0, 0)
+}
+
 export const formatWithSchema = (timestamp: number, schema: string): string => format(timestamp, schema)
 
 export const formatTime = (timestamp: number): string => formatWithSchema(timestamp, 'h:mm a')
