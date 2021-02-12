@@ -129,6 +129,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
+  // Mushrooms finance
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmXiA1GP9NF41tLgpkgcGdvHe2ysUSYzfD28T3XGEXdZnM`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
