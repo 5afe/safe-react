@@ -6,7 +6,7 @@ import {
   EthHashInfo,
   IconText,
 } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -148,7 +148,7 @@ const gridColumns = {
   status: '2.5fr',
 }
 
-export const WillBeReplaced = styled.div`
+const willBeReplaced = css`
   .will-be-replaced * {
     color: gray !important;
     text-decoration: line-through !important;
@@ -156,7 +156,18 @@ export const WillBeReplaced = styled.div`
   }
 `
 
-export const StyledTransaction = styled(WillBeReplaced)`
+const failedTransaction = css`
+  &.failed-transaction {
+    div[class^='tx-']:not(.tx-status):not(.tx-nonce) {
+      opacity: 0.5;
+    }
+  }
+`
+
+export const StyledTransaction = styled.div`
+  ${willBeReplaced};
+  ${failedTransaction};
+
   display: grid;
   grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
@@ -303,7 +314,9 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled(WillBeReplaced)`
+export const TxDetailsContainer = styled.div`
+  ${willBeReplaced};
+
   background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;
