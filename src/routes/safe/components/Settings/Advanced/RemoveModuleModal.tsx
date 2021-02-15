@@ -18,7 +18,7 @@ import Row from 'src/components/layout/Row'
 import Modal from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
@@ -55,6 +55,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const [, moduleAddress] = selectedModulePair
   const explorerInfo = getExplorerInfo(moduleAddress)
@@ -73,6 +75,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     txData,
     txRecipient: safeAddress,
     txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -82,13 +86,13 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
-      dispatch(
+      await dispatch(
         createTransaction({
           safeAddress,
           to: safeAddress,
           valueInWei: '0',
           txData,
-          txNonce: txParameters.ethNonce,
+          txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
@@ -96,6 +100,21 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       )
     } catch (e) {
       console.error(`failed to remove the module ${selectedModulePair}`, e.message)
+    }
+  }
+
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
     }
   }
 
@@ -107,7 +126,12 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       title="Remove Module"
       open
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
         {(txParameters, toggleEditMode) => {
           return (
             <>
@@ -120,7 +144,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 </IconButton>
               </Row>
               <Hairline />
-              <Block className={classes.modalContainer}>
+              <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
                     <Identicon address={moduleAddress} diameter={32} />
@@ -149,25 +173,25 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                     as well.
                   </Paragraph>
                 </Row>
+              </Block>
+              <Block className={classes.accordionContainer}>
                 {/* Tx Parameters */}
                 <TxParametersDetail
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
-                  compact={false}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
                 />
-                <Row className={classes.modalDescription}>
-                  <TransactionFees
-                    gasCostFormatted={gasCostFormatted}
-                    isExecution={isExecution}
-                    isCreation={isCreation}
-                    isOffChainSignature={isOffChainSignature}
-                    txEstimationExecutionStatus={txEstimationExecutionStatus}
-                  />
-                </Row>
               </Block>
-              <Hairline />
+              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
+                <TransactionFees
+                  gasCostFormatted={gasCostFormatted}
+                  isExecution={isExecution}
+                  isCreation={isCreation}
+                  isOffChainSignature={isOffChainSignature}
+                  txEstimationExecutionStatus={txEstimationExecutionStatus}
+                />
+              </Row>
               <Row align="center" className={classes.modalButtonRow}>
                 <FooterWrapper>
                   <Button size="md" color="secondary" onClick={onClose}>

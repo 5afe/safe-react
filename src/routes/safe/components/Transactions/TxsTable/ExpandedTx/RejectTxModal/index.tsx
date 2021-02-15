@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
@@ -110,12 +110,13 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                 <TxParametersDetail
                   txParameters={txParameters}
                   onEdit={toggleEditMode}
-                  compact={false}
                   parametersStatus={getParametersStatus()}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
                 />
-                <Row>
+              </Block>
+              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                <Block className={classes.gasCostsContainer}>
                   <TransactionFees
                     gasCostFormatted={gasCostFormatted}
                     isExecution={isExecution}
@@ -123,8 +124,8 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                     isOffChainSignature={isOffChainSignature}
                     txEstimationExecutionStatus={txEstimationExecutionStatus}
                   />
-                </Row>
-              </Block>
+                </Block>
+              )}
               <Row align="center" className={classes.buttonRow}>
                 <Button minHeight={42} minWidth={140} onClick={onClose}>
                   Exit

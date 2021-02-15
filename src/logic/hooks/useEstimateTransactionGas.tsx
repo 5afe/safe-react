@@ -101,7 +101,14 @@ const estimateTransactionGas = async ({
   approvalAndExecution,
 }: TransactionEstimationProps): Promise<number> => {
   if (isCreation) {
-    return estimateGasForTransactionCreation(safeAddress, txData, txRecipient, txAmount || '0', operation || CALL)
+    return estimateGasForTransactionCreation(
+      safeAddress,
+      txData,
+      txRecipient,
+      txAmount || '0',
+      operation || CALL,
+      safeTxGas,
+    )
   }
 
   if (!from) {
@@ -148,7 +155,7 @@ type UseEstimateTransactionGasProps = {
   manualGasPrice?: string
 }
 
-type TransactionGasEstimationResult = {
+export type TransactionGasEstimationResult = {
   txEstimationExecutionStatus: EstimationStatus
   gasEstimation: number // Amount of gas needed for execute or approve the transaction
   gasCost: string // Cost of gas in raw format (estimatedGas * gasPrice)

@@ -207,6 +207,7 @@ export const estimateGasForTransactionCreation = async (
   to: string,
   valueInWei: string,
   operation: number,
+  safeTxGas?: number,
 ): Promise<number> => {
   try {
     const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
@@ -216,7 +217,12 @@ export const estimateGasForTransactionCreation = async (
       to: safeAddress,
       from: safeAddress,
       data: estimateData,
+      gas: safeTxGas ? safeTxGas : undefined,
     })
+
+    if (safeTxGas) {
+      return gasEstimationResponse
+    }
 
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData)
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]

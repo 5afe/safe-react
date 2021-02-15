@@ -16,7 +16,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
@@ -169,8 +169,9 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-
-            <Row>
+          </Block>
+          {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+            <Block className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
                 isExecution={isExecution}
@@ -178,9 +179,8 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-            </Row>
-          </Block>
-          <Hairline />
+            </Block>
+          )}
           <Row align="center" className={classes.buttonRow}>
             <Button minWidth={140} onClick={onPrev}>
               Back

@@ -12,7 +12,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { makeStyles } from '@material-ui/core'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -117,7 +117,9 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
                   />
-                  <Row>
+                </Block>
+                {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                  <Block className={classes.gasCostsContainer}>
                     <TransactionFees
                       gasCostFormatted={gasCostFormatted}
                       isExecution={isExecution}
@@ -125,9 +127,8 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                       isOffChainSignature={isOffChainSignature}
                       txEstimationExecutionStatus={txEstimationExecutionStatus}
                     />
-                  </Row>
-                </Block>
-                <Hairline />
+                  </Block>
+                )}
                 <Row align="center" className={classes.buttonRow}>
                   <Button minWidth={140} onClick={onClose}>
                     Back

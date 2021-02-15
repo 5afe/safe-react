@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
@@ -23,6 +23,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import Row from 'src/components/layout/Row'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import cn from 'classnames'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -38,6 +39,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   useEffect(() => {
     const {
@@ -61,6 +64,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     txData,
     txRecipient: SPENDING_LIMIT_MODULE_ADDRESS,
     txAmount: '0',
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
@@ -88,6 +93,21 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   const resetTimeLabel =
     RESET_TIME_OPTIONS.find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin / 24 / 60)?.label ?? ''
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
     <Modal
       handleClose={onClose}
@@ -95,7 +115,12 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       title="Remove Spending Limit"
       description="Remove the selected Spending Limit"
     >
-      <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+      <EditableTxParameters
+        ethGasLimit={gasLimit}
+        ethGasPrice={gasPriceFormatted}
+        safeTxGas={gasEstimation.toString()}
+        closeEditModalCallback={closeEditModalCallback}
+      >
         {(txParameters, toggleEditMode) => {
           return (
             <>
@@ -117,17 +142,16 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 <Col margin="lg">
                   <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
                 </Col>
+                {/* Tx Parameters */}
+                <TxParametersDetail
+                  txParameters={txParameters}
+                  onEdit={toggleEditMode}
+                  isTransactionCreation={isCreation}
+                  isTransactionExecution={isExecution}
+                />
               </Block>
 
-              {/* Tx Parameters */}
-              <TxParametersDetail
-                txParameters={txParameters}
-                onEdit={toggleEditMode}
-                compact={false}
-                isTransactionCreation={isCreation}
-                isTransactionExecution={isExecution}
-              />
-              <Row className={classes.modalDescription}>
+              <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
                 <TransactionFees
                   gasCostFormatted={gasCostFormatted}
                   isExecution={isExecution}

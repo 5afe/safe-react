@@ -56,6 +56,8 @@ export const ReviewRemoveOwnerModal = ({
   const owners = useSelector(safeOwnersSelector)
   const addressBook = useSelector(addressBookSelector)
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -69,6 +71,8 @@ export const ReviewRemoveOwnerModal = ({
   } = useEstimateTransactionGas({
     txData: data,
     txRecipient: safeAddress,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -101,8 +105,28 @@ export const ReviewRemoveOwnerModal = ({
     }
   }, [safeAddress, ownerAddress, threshold])
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -225,7 +249,6 @@ export const ReviewRemoveOwnerModal = ({
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-              <Hairline />
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>

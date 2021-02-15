@@ -18,7 +18,7 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
 import { Header } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Header'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
@@ -55,6 +55,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -75,6 +77,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     txRecipient: txInfo?.txRecipient,
     txAmount: txInfo?.txAmount,
     txData: txInfo?.txData,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -105,8 +109,28 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     onClose()
   }
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
@@ -187,18 +211,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-
-            <Row>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Row>
           </Block>
-          <Hairline />
+          <div className={classes.gasCostsContainer}>
+            <TransactionFees
+              gasCostFormatted={gasCostFormatted}
+              isExecution={isExecution}
+              isCreation={isCreation}
+              isOffChainSignature={isOffChainSignature}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
+          </div>
+
           <Row align="center" className={classes.buttonRow}>
             <Button minWidth={140} onClick={onPrev}>
               Back

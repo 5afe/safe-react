@@ -100,7 +100,7 @@ export const ApproveTxModal = ({
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
     safeTxGas: tx.safeTxGas,
     operation: tx.operation,
-    manualGasPrice: manualGasPrice,
+    manualGasPrice,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
@@ -109,7 +109,7 @@ export const ApproveTxModal = ({
     dispatch(
       processTransaction({
         safeAddress,
-        tx,
+        tx: tx as any,
         userAddress,
         notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
         approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
@@ -133,7 +133,7 @@ export const ApproveTxModal = ({
     const newGasPrice = Number(txParameters.ethGasPrice)
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
-      setManualGasPrice(newGasPrice.toString())
+      setManualGasPrice(txParameters.ethGasPrice)
     }
   }
 
@@ -203,16 +203,18 @@ export const ApproveTxModal = ({
                     />
                   )}
                 </Row>
-
-                <TransactionFees
-                  gasCostFormatted={gasCostFormatted}
-                  isExecution={isExecution}
-                  isCreation={isCreation}
-                  isOffChainSignature={isOffChainSignature}
-                  txEstimationExecutionStatus={txEstimationExecutionStatus}
-                />
               </Block>
-
+              {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+                <Block className={classes.gasCostsContainer}>
+                  <TransactionFees
+                    gasCostFormatted={gasCostFormatted}
+                    isExecution={isExecution}
+                    isCreation={isCreation}
+                    isOffChainSignature={isOffChainSignature}
+                    txEstimationExecutionStatus={txEstimationExecutionStatus}
+                  />
+                </Block>
+              )}
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
                 <Button minHeight={42} minWidth={140} onClick={onClose}>

@@ -16,7 +16,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
-import createTransaction from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
@@ -98,8 +98,9 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const txRecipient = isSendingNativeToken ? tx.recipientAddress : txToken?.address || ''
   const txValue = isSendingNativeToken ? toTokenUnit(tx.amount, nativeCoin.decimals) : '0'
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
-  /* Get GasInfo */
   const {
     gasCostFormatted,
     gasPriceFormatted,
@@ -113,6 +114,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     txData: data,
     txRecipient,
     txType: tx.txType,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   const submitTx = async (txParameters: TxParameters) => {
@@ -157,8 +160,28 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     }
   }
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           {/* Header */}
@@ -239,7 +262,9 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             />
 
             {/* Disclaimer */}
-            <Row>
+          </Block>
+          {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+            <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
                 isExecution={isExecution}
@@ -247,10 +272,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 isOffChainSignature={isOffChainSignature}
                 txEstimationExecutionStatus={txEstimationExecutionStatus}
               />
-            </Row>
-          </Block>
-
-          <Hairline style={{ position: 'absolute', bottom: 85 }} />
+            </div>
+          )}
 
           {/* Footer */}
           <Row align="center" className={classes.buttonRow}>

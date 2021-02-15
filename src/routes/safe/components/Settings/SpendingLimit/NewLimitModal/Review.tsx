@@ -6,7 +6,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { getNetworkInfo } from 'src/config'
-import createTransaction, { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
+import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,
@@ -158,6 +158,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     to: '',
     txData: '',
   })
+  const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
+  const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
 
   const {
     gasCostFormatted,
@@ -173,6 +175,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     txData: estimateGasArgs.txData as string,
     txRecipient: estimateGasArgs.to as string,
     operation: estimateGasArgs.operation,
+    safeTxGas: manualSafeTxGas,
+    manualGasPrice,
   })
 
   useEffect(() => {
@@ -217,8 +221,28 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
       ?.label ?? 'One-time spending limit'
 
+  const closeEditModalCallback = (txParameters: TxParameters) => {
+    const oldGasPrice = Number(gasPriceFormatted)
+    const newGasPrice = Number(txParameters.ethGasPrice)
+    const oldSafeTxGas = Number(gasEstimation)
+    const newSafeTxGas = Number(txParameters.safeTxGas)
+
+    if (newGasPrice && oldGasPrice !== newGasPrice) {
+      setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
+      setManualSafeTxGas(newSafeTxGas)
+    }
+  }
+
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+      closeEditModalCallback={closeEditModalCallback}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
@@ -251,9 +275,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             </Col>
 
             {existentSpendingLimit && (
-              <Text size="xl" color="error" center strong>
-                You are about to replace an existent spending limit
-              </Text>
+              <Col margin="md">
+                <Text size="xl" color="error" center strong>
+                  You are about to replace an existent spending limit
+                </Text>
+              </Col>
             )}
             {/* Tx Parameters */}
             <TxParametersDetail
@@ -262,16 +288,16 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
             />
-            <Row>
-              <TransactionFees
-                gasCostFormatted={gasCostFormatted}
-                isExecution={isExecution}
-                isCreation={isCreation}
-                isOffChainSignature={isOffChainSignature}
-                txEstimationExecutionStatus={txEstimationExecutionStatus}
-              />
-            </Row>
           </Block>
+          <div className={classes.gasCostsContainer}>
+            <TransactionFees
+              gasCostFormatted={gasCostFormatted}
+              isExecution={isExecution}
+              isCreation={isCreation}
+              isOffChainSignature={isOffChainSignature}
+              txEstimationExecutionStatus={txEstimationExecutionStatus}
+            />
+          </div>
 
           <Modal.Footer>
             <Button

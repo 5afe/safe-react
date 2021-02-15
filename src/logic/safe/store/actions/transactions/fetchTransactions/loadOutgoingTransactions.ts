@@ -1,6 +1,7 @@
 import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
+import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -57,8 +58,8 @@ export type SafeTransactionsType = {
 }
 
 export type OutgoingTxs = {
-  cancellationTxs: Record<number, TxServiceModel>
-  outgoingTxs: TxServiceModel[]
+  cancellationTxs: Record<number, TxServiceModel> | CancellationTransactions
+  outgoingTxs: TxServiceModel[] | List<Transaction>
 }
 
 export type BatchProcessTxsProps = OutgoingTxs & {
@@ -94,21 +95,25 @@ const extractCancelAndOutgoingTxs = (safeAddress: string, outgoingTxs: TxService
   )
 }
 
-type BatchRequestReturnValues = [TxServiceModel, string | undefined]
+type BatchRequestReturnValues = [TxServiceModel | Transaction, string | undefined]
 
 /**
  * Requests Contract's code for all the Contracts the Safe has interacted with
  * @param transactions
  * @returns {Promise<[Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>, Promise<*[]>]>}
  */
-const batchRequestContractCode = (transactions: TxServiceModel[]): Promise<BatchRequestReturnValues[]> => {
+const batchRequestContractCode = (
+  transactions: (TxServiceModel | Transaction)[],
+): Promise<BatchRequestReturnValues[]> => {
   if (!transactions || !Array.isArray(transactions)) {
     throw new Error('`transactions` must be provided in order to lookup information')
   }
 
   const batch = new web3ReadOnly.BatchRequest()
 
-  const whenTxsValues = transactions.map((tx) => {
+  // this will no longer be used when txs-list-v2 feature is finished
+  // that's why I'm doing this to move forward
+  const whenTxsValues = (transactions as any[]).map((tx) => {
     return generateBatchRequests<BatchRequestReturnValues>({
       abi: [],
       address: tx.to,
@@ -142,8 +147,8 @@ const batchProcessOutgoingTransactions = async ({
   outgoing: Transaction[]
 }> => {
   // cancellation transactions
-  const cancelTxsValues = Object.values(cancellationTxs)
-  const cancellationTxsWithData = cancelTxsValues.length ? await batchRequestContractCode(cancelTxsValues) : []
+  const cancelTxsValues = List(Object.values(cancellationTxs))
+  const cancellationTxsWithData = cancelTxsValues.size ? await batchRequestContractCode(cancelTxsValues.toArray()) : []
 
   const cancel = {}
   for (const [tx] of cancellationTxsWithData) {
@@ -157,7 +162,11 @@ const batchProcessOutgoingTransactions = async ({
   }
 
   // outgoing transactions
-  const outgoingTxsWithData = outgoingTxs.length ? await batchRequestContractCode(outgoingTxs) : []
+  const outgoingTxsList: List<Transaction | TxServiceModel> =
+    (outgoingTxs as TxServiceModel[]).length !== undefined
+      ? List(outgoingTxs as TxServiceModel[])
+      : (outgoingTxs as List<Transaction>)
+  const outgoingTxsWithData = outgoingTxsList.size ? await batchRequestContractCode(outgoingTxsList.toArray()) : []
 
   const outgoing: Transaction[] = []
   for (const [tx] of outgoingTxsWithData) {

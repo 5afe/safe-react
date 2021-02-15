@@ -2,6 +2,7 @@ import EwcLogo from 'src/config/assets/token_ewc.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
+  clientGatewayUrl: 'https://safe-client.volta.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
   safeAppsUrl: 'https://safe-apps-volta.staging.gnosisdev.com',
   gasPriceOracle: {
