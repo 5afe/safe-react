@@ -1,0 +1,60 @@
+name: Deploy PR
+
+# Run on pull request
+on: pull_request
+
+env:
+  REPO_NAME_ALPHANUMERIC: safereact
+
+jobs:
+  deploy:
+    name: Deploy Pull Request
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Remove broken apt repos [Ubuntu]
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
+      - uses: actions/checkout@v2
+
+      - name: Setup dependencies ${{ matrix.node-version }}
+        uses: actions/setup-node@v2
+        with:
+          node-version: ${{ matrix.node-version }}
+      - run: |
+          sudo apt-get update
+          sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
+          pip install awscli --upgrade --user
+          # Due to some dependencies yarn may randomly throw an error about invalid cache
+          # This approach is taken from https://github.com/yarnpkg/yarn/issues/7212#issuecomment-506155894 to fix the issue
+          # Another approach is to install with flag --network-concurrency 1, but this will make the installation pretty slow (default value is 8)
+          mkdir .yarncache
+          yarn install --cache-folder ./.yarncache --frozen-lockfile
+          rm -rf .yarncache
+          yarn cache clean
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - name: Build app
+        run: yarn build
+
+      - run: bash ./scripts/github/deploy_pr.sh
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          PR_NUMBER: ${{ github.event.number }}
+          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+
+      - name: 'PRaul: Comment PR with app URLs'
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            * [Compound app](${{ env.REVIEW_FEATURE_URL }}/compound/)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+        if: success() && github.event.number
+        env:
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
