@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { List } from 'immutable'
 
@@ -44,12 +44,13 @@ export const ChangeThresholdModal = ({
   owners,
   safeAddress,
   threshold = 1,
-}: ChangeThresholdModalProps): React.ReactElement => {
+}: ChangeThresholdModalProps): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [data, setData] = useState('')
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
 
   const {
     gasCostFormatted,
@@ -71,7 +72,7 @@ export const ChangeThresholdModal = ({
     let isCurrent = true
     const calculateChangeThresholdData = async () => {
       const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-      const txData = safeInstance.methods.changeThreshold(threshold).encodeABI()
+      const txData = safeInstance.methods.changeThreshold(editedThreshold).encodeABI()
       if (isCurrent) {
         setData(txData)
       }
@@ -81,7 +82,7 @@ export const ChangeThresholdModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, threshold])
+  }, [safeAddress, editedThreshold])
 
   const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
@@ -135,7 +136,7 @@ export const ChangeThresholdModal = ({
             </IconButton>
           </Row>
           <Hairline />
-          <GnoForm initialValues={{ threshold: threshold.toString(), txParameters }} onSubmit={handleSubmit}>
+          <GnoForm initialValues={{ threshold: editedThreshold.toString(), txParameters }} onSubmit={handleSubmit}>
             {() => (
               <>
                 <Block className={classes.modalContent}>
@@ -147,6 +148,9 @@ export const ChangeThresholdModal = ({
                       <Field
                         data-testid="threshold-select-input"
                         name={THRESHOLD_FIELD_NAME}
+                        onChange={({ target }) => {
+                          setEditedThreshold(parseInt(target.value))
+                        }}
                         render={(props) => (
                           <>
                             <SelectField {...props} disableError>
@@ -177,7 +181,6 @@ export const ChangeThresholdModal = ({
                   <TxParametersDetail
                     txParameters={txParameters}
                     onEdit={toggleEditMode}
-                    compact={true}
                     parametersStatus={getParametersStatus()}
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
