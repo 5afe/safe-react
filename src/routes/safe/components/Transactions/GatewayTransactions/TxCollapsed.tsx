@@ -2,6 +2,7 @@ import { Dot, IconText as IconTextSrc, Text, Tooltip } from '@gnosis.pm/safe-rea
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import CircularProgress from '@material-ui/core/CircularProgress'
 import React, { ReactElement, useContext, useRef } from 'react'
+import styled from 'styled-components'
 
 import CustomIconText from 'src/components/CustomIconText'
 import {
@@ -13,7 +14,7 @@ import {
 import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
-import styled from 'styled-components'
+import { sameString } from 'src/utils/strings'
 import { AssetInfo, isTokenTransferAsset } from './hooks/useAssetInfo'
 import { TransactionActions } from './hooks/useTransactionActions'
 import { TransactionStatusProps } from './hooks/useTransactionStatus'
@@ -188,7 +189,7 @@ export const TxCollapsed = ({
       {txCollapsedStatus}
     </StyledGroupedTransactions>
   ) : (
-    <StyledTransaction>
+    <StyledTransaction className={sameString(status.text, 'Failed') ? 'failed-transaction' : ''}>
       {txCollapsedNonce}
       {txCollapsedType}
       {txCollapsedInfo}

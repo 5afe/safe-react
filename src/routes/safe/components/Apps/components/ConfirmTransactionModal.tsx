@@ -20,6 +20,7 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
@@ -105,6 +106,10 @@ type OwnProps = {
 
 const { nativeCoin } = getNetworkInfo()
 
+const parseTxValue = (value: string | number): string => {
+  return web3ReadOnly.utils.toBN(value).toString()
+}
+
 export const ConfirmTransactionModal = ({
   isOpen,
   app,
@@ -122,7 +127,10 @@ export const ConfirmTransactionModal = ({
 
   const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
   const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
-  const txValue: string | undefined = useMemo(() => (txs.length > 1 ? '0' : txs[0]?.value), [txs])
+  const txValue: string | undefined = useMemo(
+    () => (txs.length > 1 ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
+    [txs],
+  )
   const operation = useMemo(() => (txs.length > 1 ? DELEGATE_CALL : CALL), [txs])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
