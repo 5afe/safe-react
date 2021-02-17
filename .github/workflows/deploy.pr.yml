@@ -40,6 +40,8 @@ jobs:
 
       - name: Build app
         run: yarn build
+        env:
+          PUBLIC_URL: 'app'
 
       - run: bash ./scripts/github/deploy_pr.sh
         env:
@@ -52,7 +54,7 @@ jobs:
         uses: mshick/add-pr-comment@v1
         with:
           message: |
-            * [Compound app](${{ env.REVIEW_FEATURE_URL }}/compound/)
+            * [Safe Multisig app](${{ env.REVIEW_FEATURE_URL }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
         if: success() && github.event.number

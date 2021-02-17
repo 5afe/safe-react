@@ -5,11 +5,9 @@ function deploy_pr {
   PULL_REQUEST_NUMBER="pr$PR_NUMBER"
   REVIEW_FEATURE_FOLDER="$REPO_NAME_ALPHANUMERIC/$PULL_REQUEST_NUMBER"
   APP_PATH="./build"
-  echo $REVIEW_BUCKET_NAME
-  echo $REVIEW_FEATURE_FOLDER
   
   # Deploy app project
-  aws s3 sync build s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
+  aws s3 sync $APP_PATH s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
 }
 
 # Only:
