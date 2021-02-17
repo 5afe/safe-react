@@ -1,10 +1,36 @@
-import React, { ReactElement } from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 
-import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { getNetworkInfo } from 'src/config'
+import { ExpandedTxDetails, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import {
+  DeleteSpendingLimitDetails,
+  isDeleteAllowance,
+  isSetAllowance,
+  ModifySpendingLimitDetails,
+} from './SpendingLimitDetails'
+import { TxInfoDetails } from './TxInfoDetails'
 import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
+
+const { nativeCoin } = getNetworkInfo()
+
+type DetailsWithTxInfoProps = {
+  children: ReactNode
+  txData: TransactionData
+}
+
+const DetailsWithTxInfo = ({ children, txData }: DetailsWithTxInfoProps): ReactElement => (
+  <>
+    <TxInfoDetails
+      address={txData.to}
+      title={`Send ${txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'} ${nativeCoin.symbol} to:`}
+    />
+    {children}
+  </>
+)
 
 type TxDataProps = {
   txData: ExpandedTxDetails['txData']
@@ -24,7 +50,11 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
     }
 
     // we render the hex encoded data
-    return <HexEncodedData hexData={txData.hexData} />
+    return (
+      <DetailsWithTxInfo txData={txData}>
+        <HexEncodedData hexData={txData.hexData} />
+      </DetailsWithTxInfo>
+    )
   }
 
   // known data and particularly `multiSend` data type
@@ -32,6 +62,20 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
     return <MultiSendDetails txData={txData} />
   }
 
+  // FixMe: this way won't scale well
+  if (isSetAllowance(txData.dataDecoded.method)) {
+    return <ModifySpendingLimitDetails data={txData.dataDecoded} />
+  }
+
+  // FixMe: this way won't scale well
+  if (isDeleteAllowance(txData.dataDecoded.method)) {
+    return <DeleteSpendingLimitDetails data={txData.dataDecoded} />
+  }
+
   // we render the decoded data
-  return <MethodDetails data={txData.dataDecoded} />
+  return (
+    <DetailsWithTxInfo txData={txData}>
+      <MethodDetails data={txData.dataDecoded} />
+    </DetailsWithTxInfo>
+  )
 }

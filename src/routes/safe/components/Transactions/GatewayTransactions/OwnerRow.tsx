@@ -11,7 +11,7 @@ export const OwnerRow = ({ ownerAddress }: { ownerAddress: string }): ReactEleme
   return (
     <EthHashInfo
       hash={ownerAddress}
-      name={ownerName}
+      name={ownerName === 'UNKNOWN' ? '' : ownerName}
       showIdenticon
       showCopyBtn
       explorerUrl={getExplorerInfo(ownerAddress)}

@@ -1,7 +1,7 @@
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { ReactElement, useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
@@ -96,7 +96,7 @@ interface CookiesBannerFormProps {
 
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
-  const dispatch = useDispatch()
+  const dispatch = useRef(useDispatch())
 
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
@@ -110,7 +110,7 @@ const CookiesBanner = (): ReactElement => {
     async function fetchCookiesFromStorage() {
       const cookiesState = await loadFromCookie(COOKIES_KEY)
       if (!cookiesState) {
-        dispatch(openCookieBanner({ cookieBannerOpen: true }))
+        dispatch.current(openCookieBanner({ cookieBannerOpen: true }))
       } else {
         const { acceptedIntercom, acceptedAnalytics, acceptedNecessary } = cookiesState
         if (acceptedIntercom === undefined) {
@@ -143,7 +143,7 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie(COOKIES_KEY, newState, 365)
     setShowAnalytics(!isDesktop)
     setShowIntercom(true)
-    dispatch(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
   const closeCookiesBannerHandler = async () => {
@@ -159,7 +159,7 @@ const CookiesBanner = (): ReactElement => {
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
     }
-    dispatch(openCookieBanner({ cookieBannerOpen: false }))
+    dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
   if (showAnalytics && !isDesktop) {
@@ -254,7 +254,7 @@ const CookiesBanner = (): ReactElement => {
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
-          onClick={() => dispatch(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
+          onClick={() => dispatch.current(openCookieBanner({ cookieBannerOpen: true, intercomAlertDisplayed: true }))}
         />
       )}
       {!isDesktop && showBanner?.cookieBannerOpen && (

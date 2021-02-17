@@ -86,13 +86,13 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
-      dispatch(
+      await dispatch(
         createTransaction({
           safeAddress,
           to: safeAddress,
           valueInWei: '0',
           txData,
-          txNonce: txParameters.ethNonce,
+          txNonce: txParameters.safeNonce,
           safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
