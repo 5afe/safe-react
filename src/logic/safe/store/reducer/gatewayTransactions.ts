@@ -22,7 +22,7 @@ import {
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
 
 import { AppReduxState } from 'src/store'
-import { getUTCStartOfDate } from 'src/utils/date'
+import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
 
@@ -78,7 +78,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
 
         if (isTransactionSummary(value)) {
-          const startOfDate = getUTCStartOfDate(value.transaction.timestamp)
+          const startOfDate = getLocalStartOfDate(value.transaction.timestamp)
 
           if (typeof history[startOfDate] === 'undefined') {
             history[startOfDate] = []
@@ -326,6 +326,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.next': {
           queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
+            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
+            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+              return txToUpdate
+            }
+
             if (typeof id !== 'undefined') {
               if (sameString(txToUpdate.id, id)) {
                 txToUpdate.txStatus = txStatus
@@ -339,6 +344,11 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.queued': {
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
+            // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
+            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+              return txToUpdate
+            }
+
             if (typeof id !== 'undefined') {
               if (sameString(txToUpdate.id, id)) {
                 txToUpdate.txStatus = txStatus
