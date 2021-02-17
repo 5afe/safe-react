@@ -3,6 +3,7 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
+import { useDispatch } from 'react-redux'
 import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
@@ -20,6 +21,8 @@ import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -30,7 +33,6 @@ const THRESHOLD_FIELD_NAME = 'threshold'
 const useStyles = makeStyles(styles)
 
 type ChangeThresholdModalProps = {
-  onChangeThreshold: (newThreshold: number) => void
   onClose: () => void
   owners?: List<SafeOwner>
   safeAddress: string
@@ -38,13 +40,13 @@ type ChangeThresholdModalProps = {
 }
 
 export const ChangeThresholdModal = ({
-  onChangeThreshold,
   onClose,
   owners,
   safeAddress,
   threshold = 1,
 }: ChangeThresholdModalProps): React.ReactElement => {
   const classes = useStyles()
+  const dispatch = useDispatch()
   const [data, setData] = useState('')
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -83,11 +85,21 @@ export const ChangeThresholdModal = ({
 
   const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
-  const handleSubmit = (values) => {
-    const newThreshold = values[THRESHOLD_FIELD_NAME]
+  const handleSubmit = async ({ txParameters }) => {
+    await dispatch(
+      createTransaction({
+        safeAddress,
+        to: safeAddress,
+        valueInWei: '0',
+        txData: data,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        ethParameters: txParameters,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
+      }),
+    )
 
     onClose()
-    onChangeThreshold(newThreshold)
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
@@ -123,7 +135,7 @@ export const ChangeThresholdModal = ({
             </IconButton>
           </Row>
           <Hairline />
-          <GnoForm initialValues={{ threshold: threshold.toString() }} onSubmit={handleSubmit}>
+          <GnoForm initialValues={{ threshold: threshold.toString(), txParameters }} onSubmit={handleSubmit}>
             {() => (
               <>
                 <Block className={classes.modalContent}>

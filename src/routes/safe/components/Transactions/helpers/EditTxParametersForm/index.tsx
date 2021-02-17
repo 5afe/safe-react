@@ -203,7 +203,7 @@ export const EditTxParametersForm = ({
               </EthereumOptions>
 
               <StyledLink
-                href="https://docs.gnosis.io/safe/docs/contracts_tx_execution/#safe-transaction-gas-limit-estimation"
+                href="https://help.gnosis-safe.io/en/articles/4738445-configure-advanced-transaction-parameters-manually"
                 target="_blank"
               >
                 <Text size="xl" color="primary">

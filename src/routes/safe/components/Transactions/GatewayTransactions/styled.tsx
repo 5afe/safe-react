@@ -6,7 +6,7 @@ import {
   EthHashInfo,
   IconText,
 } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
   display: flex;
@@ -139,16 +139,16 @@ export const GroupedTransactionsCard = styled(StyledTransactions)`
   }
 `
 const gridColumns = {
-  nonce: '0.75fr',
+  nonce: '0.5fr',
   type: '3fr',
   info: '3fr',
-  time: '1.5fr',
+  time: '2.5fr',
   votes: '1.5fr',
   actions: '1fr',
-  status: '3fr',
+  status: '2.5fr',
 }
 
-export const WillBeReplaced = styled.div`
+const willBeReplaced = css`
   .will-be-replaced * {
     color: gray !important;
     text-decoration: line-through !important;
@@ -156,13 +156,28 @@ export const WillBeReplaced = styled.div`
   }
 `
 
-export const StyledTransaction = styled(WillBeReplaced)`
+const failedTransaction = css`
+  &.failed-transaction {
+    div[class^='tx-']:not(.tx-status):not(.tx-nonce) {
+      opacity: 0.5;
+    }
+  }
+`
+
+export const StyledTransaction = styled.div`
+  ${willBeReplaced};
+  ${failedTransaction};
+
   display: grid;
   grid-template-columns: ${Object.values(gridColumns).join(' ')};
   width: 100%;
 
   & > div {
     align-self: center;
+  }
+
+  .tx-votes {
+    justify-self: center;
   }
 
   .tx-actions {
@@ -208,7 +223,7 @@ export const GroupedTransactions = styled(StyledTransaction)`
   // builds the tree-view layout
   .tree-lines {
     height: 100%;
-    margin-left: 50%;
+    margin-left: 30px;
     position: relative;
     width: 30%;
 
@@ -286,8 +301,8 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   background-color: ${({ theme }) => theme.colors.inputField} !important;
   border-radius: 4px;
   margin: 12px 8px 0 12px;
-  padding: 8px;
-  width: calc(100% - 40px);
+  padding: 8px 12px;
+  width: calc(100% - 48px);
 
   .nonce {
     grid-column-start: 1;
@@ -299,13 +314,15 @@ export const DisclaimerContainer = styled(StyledTransaction)`
   }
 `
 
-export const TxDetailsContainer = styled(WillBeReplaced)`
+export const TxDetailsContainer = styled.div`
+  ${willBeReplaced};
+
   background-color: ${({ theme }) => theme.colors.separator} !important;
   column-gap: 2px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: minmax(min-content, max-content);
-  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(100px, 1fr);
+  grid-template-rows: [tx-summary] minmax(min-content, max-content) [tx-details] minmax(min-content, 1fr);
   row-gap: 2px;
   width: 100%;
 
