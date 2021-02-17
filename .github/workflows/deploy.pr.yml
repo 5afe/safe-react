@@ -22,6 +22,12 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+
+       - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      
       - run: |
           sudo apt-get update
           sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
@@ -33,15 +39,11 @@ jobs:
           yarn install --cache-folder ./.yarncache --frozen-lockfile
           rm -rf .yarncache
           yarn cache clean
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
       - name: Build app
         run: yarn build
         env:
-          PUBLIC_URL: 'app'
+          PUBLIC_URL: './app'
 
       - run: bash ./scripts/github/deploy_pr.sh
         env:
