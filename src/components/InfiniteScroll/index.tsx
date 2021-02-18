@@ -1,39 +1,56 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
-import { default as ReactInfiniteScroll, Props as ReactInfiniteScrollProps } from 'react-infinite-scroll-component'
-import styled from 'styled-components'
+import React, {
+  createContext,
+  Dispatch,
+  forwardRef,
+  ReactElement,
+  ReactNode,
+  SetStateAction,
+  useEffect,
+  useState,
+} from 'react'
+import { useInView } from 'react-intersection-observer'
 
-import { Overwrite } from 'src/types/helpers'
+export const INFINITE_SCROLL_CONTAINER = 'infinite-scroll-container'
 
-export const Centered = styled.div<{ padding?: number }>`
-  width: 100%;
-  height: 100%;
-  display: flex;
-  padding: ${({ padding }) => `${padding}px`};
-  justify-content: center;
-  align-items: center;
-`
+export const InfiniteScrollContext = createContext<{
+  ref?: any
+  lastItemId?: string
+  setLastItemId: Dispatch<SetStateAction<string>>
+}>({ setLastItemId: () => {} })
 
-export const SCROLLABLE_TARGET_ID = 'scrollableDiv'
+export const InfiniteScrollProvider = forwardRef<HTMLDivElement, { children: ReactNode }>(
+  ({ children }, ref): ReactElement => {
+    const [lastItemId, setLastItemId] = useState<string>()
 
-type InfiniteScrollProps = Overwrite<ReactInfiniteScrollProps, { loader?: ReactInfiniteScrollProps['loader'] }>
+    return (
+      <InfiniteScrollContext.Provider value={{ ref, lastItemId, setLastItemId }}>
+        {children}
+      </InfiniteScrollContext.Provider>
+    )
+  },
+)
 
-export const InfiniteScroll = ({ dataLength, next, hasMore, ...props }: InfiniteScrollProps): ReactElement => {
-  return (
-    <ReactInfiniteScroll
-      style={{ overflow: 'hidden' }}
-      dataLength={dataLength}
-      next={next}
-      hasMore={hasMore}
-      loader={
-        <Centered>
-          <Loader size="md" />
-        </Centered>
-      }
-      scrollThreshold="120px"
-      scrollableTarget={SCROLLABLE_TARGET_ID}
-    >
-      {props.children}
-    </ReactInfiniteScroll>
-  )
+InfiniteScrollProvider.displayName = 'InfiniteScrollProvider'
+
+type InfiniteScrollProps = {
+  children: ReactNode
+  hasMore: boolean
+  next: () => Promise<void>
+}
+
+export const InfiniteScroll = ({ children, hasMore, next }: InfiniteScrollProps): ReactElement => {
+  const { ref, inView } = useInView({
+    threshold: 0,
+    root: document.querySelector(`#${INFINITE_SCROLL_CONTAINER}`),
+    rootMargin: '0px 0px 200px 0px',
+    triggerOnce: true,
+  })
+
+  useEffect(() => {
+    if (inView && hasMore) {
+      next()
+    }
+  }, [inView, hasMore, next])
+
+  return <InfiniteScrollProvider ref={ref}>{children}</InfiniteScrollProvider>
 }
