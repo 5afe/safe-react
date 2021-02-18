@@ -1,4 +1,4 @@
-name: Deploy Rinkeby to S3
+name: Deploy Rinkeby to S3 0
 
 # Run on pushes to dev/master
 on:
@@ -8,7 +8,7 @@ on:
       - development
       - migrate-to-github-actions
 
- env:
+env:
   REPO_NAME_SLUG: safe-react
   REACT_APP_NETWORK: 'rinkeby'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
