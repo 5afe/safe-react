@@ -12,5 +12,14 @@ export const TxHistoryCollapsed = ({ transaction }: { transaction: Transaction }
   const info = useAssetInfo(transaction.txInfo)
   const status = useTransactionStatus(transaction)
 
-  return <TxCollapsed nonce={nonce} type={type} info={info} time={transaction.timestamp} status={status} />
+  return (
+    <TxCollapsed
+      nonce={nonce}
+      type={type}
+      info={info}
+      time={transaction.timestamp}
+      status={status}
+      transaction={transaction}
+    />
+  )
 }

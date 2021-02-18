@@ -13,7 +13,7 @@ import {
   isSettingsChangeTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
+import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
@@ -23,6 +23,7 @@ import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
+import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 
@@ -106,7 +107,7 @@ const TooltipContent = styled.div`
 `
 
 type TxCollapsedProps = {
-  transaction?: Transaction
+  transaction: Transaction
   isGrouped?: boolean
   nonce?: number
   type: TxTypeProps
@@ -129,6 +130,7 @@ export const TxCollapsed = ({
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
+  const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
 
@@ -179,8 +181,9 @@ export const TxCollapsed = ({
     </div>
   )
 
+  // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
-    <div className="tx-status">
+    <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
       {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
         <CircularProgressPainter color={status.color}>
           <CircularProgress size={14} color="inherit" />
