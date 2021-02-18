@@ -2,11 +2,12 @@ name: Deploy Rinkeby
 
 # Run on pushes to dev/master or PR
 on:
+  pull_request:
   push:
     branches:
       - master
       - development
-      - migrate-to-github-actions
+      # - migrate-to-github-actions
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
