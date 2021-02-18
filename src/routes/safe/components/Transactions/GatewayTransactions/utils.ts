@@ -1,5 +1,4 @@
 import { BigNumber } from 'bignumber.js'
-import format from 'date-fns/format'
 
 import { getNetworkInfo } from 'src/config'
 import {
@@ -24,10 +23,6 @@ export const TX_TABLE_STATUS_ID = 'status'
 export const TX_TABLE_RAW_TX_ID = 'tx'
 export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
 export const TX_TABLE_EXPAND_ICON = 'expand'
-
-export const formatTime = (timestamp: number): string => format(timestamp, 'h:mm a')
-
-export const formatDateTime = (timestamp: number): string => format(timestamp, 'MMM d, yyyy - h:mm:ss a')
 
 export const NOT_AVAILABLE = 'n/a'
 

@@ -30,7 +30,15 @@ export const TxInfoDetails = ({ title, address, isTransferType, txInfo }: TxInfo
   const knownAddress = recipientName !== 'UNKNOWN'
 
   const { txLocation } = useContext<TxLocationProps>(TxLocationContext)
-  const canRepeatTransaction = isTransferType && txLocation === 'history' && txInfo?.direction === 'OUTGOING'
+  const canRepeatTransaction =
+    // is transfer type by context
+    isTransferType &&
+    // not a Collectible
+    txInfo?.transferInfo.type !== 'ERC721' &&
+    // in history list
+    txLocation === 'history' &&
+    // it's outgoing
+    txInfo?.direction === 'OUTGOING'
 
   const [sendModalOpen, setSendModalOpen] = useState(false)
   const sendModalOpenHandler = () => {
