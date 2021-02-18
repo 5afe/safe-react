@@ -1,5 +1,5 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import React, { Fragment, ReactElement, useContext } from 'react'
+import React, { Fragment, ReactElement, useContext, useEffect } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import {
@@ -14,6 +14,7 @@ import {
 import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
+import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -50,20 +51,35 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
 type QueueTransactionProps = {
   nonce: string
   transactions: Transaction[]
+  isLastRow: boolean
 }
 
-const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
+const QueueTransaction = ({ nonce, transactions, isLastRow }: QueueTransactionProps): ReactElement => {
+  const { setLastItemId } = useContext(TxsInfiniteScrollContext)
+
+  useEffect(() => {
+    if (isLastRow && transactions.length === 1) {
+      setLastItemId(transactions[0].id)
+    }
+  }, [setLastItemId, isLastRow, transactions])
+
   return transactions.length > 1 ? (
     <GroupedTransactionsCard>
       <TxHoverProvider>
         <Disclaimer nonce={nonce} />
         <GroupedTransactions>
-          {transactions.map((transaction, index) => (
-            <Fragment key={`${nonce}-${transaction.id}`}>
-              <TreeView firstElement={!index} />
-              <TxQueueRow isGrouped transaction={transaction} />
-            </Fragment>
-          ))}
+          {transactions.map((transaction, index) => {
+            if (transactions.length === index + 1) {
+              setLastItemId(transaction.id)
+            }
+
+            return (
+              <Fragment key={`${nonce}-${transaction.id}`}>
+                <TreeView firstElement={!index} />
+                <TxQueueRow isGrouped transaction={transaction} />
+              </Fragment>
+            )
+          })}
         </GroupedTransactions>
       </TxHoverProvider>
     </GroupedTransactionsCard>
@@ -84,9 +100,10 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
     <StyledTransactionsGroup>
       <SubTitle size="lg">{title}</SubTitle>
       <StyledTransactions>
-        {transactions.map(([nonce, txs]) => (
-          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
-        ))}
+        {transactions.map(([nonce, txs], index) => {
+          const isLastRow = transactions.length === index + 1
+          return <QueueTransaction key={nonce} nonce={nonce} transactions={txs} isLastRow={isLastRow} />
+        })}
       </StyledTransactions>
     </StyledTransactionsGroup>
   )
