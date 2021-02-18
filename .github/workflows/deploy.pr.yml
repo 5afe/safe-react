@@ -12,15 +12,15 @@ jobs:
     runs-on: ubuntu-latest
 
   strategy:
-      matrix:
-        include:
-          # Rinkeby Matrix configuration
-          - REACT_APP_NETWORK: 'rinkeby'
+    matrix:
+      include:
+        # Rinkeby Matrix configuration
+        - REACT_APP_NETWORK: 'rinkeby'
 
-        # Mainnet Matrix configuration
-          # - REACT_APP_NETWORK: 'mainnet'
-        # Volta Matrix configuration
-          # - REACT_APP_NETWORK: 'volta'
+      # Mainnet Matrix configuration
+        # - REACT_APP_NETWORK: 'mainnet'
+      # Volta Matrix configuration
+        # - REACT_APP_NETWORK: 'volta'
 
   steps:
     - name: Remove broken apt repos [Ubuntu]
