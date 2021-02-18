@@ -57,4 +57,3 @@ export const QueueTransactions = (): ReactElement => {
     </TxActionProvider>
   )
 }
-
