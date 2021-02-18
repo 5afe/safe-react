@@ -1,13 +1,20 @@
-name: Deploy S3
+name: Deploy Mainnet
 
-# Run on pushes to dev/master
+# Run on pushes to master
 on:
   push:
     branches:
       - master
-      - development
+
 env:
+  REPO_NAME_ALPHANUMERIC: safereact
   REPO_NAME_SLUG: safe-react
+  REACT_APP_NETWORK: 'mainnet'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_MAINNET }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
+  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_MAINNET }}
 
 jobs:
   deploy:
@@ -25,6 +32,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - run: |
           sudo apt-get update
           sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
@@ -36,26 +48,23 @@ jobs:
           yarn install --cache-folder ./.yarncache --frozen-lockfile
           rm -rf .yarncache
           yarn cache clean
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - name: Build app
+      - name: Build ${{ env.REACT_APP_NETWORK }} app
         run: yarn build
-
-      - name: 'Deploy to S3: Develop'
-        run: bash ./scripts/deploy_to_s3_bucket.sh
-        if: github.ref == 'refs/heads/development'
         env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          BUCKET_NAME: ${{ secrets.AWS_DEV_BUCKET_NAME }}
+          PUBLIC_URL: './'
 
+      # Script to deploy Pull Requests
+      # Mainnet build is never created in Pull Requests
+
+      # Script to deploy to development environment
+      # Mainnet build is never created in development branch
+
+      # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
         run: bash ./scripts/deploy_to_s3_bucket.sh
         if: github.ref == 'refs/heads/master'
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
+          BUCKET_NAME: ${{ env.STAGING_BUCKET_NAME }}
