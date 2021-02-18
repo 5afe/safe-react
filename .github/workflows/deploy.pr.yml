@@ -28,7 +28,7 @@ jobs:
             REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
             REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_STAGING}
         
-    if: ${{ matrix.REACT_APP_NETWORK == 'rinkeby'}}
+    if: matrix.REACT_APP_NETWORK == 'rinkeby'
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
