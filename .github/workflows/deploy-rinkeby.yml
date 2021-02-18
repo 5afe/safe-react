@@ -57,6 +57,7 @@ jobs:
           PUBLIC_URL: './app'
 
       - run: bash ./scripts/github/deploy_pr.sh
+        if: success() && github.event.number
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
