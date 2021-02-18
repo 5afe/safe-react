@@ -7,19 +7,10 @@ env:
   REPO_NAME_ALPHANUMERIC: safereact
 
 jobs:
-  deploy:
+  setup:
     name: Deploy Pull Request
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        include:      
-          # Rinkeby Matrix configuration
-          - REACT_APP_NETWORK: 'rinkeby'
-        
-        # Mainnet Matrix configuration
-          # - REACT_APP_NETWORK: 'mainnet'
-        # Volta Matrix configuration
-          # - REACT_APP_NETWORK: 'volta'
+
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
@@ -49,6 +40,21 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
+  build:
+    name: Build App
+    runs-on: ubuntu-latest
+    needs: setup
+    strategy:
+      matrix:
+        include:      
+          # Rinkeby Matrix configuration
+          - REACT_APP_NETWORK: 'rinkeby'
+        
+        # Mainnet Matrix configuration
+          # - REACT_APP_NETWORK: 'mainnet'
+        # Volta Matrix configuration
+          - REACT_APP_NETWORK: 'volta'
+    steps:
       - name: Build app
         run: yarn build
         env:
