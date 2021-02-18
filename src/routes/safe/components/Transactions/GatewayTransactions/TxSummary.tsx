@@ -2,9 +2,10 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
+import { formatDateTime } from 'src/utils/date'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Operation } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
-import { formatDateTime, NOT_AVAILABLE } from './utils'
+import { NOT_AVAILABLE } from './utils'
 
 export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement => {
   const { txHash, detailedExecutionInfo, executedAt, txData } = txDetails
