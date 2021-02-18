@@ -1,6 +1,6 @@
-name: Deploy Rinkeby to S3 0
+name: Deploy Rinkeby
 
-# Run on pushes to dev/master
+# Run on pushes to dev/master or PR
 on:
   push:
     branches:
@@ -9,6 +9,7 @@ on:
       - migrate-to-github-actions
 
 env:
+  REPO_NAME_ALPHANUMERIC: safereact
   REPO_NAME_SLUG: safe-react
   REACT_APP_NETWORK: 'rinkeby'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
@@ -50,8 +51,30 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Build ${{ matrix.REACT_APP_NETWORK }} app
+      - name: Build ${{ REACT_APP_NETWORK }} app
         run: yarn build
+        env:
+          PUBLIC_URL: './app'
+
+      - run: bash ./scripts/github/deploy_pr.sh
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          PR_NUMBER: ${{ github.event.number }}
+          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+          REACT_APP_NETWORK: ${{ REACT_APP_NETWORK }}
+
+      - name: 'PRaul: Comment PR with app URLs'
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            * [Safe Multisig app](${{ env.REVIEW_FEATURE_URL }}/${{ matrix.REACT_APP_NETWORK }}/app/)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: true
+        if: success() && github.event.number
+        env:
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
 
       - name: 'Deploy to S3: Develop'
         run: bash ./scripts/deploy_to_s3_bucket.sh
