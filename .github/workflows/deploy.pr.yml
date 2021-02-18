@@ -15,10 +15,10 @@ jobs:
         include:      
           # Rinkeby Matrix configuration
           - REACT_APP_NETWORK: 'rinkeby'
-            REACT_APP_SENTRY_DSN: ${SENTRY_DSN_RINKEBY}
-            SENTRY_PROJECT: ${SENTRY_PROJECT_RINKEBY}
-            REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
-            REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_STAGING}
+            REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
+            SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_RINKEBY }}
+            REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
+            REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
         
         # Mainnet Matrix configuration
           # - REACT_APP_NETWORK: 'mainnet'
@@ -27,6 +27,13 @@ jobs:
           #   SENTRY_PROJECT: ${SENTRY_PROJECT_MAINNET}
           #   REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
           #   REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_PROD}
+        # Volta Matrix configuration
+          # - REACT_APP_NETWORK: 'volta'
+          #   STAGING_BUCKET_NAME: ${STAGING_VOLTA_BUCKET_NAME}
+          #   REACT_APP_SENTRY_DSN: ${SENTRY_DSN_VOLTA}
+          #   SENTRY_PROJECT: ${SENTRY_PROJECT_VOLTA}
+          #   REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+        if: (branch = master) OR tag IS present
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
@@ -75,6 +82,7 @@ jobs:
             * [Safe Multisig app](${{ env.REVIEW_FEATURE_URL }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: true
         if: success() && github.event.number
         env:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
