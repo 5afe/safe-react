@@ -1,5 +1,6 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import MenuItem from '@material-ui/core/MenuItem'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
@@ -159,6 +160,18 @@ const SafeOwnersForm = (props): React.ReactElement => {
           Add additional owners (e.g. wallets of your teammates) and specify how many of them have to confirm a
           transaction before it gets executed. You can also add/remove owners and change the signature threshold after
           your Safe is created.
+          <Link
+            href="https://help.gnosis-safe.io/en/articles/4772567-what-gnosis-safe-setup-should-i-use"
+            target="_blank"
+            className={classes.link}
+            rel="noreferrer"
+            title="Learn about which Safe setup to use"
+          >
+            <Text size="xl" as="span" color="primary">
+              Learn about which Safe setup to use
+            </Text>
+            <Icon size="sm" type="externalLink" color="primary" />
+          </Link>
         </Paragraph>
       </Block>
       <Hairline />

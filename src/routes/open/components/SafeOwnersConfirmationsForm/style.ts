@@ -8,6 +8,14 @@ export const styles = createStyles({
   title: {
     padding: `${md} ${lg}`,
   },
+  link: {
+    paddingLeft: `${sm}`,
+    '& svg': {
+      position: 'relative',
+      top: '1px',
+      left: '3px',
+    },
+  },
   owner: {
     flexDirection: 'column',
     marginTop: '12px',
