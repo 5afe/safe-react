@@ -7,7 +7,7 @@ function deploy_pr {
   APP_PATH="./build"
   
   # Deploy app project
-  aws s3 sync $APP_PATH s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/app --delete
+  aws s3 sync $APP_PATH s3://${REVIEW_BUCKET_NAME}/${REVIEW_FEATURE_FOLDER}/${REACT_APP_NETWORK}/app --delete
 }
 
 # Only:
