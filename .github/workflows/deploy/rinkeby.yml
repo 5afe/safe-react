@@ -1,26 +1,26 @@
-name: Deploy PR
+name: Deploy S3
 
-# Run on pull request
-on: pull_request
+# Run on pushes to dev/master
+on:
+  push:
+    branches:
+      - master
+      - development
+      - migrate-to-github-actions
 
-env:
-  REPO_NAME_ALPHANUMERIC: safereact
+ env:
+  REPO_NAME_SLUG: safe-react
+  REACT_APP_NETWORK: 'rinkeby'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_RINKEBY }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
+  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
 
 jobs:
   deploy:
-    name: Deploy Pull Request
+    name: Deployment
     runs-on: ubuntu-latest
-
-  strategy:
-      matrix:
-        include:
-          # Rinkeby Matrix configuration
-          - REACT_APP_NETWORK: 'rinkeby'
-
-        # Mainnet Matrix configuration
-          # - REACT_APP_NETWORK: 'mainnet'
-        # Volta Matrix configuration
-          # - REACT_APP_NETWORK: 'volta'
 
     steps:
       - name: Remove broken apt repos [Ubuntu]
@@ -33,12 +33,11 @@ jobs:
         uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-
       - uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-      
+
       - run: |
           sudo apt-get update
           sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
@@ -51,27 +50,21 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Build app
+      - name: Build ${{ matrix.REACT_APP_NETWORK }} app
         run: yarn build
-        env:
-          PUBLIC_URL: './app'
 
-      - run: bash ./scripts/github/deploy_pr.sh
+      - name: 'Deploy to S3: Develop'
+        run: bash ./scripts/deploy_to_s3_bucket.sh
+        if: github.ref == 'refs/heads/development'
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          PR_NUMBER: ${{ github.event.number }}
-          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-          REACT_APP_NETWORK: ${{ matrix.REACT_APP_NETWORK }}
+          BUCKET_NAME: ${{ secrets.AWS_DEV_BUCKET_NAME }}
 
-      - name: 'PRaul: Comment PR with app URLs'
-        uses: mshick/add-pr-comment@v1
-        with:
-          message: |
-            * [Safe Multisig app](${{ env.REVIEW_FEATURE_URL }}/${{ matrix.REACT_APP_NETWORK }}/app/)
-          repo-token: ${{ secrets.GITHUB_TOKEN }}
-          repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: true
-        if: success() && github.event.number
+      - name: 'Deploy to S3: Staging'
+        run: bash ./scripts/deploy_to_s3_bucket.sh
+        if: github.ref == 'refs/heads/master'
         env:
-          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          BUCKET_NAME: ${{ secrets.STAGING_BUCKET_NAME }}
