@@ -60,21 +60,21 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
         const title = `Send ${amount} ${nativeCoin.name} to:`
 
         if (dataDecoded) {
+          // Backend decoded data
           details = <MethodDetails data={dataDecoded} />
         } else {
+          // We couldn't decode it but we have data
           details = data && <HexEncodedData hexData={data} />
         }
 
         return (
-          details && (
-            <MultiSendTxGroup
-              key={`${data ?? to}-${index}`}
-              actionTitle={actionTitle}
-              txDetails={{ title, address: to, dataDecoded }}
-            >
-              {details}
-            </MultiSendTxGroup>
-          )
+          <MultiSendTxGroup
+            key={`${data ?? to}-${index}`}
+            actionTitle={actionTitle}
+            txDetails={{ title, address: to, dataDecoded }}
+          >
+            {details}
+          </MultiSendTxGroup>
         )
       })}
     </>
