@@ -1,4 +1,4 @@
-name: Deploy Rinkeby
+name: Deploy to Rinkeby network
 
 # Run on pushes to dev/master or PR
 on:
@@ -9,10 +9,12 @@ on:
     branches:
       - master
       - development
+  # Launches build when release is published
+  release:
+      types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REPO_NAME_SLUG: safe-react
   REACT_APP_NETWORK: 'rinkeby'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
@@ -59,7 +61,7 @@ jobs:
           PUBLIC_URL: './'
 
       # Script to deploy Pull Requests
-      - run: bash ./scripts/github/deploy_pr.sh
+      - run: bash ./scripts/github/deploy_pull_request.sh
         if: success() && github.event.number
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -67,6 +69,7 @@ jobs:
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
           REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+          TRAVIS_TAG: ${GITHUB_REF##*/}
 
       - name: 'PRaul: Comment PR with app URLs'
         uses: mshick/add-pr-comment@v1
@@ -97,3 +100,11 @@ jobs:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           BUCKET_NAME: ${{ env.STAGING_BUCKET_NAME }}
+      
+      # Script to prepare production deployments
+      - run: bash ./config/travis/prepare_production_deployment.sh
+        if: startsWith(github.ref, 'refs/tags/v')
+        env:
+          PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
+          PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
+          TRAVIS_TAG: ${GITHUB_REF##*/}

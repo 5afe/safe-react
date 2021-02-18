@@ -1,4 +1,4 @@
-name: Deploy Volta
+name: Deploy to Volta network
 
 # Run on pushes to master or PRs to master
 on:
@@ -11,7 +11,6 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REPO_NAME_SLUG: safe-react
   REACT_APP_NETWORK: 'volta'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_VOLTA_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_VOLTA }}
@@ -58,7 +57,7 @@ jobs:
           PUBLIC_URL: './'
 
       # Script to deploy Pull Requests
-      - run: bash ./scripts/github/deploy_pr.sh
+      - run: bash ./scripts/github/deploy_pull_request.sh
         if: success() && github.event.number
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}

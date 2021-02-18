@@ -1,4 +1,4 @@
-name: Deploy to Mainnet network
+name: Deploy to EWC network
 
 # Run on pushes to master
 on:
@@ -8,12 +8,12 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'mainnet'
-  STAGING_BUCKET_NAME: ${{ secrets.STAGING_MAINNET_BUCKET_NAME }}
-  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
-  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_MAINNET }}
-  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
-  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_MAINNET }}
+  REACT_APP_NETWORK: 'ewc'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_EWC_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_EWC }}
+  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_EWC }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_EWC }}
+  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_EWC }}
 
 jobs:
   deploy:
@@ -54,10 +54,29 @@ jobs:
           PUBLIC_URL: './'
 
       # Script to deploy Pull Requests
-      # Mainnet build is never created in Pull Requests
+      - run: bash ./scripts/github/deploy_pull_request.sh
+        if: success() && github.event.number
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          PR_NUMBER: ${{ github.event.number }}
+          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+          REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+
+      - name: 'PRaul: Comment PR with app URLs'
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: true
+        if: success() && github.event.number
+        env:
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com  
 
       # Script to deploy to development environment
-      # Mainnet build is never created in development branch
+      # xDai build is never created in development branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
