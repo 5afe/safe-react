@@ -12,15 +12,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix:
-        include:
-          # Mainnet Matrix configuration
-          - REACT_APP_NETWORK: 'mainnet'
-            STAGING_BUCKET_NAME: ${STAGING_MAINNET_BUCKET_NAME}
-            REACT_APP_SENTRY_DSN: ${SENTRY_DSN_MAINNET}
-            SENTRY_PROJECT: ${SENTRY_PROJECT_MAINNET}
-            REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
-            REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_PROD}
-          
+        include:      
           # Rinkeby Matrix configuration
           - REACT_APP_NETWORK: 'rinkeby'
             REACT_APP_SENTRY_DSN: ${SENTRY_DSN_RINKEBY}
@@ -28,7 +20,13 @@ jobs:
             REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
             REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_STAGING}
         
-    if: matrix.REACT_APP_NETWORK == 'rinkeby'
+        # Mainnet Matrix configuration
+          # - REACT_APP_NETWORK: 'mainnet'
+          #   STAGING_BUCKET_NAME: ${STAGING_MAINNET_BUCKET_NAME}
+          #   REACT_APP_SENTRY_DSN: ${SENTRY_DSN_MAINNET}
+          #   SENTRY_PROJECT: ${SENTRY_PROJECT_MAINNET}
+          #   REACT_APP_GOOGLE_ANALYTICS: ${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
+          #   REACT_APP_GNOSIS_APPS_URL: ${REACT_APP_GNOSIS_APPS_URL_PROD}
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
