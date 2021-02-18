@@ -50,13 +50,6 @@ export const EditableTxParameters = ({
     toggleEditMode((prev) => !prev)
   }
 
-  // Sends a callback with the last values of txParameters
-  useEffect(() => {
-    if (!isEditMode && closeEditModalCallback) {
-      closeEditModalCallback(txParameters)
-    }
-  }, [isEditMode, closeEditModalCallback, txParameters])
-
   const closeEditFormHandler = (txParameters?: TxParameters) => {
     if (txParameters) {
       setUseManualValues(true)
@@ -65,6 +58,7 @@ export const EditableTxParameters = ({
       setEthGasLimit(txParameters.ethGasLimit)
       setEthGasPrice(txParameters.ethGasPrice)
       setEthNonce(txParameters.ethNonce)
+      closeEditModalCallback && closeEditModalCallback(txParameters)
     }
     toggleStatus()
   }
