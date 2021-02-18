@@ -1,4 +1,4 @@
-name: Deploy Rinkeby to S3
+name: Deploy Rinkeby to S3 1
 
 # Run on pushes to dev/master
 on:
