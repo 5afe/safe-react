@@ -50,7 +50,7 @@ const Body = styled.div`
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
-  grid-template-rows: 100px 50px 60px 1fr;
+  grid-template-rows: 100px 50px 110px 1fr;
 `
 
 const CardTitle = styled.div`
@@ -65,8 +65,8 @@ interface FullParagraphProps {
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
   background-color: ${(p) => (p.inversecolors ? connected : background)};
   color: ${(p) => (p.inversecolors ? background : connected)};
-  padding: 24px;
-  font-size: 16px;
+  padding: 28px;
+  font-size: 20px;
   margin-bottom: 16px;
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
@@ -79,6 +79,7 @@ const BodyDescription = styled.div`
 `
 const BodyInstruction = styled.div`
   grid-row: 3;
+  margin: 27px 0;
 `
 const BodyFooter = styled.div`
   grid-row: 4;
