@@ -328,7 +328,7 @@ export const SafeDeployment = ({
         </BodyDescription>
 
         <BodyInstruction>
-          <FullParagraph color="background" inversecolors={confirmationStep.toString()} noMargin size="md">
+          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>
