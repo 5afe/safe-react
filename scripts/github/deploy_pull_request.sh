@@ -17,8 +17,6 @@ function deploy_pull_request {
 # Only:
 # - Pull requests
 # - Security env variables are available. PR from forks don't have them.
-if [ -n "$AWS_SECRET_ACCESS_KEY" ]; then
-    echo "This is the tag:"
-    echo $TRAVIS_TAG
+if [ -n "$AWS_ACCESS_KEY_ID" ]; then
     deploy_pull_request
 fi

@@ -6,43 +6,43 @@ node_js:
 os:
   - linux
 matrix:
-  include:
-    - env:
-        - REACT_APP_NETWORK='mainnet'
-        - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_MAINNET}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_MAINNET}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
-        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
-      if: (branch = master AND NOT type = pull_request) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='rinkeby'
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_RINKEBY}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_RINKEBY}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
-        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
-      if: (branch = development AND NOT type = pull_request) OR (branch = master) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='xdai'
-        - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
-      if: (branch = master) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='volta'
-        - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_VOLTA}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
-      if: (branch = master) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='energy_web_chain'
-        - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
-      if: (branch = master AND NOT type = pull_request) OR tag IS present
+  # include:
+  #   - env:
+  #       - REACT_APP_NETWORK='mainnet'
+  #       - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_MAINNET}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_MAINNET}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
+  #       - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
+  #     if: (branch = master AND NOT type = pull_request) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='rinkeby'
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_RINKEBY}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_RINKEBY}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
+  #       - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+  #     if: (branch = development AND NOT type = pull_request) OR (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='xdai'
+  #       - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
+  #     if: (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='volta'
+  #       - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_VOLTA}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+  #     if: (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='energy_web_chain'
+  #       - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
+  #     if: (branch = master AND NOT type = pull_request) OR tag IS present
 cache:
   npm: false
   yarn: true
@@ -69,7 +69,7 @@ after_success:
   # Travis doesn't do deploy step with pull requests builds
   - ./config/travis/deploy_pull_request.sh
   # Releases (tagged commits) - Deploy it to a release environment
-  - ./config/travis/deploy_release.sh
+  # - ./config/travis/deploy_release.sh
   - yarn coveralls
 
 deploy:
