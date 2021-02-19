@@ -12,6 +12,7 @@ on:
   # Launches build when release is published
   release:
       types: [published]
+  workflow_dispatch:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
