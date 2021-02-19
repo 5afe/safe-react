@@ -2,8 +2,9 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
+import { formatDateTime } from 'src/utils/date'
 import { Creation, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { formatDateTime, NOT_AVAILABLE } from './utils'
+import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
