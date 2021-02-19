@@ -1,7 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -38,7 +38,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const classes = useStyles()
-  const [nonce] = useState(gwTransaction.executionInfo?.nonce ?? 0)
 
   const {
     gasCostFormatted,
@@ -57,6 +56,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   const origin = gwTransaction.safeAppInfo
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
     : ''
+
+  const nonce = gwTransaction.executionInfo?.nonce ?? 0
 
   const sendReplacementTransaction = (txParameters: TxParameters) => {
     dispatch(
