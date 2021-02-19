@@ -1,15 +1,19 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
+import { ButtonLink, Link, Text } from '@gnosis.pm/safe-react-components'
+
 import Button from 'src/components/layout/Button'
-import { connected } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
 
-const ExplorerLink = styled.a`
-  color: ${connected};
+const StyledButtonLink = styled(ButtonLink)`
+  display: inline-flex;
+  padding: 0 0 0 8px;
 `
-
+const StyledText = styled(Text)`
+  display: inline-flex;
+`
 const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
 `
@@ -30,20 +34,23 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
 
   return (
     <span>
-      <p>This process should take a couple of minutes.</p>
-      <p>
+      <Text size="xl">This process should take a couple of minutes.</Text>
+      <StyledText size="xl">
         Follow the progress on{' '}
-        <ExplorerLink
-          aria-label={alt}
-          href={url}
-          rel="noopener noreferrer"
-          target="_blank"
-          data-testid="safe-create-explorer-link"
-        >
-          {explorerDomain}
-        </ExplorerLink>
-        .
-      </p>
+        <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
+          <Link
+            size="xl"
+            aria-label={alt}
+            href={url}
+            target="_blank"
+            rel="noopener noreferrer"
+            data-testid="safe-create-explorer-link"
+            title="More info about this in Etherscan"
+          >
+            {explorerDomain}
+          </Link>
+        </StyledButtonLink>
+      </StyledText>
     </span>
   )
 }
