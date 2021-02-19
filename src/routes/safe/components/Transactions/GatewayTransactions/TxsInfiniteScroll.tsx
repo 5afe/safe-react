@@ -4,19 +4,14 @@ import React, { ReactElement, ReactNode } from 'react'
 import { INFINITE_SCROLL_CONTAINER, InfiniteScroll } from 'src/components/InfiniteScroll'
 import { HorizontallyCentered, ScrollableTransactionsContainer } from './styled'
 
-type TransactionsInfiniteScrollProps = {
+type TxsInfiniteScrollProps = {
   children: ReactNode
   next: () => Promise<void>
   hasMore: boolean
   isLoading: boolean
 }
 
-export const TxsInfiniteScroll = ({
-  children,
-  next,
-  hasMore,
-  isLoading,
-}: TransactionsInfiniteScrollProps): ReactElement => {
+export const TxsInfiniteScroll = ({ children, next, hasMore, isLoading }: TxsInfiniteScrollProps): ReactElement => {
   return (
     <InfiniteScroll next={next} hasMore={hasMore}>
       <ScrollableTransactionsContainer id={INFINITE_SCROLL_CONTAINER}>
