@@ -1,14 +1,22 @@
 import React, { ReactElement, useContext } from 'react'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { TxsInfiniteScrollContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxsInfiniteScroll'
 import { formatWithSchema } from 'src/utils/date'
+import { sameString } from 'src/utils/strings'
 import { StyledTransactions, StyledTransactionsGroup, SubTitle } from './styled'
 import { TxHistoryRow } from './TxHistoryRow'
 import { TxLocationContext } from './TxLocationProvider'
-import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 
 export const HistoryTxList = ({ transactions }: { transactions: TransactionDetails['transactions'] }): ReactElement => {
-  const { setLastItemId } = useContext(TxsInfiniteScrollContext)
+  const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
+
+  const [, lastTransactionsGroup] = transactions[transactions.length - 1]
+  const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
+
+  if (!sameString(lastItemId, lastTransaction.id)) {
+    setLastItemId(lastTransaction.id)
+  }
 
   return (
     <TxLocationContext.Provider value={{ txLocation: 'history' }}>
@@ -16,12 +24,9 @@ export const HistoryTxList = ({ transactions }: { transactions: TransactionDetai
         <StyledTransactionsGroup key={timestamp}>
           <SubTitle size="lg">{formatWithSchema(Number(timestamp), 'MMM d, yyyy')}</SubTitle>
           <StyledTransactions>
-            {txs.map((transaction, index) => {
-              if (txs.length === index + 1) {
-                setLastItemId(transaction.id)
-              }
-              return <TxHistoryRow key={transaction.id} transaction={transaction} />
-            })}
+            {txs.map((transaction) => (
+              <TxHistoryRow key={transaction.id} transaction={transaction} />
+            ))}
           </StyledTransactions>
         </StyledTransactionsGroup>
       ))}

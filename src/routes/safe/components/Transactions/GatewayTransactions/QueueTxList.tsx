@@ -1,7 +1,8 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import React, { Fragment, ReactElement, useContext, useEffect } from 'react'
+import React, { Fragment, ReactElement, useContext } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { sameString } from 'src/utils/strings'
 import {
   DisclaimerContainer,
   GroupedTransactions,
@@ -51,42 +52,26 @@ const Disclaimer = ({ nonce }: { nonce: string }): ReactElement => {
 type QueueTransactionProps = {
   nonce: string
   transactions: Transaction[]
-  isLastRow: boolean
 }
 
-const QueueTransaction = ({ nonce, transactions, isLastRow }: QueueTransactionProps): ReactElement => {
-  const { setLastItemId } = useContext(TxsInfiniteScrollContext)
-
-  useEffect(() => {
-    if (isLastRow && transactions.length === 1) {
-      setLastItemId(transactions[0].id)
-    }
-  }, [setLastItemId, isLastRow, transactions])
-
-  return transactions.length > 1 ? (
+const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement =>
+  transactions.length > 1 ? (
     <GroupedTransactionsCard>
       <TxHoverProvider>
         <Disclaimer nonce={nonce} />
         <GroupedTransactions>
-          {transactions.map((transaction, index) => {
-            if (transactions.length === index + 1) {
-              setLastItemId(transaction.id)
-            }
-
-            return (
-              <Fragment key={`${nonce}-${transaction.id}`}>
-                <TreeView firstElement={!index} />
-                <TxQueueRow isGrouped transaction={transaction} />
-              </Fragment>
-            )
-          })}
+          {transactions.map((transaction, index) => (
+            <Fragment key={`${nonce}-${transaction.id}`}>
+              <TreeView firstElement={!index} />
+              <TxQueueRow isGrouped transaction={transaction} />
+            </Fragment>
+          ))}
         </GroupedTransactions>
       </TxHoverProvider>
     </GroupedTransactionsCard>
   ) : (
     <TxQueueRow transaction={transactions[0]} />
   )
-}
 
 type QueueTxListProps = {
   transactions: TransactionDetails['transactions']
@@ -96,14 +81,21 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
   const { txLocation } = useContext(TxLocationContext)
   const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
 
+  const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
+  const [, lastTransactionsGroup] = transactions[transactions.length - 1]
+  const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
+
+  if (txLocation === 'queued.queued' && !sameString(lastItemId, lastTransaction.id)) {
+    setLastItemId(lastTransaction.id)
+  }
+
   return (
     <StyledTransactionsGroup>
       <SubTitle size="lg">{title}</SubTitle>
       <StyledTransactions>
-        {transactions.map(([nonce, txs], index) => {
-          const isLastRow = transactions.length === index + 1
-          return <QueueTransaction key={nonce} nonce={nonce} transactions={txs} isLastRow={isLastRow} />
-        })}
+        {transactions.map(([nonce, txs]) => (
+          <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
+        ))}
       </StyledTransactions>
     </StyledTransactionsGroup>
   )
