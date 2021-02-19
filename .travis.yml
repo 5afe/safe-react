@@ -99,17 +99,17 @@ deploy:
       branch: master
 
   # Prepare production deployment
-  - provider: s3
-    bucket: $STAGING_BUCKET_NAME
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    access_key_id: $AWS_ACCESS_KEY_ID
-    skip_cleanup: true
-    local_dir: build
-    upload_dir: releases/$TRAVIS_TAG
-    region: $AWS_DEFAULT_REGION
-    on:
-      tags: true
-  - provider: script
-    script: ./config/travis/prepare_production_deployment.sh
-    on:
-      tags: true
+  # - provider: s3
+  #   bucket: $STAGING_BUCKET_NAME
+  #   secret_access_key: $AWS_SECRET_ACCESS_KEY
+  #   access_key_id: $AWS_ACCESS_KEY_ID
+  #   skip_cleanup: true
+  #   local_dir: build
+  #   upload_dir: releases/$TRAVIS_TAG
+  #   region: $AWS_DEFAULT_REGION
+  #   on:
+  #     tags: true
+  # - provider: script
+  #   script: ./config/travis/prepare_production_deployment.sh
+  #   on:
+  #     tags: true
