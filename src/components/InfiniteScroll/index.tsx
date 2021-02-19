@@ -2,6 +2,7 @@ import React, {
   createContext,
   Dispatch,
   forwardRef,
+  MutableRefObject,
   ReactElement,
   ReactNode,
   SetStateAction,
@@ -13,10 +14,10 @@ import { useInView } from 'react-intersection-observer'
 export const INFINITE_SCROLL_CONTAINER = 'infinite-scroll-container'
 
 export const InfiniteScrollContext = createContext<{
-  ref?: any
+  ref: MutableRefObject<HTMLDivElement | null> | ((instance: HTMLDivElement | null) => void) | null
   lastItemId?: string
   setLastItemId: Dispatch<SetStateAction<string>>
-}>({ setLastItemId: () => {} })
+}>({ setLastItemId: () => {}, ref: null })
 
 export const InfiniteScrollProvider = forwardRef<HTMLDivElement, { children: ReactNode }>(
   ({ children }, ref): ReactElement => {
