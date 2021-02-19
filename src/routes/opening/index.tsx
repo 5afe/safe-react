@@ -24,7 +24,7 @@ import { PromiEvent, TransactionReceipt } from 'web3-core'
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 250px auto;
-  grid-template-rows: 62px auto;
+  grid-template-rows: 43px auto;
   margin-bottom: 30px;
 `
 
@@ -327,11 +327,13 @@ export const SafeDeployment = ({
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyInstruction>
-          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
-            {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
-          </FullParagraph>
-        </BodyInstruction>
+        {steps[stepIndex].instruction && (
+          <BodyInstruction>
+            <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
+              {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
+            </FullParagraph>
+          </BodyInstruction>
+        )}
 
         <BodyFooter>
           {FooterComponent ? (
