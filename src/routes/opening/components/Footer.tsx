@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import Button from 'src/components/layout/Button'
 import { connected } from 'src/theme/variables'
 import { getExplorerInfo } from 'src/config'
+import Hairline from 'src/components/layout/Hairline'
 
 const ExplorerLink = styled.a`
   color: ${connected};
@@ -11,6 +12,14 @@ const ExplorerLink = styled.a`
 
 const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
+`
+const FooterContainer = styled.div`
+  width: 100%;
+  height: 76px;
+
+  button {
+    margin-top: 24px;
+  }
 `
 
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }) => {
@@ -46,15 +55,18 @@ export const ContinueFooter = ({
   continueButtonDisabled: boolean
   onContinue: (event: SyntheticEvent) => void
 }) => (
-  <Button
-    color="primary"
-    disabled={continueButtonDisabled}
-    onClick={onContinue}
-    variant="contained"
-    data-testid="continue-btn"
-  >
-    Continue
-  </Button>
+  <FooterContainer>
+    <Hairline />
+    <Button
+      color="primary"
+      disabled={continueButtonDisabled}
+      onClick={onContinue}
+      variant="contained"
+      data-testid="continue-btn"
+    >
+      Get started
+    </Button>
+  </FooterContainer>
 )
 
 export const ErrorFooter = ({
@@ -64,12 +76,13 @@ export const ErrorFooter = ({
   onCancel: (event: SyntheticEvent) => void
   onRetry: (event: SyntheticEvent) => void
 }) => (
-  <>
+  <FooterContainer>
+    <Hairline />
     <ButtonWithMargin onClick={onCancel} variant="contained">
       Cancel
     </ButtonWithMargin>
     <Button color="primary" onClick={onRetry} variant="contained">
       Retry
     </Button>
-  </>
+  </FooterContainer>
 )

@@ -16,10 +16,9 @@ import { background, connected } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 
-import LoaderDotsSvg from './assets/loader-dots.svg'
-import SuccessSvg from './assets/success.svg'
+import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
-import VaultSvg from './assets/vault.svg'
+import VaultLoading from './assets/creation-process.gif'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const Wrapper = styled.div`
@@ -47,15 +46,16 @@ const Body = styled.div`
   background-color: #ffffff;
   border-radius: 5px;
   min-width: 700px;
-  padding-top: 50px;
+  padding-top: 70px;
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
-  grid-template-rows: 100px 50px 70px 60px 100px;
+  grid-template-rows: 100px 50px 60px 1fr;
 `
 
 const CardTitle = styled.div`
   font-size: 20px;
+  padding-top: 10px;
 `
 
 interface FullParagraphProps {
@@ -77,17 +77,11 @@ const BodyImage = styled.div`
 const BodyDescription = styled.div`
   grid-row: 2;
 `
-const BodyLoader = styled.div`
-  grid-row: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 const BodyInstruction = styled.div`
-  grid-row: 4;
+  grid-row: 3;
 `
 const BodyFooter = styled.div`
-  grid-row: 5;
+  grid-row: 4;
 
   padding: 10px 0;
   display: flex;
@@ -154,7 +148,7 @@ export const SafeDeployment = ({
     }
 
     if (stepIndex <= 4) {
-      return VaultSvg
+      return VaultLoading
     }
 
     return SuccessSvg
@@ -326,17 +320,15 @@ export const SafeDeployment = ({
       </Nav>
       <Body>
         <BodyImage>
-          <Img alt="Vault" height={75} src={getImage()} />
+          <Img alt="Vault" height={92} src={getImage()} />
         </BodyImage>
 
         <BodyDescription>
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
-
         <BodyInstruction>
-          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
+          <FullParagraph color="background" inversecolors={confirmationStep.toString()} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>

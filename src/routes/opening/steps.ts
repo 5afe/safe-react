@@ -42,7 +42,7 @@ export const steps = [
     id: '6',
     label: 'Success',
     description: 'Your Safe was created successfully',
-    instruction: 'Click below to get started',
+    instruction: '.',
     footerComponent: ContinueFooter,
   },
 ]
