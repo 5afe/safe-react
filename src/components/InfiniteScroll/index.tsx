@@ -1,14 +1,4 @@
-import React, {
-  createContext,
-  Dispatch,
-  forwardRef,
-  MutableRefObject,
-  ReactElement,
-  ReactNode,
-  SetStateAction,
-  useEffect,
-  useState,
-} from 'react'
+import React, { createContext, forwardRef, MutableRefObject, ReactElement, ReactNode, useEffect, useState } from 'react'
 import { InViewHookResponse, useInView } from 'react-intersection-observer'
 
 export const INFINITE_SCROLL_CONTAINER = 'infinite-scroll-container'
@@ -16,12 +6,16 @@ export const INFINITE_SCROLL_CONTAINER = 'infinite-scroll-container'
 export const InfiniteScrollContext = createContext<{
   ref: MutableRefObject<HTMLDivElement | null> | ((instance: HTMLDivElement | null) => void) | null
   lastItemId?: string
-  setLastItemId: Dispatch<SetStateAction<string>>
+  setLastItemId: (itemId?: string) => void
 }>({ setLastItemId: () => {}, ref: null })
 
 export const InfiniteScrollProvider = forwardRef<HTMLDivElement, { children: ReactNode }>(
   ({ children }, ref): ReactElement => {
-    const [lastItemId, setLastItemId] = useState<string>()
+    const [lastItemId, _setLastItemId] = useState<string>()
+
+    const setLastItemId = (itemId?: string) => {
+      setTimeout(() => _setLastItemId(itemId), 0)
+    }
 
     return (
       <InfiniteScrollContext.Provider value={{ ref, lastItemId, setLastItemId }}>
@@ -44,8 +38,7 @@ export const InfiniteScroll = ({ children, hasMore, next, config }: InfiniteScro
   const { ref, inView } = useInView({
     threshold: 0,
     root: document.querySelector(`#${INFINITE_SCROLL_CONTAINER}`),
-    rootMargin: '0px 0px 80% 0px',
-    triggerOnce: true,
+    rootMargin: '0px 0px 200px 0px',
     ...config,
   })
 
