@@ -1554,12 +1554,12 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#452371e":
-  version "0.4.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#452371e3cb6682757617fafaf62502f6a58ecfeb"
+"@gnosis.pm/safe-react-components@^0.5.0":
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-components/-/safe-react-components-0.5.0.tgz#ce72f3f0674d33bac507bf6409462655fb55f096"
+  integrity sha512-Xfqm4dMNlDqpYRsaKhNQ/tL+ftFuevpRx35dr26DM9gSl4ReC9i7c5SbOrAwbnv9RbQ4gJFRix9aH/gN2pK8CA==
   dependencies:
     classnames "^2.2.6"
-    polished "^3.6.7"
     react-media "^1.10.0"
 
 "@gnosis.pm/util-contracts@2.0.6":
@@ -15232,7 +15232,7 @@ pocket-js-core@0.0.3:
   dependencies:
     axios "^0.18.0"
 
-polished@^3.3.1, polished@^3.6.7:
+polished@^3.3.1:
   version "3.6.7"
   resolved "https://registry.yarnpkg.com/polished/-/polished-3.6.7.tgz#44cbd0047f3187d83db0c479ef0c7d5583af5fb6"
   integrity sha512-b4OViUOihwV0icb9PHmWbR+vPqaSzSAEbgLskvb7ANPATVXGiYv/TQFHQo65S53WU9i5EQ1I03YDOJW7K0bmYg==
