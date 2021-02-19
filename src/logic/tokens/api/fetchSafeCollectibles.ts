@@ -16,9 +16,11 @@ export type CollectibleResult = {
   uri: string | null
 }
 
-export const fetchSafeCollectibles = async (safeAddress: string): Promise<AxiosResponse<CollectibleResult[]>> => {
+export const fetchSafeCollectibles = async (
+  safeAddress: string,
+): Promise<AxiosResponse<{ results: CollectibleResult[] }>> => {
   const address = checksumAddress(safeAddress)
   const url = `${getSafeServiceBaseUrl(address)}/collectibles/`
 
-  return axios.get(url)
+  return axios.get<CollectibleResult[], AxiosResponse<{ results: CollectibleResult[] }>>(url)
 }
