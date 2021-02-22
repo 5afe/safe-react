@@ -70,7 +70,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   const handleSubmit = async (
     { contractAddress, selectedMethod, value, ...values },
     submit = true,
-  ): Promise<void | any> => {
+  ): Promise<void | Record<string, string>> => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
