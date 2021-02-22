@@ -112,3 +112,7 @@ jobs:
           PROD_DEPLOYMENT_HOOK_TOKEN: ${{ secrets.PROD_DEPLOYMENT_HOOK_TOKEN }}
           PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
           VERSION_TAG: ${{ github.event.release.tag_name }}
+
+      # Upload Sentry source maps when sending to staging or production
+      - run: yarn sentry-upload-sourcemaps
+        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
