@@ -33,7 +33,7 @@ jobs:
     - id: set-matrix
       run: |
         echo "::set-output name=matrix::{\"include\":[
-          rinkeby-network
+          \"rinkeby-network\"
         ]}"
  
 
