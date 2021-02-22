@@ -4,12 +4,10 @@ import walletConnectIcon from './icon-wallet-connect.svg'
 import trezorIcon from './icon-trezor.svg'
 import ledgerIcon from './icon-ledger.svg'
 import latticeIcon from './icon-lattice.svg'
-import dapperIcon from './icon-dapper.png'
 import fortmaticIcon from './icon-fortmatic.svg'
 import portisIcon from './icon-portis.svg'
 import authereumIcon from './icon-authereum.png'
 import torusIcon from './icon-torus.svg'
-import uniloginIcon from './icon-unilogin.svg'
 import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
 
@@ -47,10 +45,6 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
     src: latticeIcon,
     height: 41,
   },
-  [WALLET_PROVIDER.DAPPER]: {
-    src: dapperIcon,
-    height: 25,
-  },
   [WALLET_PROVIDER.FORTMATIC]: {
     src: fortmaticIcon,
     height: 25,
@@ -66,10 +60,6 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
   [WALLET_PROVIDER.TORUS]: {
     src: torusIcon,
     height: 30,
-  },
-  [WALLET_PROVIDER.UNILOGIN]: {
-    src: uniloginIcon,
-    height: 25,
   },
   [WALLET_PROVIDER.OPERA]: {
     src: operaIcon,
