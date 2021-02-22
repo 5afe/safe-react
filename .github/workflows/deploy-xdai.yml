@@ -55,6 +55,11 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
+      # Set production flag
+      - name: Set production flag for tag build
+        run: echo "REACT_APP_ENV='production'" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v')
+
       - name: Build ${{ env.REACT_APP_NETWORK }} app
         run: yarn build
         env:
