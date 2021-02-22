@@ -35,4 +35,5 @@ jobs:
 
       - run: yarn test:coverage
       - run: yarn coveralls
+        if: success()
 
