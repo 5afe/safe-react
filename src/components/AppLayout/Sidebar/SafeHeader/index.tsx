@@ -44,7 +44,9 @@ const IconContainer = styled.div`
   justify-content: space-evenly;
 `
 const StyledButton = styled(Button)`
-  padding: 0 18px;
+  &&.MuiButton-root {
+    padding: 0 16px;
+  }
   *:first-child {
     margin: 0 4px 0 0;
   }
