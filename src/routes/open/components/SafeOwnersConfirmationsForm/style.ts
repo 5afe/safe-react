@@ -1,4 +1,4 @@
-import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, md, screenSm, sm, xs } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -9,11 +9,13 @@ export const styles = createStyles({
     padding: `${md} ${lg}`,
   },
   link: {
-    paddingLeft: `${sm}`,
+    paddingLeft: `${xs}`,
     '& svg': {
       position: 'relative',
       top: '1px',
-      left: '3px',
+      left: `${xs}`,
+      height: '14px',
+      width: '14px',
     },
   },
   owner: {
