@@ -17,15 +17,32 @@ on:
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'rinkeby'
-  STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
-  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
-  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_RINKEBY }}
-  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
-  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
+  # REACT_APP_NETWORK: 'rinkeby'
+  # STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
+  # REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
+  # SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_RINKEBY }}
+  # REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
+  # REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
 
 jobs:
+  job1:
+    runs-on: ubuntu-latest
+    outputs:
+      matrix: ${{ steps.set-matrix.outputs.matrix }}
+    steps:
+    - id: set-matrix
+      run: |
+        echo "::set-output name=matrix::{\"include\":[
+          rinkeby-network
+        ]}"
+ 
+
+
+
   debug:
+    needs: job1
+    strategy:
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     name: Debug
     runs-on: ubuntu-latest
     steps:
@@ -36,9 +53,11 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
   deploy:
+    needs: job1
     name: Deployment
     runs-on: ubuntu-latest
-
+    strategy:
+      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
