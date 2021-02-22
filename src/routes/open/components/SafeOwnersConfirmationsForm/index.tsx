@@ -167,7 +167,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
             rel="noreferrer"
             title="Learn about which Safe setup to use"
           >
-            <Text size="xl" as="span" color="primary">
+            <Text size="lg" as="span" color="primary">
               Learn about which Safe setup to use
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
