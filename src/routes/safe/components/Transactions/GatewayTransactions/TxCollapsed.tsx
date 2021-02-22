@@ -133,7 +133,7 @@ export const TxCollapsed = ({
 
   const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
-      <Tooltip title={formatDateTime(time)} arrow backgroundColor="white">
+      <Tooltip title={formatDateTime(time)} arrow backgroundColor="white" size="lg">
         <TooltipContent ref={timestamp}>
           <Text size="xl">{txLocation === 'history' ? formatTime(time) : formatTimeInWords(time)}</Text>
         </TooltipContent>
