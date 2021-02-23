@@ -26,6 +26,8 @@ import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 
+const GAS_REQUIRED_PER_SIGNATURE = 7000
+
 export enum EstimationStatus {
   LOADING = 'LOADING',
   FAILURE = 'FAILURE',
@@ -215,7 +217,7 @@ export const useEstimateTransactionGas = ({
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
-        const gasEstimation = await estimateTransactionGas({
+        let gasEstimation = await estimateTransactionGas({
           safeAddress,
           txRecipient,
           txData,
@@ -229,6 +231,12 @@ export const useEstimateTransactionGas = ({
           safeTxGas,
           approvalAndExecution,
         })
+
+        // TODO: Find a proper fix.
+        // When the safe has a threshold > 4 the estimation is not correct and makes the tx fail due "run out of gas"
+        // This fix takes the safe threshold and multiplies it by GAS_REQUIRED_PER_SIGNATURE.
+        gasEstimation = gasEstimation + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
+
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
