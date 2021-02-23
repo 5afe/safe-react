@@ -32,6 +32,8 @@ const watchedActions = [
   ADD_QUEUED_TRANSACTIONS,
 ]
 
+const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
+
 const sendAwaitingTransactionNotification = async (
   dispatch,
   safeAddress,
@@ -39,7 +41,6 @@ const sendAwaitingTransactionNotification = async (
   notificationKey,
   notificationClickedCb,
 ) => {
-  const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
   if (!dispatch || !safeAddress || !awaitingTxsSubmissionDateList || !notificationKey) {
     return
   }
@@ -48,25 +49,25 @@ const sendAwaitingTransactionNotification = async (
   }
 
   let lastTimeUserLoggedInForSafes = (await loadFromStorage<Record<string, string>>(LAST_TIME_USED_LOGGED_IN_ID)) || {}
-  const lastTimeUserLoggedIn =
-    lastTimeUserLoggedInForSafes && lastTimeUserLoggedInForSafes[safeAddress]
-      ? lastTimeUserLoggedInForSafes[safeAddress]
-      : null
+  const lastTimeUserLoggedIn = lastTimeUserLoggedInForSafes[safeAddress]
+    ? lastTimeUserLoggedInForSafes[safeAddress]
+    : null
 
   const filteredDuplicatedAwaitingTxList = awaitingTxsSubmissionDateList.filter((submissionDate) => {
     return lastTimeUserLoggedIn ? new Date(submissionDate) > new Date(lastTimeUserLoggedIn) : true
   })
 
-  if (filteredDuplicatedAwaitingTxList.length === 0) {
+  if (!filteredDuplicatedAwaitingTxList.length) {
     return
   }
+
   dispatch(
     enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.TX_WAITING_MSG, notificationKey, notificationClickedCb)),
   )
 
   lastTimeUserLoggedInForSafes = {
     ...lastTimeUserLoggedInForSafes,
-    [safeAddress]: lastTimeUserLoggedIn || new Date(),
+    [safeAddress]: new Date(),
   }
   await saveToStorage(LAST_TIME_USED_LOGGED_IN_ID, lastTimeUserLoggedInForSafes)
 }
