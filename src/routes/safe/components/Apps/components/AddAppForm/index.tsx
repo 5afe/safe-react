@@ -33,8 +33,11 @@ const AppInfo = styled.div`
 const AppDocsInfo = styled.div`
   display: flex;
   margin-bottom: 10px;
-  a {
-    margin-left: 5px;
+  flex-direction: column;
+  svg {
+    position: relative;
+    top: 5px;
+    left: 2px;
   }
 `
 
@@ -85,7 +88,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               title="Learn more about building Safe Apps"
             >
               <Text size="xl" as="span" color="primary">
-                Learn more about building Safe Apps
+                Learn more about building Safe Apps.
               </Text>
               <Icon size="sm" type="externalLink" color="primary" />
             </Link>
