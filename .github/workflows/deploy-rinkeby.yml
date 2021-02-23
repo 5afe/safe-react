@@ -14,34 +14,16 @@ on:
       types: [published]
   workflow_dispatch:
 
-
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  # REACT_APP_NETWORK: 'rinkeby'
-  # STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
-  # REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
-  # SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_RINKEBY }}
-  # REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
-  # REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
+  REACT_APP_NETWORK: 'rinkeby'
+  STAGING_BUCKET_NAME: ${{ secrets.STAGING_RINKEBY_BUCKET_NAME }}
+  REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_RINKEBY }}
+  REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY }}
+  REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_STAGING }}
 
 jobs:
-  job1:
-    runs-on: ubuntu-latest
-    outputs:
-      matrix: ${{ steps.set-matrix.outputs.matrix }}
-    steps:
-    - id: set-matrix
-      run: |
-        echo "::set-output name=matrix::{\"include\":[{\"networkenvironment\": \"rinkeby-network\"}]}"
- 
-
-
-
   debug:
-    needs: job1
-    strategy:
-      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
-    environment: ${{ matrix.networkenvironment }}
     name: Debug
     runs-on: ubuntu-latest
     steps:
@@ -52,12 +34,8 @@ jobs:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
   deploy:
-    needs: job1
     name: Deployment
     runs-on: ubuntu-latest
-    strategy:
-      matrix: ${{fromJson(needs.job1.outputs.matrix)}}
-    environment: ${{ matrix.networkenvironment }}
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
@@ -90,7 +68,7 @@ jobs:
         # Set production flag
       - name: Set production flag for tag build
         run: echo "REACT_APP_ENV='production'" >> $GITHUB_ENV
-        # if: startsWith(github.ref, 'refs/tags/v')
+        if: startsWith(github.ref, 'refs/tags/v')
 
       - name: Test adding env var
         run: echo $REACT_APP_ENV
@@ -163,4 +141,7 @@ jobs:
       # Upload Sentry source maps when sending to staging or production
       - run: yarn sentry-upload-sourcemaps
         if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
-
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG}}
+          SENTRY_PROJECT: gnosis-safe-multisig-${{ env.REACT_APP_NETWORK }}

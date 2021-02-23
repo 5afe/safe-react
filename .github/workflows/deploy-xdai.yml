@@ -17,7 +17,6 @@ env:
   REACT_APP_NETWORK: 'xdai'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_XDAI_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_XDAI }}
-  SENTRY_PROJECT: ${{ secrets.SENTRY_PROJECT_XDAI }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_XDAI }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_XDAI }}
 
@@ -118,6 +117,10 @@ jobs:
           PROD_DEPLOYMENT_HOOK_URL: ${{ secrets.PROD_DEPLOYMENT_HOOK_URL }}
           VERSION_TAG: ${{ github.event.release.tag_name }}
 
-      # Upload Sentry source maps when sending to staging or production
+     # Upload Sentry source maps when sending to staging or production
       - run: yarn sentry-upload-sourcemaps
         if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+        env:
+          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          SENTRY_ORG: ${{ secrets.SENTRY_ORG}}
+          SENTRY_PROJECT: gnosis-safe-multisig-${{ env.REACT_APP_NETWORK }}
