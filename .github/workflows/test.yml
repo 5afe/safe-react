@@ -1,10 +1,10 @@
 name: Run app tests
 on:
+  pull_request:
   push:
     branches:
       - master
       - development
-  pull_request:
 
 jobs:
   test:
