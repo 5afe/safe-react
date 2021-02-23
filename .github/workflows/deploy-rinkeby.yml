@@ -41,6 +41,7 @@ jobs:
     needs: job1
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+    environment: ${{ matrix.networkenvironment }}
     name: Debug
     runs-on: ubuntu-latest
     steps:
@@ -56,6 +57,7 @@ jobs:
     runs-on: ubuntu-latest
     strategy:
       matrix: ${{fromJson(needs.job1.outputs.matrix)}}
+    environment: ${{ matrix.networkenvironment }}
     steps:
       - name: Remove broken apt repos [Ubuntu]
         if: matrix.os == 'ubuntu-latest'
