@@ -45,7 +45,7 @@ export const useEstimateSafeCreationGas = ({
       const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
       const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const gasCostFormatted = formatAmount(gasCost)
-      const gasLimit = gasEstimation * 2 + MINIMUM_TRANSACTION_GAS
+      const gasLimit = gasEstimation + MINIMUM_TRANSACTION_GAS
 
       setGasEstimation({
         gasEstimation,

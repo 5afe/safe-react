@@ -3,6 +3,7 @@ import { List } from 'immutable'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { LoadFormValues } from 'src/routes/load/container/Load'
+import { getNumOwnersFrom } from 'src/routes/open/components/fields'
 
 export type CreateSafeValues = {
   confirmations: string
@@ -19,8 +20,8 @@ export const getAccountsFrom = (values: CreateSafeValues | LoadFormValues): stri
     .sort()
     .filter((key) => /^owner\d+Address$/.test(key))
 
-  const ownersAmount = 'owners' in values ? Number(values.owners) : 1
-  return accounts.map((account) => values[account]).slice(0, ownersAmount)
+  const numOwners = getNumOwnersFrom(values)
+  return accounts.map((account) => values[account]).slice(0, numOwners)
 }
 
 export const getNamesFrom = (values: CreateSafeValues | LoadFormValues): string[] => {
@@ -28,8 +29,8 @@ export const getNamesFrom = (values: CreateSafeValues | LoadFormValues): string[
     .sort()
     .filter((key) => /^owner\d+Name$/.test(key))
 
-  const ownersAmount = 'owners' in values ? Number(values.owners) : 1
-  return accounts.map((account) => values[account]).slice(0, ownersAmount)
+  const numOwners = getNumOwnersFrom(values)
+  return accounts.map((account) => values[account]).slice(0, numOwners)
 }
 
 export const getOwnersFrom = (names: string[], addresses: string[]): List<SafeOwner> => {
