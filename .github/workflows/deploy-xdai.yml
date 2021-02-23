@@ -63,6 +63,11 @@ jobs:
         run: yarn build
         env:
           PUBLIC_URL: './'
+          REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
+          REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
+          REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
+          REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
+          REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 
       # Script to deploy Pull Requests
       - run: bash ./scripts/github/deploy_pull_request.sh
