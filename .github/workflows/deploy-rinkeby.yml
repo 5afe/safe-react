@@ -32,7 +32,7 @@ jobs:
     steps:
     - id: set-matrix
       run: |
-        echo "::set-output name=matrix::{\"include\":[\"rinkeby-network\"]}"
+        echo "::set-output name=matrix::{\"include\":[{\"networkenvironment\": \"rinkeby-network\"}]}"
  
 
 
