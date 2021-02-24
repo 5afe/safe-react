@@ -122,13 +122,16 @@ export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch
     name: localSafe?.name,
     modules,
     spendingLimits,
-    nonce: Number(remoteNonce),
-    threshold: Number(remoteThreshold),
+    nonce: remoteNonce ? Number(remoteNonce) : undefined,
+    threshold: remoteThreshold ? Number(remoteThreshold) : undefined,
     featuresEnabled: localSafe?.currentVersion ? enabledFeatures(localSafe.currentVersion) : localSafe?.featuresEnabled,
   }
 
   dispatch(updateSafe(updatedSafe))
 
+  if (!remoteOwners.length) {
+    return
+  }
   // If the remote owners does not contain a local address, we remove that local owner
   localOwners.forEach((localAddress) => {
     const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
