@@ -1,0 +1,43 @@
+name: Run app tests
+on:
+  pull_request:
+  push:
+    branches:
+      - master
+      - development
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 14
+
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
+      - run: |
+          sudo apt-get update
+          sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
+          pip install awscli --upgrade --user
+          # Due to some dependencies yarn may randomly throw an error about invalid cache
+          # This approach is taken from https://github.com/yarnpkg/yarn/issues/7212#issuecomment-506155894 to fix the issue
+          # Another approach is to install with flag --network-concurrency 1, but this will make the installation pretty slow (default value is 8)
+          mkdir .yarncache
+          yarn install --cache-folder ./.yarncache --frozen-lockfile
+          rm -rf .yarncache
+          yarn cache clean
+
+      - run: yarn test:coverage
+
+      - name: Upload coverage to Coveralls
+        uses: coverallsapp/github-action@master
+        with:
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+        if: success()
+
