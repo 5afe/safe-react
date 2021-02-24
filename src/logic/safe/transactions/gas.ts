@@ -180,9 +180,10 @@ const calculateMinimumGasForTransaction = async (
   estimateData: string,
   txGasEstimation: number,
   dataGasEstimation: number,
+  fixedGasCosts: number,
 ): Promise<number> => {
   for (const additionalGas of additionalGasBatches) {
-    const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + additionalGas
+    const amountOfGasToTryTx = txGasEstimation + dataGasEstimation + fixedGasCosts + additionalGas
     console.info(`Estimating transaction creation with gas amount: ${amountOfGasToTryTx}`)
     try {
       const estimation = await getGasEstimationTxResponse({
@@ -227,9 +228,13 @@ export const estimateGasForTransactionCreation = async (
       return gasEstimationResponse
     }
 
+    const threshold = await safeInstance.methods.getThreshold().call()
+
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData)
     // We add the minimum required gas for a transaction
-    const dataGasEstimationAndMinimumTransactionGas = dataGasEstimation + MINIMUM_TRANSACTION_GAS
+    // TODO: This fix will be more accurate when we have a service for estimation.
+    // This fix takes the safe threshold and multiplies it by GAS_REQUIRED_PER_SIGNATURE.
+    const fixedGasCosts = MINIMUM_TRANSACTION_GAS + (Number(threshold) || 1) * GAS_REQUIRED_PER_SIGNATURE
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(
@@ -237,7 +242,8 @@ export const estimateGasForTransactionCreation = async (
       safeAddress,
       estimateData,
       gasEstimationResponse,
-      dataGasEstimationAndMinimumTransactionGas,
+      dataGasEstimation,
+      fixedGasCosts,
     )
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)

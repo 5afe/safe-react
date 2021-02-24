@@ -216,7 +216,7 @@ export const useEstimateTransactionGas = ({
       try {
         const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
-        let gasEstimation = await estimateTransactionGas({
+        const gasEstimation = await estimateTransactionGas({
           safeAddress,
           txRecipient,
           txData,
@@ -230,10 +230,6 @@ export const useEstimateTransactionGas = ({
           safeTxGas,
           approvalAndExecution,
         })
-
-        // TODO: This fix will be more accurate when we have a service for estimation.
-        // This fix takes the safe threshold and multiplies it by GAS_REQUIRED_PER_SIGNATURE.
-        gasEstimation = gasEstimation + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
 
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
