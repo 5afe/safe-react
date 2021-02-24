@@ -105,7 +105,7 @@ jobs:
 
       # Script to deploy to development environment
       - name: 'Deploy to S3: Develop'
-        run: bash ./scripts/deploy_to_s3_bucket.sh
+        run: bash ./scripts/github/deploy_to_s3_bucket.sh
         if: github.ref == 'refs/heads/development'
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
@@ -114,7 +114,7 @@ jobs:
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        run: bash ./scripts/deploy_to_s3_bucket.sh
+        run: bash ./scripts/github/deploy_to_s3_bucket.sh
         if: github.ref == 'refs/heads/master'
         env:
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
