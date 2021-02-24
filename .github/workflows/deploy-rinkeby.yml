@@ -112,7 +112,7 @@ jobs:
 
       # Script to deploy to development environment
       - name: 'Deploy to S3: Develop'
-        if: github.ref == 'refs/heads/develop'
+        if: github.ref == 'refs/heads/development'
         run: aws s3 sync build s3://${{ secrets.AWS_DEV_BUCKET_NAME }}/app --delete
 
       # Script to deploy to staging environment
