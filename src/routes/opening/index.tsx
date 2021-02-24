@@ -12,7 +12,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { background, connected } from 'src/theme/variables'
+import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 
@@ -60,11 +60,14 @@ const CardTitle = styled.div`
 
 interface FullParagraphProps {
   inversecolors: string
+  stepIndex: number
 }
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${(p) => (p.inversecolors ? connected : background)};
-  color: ${(p) => (p.inversecolors ? background : connected)};
+  background-color: ${({ stepIndex }) => (stepIndex === 0 ? connected : background)};
+  color: ${({ stepIndex }) => (stepIndex === 0 ? '#ffffff' : fontColor)};
+
+  /* color: ${(p) => (p.inversecolors ? background : fontColor)}; */
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
@@ -330,7 +333,13 @@ export const SafeDeployment = ({
 
         {steps[stepIndex].instruction && (
           <BodyInstruction>
-            <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
+            <FullParagraph
+              color="primary"
+              inversecolors={confirmationStep.toString()}
+              noMargin
+              size="md"
+              stepIndex={stepIndex}
+            >
               {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
             </FullParagraph>
           </BodyInstruction>
