@@ -28,7 +28,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       })
 
       if (mounted) {
-        timer.current = setTimeout(() => {
+        timer.current = window.setTimeout(() => {
           fetchSafeData(address)
         }, TIMEOUT * 3)
       }
