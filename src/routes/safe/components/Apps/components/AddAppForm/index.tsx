@@ -36,8 +36,8 @@ const AppDocsInfo = styled.div`
   flex-direction: column;
   svg {
     position: relative;
-    top: 5px;
-    left: 2px;
+    top: 4px;
+    left: 4px;
   }
 `
 
