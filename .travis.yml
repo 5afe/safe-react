@@ -1,4 +1,5 @@
-if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
+# if: (branch = development) OR (branch = master) OR (type = pull_request) OR (tag IS present)
+if: (branch = master) OR (tag IS present)
 dist: focal
 language: node_js
 node_js:
@@ -6,42 +7,43 @@ node_js:
 os:
   - linux
 matrix:
-  include:
-    - env:
-        - REACT_APP_NETWORK='mainnet'
-        - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_MAINNET}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_MAINNET}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
-        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
-      if: (branch = master AND NOT type = pull_request) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='rinkeby'
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_RINKEBY}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_RINKEBY}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
-        - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
-    - env:
-        - REACT_APP_NETWORK='xdai'
-        - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
-      if: (branch = master) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='volta'
-        - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_VOLTA}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
-      if: (branch = master) OR tag IS present
-    - env:
-        - REACT_APP_NETWORK='energy_web_chain'
-        - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
-        - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
-        - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
-        - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
-      if: (branch = master AND NOT type = pull_request) OR tag IS present
+  # include:
+  #   - env:
+  #       - REACT_APP_NETWORK='mainnet'
+  #       - STAGING_BUCKET_NAME=${STAGING_MAINNET_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_MAINNET}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_MAINNET}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET}
+  #       - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_PROD}
+  #     if: (branch = master AND NOT type = pull_request) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='rinkeby'
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_RINKEBY}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_RINKEBY}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_RINKEBY}
+  #       - REACT_APP_GNOSIS_APPS_URL=${REACT_APP_GNOSIS_APPS_URL_STAGING}
+  #     if: (branch = development AND NOT type = pull_request) OR (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='xdai'
+  #       - STAGING_BUCKET_NAME=${STAGING_XDAI_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_XDAI}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_XDAI}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_XDAI}
+  #     if: (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='volta'
+  #       - STAGING_BUCKET_NAME=${STAGING_VOLTA_BUCKET_NAME}
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_VOLTA}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_VOLTA}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_VOLTA}
+  #     if: (branch = master) OR tag IS present
+  #   - env:
+  #       - REACT_APP_NETWORK='energy_web_chain'
+  #       - STAGING_BUCKET_NAME=${STAGING_EWC_BUCKET_NAME}      
+  #       - REACT_APP_SENTRY_DSN=${SENTRY_DSN_EWC}
+  #       - SENTRY_PROJECT=${SENTRY_PROJECT_EWC}
+  #       - REACT_APP_GOOGLE_ANALYTICS=${REACT_APP_GOOGLE_ANALYTICS_ID_EWC}
+  #     if: (branch = master AND NOT type = pull_request) OR tag IS present
 cache:
   npm: false
   yarn: true
@@ -50,65 +52,65 @@ before_script:
   - if [ $TRAVIS_PULL_REQUEST != "false" ]; then export PUBLIC_URL="/${REACT_APP_NETWORK}/app"; fi;
 before_install:
   # Needed to deploy pull request and releases
-  - sudo apt-get update
-  - sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
-  - pip install awscli --upgrade --user
+  # - sudo apt-get update
+  # - sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
+  # - pip install awscli --upgrade --user
 script:
   - yarn prettier:check
-  - yarn test:coverage
-  - yarn build
-  - if [[ $TRAVIS_BRANCH == "master" && $TRAVIS_PULL_REQUEST == "false" ]] || [ -n "$TRAVIS_TAG" ]; then
-      echo "Upload sentry source maps";
-      yarn sentry-upload-sourcemaps;
-    else
-      echo "Skip source map upload";
-    fi;
+  # - yarn test:coverage
+  # - yarn build
+  # - if [[ $TRAVIS_BRANCH == "master" && $TRAVIS_PULL_REQUEST == "false" ]] || [ -n "$TRAVIS_TAG" ]; then
+  #     echo "Upload sentry source maps";
+  #     yarn sentry-upload-sourcemaps;
+  #   else
+  #     echo "Skip source map upload";
+  #   fi;
 after_success:
   # Pull Request - Deploy it to a review environment
   # Travis doesn't do deploy step with pull requests builds
-  - ./config/travis/deploy_pull_request.sh
+  # - ./config/travis/deploy_pull_request.sh
   # Releases (tagged commits) - Deploy it to a release environment
-  - ./config/travis/deploy_release.sh
-  - yarn coveralls
+  # - ./config/travis/deploy_release.sh
+  # - yarn coveralls
 
 deploy:
   # Development environment only on rinkeby
-  - provider: s3
-    bucket: $DEV_BUCKET_NAME
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    skip_cleanup: true
-    local_dir: build
-    upload_dir: app
-    region: $AWS_DEFAULT_REGION
-    on:
-      branch: development
-      condition: $REACT_APP_NETWORK = rinkeby
+  # - provider: s3
+  #   bucket: $DEV_BUCKET_NAME
+  #   access_key_id: $AWS_ACCESS_KEY_ID
+  #   secret_access_key: $AWS_SECRET_ACCESS_KEY
+  #   skip_cleanup: true
+  #   local_dir: build
+  #   upload_dir: app
+  #   region: $AWS_DEFAULT_REGION
+  #   on:
+  #     branch: development
+  #     condition: $REACT_APP_NETWORK = rinkeby
 
   # Staging environment
-  - provider: s3
-    bucket: $STAGING_BUCKET_NAME
-    access_key_id: $AWS_ACCESS_KEY_ID
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    skip_cleanup: true
-    local_dir: build
-    upload_dir: current/app
-    region: $AWS_DEFAULT_REGION
-    on:
-      branch: master
+  # - provider: s3
+  #   bucket: $STAGING_BUCKET_NAME
+  #   access_key_id: $AWS_ACCESS_KEY_ID
+  #   secret_access_key: $AWS_SECRET_ACCESS_KEY
+  #   skip_cleanup: true
+  #   local_dir: build
+  #   upload_dir: current/app
+  #   region: $AWS_DEFAULT_REGION
+  #   on:
+  #     branch: master
 
   # Prepare production deployment
-  - provider: s3
-    bucket: $STAGING_BUCKET_NAME
-    secret_access_key: $AWS_SECRET_ACCESS_KEY
-    access_key_id: $AWS_ACCESS_KEY_ID
-    skip_cleanup: true
-    local_dir: build
-    upload_dir: releases/$TRAVIS_TAG
-    region: $AWS_DEFAULT_REGION
-    on:
-      tags: true
-  - provider: script
-    script: ./config/travis/prepare_production_deployment.sh
-    on:
-      tags: true
+  # - provider: s3
+  #   bucket: $STAGING_BUCKET_NAME
+  #   secret_access_key: $AWS_SECRET_ACCESS_KEY
+  #   access_key_id: $AWS_ACCESS_KEY_ID
+  #   skip_cleanup: true
+  #   local_dir: build
+  #   upload_dir: releases/$TRAVIS_TAG
+  #   region: $AWS_DEFAULT_REGION
+  #   on:
+  #     tags: true
+  # - provider: script
+  #   script: ./config/travis/prepare_production_deployment.sh
+  #   on:
+  #     tags: true

@@ -1,7 +1,7 @@
 import React from 'react'
 import { useField, useForm } from 'react-final-form'
 
-import TextareaField from 'src/components/forms/TextareaField'
+import { TextAreaField } from 'src/components/forms/TextAreaField'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -54,7 +54,7 @@ const ContractABI = (): React.ReactElement => {
   return (
     <Row margin="sm">
       <Col>
-        <TextareaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={hasUsefulMethods} />
+        <TextAreaField name="abi" placeholder="ABI*" text="ABI*" type="text" validate={hasUsefulMethods} />
       </Col>
     </Row>
   )
