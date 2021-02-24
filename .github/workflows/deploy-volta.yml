@@ -101,17 +101,21 @@ jobs:
         env:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
+
       # Script to deploy to development environment
-      # xDai build is never created in development branch
+      # Volta build is never created in development branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        run: bash ./scripts/github/deploy_to_s3_bucket.sh
         if: github.ref == 'refs/heads/master'
-        env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          BUCKET_NAME: ${{ env.STAGING_BUCKET_NAME }}
+        run: aws s3 sync build s3://${{ secrets.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
       - run: bash ./scripts/github/deploy_release.sh
