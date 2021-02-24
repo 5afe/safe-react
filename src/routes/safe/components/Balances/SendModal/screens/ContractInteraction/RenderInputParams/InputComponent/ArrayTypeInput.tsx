@@ -1,6 +1,6 @@
 import React from 'react'
 
-import TextareaField from 'src/components/forms/TextareaField'
+import { TextAreaField } from 'src/components/forms/TextAreaField'
 import {
   isAddress,
   isBoolean,
@@ -46,7 +46,7 @@ const typePlaceholder = (text: string, type: string): string => {
 }
 
 const ArrayTypeInput = ({ name, text, type }: { name: string; text: string; type: string }): React.ReactElement => (
-  <TextareaField name={name} placeholder={typePlaceholder(text, type)} text={text} type="text" validate={validator} />
+  <TextAreaField name={name} placeholder={typePlaceholder(text, type)} text={text} type="text" validate={validator} />
 )
 
 export default ArrayTypeInput

@@ -10,7 +10,7 @@ import QRIcon from 'src/assets/icons/qrcode.svg'
 import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
-import TextareaField from 'src/components/forms/TextareaField'
+import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
 import Identicon from 'src/components/Identicon'
@@ -247,7 +247,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TextareaField
+                    <TextAreaField
                       name="data"
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
