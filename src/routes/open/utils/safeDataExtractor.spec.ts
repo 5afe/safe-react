@@ -18,8 +18,11 @@ describe('Test JS', () => {
   it('return the names of owners', () => {
     const safe = {
       owner0Name: 'foo',
+      owner0Address: '0x',
       owner1Name: 'bar',
+      owner1Address: '0x',
       owner2Name: 'baz',
+      owner2Address: '0x',
       owners: 3,
       confirmations: '0',
       name: '',
@@ -42,10 +45,10 @@ describe('Test JS', () => {
       safeCreationSalt: 0,
     }
 
-    expect(getNamesFrom(safe)).toEqual(['fooName'])
-    expect(getAccountsFrom(safe)).toEqual(['fooAddress'])
+    expect(getNamesFrom(safe)).toEqual(['fooName', 'barName', 'bazName'])
+    expect(getAccountsFrom(safe)).toEqual(['fooAddress', 'barAddress', 'bazAddress'])
   })
-  it('return name and address ordered alphabetically', () => {
+  it('return name and address keys ordered alphabetically', () => {
     const safe = {
       owner1Name: 'barName',
       owner1Address: 'barAddress',
@@ -59,8 +62,8 @@ describe('Test JS', () => {
       safeCreationSalt: 0,
     }
 
-    expect(getNamesFrom(safe)).toEqual(['fooName'])
-    expect(getAccountsFrom(safe)).toEqual(['fooAddress'])
+    expect(getNamesFrom(safe)).toEqual(['fooName', 'barName', 'bazName'])
+    expect(getAccountsFrom(safe)).toEqual(['fooAddress', 'barAddress', 'bazAddress'])
   })
   it('return the number of required confirmations', () => {
     const safe = {
