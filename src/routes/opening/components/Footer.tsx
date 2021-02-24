@@ -1,18 +1,22 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
-import { ButtonLink, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
 import { getExplorerInfo } from 'src/config'
 import Hairline from 'src/components/layout/Hairline'
 
-const StyledButtonLink = styled(ButtonLink)`
-  display: inline-flex;
-  padding: 0 0 0 8px;
-`
 const StyledText = styled(Text)`
   display: inline-flex;
+  a {
+    margin-left: 4px;
+  }
+  svg {
+    position: relative;
+    top: 4px;
+    left: 4px;
+  }
 `
 const ButtonWithMargin = styled(Button)`
   margin-right: 16px;
@@ -37,19 +41,19 @@ export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: stri
       <Text size="xl">This process should take a couple of minutes.</Text>
       <StyledText size="xl">
         Follow the progress on{' '}
-        <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
-          <Link
-            size="xl"
-            aria-label={alt}
-            href={url}
-            target="_blank"
-            rel="noopener noreferrer"
-            data-testid="safe-create-explorer-link"
-            title="More info about this in Etherscan"
-          >
+        <Link
+          href={url}
+          aria-label={alt}
+          target="_blank"
+          rel="noopener noreferrer"
+          data-testid="safe-create-explorer-link"
+          title="More info about this in Etherscan"
+        >
+          <Text size="xl" as="span" color="primary">
             {explorerDomain}
-          </Link>
-        </StyledButtonLink>
+          </Text>
+          <Icon size="sm" type="externalLink" color="primary" />
+        </Link>
       </StyledText>
     </span>
   )
