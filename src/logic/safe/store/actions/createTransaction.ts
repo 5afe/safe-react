@@ -80,11 +80,7 @@ export const createTransaction = (
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nextNonce = await getNewTxNonce(lastTx, safeInstance)
-
-  let nonce = nextNonce
-  if (txNonce !== undefined) {
-    nonce = txNonce.toString()
-  }
+  const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
