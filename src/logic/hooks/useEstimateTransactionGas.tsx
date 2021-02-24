@@ -5,6 +5,7 @@ import {
   estimateGasForTransactionCreation,
   estimateGasForTransactionExecution,
   MINIMUM_TRANSACTION_GAS,
+  GAS_REQUIRED_PER_SIGNATURE,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -25,8 +26,6 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-
-const GAS_REQUIRED_PER_SIGNATURE = 7000
 
 export enum EstimationStatus {
   LOADING = 'LOADING',
@@ -232,8 +231,7 @@ export const useEstimateTransactionGas = ({
           approvalAndExecution,
         })
 
-        // TODO: Find a proper fix.
-        // When the safe has a threshold > 4 the estimation is not correct and makes the tx fail due "run out of gas"
+        // TODO: This fix will be more accurate when we have a service for estimation.
         // This fix takes the safe threshold and multiplies it by GAS_REQUIRED_PER_SIGNATURE.
         gasEstimation = gasEstimation + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
 
@@ -242,7 +240,7 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = (gasEstimation * 2 + MINIMUM_TRANSACTION_GAS).toString()
+        const gasLimit = (gasEstimation * 2).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
@@ -265,7 +263,7 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const gasEstimation = MINIMUM_TRANSACTION_GAS
+        const gasEstimation = MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
         const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
         setGasEstimation({

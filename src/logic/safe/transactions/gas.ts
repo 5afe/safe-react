@@ -1,4 +1,5 @@
 import { BigNumber } from 'bignumber.js'
+
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -12,6 +13,8 @@ import { sameString } from 'src/utils/strings'
 
 // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
 export const MINIMUM_TRANSACTION_GAS = 21000
+// Estimation of gas required for each signature (aproximately 7800, roundup to 8000)
+export const GAS_REQUIRED_PER_SIGNATURE = 8000
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -225,6 +228,8 @@ export const estimateGasForTransactionCreation = async (
     }
 
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData)
+    // We add the minimum required gas for a transaction
+    const dataGasEstimationAndMinimumTransactionGas = dataGasEstimation + MINIMUM_TRANSACTION_GAS
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(
@@ -232,7 +237,7 @@ export const estimateGasForTransactionCreation = async (
       safeAddress,
       estimateData,
       gasEstimationResponse,
-      dataGasEstimation,
+      dataGasEstimationAndMinimumTransactionGas,
     )
   } catch (error) {
     console.info('Error calculating tx gas estimation', error.message)
