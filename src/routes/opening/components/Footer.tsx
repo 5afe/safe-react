@@ -1,4 +1,4 @@
-import React, { SyntheticEvent } from 'react'
+import React, { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
@@ -30,7 +30,7 @@ const FooterContainer = styled.div`
   }
 `
 
-export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }) => {
+export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
   const explorerInfo = getExplorerInfo(safeCreationTxHash)
   const { url, alt } = explorerInfo()
   const match = /(http|https):\/\/(\w+\.\w+)\/.*/i.exec(url)
@@ -65,7 +65,7 @@ export const ContinueFooter = ({
 }: {
   continueButtonDisabled: boolean
   onContinue: (event: SyntheticEvent) => void
-}) => (
+}): ReactElement => (
   <FooterContainer>
     <Hairline />
     <Button
@@ -86,7 +86,7 @@ export const ErrorFooter = ({
 }: {
   onCancel: (event: SyntheticEvent) => void
   onRetry: (event: SyntheticEvent) => void
-}) => (
+}): ReactElement => (
   <FooterContainer>
     <Hairline />
     <ButtonWithMargin onClick={onCancel} variant="contained">

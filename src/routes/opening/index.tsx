@@ -43,7 +43,7 @@ const Body = styled.div`
   grid-column: 2;
   grid-row: 2;
   text-align: center;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 5px;
   min-width: 700px;
   padding-top: 70px;
@@ -65,7 +65,7 @@ interface FullParagraphProps {
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
   background-color: ${({ stepIndex }) => (stepIndex === 0 ? connected : background)};
-  color: ${({ stepIndex }) => (stepIndex === 0 ? '#ffffff' : fontColor)};
+  color: ${({ theme, stepIndex }) => (stepIndex === 0 ? theme.colors.white : fontColor)};
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
