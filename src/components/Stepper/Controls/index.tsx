@@ -3,7 +3,7 @@ import * as React from 'react'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { boldFont, sm, lg } from 'src/theme/variables'
+import { boldFont, sm, lg, secondary } from 'src/theme/variables'
 
 const controlStyle = {
   backgroundColor: 'white',
@@ -14,6 +14,7 @@ const controlStyle = {
 const firstButtonStyle = {
   marginRight: sm,
   fontWeight: boldFont,
+  color: secondary,
 }
 
 const secondButtonStyle = {
