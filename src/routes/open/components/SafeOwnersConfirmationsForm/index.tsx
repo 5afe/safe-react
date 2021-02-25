@@ -254,7 +254,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
       </Block>
       <Row align="center" className={classes.add} grow margin="xl">
         <Button color="secondary" data-testid="add-owner-btn" onClick={onAddOwner}>
-          <Paragraph noMargin size="md">
+          <Paragraph noMargin size="lg">
             {ADD_OWNER_BUTTON}
           </Paragraph>
         </Button>
