@@ -6,7 +6,6 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getNetworkInfo } from 'src/config'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
-import { MINIMUM_TRANSACTION_GAS } from 'src/logic/safe/transactions/gas'
 
 type EstimateSafeCreationGasProps = {
   addresses: string[]
@@ -45,12 +44,11 @@ export const useEstimateSafeCreationGas = ({
       const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
       const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
       const gasCostFormatted = formatAmount(gasCost)
-      const gasLimit = gasEstimation + MINIMUM_TRANSACTION_GAS
 
       setGasEstimation({
         gasEstimation,
         gasCostFormatted,
-        gasLimit,
+        gasLimit: gasEstimation,
       })
     }
 
