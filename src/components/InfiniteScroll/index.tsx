@@ -39,6 +39,7 @@ export const InfiniteScroll = ({ children, hasMore, next, config }: InfiniteScro
     threshold: 0,
     root: document.querySelector(`#${INFINITE_SCROLL_CONTAINER}`),
     rootMargin: '0px 0px 200px 0px',
+    triggerOnce: true,
     ...config,
   })
 
