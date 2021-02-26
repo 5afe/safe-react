@@ -2,6 +2,7 @@ import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { sameString } from 'src/utils/strings'
 import {
   DisclaimerContainer,
   GroupedTransactions,
@@ -14,6 +15,7 @@ import {
 import { TxHoverProvider } from './TxHoverProvider'
 import { TxLocationContext } from './TxLocationProvider'
 import { TxQueueRow } from './TxQueueRow'
+import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 
 const TreeView = ({ firstElement }: { firstElement: boolean }): ReactElement => {
   return <p className="tree-lines">{firstElement ? <span className="first-node" /> : null}</p>
@@ -52,8 +54,8 @@ type QueueTransactionProps = {
   transactions: Transaction[]
 }
 
-const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement => {
-  return transactions.length > 1 ? (
+const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): ReactElement =>
+  transactions.length > 1 ? (
     <GroupedTransactionsCard>
       <TxHoverProvider>
         <Disclaimer nonce={nonce} />
@@ -70,7 +72,6 @@ const QueueTransaction = ({ nonce, transactions }: QueueTransactionProps): React
   ) : (
     <TxQueueRow transaction={transactions[0]} />
   )
-}
 
 type QueueTxListProps = {
   transactions: TransactionDetails['transactions']
@@ -79,6 +80,14 @@ type QueueTxListProps = {
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
+
+  const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
+  const [, lastTransactionsGroup] = transactions[transactions.length - 1]
+  const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
+
+  if (txLocation === 'queued.queued' && !sameString(lastItemId, lastTransaction.id)) {
+    setLastItemId(lastTransaction.id)
+  }
 
   return (
     <StyledTransactionsGroup>

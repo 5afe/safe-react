@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useCallback, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadGatewayTransactions'
@@ -12,17 +12,20 @@ type PagedTransactions = {
   transactions: TransactionDetails['transactions']
   hasMore: boolean
   next: () => Promise<void>
+  isLoading: boolean
 }
 
 export const usePagedHistoryTransactions = (): PagedTransactions => {
   const { count, transactions } = useHistoryTransactions()
 
-  const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const dispatch = useRef(useDispatch())
+  const safeAddress = useRef(useSelector(safeParamAddressFromStateSelector))
   const [hasMore, setHasMore] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
 
-  const next = async () => {
-    const results = await loadPagedHistoryTransactions(safeAddress)
+  const next = useCallback(async () => {
+    setIsLoading(true)
+    const results = await loadPagedHistoryTransactions(safeAddress.current)
 
     if (!results) {
       setHasMore(false)
@@ -36,11 +39,12 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
     }
 
     if (values) {
-      dispatch(addHistoryTransactions({ safeAddress, values, isTail: true }))
+      dispatch.current(addHistoryTransactions({ safeAddress: safeAddress.current, values, isTail: true }))
     } else {
       setHasMore(false)
     }
-  }
+    setIsLoading(false)
+  }, [])
 
-  return { count, transactions, hasMore, next }
+  return { count, transactions, hasMore, next, isLoading }
 }
