@@ -6,6 +6,7 @@ import {
   estimateGasForTransactionExecution,
   MINIMUM_TRANSACTION_GAS,
   GAS_REQUIRED_PER_SIGNATURE,
+  SAFE_TX_GAS_DATA_COST,
 } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -236,7 +237,12 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = (gasEstimation * 2).toString()
+        const gasLimit = (
+          gasEstimation * 2 +
+          MINIMUM_TRANSACTION_GAS +
+          (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE +
+          SAFE_TX_GAS_DATA_COST
+        ).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
@@ -259,7 +265,8 @@ export const useEstimateTransactionGas = ({
       } catch (error) {
         console.warn(error.message)
         // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const gasEstimation = MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
+        const gasEstimation =
+          MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE + SAFE_TX_GAS_DATA_COST
         const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
         setGasEstimation({
