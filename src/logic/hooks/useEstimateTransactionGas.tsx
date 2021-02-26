@@ -238,7 +238,8 @@ export const useEstimateTransactionGas = ({
         const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = (gasEstimation * 2 + fixedGasCosts).toString()
+        // We also include the 1/64 in the check that is not send along with a call to counteract potential shortings because of EIP-150
+        const gasLimit = (Math.ceil((gasEstimation * 64) / 63) * 2 + fixedGasCosts).toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
