@@ -14,13 +14,12 @@ export const styles = createStyles({
     marginBottom: '15px',
     display: 'flex',
     flexGrow: 1,
-    backgroundColor: 'red',
   },
   tokenImageHeading: {
     margin: '0 0 15px',
   },
   checkbox: {
-    padding: '0 7px 0 0',
+    padding: '0 8px 2px 0',
     width: '18px',
     height: '18px',
   },

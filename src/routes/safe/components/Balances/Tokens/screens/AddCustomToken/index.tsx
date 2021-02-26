@@ -19,7 +19,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
-import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
+import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder_generic.svg'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Checkbox } from '@gnosis.pm/safe-react-components'
 import { useDispatch } from 'react-redux'
@@ -190,14 +190,14 @@ const AddCustomToken = (props: Props): React.ReactElement => {
                   </Col>
                   <Col align="center" layout="column" xs={6}>
                     <Paragraph className={classes.tokenImageHeading}>Token Image</Paragraph>
-                    <Img alt="Token image" height={100} src={TokenPlaceholder} />
+                    <Img alt="Token image" height={92} src={TokenPlaceholder} />
                   </Col>
                 </Row>
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={goBack}>
-                  Cancel
+                <Button color="secondary" minHeight={42} minWidth={140} onClick={goBack}>
+                  Back
                 </Button>
                 <Button color="primary" minHeight={42} minWidth={140} type="submit" variant="contained">
                   Save
