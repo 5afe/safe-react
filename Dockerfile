@@ -8,4 +8,5 @@ RUN yarn build-mainnet
 
 FROM nginx:stable-alpine-perl
 COPY --from=builder /app/build /usr/share/nginx/html
+COPY nginx.conf /etc/nginx/
 EXPOSE 80
