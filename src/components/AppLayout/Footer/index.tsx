@@ -45,7 +45,7 @@ const Footer = (): React.ReactElement => {
 
   return (
     <footer className={classes.footer}>
-      <span className={classes.item}>©{date.getFullYear()} Powered by Binance</span>
+      <span className={classes.item}>©{date.getFullYear()} Hosted by Binance</span>
       <span className={classes.sep}>|</span>
       <Link className={cn(classes.item, classes.link)} target="_blank" to="https://www.binance.org/en/terms">
         Terms
