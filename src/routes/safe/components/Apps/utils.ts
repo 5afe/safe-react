@@ -135,6 +135,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
+  // Lido finance
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYnBXvCy9qNTZEA1Bd1R3Apq6Mf2yzsgQL1uhUkuQR1jE`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
 ]
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
