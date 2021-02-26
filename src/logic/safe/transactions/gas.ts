@@ -15,6 +15,8 @@ import { sameString } from 'src/utils/strings'
 export const MINIMUM_TRANSACTION_GAS = 21000
 // Estimation of gas required for each signature (aproximately 7800, roundup to 8000)
 export const GAS_REQUIRED_PER_SIGNATURE = 8000
+// Some data will be added before execution (signatures and some other we can't estimate on creation)
+export const GAS_FOR_EXTRA_DATA_VALUES = 10000
 
 // Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
 const parseRequiredTxGasResponse = (data: string): number => {
@@ -234,7 +236,8 @@ export const estimateGasForTransactionCreation = async (
     // We add the minimum required gas for a transaction
     // TODO: This fix will be more accurate when we have a service for estimation.
     // This fix takes the safe threshold and multiplies it by GAS_REQUIRED_PER_SIGNATURE.
-    const fixedGasCosts = MINIMUM_TRANSACTION_GAS + (Number(threshold) || 1) * GAS_REQUIRED_PER_SIGNATURE
+    const fixedGasCosts =
+      MINIMUM_TRANSACTION_GAS + (Number(threshold) || 1) * GAS_REQUIRED_PER_SIGNATURE + GAS_FOR_EXTRA_DATA_VALUES
     const additionalGasBatches = [0, 10000, 20000, 40000, 80000, 160000, 320000, 640000, 1280000, 2560000, 5120000]
 
     return await calculateMinimumGasForTransaction(
