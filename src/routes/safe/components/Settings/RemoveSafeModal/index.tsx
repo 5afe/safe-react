@@ -1,10 +1,11 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import OpenInNew from '@material-ui/icons/OpenInNew'
 import classNames from 'classnames'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { getExplorerInfo } from 'src/config'
 
 import { styles } from './style'
 
@@ -17,23 +18,50 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getEtherScanLink } from 'src/logic/wallets/getWeb3'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import removeSafe from 'src/routes/safe/store/actions/removeSafe'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { history } from 'src/store'
+import {
+  defaultSafeSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 import { md, secondary } from 'src/theme/variables'
+import { WELCOME_ADDRESS } from 'src/routes/routes'
+import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 const openIconStyle = {
   height: md,
   color: secondary,
 }
 
-const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
+const useStyles = makeStyles(styles)
+
+type RemoveSafeModalProps = {
+  isOpen: boolean
+  onClose: () => void
+}
+
+export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
+  const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector)
+  const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
-  const etherScanLink = getEtherScanLink('address', safeAddress)
+  const explorerInfo = getExplorerInfo(safeAddress)
+  const { url } = explorerInfo()
+
+  const onRemoveSafeHandler = async () => {
+    await dispatch(removeLocalSafe(safeAddress))
+    if (sameAddress(safeAddress, defaultSafe)) {
+      await saveDefaultSafe('')
+    }
+
+    onClose()
+    // using native redirect in order to avoid problems in several components
+    // trying to access references of the removed safe.
+    const relativePath = window.location.href.split('/#/')[0]
+    window.location.href = `${relativePath}/#/${WELCOME_ADDRESS}`
+  }
 
   return (
     <Modal
@@ -66,7 +94,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
                 <Paragraph color="disabled" noMargin size="md">
                   {safeAddress}
                 </Paragraph>
-                <Link className={classes.open} target="_blank" to={etherScanLink}>
+                <Link className={classes.open} target="_blank" to={url}>
                   <OpenInNew style={openIconStyle} />
                 </Link>
               </Block>
@@ -89,11 +117,7 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
         <Button
           className={classes.buttonRemove}
           minWidth={140}
-          onClick={() => {
-            dispatch(removeSafe(safeAddress))
-            onClose()
-            history.push(SAFELIST_ADDRESS)
-          }}
+          onClick={onRemoveSafeHandler}
           type="submit"
           variant="contained"
         >
@@ -103,5 +127,3 @@ const RemoveSafeComponent = ({ classes, isOpen, onClose }) => {
     </Modal>
   )
 }
-
-export const RemoveSafeModal = withStyles(styles as any)(RemoveSafeComponent)

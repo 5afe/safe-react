@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useFormState, useField } from 'react-final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import {
@@ -11,6 +11,7 @@ import {
   mustBeEthereumAddress,
   mustBeEthereumContractAddress,
   required,
+  Validator,
 } from 'src/components/forms/validator'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -26,21 +27,25 @@ export interface EthAddressInputProps {
   text: string
 }
 
-const EthAddressInput = ({
+export const EthAddressInput = ({
   isContract = true,
   isRequired = true,
   name,
   onScannedValue,
   text,
-}: EthAddressInputProps) => {
+}: EthAddressInputProps): React.ReactElement => {
   const classes = useStyles()
-  const validatorsList = [isRequired && required, mustBeEthereumAddress, isContract && mustBeEthereumContractAddress]
-  const validate = composeValidators(...validatorsList.filter((_) => _))
+  const validatorsList = [
+    isRequired && required,
+    mustBeEthereumAddress,
+    isContract && mustBeEthereumContractAddress,
+  ] as Validator[]
+  const validate = composeValidators(...validatorsList.filter((validator) => validator))
   const { pristine } = useFormState({ subscription: { pristine: true } })
   const {
     input: { value },
   } = useField('contractAddress', { subscription: { value: true } })
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string } | null>({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
     address: value,
     name: '',
   })
@@ -52,6 +57,7 @@ const EthAddressInput = ({
       scannedAddress = scannedAddress.replace('ethereum:', '')
     }
 
+    setSelectedEntry({ address: scannedAddress })
     onScannedValue(scannedAddress)
     closeQrModal()
   }
@@ -77,11 +83,10 @@ const EthAddressInput = ({
               validate={validate}
             />
           ) : (
-            <AddressBookInput
+            <ContractsAddressBookInput
               setSelectedEntry={setSelectedEntry}
               setIsValidAddress={() => {}}
               fieldMutator={onScannedValue}
-              isCustomTx
               pristine={pristine}
             />
           )}
@@ -93,5 +98,3 @@ const EthAddressInput = ({
     </>
   )
 }
-
-export default EthAddressInput

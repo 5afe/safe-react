@@ -1,11 +1,12 @@
-import { lg, md, secondaryText, sm } from 'src/theme/variables'
+import { background, lg, md, secondaryText, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -29,7 +30,7 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     width: '100%',
   },
@@ -39,5 +40,9 @@ export const styles = () => ({
   errorText: {
     position: 'absolute',
     bottom: '-25px',
+  },
+  gasCostsContainer: {
+    backgroundColor: background,
+    padding: `${sm} ${lg}`,
   },
 })

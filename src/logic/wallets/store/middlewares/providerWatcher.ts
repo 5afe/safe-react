@@ -1,5 +1,5 @@
 import closeSnackbar from 'src/logic/notifications/store/actions/closeSnackbar'
-import { WALLET_PROVIDER, getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider } from 'src/logic/wallets/store/actions'
 import { ADD_PROVIDER } from 'src/logic/wallets/store/actions/addProvider'
 import { REMOVE_PROVIDER } from 'src/logic/wallets/store/actions/removeProvider'
@@ -16,8 +16,7 @@ export const loadLastUsedProvider = async (): Promise<string | undefined> => {
   return lastUsedProvider
 }
 
-let watcherInterval = null
-
+let watcherInterval
 const providerWatcherMware = (store) => (next) => async (action) => {
   const handledAction = next(action)
 
@@ -30,14 +29,11 @@ const providerWatcherMware = (store) => (next) => async (action) => {
           clearInterval(watcherInterval)
         }
 
-        if (currentProviderProps.name.toUpperCase() === WALLET_PROVIDER.METAMASK && (window as any).ethereum) {
-          ;(window as any).ethereum.autoRefreshOnNetworkChange = false
-        }
         saveToStorage(LAST_USED_PROVIDER_KEY, currentProviderProps.name)
 
         watcherInterval = setInterval(async () => {
           const web3 = getWeb3()
-          const providerInfo = await getProviderInfo(web3.currentProvider)
+          const providerInfo = await getProviderInfo(web3)
 
           const networkChanged = currentProviderProps.network !== providerInfo.network
 

@@ -1,110 +1,55 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import { withStyles } from '@material-ui/core/styles'
 import classNames from 'classnames'
-import * as React from 'react'
-
-import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
-
+import React, { useEffect, useState } from 'react'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
-import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
-import { background, border, lg, screenSm, sm } from 'src/theme/variables'
+import { getAccountsFrom, getNamesFrom, getSafeCreationSaltFrom } from 'src/routes/open/utils/safeDataExtractor'
 
-const { useEffect, useState } = React
+import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
+import { useStyles } from './styles'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
-const styles = () => ({
-  root: {
-    minHeight: '300px',
-    [`@media (min-width: ${screenSm}px)`]: {
-      flexDirection: 'row',
-    },
-  },
-  detailsColumn: {
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      minWidth: '0',
-    },
-  },
-  ownersColumn: {
-    minWidth: '100%',
-    [`@media (min-width: ${screenSm}px)`]: {
-      minWidth: '0',
-    },
-  },
-  details: {
-    padding: lg,
-    borderRight: `solid 1px ${border}`,
-    height: '100%',
-  },
-  info: {
-    backgroundColor: background,
-    flexDirection: 'column',
-    justifyContent: 'center',
-    padding: lg,
-    textAlign: 'center',
-  },
-  owners: {
-    padding: lg,
-  },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
-  owner: {
-    alignItems: 'center',
-    minWidth: 'fit-content',
-    padding: sm,
-    paddingLeft: lg,
-  },
-  user: {
-    justifyContent: 'left',
-    '& > p': {
-      marginRight: sm,
-    },
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-})
+type ReviewComponentProps = {
+  userAccount: string
+  values: any
+}
 
-const ReviewComponent = ({ classes, userAccount, values }: any) => {
+const { nativeCoin } = getNetworkInfo()
+
+const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
+  const classes = useStyles()
+
   const [gasCosts, setGasCosts] = useState('< 0.001')
   const names = getNamesFrom(values)
   const addresses = getAccountsFrom(values)
   const numOwners = getNumOwnersFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   useEffect(() => {
     const estimateGas = async () => {
       if (!addresses.length || !numOwners || !userAccount) {
         return
       }
-      const web3 = getWeb3()
-      const { fromWei, toBN } = web3.utils
-      const estimatedGasCosts = await estimateGasForDeployingSafe(addresses, numOwners, userAccount)
-      const gasCostsAsEth = fromWei(toBN(estimatedGasCosts), 'ether')
-      const formattedGasCosts = formatAmount(gasCostsAsEth)
+      const estimatedGasCosts = (
+        await estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt)
+      ).toString()
+      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const formattedGasCosts = formatAmount(gasCosts)
       setGasCosts(formattedGasCosts)
     }
 
     estimateGas()
-  }, [addresses, numOwners, userAccount])
+  }, [addresses, numOwners, safeCreationSalt, userAccount])
 
   return (
     <>
@@ -176,7 +121,7 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
                           {addresses[index]}
                         </Paragraph>
                         <CopyBtn content={addresses[index]} />
-                        <EtherscanBtn type="address" value={addresses[index]} />
+                        <ExplorerButton explorerUrl={getExplorerInfo(addresses[index])} />
                       </Block>
                     </Block>
                   </Col>
@@ -190,22 +135,21 @@ const ReviewComponent = ({ classes, userAccount, values }: any) => {
       <Row align="center" className={classes.info}>
         <Paragraph color="primary" noMargin size="md">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately {gasCosts} ETH. The exact amount will be determined by your
-          wallet.
+          wallet. The creation will cost approximately {gasCosts} {nativeCoin.name}. The exact amount will be determined
+          by your wallet.
         </Paragraph>
       </Row>
     </>
   )
 }
 
-const ReviewPage = withStyles(styles as any)(ReviewComponent)
-
-const Review = () => (controls, { values }) => (
-  <>
-    <OpenPaper controls={controls} padding={false}>
-      <ReviewPage values={values} />
-    </OpenPaper>
-  </>
-)
-
-export default Review
+export const Review = () =>
+  function ReviewPage(controls, props): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls} padding={false}>
+          <ReviewComponent {...props} />
+        </OpenPaper>
+      </>
+    )
+  }

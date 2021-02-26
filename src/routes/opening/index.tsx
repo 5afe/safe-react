@@ -2,22 +2,25 @@ import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
-import { ErrorFooter } from './components/Footer'
+import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
 
 import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
-import { initContracts } from 'src/logic/contracts/safeContracts'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { background, connected } from 'src/theme/variables'
+import { providerNameSelector } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
 
-const loaderDotsSvg = require('./assets/loader-dots.svg')
-const successSvg = require('./assets/success.svg')
-const vaultErrorSvg = require('./assets/vault-error.svg')
-const vaultSvg = require('./assets/vault.svg')
+import LoaderDotsSvg from './assets/loader-dots.svg'
+import SuccessSvg from './assets/success.svg'
+import VaultErrorSvg from './assets/vault-error.svg'
+import VaultSvg from './assets/vault.svg'
+import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const Wrapper = styled.div`
   display: grid;
@@ -29,6 +32,7 @@ const Wrapper = styled.div`
 const Title = styled(Heading)`
   grid-column: 1/3;
   grid-row: 1;
+  margin: 7px 0 0 0 !important;
 `
 
 const Nav = styled.div`
@@ -53,13 +57,17 @@ const Body = styled.div`
 const CardTitle = styled.div`
   font-size: 20px;
 `
-const FullParagraph = styled(Paragraph)`
-  background-color: ${(p) => (p.inverseColors ? connected : background)};
-  color: ${(p) => (p.inverseColors ? background : connected)};
+
+interface FullParagraphProps {
+  inversecolors: string
+}
+
+const FullParagraph = styled(Paragraph)<FullParagraphProps>`
+  background-color: ${(p) => (p.inversecolors ? connected : background)};
+  color: ${(p) => (p.inversecolors ? background : connected)};
   padding: 24px;
   font-size: 16px;
   margin-bottom: 16px;
-
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
 
@@ -92,25 +100,31 @@ const BackButton = styled(Button)`
   margin: 20px auto 0;
 `
 
-// type Props = {
-//   provider: string
-//   creationTxHash: Promise<any>
-//   submittedPromise: Promise<any>
-//   onRetry: () => void
-//   onSuccess: () => void
-//   onCancel: () => void
-// }
+type Props = {
+  creationTxHash?: string
+  submittedPromise?: PromiEvent<TransactionReceipt>
+  onRetry: () => void
+  onSuccess: (createdSafeAddress: string) => void
+  onCancel: () => void
+}
 
-const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider, submittedPromise }: any) => {
+export const SafeDeployment = ({
+  creationTxHash,
+  onCancel,
+  onRetry,
+  onSuccess,
+  submittedPromise,
+}: Props): React.ReactElement => {
   const [loading, setLoading] = useState(true)
   const [stepIndex, setStepIndex] = useState(0)
-  const [safeCreationTxHash, setSafeCreationTxHash] = useState()
-  const [createdSafeAddress, setCreatedSafeAddress] = useState()
+  const [safeCreationTxHash, setSafeCreationTxHash] = useState('')
+  const [createdSafeAddress, setCreatedSafeAddress] = useState('')
 
   const [error, setError] = useState(false)
   const [intervalStarted, setIntervalStarted] = useState(false)
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
+  const provider = useSelector(providerNameSelector)
 
   const confirmationStep = isConfirmationStep(stepIndex)
 
@@ -136,19 +150,19 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
 
   const getImage = () => {
     if (error) {
-      return vaultErrorSvg
+      return VaultErrorSvg
     }
 
     if (stepIndex <= 4) {
-      return vaultSvg
+      return VaultSvg
     }
 
-    return successSvg
+    return SuccessSvg
   }
 
   useEffect(() => {
     const loadContracts = async () => {
-      await initContracts()
+      await instantiateSafeContracts()
       setLoading(false)
     }
 
@@ -241,7 +255,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
   useEffect(() => {
     let interval
 
-    const awaitUntilSafeIsDeployed = async () => {
+    const awaitUntilSafeIsDeployed = async (safeCreationTxHash: string) => {
       try {
         const web3 = getWeb3()
         const receipt = await web3.eth.getTransactionReceipt(safeCreationTxHash)
@@ -282,7 +296,9 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
       return
     }
 
-    awaitUntilSafeIsDeployed()
+    if (typeof safeCreationTxHash === 'string') {
+      awaitUntilSafeIsDeployed(safeCreationTxHash)
+    }
 
     return () => {
       clearInterval(interval)
@@ -293,7 +309,7 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     return <Loader size="sm" />
   }
 
-  let FooterComponent = null
+  let FooterComponent
   if (error) {
     FooterComponent = ErrorFooter
   } else if (steps[stepIndex].footerComponent) {
@@ -317,10 +333,10 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={loaderDotsSvg} />}</BodyLoader>
+        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
 
         <BodyInstruction>
-          <FullParagraph color="primary" inverseColors={confirmationStep} noMargin size="md">
+          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
             {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
           </FullParagraph>
         </BodyInstruction>
@@ -344,5 +360,3 @@ const SafeDeployment = ({ creationTxHash, onCancel, onRetry, onSuccess, provider
     </Wrapper>
   )
 }
-
-export default SafeDeployment

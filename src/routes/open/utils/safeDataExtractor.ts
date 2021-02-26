@@ -1,7 +1,7 @@
 import { List } from 'immutable'
 
-import { makeOwner } from 'src/routes/safe/store/models/owner'
-import { SafeOwner } from '../../safe/store/models/safe'
+import { makeOwner } from 'src/logic/safe/store/models/owner'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const getAccountsFrom = (values) => {
   const accounts = Object.keys(values)
@@ -28,3 +28,5 @@ export const getOwnersFrom = (names, addresses): List<SafeOwner> => {
 export const getThresholdFrom = (values) => Number(values.confirmations)
 
 export const getSafeNameFrom = (values) => values.name
+
+export const getSafeCreationSaltFrom = (values) => values.safeCreationSalt

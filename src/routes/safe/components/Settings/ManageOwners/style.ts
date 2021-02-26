@@ -1,6 +1,7 @@
 import { lg, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   formContainer: {
     minHeight: '420px',
   },

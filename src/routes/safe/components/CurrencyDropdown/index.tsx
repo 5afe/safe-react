@@ -16,18 +16,25 @@ import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setS
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
+import { setImageToPlaceholder } from '../Balances/utils'
+import Img from 'src/components/layout/Img/index'
+import { getNetworkInfo } from 'src/config'
+import { sameString } from 'src/utils/strings'
 
-const CurrencyDropdown = () => {
-  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+const { nativeCoin } = getNetworkInfo()
+
+const CurrencyDropdown = (): React.ReactElement | null => {
+  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
-
   const [searchParams, setSearchParams] = useState('')
-  const classes = useDropdownStyles()
+
+  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+  const tokenImage = nativeCoin.logoUri
+  const classes = useDropdownStyles({})
   const currenciesListFiltered = currenciesList.filter((currency) =>
     currency.toLowerCase().includes(searchParams.toLowerCase()),
   )
@@ -45,7 +52,11 @@ const CurrencyDropdown = () => {
     handleClose()
   }
 
-  return !selectedCurrency ? null : (
+  if (!selectedCurrency) {
+    return null
+  }
+
+  return (
     <MuiThemeProvider theme={DropdownListTheme}>
       <>
         <button className={classes.button} onClick={handleClick} type="button">
@@ -96,14 +107,23 @@ const CurrencyDropdown = () => {
                 value={currencyName}
               >
                 <ListItemIcon className={classes.iconLeft}>
-                  <div
-                    className={classNames(
-                      classes.localFlag,
-                      'currency-flag',
-                      'currency-flag-lg',
-                      `currency-flag-${currencyName.toLowerCase()}`,
-                    )}
-                  />
+                  {sameString(currencyName, nativeCoin.symbol) ? (
+                    <Img
+                      alt={nativeCoin.symbol.toLocaleLowerCase()}
+                      onError={setImageToPlaceholder}
+                      src={tokenImage}
+                      className={classNames(classes.etherFlag)}
+                    />
+                  ) : (
+                    <div
+                      className={classNames(
+                        classes.localFlag,
+                        'currency-flag',
+                        'currency-flag-lg',
+                        `currency-flag-${currencyName.toLowerCase()}`,
+                      )}
+                    />
+                  )}
                 </ListItemIcon>
                 <ListItemText primary={currencyName} />
                 {currencyName === selectedCurrency ? (

@@ -7,14 +7,29 @@ import styled from 'styled-components'
 
 const Wrapper = styled.div``
 
+const HeaderWrapper = styled.div``
+
+const TitleWrapper = styled.div``
+
 const Header = styled.div`
   display: flex;
   align-items: center;
 `
 
-const Title = styled.div``
+interface CollapseProps {
+  title: React.ReactElement | string
+  description?: React.ReactElement | string
+  collapseClassName?: string
+  headerWrapperClassName?: string
+}
 
-const Collapse = ({ children, description, title }: any) => {
+const Collapse: React.FC<CollapseProps> = ({
+  children,
+  description = null,
+  title,
+  collapseClassName,
+  headerWrapperClassName,
+}): React.ReactElement => {
   const [open, setOpen] = React.useState(false)
 
   const handleClick = () => {
@@ -23,15 +38,17 @@ const Collapse = ({ children, description, title }: any) => {
 
   return (
     <Wrapper>
-      <Title>{title}</Title>
-      <Header>
-        <IconButton disableRipple onClick={handleClick} size="small">
-          {open ? <ExpandLess /> : <ExpandMore />}
-        </IconButton>
-        {description}
-      </Header>
+      <HeaderWrapper className={headerWrapperClassName} onClick={handleClick}>
+        <TitleWrapper>{title}</TitleWrapper>
+        <Header>
+          <IconButton disableRipple size="small">
+            {open ? <ExpandLess /> : <ExpandMore />}
+          </IconButton>
+          {description}
+        </Header>
+      </HeaderWrapper>
 
-      <CollapseMUI in={open} timeout="auto" unmountOnExit>
+      <CollapseMUI in={open} timeout="auto" unmountOnExit className={collapseClassName}>
         {children}
       </CollapseMUI>
     </Wrapper>

@@ -8,6 +8,7 @@ import SettingsTxIcon from './assets/settings.svg'
 
 import CustomIconText from 'src/components/CustomIconText'
 import { getAppInfoFromOrigin, getAppInfoFromUrl } from 'src/routes/safe/components/Apps/utils'
+import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 
 const typeToIcon = {
   outgoing: OutgoingTxIcon,
@@ -19,6 +20,8 @@ const typeToIcon = {
   creation: SettingsTxIcon,
   cancellation: SettingsTxIcon,
   upgrade: SettingsTxIcon,
+  module: SettingsTxIcon,
+  spendingLimit: SettingsTxIcon,
 }
 
 const typeToLabel = {
@@ -31,31 +34,41 @@ const typeToLabel = {
   creation: 'Safe created',
   cancellation: 'Cancellation transaction',
   upgrade: 'Contract Upgrade',
+  module: 'Module transaction',
+  spendingLimit: 'Spending Limit',
 }
 
-const TxType = ({ origin, txType }: any) => {
+interface TxTypeProps {
+  origin: string | null
+  txType: keyof typeof typeToLabel
+}
+
+const TxType = ({ origin, txType }: TxTypeProps): React.ReactElement => {
   const [loading, setLoading] = useState(true)
-  const [appInfo, setAppInfo] = useState<any>()
+  const [appInfo, setAppInfo] = useState<SafeApp>()
   const [forceCustom, setForceCustom] = useState(false)
 
   useEffect(() => {
-    const getAppInfo = async () => {
+    const getAppInfo = async (origin: string | null) => {
+      if (!origin) {
+        return
+      }
+
       const parsedOrigin = getAppInfoFromOrigin(origin)
+
       if (!parsedOrigin) {
         setForceCustom(true)
         setLoading(false)
         return
       }
+
       const appInfo = await getAppInfoFromUrl(parsedOrigin.url)
+
       setAppInfo(appInfo)
       setLoading(false)
     }
 
-    if (!origin) {
-      return
-    }
-
-    getAppInfo()
+    getAppInfo(origin)
   }, [origin, txType])
 
   if (forceCustom || !origin) {

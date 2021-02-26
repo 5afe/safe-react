@@ -3,10 +3,13 @@
 .DS_Store
 yarn-error.log
 .env*
+.eslintcache
 /.idea
 dist
 electron-builder.yml
 /.yalc
 yalc.lock
 # testing
-/coverage
+/coverage/
+src/types/contracts/
+tsconfig.tsbuildinfo

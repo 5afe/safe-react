@@ -7,20 +7,20 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { safeSelector } from 'src/routes/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
-import EthAddressInput from './EthAddressInput'
-import EthValue from './EthValue'
+import { EthAddressInput } from './EthAddressInput'
 import FormDivisor from './FormDivisor'
 import FormErrorMessage from './FormErrorMessage'
-import Header from './Header'
-import MethodsDropdown from './MethodsDropdown'
-import RenderInputParams from './RenderInputParams'
-import RenderOutputParams from './RenderOutputParams'
-import { abiExtractor, createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
+import { Header } from './Header'
+import { MethodsDropdown } from './MethodsDropdown'
+import { RenderInputParams } from './RenderInputParams'
+import { RenderOutputParams } from './RenderOutputParams'
+import { createTxObject, formMutators, handleSubmitError, isReadMethod, ensResolver } from './utils'
 import { TransactionReviewType } from './Review'
+import { NativeCoinValue } from './NativeCoinValue'
 
 const useStyles = makeStyles(styles)
 
@@ -31,9 +31,13 @@ export interface CreatedTx {
   value: string | number
 }
 
+export type ContractInteractionTx = {
+  contractAddress?: string
+}
+
 export interface ContractInteractionProps {
-  contractAddress: string
-  initialValues: { contractAddress?: string }
+  contractAddress?: string
+  initialValues: ContractInteractionTx
   isABI: boolean
   onClose: () => void
   switchMethod: () => void
@@ -49,14 +53,14 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const { address: safeAddress = '' } = useSelector(safeSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   let setCallResults
 
   React.useMemo(() => {
     if (contractAddress) {
       initialValues.contractAddress = contractAddress
     }
-  }, [contractAddress, initialValues.contractAddress])
+  }, [contractAddress, initialValues])
 
   const saveForm = async (values: CreatedTx): Promise<void> => {
     await handleSubmit(values, false)
@@ -66,7 +70,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   const handleSubmit = async (
     { contractAddress, selectedMethod, value, ...values },
     submit = true,
-  ): Promise<void | any> => {
+  ): Promise<void | Record<string, string>> => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
@@ -92,7 +96,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
       <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
       <Hairline />
       <GnoForm
-        decorators={[abiExtractor, ensResolver]}
+        decorators={[ensResolver]}
         formMutators={formMutators}
         initialValues={initialValues}
         onSubmit={handleSubmit}
@@ -112,7 +116,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
-                <EthValue onSetMax={mutators.setMax} />
+                <NativeCoinValue onSetMax={mutators.setMax} />
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />

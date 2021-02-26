@@ -1,13 +1,13 @@
 import React from 'react'
-import styled from 'styled-components'
-
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Paragraph from 'src/components/layout/Paragraph'
 import { border, xs } from 'src/theme/variables'
+import styled from 'styled-components'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 
 const Wrapper = styled.div`
   display: flex;
@@ -42,6 +42,8 @@ interface Props {
   ethBalance?: string
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactElement => {
   return (
     <Wrapper>
@@ -59,12 +61,12 @@ const AddressInfo = ({ ethBalance, safeAddress, safeName }: Props): React.ReactE
             {safeAddress}
           </Paragraph>
           <CopyBtn content={safeAddress} />
-          <EtherscanBtn type="address" value={safeAddress} />
+          <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
         </div>
         {ethBalance && (
           <StyledBlock>
             <Paragraph noMargin>
-              Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ETH`}</Bold>
+              Balance: <Bold data-testid="current-eth-balance">{`${ethBalance} ${nativeCoin.symbol}`}</Bold>
             </Paragraph>
           </StyledBlock>
         )}

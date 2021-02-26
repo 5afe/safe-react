@@ -1,23 +1,30 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
+import { FormApi } from 'final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
+import { StepperPageFormProps } from 'src/components/Stepper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { mustBeEthereumAddress, noErrorsOn, required } from 'src/components/forms/validator'
+import {
+  mustBeEthereumAddress,
+  noErrorsOn,
+  required,
+  composeValidators,
+  minMaxLength,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
-import { SAFE_MASTER_COPY_ADDRESS_V10, getSafeMasterContract, validateProxy } from 'src/logic/contracts/safeContracts'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
-const styles = () => ({
+const useStyles = makeStyles({
   root: {
     display: 'flex',
     maxWidth: '460px',
@@ -34,52 +41,41 @@ const styles = () => ({
   },
 })
 
-export const SAFE_INSTANCE_ERROR = 'Address given is not a Safe instance'
-export const SAFE_MASTERCOPY_ERROR = 'Mastercopy used by this Safe is not the same'
+export const SAFE_ADDRESS_NOT_VALID = 'Address given is not a valid Safe address'
 
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
-export const safeFieldsValidation = async (values) => {
+export const safeFieldsValidation = async (values): Promise<Record<string, string>> => {
   const errors = {}
-  const web3 = getWeb3()
-  const safeAddress = values[FIELD_LOAD_ADDRESS]
+  const address = values[FIELD_LOAD_ADDRESS]
 
-  if (!safeAddress || mustBeEthereumAddress(safeAddress) !== undefined) {
+  if (!address || mustBeEthereumAddress(address) !== undefined) {
     return errors
   }
 
-  const isValidProxy = await validateProxy(safeAddress)
-  if (!isValidProxy) {
-    errors[FIELD_LOAD_ADDRESS] = SAFE_INSTANCE_ERROR
-    return errors
-  }
-
-  // check mastercopy
-  const proxyAddressFromStorage = await web3.eth.getStorageAt(safeAddress, 0)
-  // https://www.reddit.com/r/ethereum/comments/6l3da1/how_long_are_ethereum_addresses/
-  // ganache returns plain address
-  // rinkeby returns 0x0000000000000+{40 address charachers}
-  // address comes last so we just get last 40 charachers (1byte = 2hex chars)
-  const checksummedProxyAddress = web3.utils.toChecksumAddress(
-    `0x${proxyAddressFromStorage.substr(proxyAddressFromStorage.length - 40)}`,
-  )
-  const safeMaster = await getSafeMasterContract()
-  const masterCopy = safeMaster.address
-  const sameMasterCopy =
-    checksummedProxyAddress === masterCopy || checksummedProxyAddress === SAFE_MASTER_COPY_ADDRESS_V10
-  if (!sameMasterCopy) {
-    errors[FIELD_LOAD_ADDRESS] = SAFE_MASTERCOPY_ERROR
+  // if getSafeInfo does not provide data, it's not a valid safe.
+  const safeInfo = await getSafeInfo(address)
+  if (!safeInfo) {
+    errors[FIELD_LOAD_ADDRESS] = SAFE_ADDRESS_NOT_VALID
   }
 
   return errors
 }
 
-const Details = ({ classes, errors, form }) => {
-  const handleScan = (value, closeQrModal) => {
+interface DetailsFormProps {
+  errors: Record<string, string>
+  form: FormApi
+}
+
+const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => {
+  const classes = useStyles()
+
+  const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
     closeQrModal()
   }
+
   return (
     <>
       <Block margin="md">
@@ -99,7 +95,7 @@ const Details = ({ classes, errors, form }) => {
             placeholder="Name of the Safe"
             text="Safe name"
             type="text"
-            validate={required}
+            validate={composeValidators(required, minMaxLength(1, 50))}
             testId="load-safe-name-field"
           />
         </Col>
@@ -107,10 +103,11 @@ const Details = ({ classes, errors, form }) => {
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
-            component={TextField}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}
+            // eslint-disable-next-line
+            // @ts-ignore
             inputAdornment={
               noErrorsOn(FIELD_LOAD_ADDRESS, errors) && {
                 endAdornment: (
@@ -123,7 +120,6 @@ const Details = ({ classes, errors, form }) => {
             name={FIELD_LOAD_ADDRESS}
             placeholder="Safe Address*"
             text="Safe Address"
-            type="text"
             testId="load-safe-address-field"
           />
         </Col>
@@ -148,14 +144,15 @@ const Details = ({ classes, errors, form }) => {
   )
 }
 
-const DetailsForm = withStyles(styles as any)(Details)
-
-const DetailsPage = () => (controls, { errors, form }) => (
-  <>
-    <OpenPaper controls={controls}>
-      <DetailsForm errors={errors} form={form} />
-    </OpenPaper>
-  </>
-)
+const DetailsPage = () =>
+  function LoadSafeDetails(controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement {
+    return (
+      <>
+        <OpenPaper controls={controls}>
+          <DetailsForm errors={errors} form={form} />
+        </OpenPaper>
+      </>
+    )
+  }
 
 export default DetailsPage

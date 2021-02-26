@@ -2,50 +2,32 @@ import { FORM_ERROR, Mutator, SubmissionErrors } from 'final-form'
 import createDecorator from 'final-form-calculate'
 import { ContractSendMethod } from 'web3-eth-contract'
 
-import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getNetwork } from 'src/config'
-import { getConfiguredSource } from 'src/logic/contractInteraction/sources'
 import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
-import { getAddressFromENS, getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getAddressFromDomain, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
-import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { isValidCryptoDomainName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { BigNumber } from 'bignumber.js'
 
 export const NO_CONTRACT = 'no contract'
-
-export const abiExtractor = createDecorator({
-  field: 'contractAddress',
-  updates: {
-    abi: async (contractAddress) => {
-      if (
-        !contractAddress ||
-        mustBeEthereumAddress(contractAddress) ||
-        (await mustBeEthereumContractAddress(contractAddress))
-      ) {
-        return
-      }
-      const network = getNetwork()
-      const source = getConfiguredSource()
-      return source.getContractABI(contractAddress, network)
-    },
-  },
-})
 
 export const ensResolver = createDecorator({
   field: 'contractAddress',
   updates: {
     contractAddress: async (contractAddress) => {
       try {
-        const resolvedAddress = isValidEnsName(contractAddress) && (await getAddressFromENS(contractAddress))
+        const resolvedAddress =
+          (isValidEnsName(contractAddress) || isValidCryptoDomainName(contractAddress)) &&
+          (await getAddressFromDomain(contractAddress))
 
         if (resolvedAddress) {
           return resolvedAddress
         }
+
+        return contractAddress
       } catch (e) {
         console.error(e.message)
         return contractAddress
       }
-
-      return contractAddress
     },
   },
 })
@@ -59,7 +41,7 @@ export const formMutators: Record<string, Mutator<{ selectedMethod: { name: stri
   },
   setSelectedMethod: (args, state, utils) => {
     const modified =
-      state.lastFormState.values.selectedMethod && state.lastFormState.values.selectedMethod.name !== args[0].name
+      state.lastFormState?.values.selectedMethod && state.lastFormState.values.selectedMethod.name !== args[0].name
 
     if (modified) {
       utils.changeValue(state, 'callResults', () => '')
@@ -71,6 +53,9 @@ export const formMutators: Record<string, Mutator<{ selectedMethod: { name: stri
   setCallResults: (args, state, utils) => {
     utils.changeValue(state, 'callResults', () => args[0])
   },
+  setAbiValue: (args, state, utils) => {
+    utils.changeValue(state, 'abi', () => args[0])
+  },
 }
 
 export const isAddress = (type: string): boolean => type.indexOf('address') === 0
@@ -81,6 +66,19 @@ export const isInt = (type: string): boolean => type.indexOf('int') === 0
 export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
+export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
+  try {
+    const arrayResult = JSON.parse(parameter)
+    return arrayResult.map((value) => {
+      if (Number.isInteger(value)) {
+        return new BigNumber(value).toString()
+      }
+      return value
+    })
+  } catch (err) {
+    return null
+  }
+}
 
 export const handleSubmitError = (error: SubmissionErrors, values: Record<string, string>): Record<string, string> => {
   for (const key in values) {
@@ -101,11 +99,7 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
 const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
   const key = generateFormFieldKey(type, signatureHash, index)
 
-  if (isArrayParameter(type)) {
-    return JSON.parse(values[key])
-  }
-
-  return values[key]
+  return getParsedJSONOrArrayFromString(values[key]) || values[key]
 }
 
 export const createTxObject = (
@@ -114,9 +108,9 @@ export const createTxObject = (
   values: Record<string, string>,
 ): ContractSendMethod => {
   const web3 = getWeb3()
-  const contract: any = new web3.eth.Contract([method], contractAddress)
-  const { inputs, name, signatureHash } = method
-  const args = inputs.map(extractMethodArgs(signatureHash, values))
+  const contract = new web3.eth.Contract([method], contractAddress)
+  const { inputs, name = '', signatureHash } = method
+  const args = inputs?.map(extractMethodArgs(signatureHash, values)) || []
 
   return contract.methods[name](...args)
 }

@@ -2,18 +2,15 @@ import FormStep from '@material-ui/core/Step'
 import StepContent from '@material-ui/core/StepContent'
 import StepLabel from '@material-ui/core/StepLabel'
 import Stepper from '@material-ui/core/Stepper'
-import { withStyles } from '@material-ui/core/styles'
-import * as React from 'react'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { useCallback, useEffect, useState } from 'react'
+import { FormApi } from 'final-form'
 
 import Controls from './Controls'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import Hairline from 'src/components/layout/Hairline'
 import { history } from 'src/store'
-
-const { useEffect, useState } = React
-
-export { default as Step } from './Step'
 
 const transitionProps = {
   timeout: {
@@ -22,11 +19,47 @@ const transitionProps = {
   },
 }
 
-export const StepperPage = ({ children }: any) => children
+export interface StepperPageFormProps {
+  values: Record<string, string>
+  errors: Record<string, string>
+  form: FormApi
+}
 
-const GnoStepper = (props: any) => {
+interface StepperPageProps {
+  validate?: (...args: unknown[]) => undefined | Record<string, string> | Promise<undefined | Record<string, string>>
+  component: (
+    ...args: unknown[]
+  ) => (controls: React.ReactElement, formProps: StepperPageFormProps) => React.ReactElement
+  [key: string]: unknown
+}
+
+// TODO: Remove this magic
+/* eslint-disable */
+// @ts-ignore
+export const StepperPage = ({}: StepperPageProps): null => null
+/* eslint-enable */
+
+type StepperFormValues = Record<string, string>
+
+interface Mutators {
+  [key: string]: (...args: unknown[]) => void
+}
+
+interface GnoStepperProps<V = StepperFormValues> {
+  initialValues?: Partial<V>
+  onSubmit: (formValues: V) => void
+  steps: string[]
+  buttonLabels?: string[]
+  children: React.ReactNode
+  disabledWhenValidating?: boolean
+  mutators?: Mutators
+  testId?: string
+}
+
+function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
   const [page, setPage] = useState(0)
   const [values, setValues] = useState({})
+  const classes = useStyles()
 
   useEffect(() => {
     if (props.initialValues) {
@@ -39,15 +72,15 @@ const GnoStepper = (props: any) => {
     return aux.props
   }
 
-  const updateInitialProps = (newInitialProps) => {
+  const updateInitialProps = useCallback((newInitialProps) => {
     setValues(newInitialProps)
-  }
+  }, [])
 
   const getActivePageFrom = (pages) => {
     const activePageProps = getPageProps(pages)
-    const { children, ...restProps } = activePageProps
+    const { component, ...restProps } = activePageProps
 
-    return children({ ...restProps, updateInitialProps })
+    return component({ ...restProps, updateInitialProps })
   }
 
   const validate = (valuesToValidate) => {
@@ -92,12 +125,12 @@ const GnoStepper = (props: any) => {
     return next(formValues)
   }
 
-  const isLastPage = (pageNumber) => {
+  const isLastPage = (pageNumber: number): boolean => {
     const { steps } = props
     return pageNumber === steps.length - 1
   }
 
-  const { buttonLabels, children, classes, disabledWhenValidating = false, mutators, steps, testId } = props
+  const { buttonLabels, children, disabledWhenValidating = false, mutators, steps, testId } = props
   const activePage = getActivePageFrom(children)
 
   const lastPage = isLastPage(page)
@@ -157,7 +190,7 @@ const GnoStepper = (props: any) => {
   )
 }
 
-const styles = {
+const useStyles = makeStyles({
   root: {
     flex: '1 1 auto',
     backgroundColor: 'transparent',
@@ -170,6 +203,6 @@ const styles = {
       cursor: 'pointer',
     },
   },
-}
+})
 
-export default withStyles(styles as any)(GnoStepper)
+export default GnoStepper

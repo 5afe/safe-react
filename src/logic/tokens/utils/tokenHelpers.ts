@@ -1,27 +1,21 @@
-import logo from 'src/assets/icons/icon_etherTokens.svg'
+import { List } from 'immutable'
+import { AbiItem } from 'web3-utils'
+
+import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import {
-  getStandardTokenContract,
-  getTokenInfos,
-  getERC721TokenContract,
-} from 'src/logic/tokens/store/actions/fetchTokens'
+import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
+import { isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { isEmptyData } from 'src/routes/safe/store/actions/transactions/utils/transactionHelpers'
-import { TxServiceModel } from 'src/routes/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
-import { Map } from 'immutable'
-
-export const ETH_ADDRESS = '0x000'
-export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
+import { BuildTx, isEmptyData, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { CALL } from 'src/logic/safe/transactions'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const getEthAsToken = (balance: string | number): Token => {
+  const { nativeCoin } = getNetworkInfo()
   return makeToken({
-    address: ETH_ADDRESS,
-    name: 'Ether',
-    symbol: 'ETH',
-    decimals: 18,
-    logoUri: logo,
+    ...nativeCoin,
     balance,
   })
 }
@@ -35,40 +29,19 @@ export const isAddressAToken = async (tokenAddress: string): Promise<boolean> =>
   // } catch {
   //   return 'Not a token address'
   // }
-  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') })
+  const call = await web3.eth.call({ to: tokenAddress, data: web3.utils.sha3('totalSupply()') as string })
 
   return call !== '0x'
 }
 
-export const isTokenTransfer = (tx: TxServiceModel): boolean => {
-  return !isEmptyData(tx.data) && tx.data.substring(0, 10) === '0xa9059cbb' && Number(tx.value) === 0
-}
-
-export const isSendERC721Transaction = (
-  tx: TxServiceModel,
-  txCode: string,
-  knownTokens: Map<string, Token>,
-): boolean => {
-  // "0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85" - ens token contract, includes safeTransferFrom
-  // but no proper ERC721 standard implemented
+export const isTokenTransfer = (tx: BuildTx['tx']): boolean => {
   return (
-    (txCode &&
-      txCode.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH) &&
-      tx.to !== '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85') ||
-    (isTokenTransfer(tx) && !knownTokens.get(tx.to))
+    !isEmptyData(tx.data) &&
+    // Check if contains 'transfer' method code
+    tx.data?.substring(0, 10) === '0xa9059cbb' &&
+    Number(tx.value) === 0 &&
+    tx.operation === CALL
   )
-}
-
-export const getERC721Symbol = async (contractAddress: string): Promise<string> => {
-  let tokenSymbol = 'UNKNOWN'
-  try {
-    const ERC721token = await getERC721TokenContract()
-    const tokenInstance = await ERC721token.at(contractAddress)
-    tokenSymbol = tokenInstance.symbol()
-  } catch (err) {
-    console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
-  }
-  return tokenSymbol
 }
 
 export const getERC20DecimalsAndSymbol = async (
@@ -78,15 +51,17 @@ export const getERC20DecimalsAndSymbol = async (
   try {
     const storedTokenInfo = await getTokenInfos(tokenAddress)
 
-    if (storedTokenInfo === null) {
-      const [tokenDecimals, tokenSymbol] = await generateBatchRequests({
-        abi: ALTERNATIVE_TOKEN_ABI,
+    if (!storedTokenInfo) {
+      const [, tokenDecimals, tokenSymbol] = await generateBatchRequests<
+        [undefined, string | undefined, string | undefined]
+      >({
+        abi: ALTERNATIVE_TOKEN_ABI as AbiItem[],
         address: tokenAddress,
         methods: ['decimals', 'symbol'],
       })
-      return { decimals: Number(tokenDecimals), symbol: tokenSymbol }
+      return { decimals: Number(tokenDecimals), symbol: tokenSymbol ?? 'UNKNOWN' }
     }
-    return { decimals: storedTokenInfo.decimals as number, symbol: storedTokenInfo.symbol }
+    return { decimals: Number(storedTokenInfo.decimals), symbol: storedTokenInfo.symbol }
   } catch (err) {
     console.error(`Failed to retrieve token info for ERC20 token ${tokenAddress}`)
   }
@@ -94,15 +69,11 @@ export const getERC20DecimalsAndSymbol = async (
   return tokenInfo
 }
 
-export const isSendERC20Transaction = async (
-  tx: TxServiceModel,
-  txCode: string,
-  knownTokens: Map<string, Token>,
-): Promise<boolean> => {
-  let isSendTokenTx = !isSendERC721Transaction(tx, txCode, knownTokens) && isTokenTransfer(tx)
+export const isSendERC20Transaction = async (tx: BuildTx['tx']): Promise<boolean> => {
+  let isSendTokenTx = !isSendERC721Transaction(tx) && isTokenTransfer(tx)
 
   if (isSendTokenTx) {
-    const { decimals, symbol } = await getERC20DecimalsAndSymbol(tx.to)
+    const { decimals, symbol } = await getERC20DecimalsAndSymbol((tx as ServiceTx).to)
 
     // some contracts may implement the same methods as in ERC20 standard
     // we may falsely treat them as tokens, so in case we get any errors when getting token info
@@ -113,16 +84,31 @@ export const isSendERC20Transaction = async (
   return isSendTokenTx
 }
 
-export const isERC721Contract = async (contractAddress: string): Promise<boolean> => {
-  const ERC721Token = await getStandardTokenContract()
-  let isERC721 = false
+export type GetTokenByAddress = {
+  tokenAddress: string
+  tokens: List<Token>
+}
 
-  try {
-    isERC721 = true
-    await ERC721Token.at(contractAddress)
-  } catch (error) {
-    console.warn('Asset not found')
+export type TokenFound = {
+  balance: string | number
+  decimals: string | number
+}
+
+/**
+ * Finds and returns a Token object by the provided address
+ * @param {string} tokenAddress
+ * @param {List<Token>} tokens
+ * @returns Token | undefined
+ */
+export const getBalanceAndDecimalsFromToken = ({ tokenAddress, tokens }: GetTokenByAddress): TokenFound | undefined => {
+  const token = tokens?.find(({ address }) => sameAddress(address, tokenAddress))
+
+  if (!token) {
+    return
   }
 
-  return isERC721
+  return {
+    balance: token.balance ?? 0,
+    decimals: token.decimals ?? 0,
+  }
 }

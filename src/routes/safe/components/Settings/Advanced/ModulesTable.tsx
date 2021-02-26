@@ -7,11 +7,11 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from './dataFetcher'
-import RemoveModuleModal from './RemoveModuleModal'
+import { RemoveModuleModal } from './RemoveModuleModal'
 import { styles } from './style'
 
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ModulePair } from 'src/routes/safe/store/models/safe'
+import { ModulePair } from 'src/logic/safe/store/models/safe'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
@@ -39,7 +39,7 @@ interface ModulesTableProps {
   moduleData: ModuleAddressColumn | null
 }
 
-const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => {
+export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => {
   const classes = useStyles()
 
   const columns = generateColumns()
@@ -50,9 +50,9 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
   const [viewRemoveModuleModal, setViewRemoveModuleModal] = React.useState(false)
   const hideRemoveModuleModal = () => setViewRemoveModuleModal(false)
 
-  const [selectedModule, setSelectedModule] = React.useState(null)
-  const triggerRemoveSelectedModule = (module: ModulePair): void => {
-    setSelectedModule(module)
+  const [selectedModulePair, setSelectedModulePair] = React.useState<ModulePair>()
+  const triggerRemoveSelectedModule = (modulePair: ModulePair): void => {
+    setSelectedModulePair(modulePair)
     setViewRemoveModuleModal(true)
   }
 
@@ -67,7 +67,7 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
           disablePagination
           label="Modules"
           noBorder
-          size={moduleData.length}
+          size={moduleData?.length}
         >
           {(sortedData) =>
             sortedData.map((row, index) => (
@@ -80,14 +80,15 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
                 {autoColumns.map((column, index) => {
                   const columnId = column.id
                   const rowElement = row[columnId]
+                  const [, moduleAddress] = rowElement
 
                   return (
                     <React.Fragment key={`${columnId}-${index}`}>
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
-                            <Identicon address={rowElement[0]} diameter={32} />
-                            <AddressText size="lg">{rowElement[0]}</AddressText>
+                            <Identicon address={moduleAddress} diameter={32} />
+                            <AddressText size="lg">{moduleAddress}</AddressText>
                           </Block>
                         ) : (
                           rowElement
@@ -117,9 +118,9 @@ const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElement => 
           }
         </Table>
       </TableContainer>
-      {viewRemoveModuleModal && <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModule={selectedModule} />}
+      {viewRemoveModuleModal && selectedModulePair && (
+        <RemoveModuleModal onClose={hideRemoveModuleModal} selectedModulePair={selectedModulePair} />
+      )}
     </>
   )
 }
-
-export default ModulesTable

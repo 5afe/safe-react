@@ -1,10 +1,6 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
-import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
-
-import ChangeThreshold from './ChangeThreshold'
-import { styles } from './style'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { useState, useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
@@ -13,20 +9,23 @@ import Button from 'src/components/layout/Button'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
 import {
   safeOwnersSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
+} from 'src/logic/safe/store/selectors'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
-const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
+import { ChangeThresholdModal } from './ChangeThreshold'
+import { styles } from './style'
+
+const useStyles = makeStyles(styles)
+
+const ThresholdSettings = (): React.ReactElement => {
+  const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
-  const dispatch = useDispatch()
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const owners = useSelector(safeOwnersSelector)
   const granted = useSelector(grantedSelector)
@@ -35,22 +34,11 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
     setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const onChangeThreshold = async (newThreshold) => {
-    const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
-    const txData = safeInstance.contract.methods.changeThreshold(newThreshold).encodeABI()
+  const { trackEvent } = useAnalytics()
 
-    dispatch(
-      createTransaction({
-        safeAddress,
-        to: safeAddress,
-        valueInWei: '0',
-        txData,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-        enqueueSnackbar,
-        closeSnackbar,
-      } as any),
-    )
-  }
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Owners' })
+  }, [trackEvent])
 
   return (
     <>
@@ -58,9 +46,9 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
         <Heading tag="h2">Required confirmations</Heading>
         <Paragraph>Any transaction requires the confirmation of:</Paragraph>
         <Paragraph className={classes.ownersText} size="lg">
-          <Bold>{threshold}</Bold> out of <Bold>{owners.size}</Bold> owners
+          <Bold>{threshold}</Bold> out of <Bold>{owners?.size || 0}</Bold> owners
         </Paragraph>
-        {owners.size > 1 && granted && (
+        {owners && owners.size > 1 && granted && (
           <Row className={classes.buttonRow}>
             <Button
               className={classes.modifyBtn}
@@ -80,16 +68,10 @@ const ThresholdSettings = ({ classes, closeSnackbar, enqueueSnackbar }) => {
         open={isModalOpen}
         title="Change Required Confirmations"
       >
-        <ChangeThreshold
-          onChangeThreshold={onChangeThreshold}
-          onClose={toggleModal}
-          owners={owners}
-          safeAddress={safeAddress}
-          threshold={threshold}
-        />
+        <ChangeThresholdModal onClose={toggleModal} owners={owners} safeAddress={safeAddress} threshold={threshold} />
       </Modal>
     </>
   )
 }
 
-export default withStyles(styles as any)(withSnackbar(ThresholdSettings))
+export default ThresholdSettings

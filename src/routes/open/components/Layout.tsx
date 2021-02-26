@@ -6,35 +6,53 @@ import Stepper, { StepperPage } from 'src/components/Stepper'
 import Block from 'src/components/layout/Block'
 import Heading from 'src/components/layout/Heading'
 import Row from 'src/components/layout/Row'
-import { initContracts } from 'src/logic/contracts/safeContracts'
-import Review from 'src/routes/open/components/ReviewInformation'
+import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
+import { Review } from 'src/routes/open/components/ReviewInformation'
 import SafeNameField from 'src/routes/open/components/SafeNameForm'
-import SafeOwnersFields from 'src/routes/open/components/SafeOwnersConfirmationsForm'
+import { SafeOwnersPage, validateOwnersForm } from 'src/routes/open/components/SafeOwnersConfirmationsForm'
 import {
   FIELD_CONFIRMATIONS,
+  FIELD_CREATION_PROXY_SALT,
   FIELD_SAFE_NAME,
   getOwnerAddressBy,
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
-import Welcome from 'src/routes/welcome/components/Layout'
+import { WelcomeLayout } from 'src/routes/welcome/components/index'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
+import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { useSelector } from 'react-redux'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { SafeProps } from 'src/routes/open/container/Open'
 
 const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-const initialValuesFrom = (userAccount, safeProps) => {
+export type InitialValuesForm = {
+  owner0Address?: string
+  owner0Name?: string
+  confirmations: string
+  safeName?: string
+  safeCreationSalt: number
+}
+
+const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+  const addressBook = useSelector(addressBookSelector)
+  const ownerName = getNameFromAddressBook(addressBook, userAccount, { filterOnlyValidName: true })
+
   if (!safeProps) {
     return {
-      [getOwnerNameBy(0)]: 'My Wallet',
+      [getOwnerNameBy(0)]: ownerName || 'My Wallet',
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
+      [FIELD_CREATION_PROXY_SALT]: Date.now(),
     }
   }
   let obj = {}
   const { name, ownerAddresses, ownerNames, threshold } = safeProps
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const [index, value] of ownerAddresses.entries()) {
     const safeName = ownerNames[index] ? ownerNames[index] : 'My Wallet'
     obj = {
@@ -47,6 +65,7 @@ const initialValuesFrom = (userAccount, safeProps) => {
     ...obj,
     [FIELD_CONFIRMATIONS]: threshold || '1',
     [FIELD_SAFE_NAME]: name,
+    [FIELD_CREATION_PROXY_SALT]: Date.now(),
   }
 }
 
@@ -66,18 +85,27 @@ const formMutators = {
   },
 }
 
-const Layout = (props) => {
-  const { network, onCallSafeContractSubmit, provider, safeProps, userAccount } = props
+type LayoutProps = {
+  onCallSafeContractSubmit: (formValues: unknown) => void
+  safeProps?: SafeProps
+}
+
+export const Layout = (props: LayoutProps): React.ReactElement => {
+  const { onCallSafeContractSubmit, safeProps } = props
+
+  const provider = useSelector(providerNameSelector)
+  const network = useSelector(networkSelector)
+  const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
     if (provider) {
-      initContracts()
+      instantiateSafeContracts()
     }
   }, [provider])
 
   const steps = getSteps()
 
-  const initialValues = initialValuesFrom(userAccount, safeProps)
+  const initialValues = useInitialValuesFrom(userAccount, safeProps)
 
   return (
     <>
@@ -98,18 +126,14 @@ const Layout = (props) => {
             steps={steps}
             testId="create-safe-form"
           >
-            <StepperPage>{SafeNameField}</StepperPage>
-            <StepperPage>{SafeOwnersFields}</StepperPage>
-            <StepperPage network={network} userAccount={userAccount}>
-              {Review}
-            </StepperPage>
+            <StepperPage component={SafeNameField} />
+            <StepperPage component={SafeOwnersPage} validate={validateOwnersForm} />
+            <StepperPage network={network} userAccount={userAccount} component={Review} />
           </Stepper>
         </Block>
       ) : (
-        <Welcome isOldMultisigMigration provider={provider} />
+        <WelcomeLayout isOldMultisigMigration />
       )}
     </>
   )
 }
-
-export default Layout

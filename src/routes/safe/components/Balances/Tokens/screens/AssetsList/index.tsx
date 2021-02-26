@@ -1,14 +1,14 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
 import MuiList from '@material-ui/core/List'
-import { makeStyles } from '@material-ui/core/styles'
+import CircularProgress from '@material-ui/core/CircularProgress'
 import Search from '@material-ui/icons/Search'
 import cn from 'classnames'
 import SearchBar from 'material-ui-search-bar'
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { FixedSizeList } from 'react-window'
+import Paragraph from 'src/components/layout/Paragraph'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -18,16 +18,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
 import AssetRow from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList/AssetRow'
-import updateActiveAssets from 'src/routes/safe/store/actions/updateActiveAssets'
-import updateBlacklistedAssets from 'src/routes/safe/store/actions/updateBlacklistedAssets'
+import updateActiveAssets from 'src/logic/safe/store/actions/updateActiveAssets'
+import updateBlacklistedAssets from 'src/logic/safe/store/actions/updateBlacklistedAssets'
 import {
   safeActiveAssetsListSelector,
   safeBlacklistedAssetsSelector,
   safeParamAddressFromStateSelector,
-} from 'src/routes/safe/store/selectors'
-const useStyles = makeStyles(styles as any)
+} from 'src/logic/safe/store/selectors'
 
 export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
+
+type Props = {
+  setActiveScreen: (newScreen: string) => void
+}
 
 const filterBy = (filter, nfts) =>
   nfts.filter(
@@ -38,7 +41,7 @@ const filterBy = (filter, nfts) =>
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props) => {
+const AssetsList = (props: Props): React.ReactElement => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -55,11 +58,6 @@ const AssetsList = (props) => {
   const [blacklistedAssetsAddresses, setBlacklistedAssetsAddresses] = useState(blacklistedAssets)
   const nftAssetsList = useSelector(nftAssetsListSelector)
 
-  useEffect(() => {
-    dispatch(updateActiveAssets(safeAddress, activeAssetsAddresses))
-    dispatch(updateBlacklistedAssets(safeAddress, blacklistedAssetsAddresses))
-  }, [activeAssetsAddresses, blacklistedAssetsAddresses, dispatch, safeAddress])
-
   const onCancelSearch = () => {
     setFilterValue('')
   }
@@ -73,19 +71,22 @@ const AssetsList = (props) => {
   }
 
   const onSwitch = (asset) => () => {
-    const { address } = asset
-    const activeAssetsAddressesResult = activeAssetsAddresses.contains(address)
-      ? activeAssetsAddresses.remove(address)
-      : activeAssetsAddresses.add(address)
-    const blacklistedAssetsAddressesResult = activeAssetsAddresses.has(address)
-      ? blacklistedAssetsAddresses.add(address)
-      : blacklistedAssetsAddresses.remove(address)
-    setActiveAssetsAddresses(activeAssetsAddressesResult)
-    setBlacklistedAssetsAddresses(blacklistedAssetsAddressesResult)
-    return {
-      activeAssetsAddresses: activeAssetsAddressesResult,
-      blacklistedAssetsAddresses: blacklistedAssetsAddressesResult,
+    let newActiveAssetsAddresses
+    let newBlacklistedAssetsAddresses
+    if (activeAssetsAddresses.has(asset.address)) {
+      newActiveAssetsAddresses = activeAssetsAddresses.delete(asset.address)
+      newBlacklistedAssetsAddresses = blacklistedAssetsAddresses.add(asset.address)
+    } else {
+      newActiveAssetsAddresses = activeAssetsAddresses.add(asset.address)
+      newBlacklistedAssetsAddresses = blacklistedAssetsAddresses.delete(asset.address)
     }
+
+    // Set local state
+    setActiveAssetsAddresses(newActiveAssetsAddresses)
+    setBlacklistedAssetsAddresses(newBlacklistedAssetsAddresses)
+    // Dispatch to global state
+    dispatch(updateActiveAssets(safeAddress, newActiveAssetsAddresses))
+    dispatch(updateBlacklistedAssets(safeAddress, newBlacklistedAssetsAddresses))
   }
 
   const createItemData = (assetsList) => {
@@ -130,16 +131,16 @@ const AssetsList = (props) => {
         </Row>
         <Hairline />
       </Block>
-      {!nftAssetsList.length && (
+      {!nftAssetsList?.length && (
         <Block className={classes.progressContainer} justify="center">
-          <CircularProgress />
+          {!nftAssetsList ? <CircularProgress /> : <Paragraph>No collectibles available</Paragraph>}
         </Block>
       )}
-      {nftAssetsList.length > 0 && (
+      {nftAssetsFilteredList.length > 0 && (
         <MuiList className={classes.list}>
           <FixedSizeList
             height={413}
-            itemCount={nftAssetsFilteredList.size}
+            itemCount={nftAssetsFilteredList.length}
             itemData={itemData}
             itemKey={getItemKey}
             itemSize={51}

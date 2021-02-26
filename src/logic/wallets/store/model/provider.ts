@@ -1,11 +1,13 @@
 import { Record, RecordOf } from 'immutable'
 
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+
 export type ProviderProps = {
   name: string
   loaded: boolean
   available: boolean
   account: string
-  network: number
+  network: ETHEREUM_NETWORK
   smartContractWallet: boolean
   hardwareWallet: boolean
 }
@@ -15,7 +17,7 @@ export const makeProvider = Record<ProviderProps>({
   loaded: false,
   available: false,
   account: '',
-  network: 0,
+  network: ETHEREUM_NETWORK.UNKNOWN,
   smartContractWallet: false,
   hardwareWallet: false,
 })

@@ -1,53 +1,51 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import CheckOwner from './screens/CheckOwner'
-import ReviewRemoveOwner from './screens/Review'
+import { ReviewRemoveOwnerModal } from './screens/Review'
 import ThresholdForm from './screens/ThresholdForm'
 
 import Modal from 'src/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import removeSafeOwner from 'src/routes/safe/store/actions/removeSafeOwner'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
+import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-import {
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/routes/safe/store/selectors'
-
-const styles = () => ({
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
 
+const useStyles = makeStyles(styles)
+
+type OwnerValues = {
+  ownerAddress: string
+  ownerName: string
+  threshold: string
+}
+
 export const sendRemoveOwner = async (
-  values,
-  safeAddress,
-  ownerAddressToRemove,
-  ownerNameToRemove,
-  ownersOld,
-  enqueueSnackbar,
-  closeSnackbar,
-  threshold,
-  dispatch,
-) => {
+  values: OwnerValues,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  ownerNameToRemove: string,
+  dispatch: Dispatch,
+  txParameters: TxParameters,
+  threshold?: number,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const safeOwners = await gnosisSafe.getOwners()
+  const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
   )
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.contract.methods
-    .removeOwner(prevAddress, ownerAddressToRemove, values.threshold)
-    .encodeABI()
+  const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddressToRemove, values.threshold).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
@@ -55,10 +53,11 @@ export const sendRemoveOwner = async (
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash && threshold === 1) {
@@ -66,13 +65,25 @@ export const sendRemoveOwner = async (
   }
 }
 
-const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+type RemoveOwnerProps = {
+  isOpen: boolean
+  onClose: () => void
+  ownerAddress: string
+  ownerName: string
+}
+
+export const RemoveOwnerModal = ({
+  isOpen,
+  onClose,
+  ownerAddress,
+  ownerName,
+}: RemoveOwnerProps): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<any>({})
   const dispatch = useDispatch()
-  const owners = useSelector(safeOwnersSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(
     () => () => {
@@ -100,19 +111,9 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
     setActiveScreen('reviewRemoveOwner')
   }
 
-  const onRemoveOwner = () => {
+  const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(
-      values,
-      safeAddress,
-      ownerAddress,
-      ownerName,
-      owners,
-      enqueueSnackbar,
-      closeSnackbar,
-      threshold,
-      dispatch,
-    )
+    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, txParameters, threshold)
   }
 
   return (
@@ -131,18 +132,16 @@ const RemoveOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose,
           <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
-          <ReviewRemoveOwner
+          <ReviewRemoveOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            values={values}
+            threshold={threshold}
           />
         )}
       </>
     </Modal>
   )
 }
-
-export default withStyles(styles as any)(withSnackbar(RemoveOwner))

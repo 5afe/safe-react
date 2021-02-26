@@ -3,17 +3,20 @@ import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanF
 import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import contract from 'truffle-contract'
+import contract from '@truffle/contract/index.js'
+import { AbiItem } from 'web3-utils'
 
 import saveTokens from './saveTokens'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { fetchTokenList } from 'src/logic/tokens/api'
+import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { store } from 'src/store'
+import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
+import { ThunkDispatch } from 'redux-thunk'
+import { AnyAction } from 'redux'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -43,7 +46,7 @@ export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
-export const containsMethodByHash = async (contractAddress, methodHash) => {
+export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()
   const byteCode = await web3.eth.getCode(contractAddress)
 
@@ -51,17 +54,13 @@ export const containsMethodByHash = async (contractAddress, methodHash) => {
 }
 
 const getTokenValues = (tokenAddress) =>
-  generateBatchRequests({
-    abi: ERC20Detailed.abi,
+  generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined]>({
+    abi: ERC20Detailed.abi as AbiItem[],
     address: tokenAddress,
     methods: ['decimals', 'name', 'symbol'],
   })
 
-export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
-  if (!tokenAddress) {
-    return null
-  }
-
+export const getTokenInfos = async (tokenAddress: string): Promise<Token | undefined> => {
   const { tokens } = store.getState()
   const localToken = tokens.get(tokenAddress)
 
@@ -71,10 +70,10 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   }
 
   // Otherwise we fetch it, save it to the store and return it
-  const [tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
+  const [, tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
 
   if (tokenDecimals === null) {
-    return null
+    return undefined
   }
 
   const token = makeToken({
@@ -91,19 +90,24 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token> => {
   return token
 }
 
-export const fetchTokens = () => async (dispatch, getState) => {
+export const fetchTokens = () => async (
+  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+  getState: () => AppReduxState,
+): Promise<void> => {
   try {
     const currentSavedTokens = tokensSelector(getState())
 
     const {
       data: { results: tokenList },
-    } = await fetchTokenList()
+    } = await fetchErc20AndErc721AssetsList()
 
-    if (currentSavedTokens && currentSavedTokens.size === tokenList.length) {
+    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+    if (currentSavedTokens?.size === erc20Tokens.length) {
       return
     }
 
-    const tokens = List(tokenList.map((token) => makeToken(token)))
+    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
 
     dispatch(saveTokens(tokens))
   } catch (err) {

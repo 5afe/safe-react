@@ -1,76 +1,100 @@
-import * as React from 'react'
-import { useState } from 'react'
+import { GenericModal, Loader } from '@gnosis.pm/safe-react-components'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
-import Page from 'src/components/layout/Page'
+import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { wrapInSuspense } from 'src/utils/wrapInSuspense'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { FEATURES } from 'src/config/networks/network.d'
+import { LoadingContainer } from 'src/components/LoaderContainer'
 
-import Layout from 'src/routes/safe/components/Layout'
-import { safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
-import { useLoadSafe } from './hooks/useLoadSafe'
-import { useSafeScheduledUpdates } from './hooks/useSafeScheduledUpdates'
+export const BALANCES_TAB_BTN_TEST_ID = 'balances-tab-btn'
+export const SETTINGS_TAB_BTN_TEST_ID = 'settings-tab-btn'
+export const APPS_TAB_BTN_TEST_ID = 'apps-tab-btn'
+export const TRANSACTIONS_TAB_BTN_TEST_ID = 'transactions-tab-btn'
+export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
+export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
+export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
-const INITIAL_STATE = {
-  sendFunds: {
+const Apps = React.lazy(() => import('../components/Apps'))
+const Settings = React.lazy(() => import('../components/Settings'))
+const Balances = React.lazy(() => import('../components/Balances'))
+const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/GatewayTransactions'))
+const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
+
+const Container = (): React.ReactElement => {
+  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const [modal, setModal] = useState({
     isOpen: false,
-    selectedToken: undefined,
-  },
-  showReceive: false,
-}
+    title: null,
+    body: null,
+    footer: null,
+    onClose: () => {},
+  })
 
-const SafeView = (): React.ReactElement => {
-  const [state, setState] = useState(INITIAL_STATE)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const matchSafeWithAddress = useRouteMatch({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
-  useLoadSafe(safeAddress)
-  useSafeScheduledUpdates(safeAddress)
-
-  const onShow = (action) => () => {
-    setState((prevState) => ({
-      ...prevState,
-      [`show${action}`]: true,
-    }))
+  if (!featuresEnabled) {
+    return (
+      <LoadingContainer>
+        <Loader size="md" />
+      </LoadingContainer>
+    )
   }
 
-  const onHide = (action) => () => {
-    setState((prevState) => ({
-      ...prevState,
-      [`show${action}`]: false,
-    }))
-  }
+  const closeGenericModal = () => {
+    if (modal.onClose) {
+      modal.onClose?.()
+    }
 
-  const showSendFunds = (token) => {
-    setState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: true,
-        selectedToken: token,
-      },
-    }))
+    setModal({
+      isOpen: false,
+      title: null,
+      body: null,
+      footer: null,
+      onClose: () => {},
+    })
   }
-
-  const hideSendFunds = () => {
-    setState((prevState) => ({
-      ...prevState,
-      sendFunds: {
-        isOpen: false,
-        selectedToken: undefined,
-      },
-    }))
-  }
-  const { sendFunds, showReceive } = state
 
   return (
-    <Page>
-      <Layout
-        hideSendFunds={hideSendFunds}
-        onHide={onHide}
-        onShow={onShow}
-        sendFunds={sendFunds}
-        showReceive={showReceive}
-        showSendFunds={showSendFunds}
-      />
-    </Page>
+    <>
+      <Switch>
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/balances/:assetType?`}
+          render={() => wrapInSuspense(<Balances />, null)}
+        />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/transactions`}
+          render={() => wrapInSuspense(<TxsTable />, null)}
+        />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/apps`}
+          render={({ history }) => {
+            if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
+              history.push(`${matchSafeWithAddress?.url}/balances`)
+            }
+            return wrapInSuspense(<Apps />, null)
+          }}
+        />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/settings`}
+          render={() => wrapInSuspense(<Settings />, null)}
+        />
+        <Route
+          exact
+          path={`${matchSafeWithAddress?.path}/address-book`}
+          render={() => wrapInSuspense(<AddressBookTable />, null)}
+        />
+        <Redirect to={`${matchSafeWithAddress?.url}/balances`} />
+      </Switch>
+      {modal.isOpen && <GenericModal {...modal} onClose={closeGenericModal} />}
+    </>
   )
 }
 
-export default SafeView
+export default Container

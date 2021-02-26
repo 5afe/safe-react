@@ -1,8 +1,8 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Receive from './Receive'
+import ReceiveModal from 'src/components/App/ReceiveModal'
 import Tokens from './Tokens'
 import { styles } from './style'
 
@@ -15,11 +15,16 @@ import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import CurrencyDropdown from 'src/routes/safe/components/CurrencyDropdown'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/routes/safe/store/selectors'
+import {
+  safeFeaturesEnabledSelector,
+  safeNameSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
-import { useFetchTokens } from '../../container/hooks/useFetchTokens'
-import { Route, Switch, NavLink, Redirect } from 'react-router-dom'
+import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
+import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
@@ -33,7 +38,7 @@ const INITIAL_STATE = {
   showManageCollectibleModal: false,
   sendFunds: {
     isOpen: false,
-    selectedToken: undefined,
+    selectedToken: '',
   },
   showReceive: false,
 }
@@ -41,16 +46,20 @@ const INITIAL_STATE = {
 export const COINS_LOCATION_REGEX = /\/balances\/?$/
 export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
-const Balances = (props) => {
+const useStyles = makeStyles(styles)
+
+const Balances = (): React.ReactElement => {
+  const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
   const address = useSelector(safeParamAddressFromStateSelector)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const safeName = useSelector(safeNameSelector) ?? ''
 
-  useFetchTokens(address)
+  useFetchTokens(address as string)
 
   useEffect(() => {
-    const erc721Enabled = featuresEnabled && featuresEnabled.includes('ERC721')
+    const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
 
     setState((prevState) => ({
       ...prevState,
@@ -66,7 +75,7 @@ const Balances = (props) => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
-  const showSendFunds = (tokenAddress) => {
+  const showSendFunds = (tokenAddress: string): void => {
     setState((prevState) => ({
       ...prevState,
       sendFunds: {
@@ -81,7 +90,7 @@ const Balances = (props) => {
       ...prevState,
       sendFunds: {
         isOpen: false,
-        selectedToken: undefined,
+        selectedToken: '',
       },
     }))
   }
@@ -95,7 +104,7 @@ const Balances = (props) => {
     manageTokensButton,
     receiveModal,
     tokenControls,
-  } = props.classes
+  } = classes
   const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
 
   return (
@@ -221,10 +230,10 @@ const Balances = (props) => {
         paperClassName={receiveModal}
         title="Receive Tokens"
       >
-        <Receive onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )
 }
 
-export default withStyles(styles as any)(Balances)
+export default Balances

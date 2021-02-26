@@ -1,11 +1,22 @@
-import { disabled, extraSmallFontSize, lg, md, screenSm, sm } from 'src/theme/variables'
+import { disabled, extraSmallFontSize, lg, md, screenSm, sm, xs } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     display: 'flex',
   },
   title: {
     padding: `${md} ${lg}`,
+  },
+  link: {
+    paddingLeft: `${xs}`,
+    '& svg': {
+      position: 'relative',
+      top: '1px',
+      left: `${xs}`,
+      height: '14px',
+      width: '14px',
+    },
   },
   owner: {
     flexDirection: 'column',

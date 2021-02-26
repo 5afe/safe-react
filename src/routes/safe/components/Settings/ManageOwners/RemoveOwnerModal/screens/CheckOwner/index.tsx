@@ -4,10 +4,7 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
 import React from 'react'
 
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -15,6 +12,10 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+
+import { styles } from './style'
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { getExplorerInfo } from 'src/config'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 
@@ -53,7 +54,7 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
                   {ownerAddress}
                 </Paragraph>
                 <CopyBtn content={ownerAddress} />
-                <EtherscanBtn type="address" value={ownerAddress} />
+                <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
               </Block>
             </Block>
           </Col>

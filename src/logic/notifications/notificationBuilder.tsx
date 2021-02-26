@@ -2,48 +2,44 @@ import { IconButton } from '@material-ui/core'
 import { Close as IconClose } from '@material-ui/icons'
 import * as React from 'react'
 
-import { NOTIFICATIONS } from './notificationTypes'
+import { Notification, NOTIFICATIONS } from './notificationTypes'
 
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getAppInfoFromOrigin } from 'src/routes/safe/components/Apps/utils'
 import { store } from 'src/store'
 
-const setNotificationOrigin = (notification, origin) => {
+const setNotificationOrigin = (notification: Notification, origin: string): Notification => {
   if (!origin) {
     return notification
   }
 
   const appInfo = getAppInfoFromOrigin(origin)
-  return { ...notification, message: `${appInfo.name}: ${notification.message}` }
+  return { ...notification, message: `${appInfo ? appInfo.name : 'Unknown origin'}: ${notification.message}` }
 }
 
-const getStandardTxNotificationsQueue = (origin) => {
-  return {
-    beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
-    afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
-    afterExecution: {
-      noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
-      moreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG, origin),
-    },
-    afterExecutionError: setNotificationOrigin(NOTIFICATIONS.TX_FAILED_MSG, origin),
-  }
-}
+const getStandardTxNotificationsQueue = (
+  origin: string,
+): Record<string, Record<string, Notification> | Notification> => ({
+  beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
+  afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
+  afterExecution: {
+    noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
+  },
+  afterExecutionError: setNotificationOrigin(NOTIFICATIONS.TX_FAILED_MSG, origin),
+})
 
 const waitingTransactionNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: NOTIFICATIONS.TX_WAITING_MSG,
   afterExecution: null,
   afterExecutionError: null,
 }
 
-const getConfirmationTxNotificationsQueue = (origin) => {
+const getConfirmationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_CONFIRMATION_PENDING_MSG, origin),
     afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
     afterExecution: {
       noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
@@ -53,10 +49,9 @@ const getConfirmationTxNotificationsQueue = (origin) => {
   }
 }
 
-const getCancellationTxNotificationsQueue = (origin) => {
+const getCancellationTxNotificationsQueue = (origin: string) => {
   return {
     beforeExecution: setNotificationOrigin(NOTIFICATIONS.SIGN_TX_MSG, origin),
-    pendingExecution: setNotificationOrigin(NOTIFICATIONS.TX_PENDING_MSG, origin),
     afterRejection: setNotificationOrigin(NOTIFICATIONS.TX_REJECTED_MSG, origin),
     afterExecution: {
       noMoreConfirmationsNeeded: setNotificationOrigin(NOTIFICATIONS.TX_EXECUTED_MSG, origin),
@@ -68,7 +63,6 @@ const getCancellationTxNotificationsQueue = (origin) => {
 
 const safeNameChangeNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.SAFE_NAME_CHANGED_MSG,
@@ -79,7 +73,6 @@ const safeNameChangeNotificationsQueue = {
 
 const ownerNameChangeNotificationsQueue = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG,
@@ -90,7 +83,6 @@ const ownerNameChangeNotificationsQueue = {
 
 const settingsChangeTxNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_SETTINGS_CHANGE_MSG,
-  pendingExecution: NOTIFICATIONS.SETTINGS_CHANGE_PENDING_MSG,
   afterRejection: NOTIFICATIONS.SETTINGS_CHANGE_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.SETTINGS_CHANGE_EXECUTED_MSG,
@@ -99,20 +91,37 @@ const settingsChangeTxNotificationsQueue = {
   afterExecutionError: NOTIFICATIONS.SETTINGS_CHANGE_FAILED_MSG,
 }
 
+const newSpendingLimitTxNotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_NEW_SPENDING_LIMIT_MSG,
+  afterRejection: NOTIFICATIONS.NEW_SPENDING_LIMIT_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.NEW_SPENDING_LIMIT_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
+  afterExecutionError: NOTIFICATIONS.NEW_SPENDING_LIMIT_FAILED_MSG,
+}
+
+const removeSpendingLimitTxNotificationsQueue = {
+  beforeExecution: NOTIFICATIONS.SIGN_REMOVE_SPENDING_LIMIT_MSG,
+  afterRejection: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_REJECTED_MSG,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
+    moreConfirmationsNeeded: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
+  },
+  afterExecutionError: NOTIFICATIONS.REMOVE_SPENDING_LIMIT_FAILED_MSG,
+}
+
 const defaultNotificationsQueue = {
   beforeExecution: NOTIFICATIONS.SIGN_TX_MSG,
-  pendingExecution: NOTIFICATIONS.TX_PENDING_MSG,
   afterRejection: NOTIFICATIONS.TX_REJECTED_MSG,
   afterExecution: {
     noMoreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MSG,
-    moreConfirmationsNeeded: NOTIFICATIONS.TX_EXECUTED_MORE_CONFIRMATIONS_MSG,
   },
   afterExecutionError: NOTIFICATIONS.TX_FAILED_MSG,
 }
 
 const addressBookNewEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {
@@ -124,7 +133,6 @@ const addressBookNewEntry = {
 
 const addressBookEditEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {
@@ -136,7 +144,6 @@ const addressBookEditEntry = {
 
 const addressBookDeleteEntry = {
   beforeExecution: null,
-  pendingExecution: null,
   afterRejection: null,
   waitingConfirmation: null,
   afterExecution: {
@@ -164,6 +171,14 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
     }
     case TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX: {
       notificationsQueue = settingsChangeTxNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX: {
+      notificationsQueue = newSpendingLimitTxNotificationsQueue
+      break
+    }
+    case TX_NOTIFICATION_TYPES.REMOVE_SPENDING_LIMIT_TX: {
+      notificationsQueue = removeSpendingLimitTxNotificationsQueue
       break
     }
     case TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX: {
@@ -199,9 +214,13 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
   return notificationsQueue
 }
 
-export const enhanceSnackbarForAction: any = (notification, key, onClick) => ({
+export const enhanceSnackbarForAction = (
+  notification: Notification,
+  key?: string,
+  onClick?: () => void,
+): Notification => ({
   ...notification,
-  key,
+  key: key || notification.key,
   options: {
     ...notification.options,
     onClick,
@@ -213,14 +232,3 @@ export const enhanceSnackbarForAction: any = (notification, key, onClick) => ({
     ),
   },
 })
-
-export const showSnackbar: any = (notification, enqueueSnackbar, closeSnackbar) =>
-  enqueueSnackbar(notification.message, {
-    ...notification.options,
-    // eslint-disable-next-line react/display-name
-    action: (key) => (
-      <IconButton onClick={() => closeSnackbar(key)}>
-        <IconClose />
-      </IconButton>
-    ),
-  })

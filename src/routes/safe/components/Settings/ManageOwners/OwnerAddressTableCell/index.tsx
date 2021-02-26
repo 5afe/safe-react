@@ -1,15 +1,24 @@
 import * as React from 'react'
+import { useEffect, useState } from 'react'
 
-import EtherScanLink from 'src/components/EtherscanLink'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
-import { useWindowDimensions } from '../../../../container/hooks/useWindowDimensions'
-import { useEffect, useState } from 'react'
+import { getValidAddressBookName } from 'src/logic/addressBook/utils'
+import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
+import { EtherscanLink } from 'src/components/EtherscanLink'
 
-const OwnerAddressTableCell = (props) => {
-  const { address, knownAddress, showLinks, userName } = props
-  const [cut, setCut] = useState(undefined)
+type OwnerAddressTableCellProps = {
+  address: string
+  knownAddress?: boolean
+  showLinks: boolean
+  userName?: string
+  sendModalOpenHandler?: () => void
+}
+
+const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
+  const { address, knownAddress, showLinks, userName, sendModalOpenHandler } = props
+  const [cut, setCut] = useState(0)
   const { width } = useWindowDimensions()
 
   useEffect(() => {
@@ -18,7 +27,7 @@ const OwnerAddressTableCell = (props) => {
     } else if (width <= 1024) {
       setCut(12)
     } else {
-      setCut(undefined)
+      setCut(0)
     }
   }, [width])
 
@@ -27,8 +36,13 @@ const OwnerAddressTableCell = (props) => {
       <Identicon address={address} diameter={32} />
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
-          {userName}
-          <EtherScanLink knownAddress={knownAddress} type="address" value={address} cut={cut} />
+          {userName && getValidAddressBookName(userName)}
+          <EtherscanLink
+            knownAddress={knownAddress}
+            value={address}
+            cut={cut}
+            sendModalOpenHandler={sendModalOpenHandler}
+          />
         </div>
       ) : (
         <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>

@@ -1,15 +1,16 @@
 import { Loader, Text, theme, Title } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { getModuleData } from './dataFetcher'
 import { styles } from './style'
-import ModulesTable from './ModulesTable'
+import { ModulesTable } from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
-import { safeModulesSelector, safeNonceSelector } from 'src/routes/safe/store/selectors'
+import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
+import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const useStyles = makeStyles(styles)
 
@@ -37,12 +38,16 @@ const LoadingModules = (): React.ReactElement => {
   )
 }
 
-const Advanced = (): React.ReactElement => {
+export const Advanced = (): React.ReactElement => {
   const classes = useStyles()
-
   const nonce = useSelector(safeNonceSelector)
   const modules = useSelector(safeModulesSelector)
-  const moduleData = getModuleData(modules) ?? null
+  const moduleData = modules ? getModuleData(modules) ?? null : null
+  const { trackEvent } = useAnalytics()
+
+  useEffect(() => {
+    trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Settings', label: 'Advanced' })
+  }, [trackEvent])
 
   return (
     <>
@@ -78,7 +83,7 @@ const Advanced = (): React.ReactElement => {
           .
         </InfoText>
 
-        {moduleData === null ? (
+        {!moduleData ? (
           <NoModuleLegend />
         ) : moduleData?.length === 0 ? (
           <LoadingModules />
@@ -89,5 +94,3 @@ const Advanced = (): React.ReactElement => {
     </>
   )
 }
-
-export default Advanced

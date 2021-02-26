@@ -1,7 +1,8 @@
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import CancelSmallFilledCircle from './assets/cancel-small-filled.svg'
 import ConfirmSmallFilledCircle from './assets/confirm-small-filled.svg'
@@ -11,38 +12,60 @@ import ConfirmSmallRedCircle from './assets/confirm-small-red.svg'
 import PendingSmallYellowCircle from './assets/confirm-small-yellow.svg'
 import { styles } from './style'
 
-import EtherscanLink from 'src/components/EtherscanLink'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Img from 'src/components/layout/Img'
-import Paragraph from 'src/components/layout/Paragraph'
-import { getNameFromAddressBook } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { OwnersWithoutConfirmations } from './index'
+import { getExplorerInfo } from 'src/config'
 
 export const CONFIRM_TX_BTN_TEST_ID = 'confirm-btn'
 export const EXECUTE_TX_BTN_TEST_ID = 'execute-btn'
 export const REJECT_TX_BTN_TEST_ID = 'reject-btn'
 export const EXECUTE_REJECT_TX_BTN_TEST_ID = 'execute-reject-btn'
 
-const OwnerComponent = ({
-  classes,
-  confirmed,
-  executor,
-  isCancelTx,
-  onTxConfirm,
-  onTxExecute,
-  onTxReject,
-  owner,
-  pendingAcceptAction,
-  pendingRejectAction,
-  showConfirmBtn,
-  showExecuteBtn,
-  showExecuteRejectBtn,
-  showRejectBtn,
-  thresholdReached,
-  userAddress,
-}: any) => {
-  const nameInAdbk = useSelector((state) => getNameFromAddressBook(state, owner))
+type OwnerComponentProps = {
+  executor: string
+  isCancelTx?: boolean
+  onTxConfirm?: () => void
+  onTxExecute?: () => void
+  onTxReject?: () => void
+  ownersUnconfirmed: OwnersWithoutConfirmations
+  ownersWhoConfirmed: string[]
+  showConfirmBtn?: boolean
+  showExecuteBtn?: boolean
+  showExecuteRejectBtn?: boolean
+  showRejectBtn?: boolean
+  thresholdReached: boolean
+  userAddress: string
+  confirmed?: boolean
+  owner: string
+  pendingAcceptAction?: boolean
+  pendingRejectAction?: boolean
+}
+
+const useStyles = makeStyles(styles)
+
+const OwnerComponent = (props: OwnerComponentProps): React.ReactElement => {
+  const {
+    owner,
+    pendingAcceptAction,
+    pendingRejectAction,
+    isCancelTx,
+    thresholdReached,
+    executor,
+    showConfirmBtn,
+    onTxConfirm,
+    onTxExecute,
+    showExecuteBtn,
+    showRejectBtn,
+    userAddress,
+    onTxReject,
+    showExecuteRejectBtn,
+    confirmed,
+  } = props
+  const nameInAdbk = useSelector((state) => getNameFromAddressBookSelector(state, owner))
+  const classes = useStyles()
   const [imgCircle, setImgCircle] = React.useState(ConfirmSmallGreyCircle)
 
   React.useMemo(() => {
@@ -140,7 +163,7 @@ const OwnerComponent = ({
       </>
     )
   }
-
+  const explorerUrl = getExplorerInfo(owner)
   return (
     <Block className={classes.container}>
       <div
@@ -153,13 +176,14 @@ const OwnerComponent = ({
       <div className={classes.circleState}>
         <Img alt="" src={imgCircle} />
       </div>
-      <Identicon address={owner} className={classes.icon} diameter={32} />
-      <Block>
-        <Paragraph className={classes.name} noMargin>
-          {nameInAdbk}
-        </Paragraph>
-        <EtherscanLink className={classes.address} cut={4} type="address" value={owner} />
-      </Block>
+      <EthHashInfo
+        hash={owner}
+        name={!nameInAdbk || nameInAdbk === 'UNKNOWN' ? '' : nameInAdbk}
+        shortenHash={4}
+        showIdenticon
+        showCopyBtn
+        explorerUrl={explorerUrl}
+      />
       <Block className={classes.spacer} />
       {owner === userAddress && <Block>{isCancelTx ? rejectButton() : confirmButton()}</Block>}
       {owner === executor && <Block className={classes.executor}>Executor</Block>}
@@ -167,4 +191,4 @@ const OwnerComponent = ({
   )
 }
 
-export default withStyles(styles as any)(OwnerComponent)
+export default OwnerComponent

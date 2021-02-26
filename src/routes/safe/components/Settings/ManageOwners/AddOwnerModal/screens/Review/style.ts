@@ -1,6 +1,7 @@
 import { background, border, lg, secondaryText, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core/styles'
 
-export const styles = () => ({
+export const styles = createStyles({
   root: {
     height: '372px',
   },
@@ -8,7 +9,7 @@ export const styles = () => ({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     color: secondaryText,
@@ -76,8 +77,11 @@ export const styles = () => ({
     },
   },
   gasCostsContainer: {
-    padding: `0 ${lg}`,
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
     textAlign: 'center',
     width: '100%',
+    backgroundColor: background,
   },
 })

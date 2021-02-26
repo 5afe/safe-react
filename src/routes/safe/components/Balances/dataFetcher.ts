@@ -1,56 +1,78 @@
 import { BigNumber } from 'bignumber.js'
 import { List } from 'immutable'
-
-import { FIXED, buildOrderFieldFrom } from 'src/components/Table/sorting'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { ETH_ADDRESS } from 'src/logic/tokens/utils/tokenHelpers'
-import { TableColumn } from 'src/components/Table/types'
+import { getNetworkInfo } from 'src/config'
+import { FIXED } from 'src/components/Table/sorting'
+import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
+import { TableColumn } from 'src/components/Table/types.d'
+import { BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
+import { Token } from 'src/logic/tokens/store/model/token'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
 
-// eslint-disable-next-line max-len
-const getTokenPriceInCurrency = (token, currencySelected, currencyValues, currencyRate) => {
-  if (!currencySelected) {
-    return ''
-  }
+const { nativeCoin } = getNetworkInfo()
 
-  const currencyValue = currencyValues.find(({ tokenAddress }) => {
-    if (token.address === ETH_ADDRESS && !tokenAddress) {
+const getTokenValue = (token: Token, currencyValues?: BalanceCurrencyList, currencyRate?: number): string => {
+  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
+    if (token.address === nativeCoin.address && !tokenAddress) {
       return true
     }
 
     return token.address === tokenAddress
   })
 
-  if (!currencyValue) {
+  if (!currencyValue || !currencyRate) {
     return ''
   }
 
   const { balanceInBaseCurrency } = currencyValue
-  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toFixed(2)
+  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toString()
 
-  return `${balance} ${currencySelected}`
+  return balance
 }
 
-// eslint-disable-next-line max-len
-export const getBalanceData = (activeTokens, currencySelected, currencyValues, currencyRate) => {
-  const rows = activeTokens.map((token) => ({
-    [BALANCE_TABLE_ASSET_ID]: {
-      name: token.name,
-      logoUri: token.logoUri,
-      address: token.address,
-      symbol: token.symbol,
-    },
-    [buildOrderFieldFrom(BALANCE_TABLE_ASSET_ID)]: token.name,
-    [BALANCE_TABLE_BALANCE_ID]: `${formatAmount(token.balance)} ${token.symbol}`,
-    [buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)]: Number(token.balance),
-    [FIXED]: token.get('symbol') === 'ETH',
-    [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(token, currencySelected, currencyValues, currencyRate),
-  }))
+const getTokenPriceInCurrency = (balance: string, currencySelected?: string): string => {
+  if (!currencySelected) {
+    return Number('').toFixed(2)
+  }
+  return `${formatAmountInUsFormat(Number(balance).toFixed(2))} ${currencySelected}`
+}
 
-  return rows
+export interface BalanceData {
+  asset: { name: string; logoUri: string; address: string; symbol: string }
+  assetOrder: string
+  balance: string
+  balanceOrder: number
+  fixed: boolean
+  value: string
+  valueOrder: number
+}
+
+export const getBalanceData = (
+  activeTokens: List<Token>,
+  currencySelected?: string,
+  currencyValues?: BalanceCurrencyList,
+  currencyRate?: number,
+): List<BalanceData> => {
+  const { nativeCoin } = getNetworkInfo()
+  return activeTokens.map((token) => {
+    const balance = getTokenValue(token, currencyValues, currencyRate)
+    return {
+      [BALANCE_TABLE_ASSET_ID]: {
+        name: token.name,
+        logoUri: token.logoUri,
+        address: token.address,
+        symbol: token.symbol,
+      },
+      assetOrder: token.name,
+      [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(token.balance?.toString() || '0')} ${token.symbol}`,
+      balanceOrder: Number(token.balance),
+      [FIXED]: token.symbol === nativeCoin.symbol,
+      [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(balance, currencySelected),
+      valueOrder: Number(balance),
+    }
+  })
 }
 
 export const generateColumns = (): List<TableColumn> => {
@@ -83,26 +105,12 @@ export const generateColumns = (): List<TableColumn> => {
 
   const value: TableColumn = {
     id: BALANCE_TABLE_VALUE_ID,
-    order: false,
+    align: 'right',
+    order: true,
     label: 'Value',
     custom: false,
-    static: true,
     disablePadding: false,
-    style: {
-      fontSize: '11px',
-      color: '#5d6d74',
-      borderBottomWidth: '2px',
-      width: '125px',
-      fontFamily: 'Averta',
-      fontWeight: 'normal',
-      fontStyle: 'normal',
-      textAlign: 'right',
-    },
   }
 
   return List([assetColumn, balanceColumn, value, actions])
 }
-
-// eslint-disable-next-line max-len
-export const filterByZero = (data, hideZero) =>
-  data.filter((row) => (hideZero ? row[buildOrderFieldFrom(BALANCE_TABLE_BALANCE_ID)] !== 0 : true))

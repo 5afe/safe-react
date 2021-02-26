@@ -16,15 +16,7 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
    * @param text
    * @returns {string|?string}
    */
-  (text = null) => {
-    if (typeof text !== 'string') {
-      throw new TypeError(` A string is required. ${typeof text} was provided instead.`)
-    }
-
-    if (!text) {
-      return ''
-    }
-
+  (text = ''): string => {
     const amountOfCharsToKeep = charsEnd + charsStart
     const finalStringLength = amountOfCharsToKeep + ellipsis.length
 
@@ -45,3 +37,24 @@ export const textShortener = ({ charsEnd = 10, charsStart = 10, ellipsis = '...'
 
     return `${textStart}${ellipsis}${textEnd}`
   }
+
+/**
+ * Util to remove whitespace from both sides of a string.
+ * @param {string} value
+ * @returns {string} string without side whitespaces
+ */
+export const trimSpaces = (value: string): string => (value === undefined ? '' : value.trim())
+
+/**
+ * Util to compare two strings, comparison is case insensitive
+ * @param str1
+ * @param str2
+ * @returns {boolean}
+ */
+export const sameString = (str1: string | undefined, str2: string | undefined): boolean => {
+  if (!str1 || !str2) {
+    return false
+  }
+
+  return str1.toLowerCase() === str2.toLowerCase()
+}

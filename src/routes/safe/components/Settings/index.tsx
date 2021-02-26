@@ -6,7 +6,8 @@ import * as React from 'react'
 import { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import Advanced from './Advanced'
+import { Advanced } from './Advanced'
+import { SpendingLimitSettings } from './SpendingLimit'
 import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
@@ -23,9 +24,9 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/routes/safe/store/selectors'
+import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/logic/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -42,7 +43,7 @@ const Settings: React.FC = () => {
   const owners = useSelector(safeOwnersSelector)
   const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
-  const addressBook = useSelector(getAddressBook)
+  const addressBook = useSelector(addressBookSelector)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
@@ -121,9 +122,19 @@ const Settings: React.FC = () => {
               <IconText
                 iconSize="sm"
                 textSize="xl"
+                iconType="fuelIndicator"
+                text="Spending Limit"
+                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+              />
+            </Row>
+            <Hairline className={classes.hairline} />
+            <Row className={cn(classes.menuOption, menuOptionIndex === 5 && classes.active)} onClick={handleChange(5)}>
+              <IconText
+                iconSize="sm"
+                textSize="xl"
                 iconType="settingsTool"
                 text="Advanced"
-                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+                color={menuOptionIndex === 5 ? 'primary' : 'secondary'}
               />
             </Row>
             <Hairline className={classes.hairline} />
@@ -134,7 +145,8 @@ const Settings: React.FC = () => {
             {menuOptionIndex === 1 && <SafeDetails />}
             {menuOptionIndex === 2 && <ManageOwners addressBook={addressBook} granted={granted} owners={owners} />}
             {menuOptionIndex === 3 && <ThresholdSettings />}
-            {menuOptionIndex === 4 && <Advanced />}
+            {menuOptionIndex === 4 && <SpendingLimitSettings />}
+            {menuOptionIndex === 5 && <Advanced />}
           </Block>
         </Col>
       </Block>

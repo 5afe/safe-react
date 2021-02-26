@@ -5,8 +5,8 @@ export type TokenProps = {
   name: string
   symbol: string
   decimals: number | string
-  logoUri?: string | null
-  balance?: number | string
+  logoUri: string
+  balance: number | string
 }
 
 export const makeToken = Record<TokenProps>({
@@ -15,7 +15,7 @@ export const makeToken = Record<TokenProps>({
   symbol: '',
   decimals: 0,
   logoUri: '',
-  balance: undefined,
+  balance: 0,
 })
 // balance is only set in extendedSafeTokensSelector when we display user's token balances
 

@@ -1,16 +1,12 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
-import ReactGA from 'react-ga'
-import { connect } from 'react-redux'
-import { withRouter } from 'react-router-dom'
+import { useDispatch, useSelector } from 'react-redux'
+import { useLocation } from 'react-router-dom'
+import { PromiEvent, TransactionReceipt } from 'web3-core'
 
-import Opening from '../../opening'
-import Layout from '../components/Layout'
-
-import actions from './actions'
-import selector from './selector'
-
+import { SafeDeployment } from 'src/routes/opening'
+import { InitialValuesForm, Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
@@ -18,34 +14,70 @@ import {
   getAccountsFrom,
   getNamesFrom,
   getOwnersFrom,
+  getSafeCreationSaltFrom,
   getSafeNameFrom,
   getThresholdFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { buildSafe } from 'src/routes/safe/store/actions/fetchSafe'
+import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { useAnalytics } from 'src/utils/googleAnalytics'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
-const validateQueryParams = (ownerAddresses, ownerNames, threshold, safeName) => {
+interface SafeCreationQueryParams {
+  ownerAddresses: string | string[] | null
+  ownerNames: string | string[] | null
+  threshold: number | null
+  safeName: string | null
+}
+
+export interface SafeProps {
+  name: string
+  ownerAddresses: string[]
+  ownerNames: string[]
+  threshold: string
+}
+
+const validateQueryParams = (queryParams: SafeCreationQueryParams): boolean => {
+  const { ownerAddresses, ownerNames, threshold, safeName } = queryParams
+
   if (!ownerAddresses || !ownerNames || !threshold || !safeName) {
     return false
   }
-  if (!ownerAddresses.length || ownerNames.length === 0) {
+
+  if (Number.isNaN(threshold)) {
     return false
   }
 
-  if (Number.isNaN(Number(threshold))) {
-    return false
-  }
-  if (threshold > ownerAddresses.length) {
-    return false
-  }
-  return true
+  return threshold > 0 && threshold <= ownerAddresses.length
 }
 
-export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddresses) => {
+const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams): SafeProps | undefined => {
+  if (!validateQueryParams(queryParams)) {
+    return
+  }
+
+  const { threshold, safeName, ownerAddresses, ownerNames } = queryParams
+
+  return {
+    name: safeName as string,
+    threshold: (threshold as number).toString(),
+    ownerAddresses: Array.isArray(ownerAddresses) ? ownerAddresses : [ownerAddresses as string],
+    ownerNames: Array.isArray(ownerNames) ? ownerNames : [ownerNames as string],
+  }
+}
+
+export const getSafeProps = async (
+  safeAddress: string,
+  safeName: string,
+  ownersNames: string[],
+  ownerAddresses: string[],
+): Promise<SafeRecordProps> => {
   const safeProps = await buildSafe(safeAddress, safeName)
   const owners = getOwnersFrom(ownersNames, ownerAddresses)
   safeProps.owners = owners
@@ -53,15 +85,15 @@ export const getSafeProps = async (safeAddress, safeName, ownersNames, ownerAddr
   return safeProps
 }
 
-export const createSafe = (values, userAccount) => {
+export const createSafe = (values: InitialValuesForm, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values)
 
-  const deploymentTxMethod = getSafeDeploymentTransaction(ownerAddresses, confirmations, userAccount)
-
-  const promiEvent = deploymentTxMethod.send({ from: userAccount, value: 0 })
+  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+  const promiEvent = deploymentTx.send({ from: userAccount })
 
   promiEvent
     .once('transactionHash', (txHash) => {
@@ -69,7 +101,7 @@ export const createSafe = (values, userAccount) => {
     })
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
-      const safeAddress = receipt.events.ProxyCreation.returnValues.proxy
+      const safeAddress = receipt.events?.ProxyCreation.returnValues.proxy
       const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
       // returning info for testing purposes, in app is fully async
       return { safeAddress: safeProps.address, safeTx: receipt }
@@ -81,26 +113,31 @@ export const createSafe = (values, userAccount) => {
   return promiEvent
 }
 
-const Open = ({ addSafe, network, provider, userAccount }) => {
+const Open = (): React.ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
-  const [creationTxPromise, setCreationTxPromise] = useState()
-  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<any>()
-  const [safePropsFromUrl, setSafePropsFromUrl] = useState()
+  const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
+  const [safeCreationPendingInfo, setSafeCreationPendingInfo] = useState<{ txHash?: string } | undefined>()
+  const [safePropsFromUrl, setSafePropsFromUrl] = useState<SafeProps | undefined>()
+  const userAccount = useSelector(userAccountSelector)
+  const dispatch = useDispatch()
+  const location = useLocation()
+  const { trackEvent } = useAnalytics()
 
   useEffect(() => {
     // #122: Allow to migrate an old Multisig by passing the parameters to the URL.
-    const query = queryString.parse(window.location.search, { arrayFormat: 'comma' })
+    const query = queryString.parse(location.search, { arrayFormat: 'comma' })
     const { name, owneraddresses, ownernames, threshold } = query
-    if (validateQueryParams(owneraddresses, ownernames, threshold, name)) {
-      setSafePropsFromUrl({
-        name,
-        ownerAddresses: owneraddresses,
-        ownerNames: ownernames,
-        threshold,
-      } as any)
-    }
-  }, [])
+
+    const safeProps = getSafePropsValuesFromQueryParams({
+      ownerAddresses: owneraddresses,
+      ownerNames: ownernames,
+      threshold: Number(threshold),
+      safeName: name as string | null,
+    })
+
+    setSafePropsFromUrl(safeProps)
+  }, [location])
 
   // check if there is a safe being created
   useEffect(() => {
@@ -118,7 +155,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
     load()
   }, [])
 
-  const createSafeProxy = async (formValues?: any) => {
+  const createSafeProxy = async (formValues?: InitialValuesForm) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
@@ -129,24 +166,24 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
       values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     }
 
-    const promiEvent = createSafe(values, userAccount)
+    const promiEvent = createSafe(values as InitialValuesForm, userAccount)
     setCreationTxPromise(promiEvent)
     setShowProgress(true)
   }
 
-  const onSafeCreated = async (safeAddress) => {
+  const onSafeCreated = async (safeAddress): Promise<void> => {
     const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     const name = getSafeNameFrom(pendingCreation)
     const ownersNames = getNamesFrom(pendingCreation)
     const ownerAddresses = getAccountsFrom(pendingCreation)
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
-    addSafe(safeProps)
 
-    ReactGA.event({
+    await dispatch(addOrUpdateSafe(safeProps))
+
+    trackEvent({
       category: 'User',
       action: 'Created a safe',
-      value: safeAddress,
     })
 
     removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
@@ -154,7 +191,7 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
         name,
-        tx: pendingCreation.txHash,
+        tx: pendingCreation?.txHash,
       },
     }
 
@@ -169,8 +206,8 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   }
 
   const onRetry = async () => {
-    const values = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
-    delete values.txHash
+    const values = await loadFromStorage<{ txHash?: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    delete values?.txHash
     await saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, values)
     setSafeCreationPendingInfo(values)
     createSafeProxy()
@@ -183,25 +220,18 @@ const Open = ({ addSafe, network, provider, userAccount }) => {
   return (
     <Page>
       {showProgress ? (
-        <Opening
+        <SafeDeployment
           creationTxHash={safeCreationPendingInfo?.txHash}
           onCancel={onCancel}
           onRetry={onRetry}
-          onSuccess={onSafeCreated as any}
-          provider={provider}
+          onSuccess={onSafeCreated}
           submittedPromise={creationTxPromise}
         />
       ) : (
-        <Layout
-          network={network}
-          onCallSafeContractSubmit={createSafeProxy}
-          provider={provider}
-          safeProps={safePropsFromUrl}
-          userAccount={userAccount}
-        />
+        <Layout onCallSafeContractSubmit={createSafeProxy} safeProps={safePropsFromUrl} />
       )}
     </Page>
   )
 }
 
-export default connect(selector, actions)(withRouter(Open))
+export default Open

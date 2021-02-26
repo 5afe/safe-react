@@ -1,17 +1,16 @@
 import { List } from 'immutable'
-import { TableColumn } from 'src/components/Table/types'
+import { TableColumn } from 'src/components/Table/types.d'
+import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'
 export const OWNERS_TABLE_ACTIONS_ID = 'actions'
 
-export const getOwnerData = (owners) => {
-  const rows = owners.map((owner) => ({
+export const getOwnerData = (owners: List<SafeOwner>): List<{ address: string; name: string }> => {
+  return owners.map((owner) => ({
     [OWNERS_TABLE_NAME_ID]: owner.name,
     [OWNERS_TABLE_ADDRESS_ID]: owner.address,
   }))
-
-  return rows
 }
 
 export const generateColumns = (): List<TableColumn> => {

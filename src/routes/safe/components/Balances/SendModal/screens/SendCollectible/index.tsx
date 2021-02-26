@@ -1,33 +1,38 @@
+import { ExplorerButton } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
 import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import GnoForm from 'src/components/forms/GnoForm'
+import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import WhenFieldChanges from 'src/components/WhenFieldChanges'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
+import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import CollectibleSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/CollectibleSelectField'
-import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendCollectible/TokenSelectField'
+import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
+import { getExplorerInfo } from 'src/config'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
+
+import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
+
+import { CollectibleSelectField } from './CollectibleSelectField'
+import { styles } from './style'
+import TokenSelectField from './TokenSelectField'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -41,19 +46,58 @@ const formMutators = {
   },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = {} }) => {
+type SendCollectibleProps = {
+  initialValues: any
+  onClose: () => void
+  onNext: (txInfo: SendCollectibleTxInfo) => void
+  recipientAddress?: string
+  selectedToken?: NFTToken | Erc721Transfer
+}
+
+export type SendCollectibleTxInfo = {
+  assetAddress: string
+  assetName: string
+  nftTokenId: string
+  recipientAddress?: string
+}
+
+const SendCollectible = ({
+  initialValues,
+  onClose,
+  onNext,
+  recipientAddress,
+  selectedToken,
+}: SendCollectibleProps): React.ReactElement => {
   const classes = useStyles()
   const nftAssets = useSelector(safeActiveSelectorMap)
   const nftTokens = useSelector(nftTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
-    address: recipientAddress || initialValues.recipientAddress,
-    name: '',
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
+    const defaultEntry = { address: '', name: '' }
+
+    // if there's nothing to lookup for, we return the default entry
+    if (!initialValues?.recipientAddress && !recipientAddress) {
+      return defaultEntry
+    }
+
+    // if there's something to lookup for, `initialValues` has precedence over `recipientAddress`
+    const predefinedAddress = initialValues?.recipientAddress ?? recipientAddress
+    const addressBookEntry = addressBook.find(({ address }) => {
+      return sameAddress(predefinedAddress, address)
+    })
+
+    // if found in the Address Book, then we return the entry
+    if (addressBookEntry) {
+      return addressBookEntry
+    }
+
+    // otherwise we return the default entry
+    return defaultEntry
   })
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
   React.useMemo(() => {
     if (selectedEntry === null && pristine) {
@@ -61,10 +105,10 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
     }
   }, [selectedEntry, pristine])
 
-  const handleSubmit = (values) => {
+  const handleSubmit = (values: SendCollectibleTxInfo) => {
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      values.recipientAddress = selectedEntry.address
+      values.recipientAddress = selectedEntry?.address
     }
 
     values.assetName = nftAssets[values.assetAddress].name
@@ -97,10 +141,10 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName ?? '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -128,9 +172,13 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                      if (sameString(e.key, 'Tab')) {
+                        return
                       }
+                      setSelectedEntry({ address: '', name: '' })
+                    }}
+                    onClick={() => {
+                      setSelectedEntry({ address: '', name: '' })
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -150,7 +198,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.name}
@@ -158,14 +206,14 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                             <Paragraph
                               className={classes.selectAddress}
                               noMargin
-                              onClick={() => setSelectedEntry(null)}
+                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
                               weight="bolder"
                             >
                               {selectedEntry.address}
                             </Paragraph>
                           </Block>
                           <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
+                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
                         </Block>
                       </Col>
                     </Row>
@@ -177,7 +225,6 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                         <AddressBookInput
                           fieldMutator={mutators.setRecipient}
                           pristine={pristine}
-                          recipientAddress={recipientAddress}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
                         />
@@ -197,7 +244,12 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 </Row>
                 <Row margin="sm">
                   <Col>
-                    <TokenSelectField assets={nftAssets} initialValue={(selectedToken as any).assetAddress} />
+                    <TokenSelectField
+                      assets={nftAssets}
+                      initialValue={
+                        (selectedToken as NFTToken)?.assetAddress ?? (selectedToken as Erc721Transfer)?.tokenAddress
+                      }
+                    />
                   </Col>
                 </Row>
                 <Row margin="xs">
@@ -209,7 +261,7 @@ const SendCollectible = ({ initialValues, onClose, onNext, recipientAddress, sel
                 </Row>
                 <Row margin="md">
                   <Col>
-                    <CollectibleSelectField initialValue={(selectedToken as any).tokenId} tokens={selectedNFTTokens} />
+                    <CollectibleSelectField initialValue={selectedToken?.tokenId} tokens={selectedNFTTokens} />
                   </Col>
                 </Row>
               </Block>

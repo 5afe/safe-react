@@ -2,29 +2,15 @@ import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useState } from 'react'
-import { OnChange } from 'react-final-form-listeners'
+import { BigNumber } from 'bignumber.js'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
-import { styles } from './style'
-
-import CopyBtn from 'src/components/CopyBtn'
-import EtherscanBtn from 'src/components/EtherscanBtn'
-import Identicon from 'src/components/Identicon'
-import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import {
-  composeValidators,
-  greaterThan,
-  maxValue,
-  maxValueCheck,
-  mustBeFloat,
-  required,
-} from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -32,14 +18,29 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getAddressBook } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAdbk } from 'src/logic/addressBook/utils'
+import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import AddressBookInput from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
+import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/SpendingLimitRow'
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
+import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
+import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { sm } from 'src/theme/variables'
+import { sameString } from 'src/utils/strings'
+
+import ArrowDown from '../assets/arrow-down.svg'
+
+import { styles } from './style'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
+import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -51,35 +52,108 @@ const formMutators = {
   setRecipient: (args, state, utils) => {
     utils.changeValue(state, 'recipientAddress', () => args[0])
   },
+  setTxType: (args, state, utils) => {
+    utils.changeValue(state, 'txType', () => args[0])
+  },
 }
 
-const useStyles = makeStyles(styles as any)
+const useStyles = makeStyles(styles)
 
-const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedToken = '' }) => {
+export type SendFundsTx = {
+  amount?: string
+  recipientAddress?: string
+  token?: string
+  txType?: string
+  tokenSpendingLimit?: SpendingLimit
+}
+
+type SendFundsProps = {
+  onClose: () => void
+  onReview: (txInfo: unknown) => void
+  recipientAddress?: string
+  selectedToken?: string
+  amount?: string
+}
+
+const InputAdornmentChildSymbol = ({ symbol }: { symbol?: string }): ReactElement => {
+  return <>{symbol}</>
+}
+
+const SendFunds = ({
+  onClose,
+  onReview,
+  recipientAddress,
+  selectedToken = '',
+  amount,
+}: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(getAddressBook)
-  const [selectedEntry, setSelectedEntry] = useState({
-    address: recipientAddress || initialValues.recipientAddress,
-    name: '',
+  const addressBook = useSelector(addressBookSelector)
+  const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
+    const defaultEntry = { address: recipientAddress || '', name: '' }
+
+    // if there's nothing to lookup for, we return the default entry
+    if (!recipientAddress) {
+      return defaultEntry
+    }
+
+    const addressBookEntry = addressBook.find(({ address }) => {
+      return sameAddress(recipientAddress, address)
+    })
+
+    // if found in the Address Book, then we return the entry
+    if (addressBookEntry) {
+      return addressBookEntry
+    }
+
+    // otherwise we return the default entry
+    return defaultEntry
   })
-
   const [pristine, setPristine] = useState(true)
-  const [isValidAddress, setIsValidAddress] = useState(true)
+  const [isValidAddress, setIsValidAddress] = useState(false)
 
-  React.useMemo(() => {
+  useEffect(() => {
     if (selectedEntry === null && pristine) {
       setPristine(false)
     }
   }, [selectedEntry, pristine])
 
+  let tokenSpendingLimit
   const handleSubmit = (values) => {
     const submitValues = values
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
-      submitValues.recipientAddress = selectedEntry.address
+      submitValues.recipientAddress = selectedEntry?.address
     }
-    onNext(submitValues)
+    onReview({ ...submitValues, tokenSpendingLimit })
+  }
+
+  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const currentUser = useSelector(userAccountSelector)
+
+  const sendFundsValidation = (values) => {
+    const { amount, token: tokenAddress, txType } = values ?? {}
+
+    if (!amount || !tokenAddress) {
+      return
+    }
+
+    const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+
+    const amountValidation = composeValidators(
+      required,
+      mustBeFloat,
+      minValue(0, false),
+      maxValue(
+        isSpendingLimit
+          ? spendingLimitAllowedBalance({ tokenAddress, tokenSpendingLimit, tokens })
+          : getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.balance ?? 0,
+      ),
+    )(amount)
+
+    return {
+      amount: amountValidation,
+    }
   }
 
   return (
@@ -96,21 +170,21 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
       <Hairline />
       <GnoForm
         formMutators={formMutators}
-        initialValues={initialValues}
+        initialValues={{ amount, recipientAddress, token: selectedToken }}
         onSubmit={handleSubmit}
-        validation={(values) => {
-          const selectedTokenRecord = tokens.find((token) => token.address === values?.token)
-
-          return {
-            amount: maxValueCheck(selectedTokenRecord?.balance, values.amount),
-          }
-        }}
+        validation={sendFundsValidation}
       >
         {(...args) => {
           const formState = args[2]
           const mutators = args[3]
-          const { token: tokenAddress } = formState.values
-          const selectedTokenRecord = tokens.find((token) => token.address === tokenAddress)
+          const { token: tokenAddress, txType } = formState.values
+          const selectedToken = tokens?.find((token) => token.address === tokenAddress)
+          const userSpendingLimits = spendingLimits?.filter(({ delegate }) => sameAddress(delegate, currentUser))
+
+          tokenSpendingLimit = getSpendingLimitByTokenAddress({
+            spendingLimits: userSpendingLimits,
+            tokenAddress: selectedToken?.address,
+          })
 
           const handleScan = (value, closeQrModal) => {
             let scannedAddress = value
@@ -118,10 +192,10 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAdbk(addressBook, scannedAddress) : ''
+            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
-              name: scannedName,
+              name: scannedName || '',
               address: scannedAddress,
             })
             closeQrModal()
@@ -130,6 +204,22 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
           let shouldDisableSubmitButton = !isValidAddress
           if (selectedEntry) {
             shouldDisableSubmitButton = !selectedEntry.address
+          }
+
+          const setMaxAllowedAmount = () => {
+            const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
+            let maxAmount = selectedToken?.balance ?? 0
+
+            if (isSpendingLimit) {
+              const spendingLimitBalance = fromTokenUnit(
+                new BigNumber(tokenSpendingLimit.amount).minus(tokenSpendingLimit.spent).toString(),
+                selectedToken?.decimals ?? 0,
+              )
+
+              maxAmount = new BigNumber(maxAmount).gt(spendingLimitBalance) ? spendingLimitBalance : maxAmount
+            }
+
+            mutators.setMax(maxAmount)
           }
 
           return (
@@ -147,9 +237,13 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
-                      if (e.keyCode !== 9) {
-                        setSelectedEntry(null)
+                      if (sameString(e.key, 'Tab')) {
+                        return
                       }
+                      setSelectedEntry({ address: '', name: '' })
+                    }}
+                    onClick={() => {
+                      setSelectedEntry({ address: '', name: '' })
                     }}
                     role="listbox"
                     tabIndex={0}
@@ -160,72 +254,48 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
-                      <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
-                      </Col>
-                      <Col layout="column" xs={11}>
-                        <Block justify="left">
-                          <Block>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry(null)}
-                              weight="bolder"
-                            >
-                              {selectedEntry.name}
-                            </Paragraph>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry(null)}
-                              weight="bolder"
-                            >
-                              {selectedEntry.address}
-                            </Paragraph>
-                          </Block>
-                          <CopyBtn content={selectedEntry.address} />
-                          <EtherscanBtn type="address" value={selectedEntry.address} />
-                        </Block>
-                      </Col>
+                      <EthHashInfo
+                        hash={selectedEntry.address}
+                        name={selectedEntry.name}
+                        showIdenticon
+                        showCopyBtn
+                        explorerUrl={getExplorerInfo(selectedEntry.address)}
+                      />
                     </Row>
                   </div>
                 ) : (
-                  <>
-                    <Row margin="md">
-                      <Col xs={11}>
-                        <AddressBookInput
-                          fieldMutator={mutators.setRecipient}
-                          pristine={pristine}
-                          recipientAddress={recipientAddress}
-                          setIsValidAddress={setIsValidAddress}
-                          setSelectedEntry={setSelectedEntry}
-                        />
-                      </Col>
-                      <Col center="xs" className={classes} middle="xs" xs={1}>
-                        <ScanQRWrapper handleScan={handleScan} />
-                      </Col>
-                    </Row>
-                  </>
+                  <Row margin="md">
+                    <Col xs={11}>
+                      <AddressBookInput
+                        fieldMutator={mutators.setRecipient}
+                        pristine={pristine}
+                        setIsValidAddress={setIsValidAddress}
+                        setSelectedEntry={setSelectedEntry}
+                      />
+                    </Col>
+                    <Col center="xs" className={classes} middle="xs" xs={1}>
+                      <ScanQRWrapper handleScan={handleScan} />
+                    </Col>
+                  </Row>
                 )}
                 <Row margin="sm">
                   <Col>
                     <TokenSelectField
-                      initialValue={selectedToken}
-                      isValid={tokenAddress && String(tokenAddress).toUpperCase() !== 'ETHER'}
+                      initialValue={selectedToken?.address}
+                      isValid={!!selectedToken?.address}
                       tokens={tokens}
                     />
                   </Col>
                 </Row>
+                {tokenSpendingLimit && selectedToken && (
+                  <SpendingLimitRow selectedToken={selectedToken} tokenSpendingLimit={tokenSpendingLimit} />
+                )}
                 <Row margin="xs">
                   <Col between="lg">
                     <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                       Amount
                     </Paragraph>
-                    <ButtonLink
-                      onClick={() => mutators.setMax(selectedTokenRecord.balance)}
-                      weight="bold"
-                      testId="send-max-btn"
-                    >
+                    <ButtonLink onClick={setMaxAllowedAmount} weight="bold" testId="send-max-btn">
                       Send max
                     </ButtonLink>
                   </Col>
@@ -234,32 +304,19 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   <Col>
                     <Field
                       component={TextField}
-                      inputAdornment={
-                        selectedTokenRecord && {
-                          endAdornment: <InputAdornment position="end">{selectedTokenRecord.symbol}</InputAdornment>,
-                        }
-                      }
+                      inputAdornment={{
+                        endAdornment: (
+                          <InputAdornment position="end">
+                            <InputAdornmentChildSymbol symbol={selectedToken?.symbol} />
+                          </InputAdornment>
+                        ),
+                      }}
                       name="amount"
                       placeholder="Amount*"
                       text="Amount*"
                       type="text"
                       testId="amount-input"
-                      validate={composeValidators(
-                        required,
-                        mustBeFloat,
-                        greaterThan(0),
-                        maxValue(selectedTokenRecord?.balance),
-                      )}
                     />
-                    <OnChange name="token">
-                      {() => {
-                        setSelectedEntry({
-                          name: selectedEntry?.name,
-                          address: selectedEntry?.address,
-                        })
-                        mutators.onTokenChange()
-                      }}
-                    </OnChange>
                   </Col>
                 </Row>
               </Block>
@@ -272,7 +329,7 @@ const SendFunds = ({ initialValues, onClose, onNext, recipientAddress, selectedT
                   className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
-                  disabled={shouldDisableSubmitButton}
+                  disabled={!formState.valid || shouldDisableSubmitButton}
                   minWidth={140}
                   type="submit"
                   variant="contained"

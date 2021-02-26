@@ -1,11 +1,12 @@
-import { border, lg, md, sm } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
+import { background, border, lg, md, sm } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   headingText: {
     fontSize: lg,
@@ -20,7 +21,7 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    position: 'absolute',
+    position: 'relative',
     bottom: 0,
     width: '100%',
     borderTop: `1px solid ${border}`,
@@ -28,5 +29,9 @@ export const styles = () => ({
   nonceNumber: {
     marginTop: sm,
     fontSize: md,
+  },
+  gasCostsContainer: {
+    backgroundColor: background,
+    padding: `0 ${lg}`,
   },
 })

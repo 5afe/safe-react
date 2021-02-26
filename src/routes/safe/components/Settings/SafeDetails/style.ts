@@ -1,6 +1,7 @@
+import { createStyles } from '@material-ui/core/styles'
 import { boldFont, border, lg, sm, connected } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   formContainer: {
     padding: lg,
   },

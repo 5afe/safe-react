@@ -1,47 +1,50 @@
-import { withStyles } from '@material-ui/core/styles'
-import { withSnackbar } from 'notistack'
+import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import OwnerForm from './screens/OwnerForm'
-import ReviewReplaceOwner from './screens/Review'
 
 import Modal from 'src/components/Modal'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import createTransaction from 'src/routes/safe/store/actions/createTransaction'
-import replaceSafeOwner from 'src/routes/safe/store/actions/replaceSafeOwner'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/routes/safe/store/selectors'
+import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
+import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
+import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
-const styles = () => ({
+import OwnerForm from './screens/OwnerForm'
+import { ReviewReplaceOwnerModal } from './screens/Review'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+
+const styles = createStyles({
   biggerModalWindow: {
     width: '775px',
-    minHeight: '500px',
-    position: 'static',
     height: 'auto',
   },
 })
 
+const useStyles = makeStyles(styles)
+
+type OwnerValues = {
+  newOwnerAddress: string
+  newOwnerName: string
+}
+
 export const sendReplaceOwner = async (
-  values,
-  safeAddress,
-  ownerAddressToRemove,
-  enqueueSnackbar,
-  closeSnackbar,
-  threshold,
-  dispatch,
-) => {
+  values: OwnerValues,
+  safeAddress: string,
+  ownerAddressToRemove: string,
+  dispatch: Dispatch,
+  txParameters: TxParameters,
+  threshold?: number,
+): Promise<void> => {
   const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
-  const safeOwners = await gnosisSafe.getOwners()
-  const index = safeOwners.findIndex(
-    (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
-  )
+  const safeOwners = await gnosisSafe.methods.getOwners().call()
+  const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.contract.methods
-    .swapOwner(prevAddress, ownerAddressToRemove, values.ownerAddress)
-    .encodeABI()
+  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.newOwnerAddress).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
@@ -49,10 +52,11 @@ export const sendReplaceOwner = async (
       to: safeAddress,
       valueInWei: '0',
       txData,
+      txNonce: txParameters.safeNonce,
+      safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+      ethParameters: txParameters,
       notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
-      enqueueSnackbar,
-      closeSnackbar,
-    } as any),
+    }),
   )
 
   if (txHash && threshold === 1) {
@@ -60,24 +64,43 @@ export const sendReplaceOwner = async (
       replaceSafeOwner({
         safeAddress,
         oldOwnerAddress: ownerAddressToRemove,
-        ownerAddress: values.ownerAddress,
-        ownerName: values.ownerName,
+        ownerAddress: values.newOwnerAddress,
+        ownerName: values.newOwnerName,
       }),
     )
   }
 }
 
-const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose, ownerAddress, ownerName }) => {
+type ReplaceOwnerProps = {
+  isOpen: boolean
+  onClose: () => void
+  ownerAddress: string
+  ownerName: string
+}
+
+export const ReplaceOwnerModal = ({
+  isOpen,
+  onClose,
+  ownerAddress,
+  ownerName,
+}: ReplaceOwnerProps): React.ReactElement => {
+  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState<any>({})
+  const [values, setValues] = useState({
+    newOwnerAddress: '',
+    newOwnerName: '',
+  })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(
     () => () => {
       setActiveScreen('checkOwner')
-      setValues({})
+      setValues({
+        newOwnerAddress: '',
+        newOwnerName: '',
+      })
     },
     [isOpen],
   )
@@ -87,22 +110,22 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
   const ownerSubmitted = (newValues) => {
     const { ownerAddress, ownerName } = newValues
     const checksumAddr = checksumAddress(ownerAddress)
-    values.ownerName = ownerName
-    values.ownerAddress = checksumAddr
-    setValues(values)
+    setValues({
+      newOwnerAddress: checksumAddr,
+      newOwnerName: ownerName,
+    })
     setActiveScreen('reviewReplaceOwner')
   }
 
-  const onReplaceOwner = async () => {
+  const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, enqueueSnackbar, closeSnackbar, threshold, dispatch)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters, threshold)
 
       dispatch(
-        // Needs the `address` field because we need to provide the minimum required values to ADD a new entry
-        // The reducer will update all the addressBooks stored, so we cannot decide what to do beforehand,
-        // thus, we pass the minimum required fields (name and address)
-        addOrUpdateAddressBookEntry(values.ownerAddress, { name: values.ownerName, address: values.ownerAddress }),
+        addOrUpdateAddressBookEntry(
+          makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName }),
+        ),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)
@@ -122,7 +145,7 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
           <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
-          <ReviewReplaceOwner
+          <ReviewReplaceOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onReplaceOwner}
@@ -135,5 +158,3 @@ const ReplaceOwner = ({ classes, closeSnackbar, enqueueSnackbar, isOpen, onClose
     </Modal>
   )
 }
-
-export default withStyles(styles as any)(withSnackbar(ReplaceOwner))

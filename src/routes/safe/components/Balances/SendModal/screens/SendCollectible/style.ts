@@ -1,11 +1,12 @@
 import { lg, md, secondaryText } from 'src/theme/variables'
+import { createStyles } from '@material-ui/core'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: `${md} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     letterSpacing: '-1px',

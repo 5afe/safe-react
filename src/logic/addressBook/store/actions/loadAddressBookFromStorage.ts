@@ -1,29 +1,17 @@
-import { List } from 'immutable'
-
 import { loadAddressBook } from 'src/logic/addressBook/store/actions/loadAddressBook'
 import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
 import { getAddressBookFromStorage } from 'src/logic/addressBook/utils'
-import { safesListSelector } from 'src/routes/safe/store/selectors'
+import { Dispatch } from 'redux'
 
-const loadAddressBookFromStorage = () => async (dispatch, getState) => {
+const loadAddressBookFromStorage = () => async (dispatch: Dispatch): Promise<void> => {
   try {
-    const state = getState()
     let storedAdBk = await getAddressBookFromStorage()
     if (!storedAdBk) {
       storedAdBk = []
     }
 
-    let addressBook = buildAddressBook(storedAdBk)
-    // Fetch all the current safes, in case that we don't have a safe on the adbk, we add it
-    const safes = safesListSelector(state)
-    const adbkEntries = addressBook.keySeq().toArray()
-    safes.forEach((safe) => {
-      const { address } = safe
-      const found = adbkEntries.includes(address)
-      if (!found) {
-        addressBook = addressBook.set(address, List([]))
-      }
-    })
+    const addressBook = buildAddressBook(storedAdBk)
+
     dispatch(loadAddressBook(addressBook))
   } catch (err) {
     // eslint-disable-next-line

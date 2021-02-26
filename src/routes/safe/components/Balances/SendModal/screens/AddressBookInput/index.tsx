@@ -1,227 +1,209 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import MuiTextField from '@material-ui/core/TextField'
-import { withStyles } from '@material-ui/core/styles'
-import makeStyles from '@material-ui/core/styles/makeStyles'
-import Autocomplete from '@material-ui/lab/Autocomplete'
-import { List } from 'immutable'
-import React, { useEffect, useState } from 'react'
+import Autocomplete, { AutocompleteProps } from '@material-ui/lab/Autocomplete'
+import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { styles } from './style'
-
-import Identicon from 'src/components/Identicon'
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { getAddressBookListSelector } from 'src/logic/addressBook/store/selectors'
-import { getAddressFromENS } from 'src/logic/wallets/getWeb3'
-import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { isFeatureEnabled } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
+import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
+import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
+import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
+import {
+  useTextFieldInputStyle,
+  useTextFieldLabelStyle,
+} from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
+import { trimSpaces } from 'src/utils/strings'
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
-  isCustomTx?: boolean
-  pristine: boolean
+  label?: string
+  pristine?: boolean
   recipientAddress?: string
-  setSelectedEntry: (
-    entry: { address?: string; name?: string } | React.SetStateAction<{ address: string; name: string }>,
-  ) => void
-  setIsValidAddress: (valid?: boolean) => void
+  setIsValidAddress: (valid: boolean) => void
+  setSelectedEntry: Dispatch<SetStateAction<{ address: string; name: string }> | null>
 }
 
-const useStyles = makeStyles(styles)
-
-const textFieldLabelStyle = makeStyles(() => ({
-  root: {
-    overflow: 'hidden',
-    borderRadius: 4,
-    fontSize: '15px',
-    width: '500px',
-  },
-}))
-
-const textFieldInputStyle = makeStyles(() => ({
-  root: {
-    fontSize: '14px',
-    width: '420px',
-  },
-}))
-
-const filterAddressBookWithContractAddresses = async (
-  addressBook: List<{ address: string }>,
-): Promise<List<{ address: string }>> => {
-  const abFlags = await Promise.all(
-    addressBook.map(
-      async ({ address }: { address: string }): Promise<boolean> => {
-        return (await mustBeEthereumContractAddress(address)) === undefined
-      },
-    ),
-  )
-
-  return addressBook.filter((_, index) => abFlags[index])
+export interface BaseAddressBookInputProps extends AddressBookProps {
+  addressBookEntries: AddressBookEntry[]
+  setSelectedEntry: (args: { address: string; name: string } | null) => void
+  setValidationText: Dispatch<SetStateAction<string | undefined>>
+  validationText: string | undefined
 }
 
-const AddressBookInput = ({
+const BaseAddressBookInput = ({
+  addressBookEntries,
   fieldMutator,
-  isCustomTx,
-  pristine,
-  recipientAddress,
+  label = 'Recipient',
   setIsValidAddress,
   setSelectedEntry,
-}: AddressBookProps) => {
-  const classes = useStyles()
-  const addressBook = useSelector(getAddressBookListSelector)
-  const [isValidForm, setIsValidForm] = useState(true)
-  const [validationText, setValidationText] = useState<string>('')
-  const [inputTouched, setInputTouched] = useState(false)
-  const [blurred, setBlurred] = useState(pristine)
-  const [adbkList, setADBKList] = useState<List<{ address: string }>>(List([]))
+  setValidationText,
+  validationText,
+}: BaseAddressBookInputProps): ReactElement => {
+  const updateAddressInfo = (addressEntry: AddressBookEntry): void => {
+    setSelectedEntry(addressEntry)
+    fieldMutator(addressEntry.address)
+  }
 
-  const [inputAddValue, setInputAddValue] = useState(recipientAddress)
+  const validateAddress = (address: string): AddressBookEntry | string | undefined => {
+    const addressErrorMessage = mustBeEthereumAddress(address)
+    setIsValidAddress(!addressErrorMessage)
 
-  const onAddressInputChanged = async (addressValue: string): Promise<void> => {
-    setInputAddValue(addressValue)
-    let resolvedAddress = addressValue
-    let isValidText
-    if (inputTouched && !addressValue) {
-      setIsValidForm(false)
-      setValidationText('Required')
-      setIsValidAddress(false)
+    if (addressErrorMessage) {
+      setValidationText(addressErrorMessage)
       return
     }
-    if (addressValue) {
-      if (isValidEnsName(addressValue)) {
-        resolvedAddress = await getAddressFromENS(addressValue)
-        setInputAddValue(resolvedAddress)
-      }
-      isValidText = mustBeEthereumAddress(resolvedAddress)
-      if (isCustomTx && isValidText === undefined) {
-        isValidText = await mustBeEthereumContractAddress(resolvedAddress)
-      }
 
-      // First removes the entries that are not contracts if the operation is custom tx
-      const adbkToFilter = isCustomTx ? await filterAddressBookWithContractAddresses(addressBook) : addressBook
-      // Then Filters the entries based on the input of the user
-      const filteredADBK = adbkToFilter.filter((adbkEntry) => {
-        const { address, name } = adbkEntry
-        return (
-          name.toLowerCase().includes(addressValue.toLowerCase()) ||
-          address.toLowerCase().includes(addressValue.toLowerCase())
-        )
-      })
-      setADBKList(filteredADBK)
-      if (!isValidText) {
-        setSelectedEntry({ address: addressValue })
+    const filteredEntries = filterAddressEntries(addressBookEntries, { inputValue: address })
+    return filteredEntries.length === 1 ? filteredEntries[0] : address
+  }
+
+  const onChange: AutocompleteProps<AddressBookEntry, false, false, true>['onChange'] = (_, value, reason) => {
+    switch (reason) {
+      case 'select-option': {
+        const { address, name } = value as AddressBookEntry
+        updateAddressInfo({ address, name })
+        break
       }
     }
-    setIsValidForm(isValidText === undefined)
-    setValidationText(isValidText)
-    fieldMutator(resolvedAddress)
-    setIsValidAddress(isValidText === undefined)
   }
+
+  const onInputChange: AutocompleteProps<AddressBookEntry, false, false, true>['onInputChange'] = async (
+    _,
+    value,
+    reason,
+  ) => {
+    switch (reason) {
+      case 'input': {
+        const normalizedValue = trimSpaces(value)
+
+        if (!normalizedValue) {
+          break
+        }
+
+        // ENS-enabled resolve/validation
+        if (
+          isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
+          (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
+        ) {
+          const address = await getAddressFromDomain(normalizedValue)
+
+          const validatedAddress = validateAddress(address)
+
+          if (!validatedAddress) {
+            fieldMutator('')
+            break
+          }
+
+          const newEntry = typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
+
+          updateAddressInfo(newEntry)
+          break
+        }
+
+        // ETH address validation
+        const validatedAddress = validateAddress(normalizedValue)
+
+        if (!validatedAddress) {
+          fieldMutator('')
+          break
+        }
+
+        const newEntry =
+          typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+
+        updateAddressInfo(newEntry)
+
+        break
+      }
+    }
+  }
+
+  const labelStyles = useTextFieldLabelStyle()
+  const inputStyles = useTextFieldInputStyle()
+
+  return (
+    <Autocomplete<AddressBookEntry, false, false, true>
+      closeIcon={null}
+      openOnFocus={false}
+      filterOptions={filterAddressEntries}
+      freeSolo
+      onChange={onChange}
+      onInputChange={onInputChange}
+      options={addressBookEntries}
+      id="address-book-input"
+      renderInput={(params) => (
+        <MuiTextField
+          {...params}
+          autoFocus={true}
+          error={!!validationText}
+          fullWidth
+          variant="filled"
+          label={validationText ? validationText : label}
+          InputLabelProps={{ shrink: true, required: true, classes: labelStyles }}
+          InputProps={{ ...params.InputProps, classes: inputStyles }}
+        />
+      )}
+      getOptionLabel={({ address }) => address}
+      renderOption={({ address, name }) => <EthHashInfo hash={address} name={name} showIdenticon />}
+      role="listbox"
+      style={{ display: 'flex', flexGrow: 1 }}
+    />
+  )
+}
+
+export const AddressBookInput = (props: AddressBookProps): ReactElement => {
+  const addressBookEntries = useSelector(addressBookSelector)
+  const [validationText, setValidationText] = useState<string>('')
+
+  return (
+    <BaseAddressBookInput
+      addressBookEntries={addressBookEntries}
+      setValidationText={setValidationText}
+      validationText={validationText}
+      {...props}
+    />
+  )
+}
+
+export const ContractsAddressBookInput = ({
+  setIsValidAddress,
+  setSelectedEntry,
+  ...props
+}: AddressBookProps): ReactElement => {
+  const addressBookEntries = useSelector(addressBookSelector)
+  const [filteredEntries, setFilteredEntries] = useState<AddressBookEntry[]>([])
+  const [validationText, setValidationText] = useState<string>('')
 
   useEffect(() => {
-    const filterAdbkContractAddresses = async (): Promise<void> => {
-      if (!isCustomTx) {
-        setADBKList(addressBook)
-        return
-      }
-
-      const filteredADBK = await filterAddressBookWithContractAddresses(addressBook)
-      setADBKList(filteredADBK)
+    const filterContractAddresses = async (): Promise<void> => {
+      const filteredADBK = await filterContractAddressBookEntries(addressBookEntries)
+      setFilteredEntries(filteredADBK)
     }
-    filterAdbkContractAddresses()
-  }, [addressBook, isCustomTx])
+    filterContractAddresses()
+  }, [addressBookEntries])
 
-  const labelStyling = textFieldLabelStyle()
-  const txInputStyling = textFieldInputStyle()
-
-  let statusClasses = ''
-  if (!isValidForm) {
-    statusClasses = 'isInvalid'
-  }
-  if (isValidForm && inputTouched) {
-    statusClasses = 'isValid'
+  const onSetSelectedEntry = async (selectedEntry) => {
+    if (selectedEntry?.address) {
+      // verify if `address` is a contract
+      const contractAddressErrorMessage = await mustBeEthereumContractAddress(selectedEntry.address)
+      setIsValidAddress(!contractAddressErrorMessage)
+      setValidationText(contractAddressErrorMessage ?? '')
+      setSelectedEntry(selectedEntry)
+    }
   }
 
   return (
-    <>
-      <Autocomplete
-        closeIcon={null}
-        disableOpenOnFocus
-        filterOptions={(optionsArray, { inputValue }) =>
-          optionsArray.filter((item) => {
-            const inputLowerCase = inputValue.toLowerCase()
-            const foundName = item.name.toLowerCase().includes(inputLowerCase)
-            const foundAddress = item.address.toLowerCase().includes(inputLowerCase)
-            return foundName || foundAddress
-          })
-        }
-        freeSolo
-        getOptionLabel={(adbkEntry) => adbkEntry.address || ''}
-        id="free-solo-demo"
-        onChange={(event, value) => {
-          let address = ''
-          let name = ''
-          if (value) {
-            address = value.address
-            name = value.name
-          }
-          setSelectedEntry({ address, name })
-          fieldMutator(address)
-        }}
-        onClose={() => setBlurred(true)}
-        onOpen={() => {
-          setSelectedEntry(null)
-          setBlurred(false)
-        }}
-        open={!blurred}
-        options={adbkList.toArray()}
-        renderInput={(params) => (
-          <MuiTextField
-            {...params}
-            // eslint-disable-next-line
-            autoFocus={!blurred || pristine}
-            error={!isValidForm}
-            fullWidth
-            id="filled-error-helper-text"
-            InputLabelProps={{
-              shrink: true,
-              required: true,
-              classes: labelStyling,
-            }}
-            InputProps={{
-              ...params.InputProps,
-              classes: {
-                ...txInputStyling,
-              },
-              className: statusClasses,
-            }}
-            label={!isValidForm ? validationText : 'Recipient'}
-            onChange={(event) => {
-              setInputTouched(true)
-              onAddressInputChanged(event.target.value)
-            }}
-            value={{ address: inputAddValue }}
-            variant="filled"
-          />
-        )}
-        renderOption={(adbkEntry) => {
-          const { address, name } = adbkEntry
-          return (
-            <div className={classes.itemOptionList}>
-              <div className={classes.identicon}>
-                <Identicon address={address} diameter={32} />
-              </div>
-              <div className={classes.adbkEntryName}>
-                <span>{name}</span>
-                <span>{address}</span>
-              </div>
-            </div>
-          )
-        }}
-        role="listbox"
-        style={{ display: 'flex', flexGrow: 1 }}
-        value={{ address: inputAddValue }}
-      />
-    </>
+    <BaseAddressBookInput
+      addressBookEntries={filteredEntries}
+      setIsValidAddress={setIsValidAddress}
+      setSelectedEntry={onSetSelectedEntry}
+      setValidationText={setValidationText}
+      validationText={validationText}
+      {...props}
+    />
   )
 }
-
-export default withStyles(styles as any)(AddressBookInput)
