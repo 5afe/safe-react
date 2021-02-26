@@ -137,7 +137,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Lido finance
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYnBXvCy9qNTZEA1Bd1R3Apq6Mf2yzsgQL1uhUkuQR1jE`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYCzVxP4v8dX92d3nPvnxCksmsjdbKEPMzDHwudK2SALE`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
