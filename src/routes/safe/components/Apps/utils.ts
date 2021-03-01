@@ -113,7 +113,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Wallet-Connect
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmT3VxxfFtfEcvq8AeaoFAyUGxePRa2zisvnxLTrQXU5Uf`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRMGTA5ARMwfhYbdmK83zzMd13NnEUKFJSZEgEjKa8YQm`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
@@ -128,6 +128,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qme9HuPPhgCtgfj1CktvaDKhTesMueGCV2Kui1Sqna3Xs9`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Mushrooms finance
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdRLqtVW9nkjZmQiryoBfpvbqXrqYT59EawZcF5WXoLCY`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
 ]
 
