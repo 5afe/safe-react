@@ -2,15 +2,15 @@ import { Loader, Title } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 import style from 'styled-components'
 
-import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
 import Img from 'src/components/layout/Img'
-import { usePagedQueuedTransactions } from './hooks/usePagedQueuedTransactions'
 import { ActionModal } from './ActionModal'
-import { TxActionProvider } from './TxActionProvider'
-import { TxLocationContext } from './TxLocationProvider'
-import { QueueTxList } from './QueueTxList'
-import { ScrollableTransactionsContainer, Centered } from './styled'
 import NoTransactionsImage from './assets/no-transactions.svg'
+import { usePagedQueuedTransactions } from './hooks/usePagedQueuedTransactions'
+import { QueueTxList } from './QueueTxList'
+import { Centered } from './styled'
+import { TxActionProvider } from './TxActionProvider'
+import { TxsInfiniteScroll } from './TxsInfiniteScroll'
+import { TxLocationContext } from './TxLocationProvider'
 
 const NoTransactions = style.div`
   display: flex;
@@ -19,11 +19,11 @@ const NoTransactions = style.div`
 `
 
 export const QueueTransactions = (): ReactElement => {
-  const { count, loading, hasMore, next, transactions } = usePagedQueuedTransactions()
+  const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
   // `loading` is, actually `!transactions`
   // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
-  if (loading || !transactions) {
+  if (isLoading || !transactions) {
     return (
       <Centered>
         <Loader size="md" />
@@ -42,19 +42,17 @@ export const QueueTransactions = (): ReactElement => {
 
   return (
     <TxActionProvider>
-      <ScrollableTransactionsContainer id={SCROLLABLE_TARGET_ID}>
-        <InfiniteScroll dataLength={count} next={next} hasMore={hasMore}>
-          {/* Next list */}
-          <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
-            {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
-          </TxLocationContext.Provider>
+      <TxsInfiniteScroll next={next} hasMore={hasMore} isLoading={isLoading}>
+        {/* Next list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.next' }}>
+          {transactions.next.count !== 0 && <QueueTxList transactions={transactions.next.transactions} />}
+        </TxLocationContext.Provider>
 
-          {/* Queue list */}
-          <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
-            {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
-          </TxLocationContext.Provider>
-        </InfiniteScroll>
-      </ScrollableTransactionsContainer>
+        {/* Queue list */}
+        <TxLocationContext.Provider value={{ txLocation: 'queued.queued' }}>
+          {transactions.queue.count !== 0 && <QueueTxList transactions={transactions.queue.transactions} />}
+        </TxLocationContext.Provider>
+      </TxsInfiniteScroll>
       <ActionModal />
     </TxActionProvider>
   )
