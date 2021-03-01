@@ -23,6 +23,9 @@ import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeM
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import Link from 'src/components/layout/Link'
+import { Icon } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
+
 import {
   latestMasterContractVersionSelector,
   safeCurrentVersionSelector,
@@ -39,6 +42,12 @@ export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
 export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 const useStyles = makeStyles(styles)
+
+const StyledIcon = styled(Icon)`
+  position: relative;
+  top: 2px;
+  left: 4px;
+`
 
 const SafeDetails = (): React.ReactElement => {
   const classes = useStyles()
@@ -111,11 +120,18 @@ const SafeDetails = (): React.ReactElement => {
           <Block className={classes.formContainer}>
             <Heading tag="h2">Safe Version</Heading>
             <Row align="end" grow>
-              <Paragraph className={classes.versionNumber}>
-                <Link className={classes.link} color="black" target="_blank" to={safeInfo?.deployerRepoUrl}>
+              <Paragraph size="lg" className={classes.versionNumber}>
+                <Link
+                  className={classes.link}
+                  color="black"
+                  rel="noreferrer noopener"
+                  target="_blank"
+                  to={safeInfo?.deployerRepoUrl}
+                >
                   {getSafeVersion()}
                   {getSafeVersionUpdate()}
                 </Link>
+                <StyledIcon size="sm" type="externalLink" color="primary" />
               </Paragraph>
             </Row>
             {safeNeedsUpdate && isUserOwner ? (
@@ -137,9 +153,9 @@ const SafeDetails = (): React.ReactElement => {
           </Block>
           <Block className={classes.formContainer}>
             <Heading tag="h2">Modify Safe name</Heading>
-            <Paragraph>
-              You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or any
-              third parties.
+            <Paragraph size="lg">
+              You can change the name of this Safe. This name is only stored locally <br />
+              and never shared with Gnosis or any third parties.
             </Paragraph>
             <Block className={classes.root}>
               <Field
