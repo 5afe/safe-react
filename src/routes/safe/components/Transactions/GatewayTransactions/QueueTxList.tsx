@@ -82,11 +82,13 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
   const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
-  const [, lastTransactionsGroup] = transactions[transactions.length - 1]
-  const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
+  if (transactions.length) {
+    const [, lastTransactionsGroup] = transactions[transactions.length - 1]
+    const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
 
-  if (txLocation === 'queued.queued' && !sameString(lastItemId, lastTransaction.id)) {
-    setLastItemId(lastTransaction.id)
+    if (txLocation === 'queued.queued' && !sameString(lastItemId, lastTransaction.id)) {
+      setLastItemId(lastTransaction.id)
+    }
   }
 
   return (
