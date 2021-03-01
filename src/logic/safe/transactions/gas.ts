@@ -155,7 +155,7 @@ const estimateGasWithRPCCall = async (txConfig: {
 
     const { error } = data
     if (error?.data) {
-      return new BigNumber(data.error.data.substring(138), 16).toNumber()
+      return new BigNumber(error.data.substring(138), 16).toNumber()
     }
   } catch (error) {
     console.log('Gas estimation endpoint errored: ', error.message)
@@ -214,7 +214,7 @@ const calculateMinimumGasForTransaction = async (
 export const getFixedGasCosts = (threshold: number): number => {
   // There are some minimum gas costs to execute an Ethereum transaction
   // We add this fixed network minimum gas, the gas required to check each signature
-  return MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE + SAFE_TX_GAS_DATA_COST
+  return MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
 }
 
 export const estimateGasForTransactionCreation = async (
