@@ -77,7 +77,7 @@ export const isSendERC20Transaction = async (tx: BuildTx['tx']): Promise<boolean
 
     // some contracts may implement the same methods as in ERC20 standard
     // we may falsely treat them as tokens, so in case we get any errors when getting token info
-    // we fallback to displaying custom transaction
+    // we fallback to displaying contract interaction
     isSendTokenTx = decimals !== null && symbol !== null
   }
 
