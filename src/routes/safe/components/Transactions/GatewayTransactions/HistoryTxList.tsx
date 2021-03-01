@@ -1,46 +1,35 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
-import React, { ReactElement } from 'react'
+import React, { ReactElement, useContext } from 'react'
 
-import { InfiniteScroll, SCROLLABLE_TARGET_ID } from 'src/components/InfiniteScroll'
-import { usePagedHistoryTransactions } from './hooks/usePagedHistoryTransactions'
-import {
-  SubTitle,
-  ScrollableTransactionsContainer,
-  StyledTransactions,
-  StyledTransactionsGroup,
-  Centered,
-} from './styled'
+import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { TxsInfiniteScrollContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxsInfiniteScroll'
+import { formatWithSchema } from 'src/utils/date'
+import { sameString } from 'src/utils/strings'
+import { StyledTransactions, StyledTransactionsGroup, SubTitle } from './styled'
 import { TxHistoryRow } from './TxHistoryRow'
 import { TxLocationContext } from './TxLocationProvider'
-import { formatWithSchema } from 'src/utils/date'
 
-export const HistoryTxList = (): ReactElement => {
-  const { count, hasMore, next, transactions } = usePagedHistoryTransactions()
+export const HistoryTxList = ({ transactions }: { transactions: TransactionDetails['transactions'] }): ReactElement => {
+  const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
 
-  if (count === 0) {
-    return (
-      <Centered>
-        <Loader size="md" />
-      </Centered>
-    )
+  const [, lastTransactionsGroup] = transactions[transactions.length - 1]
+  const lastTransaction = lastTransactionsGroup[lastTransactionsGroup.length - 1]
+
+  if (!sameString(lastItemId, lastTransaction.id)) {
+    setLastItemId(lastTransaction.id)
   }
 
   return (
     <TxLocationContext.Provider value={{ txLocation: 'history' }}>
-      <ScrollableTransactionsContainer id={SCROLLABLE_TARGET_ID}>
-        <InfiniteScroll dataLength={transactions.length} next={next} hasMore={hasMore}>
-          {transactions?.map(([timestamp, txs]) => (
-            <StyledTransactionsGroup key={timestamp}>
-              <SubTitle size="lg">{formatWithSchema(Number(timestamp), 'MMM d, yyyy')}</SubTitle>
-              <StyledTransactions>
-                {txs.map((transaction) => (
-                  <TxHistoryRow key={transaction.id} transaction={transaction} />
-                ))}
-              </StyledTransactions>
-            </StyledTransactionsGroup>
-          ))}
-        </InfiniteScroll>
-      </ScrollableTransactionsContainer>
+      {transactions?.map(([timestamp, txs]) => (
+        <StyledTransactionsGroup key={timestamp}>
+          <SubTitle size="lg">{formatWithSchema(Number(timestamp), 'MMM d, yyyy')}</SubTitle>
+          <StyledTransactions>
+            {txs.map((transaction) => (
+              <TxHistoryRow key={transaction.id} transaction={transaction} />
+            ))}
+          </StyledTransactions>
+        </StyledTransactionsGroup>
+      ))}
     </TxLocationContext.Provider>
   )
 }
