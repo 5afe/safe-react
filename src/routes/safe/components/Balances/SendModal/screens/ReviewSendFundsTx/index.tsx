@@ -114,6 +114,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     txData: data,
     txRecipient,
     txType: tx.txType,
+    txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
   })

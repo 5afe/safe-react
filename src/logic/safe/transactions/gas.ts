@@ -241,8 +241,10 @@ export const estimateGasForTransactionCreation = async (
     })
 
     if (safeTxGas) {
-      // When we execute we get a propper gas estimation response. We return the higher value
-      return Math.max(safeTxGas, gasEstimationResponse)
+      // When we execute we get a more precise estimate value, we log for debug purposes
+      console.info('This is the smart contract minimum expected safeTxGas', gasEstimationResponse)
+      // We return set safeTxGas
+      return safeTxGas
     }
 
     const dataGasEstimation = parseRequiredTxGasResponse(estimateData)
