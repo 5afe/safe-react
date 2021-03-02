@@ -27,6 +27,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { styles } from './style'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
@@ -87,9 +88,9 @@ export const ReviewRemoveOwnerModal = ({
       try {
         const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+        const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold - 1).encodeABI()
 
         if (isCurrent) {
           setData(txData)
@@ -141,6 +142,7 @@ export const ReviewRemoveOwnerModal = ({
           <Hairline />
           <Block>
             <Row className={classes.root}>
+              {/* Details */}
               <Col layout="column" xs={4}>
                 <Block className={classes.details}>
                   <Block margin="lg">
@@ -161,11 +163,12 @@ export const ReviewRemoveOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                      {`${threshold - 1} out of ${owners ? owners.size - 1 : 0} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
               </Col>
+              {/* Owners */}
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
