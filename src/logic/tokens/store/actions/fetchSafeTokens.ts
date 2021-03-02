@@ -1,6 +1,5 @@
 import { backOff } from 'exponential-backoff'
 import { List, Map } from 'immutable'
-import { batch } from 'react-redux'
 import { Dispatch } from 'redux'
 
 import {
@@ -84,11 +83,9 @@ const fetchSafeTokens = (safeAddress: string) => async (
       balances.keySeq().toSet().subtract(blacklistedTokens),
     )
 
-    batch(() => {
-      dispatch(updateSafe({ address: safeAddress, activeTokens, balances, ethBalance }))
-      dispatch(setCurrencyBalances(safeAddress, currencyList))
-      dispatch(addTokens(tokens))
-    })
+    dispatch(updateSafe({ address: safeAddress, activeTokens, balances, ethBalance }))
+    dispatch(setCurrencyBalances(safeAddress, currencyList))
+    dispatch(addTokens(tokens))
   } catch (err) {
     console.error('Error fetching active token list', err)
   }
