@@ -84,10 +84,11 @@ export const createTransaction = (
 
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
   const safeVersion = await getCurrentSafeVersion(safeInstance)
-  let safeTxGas
+  let safeTxGas = safeTxGasArg || 0
   try {
-    safeTxGas =
-      safeTxGasArg || (await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation))
+    if (safeTxGasArg === undefined) {
+      safeTxGas = await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation)
+    }
   } catch (error) {
     safeTxGas = safeTxGasArg || 0
   }
