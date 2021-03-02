@@ -90,7 +90,7 @@ export const ReviewRemoveOwnerModal = ({
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold - 1).encodeABI()
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
 
         if (isCurrent) {
           setData(txData)
@@ -163,7 +163,7 @@ export const ReviewRemoveOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold - 1} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                      {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
