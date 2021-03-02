@@ -16,6 +16,8 @@ const NoTransactions = style.div`
   display: flex;
   flex-direction: column;
   margin-top: 60px;
+  justify-content: center;
+  align-items: center;
 `
 
 export const QueueTransactions = (): ReactElement => {
@@ -34,7 +36,7 @@ export const QueueTransactions = (): ReactElement => {
   if (count === 0) {
     return (
       <NoTransactions>
-        <Img alt="No Transactions yet" src={NoTransactionsImage} />
+        <Img alt="No Transactions yet" width="144" src={NoTransactionsImage} />
         <Title size="xs">Transactions will appear here </Title>
       </NoTransactions>
     )
