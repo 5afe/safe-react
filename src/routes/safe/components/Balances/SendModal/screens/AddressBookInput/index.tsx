@@ -203,6 +203,7 @@ export const ContractsAddressBookInput = ({
       setSelectedEntry={onSetSelectedEntry}
       setValidationText={setValidationText}
       validationText={validationText}
+      label="Contract address"
       {...props}
     />
   )
