@@ -100,7 +100,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send custom transactions
+          Contract interaction
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -262,7 +262,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose} color="secondary">
                   Cancel
                 </Button>
                 <Button

@@ -218,7 +218,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             />
           </div>
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev}>
+            <Button minWidth={140} onClick={onPrev} color="secondary">
               Back
             </Button>
             <Button

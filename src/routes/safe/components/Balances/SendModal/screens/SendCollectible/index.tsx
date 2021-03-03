@@ -267,7 +267,7 @@ const SendCollectible = ({
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose} color="secondary">
                   Cancel
                 </Button>
                 <Button
