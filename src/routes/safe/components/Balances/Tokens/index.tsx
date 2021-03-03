@@ -30,7 +30,7 @@ type Props = {
   onClose: () => void
 }
 
-const Tokens = (props: Props): React.ReactElement => {
+export const Tokens = (props: Props): React.ReactElement => {
   const { modalScreen, onClose, safeAddress } = props
   const tokens = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
@@ -75,5 +75,3 @@ const Tokens = (props: Props): React.ReactElement => {
     </>
   )
 }
-
-export default Tokens
