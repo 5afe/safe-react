@@ -13,7 +13,7 @@ import { AppReduxState } from 'src/store'
 
 export const isThresholdReached = (executionInfo: ExecutionInfo): boolean => {
   const { confirmationsSubmitted, confirmationsRequired } = executionInfo
-  return confirmationsSubmitted === confirmationsRequired
+  return confirmationsSubmitted >= confirmationsRequired
 }
 
 export type TransactionActions = {

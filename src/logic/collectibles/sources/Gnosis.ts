@@ -36,10 +36,7 @@ class Gnosis {
 
     switch (tokens.status) {
       case 'fulfilled':
-        const {
-          data: { results = [] },
-        } = tokens.value
-        collectibles.erc721Tokens = results
+        collectibles.erc721Tokens = tokens.value.data || []
         break
       case 'rejected':
         console.error('no erc721 tokens for the current safe', tokens.reason)
