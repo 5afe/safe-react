@@ -112,7 +112,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <EthAddressInput
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}
-                  text="Contract Address*"
+                  text="Contract address*"
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />

@@ -120,7 +120,7 @@ const SendCollectible = ({
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send Collectible
+          Send collectible
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>

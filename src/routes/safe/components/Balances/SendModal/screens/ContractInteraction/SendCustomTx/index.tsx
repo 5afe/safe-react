@@ -161,7 +161,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   >
                     <Row margin="xs">
                       <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                        Recipient
+                        Recipients
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">

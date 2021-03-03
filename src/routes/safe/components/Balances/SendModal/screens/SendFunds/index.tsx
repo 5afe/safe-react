@@ -160,7 +160,7 @@ const SendFunds = ({
     <>
       <Row align="center" className={classes.heading} grow data-testid="modal-title-send-funds">
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send Funds
+          Send funds
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>

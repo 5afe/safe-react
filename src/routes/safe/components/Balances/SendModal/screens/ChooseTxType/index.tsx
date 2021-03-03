@@ -116,7 +116,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
                 className={classNames(classes.leftIcon, classes.iconSmall)}
                 src={ContractInteractionIcon}
               />
-              Contract Interaction
+              Contract interaction
             </Button>
           )}
         </Col>

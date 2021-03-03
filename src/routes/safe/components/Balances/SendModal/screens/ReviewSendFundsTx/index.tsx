@@ -188,7 +188,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {/* Header */}
           <Row align="center" className={classes.heading} grow data-testid="send-funds-review-step">
             <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send Funds
+              Send funds
             </Paragraph>
             <Paragraph className={classes.annotation}>2 of 2</Paragraph>
             <IconButton disableRipple onClick={onClose}>
