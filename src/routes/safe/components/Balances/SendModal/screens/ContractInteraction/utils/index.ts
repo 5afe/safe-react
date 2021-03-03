@@ -6,6 +6,7 @@ import { AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIServic
 import { getAddressFromDomain, getWeb3 } from 'src/logic/wallets/getWeb3'
 import { TransactionReviewType } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/Review'
 import { isValidCryptoDomainName, isValidEnsName } from 'src/logic/wallets/ethAddresses'
+import { BigNumber } from 'bignumber.js'
 
 export const NO_CONTRACT = 'no contract'
 
@@ -67,7 +68,13 @@ export const isByte = (type: string): boolean => type.indexOf('byte') === 0
 export const isArrayParameter = (parameter: string): boolean => /(\[\d*])+$/.test(parameter)
 export const getParsedJSONOrArrayFromString = (parameter: string): (string | number)[] | null => {
   try {
-    return JSON.parse(parameter)
+    const arrayResult = JSON.parse(parameter)
+    return arrayResult.map((value) => {
+      if (Number.isInteger(value)) {
+        return new BigNumber(value).toString()
+      }
+      return value
+    })
   } catch (err) {
     return null
   }
@@ -101,7 +108,7 @@ export const createTxObject = (
   values: Record<string, string>,
 ): ContractSendMethod => {
   const web3 = getWeb3()
-  const contract: any = new web3.eth.Contract([method], contractAddress)
+  const contract = new web3.eth.Contract([method], contractAddress)
   const { inputs, name = '', signatureHash } = method
   const args = inputs?.map(extractMethodArgs(signatureHash, values)) || []
 

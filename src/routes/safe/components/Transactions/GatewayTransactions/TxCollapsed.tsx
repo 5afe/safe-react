@@ -1,8 +1,6 @@
-import { Dot, IconText as IconTextSrc, Text } from '@gnosis.pm/safe-react-components'
+import { Dot, IconText as IconTextSrc, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import { Tooltip } from '@material-ui/core'
 import CircularProgress from '@material-ui/core/CircularProgress'
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -13,7 +11,7 @@ import {
   isSettingsChangeTxInfo,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxCollapsedActions } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxCollapsedActions'
+import { TxCollapsedActions } from './TxCollapsedActions'
 import { formatDateTime, formatTime, formatTimeInWords } from 'src/utils/date'
 import { KNOWN_MODULES } from 'src/utils/constants'
 import { sameString } from 'src/utils/strings'
@@ -23,6 +21,7 @@ import { TransactionStatusProps } from './hooks/useTransactionStatus'
 import { TxTypeProps } from './hooks/useTransactionType'
 import { StyledGroupedTransactions, StyledTransaction } from './styled'
 import { TokenTransferAmount } from './TokenTransferAmount'
+import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 
@@ -86,27 +85,12 @@ const IconText = styled(IconTextSrc)`
   }
 `
 
-const useTooltipStyles = makeStyles(
-  createStyles(() => ({
-    arrow: {
-      color: 'white',
-    },
-    tooltip: {
-      backgroundColor: 'white',
-      color: 'rgba(0, 0, 0, 0.87)',
-      boxShadow: '#00000026 0 2px 4px 0',
-      fontSize: '14px',
-      lineHeight: '14px',
-    },
-  })),
-)
-
 const TooltipContent = styled.div`
   width: max-content;
 `
 
 type TxCollapsedProps = {
-  transaction?: Transaction
+  transaction: Transaction
   isGrouped?: boolean
   nonce?: number
   type: TxTypeProps
@@ -129,6 +113,7 @@ export const TxCollapsed = ({
   status,
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
+  const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
 
@@ -146,12 +131,11 @@ export const TxCollapsed = ({
 
   const txCollapsedInfo = <div className={'tx-info' + willBeReplaced}>{info && <TxInfo info={info} />}</div>
 
-  const tooltipStyles = useTooltipStyles()
   const timestamp = useRef<HTMLDivElement | null>(null)
 
   const txCollapsedTime = (
     <div className={'tx-time' + willBeReplaced}>
-      <Tooltip classes={tooltipStyles} title={formatDateTime(time)} arrow>
+      <Tooltip title={formatDateTime(time)} arrow backgroundColor="white" size="lg">
         <TooltipContent ref={timestamp}>
           <Text size="xl">{txLocation === 'history' ? formatTime(time) : formatTimeInWords(time)}</Text>
         </TooltipContent>
@@ -179,8 +163,9 @@ export const TxCollapsed = ({
     </div>
   )
 
+  // attaching ref to a div element as it was causing troubles to add a `ref` to a FunctionComponent
   const txCollapsedStatus = (
-    <div className="tx-status">
+    <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
       {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
         <CircularProgressPainter color={status.color}>
           <CircularProgress size={14} color="inherit" />

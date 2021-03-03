@@ -8,7 +8,7 @@ import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransacti
 
 type PagedQueuedTransactions = {
   count: number
-  loading: boolean
+  isLoading: boolean
   transactions?: QueueTransactionsInfo
   hasMore: boolean
   next: () => Promise<void>
@@ -46,7 +46,7 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
     count = transactions.next.count + transactions.queue.count
   }
 
-  const loading = typeof transactions === 'undefined' || typeof count === 'undefined'
+  const isLoading = typeof transactions === 'undefined' || typeof count === 'undefined'
 
-  return { count, loading, transactions, hasMore, next: nextPage }
+  return { count, isLoading, transactions, hasMore, next: nextPage }
 }

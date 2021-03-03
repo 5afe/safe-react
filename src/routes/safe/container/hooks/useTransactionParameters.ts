@@ -88,11 +88,10 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
       }
     }
 
-    const safeNonce = Number(props?.initialSafeNonce || 0)
-    if (!safeNonce) {
+    if (safeNonce === undefined) {
       getSafeNonce()
     }
-  }, [safeAddress, props?.initialSafeNonce])
+  }, [safeAddress, safeNonce])
 
   return {
     safeNonce,

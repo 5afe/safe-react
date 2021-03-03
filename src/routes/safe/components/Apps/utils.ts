@@ -69,7 +69,25 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
-  // request
+  // Lido finance
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYCzVxP4v8dX92d3nPvnxCksmsjdbKEPMzDHwudK2SALE`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Mushrooms finance
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdRLqtVW9nkjZmQiryoBfpvbqXrqYT59EawZcF5WXoLCY`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
+  // Pooltogether
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTa21pi77hiT1sLCGy5BeVwcyzExUSp2z7byxZukye8hr`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
+  // Request
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTBBaiDQyGa17DJ7DdviyHbc51fTVgf6Z5PW5w2YUTkgR`,
     disabled: false,
@@ -113,7 +131,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Wallet-Connect
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmT3VxxfFtfEcvq8AeaoFAyUGxePRa2zisvnxLTrQXU5Uf`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRMGTA5ARMwfhYbdmK83zzMd13NnEUKFJSZEgEjKa8YQm`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,

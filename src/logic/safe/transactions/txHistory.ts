@@ -46,7 +46,7 @@ const calculateBodyFrom = async (
 
 export const buildTxServiceUrl = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
-  return `${getSafeServiceBaseUrl(address)}/transactions/?has_confirmations=True`
+  return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
 }
 
 const SUCCESS_STATUS = 201 // CREATED status
