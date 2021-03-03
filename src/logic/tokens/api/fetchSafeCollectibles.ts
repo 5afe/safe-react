@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from 'axios'
 
-import { getSafeServiceBaseUrl } from 'src/config'
+import { getSafeClientGatewayBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type CollectibleResult = {
@@ -16,11 +16,7 @@ export type CollectibleResult = {
   uri: string | null
 }
 
-export const fetchSafeCollectibles = async (
-  safeAddress: string,
-): Promise<AxiosResponse<{ results: CollectibleResult[] }>> => {
-  const address = checksumAddress(safeAddress)
-  const url = `${getSafeServiceBaseUrl(address)}/collectibles/`
-
-  return axios.get<CollectibleResult[], AxiosResponse<{ results: CollectibleResult[] }>>(url)
+export const fetchSafeCollectibles = async (safeAddress: string): Promise<AxiosResponse<CollectibleResult[]>> => {
+  const url = `${getSafeClientGatewayBaseUrl(checksumAddress(safeAddress))}/collectibles/`
+  return axios.get<CollectibleResult[], AxiosResponse<CollectibleResult[]>>(url)
 }
