@@ -17,8 +17,14 @@ import CheckIcon from 'src/routes/safe/components/CurrencyDropdown/img/check.svg
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
 import { DropdownListTheme } from 'src/theme/mui'
 import { extractUsefulMethods, AbiItemExtended } from 'src/logic/contractInteraction/sources/ABIService'
+import { Text } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 const MENU_WIDTH = '452px'
+
+const StyledText = styled(Text)`
+  padding: 4px 0 0 8px;
+`
 
 interface MethodsDropdownProps {
   onChange: (method: AbiItem) => void
@@ -78,9 +84,13 @@ export const MethodsDropdown = ({ onChange }: MethodsDropdownProps): ReactElemen
         <MuiThemeProvider theme={DropdownListTheme}>
           <>
             <button className={classes.button} onClick={handleClick} type="button">
-              <span className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}>
-                {(selectedMethod as Record<string, string>).name}
-              </span>
+              <StyledText
+                size="md"
+                color="placeHolder"
+                className={classNames(classes.buttonInner, anchorEl && classes.openMenuButton)}
+              >
+                {(selectedMethod as Record<string, string>).name || 'Method'}
+              </StyledText>
             </button>
             <Menu
               anchorEl={anchorEl}
