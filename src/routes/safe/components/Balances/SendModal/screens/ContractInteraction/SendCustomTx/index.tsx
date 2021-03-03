@@ -255,9 +255,9 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     />
                   </Col>
                 </Row>
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                  Use custom data (hex encoded)
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   <Switch onChange={() => saveForm(args[2].values)} checked={!isABI} />
+                  Use custom data (hex encoded)
                 </Paragraph>
               </Block>
               <Hairline />

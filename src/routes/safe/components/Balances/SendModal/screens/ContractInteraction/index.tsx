@@ -120,9 +120,9 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                  Use custom data (hex encoded)
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
+                  Use custom data (hex encoded)
                 </Paragraph>
               </Block>
               <Hairline />
