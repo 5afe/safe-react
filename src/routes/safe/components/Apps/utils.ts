@@ -71,13 +71,13 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Lido finance
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYCzVxP4v8dX92d3nPvnxCksmsjdbKEPMzDHwudK2SALE`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmde8dsa9r8bB59CNGww6LRiaZABuKaJfuzvu94hFkatJC`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
   // Mushrooms finance
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdRLqtVW9nkjZmQiryoBfpvbqXrqYT59EawZcF5WXoLCY`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
