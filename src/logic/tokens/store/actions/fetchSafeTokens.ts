@@ -2,12 +2,13 @@ import { backOff } from 'exponential-backoff'
 import { List, Map } from 'immutable'
 import { Dispatch } from 'redux'
 
+import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+
 import {
-  fetchTokenCurrenciesBalances,
-  BalanceEndpoint,
-} from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
-import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
-import { CurrencyRateValueRecord, makeBalanceCurrency } from 'src/logic/currencyValues/store/model/currencyValues'
+  AVAILABLE_CURRENCIES,
+  CurrencyRateValueRecord,
+  makeBalanceCurrency,
+} from 'src/logic/currencyValues/store/model/currencyValues'
 import addTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
@@ -16,6 +17,9 @@ import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
 
 interface ExtractedData {
   balances: Map<string, string>
@@ -24,17 +28,18 @@ interface ExtractedData {
   tokens: List<Token>
 }
 
-const extractDataFromResult = (currentTokens: TokenState) => (
+const extractDataFromResult = (currentTokens: TokenState, fiatCode: string) => (
   acc: ExtractedData,
-  { balance, fiatBalance, fiatCode, token, tokenAddress }: BalanceEndpoint,
+  { balance, fiatBalance, tokenInfo }: TokenBalance,
 ): ExtractedData => {
-  if (tokenAddress === null) {
+  const { address: tokenAddress, decimals } = tokenInfo
+  if (sameAddress(tokenAddress, ZERO_ADDRESS)) {
     acc.ethBalance = humanReadableValue(balance, 18)
   } else {
-    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token?.decimals)) })
+    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(decimals)) })
 
     if (currentTokens && !currentTokens.get(tokenAddress)) {
-      acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
+      acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
     }
   }
 
@@ -58,6 +63,7 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const state = getState()
     const safe = safeSelector(state)
     const currentTokens = tokensSelector(state)
+    const currencySelected = currentCurrencySelector(state)
 
     if (!safe) {
       return
@@ -67,8 +73,8 @@ const fetchSafeTokens = (safeAddress: string) => async (
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
 
-    const { balances, currencyList, ethBalance, tokens } = tokenCurrenciesBalances.reduce<ExtractedData>(
-      extractDataFromResult(currentTokens),
+    const { balances, currencyList, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
+      extractDataFromResult(currentTokens, currencySelected || AVAILABLE_CURRENCIES.USD),
       {
         balances: Map(),
         currencyList: List(),
