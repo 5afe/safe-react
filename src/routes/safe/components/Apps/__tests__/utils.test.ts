@@ -2,7 +2,7 @@ import { isAppManifestValid } from '../utils'
 import { SafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 
 describe('SafeApp manifest', () => {
-  it('It should return true given an manifest with mandatory values supplied', async () => {
+  it('It should return true given a manifest with mandatory values supplied', async () => {
     const manifest = {
       name: 'test',
       description: 'a test',
@@ -13,7 +13,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(true)
   })
 
-  it('It should return false given an manifest without name', async () => {
+  it('It should return false given a manifest without name', async () => {
     const manifest = {
       name: '',
       description: 'a test',
@@ -24,7 +24,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(false)
   })
 
-  it('It should return false given an manifest without description', async () => {
+  it('It should return false given a manifest without description', async () => {
     const manifest = {
       name: 'test',
       description: '',
@@ -35,7 +35,7 @@ describe('SafeApp manifest', () => {
     expect(result).toBe(false)
   })
 
-  it('It should return false given an manifest with error', async () => {
+  it('It should return false given a manifest with error', async () => {
     const manifest = {
       name: 'test',
       description: 'a test',
