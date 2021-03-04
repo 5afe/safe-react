@@ -208,9 +208,16 @@ export const getAppInfoFromUrl = memoize(
       const jsonDataLength = 20
       const remainingSpace = originFieldSize - res.url.length - jsonDataLength
 
+      const appInfoData = {
+        name: appInfo.data.name,
+        iconPath: appInfo.data.iconPath,
+        description: appInfo.data.description,
+        providedBy: appInfo.data.providedBy,
+      }
+
       res = {
         ...res,
-        ...appInfo.data,
+        ...appInfoData,
         id: JSON.stringify({ url: res.url, name: appInfo.data.name.substring(0, remainingSpace) }),
         error: false,
         loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
