@@ -2,6 +2,9 @@ name: Deploy to EWC network
 
 # Run on pushes to master
 on:
+  # Pull request hook without any config. Launches for every pull request
+  # This is for testing #1918. Should be removed once it's reviewed
+  pull_request:
   push:
     branches:
       - master
