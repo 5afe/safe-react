@@ -20,6 +20,7 @@ import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
+import { getNetworkInfo } from 'src/config'
 
 interface ExtractedData {
   balances: Map<string, string>
@@ -28,12 +29,14 @@ interface ExtractedData {
   tokens: List<Token>
 }
 
+const { nativeCoin } = getNetworkInfo()
+
 const extractDataFromResult = (currentTokens: TokenState, fiatCode: string) => (
   acc: ExtractedData,
   { balance, fiatBalance, tokenInfo }: TokenBalance,
 ): ExtractedData => {
   const { address: tokenAddress, decimals } = tokenInfo
-  if (sameAddress(tokenAddress, ZERO_ADDRESS)) {
+  if (sameAddress(tokenAddress, ZERO_ADDRESS) || sameAddress(tokenAddress, nativeCoin.address)) {
     acc.ethBalance = humanReadableValue(balance, 18)
   } else {
     acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(decimals)) })
