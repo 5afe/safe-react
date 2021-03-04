@@ -20,7 +20,7 @@ import {
 import { WelcomeLayout } from 'src/routes/welcome/components/index'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
-import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
@@ -94,7 +94,6 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
   const { onCallSafeContractSubmit, safeProps } = props
 
   const provider = useSelector(providerNameSelector)
-  const network = useSelector(networkSelector)
   const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
@@ -107,33 +106,31 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
 
   const initialValues = useInitialValuesFrom(userAccount, safeProps)
 
+  if (!provider) {
+    return <WelcomeLayout isOldMultisigMigration />
+  }
+
   return (
-    <>
-      {provider ? (
-        <Block>
-          <Row align="center">
-            <IconButton disableRipple onClick={back} style={iconStyle}>
-              <ChevronLeft />
-            </IconButton>
-            <Heading tag="h2" testId="create-safe-form-title">
-              Create New Safe
-            </Heading>
-          </Row>
-          <Stepper
-            initialValues={initialValues}
-            mutators={formMutators}
-            onSubmit={onCallSafeContractSubmit}
-            steps={steps}
-            testId="create-safe-form"
-          >
-            <StepperPage component={SafeNameField} />
-            <StepperPage component={SafeOwnersPage} validate={validateOwnersForm} />
-            <StepperPage network={network} userAccount={userAccount} component={Review} />
-          </Stepper>
-        </Block>
-      ) : (
-        <WelcomeLayout isOldMultisigMigration />
-      )}
-    </>
+    <Block>
+      <Row align="center">
+        <IconButton disableRipple onClick={back} style={iconStyle}>
+          <ChevronLeft />
+        </IconButton>
+        <Heading tag="h2" testId="create-safe-form-title">
+          Create New Safe
+        </Heading>
+      </Row>
+      <Stepper
+        initialValues={initialValues}
+        mutators={formMutators}
+        onSubmit={onCallSafeContractSubmit}
+        steps={steps}
+        testId="create-safe-form"
+      >
+        <StepperPage component={SafeNameField} />
+        <StepperPage component={SafeOwnersPage} validate={validateOwnersForm} />
+        <StepperPage component={Review} />
+      </Stepper>
+    </Block>
   )
 }
