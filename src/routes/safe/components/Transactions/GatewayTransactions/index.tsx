@@ -3,7 +3,7 @@ import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import React, { ReactElement, useState } from 'react'
 import styled from 'styled-components'
 
-import { HistoryTxList } from './HistoryTxList'
+import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { Breadcrumb, ContentWrapper, Wrapper } from './styled'
 
@@ -27,7 +27,7 @@ const GatewayTransactions = (): ReactElement => {
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
         {tab === 'queue' && <QueueTransactions />}
-        {tab === 'history' && <HistoryTxList />}
+        {tab === 'history' && <HistoryTransactions />}
       </ContentWrapper>
     </Wrapper>
   )

@@ -32,22 +32,26 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
   return (
     <>
       <Tooltip title={transaction.txStatus === 'AWAITING_EXECUTION' ? 'Execute' : 'Confirm'} placement="top">
-        <IconButton
-          size="small"
-          type="button"
-          onClick={handleConfirmButtonClick}
-          disabled={disabledActions}
-          onMouseEnter={handleOnMouseEnter}
-          onMouseLeave={handleOnMouseLeave}
-        >
-          <Icon type={transaction.txStatus === 'AWAITING_EXECUTION' ? 'rocket' : 'check'} color="primary" size="sm" />
-        </IconButton>
+        <span>
+          <IconButton
+            size="small"
+            type="button"
+            onClick={handleConfirmButtonClick}
+            disabled={disabledActions}
+            onMouseEnter={handleOnMouseEnter}
+            onMouseLeave={handleOnMouseLeave}
+          >
+            <Icon type={transaction.txStatus === 'AWAITING_EXECUTION' ? 'rocket' : 'check'} color="primary" size="sm" />
+          </IconButton>
+        </span>
       </Tooltip>
       {canCancel && (
         <Tooltip title="Cancel" placement="top">
-          <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={isPending}>
-            <Icon type="circleCross" color="error" size="sm" />
-          </IconButton>
+          <span>
+            <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={isPending}>
+              <Icon type="circleCross" color="error" size="sm" />
+            </IconButton>
+          </span>
         </Tooltip>
       )}
     </>

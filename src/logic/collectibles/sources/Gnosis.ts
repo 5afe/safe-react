@@ -1,10 +1,10 @@
-import { RateLimit } from 'async-sema'
-
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchErc20AndErc721AssetsList, fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
+import { sameString } from 'src/utils/strings'
 
 type FetchResult = {
   erc721Assets: TokenResult[]
@@ -12,67 +12,67 @@ type FetchResult = {
 }
 
 class Gnosis {
-  _rateLimit = async (): Promise<void> => {}
-
   _fetch = async (safeAddress: string): Promise<FetchResult> => {
     const collectibles: FetchResult = {
       erc721Assets: [],
       erc721Tokens: [],
     }
+    const [assets, tokens] = await Promise.allSettled([
+      fetchErc20AndErc721AssetsList(),
+      fetchSafeCollectibles(safeAddress),
+    ])
 
-    try {
-      const {
-        data: { results: assets = [] },
-      } = await fetchErc20AndErc721AssetsList()
-      collectibles.erc721Assets = assets.filter((token) => token.type.toLowerCase() === 'erc721')
-    } catch (e) {
-      console.error('no erc721 assets could be fetched', e)
+    switch (assets.status) {
+      case 'fulfilled':
+        const {
+          data: { results = [] },
+        } = assets.value
+        collectibles.erc721Assets = results.filter((token) => sameString(token.type, 'erc721'))
+        break
+      case 'rejected':
+        console.error('no erc721 assets could be fetched', assets.reason)
+        break
     }
 
-    try {
-      const { data: tokens = [] } = await fetchSafeCollectibles(safeAddress)
-      collectibles.erc721Tokens = tokens
-    } catch (e) {
-      console.error('no erc721 tokens for the current safe', e)
+    switch (tokens.status) {
+      case 'fulfilled':
+        collectibles.erc721Tokens = tokens.value.data || []
+        break
+      case 'rejected':
+        console.error('no erc721 tokens for the current safe', tokens.reason)
+        break
     }
 
     return collectibles
   }
 
-  /**
-   * OpenSea class constructor
-   * @param {object} options
-   * @param {number} options.rps - requests per second
-   */
-  constructor(options: { rps: number }) {
-    // eslint-disable-next-line no-underscore-dangle
-    this._rateLimit = RateLimit(options.rps, { timeUnit: 60 * 1000, uniformDistribution: true })
+  static extractNFTAsset = (asset: TokenResult, nftTokens: NFTTokens): NFTAsset => {
+    const mainAssetAddress = asset.address
+    const numberOfTokens = nftTokens.filter(({ assetAddress }) => sameAddress(assetAddress, mainAssetAddress)).length
+
+    return {
+      address: mainAssetAddress,
+      description: asset.name,
+      image: asset.logoUri || NFTIcon,
+      name: asset.name,
+      numberOfTokens,
+      slug: `${mainAssetAddress}_${asset.name}`,
+      symbol: asset.symbol,
+    }
   }
 
   static extractAssets(assets: TokenResult[], nftTokens: NFTTokens): NFTAssets {
-    const extractNFTAsset = (asset: TokenResult): NFTAsset => {
-      const numberOfTokens = nftTokens.filter(({ assetAddress }) => assetAddress === asset.address).length
+    const extractedAssets = {}
 
-      return {
-        address: asset.address,
-        description: asset.name,
-        image: asset.logoUri || NFTIcon,
-        name: asset.name,
-        numberOfTokens,
-        slug: `${asset.address}_${asset.name}`,
-        symbol: asset.symbol,
-      }
-    }
-
-    return assets.reduce((acc, asset) => {
+    assets.forEach((asset) => {
       const address = asset.address
 
-      if (acc[address] === undefined) {
-        acc[address] = extractNFTAsset(asset)
+      if (extractedAssets[address] === undefined) {
+        extractedAssets[address] = Gnosis.extractNFTAsset(asset, nftTokens)
       }
+    })
 
-      return acc
-    }, {})
+    return extractedAssets
   }
 
   static extractTokens(tokens: CollectibleResult[]): NFTTokens {
@@ -94,12 +94,11 @@ class Gnosis {
    */
   async fetchCollectibles(safeAddress: string): Promise<Collectibles> {
     const { erc721Assets, erc721Tokens } = await this._fetch(safeAddress)
-    const nftTokens = Gnosis.extractTokens(erc721Tokens)
 
-    return {
-      nftTokens,
-      nftAssets: Gnosis.extractAssets(erc721Assets, nftTokens),
-    }
+    const nftTokens = Gnosis.extractTokens(erc721Tokens)
+    const nftAssets = Gnosis.extractAssets(erc721Assets, nftTokens)
+
+    return { nftTokens, nftAssets }
   }
 }
 

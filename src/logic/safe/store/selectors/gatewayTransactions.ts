@@ -11,7 +11,7 @@ export const gatewayTransactions = (state: AppReduxState): AppReduxState['gatewa
   return state[GATEWAY_TRANSACTIONS_ID]
 }
 
-export const historyTransactions = createSelector(
+export const historyTransactions = createHashBasedSelector(
   gatewayTransactions,
   safeParamAddressFromStateSelector,
   (gatewayTransactions, safeAddress): StoreStructure['history'] | undefined => {
