@@ -114,7 +114,7 @@ jobs:
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
         if: github.ref == 'refs/heads/master'
-        run: aws s3 sync build s3://${{ secrets.STAGING_BUCKET_NAME }}/current/app --delete
+        run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
       
       # Script to upload release files
       - run: bash ./scripts/github/deploy_release.sh
