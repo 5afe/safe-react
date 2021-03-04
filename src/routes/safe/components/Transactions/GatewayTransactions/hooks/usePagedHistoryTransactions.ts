@@ -29,6 +29,7 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
 
     if (!results) {
       setHasMore(false)
+      setIsLoading(false)
       return
     }
 
