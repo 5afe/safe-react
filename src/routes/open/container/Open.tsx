@@ -6,11 +6,12 @@ import { useLocation } from 'react-router-dom'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 import { SafeDeployment } from 'src/routes/opening'
-import { InitialValuesForm, Layout } from 'src/routes/open/components/Layout'
+import { Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
 import {
+  CreateSafeValues,
   getAccountsFrom,
   getNamesFrom,
   getOwnersFrom,
@@ -28,6 +29,8 @@ import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
+
+type LoadedSafeType = CreateSafeValues & { txHash: string }
 
 interface SafeCreationQueryParams {
   ownerAddresses: string | string[] | null
@@ -85,7 +88,7 @@ export const getSafeProps = async (
   return safeProps
 }
 
-export const createSafe = (values: InitialValuesForm, userAccount: string): PromiEvent<TransactionReceipt> => {
+export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
   const name = getSafeNameFrom(values)
   const ownersNames = getNamesFrom(values)
@@ -93,7 +96,10 @@ export const createSafe = (values: InitialValuesForm, userAccount: string): Prom
   const safeCreationSalt = getSafeCreationSaltFrom(values)
 
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-  const promiEvent = deploymentTx.send({ from: userAccount })
+  const promiEvent = deploymentTx.send({
+    from: userAccount,
+    gas: values?.gasLimit,
+  })
 
   promiEvent
     .once('transactionHash', (txHash) => {
@@ -155,28 +161,28 @@ const Open = (): React.ReactElement => {
     load()
   }, [])
 
-  const createSafeProxy = async (formValues?: InitialValuesForm) => {
+  const createSafeProxy = async (formValues?: CreateSafeValues) => {
     let values = formValues
 
     // save form values, used when the user rejects the TX and wants to retry
-    if (formValues) {
-      const copy = { ...formValues }
+    if (values) {
+      const copy = { ...values }
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, copy)
     } else {
-      values = await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+      values = (await loadFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)) as CreateSafeValues
     }
 
-    const promiEvent = createSafe(values as InitialValuesForm, userAccount)
+    const promiEvent = createSafe(values, userAccount)
     setCreationTxPromise(promiEvent)
     setShowProgress(true)
   }
 
   const onSafeCreated = async (safeAddress): Promise<void> => {
-    const pendingCreation = await loadFromStorage<{ txHash: string }>(SAFE_PENDING_CREATION_STORAGE_KEY)
+    const pendingCreation = await loadFromStorage<LoadedSafeType>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
-    const name = getSafeNameFrom(pendingCreation)
-    const ownersNames = getNamesFrom(pendingCreation)
-    const ownerAddresses = getAccountsFrom(pendingCreation)
+    const name = pendingCreation ? getSafeNameFrom(pendingCreation) : ''
+    const ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
+    const ownerAddresses = pendingCreation ? getAccountsFrom(pendingCreation) : []
     const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
 
     await dispatch(addOrUpdateSafe(safeProps))
