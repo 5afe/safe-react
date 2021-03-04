@@ -203,6 +203,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                           pristine={pristine}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
+                          label="Contract address"
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
