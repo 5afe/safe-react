@@ -10,10 +10,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 
 import { useStyles } from './style'
 
-import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import { nftAssetsListSelector } from 'src/logic/collectibles/store/selectors'
@@ -26,12 +23,6 @@ import {
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
 
-export const ADD_CUSTOM_ASSET_BUTTON_TEST_ID = 'add-custom-asset-btn'
-
-type Props = {
-  setActiveScreen: (newScreen: string) => void
-}
-
 const filterBy = (filter, nfts) =>
   nfts.filter(
     (asset) =>
@@ -41,7 +32,7 @@ const filterBy = (filter, nfts) =>
       asset.symbol.toLowerCase().includes(filter.toLowerCase()),
   )
 
-const AssetsList = (props: Props): React.ReactElement => {
+export const AssetsList = (): React.ReactElement => {
   const classes = useStyles()
   const searchClasses = {
     input: classes.searchInput,
@@ -99,7 +90,7 @@ const AssetsList = (props: Props): React.ReactElement => {
 
   const nftAssetsFilteredList = filterBy(filterValue, nftAssetsList)
   const itemData = createItemData(nftAssetsFilteredList)
-  const switchToAddCustomAssetScreen = () => props.setActiveScreen('addCustomAsset')
+
   return (
     <>
       <Block className={classes.root}>
@@ -113,21 +104,6 @@ const AssetsList = (props: Props): React.ReactElement => {
             searchIcon={<div />}
             value={filterValue}
           />
-          <Spacer />
-          <Divider />
-          <Spacer />
-          <Button
-            classes={{ label: classes.addBtnLabel }}
-            className={classes.add}
-            color="primary"
-            disabled
-            onClick={switchToAddCustomAssetScreen}
-            size="small"
-            testId={ADD_CUSTOM_ASSET_BUTTON_TEST_ID}
-            variant="contained"
-          >
-            + Add custom asset
-          </Button>
         </Row>
         <Hairline />
       </Block>
@@ -154,5 +130,3 @@ const AssetsList = (props: Props): React.ReactElement => {
     </>
   )
 }
-
-export default AssetsList

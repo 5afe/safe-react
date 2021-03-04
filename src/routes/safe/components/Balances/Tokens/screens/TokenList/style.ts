@@ -65,7 +65,6 @@ export const useStyles = makeStyles(
       alignItems: 'center',
     },
     searchContainer: {
-      width: '180px',
       marginLeft: xs,
       marginRight: xs,
     },
@@ -77,6 +76,7 @@ export const useStyles = makeStyles(
       '& > button': {
         display: 'none',
       },
+      flex: 1,
     },
     searchIcon: {
       '&:hover': {
