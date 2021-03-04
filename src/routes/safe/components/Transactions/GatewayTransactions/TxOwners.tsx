@@ -52,7 +52,7 @@ export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement
           </div>
         </OwnerListItem>
       ))}
-      {confirmationsNeeded === 0 ? (
+      {confirmationsNeeded <= 0 ? (
         <OwnerListItem>
           <span className="icon">
             <StyledImg alt="" src={detailedExecutionInfo.executor ? CheckCircleGreen : TransactionListActive} />

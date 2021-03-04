@@ -20,5 +20,5 @@ export const fetchSafeCollectibles = async (safeAddress: string): Promise<AxiosR
   const address = checksumAddress(safeAddress)
   const url = `${getSafeServiceBaseUrl(address)}/collectibles/`
 
-  return axios.get(url)
+  return axios.get<CollectibleResult[], AxiosResponse<CollectibleResult[]>>(url)
 }
