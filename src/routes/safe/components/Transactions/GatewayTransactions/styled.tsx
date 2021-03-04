@@ -91,7 +91,6 @@ export const StyledTransactions = styled.div`
   overflow: hidden;
   width: 100%;
 
-  // '^' to prevent applying rules to the 'Actions' accordion components
   & > .MuiAccordion-root {
     &:first-child {
       border-top: none;
@@ -483,6 +482,11 @@ export const Centered = styled.div<{ padding?: number }>`
   padding: ${({ padding }) => `${padding}px`};
   justify-content: center;
   align-items: center;
+`
+
+export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
+  visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
+  height: auto;
 `
 
 export const StyledAccordionSummary = styled(AccordionSummary)`
