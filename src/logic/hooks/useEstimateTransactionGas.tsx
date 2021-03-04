@@ -39,7 +39,11 @@ export const checkIfTxIsExecution = (
   txConfirmations?: number,
   txType?: string,
 ): boolean => {
-  if (threshold === 1 || sameString(txType, 'spendingLimit') || txConfirmations === threshold) {
+  if (
+    threshold === 1 ||
+    sameString(txType, 'spendingLimit') ||
+    (txConfirmations !== undefined && txConfirmations >= threshold)
+  ) {
     return true
   }
 
