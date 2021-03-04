@@ -66,7 +66,7 @@ jobs:
 
       # Set production flag
       - name: Set production flag for tag build
-        run: echo "REACT_APP_ENV='production'" >> $GITHUB_ENV
+        run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v')
 
       - name: Build ${{ env.REACT_APP_NETWORK }} app
@@ -118,16 +118,18 @@ jobs:
         run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
-      - run: bash ./scripts/github/deploy_release.sh
+      - name: 'Upload release build files for production'
         if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          PR_NUMBER: ${{ github.event.number }}
-          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-          REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
-          VERSION_TAG: ${{ github.event.release.tag_name }}
-
+        run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }} --delete
+      # - run: bash ./scripts/github/deploy_release.sh
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #   env:
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     PR_NUMBER: ${{ github.event.number }}
+      #     REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+      #     REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+      #     VERSION_TAG: ${{ github.event.release.tag_name }}
       # Script to prepare production deployments
       - run: bash ./scripts/github/prepare_production_deployment.sh
         if: success() && startsWith(github.ref, 'refs/tags/v')
