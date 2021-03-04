@@ -17,8 +17,9 @@ import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
 import { getExplorerInfo } from 'src/config'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
-const checkIfUserAddressIsAnOwner = (values: Record<string, string>, userAddress: string): boolean => {
+const checkIfUserAddressIsAnOwner = (values: LoadFormValues, userAddress: string): boolean => {
   let isOwner = false
 
   for (let i = 0; i < getNumOwnersFrom(values); i += 1) {
@@ -33,7 +34,7 @@ const checkIfUserAddressIsAnOwner = (values: Record<string, string>, userAddress
 
 interface Props {
   userAddress: string
-  values: Record<string, string>
+  values: LoadFormValues
 }
 
 const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => {
@@ -138,7 +139,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
 }
 
 const Review = ({ userAddress }: { userAddress: string }) =>
-  function ReviewPage(controls: React.ReactNode, { values }: { values: Record<string, string> }): React.ReactElement {
+  function ReviewPage(controls: React.ReactNode, { values }: { values: LoadFormValues }): React.ReactElement {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>
