@@ -73,8 +73,6 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
           <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
-          . Most importantly, you confirm that your funds are held securely in the Gnosis Safe, a smart contract on the
-          Ethereum blockchain. These funds cannot be accessed by Gnosis at any point.
         </StyledParagraph>
       </Block>
     </>
