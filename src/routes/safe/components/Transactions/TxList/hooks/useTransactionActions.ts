@@ -6,8 +6,8 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
-import { isCancelTransaction } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
+import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
+import { isCancelTransaction } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
 

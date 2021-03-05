@@ -3,11 +3,11 @@ import { useSelector } from 'react-redux'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { addressInList } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
+import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
-import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxActionProvider'
-import { TxHoverContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxHoverProvider'
-import { TxLocationContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxLocationProvider'
+import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/TxList/TxActionProvider'
+import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/TxHoverProvider'
+import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 
 type ActionButtonsHandlers = {
   canCancel: boolean

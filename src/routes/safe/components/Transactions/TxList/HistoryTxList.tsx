@@ -1,7 +1,7 @@
 import React, { ReactElement, useContext } from 'react'
 
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
-import { TxsInfiniteScrollContext } from 'src/routes/safe/components/Transactions/GatewayTransactions/TxsInfiniteScroll'
+import { TxsInfiniteScrollContext } from 'src/routes/safe/components/Transactions/TxList/TxsInfiniteScroll'
 import { formatWithSchema } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { StyledTransactions, StyledTransactionsGroup, SubTitle } from './styled'

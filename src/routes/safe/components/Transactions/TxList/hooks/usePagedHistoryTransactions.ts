@@ -5,7 +5,7 @@ import { loadPagedHistoryTransactions } from 'src/logic/safe/store/actions/trans
 import { addHistoryTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/GatewayTransactions/hooks/useHistoryTransactions'
+import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
 
 type PagedTransactions = {
   count: number

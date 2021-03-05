@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-import Value from 'src/routes/safe/components/Transactions/GatewayTransactions/MethodValue'
+import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;

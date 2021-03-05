@@ -9,7 +9,7 @@ import {
   SettingsChange,
   TransactionInfo,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/GatewayTransactions/utils'
+import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export type TokenTransferAsset = {
   type: 'Transfer'
