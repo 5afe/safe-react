@@ -22,8 +22,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import Link from 'src/components/layout/Link'
-import { Icon } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import {
@@ -43,10 +42,13 @@ export const SAFE_NAME_UPDATE_SAFE_BTN_TEST_ID = 'update-safe-name-btn'
 
 const useStyles = makeStyles(styles)
 
+const StyledLink = styled(Link)`
+  margin: 12px 0 0 0;
+`
 const StyledIcon = styled(Icon)`
   position: relative;
-  top: 2px;
-  left: 4px;
+  top: 3px;
+  left: 6px;
 `
 
 const SafeDetails = (): React.ReactElement => {
@@ -120,19 +122,13 @@ const SafeDetails = (): React.ReactElement => {
           <Block className={classes.formContainer}>
             <Heading tag="h2">Safe Version</Heading>
             <Row align="end" grow>
-              <Paragraph size="lg" className={classes.versionNumber}>
-                <Link
-                  className={classes.link}
-                  color="black"
-                  rel="noreferrer noopener"
-                  target="_blank"
-                  to={safeInfo?.deployerRepoUrl}
-                >
+              <StyledLink rel="noreferrer noopener" target="_blank" href={safeInfo?.deployerRepoUrl}>
+                <Text size="xl" as="span" color="primary">
                   {getSafeVersion()}
                   {getSafeVersionUpdate()}
-                </Link>
+                </Text>
                 <StyledIcon size="sm" type="externalLink" color="primary" />
-              </Paragraph>
+              </StyledLink>
             </Row>
             {safeNeedsUpdate && isUserOwner ? (
               <Row align="end" grow>
