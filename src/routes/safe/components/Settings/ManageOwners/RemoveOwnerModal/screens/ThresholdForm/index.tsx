@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -18,12 +18,19 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
 
 const useStyles = makeStyles(styles)
 
-const ThresholdForm = ({ onClickBack, onClose, onSubmit }) => {
+type Props = {
+  onClickBack: () => void
+  onClose: () => void
+  onSubmit: (txParameters: TxParameters) => void
+}
+
+const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
   const classes = useStyles()
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector) as number
