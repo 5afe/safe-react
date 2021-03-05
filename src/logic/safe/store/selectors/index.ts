@@ -7,7 +7,6 @@ import {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
   CancellationTransactions,
 } from 'src/logic/safe/store/reducer/cancellationTransactions'
-import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/incomingTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState } from 'src/store'
@@ -33,8 +32,6 @@ export const latestMasterContractVersionSelector = createSelector(safesStateSele
 const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCER_ID]
 
 const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
-
-const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
@@ -94,22 +91,6 @@ export const safeCancellationTransactionsSelector = createSelector(
     }
 
     return cancellationTransactions.get(address, Map())
-  },
-)
-
-export const safeIncomingTransactionsSelector = createSelector(
-  incomingTransactionsSelector,
-  safeParamAddressFromStateSelector,
-  (incomingTransactions, address) => {
-    if (!incomingTransactions) {
-      return List([])
-    }
-
-    if (!address) {
-      return List([])
-    }
-
-    return incomingTransactions.get(address, List())
   },
 )
 

@@ -9,7 +9,6 @@ import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d
 import { BuildTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export enum TransactionTypes {
-  INCOMING = 'incoming',
   OUTGOING = 'outgoing',
   SETTINGS = 'settings',
   CUSTOM = 'custom',

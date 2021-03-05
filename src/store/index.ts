@@ -36,9 +36,6 @@ import cancellationTransactions, {
   CANCELLATION_TRANSACTIONS_REDUCER_ID,
   CancellationTxState,
 } from 'src/logic/safe/store/reducer/cancellationTransactions'
-import incomingTransactions, {
-  INCOMING_TRANSACTIONS_REDUCER_ID,
-} from 'src/logic/safe/store/reducer/incomingTransactions'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
@@ -76,7 +73,6 @@ const reducers = combineReducers({
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
   [TRANSACTIONS_REDUCER_ID]: transactions,
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
-  [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
@@ -95,7 +91,6 @@ export type AppReduxState = CombinedState<{
   [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
   [TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
-  [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState

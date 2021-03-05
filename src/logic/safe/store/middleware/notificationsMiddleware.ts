@@ -11,7 +11,6 @@ import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ADD_INCOMING_TRANSACTIONS } from 'src/logic/safe/store/actions/addIncomingTransactions'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import { ADD_QUEUED_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
@@ -27,7 +26,6 @@ import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 
 const watchedActions = [
   ADD_OR_UPDATE_TRANSACTIONS,
-  ADD_INCOMING_TRANSACTIONS,
   ADD_OR_UPDATE_SAFE,
   ADD_QUEUED_TRANSACTIONS,
 ]
@@ -136,23 +134,6 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
           onNotificationClicked(dispatch, notificationKey, safeAddress),
         )
 
-        break
-      }
-      case ADD_INCOMING_TRANSACTIONS: {
-        action.payload.forEach((incomingTransactions, safeAddress) => {
-          const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress, {})
-
-          const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
-
-          dispatch(
-            updateSafe({
-              address: safeAddress,
-              latestIncomingTxBlock: newIncomingTransactions.size
-                ? newIncomingTransactions.first().blockNumber
-                : latestIncomingTxBlock,
-            }),
-          )
-        })
         break
       }
       case ADD_OR_UPDATE_SAFE: {
