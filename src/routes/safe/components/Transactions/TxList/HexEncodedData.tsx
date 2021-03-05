@@ -18,7 +18,6 @@ export const styles = createStyles({
 
 const useStyles = makeStyles(styles)
 
-
 export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement => {
   const classes = useStyles()
   const [showTxData, setShowTxData] = useState(false)
@@ -65,5 +64,5 @@ export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement =
         )}
       </Paragraph>
     </div>
-  )  
+  )
 }
