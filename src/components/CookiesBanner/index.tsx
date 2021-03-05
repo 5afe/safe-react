@@ -129,6 +129,10 @@ const CookiesBanner = (): ReactElement => {
         }
         setLocalAnalytics(acceptedAnalytics)
         setLocalNecessary(acceptedNecessary)
+
+        if (acceptedAnalytics && !isDesktop) {
+          loadGoogleAnalytics()
+        }
       }
     }
     fetchCookiesFromStorage()
@@ -160,10 +164,6 @@ const CookiesBanner = (): ReactElement => {
       closeIntercom()
     }
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
-  }
-
-  if (showAnalytics && !isDesktop) {
-    loadGoogleAnalytics()
   }
 
   if (showIntercom) {
