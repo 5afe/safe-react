@@ -127,8 +127,8 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                 </Block>
               )}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Exit
+                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                  Close
                 </Button>
                 <Button
                   color="secondary"
@@ -139,7 +139,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                   variant="contained"
                   disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
                 >
-                  Reject Transaction
+                  Reject
                 </Button>
               </Row>
             </>
