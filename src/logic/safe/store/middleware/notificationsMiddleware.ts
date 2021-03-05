@@ -13,7 +13,6 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import { ADD_QUEUED_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import {
   safeParamAddressFromStateSelector,
   safesMapSelector,
@@ -24,11 +23,7 @@ import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 
-const watchedActions = [
-  ADD_OR_UPDATE_TRANSACTIONS,
-  ADD_OR_UPDATE_SAFE,
-  ADD_QUEUED_TRANSACTIONS,
-]
+const watchedActions = [ADD_OR_UPDATE_TRANSACTIONS, ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS]
 
 const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
 
