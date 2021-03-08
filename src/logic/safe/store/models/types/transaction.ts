@@ -4,7 +4,6 @@ import { Confirmation } from './confirmation'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { DataDecoded, Transfer } from './transactions'
 import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
-import { BuildTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 
 export enum TransactionTypes {
   OUTGOING = 'outgoing',
@@ -88,10 +87,6 @@ export type TransactionProps = {
 }
 
 export type Transaction = RecordOf<TransactionProps> & Readonly<TransactionProps>
-
-export const isStoredTransaction = (tx: BuildTx['tx']): tx is Transaction => {
-  return typeof (tx as Transaction).recipient !== 'undefined'
-}
 
 export type TxArgs = {
   baseGas: number
