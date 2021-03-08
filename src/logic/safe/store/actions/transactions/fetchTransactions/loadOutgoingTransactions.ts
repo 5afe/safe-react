@@ -44,11 +44,6 @@ export type TxServiceModel = {
   value: string
 }
 
-export type SafeTransactionsType = {
-  cancel: any
-  outgoing: any
-}
-
 export type OutgoingTxs = {
   cancellationTxs: Record<number, TxServiceModel>
   outgoingTxs: TxServiceModel[] | List<Transaction>

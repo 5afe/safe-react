@@ -35,10 +35,6 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import moduleTransactions, {
-  MODULE_TRANSACTIONS_REDUCER_ID,
-  ModuleTransactionsState,
-} from 'src/logic/safe/store/reducer/moduleTransactions'
 
 export const history = createHashHistory()
 
@@ -64,7 +60,6 @@ const reducers = combineReducers({
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokens,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
-  [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
@@ -79,7 +74,6 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
-  [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>

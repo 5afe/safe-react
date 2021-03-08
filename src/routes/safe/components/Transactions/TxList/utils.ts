@@ -9,20 +9,10 @@ import {
   TransactionInfo,
   Transfer,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { SafeModuleTransaction } from 'src/logic/safe/store/models/types/transaction'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-
-export const TX_TABLE_ID = 'id'
-export const TX_TABLE_TYPE_ID = 'type'
-export const TX_TABLE_DATE_ID = 'date'
-export const TX_TABLE_AMOUNT_ID = 'amount'
-export const TX_TABLE_STATUS_ID = 'status'
-export const TX_TABLE_RAW_TX_ID = 'tx'
-export const TX_TABLE_RAW_CANCEL_TX_ID = 'cancelTx'
-export const TX_TABLE_EXPAND_ICON = 'expand'
 
 export const NOT_AVAILABLE = 'n/a'
 
@@ -98,17 +88,6 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
     default:
       return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }
   }
-}
-
-export interface TableData {
-  amount: string
-  cancelTx?: Transaction
-  date: string
-  dateOrder?: number
-  id: string
-  status: string
-  tx: Transaction | SafeModuleTransaction
-  type: any
 }
 
 // TODO: isCancel
