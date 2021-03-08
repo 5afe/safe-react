@@ -24,7 +24,6 @@ import currentSession, {
 } from 'src/logic/currentSession/store/reducer/currentSession'
 import { Notification } from 'src/logic/notifications'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { gatewayTransactions, GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
@@ -33,7 +32,6 @@ import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/
 import notificationsMiddleware from 'src/logic/safe/store/middleware/notificationsMiddleware'
 import safeStorage from 'src/logic/safe/store/middleware/safeStorage'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
@@ -66,7 +64,6 @@ const reducers = combineReducers({
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokens,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
-  [TRANSACTIONS_REDUCER_ID]: transactions,
   [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
@@ -82,7 +79,6 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
-  [TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
