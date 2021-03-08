@@ -73,6 +73,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
           <a href="https://gnosis-safe.io/privacy" rel="noopener noreferrer" target="_blank">
             privacy policy
           </a>
+          .
         </StyledParagraph>
       </Block>
     </>
