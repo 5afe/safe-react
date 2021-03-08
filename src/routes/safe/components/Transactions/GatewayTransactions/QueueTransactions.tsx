@@ -1,22 +1,15 @@
 import { Loader, Title } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
-import style from 'styled-components'
 
 import Img from 'src/components/layout/Img'
 import { ActionModal } from './ActionModal'
 import NoTransactionsImage from './assets/no-transactions.svg'
 import { usePagedQueuedTransactions } from './hooks/usePagedQueuedTransactions'
 import { QueueTxList } from './QueueTxList'
-import { Centered } from './styled'
+import { Centered, NoTransactions } from './styled'
 import { TxActionProvider } from './TxActionProvider'
 import { TxsInfiniteScroll } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
-
-const NoTransactions = style.div`
-  display: flex;
-  flex-direction: column;
-  margin-top: 60px;
-`
 
 export const QueueTransactions = (): ReactElement => {
   const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
@@ -35,7 +28,7 @@ export const QueueTransactions = (): ReactElement => {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
-        <Title size="xs">Transactions will appear here </Title>
+        <Title size="xs">Queue transactions will appear here </Title>
       </NoTransactions>
     )
   }
