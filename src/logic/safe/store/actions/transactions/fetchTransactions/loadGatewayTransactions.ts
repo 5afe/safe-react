@@ -42,15 +42,25 @@ export const loadPagedHistoryTransactions = async (
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   const historyTransactionsUrl = getHistoryTransactionsUrl(safeAddress)
 
-  const {
-    data: { results, ...pointers },
-  } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl)
+  try {
+    const {
+      data: { results, ...pointers },
+    } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl)
 
-  if (!historyPointers[safeAddress]) {
-    historyPointers[safeAddress] = pointers
+    if (!historyPointers[safeAddress]) {
+      historyPointers[safeAddress] = pointers
+    }
+
+    return results
+  } catch (error) {
+    // When the safe is just created there is a delay until the gateway recognize the
+    // safe address, when that happens it returns 404.
+    if (error.response.status === 404) {
+      return []
+    }
+
+    throw Error(`There was an error trying to fetch history txs from safeAddress ${safeAddress}`)
   }
-
-  return results
 }
 
 /************/
@@ -90,14 +100,23 @@ export const loadPagedQueuedTransactions = async (
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   const queuedTransactionsUrl = getQueuedTransactionsUrl(safeAddress)
+  try {
+    const {
+      data: { results, ...pointers },
+    } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(queuedTransactionsUrl)
 
-  const {
-    data: { results, ...pointers },
-  } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(queuedTransactionsUrl)
+    if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
+      queuedPointers[safeAddress] = pointers
+    }
 
-  if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
-    queuedPointers[safeAddress] = pointers
+    return results
+  } catch (error) {
+    // When the safe is just created there is a delay until the gateway recognize the
+    // safe address, when that happens it returns 404.
+    if (error.response.status === 404) {
+      return []
+    }
+
+    throw Error(`There was an error trying to fetch queued txs from safeAddress ${safeAddress}`)
   }
-
-  return results
 }

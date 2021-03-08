@@ -4,13 +4,17 @@ export const FIELD_OWNERS = 'owners'
 export const FIELD_SAFE_NAME = 'safeName'
 export const FIELD_CREATION_PROXY_SALT = 'safeCreationSalt'
 
-export const getOwnerNameBy = (index) => `owner${index}Name`
-export const getOwnerAddressBy = (index) => `owner${index}Address`
+export const getOwnerNameBy = (index: number): string => `owner${index}Name`
+export const getOwnerAddressBy = (index: number): string => `owner${index}Address`
 
 export const getNumOwnersFrom = (values) => {
   const accounts = Object.keys(values)
     .sort()
-    .filter((key) => /^owner\d+Address$/.test(key) && !!values[key])
+    .filter((key) => {
+      const res = /^owner\d+Address$/.test(key)
+
+      return res && !!values[key]
+    })
 
   return accounts.length
 }
