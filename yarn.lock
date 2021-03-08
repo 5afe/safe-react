@@ -1561,9 +1561,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#f610327":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#fb1a523":
   version "0.5.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#f610327c109810547513079196514b05cda63844"
+  resolved "https://github.com/gnosis/safe-react-components.git#fb1a523ece12aa54e7e6a1169c7cd13da5bf5b61"
   dependencies:
     classnames "^2.2.6"
     react-media "^1.10.0"
@@ -15713,7 +15713,7 @@ polished@^3.3.1:
   resolved "https://registry.yarnpkg.com/polished/-/polished-3.6.7.tgz#44cbd0047f3187d83db0c479ef0c7d5583af5fb6"
   integrity sha512-b4OViUOihwV0icb9PHmWbR+vPqaSzSAEbgLskvb7ANPATVXGiYv/TQFHQo65S53WU9i5EQ1I03YDOJW7K0bmYg==
   dependencies:
-    "@babel/runtime" "^7.9.2"
+    "@babel/runtime" "^7.12.5"
 
 popper.js@1.16.1-lts:
   version "1.16.1-lts"
