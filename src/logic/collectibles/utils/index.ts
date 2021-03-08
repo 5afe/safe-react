@@ -1,13 +1,8 @@
 import { getNetworkId, getNetworkInfo } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
-import { BuildTx, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
 import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
-import { store } from 'src/store'
-import { sameString } from 'src/utils/strings'
 
 // CryptoKitties Contract Addresses by network
 // This is an exception made for a popular NFT that's not ERC721 standard-compatible,
