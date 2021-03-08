@@ -46,7 +46,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     isOffChainSignature,
     isCreation,
     gasLimit,
-    //gasEstimation,
     gasPriceFormatted,
   } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
