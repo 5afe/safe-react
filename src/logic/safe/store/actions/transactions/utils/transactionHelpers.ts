@@ -17,12 +17,8 @@ import {
   RefundParams,
   isStoredTransaction,
 } from 'src/logic/safe/store/models/types/transaction'
-import { AppReduxState, store } from 'src/store'
-import {
-  safeSelector,
-  safeTransactionsSelector,
-  safeCancellationTransactionsSelector,
-} from 'src/logic/safe/store/selectors'
+import { store } from 'src/store'
+import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
 import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   BatchProcessTxsProps,
@@ -343,24 +339,6 @@ export const buildTx = async ({
 }
 
 export type TxToMock = TxArgs & Partial<TxServiceModel>
-
-export const mockTransaction = (tx: TxToMock, safeAddress: string, state: AppReduxState): Promise<Transaction> => {
-  const safe = safeSelector(state)
-  const cancellationTxs = safeCancellationTransactionsSelector(state)
-  const outgoingTxs = safeTransactionsSelector(state)
-
-  if (!safe) {
-    throw new Error('Failed to recover Safe from the store')
-  }
-
-  return buildTx({
-    cancellationTxs,
-    currentUser: undefined,
-    outgoingTxs,
-    safe,
-    tx,
-  })
-}
 
 export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRecord: ProviderRecord): void => {
   const state = store.getState()

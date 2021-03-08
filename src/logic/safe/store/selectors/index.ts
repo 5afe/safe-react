@@ -1,12 +1,8 @@
-import { List, Map, Set } from 'immutable'
+import { List, Set } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
-import {
-  CANCELLATION_TRANSACTIONS_REDUCER_ID,
-  CancellationTransactions,
-} from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState } from 'src/store'
@@ -30,8 +26,6 @@ export const latestMasterContractVersionSelector = createSelector(safesStateSele
 )
 
 const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCER_ID]
-
-const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
@@ -77,22 +71,6 @@ export const addressBookQueryParamsSelector = (state: AppReduxState): string | u
     return entryAddress
   }
 }
-
-export const safeCancellationTransactionsSelector = createSelector(
-  cancellationTransactionsSelector,
-  safeParamAddressFromStateSelector,
-  (cancellationTransactions, address): CancellationTransactions => {
-    if (!cancellationTransactions) {
-      return Map()
-    }
-
-    if (!address) {
-      return Map()
-    }
-
-    return cancellationTransactions.get(address, Map())
-  },
-)
 
 export const safeSelector = createSelector(
   safesMapSelector,

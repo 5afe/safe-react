@@ -1,7 +1,6 @@
 import { fromJS, List, Map } from 'immutable'
 
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { CancellationTransactions } from 'src/logic/safe/store/reducer/cancellationTransactions'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { PROVIDER_REDUCER_ID } from 'src/logic/wallets/store/reducer/provider'
 import { buildTx, isCancelTransaction } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -58,7 +57,7 @@ export type SafeTransactionsType = {
 }
 
 export type OutgoingTxs = {
-  cancellationTxs: Record<number, TxServiceModel> | CancellationTransactions
+  cancellationTxs: Record<number, TxServiceModel>
   outgoingTxs: TxServiceModel[] | List<Transaction>
 }
 
