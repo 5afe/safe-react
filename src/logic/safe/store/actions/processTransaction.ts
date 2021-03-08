@@ -172,10 +172,6 @@ export const processTransaction = ({
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
-        if (isExecution) {
-          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
-        }
-
         dispatch(fetchTransactions(safeAddress))
 
         if (isExecution) {

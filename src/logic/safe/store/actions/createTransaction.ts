@@ -156,10 +156,6 @@ export const createTransaction = (
         onError?.()
       })
       .then(async (receipt) => {
-        if (isExecution) {
-          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
-        }
-
         dispatch(fetchTransactions(safeAddress))
 
         return receipt.transactionHash
