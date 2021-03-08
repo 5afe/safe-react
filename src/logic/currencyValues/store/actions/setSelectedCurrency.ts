@@ -3,7 +3,7 @@ import { ThunkDispatch } from 'redux-thunk'
 
 import { CurrencyPayloads } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { AppReduxState } from 'src/store'
-import fetchCurrencyRate from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
+import { fetchCurrencyRate } from 'src/logic/currencyValues/store/actions/fetchCurrencyRate'
 
 export const SET_CURRENT_CURRENCY = 'SET_CURRENT_CURRENCY'
 

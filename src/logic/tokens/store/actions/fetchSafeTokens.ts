@@ -58,7 +58,7 @@ const extractDataFromResult = (currentTokens: TokenState, fiatCode: string) => (
   return acc
 }
 
-const fetchSafeTokens = (safeAddress: string) => async (
+export const fetchSafeTokens = (safeAddress: string) => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
@@ -99,5 +99,3 @@ const fetchSafeTokens = (safeAddress: string) => async (
     console.error('Error fetching active token list', err)
   }
 }
-
-export default fetchSafeTokens

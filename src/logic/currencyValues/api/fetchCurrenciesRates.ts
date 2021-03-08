@@ -6,7 +6,7 @@ import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
 import { sameString } from 'src/utils/strings'
 import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
-const fetchCurrenciesRates = async (
+export const fetchCurrenciesRates = async (
   baseCurrency: string,
   targetCurrencyValue: string,
   safeAddress: string,
@@ -37,5 +37,3 @@ const fetchCurrenciesRates = async (
   }
   return rate
 }
-
-export default fetchCurrenciesRates
