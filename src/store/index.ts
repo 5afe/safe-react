@@ -40,7 +40,6 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
-import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import moduleTransactions, {
   MODULE_TRANSACTIONS_REDUCER_ID,
@@ -79,7 +78,6 @@ const reducers = combineReducers({
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
-  [TRANSACTIONS]: allTransactions,
 })
 
 export type AppReduxState = CombinedState<{
@@ -97,7 +95,6 @@ export type AppReduxState = CombinedState<{
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
-  [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>
 
