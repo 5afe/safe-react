@@ -14,7 +14,7 @@ type FeatureConfigByVersion = {
 }
 
 const FEATURES_BY_VERSION: FeatureConfigByVersion[] = [
-  { name: FEATURES.ERC721, validVersion: '>=1.1.1' },
+  { name: FEATURES.ERC721 },
   { name: FEATURES.ERC1155, validVersion: '>=1.1.1' },
   { name: FEATURES.SAFE_APPS },
   { name: FEATURES.CONTRACT_INTERACTION },

@@ -503,3 +503,8 @@ export const AlignItemsWithMargin = styled.div`
     margin-right: 6px;
   }
 `
+export const NoTransactions = styled.div`
+  display: flex;
+  flex-direction: column;
+  margin-top: 60px;
+`
