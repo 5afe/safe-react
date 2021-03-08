@@ -4,11 +4,10 @@ import { AbiItem } from 'web3-utils'
 import { getNetworkInfo } from 'src/config'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getTokenInfos } from 'src/logic/tokens/store/actions/fetchTokens'
-import { isSendERC721Transaction } from 'src/logic/collectibles/utils'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { ALTERNATIVE_TOKEN_ABI } from 'src/logic/tokens/utils/alternativeAbi'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { BuildTx, isEmptyData, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
+import { BuildTx, isEmptyData } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
 import { CALL } from 'src/logic/safe/transactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
@@ -67,21 +66,6 @@ export const getERC20DecimalsAndSymbol = async (
   }
 
   return tokenInfo
-}
-
-export const isSendERC20Transaction = async (tx: BuildTx['tx']): Promise<boolean> => {
-  let isSendTokenTx = !isSendERC721Transaction(tx) && isTokenTransfer(tx)
-
-  if (isSendTokenTx) {
-    const { decimals, symbol } = await getERC20DecimalsAndSymbol((tx as ServiceTx).to)
-
-    // some contracts may implement the same methods as in ERC20 standard
-    // we may falsely treat them as tokens, so in case we get any errors when getting token info
-    // we fallback to displaying custom transaction
-    isSendTokenTx = decimals !== null && symbol !== null
-  }
-
-  return isSendTokenTx
 }
 
 export type GetTokenByAddress = {

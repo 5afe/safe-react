@@ -30,24 +30,6 @@ const ENS_CONTRACT_ADDRESS = {
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
 
 /**
- * Verifies that a tx received by the transaction service is an ERC721 token-related transaction
- * @param {BuildTx['tx']} tx
- * @returns boolean
- */
-export const isSendERC721Transaction = (tx: BuildTx['tx']): boolean => {
-  let hasERC721Transfer = false
-
-  if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
-    hasERC721Transfer = tx.dataDecoded.parameters.findIndex((param) => sameString(param.name, 'tokenId')) !== -1
-  }
-
-  // Note: this is only valid with our current case (client rendering), if we move to server side rendering we need to refactor this
-  const state = store.getState()
-  const knownAssets = nftAssetsListAddressesSelector(state)
-  return knownAssets.includes((tx as ServiceTx).to) || hasERC721Transfer
-}
-
-/**
  * Returns the symbol of the provided ERC721 contract
  * @param {string} contractAddress
  * @returns Promise<string>
