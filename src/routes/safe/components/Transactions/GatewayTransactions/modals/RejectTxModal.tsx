@@ -46,7 +46,6 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     isOffChainSignature,
     isCreation,
     gasLimit,
-    gasEstimation,
     gasPriceFormatted,
   } = useEstimateTransactionGas({
     txData: EMPTY_DATA,
@@ -85,7 +84,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
       <EditableTxParameters
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
-        safeTxGas={gasEstimation.toString()}
+        safeTxGas={'0'}
         safeNonce={nonce.toString()}
         parametersStatus={getParametersStatus()}
       >
