@@ -2,8 +2,7 @@ import { List, Map, RecordOf } from 'immutable'
 
 import { Confirmation } from './confirmation'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { DataDecoded, Transfer } from './transactions'
-import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
+import { DataDecoded, DecodedParams, Transfer } from './transactions.d'
 
 export enum TransactionTypes {
   OUTGOING = 'outgoing',
