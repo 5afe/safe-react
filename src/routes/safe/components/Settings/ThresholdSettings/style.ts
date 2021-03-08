@@ -18,7 +18,7 @@ export const styles = createStyles({
     bottom: 0,
     boxSizing: 'border-box',
     width: '100%',
-    justifyContent: 'center',
+    justifyContent: 'flex-end',
     borderTop: `2px solid ${border}`,
   },
   modifyBtn: {
