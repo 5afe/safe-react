@@ -948,14 +948,6 @@ describe('buildTx', () => {
   })
 })
 
-describe('updateStoredTransactionsStatus', () => {
-  it('', () => {
-    // given
-    // when
-    // then
-  })
-})
-
 describe('generateSafeTxHash', () => {
   it('It should return a safe transaction hash', () => {
     // given

@@ -17,15 +17,11 @@ import {
   RefundParams,
   isStoredTransaction,
 } from 'src/logic/safe/store/models/types/transaction'
-import { store } from 'src/store'
-import { safeSelector, safeTransactionsSelector } from 'src/logic/safe/store/selectors'
-import { addOrUpdateTransactions } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   BatchProcessTxsProps,
   TxServiceModel,
 } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
 import { TypedDataUtils } from 'eth-sig-util'
-import { ProviderRecord } from 'src/logic/wallets/store/model/provider'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DecodedParams } from 'src/routes/safe/store/models/types/transactions.d'
 import { CALL } from 'src/logic/safe/transactions'
@@ -339,24 +335,6 @@ export const buildTx = async ({
 }
 
 export type TxToMock = TxArgs & Partial<TxServiceModel>
-
-export const updateStoredTransactionsStatus = (dispatch: (any) => void, walletRecord: ProviderRecord): void => {
-  const state = store.getState()
-  const safe = safeSelector(state)
-
-  if (safe) {
-    const safeAddress = safe.address
-    const transactions = safeTransactionsSelector(state)
-    dispatch(
-      addOrUpdateTransactions({
-        safeAddress,
-        transactions: transactions.withMutations((list) =>
-          list.map((tx) => tx.set('status', calculateTransactionStatus(tx, safe, walletRecord.account))),
-        ),
-      }),
-    )
-  }
-}
 
 export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string {
   const messageTypes = {

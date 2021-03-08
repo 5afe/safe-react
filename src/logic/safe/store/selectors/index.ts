@@ -4,7 +4,6 @@ import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -25,8 +24,6 @@ export const latestMasterContractVersionSelector = createSelector(safesStateSele
   safeState.get('latestMasterContractVersion'),
 )
 
-const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCER_ID]
-
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
     path: `${SAFELIST_ADDRESS}/:safeAddress`,
@@ -46,22 +43,6 @@ export const safeParamAddressSelector = (
   const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
   return urlAdd ? checksumAddress(urlAdd) : ''
 }
-
-export const safeTransactionsSelector = createSelector(
-  transactionsSelector,
-  safeParamAddressFromStateSelector,
-  (transactions, address) => {
-    if (!transactions) {
-      return List([])
-    }
-
-    if (!address) {
-      return List([])
-    }
-
-    return transactions.get(address, List([]))
-  },
-)
 
 export const addressBookQueryParamsSelector = (state: AppReduxState): string | undefined => {
   const { location } = state.router

@@ -2,7 +2,6 @@ import { List, Map } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
-import { REMOVE_TRANSACTION } from 'src/logic/safe/store/actions/transactions/removeTransaction'
 import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { AppReduxState } from 'src/store'
 
@@ -51,25 +50,6 @@ export default handleActions<AppReduxState['transactions'], Payload>(
           map.set(safeAddress, txsToStore)
         } else {
           map.set(safeAddress, transactions)
-        }
-      })
-    },
-    [REMOVE_TRANSACTION]: (state, action: Action<TransactionPayload>) => {
-      const { safeAddress, transaction } = action.payload
-
-      if (!safeAddress || !transaction) {
-        return state
-      }
-
-      return state.withMutations((map) => {
-        const stateTransactionsList = map.get(safeAddress)
-
-        if (stateTransactionsList) {
-          const storedTxIndex = stateTransactionsList.findIndex((storedTx) => storedTx.equals(transaction))
-
-          if (storedTxIndex !== -1) {
-            map.deleteIn([safeAddress, storedTxIndex])
-          }
         }
       })
     },
