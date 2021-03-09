@@ -100,7 +100,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
     <>
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Send custom transactions
+          Contract interaction
         </Paragraph>
         <Paragraph className={classes.annotation}>1 of 2</Paragraph>
         <IconButton disableRipple onClick={onClose}>
@@ -161,7 +161,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   >
                     <Row margin="xs">
                       <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                        Recipient
+                        Contract address
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
@@ -203,6 +203,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                           pristine={pristine}
                           setIsValidAddress={setIsValidAddress}
                           setSelectedEntry={setSelectedEntry}
+                          label="Contract address"
                         />
                       </Col>
                       <Col center="xs" className={classes} middle="xs" xs={1}>
@@ -255,14 +256,14 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     />
                   </Col>
                 </Row>
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                  Use custom data (hex encoded)
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   <Switch onChange={() => saveForm(args[2].values)} checked={!isABI} />
+                  Use custom data (hex encoded)
                 </Paragraph>
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose} color="secondary">
                   Cancel
                 </Button>
                 <Button

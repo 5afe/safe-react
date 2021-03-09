@@ -1,4 +1,5 @@
 import { Record, RecordOf } from 'immutable'
+import { TokenType } from 'src/logic/safe/store/models/types/gateway'
 
 export type TokenProps = {
   address: string
@@ -7,6 +8,7 @@ export type TokenProps = {
   decimals: number | string
   logoUri: string
   balance: number | string
+  type?: TokenType
 }
 
 export const makeToken = Record<TokenProps>({
