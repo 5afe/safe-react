@@ -80,7 +80,7 @@ export const RemoveOwnerModal = ({
 }: RemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState<any>({})
+  const [values, setValues] = useState<OwnerValues>({ ownerAddress, ownerName, threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector) || 1
@@ -88,7 +88,6 @@ export const RemoveOwnerModal = ({
   useEffect(
     () => () => {
       setActiveScreen('checkOwner')
-      setValues({})
     },
     [isOpen],
   )
@@ -106,8 +105,8 @@ export const RemoveOwnerModal = ({
   }
 
   const thresholdSubmitted = (newValues) => {
-    values.threshold = newValues.threshold
-    setValues(values)
+    const cpValues = { ...values, threshold: newValues.threshold }
+    setValues(cpValues)
     setActiveScreen('reviewRemoveOwner')
   }
 
@@ -138,7 +137,7 @@ export const RemoveOwnerModal = ({
             onSubmit={onRemoveOwner}
             ownerAddress={ownerAddress}
             ownerName={ownerName}
-            threshold={threshold}
+            threshold={Number(values.threshold)}
           />
         )}
       </>
