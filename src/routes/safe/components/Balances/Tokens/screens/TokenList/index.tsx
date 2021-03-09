@@ -9,11 +9,7 @@ import { FixedSizeList } from 'react-window'
 
 import TokenRow from './TokenRow'
 import { useStyles } from './style'
-
-import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Divider from 'src/components/layout/Divider'
 import Hairline from 'src/components/layout/Hairline'
 import Row from 'src/components/layout/Row'
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -32,7 +28,6 @@ const filterBy = (filter: string, tokens: List<Token>): List<Token> =>
   )
 
 type Props = {
-  setActiveScreen: (newScreen: string) => void
   tokens: List<Token>
   activeTokens: List<Token>
   blacklistedTokens: Set<string>
@@ -47,7 +42,7 @@ export type ItemData = {
 
 export const TokenList = (props: Props): React.ReactElement => {
   const classes = useStyles()
-  const { setActiveScreen, tokens, activeTokens, blacklistedTokens, safeAddress } = props
+  const { tokens, activeTokens, blacklistedTokens, safeAddress } = props
   const [activeTokensAddresses, setActiveTokensAddresses] = useState(Set(activeTokens.map(({ address }) => address)))
   const [blacklistedTokensAddresses, setBlacklistedTokensAddresses] = useState<Set<string>>(blacklistedTokens)
   const [filter, setFilter] = useState('')
@@ -93,8 +88,6 @@ export const TokenList = (props: Props): React.ReactElement => {
     onSwitch,
   })
 
-  const switchToAddCustomTokenScreen = () => setActiveScreen('addCustomToken')
-
   const getItemKey = (index: number, { tokens }): string => {
     return tokens.get(index).address
   }
@@ -115,20 +108,6 @@ export const TokenList = (props: Props): React.ReactElement => {
             searchIcon={<div />}
             value={filter}
           />
-          <Spacer />
-          <Divider />
-          <Spacer />
-          <Button
-            classes={{ label: classes.addBtnLabel }}
-            className={classes.add}
-            color="primary"
-            onClick={switchToAddCustomTokenScreen}
-            size="small"
-            testId={ADD_CUSTOM_TOKEN_BUTTON_TEST_ID}
-            variant="contained"
-          >
-            + Add custom token
-          </Button>
         </Row>
         <Hairline />
       </Block>
