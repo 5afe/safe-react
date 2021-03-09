@@ -15,7 +15,7 @@ export type TxTypeProps = {
 }
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
-  const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Custom transaction' })
+  const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useEffect(() => {
@@ -62,7 +62,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        setType({ icon: CustomTxIcon, text: 'Custom transaction' })
+        setType({ icon: CustomTxIcon, text: 'Contract interaction' })
         break
       }
     }
