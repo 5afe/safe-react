@@ -18,16 +18,26 @@ export const styles = createStyles({
 
 const useStyles = makeStyles(styles)
 
-export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement => {
+export const HexEncodedData = ({
+  hexData,
+  title,
+  limit = 20,
+}: {
+  hexData: string
+  title?: string
+  limit?: number
+}): ReactElement => {
   const classes = useStyles()
   const [showTxData, setShowTxData] = useState(false)
-  const showExpandBtn = hexData.length > 20
+  const showExpandBtn = hexData.length > limit
 
   return (
     <div className="tx-hexData">
-      <Text size="xl" strong>
-        Data (hex encoded):
-      </Text>
+      {title && (
+        <Text size="xl" strong>
+          {title}:
+        </Text>
+      )}
       <Paragraph className={classes.txDataParagraph} noMargin size="md">
         {showExpandBtn ? (
           <>
@@ -46,7 +56,7 @@ export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement =
               </>
             ) : (
               <>
-                {shortVersionOf(hexData, 20)}{' '}
+                {shortVersionOf(hexData, limit)}{' '}
                 <LinkWithRef
                   aria-label="Show details of the transaction"
                   className={classes.linkTxData}
