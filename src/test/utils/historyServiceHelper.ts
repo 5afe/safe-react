@@ -1,7 +1,4 @@
-// 
-import { List, Map } from 'immutable'
 import { } from 'src/logic/safe/store/models/confirmation'
-import { } from 'src/logic/safe/store/models/transaction'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const testSizeOfSafesWith = (transactions, size) => {

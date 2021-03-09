@@ -4,40 +4,24 @@ import { Action } from 'redux-actions'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import {
-  getAwaitingTransactions,
-  getAwaitingGatewayTransactions,
-} from 'src/logic/safe/transactions/awaitingTransactions'
+import { getAwaitingGatewayTransactions } from 'src/logic/safe/transactions/awaitingTransactions'
 import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ADD_INCOMING_TRANSACTIONS } from 'src/logic/safe/store/actions/addIncomingTransactions'
-import { ADD_OR_UPDATE_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/addOrUpdateTransactions'
 import {
   ADD_QUEUED_TRANSACTIONS,
   ADD_HISTORY_TRANSACTIONS,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { aboutToExecuteTx } from 'src/logic/safe/utils/aboutToExecuteTx'
 import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import {
-  safeParamAddressFromStateSelector,
-  safesMapSelector,
-  safeCancellationTransactionsSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/logic/safe/store/selectors'
 
 import { isTransactionSummary, TransactionGatewayResult } from 'src/logic/safe/store/models/types/gateway.d'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 
-const watchedActions = [
-  ADD_OR_UPDATE_TRANSACTIONS,
-  ADD_INCOMING_TRANSACTIONS,
-  ADD_OR_UPDATE_SAFE,
-  ADD_QUEUED_TRANSACTIONS,
-  ADD_HISTORY_TRANSACTIONS,
-]
+const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
 const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
 
@@ -92,32 +76,6 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
     const state = store.getState()
 
     switch (action.type) {
-      case ADD_OR_UPDATE_TRANSACTIONS: {
-        const { safeAddress, transactions } = action.payload
-        const userAddress: string = userAccountSelector(state)
-        const cancellationTransactions = safeCancellationTransactionsSelector(state)
-        const awaitingTransactions = getAwaitingTransactions(transactions, cancellationTransactions, userAddress)
-        const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.submissionDate)
-
-        const safes = safesMapSelector(state)
-        const currentSafe = safes.get(safeAddress)
-
-        if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.size === 0) {
-          break
-        }
-
-        const notificationKey = `${safeAddress}-awaiting`
-
-        await sendAwaitingTransactionNotification(
-          dispatch,
-          safeAddress,
-          awaitingTxsSubmissionDateList,
-          notificationKey,
-          onNotificationClicked(dispatch, notificationKey, safeAddress),
-        )
-
-        break
-      }
       case ADD_HISTORY_TRANSACTIONS: {
         const userAddress: string = userAccountSelector(state)
         const safes = safesMapSelector(state)
@@ -158,23 +116,6 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
           onNotificationClicked(dispatch, notificationKey, safeAddress),
         )
 
-        break
-      }
-      case ADD_INCOMING_TRANSACTIONS: {
-        action.payload.forEach((incomingTransactions, safeAddress) => {
-          const { latestIncomingTxBlock } = state.safes.get('safes').get(safeAddress, {})
-
-          const newIncomingTransactions = incomingTransactions.filter((tx) => tx.blockNumber > latestIncomingTxBlock)
-
-          dispatch(
-            updateSafe({
-              address: safeAddress,
-              latestIncomingTxBlock: newIncomingTransactions.size
-                ? newIncomingTransactions.first().blockNumber
-                : latestIncomingTxBlock,
-            }),
-          )
-        })
         break
       }
       case ADD_OR_UPDATE_SAFE: {
