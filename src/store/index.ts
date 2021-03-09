@@ -13,8 +13,6 @@ import {
   nftTokensReducer,
 } from 'src/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
-import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware'
-import currencyValues, { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
   CurrentSessionState,
@@ -46,6 +44,7 @@ import moduleTransactions, {
   MODULE_TRANSACTIONS_REDUCER_ID,
   ModuleTransactionsState,
 } from 'src/logic/safe/store/reducer/moduleTransactions'
+import { currencyValuesStorageMiddleware } from 'src/logic/safe/store/middleware/currencyValuesStorageMiddleware'
 
 export const history = createHashHistory()
 
@@ -76,7 +75,6 @@ const reducers = combineReducers({
   [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
-  [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,

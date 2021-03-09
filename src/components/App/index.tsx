@@ -21,6 +21,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import {
+  currentCurrencySelector,
   safeFiatBalancesTotalSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
@@ -30,7 +31,6 @@ import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 

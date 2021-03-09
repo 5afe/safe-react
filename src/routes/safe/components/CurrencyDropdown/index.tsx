@@ -12,13 +12,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import CheckIcon from './img/check.svg'
 
-import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
-import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { setSelectedCurrency } from 'src/logic/safe/store/actions/setSelectedCurrency'
+import { AVAILABLE_CURRENCIES } from 'src/logic/safe/store/models/availableCurrencies'
+
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentCurrencySelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
-import { setImageToPlaceholder } from '../Balances/utils'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
@@ -47,8 +47,8 @@ const CurrencyDropdown = (): React.ReactElement | null => {
     setAnchorEl(null)
   }
 
-  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName) => {
-    dispatch(setSelectedCurrency(safeAddress, newCurrencySelectedName))
+  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: string) => {
+    dispatch(setSelectedCurrency({ safeAddress, selectedCurrency: newCurrencySelectedName }))
     handleClose()
   }
 

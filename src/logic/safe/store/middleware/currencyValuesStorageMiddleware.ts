@@ -1,5 +1,5 @@
-import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { saveSelectedCurrency } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
+import { SET_CURRENT_CURRENCY } from 'src/logic/safe/store/actions/setSelectedCurrency'
+import { saveSelectedCurrency } from 'src/logic/safe/utils/currencyValuesStorage'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 const watchedActions = [SET_CURRENT_CURRENCY]

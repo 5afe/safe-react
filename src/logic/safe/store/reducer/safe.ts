@@ -19,6 +19,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE, buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
+import { SET_CURRENT_CURRENCY } from 'src/logic/safe/store/actions/setSelectedCurrency'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -79,6 +80,7 @@ type SafePayloads = SafeRecord | SafePayload | string
 type BaseOwnerPayload = { safeAddress: string; ownerAddress: string }
 type FullOwnerPayload = BaseOwnerPayload & { ownerName: string }
 type ReplaceOwnerPayload = FullOwnerPayload & { oldOwnerAddress: string }
+export type SelectedCurrencyPayload = SafeRecord & { selectedCurrency: string }
 
 type OwnerPayloads = BaseOwnerPayload | FullOwnerPayload | ReplaceOwnerPayload
 
@@ -212,6 +214,11 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const list = activeAssets ?? blacklistedAssets
 
       return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set(key, list))
+    },
+    [SET_CURRENT_CURRENCY]: (state, action: Action<SelectedCurrencyPayload>) => {
+      const { selectedCurrency } = action.payload
+
+      return state.set('selectedCurrency', selectedCurrency)
     },
     [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
 import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
@@ -9,10 +9,12 @@ import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import fetchSafeCreationTx from 'src/logic/safe/store/actions/fetchSafeCreationTx'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
+import { currentCurrencySelector } from 'src/logic/safe/store/selectors'
 
 export const useLoadSafe = (safeAddress?: string): boolean => {
   const dispatch = useDispatch<Dispatch>()
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
+  const selectedCurrency = useSelector(currentCurrencySelector)
 
   useEffect(() => {
     const fetchData = async () => {
@@ -20,7 +22,7 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(fetchLatestMasterContractVersion())
         await dispatch(fetchSafe(safeAddress))
         setIsSafeLoaded(true)
-        await dispatch(fetchSafeTokens(safeAddress))
+        await dispatch(fetchSafeTokens(safeAddress, selectedCurrency))
         dispatch(fetchSafeCreationTx(safeAddress))
         dispatch(fetchTransactions(safeAddress))
         dispatch(addViewedSafe(safeAddress))

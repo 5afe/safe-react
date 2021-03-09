@@ -2,7 +2,7 @@ import { backOff } from 'exponential-backoff'
 import { List, Map } from 'immutable'
 import { Dispatch } from 'redux'
 
-import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import addTokens from 'src/logic/tokens/store/actions/saveTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
@@ -13,7 +13,7 @@ import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector }
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getNetworkInfo } from 'src/config'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { AVAILABLE_CURRENCIES } from 'src/logic/safe/store/models/availableCurrencies'
 import BigNumber from 'bignumber.js'
 
 export type BalanceRecord = {

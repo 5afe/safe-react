@@ -1,9 +1,9 @@
 import axios from 'axios'
 
 import { getSafeClientGatewayBaseUrl } from 'src/config'
-import { fetchTokenCurrenciesBalances } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { aNewStore } from 'src/store'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import { AVAILABLE_CURRENCIES } from 'src/logic/safe/store/models/availableCurrencies'
 
 jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
