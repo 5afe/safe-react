@@ -13,7 +13,7 @@ import {
   ADD_QUEUED_TRANSACTIONS,
   ADD_HISTORY_TRANSACTIONS,
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
-import { aboutToExecuteTx } from 'src/logic/safe/utils/aboutToExecuteTx'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/logic/safe/store/selectors'
 
