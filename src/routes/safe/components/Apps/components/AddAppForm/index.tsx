@@ -5,6 +5,7 @@ import styled from 'styled-components'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
@@ -27,6 +28,16 @@ const AppInfo = styled.div`
 
   img {
     margin-right: 10px;
+  }
+`
+const AppDocsInfo = styled.div`
+  display: flex;
+  margin-bottom: 10px;
+  flex-direction: column;
+  svg {
+    position: relative;
+    top: 4px;
+    left: 4px;
   }
 `
 
@@ -66,6 +77,22 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     <GnoForm decorators={[appUrlResolver]} initialValues={INITIAL_VALUES} onSubmit={handleSubmit} testId={FORM_ID}>
       {() => (
         <>
+          <AppDocsInfo>
+            <Text size="xl" as="span" color="secondary">
+              Safe Apps are third-party extensions.
+            </Text>
+            <Link
+              href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
+              target="_blank"
+              rel="noreferrer"
+              title="Learn more about building Safe Apps"
+            >
+              <Text size="xl" as="span" color="primary">
+                Learn more about building Safe Apps.
+              </Text>
+              <Icon size="sm" type="externalLink" color="primary" />
+            </Link>
+          </AppDocsInfo>
           <AppUrl appList={appList} />
 
           {/* Fetch app from url and return a SafeApp */}

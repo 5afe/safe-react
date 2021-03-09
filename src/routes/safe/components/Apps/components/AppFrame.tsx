@@ -120,7 +120,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
 
   useEffect(() => {
     if (appIsLoading) {
-      timer.current = setTimeout(() => {
+      timer.current = window.setTimeout(() => {
         setAppTimeout(true)
       }, TIMEOUT)
     } else {

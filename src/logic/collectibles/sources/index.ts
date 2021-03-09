@@ -5,7 +5,7 @@ import { COLLECTIBLES_SOURCE } from 'src/utils/constants'
 
 const SOURCES = {
   opensea: new OpenSea({ rps: 4 }),
-  gnosis: new Gnosis({ rps: 4 }),
+  gnosis: new Gnosis(),
   mockedopensea: new MockedOpenSea({ rps: 4 }),
 }
 

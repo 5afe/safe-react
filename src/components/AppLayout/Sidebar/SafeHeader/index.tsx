@@ -44,7 +44,9 @@ const IconContainer = styled.div`
   justify-content: space-evenly;
 `
 const StyledButton = styled(Button)`
-  padding: 0 18px;
+  &&.MuiButton-root {
+    padding: 0 16px;
+  }
   *:first-child {
     margin: 0 4px 0 0;
   }
@@ -169,7 +171,7 @@ const SafeHeader = ({
         <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
           <FixedIcon type="arrowSentWhite" />
           <Text size="lg" color="white">
-            New Transaction
+            New transaction
           </Text>
         </StyledButton>
       </Container>

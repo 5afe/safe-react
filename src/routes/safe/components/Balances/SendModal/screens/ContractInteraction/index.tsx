@@ -70,7 +70,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   const handleSubmit = async (
     { contractAddress, selectedMethod, value, ...values },
     submit = true,
-  ): Promise<void | any> => {
+  ): Promise<void | Record<string, string>> => {
     if (value || (contractAddress && selectedMethod)) {
       try {
         const txObject = createTxObject(selectedMethod, contractAddress, values)
@@ -93,7 +93,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
+      <Header onClose={onClose} subTitle="1 of 2" title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}
@@ -112,7 +112,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <EthAddressInput
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}
-                  text="Contract Address*"
+                  text="Contract address*"
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
@@ -120,9 +120,9 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                  Use custom data (hex encoded)
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
+                  Use custom data (hex encoded)
                 </Paragraph>
               </Block>
               <Hairline />

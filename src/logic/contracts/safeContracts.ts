@@ -5,7 +5,7 @@ import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
@@ -99,7 +99,7 @@ export const getSafeDeploymentTransaction = (
       safeAccounts,
       numConfirmations,
       ZERO_ADDRESS,
-      '0x',
+      EMPTY_DATA,
       DEFAULT_FALLBACK_HANDLER_ADDRESS,
       ZERO_ADDRESS,
       0,
@@ -120,7 +120,7 @@ export const estimateGasForDeployingSafe = async (
       safeAccounts,
       numConfirmations,
       ZERO_ADDRESS,
-      '0x',
+      EMPTY_DATA,
       DEFAULT_FALLBACK_HANDLER_ADDRESS,
       ZERO_ADDRESS,
       0,
@@ -130,14 +130,11 @@ export const estimateGasForDeployingSafe = async (
   const proxyFactoryData = proxyFactoryMaster.methods
     .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
     .encodeABI()
-  const gas = await calculateGasOf({
+  return calculateGasOf({
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
   })
-  const gasPrice = await calculateGasPrice()
-
-  return gas * parseInt(gasPrice, 10)
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {

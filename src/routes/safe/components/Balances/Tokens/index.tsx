@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -12,9 +12,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
 import { orderedTokenListSelector } from 'src/logic/tokens/store/selectors'
-import AddCustomAssetComponent from 'src/routes/safe/components/Balances/Tokens/screens/AddCustomAsset'
-import AddCustomToken from 'src/routes/safe/components/Balances/Tokens/screens/AddCustomToken'
-import AssetsList from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList'
+import { AssetsList } from 'src/routes/safe/components/Balances/Tokens/screens/AssetsList'
 
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeBlacklistedTokensSelector } from 'src/logic/safe/store/selectors'
@@ -30,13 +28,12 @@ type Props = {
   onClose: () => void
 }
 
-const Tokens = (props: Props): React.ReactElement => {
+export const Tokens = (props: Props): React.ReactElement => {
   const { modalScreen, onClose, safeAddress } = props
   const tokens = useSelector(orderedTokenListSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
   const blacklistedTokens = useSelector(safeBlacklistedTokensSelector)
   const classes = useStyles()
-  const [activeScreen, setActiveScreen] = useState(modalScreen)
 
   return (
     <>
@@ -49,31 +46,15 @@ const Tokens = (props: Props): React.ReactElement => {
         </IconButton>
       </Row>
       <Hairline />
-      {activeScreen === 'tokenList' && (
+      {modalScreen === 'tokenList' && (
         <TokenList
           activeTokens={activeTokens}
           blacklistedTokens={blacklistedTokens}
           safeAddress={safeAddress}
-          setActiveScreen={setActiveScreen}
           tokens={tokens}
         />
       )}
-      {activeScreen === 'assetsList' && <AssetsList setActiveScreen={setActiveScreen} />}
-      {activeScreen === 'addCustomToken' && (
-        <AddCustomToken
-          activeTokens={activeTokens}
-          onClose={onClose}
-          parentList={'tokenList'}
-          safeAddress={safeAddress}
-          setActiveScreen={setActiveScreen}
-          tokens={tokens}
-        />
-      )}
-      {activeScreen === 'addCustomAsset' && (
-        <AddCustomAssetComponent onClose={onClose} parentList={'assetsList'} setActiveScreen={setActiveScreen} />
-      )}
+      {modalScreen === 'assetsList' && <AssetsList />}
     </>
   )
 }
-
-export default Tokens
