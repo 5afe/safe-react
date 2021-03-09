@@ -99,7 +99,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
         <>
           <Row align="center" className={classes.heading} grow>
             <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send Custom Tx
+              Contract interaction
             </Paragraph>
             <Paragraph className={classes.annotation}>2 of 2</Paragraph>
             <IconButton disableRipple onClick={onClose}>
@@ -182,7 +182,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev}>
+            <Button minWidth={140} onClick={onPrev} color="secondary">
               Back
             </Button>
             <Button
