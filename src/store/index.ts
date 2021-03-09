@@ -14,10 +14,7 @@ import {
 } from 'src/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
 import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
-import currencyValues, {
-  CURRENCY_VALUES_KEY,
-  CurrencyValuesState,
-} from 'src/logic/currencyValues/store/reducer/currencyValues'
+import currencyValues, { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
   CurrentSessionState,
@@ -98,7 +95,6 @@ export type AppReduxState = CombinedState<{
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
-  [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState

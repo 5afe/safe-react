@@ -1,10 +1,8 @@
 import { Map } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
-import { SET_CURRENCY_BALANCES } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
-import { SET_CURRENCY_RATE } from 'src/logic/currencyValues/store/actions/setCurrencyRate'
-import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 import { BalanceCurrencyList, CurrencyRateValue } from 'src/logic/currencyValues/store/model/currencyValues'
+import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 
 export const CURRENCY_VALUES_KEY = 'currencyValues'
 
@@ -24,16 +22,6 @@ export type CurrencyPayloads = CurrencyRatePayload | CurrencyBalancesPayload | C
 
 export default handleActions<CurrencyReducerMap, CurrencyPayloads>(
   {
-    [SET_CURRENCY_RATE]: (state, action: Action<CurrencyRatePayload>) => {
-      const { currencyRate, safeAddress } = action.payload
-
-      return state.setIn([safeAddress, 'currencyRate'], currencyRate)
-    },
-    [SET_CURRENCY_BALANCES]: (state, action: Action<CurrencyBalancesPayload>) => {
-      const { safeAddress, currencyBalances } = action.payload
-
-      return state.setIn([safeAddress, 'currencyBalances'], currencyBalances)
-    },
     [SET_CURRENT_CURRENCY]: (state, action: Action<CurrentCurrencyPayload>) => {
       const { safeAddress, selectedCurrency } = action.payload
 
