@@ -50,7 +50,7 @@ export const extendedSafeTokensSelector = createSelector(
         const tokenBalance = balances?.get(tokenAddress)
 
         if (baseToken) {
-          map.set(tokenAddress, baseToken.set('balance', tokenBalance || '0'))
+          map.set(tokenAddress, baseToken.set('balance', tokenBalance || { tokenBalance: '0', fiatBalance: '0' }))
         }
       })
     })

@@ -16,7 +16,9 @@ export const getEthAsToken = (balance: string | number): Token => {
   const { nativeCoin } = getNetworkInfo()
   return makeToken({
     ...nativeCoin,
-    balance,
+    balance: {
+      tokenBalance: balance.toString(),
+    },
   })
 }
 
@@ -89,7 +91,7 @@ export type GetTokenByAddress = {
   tokens: List<Token>
 }
 
-export type TokenFound = {
+type TokenFound = {
   balance: string | number
   decimals: string | number
 }
@@ -108,7 +110,7 @@ export const getBalanceAndDecimalsFromToken = ({ tokenAddress, tokens }: GetToke
   }
 
   return {
-    balance: token.balance ?? 0,
+    balance: token.balance.tokenBalance ?? 0,
     decimals: token.decimals ?? 0,
   }
 }
