@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { getSafeServiceBaseUrl } from 'src/config'
+import { getSafeClientGatewayBaseUrl } from 'src/config'
 import {
   fetchTokenCurrenciesBalances,
   BalanceEndpoint,
@@ -46,7 +46,7 @@ describe('fetchTokenCurrenciesBalances', () => {
       },
     ]
 
-    const apiUrl = getSafeServiceBaseUrl(safeAddress)
+    const apiUrl = getSafeClientGatewayBaseUrl(safeAddress)
 
     // @ts-ignore
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: expectedResult }))
@@ -57,6 +57,6 @@ describe('fetchTokenCurrenciesBalances', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}/balances/usd/?exclude_spam=${excludeSpamTokens}`)
+    expect(axios.get).toBeCalledWith(`${apiUrl}/balances/usd/?trusted=false&exclude_spam=${excludeSpamTokens}`)
   })
 })

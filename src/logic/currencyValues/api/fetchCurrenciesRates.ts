@@ -4,7 +4,7 @@ import BigNumber from 'bignumber.js'
 import { EXCHANGE_RATE_URL } from 'src/utils/constants'
 import { fetchTokenCurrenciesBalances } from './fetchTokenCurrenciesBalances'
 import { sameString } from 'src/utils/strings'
-import { AVAILABLE_CURRENCIES } from '../store/model/currencyValues'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
 const fetchCurrenciesRates = async (
   baseCurrency: string,
@@ -15,8 +15,8 @@ const fetchCurrenciesRates = async (
   if (sameString(targetCurrencyValue, AVAILABLE_CURRENCIES.NETWORK)) {
     try {
       const tokenCurrenciesBalances = await fetchTokenCurrenciesBalances(safeAddress)
-      if (tokenCurrenciesBalances?.length) {
-        rate = new BigNumber(1).div(tokenCurrenciesBalances[0].fiatConversion).toNumber()
+      if (tokenCurrenciesBalances.items.length) {
+        rate = new BigNumber(1).div(tokenCurrenciesBalances.items[0].fiatConversion).toNumber()
       }
     } catch (error) {
       console.error(`Fetching ${AVAILABLE_CURRENCIES.NETWORK} data from the relayer errored`, error)
