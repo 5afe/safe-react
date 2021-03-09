@@ -1,15 +1,9 @@
-import { List, Map, Set } from 'immutable'
+import { List, Set } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
-import {
-  CANCELLATION_TRANSACTIONS_REDUCER_ID,
-  CancellationTransactions,
-} from 'src/logic/safe/store/reducer/cancellationTransactions'
-import { INCOMING_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/incomingTransactions'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -29,12 +23,6 @@ export const defaultSafeSelector = createSelector(safesStateSelector, (safeState
 export const latestMasterContractVersionSelector = createSelector(safesStateSelector, (safeState) =>
   safeState.get('latestMasterContractVersion'),
 )
-
-const transactionsSelector = (state: AppReduxState) => state[TRANSACTIONS_REDUCER_ID]
-
-const cancellationTransactionsSelector = (state: AppReduxState) => state[CANCELLATION_TRANSACTIONS_REDUCER_ID]
-
-const incomingTransactionsSelector = (state: AppReduxState) => state[INCOMING_TRANSACTIONS_REDUCER_ID]
 
 export const safeParamAddressFromStateSelector = (state: AppReduxState): string => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
@@ -56,22 +44,6 @@ export const safeParamAddressSelector = (
   return urlAdd ? checksumAddress(urlAdd) : ''
 }
 
-export const safeTransactionsSelector = createSelector(
-  transactionsSelector,
-  safeParamAddressFromStateSelector,
-  (transactions, address) => {
-    if (!transactions) {
-      return List([])
-    }
-
-    if (!address) {
-      return List([])
-    }
-
-    return transactions.get(address, List([]))
-  },
-)
-
 export const addressBookQueryParamsSelector = (state: AppReduxState): string | undefined => {
   const { location } = state.router
 
@@ -80,38 +52,6 @@ export const addressBookQueryParamsSelector = (state: AppReduxState): string | u
     return entryAddress
   }
 }
-
-export const safeCancellationTransactionsSelector = createSelector(
-  cancellationTransactionsSelector,
-  safeParamAddressFromStateSelector,
-  (cancellationTransactions, address): CancellationTransactions => {
-    if (!cancellationTransactions) {
-      return Map()
-    }
-
-    if (!address) {
-      return Map()
-    }
-
-    return cancellationTransactions.get(address, Map())
-  },
-)
-
-export const safeIncomingTransactionsSelector = createSelector(
-  incomingTransactionsSelector,
-  safeParamAddressFromStateSelector,
-  (incomingTransactions, address) => {
-    if (!incomingTransactions) {
-      return List([])
-    }
-
-    if (!address) {
-      return List([])
-    }
-
-    return incomingTransactions.get(address, List())
-  },
-)
 
 export const safeSelector = createSelector(
   safesMapSelector,
