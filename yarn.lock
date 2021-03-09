@@ -1596,9 +1596,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#fb1a523":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#f610327":
   version "0.5.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#fb1a523ece12aa54e7e6a1169c7cd13da5bf5b61"
+  resolved "https://github.com/gnosis/safe-react-components.git#f610327c109810547513079196514b05cda63844"
   dependencies:
     classnames "^2.2.6"
     react-media "^1.10.0"
