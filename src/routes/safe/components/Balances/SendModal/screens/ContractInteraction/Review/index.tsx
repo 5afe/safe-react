@@ -133,7 +133,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Header onClose={onClose} subTitle="2 of 2" title="Contract Interaction" />
+          <Header onClose={onClose} subTitle="2 of 2" title="Contract interaction" />
           <Hairline />
           <Block className={classes.formContainer}>
             <Row margin="xs">
@@ -223,7 +223,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </div>
 
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev}>
+            <Button minWidth={140} onClick={onPrev} color="secondary">
               Back
             </Button>
             <Button
