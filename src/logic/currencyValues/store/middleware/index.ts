@@ -1,16 +1,18 @@
 import { SET_CURRENT_CURRENCY } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
 import { saveSelectedCurrency } from 'src/logic/currencyValues/store/utils/currencyValuesStorage'
+import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 const watchedActions = [SET_CURRENT_CURRENCY]
 
-const currencyValuesStorageMiddleware = () => (next) => async (action) => {
+export const currencyValuesStorageMiddleware = ({ dispatch }) => (next) => async (action) => {
   const handledAction = next(action)
   if (watchedActions.includes(action.type)) {
     switch (action.type) {
       case SET_CURRENT_CURRENCY: {
-        const { selectedCurrency } = action.payload
+        const { selectedCurrency, safeAddress } = action.payload
 
         saveSelectedCurrency(selectedCurrency)
+        dispatch(fetchSafeTokens(safeAddress, selectedCurrency))
         break
       }
 
@@ -21,5 +23,3 @@ const currencyValuesStorageMiddleware = () => (next) => async (action) => {
 
   return handledAction
 }
-
-export default currencyValuesStorageMiddleware

@@ -13,7 +13,7 @@ import {
   nftTokensReducer,
 } from 'src/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
-import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
+import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware'
 import currencyValues, { CURRENCY_VALUES_KEY } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,

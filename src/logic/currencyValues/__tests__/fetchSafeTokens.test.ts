@@ -3,6 +3,7 @@ import axios from 'axios'
 import { getSafeClientGatewayBaseUrl } from 'src/config'
 import { fetchTokenCurrenciesBalances } from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
 import { aNewStore } from 'src/store'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
 
 jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
@@ -49,7 +50,7 @@ describe('fetchTokenCurrenciesBalances', () => {
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: expectedResult }))
 
     // when
-    const result = await fetchTokenCurrenciesBalances(safeAddress, excludeSpamTokens)
+    const result = await fetchTokenCurrenciesBalances(safeAddress, AVAILABLE_CURRENCIES.USD, excludeSpamTokens)
 
     // then
     expect(result).toStrictEqual(expectedResult)
