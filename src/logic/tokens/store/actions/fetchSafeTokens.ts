@@ -13,6 +13,8 @@ import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector }
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getNetworkInfo } from 'src/config'
+import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
+import BigNumber from 'bignumber.js'
 
 export type BalanceRecord = {
   tokenBalance: string
@@ -50,7 +52,7 @@ const extractDataFromResult = (currentTokens: TokenState) => (
   return acc
 }
 
-export const fetchSafeTokens = (safeAddress: string) => async (
+export const fetchSafeTokens = (safeAddress: string, selectedCurrency?: string) => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
@@ -63,7 +65,9 @@ export const fetchSafeTokens = (safeAddress: string) => async (
       return
     }
 
-    const tokenCurrenciesBalances = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
+    const tokenCurrenciesBalances = await backOff(() =>
+      fetchTokenCurrenciesBalances(safeAddress, selectedCurrency || AVAILABLE_CURRENCIES.USD),
+    )
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
 
@@ -82,7 +86,15 @@ export const fetchSafeTokens = (safeAddress: string) => async (
       balances.keySeq().toSet().subtract(blacklistedTokens),
     )
 
-    dispatch(updateSafe({ address: safeAddress, activeTokens, balances, ethBalance }))
+    dispatch(
+      updateSafe({
+        address: safeAddress,
+        activeTokens,
+        balances,
+        ethBalance,
+        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+      }),
+    )
     dispatch(addTokens(tokens))
   } catch (err) {
     console.error('Error fetching active token list', err)

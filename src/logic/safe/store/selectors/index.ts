@@ -243,3 +243,7 @@ export const getBlacklistedTokensAddressesForAllSafes = createSelector(safesList
 
   return addresses
 })
+
+export const safeFiatBalancesTotalSelector = createSelector(safeSelector, (currentSafe) => {
+  return currentSafe?.totalFiatBalance.toString()
+})

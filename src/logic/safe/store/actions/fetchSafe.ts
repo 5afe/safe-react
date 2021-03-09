@@ -80,6 +80,7 @@ export const buildSafe = async (
     threshold,
     owners,
     ethBalance,
+    totalFiatBalance: 0,
     nonce,
     currentVersion: currentVersion ?? '',
     needsUpdate,

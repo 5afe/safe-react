@@ -33,9 +33,3 @@ export const currentCurrencySelector = createSelector(
   safeFiatBalancesSelector,
   currencyValueSelector('selectedCurrency'),
 )
-
-export const safeFiatBalancesTotalSelector = createSelector(safeFiatBalancesListSelector, (currencyBalances):
-  | string
-  | null => {
-  return '0'
-})
