@@ -13,7 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
-import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/custom.svg'
+import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
@@ -116,7 +116,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
                 className={classNames(classes.leftIcon, classes.iconSmall)}
                 src={ContractInteractionIcon}
               />
-              Contract Interaction
+              Contract interaction
             </Button>
           )}
         </Col>

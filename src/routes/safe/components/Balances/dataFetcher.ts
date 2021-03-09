@@ -6,6 +6,7 @@ import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
 import { BalanceCurrencyList } from 'src/logic/currencyValues/store/model/currencyValues'
 import { Token } from 'src/logic/tokens/store/model/token'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
@@ -13,23 +14,17 @@ export const BALANCE_TABLE_VALUE_ID = 'value'
 
 const { nativeCoin } = getNetworkInfo()
 
-const getTokenValue = (token: Token, currencyValues?: BalanceCurrencyList, currencyRate?: number): string => {
-  const currencyValue = currencyValues?.find(({ tokenAddress }) => {
-    if (token.address === nativeCoin.address && !tokenAddress) {
-      return true
-    }
+const getTokenValue = (token: Token, currencyValues: BalanceCurrencyList, currencyRate: number): string => {
+  const currencyValue = currencyValues.find(
+    ({ tokenAddress }) => sameAddress(token.address, tokenAddress) || sameAddress(token.address, nativeCoin.address),
+  )
 
-    return token.address === tokenAddress
-  })
-
-  if (!currencyValue || !currencyRate) {
+  if (!currencyValue) {
     return ''
   }
 
   const { balanceInBaseCurrency } = currencyValue
-  const balance = new BigNumber(balanceInBaseCurrency).times(currencyRate).toString()
-
-  return balance
+  return new BigNumber(balanceInBaseCurrency).times(currencyRate).toString()
 }
 
 const getTokenPriceInCurrency = (balance: string, currencySelected?: string): string => {
@@ -57,7 +52,8 @@ export const getBalanceData = (
 ): List<BalanceData> => {
   const { nativeCoin } = getNetworkInfo()
   return activeTokens.map((token) => {
-    const balance = getTokenValue(token, currencyValues, currencyRate)
+    const balance = currencyRate && currencyValues ? getTokenValue(token, currencyValues, currencyRate) : '0'
+
     return {
       [BALANCE_TABLE_ASSET_ID]: {
         name: token.name,
