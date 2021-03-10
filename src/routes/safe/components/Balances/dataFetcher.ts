@@ -4,7 +4,6 @@ import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
 import { Token } from 'src/logic/tokens/store/model/token'
-
 export const BALANCE_TABLE_ASSET_ID = 'asset'
 export const BALANCE_TABLE_BALANCE_ID = 'balance'
 export const BALANCE_TABLE_VALUE_ID = 'value'
