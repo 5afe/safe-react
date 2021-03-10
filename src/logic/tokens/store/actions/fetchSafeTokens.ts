@@ -66,7 +66,7 @@ export const fetchSafeTokens = (safeAddress: string, selectedCurrency?: string) 
     }
 
     const tokenCurrenciesBalances = await backOff(() =>
-      fetchTokenCurrenciesBalances(safeAddress, selectedCurrency || AVAILABLE_CURRENCIES.USD),
+      fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: selectedCurrency || AVAILABLE_CURRENCIES.USD }),
     )
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)

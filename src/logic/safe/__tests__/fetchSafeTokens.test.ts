@@ -50,7 +50,11 @@ describe('fetchTokenCurrenciesBalances', () => {
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: expectedResult }))
 
     // when
-    const result = await fetchTokenCurrenciesBalances(safeAddress, AVAILABLE_CURRENCIES.USD, excludeSpamTokens)
+    const result = await fetchTokenCurrenciesBalances({
+      safeAddress,
+      excludeSpamTokens,
+      selectedCurrency: AVAILABLE_CURRENCIES.USD,
+    })
 
     // then
     expect(result).toStrictEqual(expectedResult)
