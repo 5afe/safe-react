@@ -237,12 +237,13 @@ export const useEstimateTransactionGas = ({
           approvalAndExecution,
         })
 
+        const totalGasEstimation = (gasEstimation + fixedGasCosts) * 2
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
-        const estimatedGasCosts = (gasEstimation + fixedGasCosts) * parseInt(gasPrice, 10)
+        const estimatedGasCosts = totalGasEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = ((gasEstimation + fixedGasCosts) * 2).toString()
+        const gasLimit = totalGasEstimation.toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
