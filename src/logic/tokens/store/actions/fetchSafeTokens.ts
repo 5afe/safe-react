@@ -13,7 +13,6 @@ import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector }
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getNetworkInfo } from 'src/config'
-import { AVAILABLE_CURRENCIES } from 'src/logic/safe/store/models/availableCurrencies'
 import BigNumber from 'bignumber.js'
 
 export type BalanceRecord = {
@@ -52,7 +51,7 @@ const extractDataFromResult = (currentTokens: TokenState) => (
   return acc
 }
 
-export const fetchSafeTokens = (safeAddress: string, selectedCurrency?: string) => async (
+export const fetchSafeTokens = (safeAddress: string, selectedCurrency: string) => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
@@ -65,9 +64,7 @@ export const fetchSafeTokens = (safeAddress: string, selectedCurrency?: string) 
       return
     }
 
-    const tokenCurrenciesBalances = await backOff(() =>
-      fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: selectedCurrency || AVAILABLE_CURRENCIES.USD }),
-    )
+    const tokenCurrenciesBalances = await backOff(() => fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency }))
     const alreadyActiveTokens = safeActiveTokensSelector(state)
     const blacklistedTokens = safeBlacklistedTokensSelector(state)
 
