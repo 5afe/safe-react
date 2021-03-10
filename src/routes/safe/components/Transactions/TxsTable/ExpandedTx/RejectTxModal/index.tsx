@@ -97,7 +97,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
               <Block className={classes.container}>
                 <Row>
                   <Paragraph>
-                    This action will cancel this transaction. A separate transaction will be performed to submit the
+                    This action will reject this transaction. A separate transaction will be performed to submit the
                     rejection.
                   </Paragraph>
                   <Paragraph color="medium" size="sm">
@@ -139,7 +139,7 @@ export const RejectTxModal = ({ isOpen, onClose, tx }: Props): React.ReactElemen
                   variant="contained"
                   disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
                 >
-                  Reject
+                  Reject Transaction
                 </Button>
               </Row>
             </>
