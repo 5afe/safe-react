@@ -191,10 +191,6 @@ export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('
 
 export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
 
-export const currentCurrencySelector = createSelector(safesStateSelector, (safeState) =>
-  safeState.get('selectedCurrency'),
-)
-
 export const safeBalancesSelector = createSelector(safeSelector, safeFieldSelector('balances'))
 
 export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))

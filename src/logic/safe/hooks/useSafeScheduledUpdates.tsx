@@ -7,12 +7,12 @@ import { fetchEtherBalance } from 'src/logic/safe/store/actions/fetchEtherBalanc
 import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
-import { currentCurrencySelector } from 'src/logic/safe/store/selectors'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
 export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: string): void => {
   const dispatch = useDispatch()
   const timer = useRef<number>()
-  const selectedCurrency = useSelector(currentCurrencySelector)
+  const currentCurrency = useSelector(currentCurrencySelector)
 
   useEffect(() => {
     // using this variable to prevent setting a timeout when the component is already unmounted or the effect
@@ -22,7 +22,7 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       await batch(async () => {
         await Promise.all([
           dispatch(fetchEtherBalance(address)),
-          dispatch(fetchSafeTokens(address, selectedCurrency)),
+          dispatch(fetchSafeTokens(address, currentCurrency)),
           dispatch(fetchTransactions(address)),
           dispatch(fetchCollectibles(address)),
           dispatch(checkAndUpdateSafe(address)),
@@ -44,5 +44,5 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       mounted = false
       clearTimeout(timer.current)
     }
-  }, [dispatch, safeAddress, safeLoaded])
+  }, [dispatch, safeAddress, safeLoaded, currentCurrency])
 }
