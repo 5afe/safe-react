@@ -44,7 +44,11 @@ import moduleTransactions, {
   MODULE_TRANSACTIONS_REDUCER_ID,
   ModuleTransactionsState,
 } from 'src/logic/safe/store/reducer/moduleTransactions'
-import { currencyValuesStorageMiddleware } from 'src/logic/safe/store/middleware/currencyValuesStorageMiddleware'
+import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
+import currencyValues, {
+  CURRENCY_VALUES_KEY,
+  CurrencyValuesState,
+} from 'src/logic/currencyValues/store/reducer/currencyValues'
 
 export const history = createHashHistory()
 
@@ -75,6 +79,7 @@ const reducers = combineReducers({
   [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
   [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
+  [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
@@ -93,6 +98,7 @@ export type AppReduxState = CombinedState<{
   [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
   [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
+  [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
