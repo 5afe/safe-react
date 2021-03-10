@@ -4,7 +4,7 @@ import { createSelector } from 'reselect'
 import { Token } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
-import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
+import { isUserAnOwner, sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 import {
@@ -17,12 +17,6 @@ import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
 import { MODULE_TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/moduleTransactions'
 import { ModuleTxServiceModel } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadModuleTransactions'
-// import {
-//   SafeModuleTransaction,
-//   TransactionStatus,
-//   TransactionTypes,
-// } from 'src/logic/safe/store/models/types/transaction'
-// import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 export const grantedSelector = createSelector(
   userAccountSelector,
@@ -50,14 +44,15 @@ export const extendedSafeTokensSelector = createSelector(
         const tokenBalance = balances?.get(tokenAddress)
 
         if (baseToken) {
-          map.set(tokenAddress, baseToken.set('balance', tokenBalance || { tokenBalance: '0', fiatBalance: '0' }))
+          const updatedBaseToken = baseToken.set('balance', tokenBalance || { tokenBalance: '0', fiatBalance: '0' })
+          if (sameAddress(tokenAddress, ZERO_ADDRESS) || sameAddress(tokenAddress, ethAsToken?.address)) {
+            map.set(tokenAddress, updatedBaseToken.set('logoUri', ethAsToken?.logoUri || baseToken.logoUri))
+          } else {
+            map.set(tokenAddress, updatedBaseToken)
+          }
         }
       })
     })
-
-    if (ethAsToken) {
-      return extendedTokens.set(ethAsToken.address, ethAsToken).toList()
-    }
 
     return extendedTokens.toList()
   },

@@ -35,17 +35,16 @@ const extractDataFromResult = (currentTokens: TokenState) => (
   const { address: tokenAddress, decimals } = tokenInfo
   if (sameAddress(tokenAddress, ZERO_ADDRESS) || sameAddress(tokenAddress, nativeCoin.address)) {
     acc.ethBalance = humanReadableValue(balance, 18)
-  } else {
-    acc.balances = acc.balances.merge({
-      [tokenAddress]: {
-        fiatBalance,
-        tokenBalance: humanReadableValue(balance, Number(decimals)),
-      },
-    })
+  }
+  acc.balances = acc.balances.merge({
+    [tokenAddress]: {
+      fiatBalance,
+      tokenBalance: humanReadableValue(balance, Number(decimals)),
+    },
+  })
 
-    if (currentTokens && !currentTokens.get(tokenAddress)) {
-      acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
-    }
+  if (currentTokens && !currentTokens.get(tokenAddress)) {
+    acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
   }
 
   return acc
