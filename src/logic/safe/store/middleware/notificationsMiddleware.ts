@@ -81,7 +81,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const safes = safesMapSelector(state)
 
         const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safes)
-        // if we have a notification notification, dispatch it depending on transaction's status
+        // if we have a notification, dispatch it depending on transaction's status
         executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
 
         break
