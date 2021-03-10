@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
-import Tokens from './Tokens'
+import { Tokens } from './Tokens'
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
@@ -56,7 +56,7 @@ const Balances = (): React.ReactElement => {
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const safeName = useSelector(safeNameSelector) ?? ''
 
-  useFetchTokens(address as string)
+  useFetchTokens(address)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))

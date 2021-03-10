@@ -53,7 +53,7 @@ const CurrencyTooltip = (props: CurrencyTooltipProps): React.ReactElement | null
   const value = valueWithCurrency.replace(/[^\d.-]/g, '')
   if (!Number(value) && Number(balance)) {
     return (
-      <Tooltip placement="top" title="Balance may be zero due to missing token price information">
+      <Tooltip placement="top" title="Value may be zero due to missing token price information">
         <span>
           <Img className={classes.tooltipInfo} alt="Info Tooltip" height={16} src={InfoIcon} />
         </span>
@@ -91,7 +91,7 @@ const Coins = (props: Props): React.ReactElement => {
         data={filteredData}
         defaultFixed
         defaultOrderBy={BALANCE_TABLE_ASSET_ID}
-        defaultRowsPerPage={10}
+        defaultRowsPerPage={100}
         label="Balances"
         size={filteredData.size}
       >

@@ -1,13 +1,8 @@
 import { getNetworkId, getNetworkInfo } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { nftAssetsListAddressesSelector } from 'src/logic/collectibles/store/selectors'
-import { BuildTx, ServiceTx } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
-import { TOKEN_TRANSFER_METHODS_NAMES } from 'src/logic/safe/store/models/types/transactions.d'
 import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
-import { store } from 'src/store'
-import { sameString } from 'src/utils/strings'
 
 // CryptoKitties Contract Addresses by network
 // This is an exception made for a popular NFT that's not ERC721 standard-compatible,
@@ -28,24 +23,6 @@ const ENS_CONTRACT_ADDRESS = {
 
 // safeTransferFrom(address,address,uint256)
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
-
-/**
- * Verifies that a tx received by the transaction service is an ERC721 token-related transaction
- * @param {BuildTx['tx']} tx
- * @returns boolean
- */
-export const isSendERC721Transaction = (tx: BuildTx['tx']): boolean => {
-  let hasERC721Transfer = false
-
-  if (tx.dataDecoded && sameString(tx.dataDecoded.method, TOKEN_TRANSFER_METHODS_NAMES.SAFE_TRANSFER_FROM)) {
-    hasERC721Transfer = tx.dataDecoded.parameters.findIndex((param) => sameString(param.name, 'tokenId')) !== -1
-  }
-
-  // Note: this is only valid with our current case (client rendering), if we move to server side rendering we need to refactor this
-  const state = store.getState()
-  const knownAssets = nftAssetsListAddressesSelector(state)
-  return knownAssets.includes((tx as ServiceTx).to) || hasERC721Transfer
-}
 
 /**
  * Returns the symbol of the provided ERC721 contract
