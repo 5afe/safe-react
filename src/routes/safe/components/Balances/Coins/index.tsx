@@ -28,7 +28,7 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
-import { currentCurrencySelector } from 'src/logic/safe/store/selectors'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
 const useStyles = makeStyles(styles)
 
