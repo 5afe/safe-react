@@ -14,9 +14,7 @@ import { TxLocationContext } from './TxLocationProvider'
 export const QueueTransactions = (): ReactElement => {
   const { count, isLoading, hasMore, next, transactions } = usePagedQueuedTransactions()
 
-  // `loading` is, actually `!transactions`
-  // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
-  if (isLoading || !transactions) {
+  if (count === 0 && isLoading) {
     return (
       <Centered>
         <Loader size="md" />
@@ -24,7 +22,9 @@ export const QueueTransactions = (): ReactElement => {
     )
   }
 
-  if (count === 0) {
+  // `loading` is, actually `!transactions`
+  // added the `transaction` verification to prevent `Object is possibly 'undefined'` error
+  if (count === 0 || !transactions) {
     return (
       <NoTransactions>
         <Img alt="No Transactions yet" src={NoTransactionsImage} />
