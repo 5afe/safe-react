@@ -4,8 +4,8 @@ export const FIELD_OWNERS = 'owners'
 export const FIELD_SAFE_NAME = 'safeName'
 export const FIELD_CREATION_PROXY_SALT = 'safeCreationSalt'
 
-export const getOwnerNameBy = (index: number): string => `owner${index}Name`
-export const getOwnerAddressBy = (index: number): string => `owner${index}Address`
+export const getOwnerNameBy = (index: number): string => `owner${index.toString().padStart(4, '0')}Name`
+export const getOwnerAddressBy = (index: number): string => `owner${index.toString().padStart(4, '0')}Address`
 
 export const getNumOwnersFrom = (values) => {
   const accounts = Object.keys(values)
