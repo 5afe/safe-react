@@ -7,7 +7,23 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Gnosis Safe Multisig</title>
   </head>
+  <style>
+    .logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      margin:-60px 0 0 -60px;
+      -webkit-animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
+      -moz-animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
+      animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
+    }
+    @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
+    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
+    @keyframes spin { 100% { transform:rotate(360deg); } }
+  </style>
   <body>
-    <div id="root" style="overflow: hidden;"></div>
+    <div id="root" style="overflow: hidden;"><img class="logo" src="./resources/safe.png" /></div>
   </body>
 </html>
