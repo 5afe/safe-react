@@ -16,7 +16,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
-import ThresholdForm from './screens/ThresholdForm'
+import { ThresholdForm } from './screens/ThresholdForm'
 
 const styles = createStyles({
   biggerModalWindow: {
@@ -65,7 +65,7 @@ type Props = {
   onClose: () => void
 }
 
-const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
+export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement => {
   const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
@@ -138,5 +138,3 @@ const AddOwner = ({ isOpen, onClose }: Props): React.ReactElement => {
     </Modal>
   )
 }
-
-export default AddOwner

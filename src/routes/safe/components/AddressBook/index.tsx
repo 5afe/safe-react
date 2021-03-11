@@ -33,7 +33,7 @@ import {
   generateColumns,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import OwnerAddressTableCell from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
+import { OwnerAddressTableCell } from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
