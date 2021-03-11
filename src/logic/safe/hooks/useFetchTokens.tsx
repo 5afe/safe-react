@@ -4,7 +4,6 @@ import { useLocation } from 'react-router-dom'
 
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSelectedCurrency } from 'src/logic/currencyValues/store/actions/fetchSelectedCurrency'
-import activateAssetsByBalance from 'src/logic/tokens/store/actions/activateAssetsByBalance'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { fetchTokens } from 'src/logic/tokens/store/actions/fetchTokens'
 import { COINS_LOCATION_REGEX, COLLECTIBLES_LOCATION_REGEX } from 'src/routes/safe/components/Balances'
@@ -28,9 +27,7 @@ export const useFetchTokens = (safeAddress: string): void => {
 
     if (COLLECTIBLES_LOCATION_REGEX.test(location.pathname)) {
       batch(() => {
-        dispatch(fetchCollectibles(safeAddress)).then(() => {
-          dispatch(activateAssetsByBalance(safeAddress))
-        })
+        dispatch(fetchCollectibles(safeAddress))
       })
     }
   }, [dispatch, location.pathname, safeAddress, currentCurrency])

@@ -35,8 +35,6 @@ export type SafeRecordProps = {
   spendingLimits?: SpendingLimit[] | null
   activeTokens: Set<string>
   activeAssets: Set<string>
-  blacklistedTokens: Set<string>
-  blacklistedAssets: Set<string>
   balances: Map<string, BalanceRecord>
   nonce: number
   latestIncomingTxBlock: number
@@ -57,8 +55,6 @@ const makeSafe = Record<SafeRecordProps>({
   spendingLimits: [],
   activeTokens: Set(),
   activeAssets: Set(),
-  blacklistedTokens: Set(),
-  blacklistedAssets: Set(),
   balances: Map(),
   nonce: 0,
   latestIncomingTxBlock: 0,

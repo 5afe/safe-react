@@ -25,7 +25,7 @@ import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/red
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
 import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import notificationsMiddleware from 'src/logic/safe/store/middleware/notificationsMiddleware'
-import safeStorage from 'src/logic/safe/store/middleware/safeStorage'
+import { safeStorageMiddleware } from 'src/logic/safe/store/middleware/safeStorage'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
@@ -45,7 +45,7 @@ const finalCreateStore = composeEnhancers(
     thunk,
     routerMiddleware(history),
     notificationsMiddleware,
-    safeStorage,
+    safeStorageMiddleware,
     providerWatcher,
     addressBookMiddleware,
     currencyValuesStorageMiddleware,

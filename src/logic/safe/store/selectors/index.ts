@@ -93,33 +93,8 @@ export const safeActiveAssetsListSelector = createSelector(safeActiveAssetsSelec
   return Set(safeList)
 })
 
-export const safeBlacklistedTokensSelector = createSelector(
-  safeSelector,
-  (safe): Set<string> => {
-    if (!safe) {
-      return Set()
-    }
-
-    return safe.blacklistedTokens
-  },
-)
-
-export const safeBlacklistedAssetsSelector = createSelector(
-  safeSelector,
-  (safe): Set<string> => {
-    if (!safe) {
-      return Set()
-    }
-
-    return safe.blacklistedAssets
-  },
-)
-
 export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
   safes.get(safeAddress)?.get('activeAssets') || Set()
-
-export const safeBlacklistedAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress)?.get('blacklistedAssets') || Set()
 
 const baseSafe = makeSafe()
 
@@ -172,18 +147,7 @@ export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelec
   return addresses
 })
 
-export const getBlacklistedTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
-  const addresses = Set().withMutations((set) => {
-    safes.forEach((safe) => {
-      safe.blacklistedTokens.forEach((tokenAddress) => {
-        set.add(tokenAddress)
-      })
-    })
-  })
-
-  return addresses
-})
-
 export const safeFiatBalancesTotalSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance.toString()
 })
+

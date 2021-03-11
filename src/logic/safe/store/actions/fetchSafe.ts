@@ -89,8 +89,6 @@ export const buildSafe = async (
     latestIncomingTxBlock: 0,
     activeAssets: Set(),
     activeTokens: Set(),
-    blacklistedAssets: Set(),
-    blacklistedTokens: Set(),
     modules,
     spendingLimits,
   }

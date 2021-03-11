@@ -3,11 +3,9 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
-import { Tokens } from './Tokens'
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Divider from 'src/components/layout/Divider'
 
@@ -35,7 +33,6 @@ export const BALANCE_ROW_TEST_ID = 'balance-row'
 const INITIAL_STATE = {
   erc721Enabled: false,
   showToken: false,
-  showManageCollectibleModal: false,
   sendFunds: {
     isOpen: false,
     selectedToken: '',
@@ -95,17 +92,8 @@ const Balances = (): React.ReactElement => {
     }))
   }
 
-  const {
-    assetDivider,
-    assetTab,
-    assetTabActive,
-    assetTabs,
-    controls,
-    manageTokensButton,
-    receiveModal,
-    tokenControls,
-  } = classes
-  const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
+  const { assetDivider, assetTab, assetTabActive, assetTabs, controls, receiveModal, tokenControls } = classes
+  const { erc721Enabled, sendFunds, showReceive } = state
 
   return (
     <>
@@ -140,32 +128,7 @@ const Balances = (): React.ReactElement => {
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
             exact
             render={() => {
-              return !erc721Enabled ? (
-                <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} />
-              ) : (
-                <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                  <ButtonLink
-                    className={manageTokensButton}
-                    onClick={() => onShow('ManageCollectibleModal')}
-                    size="lg"
-                    testId="manage-tokens-btn"
-                  >
-                    Manage List
-                  </ButtonLink>
-                  <Modal
-                    description={'Enable and disable tokens to be listed'}
-                    handleClose={() => onHide('ManageCollectibleModal')}
-                    open={showManageCollectibleModal}
-                    title="Manage List"
-                  >
-                    <Tokens
-                      modalScreen={'assetsList'}
-                      onClose={() => onHide('ManageCollectibleModal')}
-                      safeAddress={address}
-                    />
-                  </Modal>
-                </Col>
-              )
+              return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
             }}
           />
           <Route
@@ -176,22 +139,6 @@ const Balances = (): React.ReactElement => {
                 <>
                   <Col className={tokenControls} end="sm" sm={6} xs={12}>
                     <CurrencyDropdown />
-                    <ButtonLink
-                      className={manageTokensButton}
-                      onClick={() => onShow('Token')}
-                      size="lg"
-                      testId="manage-tokens-btn"
-                    >
-                      Manage List
-                    </ButtonLink>
-                    <Modal
-                      description={'Enable and disable tokens to be listed'}
-                      handleClose={() => onHide('Token')}
-                      open={showToken}
-                      title="Manage List"
-                    >
-                      <Tokens modalScreen={'tokenList'} onClose={() => onHide('Token')} safeAddress={address} />
-                    </Modal>
                   </Col>
                 </>
               )
