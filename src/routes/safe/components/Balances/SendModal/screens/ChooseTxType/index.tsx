@@ -14,6 +14,7 @@ import Row from 'src/components/layout/Row'
 import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
@@ -64,7 +65,14 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
         <Row align="center">
           <Col className={classes.disclaimer} layout="column" middle="xs">
             <Paragraph className={classes.disclaimerText} noMargin>
-              Please select what you will send to {recipientAddress}
+              Please select what you will send to
+              <EthHashInfo
+                hash={recipientAddress}
+                /* name={selectedEntry.name} */
+                showIdenticon
+                showCopyBtn
+                /*  explorerUrl={getExplorerInfo(selectedEntry.address)} */
+              />
             </Paragraph>
           </Col>
         </Row>
