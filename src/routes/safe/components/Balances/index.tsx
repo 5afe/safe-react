@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { Suspense, lazy, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
@@ -21,13 +21,12 @@ import {
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
 
-import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
 import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
 import { FEATURES } from 'src/config/networks/network.d'
 
-const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
-const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
+const Collectibles = lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
+const Coins = lazy(() => import('src/routes/safe/components/Balances/Coins'))
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -108,7 +107,7 @@ const Balances = (): React.ReactElement => {
   const { erc721Enabled, sendFunds, showManageCollectibleModal, showReceive, showToken } = state
 
   return (
-    <>
+    <Suspense fallback={null}>
       <Row align="center" className={controls}>
         <Col className={assetTabs} sm={6} start="sm" xs={12}>
           <NavLink
@@ -139,7 +138,7 @@ const Balances = (): React.ReactElement => {
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
             exact
-            render={() => {
+            component={() => {
               return !erc721Enabled ? (
                 <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} />
               ) : (
@@ -171,31 +170,29 @@ const Balances = (): React.ReactElement => {
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances`}
             exact
-            render={() => {
-              return (
-                <>
-                  <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                    <CurrencyDropdown />
-                    <ButtonLink
-                      className={manageTokensButton}
-                      onClick={() => onShow('Token')}
-                      size="lg"
-                      testId="manage-tokens-btn"
-                    >
-                      Manage List
-                    </ButtonLink>
-                    <Modal
-                      description={'Enable and disable tokens to be listed'}
-                      handleClose={() => onHide('Token')}
-                      open={showToken}
-                      title="Manage List"
-                    >
-                      <Tokens modalScreen={'tokenList'} onClose={() => onHide('Token')} safeAddress={address} />
-                    </Modal>
-                  </Col>
-                </>
-              )
-            }}
+            component={() => (
+              <>
+                <Col className={tokenControls} end="sm" sm={6} xs={12}>
+                  <CurrencyDropdown />
+                  <ButtonLink
+                    className={manageTokensButton}
+                    onClick={() => onShow('Token')}
+                    size="lg"
+                    testId="manage-tokens-btn"
+                  >
+                    Manage List
+                  </ButtonLink>
+                  <Modal
+                    description={'Enable and disable tokens to be listed'}
+                    handleClose={() => onHide('Token')}
+                    open={showToken}
+                    title="Manage List"
+                  >
+                    <Tokens modalScreen={'tokenList'} onClose={() => onHide('Token')} safeAddress={address} />
+                  </Modal>
+                </Col>
+              </>
+            )}
           />
         </Switch>
       </Row>
@@ -203,18 +200,11 @@ const Balances = (): React.ReactElement => {
         <Route
           path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
           exact
-          render={() => {
-            if (erc721Enabled) {
-              return wrapInSuspense(<Collectibles />)
-            }
-            return null
-          }}
+          component={erc721Enabled ? Collectibles : undefined}
         />
         <Route
           path={`${SAFELIST_ADDRESS}/${address}/balances`}
-          render={() => {
-            return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
-          }}
+          component={() => <Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />}
         />
       </Switch>
       <SendModal
@@ -232,7 +222,7 @@ const Balances = (): React.ReactElement => {
       >
         <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
-    </>
+    </Suspense>
   )
 }
 
