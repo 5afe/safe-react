@@ -46,24 +46,8 @@ jobs:
         with:
           node-version: 14
 
-      - name: Run yarn install with custom cache
-        run: |
-          # Due to some dependencies yarn may randomly throw an error about invalid cache
-          # This approach is taken from https://github.com/yarnpkg/yarn/issues/7212#issuecomment-506155894 to fix the issue
-          # Another approach is to install with flag --network-concurrency 1, but this will make the installation pretty slow (default value is 8)
-          mkdir .yarncache
-          yarn install --cache-folder ./.yarncache --frozen-lockfile    
-      - name: Clean .yarncache for Unix systems
-        if: ${{ !startsWith(matrix.os, 'windows') }}
-        run: |
-          rm -rf .yarncache
-          yarn cache clean
-      - name: Clean .yarncache for Windows systems
-        if: startsWith(matrix.os, 'windows')
-        shell: powershell
-        run: |
-          rmdir .yarncache
-          yarn cache clean
+      - name: Run yarn install
+        run: yarn install --frozen-lockfile --network-concurrency 1
 
       - name: Build/Release Desktop App
         env:
