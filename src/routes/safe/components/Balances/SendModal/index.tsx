@@ -135,9 +135,9 @@ const SendModal = ({
           <SendFunds
             onClose={onClose}
             onReview={handleTxCreation}
-            recipientAddress={recipientAddress}
-            selectedToken={selectedToken as string}
-            amount={tokenAmount}
+            recipientAddress={recipientAddress || (tx as ReviewTxProp).recipientAddress}
+            selectedToken={(tx as ReviewTxProp).token || (selectedToken as string)}
+            amount={tokenAmount || (tx as ReviewTxProp).amount}
           />
         )}
 
