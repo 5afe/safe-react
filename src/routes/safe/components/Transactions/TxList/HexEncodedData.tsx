@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from 'react'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { textShortener } from 'src/utils/strings'
 
 export const styles = createStyles({
   txDataParagraph: {
@@ -30,6 +30,7 @@ export const HexEncodedData = ({
   const classes = useStyles()
   const [showTxData, setShowTxData] = useState(false)
   const showExpandBtn = hexData.length > limit
+  const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
     <div className="tx-hexData">
@@ -56,7 +57,7 @@ export const HexEncodedData = ({
               </>
             ) : (
               <>
-                {shortVersionOf(hexData, limit)}{' '}
+                {shortener(hexData)}{' '}
                 <LinkWithRef
                   aria-label="Show details of the transaction"
                   className={classes.linkTxData}
