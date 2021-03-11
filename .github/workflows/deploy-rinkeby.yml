@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-latest'
+        if: ${{ matrix.os }} == 'ubuntu-latest'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
       - uses: actions/checkout@v2
