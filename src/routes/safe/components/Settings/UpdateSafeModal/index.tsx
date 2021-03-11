@@ -76,7 +76,13 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   })
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -116,6 +122,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     compact={false}
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
+                    isOffChainSignature={isOffChainSignature}
                   />
                 </Block>
                 {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (

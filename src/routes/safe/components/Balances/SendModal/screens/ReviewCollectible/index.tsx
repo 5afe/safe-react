@@ -140,6 +140,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -206,6 +208,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
           </Block>
           <div className={classes.gasCostsContainer}>

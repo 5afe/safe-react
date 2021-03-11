@@ -317,6 +317,8 @@ export const ApproveTxModal = ({
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
+        isOffChainSignature={isOffChainSignature}
+        isExecution={isExecution}
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
@@ -370,13 +372,14 @@ export const ApproveTxModal = ({
                   )}
 
                   {/* Tx Parameters */}
-                  {approveAndExecute && (
+                  {(approveAndExecute || !isOffChainSignature) && (
                     <TxParametersDetail
                       txParameters={txParameters}
                       onEdit={toggleEditMode}
                       parametersStatus={getParametersStatus()}
                       isTransactionCreation={isCreation}
                       isTransactionExecution={isExecution}
+                      isOffChainSignature={isOffChainSignature}
                     />
                   )}
                 </Row>

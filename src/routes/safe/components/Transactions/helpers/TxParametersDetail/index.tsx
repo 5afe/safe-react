@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from '@gnosis.pm/safe-react-components'
 
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ParametersStatus, areEthereumParamsEnabled, areSafeParamsEnabled } from '../utils'
+import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
 import { useSelector } from 'react-redux'
 import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
@@ -35,8 +35,9 @@ type Props = {
   onEdit: () => void
   compact?: boolean
   parametersStatus?: ParametersStatus
-  isTransactionExecution: boolean
   isTransactionCreation: boolean
+  isTransactionExecution: boolean
+  isOffChainSignature: boolean
 }
 
 export const TxParametersDetail = ({
@@ -46,11 +47,12 @@ export const TxParametersDetail = ({
   parametersStatus,
   isTransactionCreation,
   isTransactionExecution,
+  isOffChainSignature,
 }: Props): ReactElement | null => {
   const threshold = useSelector(safeThresholdSelector) || 1
-  const defaultParameterStatus = threshold > 1 ? 'ETH_DISABLED' : 'ENABLED'
+  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
-  if (!isTransactionExecution && !isTransactionCreation) {
+  if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {
     return null
   }
 
@@ -62,7 +64,7 @@ export const TxParametersDetail = ({
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
-            Safe transactions parameters
+            Safe transactions
           </StyledText>
 
           <TxParameterWrapper>
@@ -95,57 +97,30 @@ export const TxParametersDetail = ({
             </Text>
           </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <StyledText size="md" color="placeHolder">
-              Ethereum transaction parameters
-            </StyledText>
-          </TxParameterWrapper>
+          {areEthereumParamsVisible(parametersStatus || defaultParameterStatus) && (
+            <>
+              <TxParameterWrapper>
+                <StyledText size="md" color="placeHolder">
+                  {ethereumTxParametersTitle(isTransactionExecution)}
+                </StyledText>
+              </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              Ethereum nonce
-            </Text>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.ethNonce}
-            </Text>
-          </TxParameterWrapper>
+              <TxParameterWrapper>
+                <Text size="lg">Ethereum nonce</Text>
+                <Text size="lg">{txParameters.ethNonce}</Text>
+              </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              Ethereum gas limit
-            </Text>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.ethGasLimit}
-            </Text>
-          </TxParameterWrapper>
+              <TxParameterWrapper>
+                <Text size="lg">Ethereum gas limit</Text>
+                <Text size="lg">{txParameters.ethGasLimit}</Text>
+              </TxParameterWrapper>
 
-          <TxParameterWrapper>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              Ethereum gas price
-            </Text>
-            <Text
-              size="lg"
-              color={areEthereumParamsEnabled(parametersStatus || defaultParameterStatus) ? 'text' : 'secondaryLight'}
-            >
-              {txParameters.ethGasPrice}
-            </Text>
-          </TxParameterWrapper>
-
+              <TxParameterWrapper>
+                <Text size="lg">Ethereum gas price</Text>
+                <Text size="lg">{txParameters.ethGasPrice}</Text>
+              </TxParameterWrapper>
+            </>
+          )}
           <StyledButtonLink color="primary" textSize="xl" onClick={onEdit}>
             Edit
           </StyledButtonLink>

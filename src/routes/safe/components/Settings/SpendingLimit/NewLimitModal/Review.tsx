@@ -238,6 +238,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -287,6 +289,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
           </Block>
           <div className={classes.gasCostsContainer}>
