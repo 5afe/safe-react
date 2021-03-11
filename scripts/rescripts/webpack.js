@@ -1,6 +1,10 @@
-const { removeWebpackPlugin } = require('@rescripts/utilities')
+const { removeWebpackPlugin, appendWebpackPlugin } = require('@rescripts/utilities')
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 module.exports = config => {
   const webpackWithoutEsLint = removeWebpackPlugin('ESLintWebpackPlugin', config)
-  return webpackWithoutEsLint
+  return appendWebpackPlugin(
+    new CleanWebpackPlugin(),
+    webpackWithoutEsLint,
+  )
 }
