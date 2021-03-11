@@ -10,7 +10,13 @@ import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required, uniqueAddress } from 'src/components/forms/validator'
+import {
+  addressIsNotSafe,
+  composeValidators,
+  minMaxLength,
+  required,
+  uniqueAddress,
+} from 'src/components/forms/validator'
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -19,7 +25,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { safeOwnersAddressesListSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
@@ -40,7 +46,9 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
     onSubmit(values)
   }
   const owners = useSelector(safeOwnersAddressesListSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerDoesntExist = uniqueAddress(owners)
+  const ownerAddressIsNotSafeAddress = addressIsNotSafe(safeAddress)
 
   return (
     <>
@@ -126,7 +134,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                       placeholder="Owner address*"
                       testId={REPLACE_OWNER_ADDRESS_INPUT_TEST_ID}
                       text="Owner address*"
-                      validators={[ownerDoesntExist]}
+                      validators={[ownerDoesntExist, ownerAddressIsNotSafeAddress]}
                     />
                   </Col>
                   <Col center="xs" className={classes} middle="xs" xs={1}>
