@@ -11,7 +11,7 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import {
-  addressIsNotSafe,
+  addressIsNotCurrentSafe,
   composeValidators,
   minMaxLength,
   required,
@@ -48,7 +48,7 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
   const owners = useSelector(safeOwnersAddressesListSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerDoesntExist = uniqueAddress(owners)
-  const ownerAddressIsNotSafeAddress = addressIsNotSafe(safeAddress)
+  const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
   return (
     <>
