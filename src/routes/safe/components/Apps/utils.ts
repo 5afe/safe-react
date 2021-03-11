@@ -79,7 +79,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh`,
     disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+    networks: [ETHEREUM_NETWORK.MAINNET],
   },
   // Pooltogether
   {
