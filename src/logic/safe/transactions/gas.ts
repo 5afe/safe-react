@@ -296,10 +296,12 @@ export const estimateGasForTransactionExecution = async ({
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
   try {
-    if (approvalAndExecution) {
-      console.info(`Estimating transaction success for execution & approval...`)
+    let gasEstimation
+    // If safeTxGas === 0 we still have to estimate the gas limit to execute the transaction so we need to get an estimation
+    if (approvalAndExecution || safeTxGas === 0) {
+      console.info(`Estimating transaction necessary gas...`)
       // @todo (agustin) once we solve the problem with the preApprovingOwner, we need to use the method bellow (execTransaction) with sigs = generateSignaturesFromTxConfirmations(txConfirmations,from)
-      const gasEstimation = await estimateGasForTransactionCreation(
+      gasEstimation = await estimateGasForTransactionCreation(
         safeAddress,
         txData,
         txRecipient,
@@ -307,17 +309,21 @@ export const estimateGasForTransactionExecution = async ({
         operation,
         safeTxGas,
       )
-      console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
-      return gasEstimation
+
+      if (approvalAndExecution) {
+        // If it's approve and execute we don't have all the signatures to do a complete simulation, we return the gas estimation
+        console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
+        return gasEstimation
+      }
     }
+    // If we have all signatures we can do a call to ensure the transaction will be successful or fail
     const sigs = generateSignaturesFromTxConfirmations(txConfirmations)
-    console.info(`Estimating transaction success for with gas amount: ${safeTxGas}...`)
+    console.info(`Check transaction success with gas amount: ${safeTxGas}...`)
     await safeInstance.methods
       .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
       .call()
-
     console.info(`Gas estimation successfully finished with gas amount: ${safeTxGas}`)
-    return safeTxGas
+    return safeTxGas || gasEstimation
   } catch (error) {
     throw new Error(`Gas estimation failed with gas amount: ${safeTxGas}`)
   }
