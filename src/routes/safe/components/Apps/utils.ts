@@ -119,7 +119,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // TX-Builder
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYES1Se6i6679z3PfQ62bydgVVEoSRUabvjB35DfUGPGA`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZBgEvjqi9Jg8xATr9uUgNUVmnfYiECNxZv9Taux7mzgV`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
