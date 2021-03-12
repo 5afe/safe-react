@@ -26,9 +26,7 @@ export const useFetchTokens = (safeAddress: string): void => {
     }
 
     if (COLLECTIBLES_LOCATION_REGEX.test(location.pathname)) {
-      batch(() => {
-        dispatch(fetchCollectibles(safeAddress))
-      })
+      dispatch(fetchCollectibles(safeAddress))
     }
   }, [dispatch, location.pathname, safeAddress, currentCurrency])
 }
