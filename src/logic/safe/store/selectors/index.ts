@@ -76,26 +76,6 @@ export const safeActiveTokensSelector = createSelector(
   },
 )
 
-export const safeActiveAssetsSelector = createSelector(
-  safeSelector,
-  (safe): Set<string> => {
-    if (!safe) {
-      return Set()
-    }
-    return safe.activeAssets
-  },
-)
-
-export const safeActiveAssetsListSelector = createSelector(safeActiveAssetsSelector, (safeList) => {
-  if (!safeList) {
-    return Set([])
-  }
-  return Set(safeList)
-})
-
-export const safeActiveAssetsSelectorBySafe = (safeAddress: string, safes: SafesMap): Set<string> =>
-  safes.get(safeAddress)?.get('activeAssets') || Set()
-
 const baseSafe = makeSafe()
 
 export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
@@ -150,4 +130,3 @@ export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelec
 export const safeFiatBalancesTotalSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance.toString()
 })
-
