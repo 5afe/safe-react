@@ -9,7 +9,7 @@ import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getNetworkInfo } from 'src/config'
@@ -68,7 +68,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     const tokenCurrenciesBalances = await backOff(() =>
       fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currencySelected ?? selectedCurrency }),
     )
-    const activeTokens = safeActiveTokensSelector(state)
 
     const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
@@ -82,7 +81,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     dispatch(
       updateSafe({
         address: safeAddress,
-        activeTokens,
         balances,
         ethBalance,
         totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
