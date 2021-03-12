@@ -149,7 +149,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
         <>
           <Row align="center" className={classes.heading} grow>
             <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Send Collectible
+              Send collectible
             </Paragraph>
             <Paragraph className={classes.annotation}>2 of 2</Paragraph>
             <IconButton disableRipple onClick={onClose}>
@@ -218,7 +218,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             />
           </div>
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev}>
+            <Button minWidth={140} onClick={onPrev} color="secondary">
               Back
             </Button>
             <Button
