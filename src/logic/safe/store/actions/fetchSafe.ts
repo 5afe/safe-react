@@ -87,7 +87,7 @@ export const buildSafe = async (
     featuresEnabled,
     balances: localSafe?.balances || Map(),
     latestIncomingTxBlock: 0,
-    assets: Set(),
+    activeAssets: Set(),
     activeTokens: Set(),
     modules,
     spendingLimits,
