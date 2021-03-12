@@ -1,7 +1,7 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import React, { Suspense, useEffect, useState } from 'react'
+import React, { Suspense, lazy, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
 import { CollectibleTx } from './screens/ReviewCollectible'
@@ -12,23 +12,23 @@ import { ReviewTxProp } from './screens/ReviewTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
 
-const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
+const ChooseTxType = lazy(() => import('./screens/ChooseTxType'))
 
-const SendFunds = React.lazy(() => import('./screens/SendFunds'))
+const SendFunds = lazy(() => import('./screens/SendFunds'))
 
-const SendCollectible = React.lazy(() => import('./screens/SendCollectible'))
+const SendCollectible = lazy(() => import('./screens/SendCollectible'))
 
-const ReviewCollectible = React.lazy(() => import('./screens/ReviewCollectible'))
+const ReviewCollectible = lazy(() => import('./screens/ReviewCollectible'))
 
-const ReviewTx = React.lazy(() => import('./screens/ReviewTx'))
+const ReviewTx = lazy(() => import('./screens/ReviewTx'))
 
-const ContractInteraction = React.lazy(() => import('./screens/ContractInteraction'))
+const ContractInteraction = lazy(() => import('./screens/ContractInteraction'))
 
 const ContractInteractionReview: any = React.lazy(() => import('./screens/ContractInteraction/Review'))
 
-const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
+const SendCustomTx = lazy(() => import('./screens/ContractInteraction/SendCustomTx'))
 
-const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
+const ReviewCustomTx = lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
 const useStyles = makeStyles({
   scalableModalWindow: {
@@ -101,19 +101,19 @@ const SendModal = ({
   }
 
   return (
-    <Modal
-      description="Send Tokens Form"
-      handleClose={onClose}
-      open={isOpen}
-      paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
-      title="Send Tokens"
+    <Suspense
+      fallback={
+        <div className={classes.loaderStyle}>
+          <CircularProgress size={40} />
+        </div>
+      }
     >
-      <Suspense
-        fallback={
-          <div className={classes.loaderStyle}>
-            <CircularProgress size={40} />
-          </div>
-        }
+      <Modal
+        description="Send Tokens Form"
+        handleClose={onClose}
+        open={isOpen}
+        paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
+        title="Send Tokens"
       >
         {activeScreen === 'chooseTxType' && (
           <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
@@ -172,8 +172,8 @@ const SendModal = ({
             tx={tx as CollectibleTx}
           />
         )}
-      </Suspense>
-    </Modal>
+      </Modal>
+    </Suspense>
   )
 }
 
