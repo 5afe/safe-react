@@ -66,14 +66,15 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
           <Col className={classes.disclaimer} layout="column" middle="xs">
             <Paragraph className={classes.disclaimerText} noMargin>
               Please select what you will send to
-              <EthHashInfo
-                hash={recipientAddress}
-                /* name={selectedEntry.name} */
-                showIdenticon
-                showCopyBtn
-                /*  explorerUrl={getExplorerInfo(selectedEntry.address)} */
-              />
             </Paragraph>
+            <EthHashInfo
+              hash={recipientAddress}
+              name="Safe Name"
+              /* name={selectedEntry.name} */
+              showIdenticon
+              showCopyBtn
+              /*  explorerUrl={getExplorerInfo(selectedEntry.address)} */
+            />
           </Col>
         </Row>
       )}

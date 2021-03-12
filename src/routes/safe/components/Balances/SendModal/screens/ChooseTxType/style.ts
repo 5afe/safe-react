@@ -19,6 +19,7 @@ export const useStyles = makeStyles(
     },
     disclaimerText: {
       fontSize: md,
+      marginBottom: `${md}`,
     },
     closeIcon: {
       height: '35px',
