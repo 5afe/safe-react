@@ -89,7 +89,9 @@ function createWindow(port = DEFAULT_PORT) {
     height: 768,
     webPreferences: {
       preload: path.join(__dirname, '../scripts/preload.js'),
-      allowRunningInsecureContent: true,
+      experimentalFeatures: true,
+      nodeIntegration: true,
+      // allowRunningInsecureContent: true,
       enableRemoteModule: true,
       nativeWindowOpen: true, // need to be set in order to display modal
     },
