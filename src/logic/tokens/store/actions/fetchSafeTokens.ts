@@ -68,7 +68,7 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     const tokenCurrenciesBalances = await backOff(() =>
       fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currencySelected ?? selectedCurrency }),
     )
-    const activeTokens = safeActiveTokensSelector(state)
+    const alreadyActiveTokens = safeActiveTokensSelector(state)
 
     const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
@@ -78,6 +78,9 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
         tokens: List(),
       },
     )
+
+    // need to persist those already active tokens, despite its balances
+    const activeTokens = alreadyActiveTokens.union(balances.keySeq().toSet())
 
     dispatch(
       updateSafe({
