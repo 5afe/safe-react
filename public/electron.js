@@ -144,7 +144,7 @@ process.on('uncaughtException', function (error) {
 })
 
 app.userAgentFallback =
-  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/9.4.1 Safari/537.36'
+  'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_14_6) AppleWebKit/537.36 (KHTML, like Gecko) old-airport-include/1.0.0 Chrome Electron/11.3.0 Safari/537.36'
 
 // We have one non-context-aware module in node_modules/usb. This is used by @ledgerhq/hw-transport-node-hid
 // This type of modules will be impossible to use after electron 10
