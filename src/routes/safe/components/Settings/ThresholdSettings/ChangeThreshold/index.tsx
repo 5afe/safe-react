@@ -51,6 +51,7 @@ export const ChangeThresholdModal = ({
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
+  const [disabledSubmitForm, setDisabledSubmitForm] = useState<boolean>(true)
 
   const {
     gasCostFormatted,
@@ -149,7 +150,9 @@ export const ChangeThresholdModal = ({
                         data-testid="threshold-select-input"
                         name={THRESHOLD_FIELD_NAME}
                         onChange={({ target }) => {
-                          setEditedThreshold(parseInt(target.value))
+                          const value = parseInt(target.value)
+                          setDisabledSubmitForm(value === editedThreshold)
+                          setEditedThreshold(value)
                         }}
                         render={(props) => (
                           <>
@@ -207,7 +210,7 @@ export const ChangeThresholdModal = ({
                     minWidth={140}
                     type="submit"
                     variant="contained"
-                    disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                    disabled={txEstimationExecutionStatus === EstimationStatus.LOADING || disabledSubmitForm}
                   >
                     Submit
                   </Button>
