@@ -57,7 +57,7 @@ const ThresholdSettings = (): React.ReactElement => {
               onClick={toggleModal}
               variant="contained"
             >
-              Modify
+              Change
             </Button>
           </Row>
         )}
