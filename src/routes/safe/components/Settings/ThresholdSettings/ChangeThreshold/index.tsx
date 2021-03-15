@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
 import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
@@ -29,6 +30,14 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
+
+const StyledButton = styled(Button)`
+  &.Mui-disabled {
+    background-color: ${({ theme }) => theme.colors.primary};
+    color: ${({ theme }) => theme.colors.white};
+    opacity: 0.5;
+  }
+`
 
 const useStyles = makeStyles(styles)
 
@@ -205,7 +214,7 @@ export const ChangeThresholdModal = ({
                   <Button minWidth={140} onClick={onClose} color="secondary">
                     Cancel
                   </Button>
-                  <Button
+                  <StyledButton
                     color="primary"
                     minWidth={140}
                     type="submit"
@@ -213,7 +222,7 @@ export const ChangeThresholdModal = ({
                     disabled={txEstimationExecutionStatus === EstimationStatus.LOADING || disabledSubmitForm}
                   >
                     Submit
-                  </Button>
+                  </StyledButton>
                 </Row>
               </>
             )}
