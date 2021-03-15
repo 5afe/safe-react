@@ -8,22 +8,30 @@
     <title>Gnosis Safe Multisig</title>
   </head>
   <style>
-    .logo {
+    .spinner {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 120px;
       height: 120px;
       margin:-60px 0 0 -60px;
-      -webkit-animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
-      -moz-animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
-      animation:spin 10s cubic-bezier(0,1.13,.5,.97) 1;
+      animation: sk-bounce 2.0s infinite ease-in-out;
+      animation-delay: -1.0s;
     }
-    @-moz-keyframes spin { 100% { -moz-transform: rotate(360deg); } }
-    @-webkit-keyframes spin { 100% { -webkit-transform: rotate(360deg); } }
-    @keyframes spin { 100% { transform:rotate(360deg); } }
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
   </style>
   <body>
-    <div id="root" style="overflow: hidden;"><img class="logo" src="./resources/safe.png" /></div>
+    <div id="root" style="overflow: hidden;"><img class="spinner" src="./resources/safe.png" /></div>
   </body>
 </html>
