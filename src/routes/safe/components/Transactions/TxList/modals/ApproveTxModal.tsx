@@ -399,8 +399,8 @@ export const ApproveTxModal = ({
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Exit
+                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                  Close
                 </Button>
                 <Button
                   color={isCancelTx ? 'secondary' : 'primary'}

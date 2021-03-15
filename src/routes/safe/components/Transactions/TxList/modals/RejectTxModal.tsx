@@ -105,7 +105,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
               <Block className={classes.container}>
                 <Row>
                   <Paragraph>
-                    This action will cancel this transaction. A separate transaction will be performed to submit the
+                    This action will reject this transaction. A separate transaction will be performed to submit the
                     rejection.
                   </Paragraph>
                   <Paragraph color="medium" size="sm">
@@ -137,8 +137,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 </Block>
               )}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Exit
+                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                  Close
                 </Button>
                 <Button
                   color="secondary"

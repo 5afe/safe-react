@@ -199,8 +199,8 @@ export const ChangeThresholdModal = ({
                 )}
 
                 <Row align="center" className={classes.buttonRow}>
-                  <Button minWidth={140} onClick={onClose}>
-                    Back
+                  <Button minWidth={140} onClick={onClose} color="secondary">
+                    Cancel
                   </Button>
                   <Button
                     color="primary"
@@ -209,7 +209,7 @@ export const ChangeThresholdModal = ({
                     variant="contained"
                     disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
                   >
-                    Change
+                    Submit
                   </Button>
                 </Row>
               </>
