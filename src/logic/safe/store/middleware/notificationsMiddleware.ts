@@ -94,9 +94,6 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const userAddress: string = userAccountSelector(state)
         const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
 
-        // identify and store the pending transaction's nonce
-        aboutToExecuteTx.identifyPendingTx(transactions)
-
         const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.timestamp)
 
         const safes = safesMapSelector(state)

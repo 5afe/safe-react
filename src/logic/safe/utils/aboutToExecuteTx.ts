@@ -1,10 +1,8 @@
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import {
   isStatusFailed,
-  isStatusPending,
   isTransactionSummary,
   TransactionGatewayResult,
-  TransactionSummary,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -13,7 +11,7 @@ import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 
 let nonce: number | undefined
 
-const setNonce = (newNonce: typeof nonce): void => {
+export const setNonce = (newNonce: typeof nonce): void => {
   nonce = newNonce
 }
 
@@ -49,27 +47,5 @@ export const getNotification = (
 
       return notification
     }
-  }
-}
-
-export const identifyPendingTx = (transactions: TransactionSummary[]): void => {
-  if (nonce !== undefined) {
-    const txByNonce = transactions.find((tx) => tx.executionInfo?.nonce === nonce)
-
-    // if for any reason tx remains in the queued list, we cleanup the nonce value
-    if (!txByNonce || !isStatusPending(txByNonce.txStatus)) {
-      setNonce(undefined)
-      return
-    }
-
-    // we do nothing, as we're waiting for the pending tx resolution
-    return
-  }
-
-  const pendingTxNonce = transactions.find((tx) => isStatusPending(tx.txStatus))?.executionInfo?.nonce
-
-  // found a pending tx, then we set the nonce for future tracking
-  if (pendingTxNonce !== undefined) {
-    setNonce(pendingTxNonce)
   }
 }

@@ -12,6 +12,7 @@ import {
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
 import { estimateGasForTransactionCreation } from 'src/logic/safe/transactions/gas'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -147,6 +148,9 @@ export const createTransaction = (
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
         await saveTxToHistory({ ...txArgs, txHash, origin })
+
+        // store the pending transaction's nonce
+        isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
         dispatch(fetchTransactions(safeAddress))
       })
