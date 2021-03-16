@@ -86,7 +86,27 @@ jobs:
           aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
 
       # Script to deploy Pull Requests
-      # Mainnet build is never created in Pull Requests
+      - run: bash ./scripts/github/deploy_pull_request.sh
+        if: success() && github.event.number
+        env:
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          PR_NUMBER: ${{ github.event.number }}
+          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+          REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+          TRAVIS_TAG: ${{ github.event.release.tag_name }}
+
+      - name: 'PRaul: Comment PR with app URLs'
+        uses: mshick/add-pr-comment@v1
+        with:
+          message: |
+            * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
+          repo-token: ${{ secrets.GITHUB_TOKEN }}
+          repo-token-user-login: 'github-actions[bot]'
+          allow-repeats: true
+        if: success() && github.event.number
+        env:
+          REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
 
       # Script to deploy to development environment
       # Mainnet build is never created in development branch
