@@ -10,7 +10,7 @@ import {
   uniqueAddress,
   differentFrom,
   ADDRESS_REPEATED_ERROR,
-  addressIsNotSafe,
+  addressIsNotCurrentSafe,
   OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR,
 } from 'src/components/forms/validator'
 
@@ -186,14 +186,14 @@ describe('Forms > Validators', () => {
       const address = '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
       const safeAddress = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
 
-      expect(addressIsNotSafe(safeAddress)(address)).toBeUndefined()
+      expect(addressIsNotCurrentSafe(safeAddress)(address)).toBeUndefined()
     })
 
     it('Returns an error message if the given `address` is the same as the `safeAddress`', async () => {
       const address = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
       const safeAddress = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
 
-      expect(addressIsNotSafe(safeAddress)(address)).toEqual(OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR)
+      expect(addressIsNotCurrentSafe(safeAddress)(address)).toEqual(OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR)
     })
   })
 

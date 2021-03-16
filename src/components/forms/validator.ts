@@ -99,7 +99,7 @@ export const uniqueAddress = (addresses: string[] | List<string> = []) => (addre
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }
 
-export const addressIsNotSafe = (safeAddress: string) => (address?: string): string | undefined =>
+export const addressIsNotCurrentSafe = (safeAddress: string) => (address?: string): string | undefined =>
   sameAddress(safeAddress, address) ? OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR : undefined
 
 export const composeValidators = (...validators: Validator[]) => (value: unknown): ValidatorReturnType =>
