@@ -6,14 +6,11 @@ import {
   isAddress,
   isArrayParameter,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
+import { HexEncodedData } from './HexEncodedData'
 import { getExplorerInfo } from 'src/config'
 
 const NestedWrapper = styled.div`
   padding-left: 4px;
-`
-
-const StyledText = styled(Text)`
-  white-space: normal;
 `
 
 interface RenderValueProps {
@@ -23,7 +20,7 @@ interface RenderValueProps {
 }
 
 const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactElement => {
-  const getTextValue = (value: string) => <StyledText size="lg">{value}</StyledText>
+  const getTextValue = (value: string) => <HexEncodedData limit={60} hexData={value} />
 
   const getArrayValue = (parentId: string, value: string[] | string) => (
     <div>
@@ -31,10 +28,12 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
       <NestedWrapper>
         {(value as string[]).map((currentValue, index) => {
           const key = `${parentId}-value-${index}`
-          return (
+          return Array.isArray(currentValue) ? (
             <Text key={key} size="xl">
-              {Array.isArray(currentValue) ? getArrayValue(key, currentValue) : getTextValue(currentValue)}
+              {getArrayValue(key, currentValue)}
             </Text>
+          ) : (
+            getTextValue(currentValue)
           )
         })}
       </NestedWrapper>
