@@ -52,7 +52,7 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
     // we render the hex encoded data
     return (
       <DetailsWithTxInfo txData={txData}>
-        <HexEncodedData hexData={txData.hexData} />
+        <HexEncodedData title="Data (hex encoded)" hexData={txData.hexData} />
       </DetailsWithTxInfo>
     )
   }
