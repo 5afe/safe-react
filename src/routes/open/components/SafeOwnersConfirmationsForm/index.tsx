@@ -46,9 +46,6 @@ const { useState } = React
 
 export const ADD_OWNER_BUTTON = '+ Add another owner'
 
-const StyledParagraph = styled(Paragraph)`
-  max-width: 722px;
-`
 const StyledAddressInput = styled(AddressInput)`
   width: 460px;
 `
@@ -160,7 +157,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
   return (
     <>
       <Block className={classes.title}>
-        <StyledParagraph color="primary" noMargin size="lg" data-testid="create-safe-step-two">
+        <Paragraph color="primary" noMargin size="lg" data-testid="create-safe-step-two">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
           <br />
@@ -180,12 +177,12 @@ const SafeOwnersForm = (props): React.ReactElement => {
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
           </Link>
-        </StyledParagraph>
+        </Paragraph>
       </Block>
       <Hairline />
       <Row className={classes.header}>
         <Col xs={3}>NAME</Col>
-        <Col xs={5}>ADDRESS</Col>
+        <Col xs={7}>ADDRESS</Col>
       </Row>
       <Hairline />
       <Block margin="md" padding="md">
@@ -207,7 +204,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
-              <Col className={classes.ownerAddress} xs={5}>
+              <Col className={classes.ownerAddress} xs={7}>
                 <StyledAddressInput
                   fieldMutator={(newOwnerAddress) => {
                     const newOwnerName = getNameFromAddressBook(addressBook, newOwnerAddress, {

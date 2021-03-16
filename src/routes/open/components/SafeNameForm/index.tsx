@@ -29,9 +29,6 @@ const styles = createStyles({
   },
 })
 
-const StyledParagraph = styled(Paragraph)`
-  max-width: 722px;
-`
 const StyledField = styled(Field)`
   &.MuiTextField-root {
     width: 460px;
@@ -46,10 +43,10 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
   return (
     <>
       <Block margin="lg">
-        <StyledParagraph color="primary" noMargin size="lg">
+        <Paragraph color="primary" noMargin size="lg">
           You are about to create a new Gnosis Safe wallet with one or more owners. First, let&apos;s give your new
           wallet a name. This name is only stored locally and will never be shared with Gnosis or any third parties.
-        </StyledParagraph>
+        </Paragraph>
       </Block>
       <Block className={classes.root} margin="lg">
         <StyledField
@@ -64,7 +61,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
         />
       </Block>
       <Block margin="lg">
-        <StyledParagraph className={classes.links} color="primary" noMargin size="lg">
+        <Paragraph className={classes.links} color="primary" noMargin size="lg">
           By continuing you consent to the{' '}
           <a href="https://gnosis-safe.io/terms" rel="noopener noreferrer" target="_blank">
             terms of use
@@ -74,7 +71,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
             privacy policy
           </a>
           .
-        </StyledParagraph>
+        </Paragraph>
       </Block>
     </>
   )
