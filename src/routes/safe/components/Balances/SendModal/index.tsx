@@ -1,6 +1,5 @@
 import CircularProgress from '@material-ui/core/CircularProgress'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
@@ -32,12 +31,6 @@ const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/Send
 const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
 const useStyles = makeStyles({
-  scalableModalWindow: {
-    height: 'auto',
-  },
-  scalableStaticModalWindow: {
-    height: 'auto',
-  },
   loaderStyle: {
     height: '500px',
     width: '100%',
@@ -86,8 +79,6 @@ const SendModal = ({
     setTx({})
   }, [activeScreenType, isOpen])
 
-  const scalableModalSize = activeScreen === 'chooseTxType'
-
   const handleTxCreation = (txInfo: SendCollectibleTxInfo) => {
     setActiveScreen('sendFundsReviewTx')
     setTx(txInfo)
@@ -117,7 +108,7 @@ const SendModal = ({
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
+      paperClassName="smaller-modal-window"
       title="Send Tokens"
     >
       <Suspense
