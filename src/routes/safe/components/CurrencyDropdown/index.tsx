@@ -76,6 +76,7 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
             horizontal: 'center',
             vertical: 'top',
           }}
+          TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
         >
           <MenuItem className={classes.listItemSearch} key="0">
             <div className={classes.search}>
