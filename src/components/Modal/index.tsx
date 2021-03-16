@@ -24,6 +24,14 @@ const ModalStyled = styled(Modal)`
     &:focus {
       outline: none;
     }
+
+    // TODO: replace class-based styles by params
+    &.receive-modal {
+      height: auto;
+      max-width: calc(100% - 130px);
+      min-height: 544px;
+      overflow: hidden;
+    }
   }
 `
 
@@ -32,29 +40,14 @@ interface GnoModalProps {
   description: string
   // type copied from Material-UI Modal's `close` prop
   handleClose?: (event: Record<string, unknown>, reason: 'backdropClick' | 'escapeKeyDown') => void
-  modalClassName?: string
   open: boolean
   paperClassName?: string
   title: string
 }
 
-const GnoModal = ({
-  children,
-  description,
-  handleClose,
-  modalClassName,
-  open,
-  paperClassName,
-  title,
-}: GnoModalProps): ReactElement => {
+const GnoModal = ({ children, description, handleClose, open, paperClassName, title }: GnoModalProps): ReactElement => {
   return (
-    <ModalStyled
-      aria-describedby={description}
-      aria-labelledby={title}
-      className={modalClassName}
-      onClose={handleClose}
-      open={open}
-    >
+    <ModalStyled aria-describedby={description} aria-labelledby={title} onClose={handleClose} open={open}>
       <div className={cn('paper', paperClassName)}>{children}</div>
     </ModalStyled>
   )
