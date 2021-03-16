@@ -79,7 +79,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh`,
     disabled: false,
-    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+    networks: [ETHEREUM_NETWORK.MAINNET],
   },
   // Pooltogether
   {
@@ -119,7 +119,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // TX-Builder
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYES1Se6i6679z3PfQ62bydgVVEoSRUabvjB35DfUGPGA`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmZBgEvjqi9Jg8xATr9uUgNUVmnfYiECNxZv9Taux7mzgV`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
