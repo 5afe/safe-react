@@ -33,9 +33,7 @@ interface GnoModalProps {
   children: ReactNode
   description: string
   // type copied from Material-UI Modal's `close` prop
-  handleClose?: {
-    bivarianceHack(event: Record<string, unknown>, reason: 'backdropClick' | 'escapeKeyDown'): void
-  }['bivarianceHack']
+  handleClose?: (event: Record<string, unknown>, reason: 'backdropClick' | 'escapeKeyDown') => void
   modalClassName?: string
   open: boolean
   paperClassName?: string
