@@ -32,6 +32,11 @@ const ModalStyled = styled(Modal)`
       min-height: 544px;
       overflow: hidden;
     }
+
+    &.bigger-modal-window {
+      width: 775px;
+      height: auto;
+    }
   }
 `
 
