@@ -35,11 +35,23 @@ export const loadSafe = async (
   await addSafe(safeProps)
 }
 
-export interface LoadFormValues {
+interface ReviewSafeCreationValues {
+  confirmations: string
+  name: string
+  owner0Address: string
+  owner0Name: string
+  safeCreationSalt: number
+}
+
+interface LoadForm {
   name: string
   address: string
   threshold: string
+  owner0Address: string
+  owner0Name: string
 }
+
+export type LoadFormValues = ReviewSafeCreationValues | LoadForm
 
 const Load = (): React.ReactElement => {
   const dispatch = useDispatch()
