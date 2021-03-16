@@ -4,7 +4,7 @@ import React, { ReactElement, useState } from 'react'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import LinkWithRef from 'src/components/layout/Link'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
+import { textShortener } from 'src/utils/strings'
 
 export const styles = createStyles({
   txDataParagraph: {
@@ -18,16 +18,27 @@ export const styles = createStyles({
 
 const useStyles = makeStyles(styles)
 
-export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement => {
+export const HexEncodedData = ({
+  hexData,
+  title,
+  limit = 20,
+}: {
+  hexData: string
+  title?: string
+  limit?: number
+}): ReactElement => {
   const classes = useStyles()
   const [showTxData, setShowTxData] = useState(false)
-  const showExpandBtn = hexData.length > 20
+  const showExpandBtn = hexData.length > limit
+  const shortener = textShortener({ charsStart: 40, charsEnd: 0 })
 
   return (
     <div className="tx-hexData">
-      <Text size="xl" strong>
-        Data (hex encoded):
-      </Text>
+      {title && (
+        <Text size="xl" strong>
+          {title}:
+        </Text>
+      )}
       <Paragraph className={classes.txDataParagraph} noMargin size="md">
         {showExpandBtn ? (
           <>
@@ -46,7 +57,7 @@ export const HexEncodedData = ({ hexData }: { hexData: string }): ReactElement =
               </>
             ) : (
               <>
-                {shortVersionOf(hexData, 20)}{' '}
+                {shortener(hexData)}{' '}
                 <LinkWithRef
                   aria-label="Show details of the transaction"
                   className={classes.linkTxData}
