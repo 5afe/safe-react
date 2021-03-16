@@ -7,15 +7,15 @@ import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import replaceSafeOwner from 'src/logic/safe/store/actions/replaceSafeOwner'
+import { replaceSafeOwner } from 'src/logic/safe/store/actions/replaceSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 
-import OwnerForm from './screens/OwnerForm'
-import { ReviewReplaceOwnerModal } from './screens/Review'
+import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
+import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const styles = createStyles({

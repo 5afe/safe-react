@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { useEffect, useState } from 'react'
+import { ReactElement, useEffect, useState } from 'react'
 
 import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
@@ -16,7 +16,7 @@ type OwnerAddressTableCellProps = {
   sendModalOpenHandler?: () => void
 }
 
-const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactElement => {
+export const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): ReactElement => {
   const { address, knownAddress, showLinks, userName, sendModalOpenHandler } = props
   const [cut, setCut] = useState(0)
   const { width } = useWindowDimensions()
@@ -50,5 +50,3 @@ const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): React.ReactEl
     </Block>
   )
 }
-
-export default OwnerAddressTableCell
