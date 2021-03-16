@@ -128,7 +128,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
         </Col>
       </Row>
       <Row align="center" className={classes.info}>
-        <Paragraph color="primary" noMargin size="md">
+        <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
           wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The exact amount will be
           determined by your wallet.
