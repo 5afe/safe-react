@@ -7,9 +7,7 @@ const getMockedOldSafe = ({
   needsUpdate,
   balances,
   recurringUser,
-  blacklistedAssets,
-  blacklistedTokens,
-  activeAssets,
+  assets,
   activeTokens,
   owners,
   featuresEnabled,
@@ -34,8 +32,6 @@ const getMockedOldSafe = ({
   const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
   const mockedActiveAssetsAddress1 = '0x503ab2a6A70c6C6ec8b25a4C87C784e1c8f8e8CD'
   const mockedActiveAssetsAddress2 = '0xfdd4E685361CB7E89a4D27e03DCd0001448d731F'
-  const mockedBlacklistedTokenAddress1 = '0xc7d892dca37a244Fb1A7461e6141e58Ead460282'
-  const mockedBlacklistedAssetAddress1 = '0x0ac539137c4c99001f16Dd132E282F99A02Ddc3F'
 
   return {
     name: name || 'MockedSafe',
@@ -46,14 +42,12 @@ const getMockedOldSafe = ({
     modules: modules || [],
     spendingLimits: spendingLimits || [],
     activeTokens: activeTokens || Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2]),
-    activeAssets: activeAssets || Set([mockedActiveAssetsAddress1, mockedActiveAssetsAddress2]),
-    blacklistedTokens: blacklistedTokens || Set([mockedBlacklistedTokenAddress1]),
-    blacklistedAssets: blacklistedAssets || Set([mockedBlacklistedAssetAddress1]),
+    assets: assets || Set([mockedActiveAssetsAddress1, mockedActiveAssetsAddress2]),
     balances:
       balances ||
       Map({
-        [mockedActiveTokenAddress1]: '100',
-        [mockedActiveTokenAddress2]: '10',
+        [mockedActiveTokenAddress1]: { tokenBalance: '100' },
+        [mockedActiveTokenAddress2]: { tokenBalance: '10' },
       }),
     nonce: nonce || 2,
     latestIncomingTxBlock: latestIncomingTxBlock || 1,
@@ -61,6 +55,7 @@ const getMockedOldSafe = ({
     currentVersion: currentVersion || 'v1.1.1',
     needsUpdate: needsUpdate || false,
     featuresEnabled: featuresEnabled || [],
+    totalFiatBalance: 110,
   }
 }
 
@@ -209,43 +204,9 @@ describe('shouldSafeStoreBeUpdated', () => {
     const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
     const oldActiveAssets = Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2])
     const newActiveAssets = Set([mockedActiveTokenAddress1])
-    const oldSafe = getMockedOldSafe({ activeAssets: oldActiveAssets })
+    const oldSafe = getMockedOldSafe({ assets: oldActiveAssets })
     const newSafeProps: Partial<SafeRecordProps> = {
-      activeAssets: newActiveAssets,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old blacklistedTokens list and a new blacklistedTokens list for the safe, should return true`, () => {
-    // given
-    const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
-    const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-    const oldBlacklistedTokens = Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2])
-    const newBlacklistedTokens = Set([mockedActiveTokenAddress1])
-    const oldSafe = getMockedOldSafe({ blacklistedTokens: oldBlacklistedTokens })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      blacklistedTokens: newBlacklistedTokens,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old blacklistedAssets list and a new blacklistedAssets list for the safe, should return true`, () => {
-    // given
-    const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
-    const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-    const oldBlacklistedAssets = Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2])
-    const newBlacklistedAssets = Set([mockedActiveTokenAddress1])
-    const oldSafe = getMockedOldSafe({ blacklistedAssets: oldBlacklistedAssets })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      blacklistedAssets: newBlacklistedAssets,
+      assets: newActiveAssets,
     }
 
     // When
@@ -259,11 +220,11 @@ describe('shouldSafeStoreBeUpdated', () => {
     const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
     const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
     const oldBalances = Map({
-      [mockedActiveTokenAddress1]: '100',
-      [mockedActiveTokenAddress2]: '10',
+      [mockedActiveTokenAddress1]: { tokenBalance: '100' },
+      [mockedActiveTokenAddress2]: { tokenBalance: '100' },
     })
     const newBalances = Map({
-      [mockedActiveTokenAddress1]: '100',
+      [mockedActiveTokenAddress1]: { tokenBalance: '100' },
     })
     const oldSafe = getMockedOldSafe({ balances: oldBalances })
     const newSafeProps: Partial<SafeRecordProps> = {

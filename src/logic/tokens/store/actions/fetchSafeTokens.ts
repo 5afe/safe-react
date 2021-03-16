@@ -3,13 +3,13 @@ import { List, Map } from 'immutable'
 import { Dispatch } from 'redux'
 
 import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
-import addTokens from 'src/logic/tokens/store/actions/saveTokens'
+import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { getNetworkInfo } from 'src/config'
@@ -69,7 +69,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
       fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currencySelected ?? selectedCurrency }),
     )
     const alreadyActiveTokens = safeActiveTokensSelector(state)
-    const blacklistedTokens = safeBlacklistedTokensSelector(state)
 
     const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
       extractDataFromResult(currentTokens),
@@ -81,10 +80,7 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     )
 
     // need to persist those already active tokens, despite its balances
-    const activeTokens = alreadyActiveTokens.union(
-      // active tokens by balance, excluding those already blacklisted and the `null` address
-      balances.keySeq().toSet().subtract(blacklistedTokens),
-    )
+    const activeTokens = alreadyActiveTokens.union(balances.keySeq().toSet())
 
     dispatch(
       updateSafe({

@@ -18,7 +18,7 @@ import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { nftTokensSelector, safeActiveSelectorMap } from 'src/logic/collectibles/store/selectors'
+import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
@@ -71,7 +71,7 @@ const SendCollectible = ({
   selectedToken,
 }: SendCollectibleProps): React.ReactElement => {
   const classes = useStyles()
-  const nftAssets = useSelector(safeActiveSelectorMap)
+  const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
