@@ -1,8 +1,7 @@
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import classNames from 'classnames/bind'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import CopyBtn from 'src/components/CopyBtn'
@@ -30,6 +29,7 @@ import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } fr
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
 import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { makeStyles } from '@material-ui/core'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -41,8 +41,24 @@ const formMutators = {
   },
 }
 
-const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
-  const handleSubmit = (values) => {
+const useStyles = makeStyles(styles)
+
+type NewOwnerProps = {
+  ownerAddress: string
+  ownerName: string
+}
+
+type OwnerFormProps = {
+  onClose: () => void
+  onSubmit: (values: NewOwnerProps) => void
+  ownerAddress: string
+  ownerName: string
+}
+
+export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerFormProps): ReactElement => {
+  const classes = useStyles()
+
+  const handleSubmit = (values: NewOwnerProps) => {
     onSubmit(values)
   }
   const owners = useSelector(safeOwnersAddressesListSelector)
@@ -114,7 +130,6 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                 <Row margin="md">
                   <Col xs={8}>
                     <Field
-                      className={classes.addressInput}
                       component={TextField}
                       name="ownerName"
                       placeholder="Owner name*"
@@ -128,7 +143,6 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
                 <Row margin="md">
                   <Col xs={8}>
                     <AddressInput
-                      className={classes.addressInput}
                       fieldMutator={mutators.setOwnerAddress}
                       name="ownerAddress"
                       placeholder="Owner address*"
@@ -144,11 +158,10 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button className={classes.button} minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
-                  className={classes.button}
                   color="primary"
                   minWidth={140}
                   testId={REPLACE_OWNER_NEXT_BTN_TEST_ID}
@@ -165,5 +178,3 @@ const OwnerForm = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => {
     </>
   )
 }
-
-export default withStyles(styles as any)(OwnerForm)

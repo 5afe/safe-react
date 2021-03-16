@@ -1,8 +1,11 @@
 name: Deploy to EWC network
 
-# Run on pushes to master
+# Run on pushes to master or PRs to master
 on:
   push:
+    branches:
+      - master
+  pull_request:
     branches:
       - master
   # Launches build when release is published
