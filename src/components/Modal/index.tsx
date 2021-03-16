@@ -1,33 +1,31 @@
 import Modal from '@material-ui/core/Modal'
-import { makeStyles, createStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 import React, { ReactElement, ReactNode } from 'react'
+import styled from 'styled-components'
 
-import { sm } from 'src/theme/variables'
+const ModalStyled = styled(Modal)`
+  & {
+    align-items: center;
+    flex-direction: column;
+    display: flex;
+    overflow-y: scroll;
+  }
 
-const useStyles = makeStyles(
-  createStyles({
-    root: {
-      alignItems: 'center',
-      flexDirection: 'column',
-      display: 'flex',
-      overflowY: 'scroll',
-    },
-    paper: {
-      position: 'relative',
-      top: '68px',
-      width: '500px',
-      borderRadius: sm,
-      backgroundColor: '#ffffff',
-      boxShadow: '0 0 5px 0 rgba(74, 85, 121, 0.5)',
-      '&:focus': {
-        outline: 'none',
-      },
-      display: 'flex',
-      flexDirection: 'column',
-    },
-  }),
-)
+  .paper {
+    position: relative;
+    top: 68px;
+    width: 500px;
+    border-radius: 8px;
+    background-color: #ffffff;
+    box-shadow: 0 0 5px 0 rgba(74, 85, 121, 0.5);
+    display: flex;
+    flex-direction: column;
+
+    &:focus {
+      outline: none;
+    }
+  }
+`
 
 interface GnoModalProps {
   children: ReactNode
@@ -49,18 +47,16 @@ const GnoModal = ({
   paperClassName,
   title,
 }: GnoModalProps): ReactElement => {
-  const classes = useStyles()
-
   return (
-    <Modal
+    <ModalStyled
       aria-describedby={description}
       aria-labelledby={title}
-      className={cn(classes.root, modalClassName)}
+      className={modalClassName}
       onClose={handleClose}
       open={open}
     >
-      <div className={cn(classes.paper, paperClassName, 'classpep')}>{children}</div>
-    </Modal>
+      <div className={cn('paper', paperClassName)}>{children}</div>
+    </ModalStyled>
   )
 }
 
