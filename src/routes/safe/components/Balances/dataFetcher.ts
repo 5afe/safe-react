@@ -54,6 +54,7 @@ export const generateColumns = (): List<TableColumn> => {
     disablePadding: false,
     label: 'Asset',
     custom: false,
+    static: true,
     width: 250,
   }
 
@@ -64,6 +65,7 @@ export const generateColumns = (): List<TableColumn> => {
     disablePadding: false,
     label: 'Balance',
     custom: false,
+    static: true,
   }
 
   const actions: TableColumn = {
@@ -81,6 +83,7 @@ export const generateColumns = (): List<TableColumn> => {
     order: true,
     label: 'Value',
     custom: false,
+    static: true,
     disablePadding: false,
   }
 
