@@ -3,7 +3,6 @@ import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
 import styled from 'styled-components'
 
 import GnoModal from 'src/components/Modal'
-import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 
 const TitleSection = styled.div`
   display: flex;
@@ -87,10 +86,8 @@ export interface ModalProps {
 // TODO: this is a potential proposal for `safe-react-components` Modal
 //  By being able to combine components for better flexibility, this way Buttons can be part of the form body
 const Modal = ({ children, ...props }: ModalProps): ReactElement => {
-  const classes = useStyles()
-
   return (
-    <GnoModal {...props} paperClassName={classes.modal}>
+    <GnoModal {...props} paperClassName="modal">
       {children}
     </GnoModal>
   )

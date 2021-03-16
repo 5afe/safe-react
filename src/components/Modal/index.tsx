@@ -41,6 +41,12 @@ const ModalStyled = styled(Modal)`
     &.smaller-modal-window {
       height: auto;
     }
+
+    &.modal {
+      height: auto;
+      max-width: calc(100% - 130px);
+      overflow: hidden;
+    }
   }
 `
 
