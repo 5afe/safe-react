@@ -23,8 +23,5 @@ export const useStyles = makeStyles(
       height: '84px',
       justifyContent: 'center',
     },
-    smallerModalWindow: {
-      height: 'auto',
-    },
   }),
 )

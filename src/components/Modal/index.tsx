@@ -37,6 +37,10 @@ const ModalStyled = styled(Modal)`
       width: 775px;
       height: auto;
     }
+
+    &.smaller-modal-window {
+      height: auto;
+    }
   }
 `
 
