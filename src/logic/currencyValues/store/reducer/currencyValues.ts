@@ -27,7 +27,17 @@ export default handleActions<AppReduxState['currencyValues'], CurrencyValuesStat
     },
     [SET_AVAILABLE_CURRENCIES]: (state, action: Action<AvailableCurrenciesPayload>) => {
       const { availableCurrencies } = action.payload
-      state.availableCurrencies = availableCurrencies
+      const baseCurrencies = ['USD', 'EUR']
+
+      state.availableCurrencies = [
+        ...baseCurrencies,
+        ...availableCurrencies
+          // filter out already added `baseCurrencies`
+          .filter((currency) => !baseCurrencies.includes(currency))
+          // sort the rest of the list alphabetically
+          .sort(),
+      ]
+
       return state
     },
   },
