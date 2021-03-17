@@ -14,11 +14,6 @@ import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
-import {
-  currencyRateSelector,
-  currentCurrencySelector,
-  safeFiatBalancesListSelector,
-} from 'src/logic/currencyValues/store/selectors'
 import { BALANCE_ROW_TEST_ID } from 'src/routes/safe/components/Balances'
 import AssetTableCell from 'src/routes/safe/components/Balances/AssetTableCell'
 import {
@@ -33,6 +28,7 @@ import { extendedSafeTokensSelector, grantedSelector } from 'src/routes/safe/con
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
 const useStyles = makeStyles(styles)
 
@@ -69,9 +65,7 @@ const Coins = (props: Props): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const selectedCurrency = useSelector(currentCurrencySelector)
-  const currencyRate = useSelector(currencyRateSelector)
   const activeTokens = useSelector(extendedSafeTokensSelector)
-  const currencyValues = useSelector(safeFiatBalancesListSelector)
   const granted = useSelector(grantedSelector)
   const { trackEvent } = useAnalytics()
 
@@ -79,10 +73,10 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  const filteredData: List<BalanceData> = useMemo(
-    () => getBalanceData(activeTokens, selectedCurrency, currencyValues, currencyRate),
-    [activeTokens, selectedCurrency, currencyValues, currencyRate],
-  )
+  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(activeTokens, selectedCurrency), [
+    activeTokens,
+    selectedCurrency,
+  ])
 
   return (
     <TableContainer>

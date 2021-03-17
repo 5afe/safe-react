@@ -77,7 +77,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Mushrooms finance
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQs6CUbMUyKe3Sa3tU3HcnWWzsuCk8oJEk8CZKhRcJfEh`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmT96aES2YA9BssByc6DVizQDkofmKRErs8gJyqWipjyS8`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
