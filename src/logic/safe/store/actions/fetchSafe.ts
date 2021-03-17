@@ -80,6 +80,7 @@ export const buildSafe = async (
     threshold,
     owners,
     ethBalance,
+    totalFiatBalance: 0,
     nonce,
     currentVersion: currentVersion ?? '',
     needsUpdate,
@@ -88,8 +89,6 @@ export const buildSafe = async (
     latestIncomingTxBlock: 0,
     activeAssets: Set(),
     activeTokens: Set(),
-    blacklistedAssets: Set(),
-    blacklistedTokens: Set(),
     modules,
     spendingLimits,
   }
