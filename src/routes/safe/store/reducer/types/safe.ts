@@ -9,12 +9,14 @@ export interface SafeReducerState {
   defaultSafe: DefaultSafe
   safes: SafesMap
   latestMasterContractVersion: string
+  selectedCurrency: string
 }
 
 interface SafeReducerStateJSON {
   defaultSafe: 'NOT_ASKED' | string | undefined
   safes: Record<string, SafeRecordProps>
   latestMasterContractVersion: string
+  selectedCurrency: string
 }
 
 export interface SafeReducerMap extends Map<string, any> {

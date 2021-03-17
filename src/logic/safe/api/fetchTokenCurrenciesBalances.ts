@@ -16,14 +16,22 @@ export type BalanceEndpoint = {
   items: TokenBalance[]
 }
 
-export const fetchTokenCurrenciesBalances = (
-  safeAddress: string,
+type FetchTokenCurrenciesBalancesProps = {
+  safeAddress: string
+  selectedCurrency: string
+  excludeSpamTokens?: boolean
+  trustedTokens?: boolean
+}
+
+export const fetchTokenCurrenciesBalances = async ({
+  safeAddress,
+  selectedCurrency,
   excludeSpamTokens = true,
   trustedTokens = false,
-): Promise<BalanceEndpoint> => {
+}: FetchTokenCurrenciesBalancesProps): Promise<BalanceEndpoint> => {
   const url = `${getSafeClientGatewayBaseUrl(
     checksumAddress(safeAddress),
-  )}/balances/usd/?trusted=${trustedTokens}&exclude_spam=${excludeSpamTokens}`
+  )}/balances/${selectedCurrency}/?trusted=${trustedTokens}&exclude_spam=${excludeSpamTokens}`
 
   return axios.get(url).then(({ data }) => data)
 }
