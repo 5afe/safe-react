@@ -13,26 +13,22 @@ import { useDispatch, useSelector } from 'react-redux'
 import CheckIcon from './img/check.svg'
 
 import { setSelectedCurrency } from 'src/logic/currencyValues/store/actions/setSelectedCurrency'
-import { AVAILABLE_CURRENCIES } from 'src/logic/currencyValues/store/model/currencyValues'
-import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { useDropdownStyles } from 'src/routes/safe/components/CurrencyDropdown/style'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { availableCurrenciesSelector, currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { DropdownListTheme } from 'src/theme/mui'
-import { setImageToPlaceholder } from '../Balances/utils'
+import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import Img from 'src/components/layout/Img/index'
 import { getNetworkInfo } from 'src/config'
 import { sameString } from 'src/utils/strings'
 
 const { nativeCoin } = getNetworkInfo()
 
-const CurrencyDropdown = (): React.ReactElement | null => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
+export const CurrencyDropdown = (): React.ReactElement | null => {
   const dispatch = useDispatch()
   const [anchorEl, setAnchorEl] = useState(null)
   const selectedCurrency = useSelector(currentCurrencySelector)
   const [searchParams, setSearchParams] = useState('')
-
-  const currenciesList = Object.values(AVAILABLE_CURRENCIES)
+  const currenciesList = useSelector(availableCurrenciesSelector)
   const tokenImage = nativeCoin.logoUri
   const classes = useDropdownStyles({})
   const currenciesListFiltered = currenciesList.filter((currency) =>
@@ -47,8 +43,8 @@ const CurrencyDropdown = (): React.ReactElement | null => {
     setAnchorEl(null)
   }
 
-  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName) => {
-    dispatch(setSelectedCurrency(safeAddress, newCurrencySelectedName))
+  const onCurrentCurrencyChangedHandler = (newCurrencySelectedName: string) => {
+    dispatch(setSelectedCurrency({ selectedCurrency: newCurrencySelectedName }))
     handleClose()
   }
 
@@ -80,6 +76,7 @@ const CurrencyDropdown = (): React.ReactElement | null => {
             horizontal: 'center',
             vertical: 'top',
           }}
+          TransitionProps={{ mountOnEnter: true, unmountOnExit: true }}
         >
           <MenuItem className={classes.listItemSearch} key="0">
             <div className={classes.search}>
@@ -139,5 +136,3 @@ const CurrencyDropdown = (): React.ReactElement | null => {
     </MuiThemeProvider>
   )
 }
-
-export default CurrencyDropdown
