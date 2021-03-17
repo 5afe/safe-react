@@ -1,8 +1,8 @@
 import { Button } from '@gnosis.pm/safe-react-components'
+import cn from 'classnames'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -15,7 +15,6 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { RESET_TIME_OPTIONS } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
-import Modal from './Modal'
 import { useStyles } from './style'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -23,7 +22,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import Row from 'src/components/layout/Row'
 import { TransactionFees } from 'src/components/TransactionsFees'
-import cn from 'classnames'
+import { Modal } from 'src/components/Modal'
 
 interface RemoveSpendingLimitModalProps {
   onClose: () => void
@@ -126,9 +125,9 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.TopBar title="Remove Spending Limit" onClose={onClose} />
+              <Modal.Header title="Remove Spending Limit" onClose={onClose} />
 
-              <Block className={classes.container}>
+              <Modal.Body>
                 <Col margin="lg">
                   <AddressInfo title="Beneficiary" address={spendingLimit.beneficiary} />
                 </Col>
@@ -152,7 +151,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                   isTransactionExecution={isExecution}
                   isOffChainSignature={isOffChainSignature}
                 />
-              </Block>
+              </Modal.Body>
 
               <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
                 <TransactionFees

@@ -5,8 +5,8 @@ import styled from 'styled-components'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import GnoButton from 'src/components/layout/Button'
+import { Modal } from 'src/components/Modal'
 import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields'
-import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 const FormContainer = styled.div`
   padding: 24px 8px 24px 24px;
@@ -55,7 +55,7 @@ const canReview = ({
 const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): ReactElement => {
   return (
     <>
-      <Modal.TopBar title="New Spending Limit" titleNote="1 of 2" onClose={onCancel} />
+      <Modal.Header title="New Spending Limit" titleNote="1 of 2" onClose={onCancel} />
 
       <GnoForm formMutators={formMutators} onSubmit={onReview} initialValues={initialValues}>
         {(...args) => {
