@@ -243,6 +243,7 @@ const AddressBookTable = (): ReactElement => {
         isOpen={sendFundsModalOpen}
         onClose={() => setSendFundsModalOpen(false)}
         recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
+        recipientName={selectedEntry && selectedEntry.entry ? selectedEntry.entry.name : undefined}
       />
     </>
   )

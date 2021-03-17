@@ -22,6 +22,7 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles(styles)
 
@@ -36,8 +37,6 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
   const safeName = useSelector(safeNameSelector)
   const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
-  /* const explorerInfo = getExplorerInfo(safeAddress)
-  const { url } = explorerInfo() */
 
   const onRemoveSafeHandler = async () => {
     await dispatch(removeLocalSafe(safeAddress))
@@ -76,7 +75,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
             name={safeName}
             showIdenticon
             showCopyBtn
-            /* explorerUrl={getExplorerInfo(selectedEntry.address)} */
+            explorerUrl={getExplorerInfo(safeAddress)}
           />
 
           {/* <Col align="center" xs={1}>

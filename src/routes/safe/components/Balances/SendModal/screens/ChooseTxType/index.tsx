@@ -20,16 +20,25 @@ import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 import { FEATURES } from 'src/config/networks/network.d'
 
+import { getExplorerInfo } from 'src/config'
+
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
 interface ChooseTxTypeProps {
   onClose: () => void
   recipientAddress?: string
+  recipientName?: string
   setActiveScreen: React.Dispatch<React.SetStateAction<ActiveScreen>>
 }
 
-const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTypeProps): React.ReactElement => {
+const ChooseTxType = ({
+  onClose,
+  recipientAddress,
+  recipientName,
+  setActiveScreen,
+}: ChooseTxTypeProps): React.ReactElement => {
   const classes = useStyles()
+  console.log('name', recipientName)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
@@ -69,11 +78,10 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
             </Paragraph>
             <EthHashInfo
               hash={recipientAddress}
-              name="Safe Name"
-              /* name={selectedEntry.name} */
+              name={recipientName}
               showIdenticon
               showCopyBtn
-              /*  explorerUrl={getExplorerInfo(selectedEntry.address)} */
+              explorerUrl={getExplorerInfo(recipientAddress)}
             />
           </Col>
         </Row>
