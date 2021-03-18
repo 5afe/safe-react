@@ -7,7 +7,6 @@ const getMockedOldSafe = ({
   needsUpdate,
   balances,
   recurringUser,
-  assets,
   activeTokens,
   owners,
   featuresEnabled,
@@ -30,8 +29,6 @@ const getMockedOldSafe = ({
   }
   const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
   const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-  const mockedActiveAssetsAddress1 = '0x503ab2a6A70c6C6ec8b25a4C87C784e1c8f8e8CD'
-  const mockedActiveAssetsAddress2 = '0xfdd4E685361CB7E89a4D27e03DCd0001448d731F'
 
   return {
     name: name || 'MockedSafe',
@@ -42,7 +39,6 @@ const getMockedOldSafe = ({
     modules: modules || [],
     spendingLimits: spendingLimits || [],
     activeTokens: activeTokens || Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2]),
-    assets: assets || Set([mockedActiveAssetsAddress1, mockedActiveAssetsAddress2]),
     balances:
       balances ||
       Map({
@@ -190,23 +186,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ activeTokens: oldActiveTokens })
     const newSafeProps: Partial<SafeRecordProps> = {
       activeTokens: newActiveTokens,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old activeAssets list and a new activeAssets list for the safe, should return true`, () => {
-    // given
-    const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
-    const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-    const oldActiveAssets = Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2])
-    const newActiveAssets = Set([mockedActiveTokenAddress1])
-    const oldSafe = getMockedOldSafe({ assets: oldActiveAssets })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      assets: newActiveAssets,
     }
 
     // When
