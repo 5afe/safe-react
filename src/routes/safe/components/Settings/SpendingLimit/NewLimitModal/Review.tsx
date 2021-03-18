@@ -5,7 +5,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { getNetworkInfo } from 'src/config'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -20,7 +19,7 @@ import {
 import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
@@ -33,8 +32,6 @@ import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-
-const { nativeCoin } = getNetworkInfo()
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -51,9 +48,7 @@ const useExistentSpendingLimit = ({
   return useMemo<SpendingLimit | null>(() => {
     // if `delegate` already exist, check what tokens were delegated to the _beneficiary_ `getTokens(safe, delegate)`
     const currentDelegate = spendingLimits?.find(
-      ({ delegate, token }) =>
-        sameAddress(delegate, values.beneficiary) &&
-        sameAddress(token, sameAddress(values.token, nativeCoin.address) ? ZERO_ADDRESS : values.token),
+      ({ delegate, token }) => sameAddress(delegate, values.beneficiary) && sameAddress(token, values.token),
     )
 
     // let the user know that is about to replace an existent allowance
