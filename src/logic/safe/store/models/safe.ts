@@ -34,7 +34,6 @@ export type SafeRecordProps = {
   modules?: ModulePair[] | null
   spendingLimits?: SpendingLimit[] | null
   activeTokens: Set<string>
-  activeAssets: Set<string>
   balances: Map<string, BalanceRecord>
   nonce: number
   latestIncomingTxBlock: number
@@ -54,7 +53,6 @@ const makeSafe = Record<SafeRecordProps>({
   modules: [],
   spendingLimits: [],
   activeTokens: Set(),
-  activeAssets: Set(),
   balances: Map(),
   nonce: 0,
   latestIncomingTxBlock: 0,
