@@ -27,6 +27,8 @@ const BasicTxInfoWrapper = styled.div`
 
 const TxList = styled.div`
   width: 100%;
+  max-height: 260px;
+  overflow-y: auto;
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
 `
 
