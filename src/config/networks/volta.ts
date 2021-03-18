@@ -35,7 +35,7 @@ const mainnet: NetworkConfig = {
     label: 'Volta',
     isTestNet: true,
     nativeCoin: {
-      address: '0x000',
+      address: '0x0000000000000000000000000000000000000000',
       name: 'Energy web token',
       symbol: 'EWT',
       decimals: 18,
