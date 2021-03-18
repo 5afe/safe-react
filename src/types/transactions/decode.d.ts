@@ -3,7 +3,7 @@ export type DataDecodedBasicParameter = {
   type: string
   value: string
 }
-export type DataDecodedValue = {
+export type DataDecodedParameterValue = {
   operation: 0 | 1
   to: string
   value: string
@@ -15,7 +15,7 @@ export type DataDecodedValue = {
 }
 
 export type DataDecodedParameter = {
-  valueDecoded?: DataDecodedValue[]
+  valueDecoded?: DataDecodedParameterValue[]
 } & DataDecodedBasicParameter
 
 export type DataDecoded = {

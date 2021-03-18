@@ -1,12 +1,14 @@
 import React, { ReactElement, useState } from 'react'
-import Modal from 'src/components/Modal'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 
+import Modal from 'src/components/Modal'
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { TransactionParams } from 'src/routes/safe/components/Apps/components/AppFrame'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { SafeAppLoadError } from './SafeAppLoadError'
 import { ReviewConfirm } from './ReviewConfirm'
+import { DataDecodedParameterValue } from 'src/types/transactions/decode'
+import { DecodedTxDetail } from './DecodedTxDetail'
 
 export type ConfirmTxModalProps = {
   isOpen: boolean
@@ -34,15 +36,31 @@ const isTxValid = (t: Transaction): boolean => {
   return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
-export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement => {
-  const [decodedTxDetail /* setDecodedTxData */] = useState()
+export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null => {
+  const [decodedTxDetails, setDecodedTxDetails] = useState<DataDecodedParameterValue | undefined>()
   const areTxsMalformed = props.txs.some((t) => !isTxValid(t))
+
+  const showDecodedTxData = setDecodedTxDetails
+  const hideDecodedTxData = () => setDecodedTxDetails(undefined)
+
+  const closeDecodedTxDetail = () => {
+    hideDecodedTxData()
+    props.onClose()
+  }
 
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open={props.isOpen}>
       {areTxsMalformed && <SafeAppLoadError {...props} />}
-      {decodedTxDetail && <div>decoded</div>}
-      {!areTxsMalformed && !decodedTxDetail && <ReviewConfirm {...props} areTxsMalformed={areTxsMalformed} />}
+      {decodedTxDetails && (
+        <DecodedTxDetail
+          onClose={closeDecodedTxDetail}
+          hideDecodedTxData={hideDecodedTxData}
+          decodedTxData={decodedTxDetails}
+        />
+      )}
+      {!areTxsMalformed && !decodedTxDetails && (
+        <ReviewConfirm {...props} areTxsMalformed={areTxsMalformed} showDecodedTxData={showDecodedTxData} />
+      )}
     </Modal>
   )
 }

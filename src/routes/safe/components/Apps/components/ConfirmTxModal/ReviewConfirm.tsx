@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import DividerLine from 'src/components/DividerLine'
 import TextBox from 'src/components/TextBox'
 import ModalTitle from 'src/components/ModalTitle'
+import Hairline from 'src/components/layout/Hairline'
 import Heading from 'src/components/layout/Heading'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
@@ -14,16 +15,15 @@ import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
-import Hairline from 'src/components/layout/Hairline'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg, sm } from 'src/theme/variables'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import AddressInfo from 'src/components/AddressInfo'
-import { DecodeTxs } from 'src/components/DecodeTxs'
+import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
-import { DataDecoded } from 'src/types/transactions/decode.d'
+import { DataDecoded, DataDecodedParameterValue } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 import GasEstimationInfo from '../GasEstimationInfo'
@@ -37,19 +37,28 @@ const StyledTextBox = styled(TextBox)`
 
 const Container = styled.div`
   max-width: 480px;
-  padding: ${md} ${lg};
+  padding: ${md} ${lg} 0;
 `
 const TransactionFeesWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: ${sm} ${lg};
+  margin-bottom: 15px;
 `
 
 const FooterWrapper = styled.div`
-  margin-top: 15px;
+  margin-bottom: 15px;
 `
 
+const DecodeTxsWrapper = styled.div`
+  margin: 24px -24px;
+`
+
+type Props = ConfirmTxModalProps & {
+  areTxsMalformed: boolean
+  showDecodedTxData: (decodedTxDetails: DataDecodedParameterValue) => void
+}
+
 export const ReviewConfirm = ({
-  isOpen,
   app,
   txs,
   safeAddress,
@@ -60,11 +69,13 @@ export const ReviewConfirm = ({
   onClose,
   onTxReject,
   areTxsMalformed,
-}: ConfirmTxModalProps & { areTxsMalformed: boolean }): React.ReactElement | null => {
+  showDecodedTxData,
+}: Props): React.ReactElement => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
   const threshold = useSelector(safeThresholdSelector) || 1
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DataDecoded | null>(null)
+  const dispatch = useDispatch()
 
   const txRecipient: string | undefined = useMemo(() => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to), [
     txs,
@@ -116,11 +127,6 @@ export const ReviewConfirm = ({
 
     decodeTxData()
   }, [txData])
-
-  const dispatch = useDispatch()
-  if (!isOpen) {
-    return null
-  }
 
   const handleTxRejection = () => {
     onTxReject()
@@ -194,15 +200,13 @@ export const ReviewConfirm = ({
             <DividerLine withArrow />
 
             {/* Txs decoded */}
-            <DecodeTxs
-              txs={txs}
-              txRecipient={txRecipient}
-              txData={txData}
-              txValue={txValue}
-              decodedData={decodedData}
-            />
+            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={txValue} />
 
-            <DividerLine withArrow={false} />
+            <DecodeTxsWrapper>
+              <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
+            </DecodeTxsWrapper>
+
+            {!isMultiSend && <DividerLine withArrow={false} />}
 
             {/* Warning gas estimation */}
             {params?.safeTxGas && (
@@ -240,6 +244,7 @@ export const ReviewConfirm = ({
             </TransactionFeesWrapper>
           )}
 
+          {/* Buttons */}
           <FooterWrapper>
             <ModalFooterConfirmation
               cancelText="Cancel"

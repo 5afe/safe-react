@@ -36,7 +36,7 @@ export const SafeAppLoadError = ({ onTxReject, onClose }: ConfirmTxModalProps): 
       <FooterWrapper>
         <ModalFooterConfirmation
           cancelText="Cancel"
-          handleCancel={handleTxRejection}
+          handleCancel={() => handleTxRejection()}
           handleOk={() => {}}
           okDisabled={true}
           okText="Submit"

@@ -6,32 +6,47 @@ import get from 'lodash.get'
 
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { getExplorerInfo } from 'src/config'
-import { getNetworkInfo } from 'src/config'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { DataDecoded, DataDecodedBasicParameter, DataDecodedValue } from 'src/types/transactions/decode.d'
+import { DataDecoded, DataDecodedBasicParameter, DataDecodedParameterValue } from 'src/types/transactions/decode.d'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
   align-items: center;
 
-  *:nth-child(2) {
+  > :nth-child(2) {
     margin-left: ${({ margin }) => margin}px;
   }
 `
 
-const TxList = styled.div``
+const BasicTxInfoWrapper = styled.div`
+  margin-bottom: 15px;
+
+  > :nth-child(2) {
+    margin-bottom: 15px;
+  }
+`
+
+const TxList = styled.div`
+  width: 100%;
+  border-top: 2px solid ${({ theme }) => theme.colors.separator};
+`
 
 const TxListItem = styled.div`
   display: flex;
   justify-content: space-between;
-  height: 40px;
 
-  border: 1px solid red;
+  padding: 0 24px;
+  height: 50px;
+  border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+
+  :hover {
+    cursor: pointer;
+  }
+`
+const ElementWrapper = styled.div`
+  margin-bottom: 15px;
 `
 
-const { nativeCoin } = getNetworkInfo()
-
-const BasicTxInfo = ({
+export const BasicTxInfo = ({
   txRecipient,
   txData,
   txValue,
@@ -41,32 +56,35 @@ const BasicTxInfo = ({
   txValue: string
 }): ReactElement => {
   return (
-    <>
+    <BasicTxInfoWrapper>
       {/* TO */}
-      <Text size="lg" strong>
-        {`Send ${txValue} ETH to:`}
-      </Text>
-      <EthHashInfo
-        hash={txRecipient}
-        showIdenticon
-        textSize="lg"
-        showCopyBtn
-        explorerUrl={getExplorerInfo(txRecipient)}
-      />
-
-      {/* Data */}
-      <Text size="lg" strong>
-        Data (hex encoded):
-      </Text>
-      <FlexWrapper margin={5}>
-        <Text size="lg">{web3.utils.hexToBytes(txData).length} bytes</Text>
-        <CopyToClipboardBtn textToCopy={txData} />
-      </FlexWrapper>
-    </>
+      <>
+        <Text size="lg" strong>
+          {`Send ${txValue} ETH to:`}
+        </Text>
+        <EthHashInfo
+          hash={txRecipient}
+          showIdenticon
+          textSize="lg"
+          showCopyBtn
+          explorerUrl={getExplorerInfo(txRecipient)}
+        />
+      </>
+      <>
+        {/* Data */}
+        <Text size="lg" strong>
+          Data (hex encoded):
+        </Text>
+        <FlexWrapper margin={5}>
+          <Text size="lg">{web3.utils.hexToBytes(txData).length} bytes</Text>
+          <CopyToClipboardBtn textToCopy={txData} />
+        </FlexWrapper>
+      </>
+    </BasicTxInfoWrapper>
   )
 }
 
-const getParameterElement = (parameter: DataDecodedBasicParameter, index: number): ReactElement => {
+export const getParameterElement = (parameter: DataDecodedBasicParameter, index: number): ReactElement => {
   let valueElement
   switch (parameter.type) {
     case 'address':
@@ -100,12 +118,12 @@ const getParameterElement = (parameter: DataDecodedBasicParameter, index: number
   }
 
   return (
-    <div key={index}>
+    <ElementWrapper key={index}>
       <Text size="lg" strong>
         {parameter.name} ({parameter.type})
       </Text>
       {valueElement}
-    </div>
+    </ElementWrapper>
   )
 }
 
@@ -131,8 +149,14 @@ const SingleTx = ({ decodedData }: { decodedData: DataDecoded | null }): ReactEl
   )
 }
 
-const MultiSendTx = ({ decodedData }: { decodedData: DataDecoded | null }): ReactElement | null => {
-  const txs: DataDecodedValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
+const MultiSendTx = ({
+  decodedData,
+  onTxItemClick,
+}: {
+  decodedData: DataDecoded | null
+  onTxItemClick: (decodedTxDetails: DataDecodedParameterValue) => void
+}): ReactElement | null => {
+  const txs: DataDecodedParameterValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
 
   if (!txs) {
     return null
@@ -141,10 +165,9 @@ const MultiSendTx = ({ decodedData }: { decodedData: DataDecoded | null }): Reac
   return (
     <TxList>
       {txs.map((tx, index) => {
-        const txValue = fromTokenUnit(tx.value, nativeCoin.decimals)
         return (
           <>
-            <TxListItem key={index}>
+            <TxListItem key={index} onClick={() => onTxItemClick(tx)}>
               <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
 
               <FlexWrapper margin={20}>
@@ -152,8 +175,6 @@ const MultiSendTx = ({ decodedData }: { decodedData: DataDecoded | null }): Reac
                 <FixedIcon type="chevronRight" />
               </FlexWrapper>
             </TxListItem>
-            <BasicTxInfo txRecipient={tx.to} txData={tx.data} txValue={txValue} />
-            {tx.dataDecoded?.parameters.map((p, index) => getParameterElement(p, index))}
           </>
         )
       })}
@@ -163,22 +184,14 @@ const MultiSendTx = ({ decodedData }: { decodedData: DataDecoded | null }): Reac
 
 type Props = {
   txs: Transaction[]
-  txRecipient: string
-  txData: string
-  txValue: string
   decodedData: DataDecoded | null
+  onTxItemClick: (decodedTxDetails: DataDecodedParameterValue) => void
 }
 
-export const DecodeTxs = ({ txs, txRecipient, txData, txValue, decodedData }: Props): ReactElement => {
-  const isMultiSend = txs.length > 1
-
-  return (
-    <>
-      <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={txValue} />
-
-      {/* TXs Decoding */}
-      {isMultiSend && <MultiSendTx decodedData={decodedData} />}
-      {!isMultiSend && <SingleTx decodedData={decodedData} />}
-    </>
+export const DecodeTxs = ({ txs, decodedData, onTxItemClick }: Props): ReactElement => {
+  return txs.length > 1 ? (
+    <MultiSendTx decodedData={decodedData} onTxItemClick={onTxItemClick} />
+  ) : (
+    <SingleTx decodedData={decodedData} />
   )
 }
