@@ -27,24 +27,20 @@ interface ExtractedData {
   tokens: List<Token>
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 const extractDataFromResult = (currentTokens: TokenState) => (
   acc: ExtractedData,
   { balance, fiatBalance, tokenInfo }: TokenBalance,
 ): ExtractedData => {
-  const { address: tokenAddress, decimals } = tokenInfo
-  if (sameAddress(tokenAddress, ZERO_ADDRESS) || sameAddress(tokenAddress, nativeCoin.address)) {
-    acc.ethBalance = humanReadableValue(balance, 18)
-  }
+  const { address, decimals } = tokenInfo
+
   acc.balances = acc.balances.merge({
-    [tokenAddress]: {
+    [address]: {
       fiatBalance,
       tokenBalance: humanReadableValue(balance, Number(decimals)),
     },
   })
 
-  if (currentTokens && !currentTokens.get(tokenAddress)) {
+  if (currentTokens && !currentTokens.get(address)) {
     acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
   }
 

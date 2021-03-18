@@ -138,16 +138,13 @@ type DeleteAllowanceParams = {
 }
 
 export const getDeleteAllowanceTxData = ({ beneficiary, tokenAddress }: DeleteAllowanceParams): string => {
-  const { nativeCoin } = getNetworkInfo()
-  const token = sameAddress(tokenAddress, nativeCoin.address) ? ZERO_ADDRESS : tokenAddress
-
   const web3 = getWeb3()
   const spendingLimitContract = new web3.eth.Contract(
     SpendingLimitModule.abi as AbiItem[],
     SPENDING_LIMIT_MODULE_ADDRESS,
   )
 
-  return spendingLimitContract.methods.deleteAllowance(beneficiary, token).encodeABI()
+  return spendingLimitContract.methods.deleteAllowance(beneficiary, tokenAddress).encodeABI()
 }
 
 export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): MultiSendTx => {
@@ -188,20 +185,13 @@ export const setSpendingLimitTx = ({
   safeAddress,
 }: SpendingLimitTxParams): CreateTransactionArgs => {
   const spendingLimitContract = getSpendingLimitContract()
-  const { nativeCoin } = getNetworkInfo()
 
   const txArgs: CreateTransactionArgs = {
     safeAddress,
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     valueInWei: ZERO_VALUE,
     txData: spendingLimitContract.methods
-      .setAllowance(
-        beneficiary,
-        token === nativeCoin.address ? ZERO_ADDRESS : token,
-        spendingLimitInWei,
-        resetTimeMin,
-        resetBaseMin,
-      )
+      .setAllowance(beneficiary, token, spendingLimitInWei, resetTimeMin, resetBaseMin)
       .encodeABI(),
     operation: CALL,
     notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
@@ -285,12 +275,5 @@ export const getSpendingLimitByTokenAddress = ({
     return
   }
 
-  const { nativeCoin } = getNetworkInfo()
-
-  return spendingLimits.find(({ token: spendingLimitTokenAddress }) => {
-    spendingLimitTokenAddress = sameAddress(spendingLimitTokenAddress, ZERO_ADDRESS)
-      ? nativeCoin.address
-      : spendingLimitTokenAddress
-    return sameAddress(spendingLimitTokenAddress, tokenAddress)
-  })
+  return spendingLimits.find(({ token }) => sameAddress(token, tokenAddress))
 }
