@@ -11,8 +11,6 @@ import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { getNetworkInfo } from 'src/config'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 

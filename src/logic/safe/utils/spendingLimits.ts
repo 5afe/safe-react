@@ -1,5 +1,4 @@
 import { BigNumber } from 'bignumber.js'
-import { getNetworkInfo } from 'src/config'
 import { AbiItem } from 'web3-utils'
 
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
@@ -9,7 +8,7 @@ import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.j
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getSpendingLimitContract, MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
