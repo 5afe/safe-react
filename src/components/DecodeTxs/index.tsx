@@ -89,35 +89,36 @@ export const BasicTxInfo = ({
 
 export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
-  switch (parameter.type) {
-    case 'address':
-      valueElement = (
-        <EthHashInfo
-          hash={parameter.value}
-          showIdenticon
-          textSize="lg"
-          showCopyBtn
-          explorerUrl={getExplorerInfo(parameter.value)}
-        />
-      )
 
-      break
-    case 'bytes':
-      valueElement = (
-        <FlexWrapper margin={5}>
-          <Text size="lg">{web3.utils.hexToBytes(parameter.value).length} bytes</Text>
-          <CopyToClipboardBtn textToCopy={parameter.value} />
-        </FlexWrapper>
-      )
-      break
-    default:
-      let value = parameter.value
-      if (parameter.type.endsWith('[]')) {
-        try {
-          value = JSON.stringify(parameter.value)
-        } catch (e) {}
-      }
-      valueElement = <Text size="lg">{value}</Text>
+  if (parameter.type === 'address') {
+    valueElement = (
+      <EthHashInfo
+        hash={parameter.value}
+        showIdenticon
+        textSize="lg"
+        showCopyBtn
+        explorerUrl={getExplorerInfo(parameter.value)}
+      />
+    )
+  }
+
+  if (parameter.type.startsWith('bytes')) {
+    valueElement = (
+      <FlexWrapper margin={5}>
+        <Text size="lg">{web3.utils.hexToBytes(parameter.value).length} bytes</Text>
+        <CopyToClipboardBtn textToCopy={parameter.value} />
+      </FlexWrapper>
+    )
+  }
+
+  if (!valueElement) {
+    let value = parameter.value
+    if (parameter.type.endsWith('[]')) {
+      try {
+        value = JSON.stringify(parameter.value)
+      } catch (e) {}
+    }
+    valueElement = <Text size="lg">{value}</Text>
   }
 
   return (

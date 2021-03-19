@@ -14,6 +14,7 @@ const { nativeCoin } = getNetworkInfo()
 const Container = styled.div`
   max-width: 480px;
   padding: ${md} ${lg};
+  word-break: break-word;
 `
 
 function isDataDecodedParameterValue(arg: any): arg is DecodedDataParameterValue {
