@@ -43,7 +43,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
   if (!txData.dataDecoded?.parameters) {
     // we render the hex encoded data
     if (txData.hexData) {
-      return <HexEncodedData hexData={txData.hexData} />
+      return <HexEncodedData title="Data (hex encoded)" hexData={txData.hexData} />
     }
 
     return null
@@ -64,7 +64,7 @@ export const MultiSendDetails = ({ txData }: { txData: TransactionData }): React
           details = <MethodDetails data={dataDecoded} />
         } else {
           // We couldn't decode it but we have data
-          details = data && <HexEncodedData hexData={data} />
+          details = data && <HexEncodedData title="Data (hex encoded)" hexData={data} />
         }
 
         return (

@@ -208,7 +208,7 @@ const SendFunds = ({
 
           const setMaxAllowedAmount = () => {
             const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
-            let maxAmount = selectedToken?.balance ?? 0
+            let maxAmount = selectedToken?.balance.tokenBalance ?? 0
 
             if (isSpendingLimit) {
               const spendingLimitBalance = fromTokenUnit(
