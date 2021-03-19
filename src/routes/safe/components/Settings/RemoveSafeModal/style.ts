@@ -5,7 +5,7 @@ export const styles = createStyles({
   heading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
-    height: '74px',
+    minHeight: '74px',
     padding: `${sm} ${lg}`,
   },
   container: {

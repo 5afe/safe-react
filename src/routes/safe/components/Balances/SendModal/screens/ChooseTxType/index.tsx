@@ -71,7 +71,7 @@ const ChooseTxType = ({
       </Row>
       <Hairline />
       {!!recipientAddress && (
-        <Row align="center">
+        <Row align="center" margin="md">
           <Col className={classes.disclaimer} layout="column" middle="xs">
             <Paragraph className={classes.disclaimerText} noMargin>
               Please select what you will send to

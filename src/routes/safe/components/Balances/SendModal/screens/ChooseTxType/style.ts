@@ -26,7 +26,7 @@ export const useStyles = makeStyles(
       width: '35px',
     },
     buttonColumn: {
-      padding: '52px 0',
+      margin: '16px 0 44px 0',
       '& > button': {
         fontSize: md,
         fontFamily: 'Averta',
