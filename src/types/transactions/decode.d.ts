@@ -1,24 +1,24 @@
-export type DataDecodedBasicParameter = {
+export type DecodedDataBasicParameter = {
   name: string
   type: string
   value: string
 }
-export type DataDecodedParameterValue = {
+export type DecodedDataParameterValue = {
   operation: 0 | 1
   to: string
   value: string
   data: string
   dataDecoded: {
     method: string
-    parameters: DataDecodedBasicParameter[]
+    parameters: DecodedDataBasicParameter[]
   } | null
 }
 
-export type DataDecodedParameter = {
-  valueDecoded?: DataDecodedParameterValue[]
-} & DataDecodedBasicParameter
+export type DecodedDataParameter = {
+  valueDecoded?: DecodedDataParameterValue[]
+} & DecodedDataBasicParameter
 
-export type DataDecoded = {
+export type DecodedData = {
   method: string
-  parameters: DataDecodedParameter[]
+  parameters: DecodedDataParameter[]
 }

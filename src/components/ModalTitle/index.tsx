@@ -34,6 +34,14 @@ const StyledClose = styled(Close)`
   width: 35px;
 `
 
+const GoBackWrapper = styled.div`
+  margin-right: 15px;
+
+  :hover {
+    cursor: pointer;
+  }
+`
+
 type Props = {
   title: string
   goBack?: () => void
@@ -46,9 +54,9 @@ const ModalTitle = ({ goBack, iconUrl, title, onClose }: Props): React.ReactElem
     <StyledRow align="center" grow>
       <TitleWrapper>
         {goBack && (
-          <div onClick={goBack}>
-            <Icon type="arrowDown" size="md" />
-          </div>
+          <GoBackWrapper onClick={goBack}>
+            <Icon type="arrowLeft" size="md" />
+          </GoBackWrapper>
         )}
         {iconUrl && <IconImg alt={title} src={iconUrl} />}
         <StyledParagraph noMargin weight="bolder">

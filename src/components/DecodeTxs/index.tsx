@@ -6,7 +6,8 @@ import get from 'lodash.get'
 
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { getExplorerInfo } from 'src/config'
-import { DataDecoded, DataDecodedBasicParameter, DataDecodedParameterValue } from 'src/types/transactions/decode.d'
+import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
+import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 
 const FlexWrapper = styled.div<{ margin: number }>`
   display: flex;
@@ -86,7 +87,7 @@ export const BasicTxInfo = ({
   )
 }
 
-export const getParameterElement = (parameter: DataDecodedBasicParameter, index: number): ReactElement => {
+export const getParameterElement = (parameter: DecodedDataBasicParameter, index: number): ReactElement => {
   let valueElement
   switch (parameter.type) {
     case 'address':
@@ -129,25 +130,28 @@ export const getParameterElement = (parameter: DataDecodedBasicParameter, index:
   )
 }
 
-const SingleTx = ({ decodedData }: { decodedData: DataDecoded | null }): ReactElement | null => {
+const SingleTx = ({
+  decodedData,
+  onTxItemClick,
+}: {
+  decodedData: DecodedData | null
+  onTxItemClick: (decodedTxDetails: DecodedData) => void
+}): ReactElement | null => {
   if (!decodedData) {
     return null
   }
 
   return (
-    <>
-      {/* Method */}
-      {decodedData.method && (
-        <>
-          <Text size="lg" strong>
-            method:
-          </Text>
-          <Text size="lg">{decodedData.method}</Text>
-        </>
-      )}
+    <TxList>
+      <TxListItem onClick={() => onTxItemClick(decodedData)}>
+        <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
 
-      {decodedData.parameters.map((p, index) => getParameterElement(p, index))}
-    </>
+        <FlexWrapper margin={20}>
+          <Text size="xl">{decodedData.method}</Text>
+          <FixedIcon type="chevronRight" />
+        </FlexWrapper>
+      </TxListItem>
+    </TxList>
   )
 }
 
@@ -155,10 +159,10 @@ const MultiSendTx = ({
   decodedData,
   onTxItemClick,
 }: {
-  decodedData: DataDecoded | null
-  onTxItemClick: (decodedTxDetails: DataDecodedParameterValue) => void
+  decodedData: DecodedData | null
+  onTxItemClick: (decodedTxDetails: DecodedDataParameterValue) => void
 }): ReactElement | null => {
-  const txs: DataDecodedParameterValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
+  const txs: DecodedDataParameterValue[] | undefined = get(decodedData, 'parameters[0].valueDecoded')
 
   if (!txs) {
     return null
@@ -166,34 +170,30 @@ const MultiSendTx = ({
 
   return (
     <TxList>
-      {txs.map((tx, index) => {
-        return (
-          <>
-            <TxListItem key={index} onClick={() => onTxItemClick(tx)}>
-              <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
+      {txs.map((tx, index) => (
+        <TxListItem key={index} onClick={() => onTxItemClick(tx)}>
+          <IconText iconSize="sm" iconType="code" text="Contract interaction" textSize="xl" />
 
-              <FlexWrapper margin={20}>
-                {tx.dataDecoded && <Text size="xl">{tx.dataDecoded.method}</Text>}
-                <FixedIcon type="chevronRight" />
-              </FlexWrapper>
-            </TxListItem>
-          </>
-        )
-      })}
+          <FlexWrapper margin={20}>
+            {tx.dataDecoded && <Text size="xl">{tx.dataDecoded.method}</Text>}
+            <FixedIcon type="chevronRight" />
+          </FlexWrapper>
+        </TxListItem>
+      ))}
     </TxList>
   )
 }
 
 type Props = {
   txs: Transaction[]
-  decodedData: DataDecoded | null
-  onTxItemClick: (decodedTxDetails: DataDecodedParameterValue) => void
+  decodedData: DecodedData | null
+  onTxItemClick: (decodedTxDetails: DecodedTxDetail) => void
 }
 
 export const DecodeTxs = ({ txs, decodedData, onTxItemClick }: Props): ReactElement => {
   return txs.length > 1 ? (
     <MultiSendTx decodedData={decodedData} onTxItemClick={onTxItemClick} />
   ) : (
-    <SingleTx decodedData={decodedData} />
+    <SingleTx decodedData={decodedData} onTxItemClick={onTxItemClick} />
   )
 }

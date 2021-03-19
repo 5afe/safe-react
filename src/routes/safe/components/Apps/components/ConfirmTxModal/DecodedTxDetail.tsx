@@ -6,7 +6,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { md, lg } from 'src/theme/variables'
 import ModalTitle from 'src/components/ModalTitle'
 import Hairline from 'src/components/layout/Hairline'
-import { DataDecodedParameterValue } from 'src/types/transactions/decode.d'
+import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode.d'
 import { BasicTxInfo, getParameterElement } from 'src/components/DecodeTxs'
 
 const { nativeCoin } = getNetworkInfo()
@@ -16,25 +16,46 @@ const Container = styled.div`
   padding: ${md} ${lg};
 `
 
+function isDataDecodedParameterValue(arg: any): arg is DecodedDataParameterValue {
+  return arg.operation !== undefined
+}
+
 type Props = {
   hideDecodedTxData: () => void
   onClose: () => void
-  decodedTxData: DataDecodedParameterValue
+  decodedTxData: DecodedDataParameterValue | DecodedData
 }
 
 export const DecodedTxDetail = ({ hideDecodedTxData, onClose, decodedTxData: tx }: Props): ReactElement => {
-  const txValue = fromTokenUnit(tx.value, nativeCoin.decimals)
+  let body
+  // If we are dealing with a multiSend
+  // decodedTxData is of type DataDecodedParameter
+  if (isDataDecodedParameterValue(tx)) {
+    const txValue = fromTokenUnit(tx.value, nativeCoin.decimals)
+
+    body = (
+      <>
+        <BasicTxInfo txRecipient={tx.to} txData={tx.data} txValue={txValue} />
+        {tx.dataDecoded?.parameters.map((p, index) => getParameterElement(p, index))}
+      </>
+    )
+  } else {
+    // If we are dealing with a single tx
+    // decodedTxData is of type DecodedData
+    body = <>{tx.parameters.map((p, index) => getParameterElement(p, index))}</>
+  }
 
   return (
     <>
-      <ModalTitle title="Approve" onClose={onClose} goBack={hideDecodedTxData} />
+      <ModalTitle
+        title={(tx as DecodedDataParameterValue).dataDecoded?.method || (tx as DecodedData).method}
+        onClose={onClose}
+        goBack={hideDecodedTxData}
+      />
 
       <Hairline />
 
-      <Container>
-        <BasicTxInfo txRecipient={tx.to} txData={tx.data} txValue={txValue} />
-        {tx.dataDecoded?.parameters.map((p, index) => getParameterElement(p, index))}
-      </Container>
+      <Container>{body}</Container>
     </>
   )
 }

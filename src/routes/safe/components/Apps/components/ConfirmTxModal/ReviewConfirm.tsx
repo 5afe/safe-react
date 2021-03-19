@@ -23,11 +23,11 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import AddressInfo from 'src/components/AddressInfo'
 import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
-import { DataDecoded, DataDecodedParameterValue } from 'src/types/transactions/decode.d'
+import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 
 import GasEstimationInfo from '../GasEstimationInfo'
-import { ConfirmTxModalProps } from '.'
+import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -55,7 +55,7 @@ const DecodeTxsWrapper = styled.div`
 
 type Props = ConfirmTxModalProps & {
   areTxsMalformed: boolean
-  showDecodedTxData: (decodedTxDetails: DataDecodedParameterValue) => void
+  showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
 }
 
 export const ReviewConfirm = ({
@@ -74,7 +74,7 @@ export const ReviewConfirm = ({
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
   const threshold = useSelector(safeThresholdSelector) || 1
   const isMultiSend = txs.length > 1
-  const [decodedData, setDecodedData] = useState<DataDecoded | null>(null)
+  const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
 
   const txRecipient: string | undefined = useMemo(() => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to), [

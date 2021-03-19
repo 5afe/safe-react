@@ -7,7 +7,7 @@ import { TransactionParams } from 'src/routes/safe/components/Apps/components/Ap
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { SafeAppLoadError } from './SafeAppLoadError'
 import { ReviewConfirm } from './ReviewConfirm'
-import { DataDecodedParameterValue } from 'src/types/transactions/decode'
+import { DecodedDataParameterValue, DecodedData } from 'src/types/transactions/decode'
 import { DecodedTxDetail } from './DecodedTxDetail'
 
 export type ConfirmTxModalProps = {
@@ -36,8 +36,10 @@ const isTxValid = (t: Transaction): boolean => {
   return isAddressValid && !!t.data && typeof t.data === 'string'
 }
 
+export type DecodedTxDetail = DecodedDataParameterValue | DecodedData | undefined
+
 export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null => {
-  const [decodedTxDetails, setDecodedTxDetails] = useState<DataDecodedParameterValue | undefined>()
+  const [decodedTxDetails, setDecodedTxDetails] = useState<DecodedTxDetail>()
   const areTxsMalformed = props.txs.some((t) => !isTxValid(t))
 
   const showDecodedTxData = setDecodedTxDetails
