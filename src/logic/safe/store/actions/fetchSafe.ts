@@ -160,7 +160,7 @@ export default (safeAdd: string) => async (
 ): Promise<Action | void> => {
   try {
     const safeAddress = checksumAddress(safeAdd)
-    const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
+    const safeName = (await getSafeName(safeAddress)) || 'UNNAMED'
     const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
     const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
 

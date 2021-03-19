@@ -57,8 +57,8 @@ export const Advanced = (): React.ReactElement => {
           Safe Nonce
         </Title>
         <InfoText size="lg">
-          For security reasons, transactions made with the Safe need to be executed in order. The nonce shows you which
-          transaction was executed most recently. You can find the nonce for a transaction in the transaction details.
+          For security reasons, transactions made with Gnosis Safe need to be executed in order. The nonce shows you
+          which transaction will be executed next. You can find the nonce for a transaction in the transaction details.
         </InfoText>
         <InfoText color="secondaryLight" size="xl">
           Current Nonce: <Bold>{nonce}</Bold>
@@ -71,8 +71,8 @@ export const Advanced = (): React.ReactElement => {
           Safe Modules
         </Title>
         <InfoText size="lg">
-          Modules allow you to customize the access-control logic of your Safe. Modules are potentially risky, so make
-          sure to only use modules from trusted sources. Learn more about modules{' '}
+          Modules allow you to customize the access-control logic of your account. Modules are potentially risky, so
+          make sure to only use modules from trusted sources. Learn more about modules{' '}
           <a
             href="https://docs.gnosis.io/safe/docs/contracts_architecture/#3-module-management"
             rel="noopener noreferrer"

@@ -81,7 +81,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
         <>
           <Row align="center" className={classes.heading} grow>
             <Paragraph className={classes.headingText} noMargin weight="bolder">
-              Update to new Safe version
+              Update to new Gnosis Safe contract version
             </Paragraph>
             <IconButton disableRipple onClick={onClose}>
               <Close className={classes.close} />

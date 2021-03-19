@@ -114,7 +114,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
             to={WELCOME_ADDRESS}
             variant="contained"
           >
-            + Add Safe
+            + Add account
           </Button>
           <Spacer />
         </Row>

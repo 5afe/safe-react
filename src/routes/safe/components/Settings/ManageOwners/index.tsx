@@ -91,7 +91,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
     <>
       <Block className={classes.formContainer}>
         <Heading className={classes.title} tag="h2">
-          Manage Safe Owners
+          Manage Owners
         </Heading>
         <Paragraph className={classes.annotation}>
           Add, remove and replace owners or rename existing owners. Owner names are only stored locally and never shared
