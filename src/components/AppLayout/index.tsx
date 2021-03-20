@@ -41,7 +41,7 @@ const SidebarWrapper = styled.aside`
 
   padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
-  border-top: 1px solid ${({ theme }) => theme.colors.separator};
+  border-top: 2px solid ${({ theme }) => theme.colors.separator};
   border-right: 2px solid ${({ theme }) => theme.colors.separator};
 `
 
