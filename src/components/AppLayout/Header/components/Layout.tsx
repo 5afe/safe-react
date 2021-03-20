@@ -21,6 +21,7 @@ const styles = () => ({
   root: {
     backgroundColor: 'white',
     borderRadius: sm,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
     minWidth: '280px',
     padding: 0,
@@ -29,6 +30,7 @@ const styles = () => ({
     alignItems: 'center',
     backgroundColor: 'white',
     borderBottom: `solid 2px ${border}`,
+    boxShadow: '0 2px 4px 0 rgba(212, 212, 211, 0.59)',
     flexWrap: 'nowrap',
     height: headerHeight,
     position: 'fixed',
