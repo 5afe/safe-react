@@ -211,7 +211,7 @@ export const EditTxParametersForm = ({
                     target="_blank"
                   >
                     <Text size="xl" color="primary">
-                      How can I configure the gas price manually?
+                      How can I configure these parameters manually?
                     </Text>
                     <Icon size="sm" type="externalLink" color="primary" />
                   </StyledLink>
