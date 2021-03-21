@@ -17,7 +17,7 @@ export type OldAddressBookType = {
   [safeAddress: string]: [OldAddressBookEntry]
 }
 
-const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
+const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET', 'LOADED SAFE', 'UNNAMED']
 
 export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
   const values: AddressBookState = []

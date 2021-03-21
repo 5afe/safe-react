@@ -218,6 +218,30 @@ describe('isValidAddressBookName', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
   })
+  it('It should return false if given a blacklisted name like LOADED SAFE', () => {
+    // given
+    const addressNameInput = 'LOADED SAFE'
+
+    const expectedResult = false
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
+  it('It should return false if given a blacklisted name like UNNAMED', () => {
+    // given
+    const addressNameInput = 'UNNAMED'
+
+    const expectedResult = false
+
+    // when
+    const result = isValidAddressBookName(addressNameInput)
+
+    // then
+    expect(result).toStrictEqual(expectedResult)
+  })
   it('It should return false if given a blacklisted name like OWNER #', () => {
     // given
     const addressNameInput = 'OWNER #'
