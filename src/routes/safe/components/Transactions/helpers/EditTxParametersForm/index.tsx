@@ -180,8 +180,8 @@ export const EditTxParametersForm = ({
                     <Field
                       name="ethNonce"
                       defaultValue={ethNonce}
-                      placeholder="Ethereum nonce"
-                      text="Ethereum nonce"
+                      placeholder="Nonce"
+                      text="Nonce"
                       type="number"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
@@ -189,8 +189,8 @@ export const EditTxParametersForm = ({
                     <Field
                       name="ethGasLimit"
                       defaultValue={ethGasLimit}
-                      placeholder="Ethereum gas limit"
-                      text="Ethereum gas limit"
+                      placeholder="Gas limit"
+                      text="Gas limit"
                       type="number"
                       component={TextField}
                       disabled={parametersStatus === 'CANCEL_TRANSACTION'}
@@ -199,8 +199,8 @@ export const EditTxParametersForm = ({
                       name="ethGasPrice"
                       defaultValue={ethGasPrice}
                       type="number"
-                      placeholder="Ethereum gas price (GWEI)"
-                      text="Ethereum gas price (GWEI)"
+                      placeholder="Gas price (GWEI)"
+                      text="Gas price (GWEI)"
                       component={TextField}
                       disabled={!areEthereumParamsVisible(parametersStatus)}
                     />

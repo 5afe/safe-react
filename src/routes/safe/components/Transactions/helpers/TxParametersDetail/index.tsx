@@ -64,7 +64,7 @@ export const TxParametersDetail = ({
       <AccordionDetails>
         <AccordionDetailsWrapper>
           <StyledText size="md" color="placeHolder">
-            Safe transactions
+            Safe transaction
           </StyledText>
 
           <TxParameterWrapper>
@@ -106,17 +106,17 @@ export const TxParametersDetail = ({
               </TxParameterWrapper>
 
               <TxParameterWrapper>
-                <Text size="lg">Ethereum nonce</Text>
+                <Text size="lg">Nonce</Text>
                 <Text size="lg">{txParameters.ethNonce}</Text>
               </TxParameterWrapper>
 
               <TxParameterWrapper>
-                <Text size="lg">Ethereum gas limit</Text>
+                <Text size="lg">Gas limit</Text>
                 <Text size="lg">{txParameters.ethGasLimit}</Text>
               </TxParameterWrapper>
 
               <TxParameterWrapper>
-                <Text size="lg">Ethereum gas price</Text>
+                <Text size="lg">Gas price</Text>
                 <Text size="lg">{txParameters.ethGasPrice}</Text>
               </TxParameterWrapper>
             </>

@@ -14,5 +14,5 @@ export const areSafeParamsEnabled = (parametersStatus: ParametersStatus): boolea
 }
 
 export const ethereumTxParametersTitle = (isExecution: boolean): string => {
-  return `Ethereum transaction ${isExecution ? '(Execution)' : '(On-chain approval)'}`
+  return `Owner transaction ${isExecution ? '(Execution)' : '(On-chain approval)'}`
 }
