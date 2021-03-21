@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
-import { EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
+import { Card, EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -61,7 +61,7 @@ const styles = createStyles({
     },
   },
   disconnect: {
-    padding: `${md} ${lg}`,
+    padding: `${md}`,
     '& button': {
       background: '#f02525',
     },
@@ -117,79 +117,81 @@ export const UserDetails = ({
 
   return (
     <>
-      <Block className={classes.container}>
-        <Row align="center" className={classes.identicon} margin="md">
-          {connected ? (
-            <Identicon address={userAddress || 'random'} size="lg" />
-          ) : (
-            <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
-          )}
-        </Row>
-        <Block className={classes.user} justify="center">
-          {userAddress ? (
-            <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
-          ) : (
-            'Address not available'
-          )}
+      <Card>
+        <Block className={classes.container}>
+          <Row align="center" className={classes.identicon} margin="md">
+            {connected ? (
+              <Identicon address={userAddress || 'random'} size="lg" />
+            ) : (
+              <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
+            )}
+          </Row>
+          <Block className={classes.user} justify="center">
+            {userAddress ? (
+              <EthHashInfo hash={userAddress} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
+            ) : (
+              'Address not available'
+            )}
+          </Block>
         </Block>
-      </Block>
-      <Hairline margin="xs" />
-      <Row className={classes.details}>
-        <Paragraph align="right" className={classes.labels} noMargin>
-          Status
-        </Paragraph>
-        <Spacer />
-        <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
-        <Paragraph align="right" className={classes.labels} color={color} noMargin weight="bolder">
-          {status}
-        </Paragraph>
-      </Row>
-      <Hairline margin="xs" />
-      <Row className={classes.details}>
-        <Paragraph align="right" className={classes.labels} noMargin>
-          Wallet
-        </Paragraph>
-        <Spacer />
-        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(provider)}
-        </Paragraph>
-      </Row>
-      <Hairline margin="xs" />
-      <Row className={classes.details}>
-        <Paragraph align="right" className={classes.labels} noMargin>
-          Network
-        </Paragraph>
-        <Spacer />
-        <CircleDot className={classes.logo} />
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(ETHEREUM_NETWORK[network])}
-        </Paragraph>
-      </Row>
-      <Hairline margin="xs" />
-      {openDashboard && (
-        <Row className={classes.dashboard}>
-          <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
-            <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
-              {upperFirst(provider)} Wallet
+        <Hairline margin="xs" />
+        <Row className={classes.details}>
+          <Paragraph align="right" className={classes.labels} noMargin>
+            Status
+          </Paragraph>
+          <Spacer />
+          <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
+          <Paragraph align="right" className={classes.labels} color={color} noMargin weight="bolder">
+            {status}
+          </Paragraph>
+        </Row>
+        <Hairline margin="xs" />
+        <Row className={classes.details}>
+          <Paragraph align="right" className={classes.labels} noMargin>
+            Wallet
+          </Paragraph>
+          <Spacer />
+          <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
+          <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
+            {upperFirst(provider)}
+          </Paragraph>
+        </Row>
+        <Hairline margin="xs" />
+        <Row className={classes.details}>
+          <Paragraph align="right" className={classes.labels} noMargin>
+            Network
+          </Paragraph>
+          <Spacer />
+          <CircleDot className={classes.logo} />
+          <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
+            {upperFirst(ETHEREUM_NETWORK[network])}
+          </Paragraph>
+        </Row>
+        <Hairline margin="xs" />
+        {openDashboard && (
+          <Row className={classes.dashboard}>
+            <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
+              <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
+                {upperFirst(provider)} Wallet
+              </Paragraph>
+            </Button>
+          </Row>
+        )}
+        <Row className={classes.disconnect}>
+          <Button
+            color="primary"
+            fullWidth
+            onClick={onDisconnect}
+            size="medium"
+            variant="contained"
+            data-testid="disconnect-btn"
+          >
+            <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
+              Disconnect
             </Paragraph>
           </Button>
         </Row>
-      )}
-      <Row className={classes.disconnect}>
-        <Button
-          color="primary"
-          fullWidth
-          onClick={onDisconnect}
-          size="medium"
-          variant="contained"
-          data-testid="disconnect-btn"
-        >
-          <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
-            Disconnect
-          </Paragraph>
-        </Button>
-      </Row>
+      </Card>
     </>
   )
 }

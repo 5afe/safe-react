@@ -1,18 +1,15 @@
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
+import { Card } from '@gnosis.pm/safe-react-components'
 
 import ConnectButton from 'src/components/ConnectButton'
 
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { lg, md } from 'src/theme/variables'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 
 const styles = () => ({
-  container: {
-    padding: `${md} 12px`,
-  },
   logo: {
     justifyContent: 'center',
   },
@@ -22,7 +19,6 @@ const styles = () => ({
     textAlign: 'center',
   },
   connect: {
-    padding: `${md} ${lg}`,
     textAlign: 'center',
   },
   connectText: {
@@ -35,19 +31,21 @@ const styles = () => ({
 
 const ConnectDetails = ({ classes }) => (
   <>
-    <div className={classes.container}>
-      <Row align="center" margin="lg">
-        <Paragraph className={classes.text} noMargin size="lg" weight="bolder">
-          Connect a Wallet
-        </Paragraph>
+    <Card>
+      <div>
+        <Row align="center" margin="lg">
+          <Paragraph className={classes.text} noMargin size="xl" weight="bolder">
+            Connect a Wallet
+          </Paragraph>
+        </Row>
+      </div>
+      <Row className={classes.logo} margin="lg">
+        <KeyRing center circleSize={75} dotRight={25} dotSize={25} dotTop={50} keySize={32} mode="error" />
       </Row>
-    </div>
-    <Row className={classes.logo} margin="lg">
-      <KeyRing center circleSize={75} dotRight={25} dotSize={25} dotTop={50} keySize={32} mode="error" />
-    </Row>
-    <Block className={classes.connect}>
-      <ConnectButton data-testid="heading-connect-btn" />
-    </Block>
+      <Block className={classes.connect}>
+        <ConnectButton data-testid="heading-connect-btn" />
+      </Block>
+    </Card>
   </>
 )
 
