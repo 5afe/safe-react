@@ -22,7 +22,7 @@ class AppCommunicator {
   constructor(iframeRef: MutableRefObject<HTMLIFrameElement | null>, app: SafeApp) {
     this.iframeRef = iframeRef
     this.app = app
-    console.log('communicator initialized')
+
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
