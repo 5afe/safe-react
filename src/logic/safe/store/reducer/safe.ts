@@ -1,7 +1,6 @@
 import { Map, Set, List } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
-import { ACTIVATE_TOKEN_FOR_ALL_SAFES } from 'src/logic/safe/store/actions/activateTokenForAllSafes'
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
 import { EDIT_SAFE_OWNER } from 'src/logic/safe/store/actions/editSafeOwner'
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
@@ -10,8 +9,6 @@ import { REPLACE_SAFE_OWNER } from 'src/logic/safe/store/actions/replaceSafeOwne
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
-import { UPDATE_TOKENS_LIST } from 'src/logic/safe/store/actions/updateTokensList'
-import { UPDATE_ASSETS_LIST } from 'src/logic/safe/store/actions/updateAssetsList'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
@@ -28,9 +25,6 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
   const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
   const activeTokens = Set(storedSafe.activeTokens)
-  const activeAssets = Set(storedSafe.activeAssets)
-  const blacklistedTokens = Set(storedSafe.blacklistedTokens)
-  const blacklistedAssets = Set(storedSafe.blacklistedAssets)
   const balances = Map(storedSafe.balances)
 
   return {
@@ -38,9 +32,6 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
     owners,
     balances,
     activeTokens,
-    blacklistedTokens,
-    activeAssets,
-    blacklistedAssets,
     latestIncomingTxBlock: 0,
     modules: null,
   }
@@ -101,21 +92,6 @@ export default handleActions<AppReduxState['safes'], Payloads>(
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state
-    },
-    [ACTIVATE_TOKEN_FOR_ALL_SAFES]: (state, action: Action<SafeRecord>) => {
-      const tokenAddress = action.payload
-
-      return state.withMutations((map) => {
-        map
-          .get('safes')
-          .keySeq()
-          .forEach((safeAddress) => {
-            const safeActiveTokens = map.getIn(['safes', safeAddress, 'activeTokens'])
-            const activeTokens = safeActiveTokens.add(tokenAddress)
-
-            map.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.mergeDeep({ activeTokens }))
-          })
-      })
     },
     [ADD_OR_UPDATE_SAFE]: (state, action: Action<SafePayload>) => {
       const { safe } = action.payload
@@ -194,24 +170,6 @@ export default handleActions<AppReduxState['safes'], Payloads>(
         const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
         return prevSafe.merge({ owners: updatedOwners })
       })
-    },
-    [UPDATE_TOKENS_LIST]: (state, action: Action<SafeWithAddressPayload>) => {
-      // Only activeTokens or blackListedTokens is required
-      const { safeAddress, activeTokens, blacklistedTokens } = action.payload
-
-      const key = activeTokens ? 'activeTokens' : 'blacklistedTokens'
-      const list = activeTokens ?? blacklistedTokens
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set(key, list))
-    },
-    [UPDATE_ASSETS_LIST]: (state, action: Action<SafeWithAddressPayload>) => {
-      // Only activeAssets or blackListedAssets is required
-      const { safeAddress, activeAssets, blacklistedAssets } = action.payload
-
-      const key = activeAssets ? 'activeAssets' : 'blacklistedAssets'
-      const list = activeAssets ?? blacklistedAssets
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) => prevSafe.set(key, list))
     },
     [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>

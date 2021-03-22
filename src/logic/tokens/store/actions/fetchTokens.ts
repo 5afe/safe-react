@@ -5,9 +5,7 @@ import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
 import contract from '@truffle/contract/index.js'
 import { AbiItem } from 'web3-utils'
-
-import saveTokens from './saveTokens'
-
+import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
@@ -85,7 +83,7 @@ export const getTokenInfos = async (tokenAddress: string): Promise<Token | undef
   })
 
   const newTokens = tokens.set(tokenAddress, token)
-  store.dispatch(saveTokens(newTokens))
+  store.dispatch(addTokens(newTokens))
 
   return token
 }
@@ -109,10 +107,8 @@ export const fetchTokens = () => async (
 
     const tokens = List(erc20Tokens.map((token) => makeToken(token)))
 
-    dispatch(saveTokens(tokens))
+    dispatch(addTokens(tokens))
   } catch (err) {
     console.error('Error fetching token list', err)
   }
 }
-
-export default fetchTokens
