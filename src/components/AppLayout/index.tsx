@@ -41,7 +41,7 @@ const SidebarWrapper = styled.aside`
 
   padding: 8px 8px 0 8px;
   background-color: ${({ theme }) => theme.colors.white};
-  border-right: 2px solid ${({ theme }) => theme.colors.separator};
+  box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
 `
 
 const ContentWrapper = styled.section`
