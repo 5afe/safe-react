@@ -37,7 +37,7 @@ const ConnectDetails = ({ classes }) => (
   <>
     <div className={classes.container}>
       <Row align="center" margin="lg">
-        <Paragraph className={classes.text} noMargin size="lg" weight="bolder">
+        <Paragraph className={classes.text} noMargin size="xl" weight="bolder">
           Connect a Wallet
         </Paragraph>
       </Row>
