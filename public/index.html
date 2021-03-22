@@ -7,7 +7,31 @@
     <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
     <title>Gnosis Safe</title>
   </head>
+  <style>
+    .safe-preloader-animation {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 120px;
+      margin:-60px 0 0 -60px;
+      animation: sk-bounce 2.0s infinite ease-in-out;
+      animation-delay: -1.0s;
+    }
+
+@keyframes sk-bounce {
+  0%, 100% {
+    transform: scale(0.8);
+    -webkit-transform: scale(0.8);
+  }
+  50% {
+    transform: scale(1.0);
+    -webkit-transform: scale(1.0);
+  }
+}
+
+  </style>
   <body>
-    <div id="root" style="overflow: hidden;"></div>
+    <div id="root" style="overflow: hidden;"><img class="safe-preloader-animation" src="./resources/safe.png" /></div>
   </body>
 </html>

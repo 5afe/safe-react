@@ -30,7 +30,7 @@ type Props = {
   onSubmit: (txParameters: TxParameters) => void
 }
 
-const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
+export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
   const classes = useStyles()
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector) as number
@@ -120,5 +120,3 @@ const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement 
     </>
   )
 }
-
-export default ThresholdForm

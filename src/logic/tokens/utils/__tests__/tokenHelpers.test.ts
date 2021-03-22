@@ -58,7 +58,7 @@ describe('getERC20DecimalsAndSymbol', () => {
       symbol,
       decimals,
       logoUri: 'https://gnosis-safe-token-logos.s3.amazonaws.com/0x5592EC0cfb4dbc12D3aB100b257153436a1f0FEa.png',
-      balance: 0,
+      balance: { tokenBalance: '0', fiatBalance: '0' },
     })
     const expectedResult = {
       decimals,

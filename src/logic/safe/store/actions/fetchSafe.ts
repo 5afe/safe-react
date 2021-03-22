@@ -8,8 +8,8 @@ import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
-import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
-import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
+import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
+import { removeSafeOwner } from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -80,16 +80,14 @@ export const buildSafe = async (
     threshold,
     owners,
     ethBalance,
+    totalFiatBalance: 0,
     nonce,
     currentVersion: currentVersion ?? '',
     needsUpdate,
     featuresEnabled,
     balances: localSafe?.balances || Map(),
     latestIncomingTxBlock: 0,
-    activeAssets: Set(),
     activeTokens: Set(),
-    blacklistedAssets: Set(),
-    blacklistedTokens: Set(),
     modules,
     spendingLimits,
   }

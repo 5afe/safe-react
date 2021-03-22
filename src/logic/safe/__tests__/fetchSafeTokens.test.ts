@@ -1,10 +1,7 @@
 import axios from 'axios'
 
 import { getSafeClientGatewayBaseUrl } from 'src/config'
-import {
-  fetchTokenCurrenciesBalances,
-  BalanceEndpoint,
-} from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
+import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { aNewStore } from 'src/store'
 
 jest.mock('axios')
@@ -52,11 +49,15 @@ describe('fetchTokenCurrenciesBalances', () => {
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: expectedResult }))
 
     // when
-    const result = await fetchTokenCurrenciesBalances(safeAddress, excludeSpamTokens)
+    const result = await fetchTokenCurrenciesBalances({
+      safeAddress,
+      excludeSpamTokens,
+      selectedCurrency: 'USD',
+    })
 
     // then
     expect(result).toStrictEqual(expectedResult)
     expect(axios.get).toHaveBeenCalled()
-    expect(axios.get).toBeCalledWith(`${apiUrl}/balances/usd/?trusted=false&exclude_spam=${excludeSpamTokens}`)
+    expect(axios.get).toBeCalledWith(`${apiUrl}/balances/USD/?trusted=false&exclude_spam=${excludeSpamTokens}`)
   })
 })

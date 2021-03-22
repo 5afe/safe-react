@@ -12,20 +12,19 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { background, connected } from 'src/theme/variables'
+import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
 
-import LoaderDotsSvg from './assets/loader-dots.svg'
-import SuccessSvg from './assets/success.svg'
+import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
-import VaultSvg from './assets/vault.svg'
+import VaultLoading from './assets/creation-process.gif'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
 
 const Wrapper = styled.div`
   display: grid;
   grid-template-columns: 250px auto;
-  grid-template-rows: 62px auto;
+  grid-template-rows: 43px auto;
   margin-bottom: 30px;
 `
 
@@ -44,29 +43,31 @@ const Body = styled.div`
   grid-column: 2;
   grid-row: 2;
   text-align: center;
-  background-color: #ffffff;
+  background-color: ${({ theme }) => theme.colors.white};
   border-radius: 5px;
   min-width: 700px;
-  padding-top: 50px;
+  padding-top: 70px;
   box-shadow: 0 0 10px 0 rgba(33, 48, 77, 0.1);
 
   display: grid;
-  grid-template-rows: 100px 50px 70px 60px 100px;
+  grid-template-rows: 100px 50px 110px 1fr;
 `
 
 const CardTitle = styled.div`
   font-size: 20px;
+  padding-top: 10px;
 `
 
 interface FullParagraphProps {
   inversecolors: string
+  stepIndex: number
 }
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${(p) => (p.inversecolors ? connected : background)};
-  color: ${(p) => (p.inversecolors ? background : connected)};
-  padding: 24px;
-  font-size: 16px;
+  background-color: ${({ stepIndex }) => (stepIndex === 0 ? connected : background)};
+  color: ${({ theme, stepIndex }) => (stepIndex === 0 ? theme.colors.white : fontColor)};
+  padding: 28px;
+  font-size: 20px;
   margin-bottom: 16px;
   transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out;
 `
@@ -77,17 +78,12 @@ const BodyImage = styled.div`
 const BodyDescription = styled.div`
   grid-row: 2;
 `
-const BodyLoader = styled.div`
-  grid-row: 3;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`
 const BodyInstruction = styled.div`
-  grid-row: 4;
+  grid-row: 3;
+  margin: 27px 0;
 `
 const BodyFooter = styled.div`
-  grid-row: 5;
+  grid-row: 4;
 
   padding: 10px 0;
   display: flex;
@@ -154,7 +150,7 @@ export const SafeDeployment = ({
     }
 
     if (stepIndex <= 4) {
-      return VaultSvg
+      return VaultLoading
     }
 
     return SuccessSvg
@@ -326,20 +322,26 @@ export const SafeDeployment = ({
       </Nav>
       <Body>
         <BodyImage>
-          <Img alt="Vault" height={75} src={getImage()} />
+          <Img alt="Vault" height={92} src={getImage()} />
         </BodyImage>
 
         <BodyDescription>
           <CardTitle>{steps[stepIndex].description || steps[stepIndex].label}</CardTitle>
         </BodyDescription>
 
-        <BodyLoader>{!error && stepIndex <= 4 && <Img alt="Loader dots" src={LoaderDotsSvg} />}</BodyLoader>
-
-        <BodyInstruction>
-          <FullParagraph color="primary" inversecolors={confirmationStep.toString()} noMargin size="md">
-            {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
-          </FullParagraph>
-        </BodyInstruction>
+        {steps[stepIndex].instruction && (
+          <BodyInstruction>
+            <FullParagraph
+              color="primary"
+              inversecolors={confirmationStep.toString()}
+              noMargin
+              size="md"
+              stepIndex={stepIndex}
+            >
+              {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
+            </FullParagraph>
+          </BodyInstruction>
+        )}
 
         <BodyFooter>
           {FooterComponent ? (
@@ -354,9 +356,12 @@ export const SafeDeployment = ({
           ) : null}
         </BodyFooter>
       </Body>
-      <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
-        Back
-      </BackButton>
+
+      {stepIndex !== 0 && (
+        <BackButton color="primary" minWidth={140} onClick={onCancel} data-testid="safe-creation-back-btn">
+          Back
+        </BackButton>
+      )}
     </Wrapper>
   )
 }
