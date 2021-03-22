@@ -45,7 +45,7 @@ const notificationStyles = {
     background: '#ffe6ea',
   },
   warning: {
-    background: '#fff3e2',
+    background: '#f7f5f5',
   },
   info: {
     background: '#fff',
