@@ -80,7 +80,7 @@ export const mustBeEthereumContractAddress = memoize(
   async (address: string): Promise<ValidatorReturnType> => {
     const contractCode = await getWeb3().eth.getCode(address)
 
-    const errorMessage = `Must resolve to a valid smart contract address`
+    const errorMessage = `Must resolve to a valid smart contract address.`
 
     return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '' ? errorMessage : undefined
   },
