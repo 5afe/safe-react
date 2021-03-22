@@ -56,6 +56,7 @@ const DecodeTxsWrapper = styled.div`
 type Props = ConfirmTxModalProps & {
   areTxsMalformed: boolean
   showDecodedTxData: (decodedTxDetails: DecodedTxDetail) => void
+  hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
 
 export const ReviewConfirm = ({
@@ -65,6 +66,7 @@ export const ReviewConfirm = ({
   ethBalance,
   safeName,
   params,
+  hidden,
   onUserConfirm,
   onClose,
   onTxReject,
@@ -188,7 +190,7 @@ export const ReviewConfirm = ({
       closeEditModalCallback={closeEditModalCallback}
     >
       {(txParameters, toggleEditMode) => (
-        <>
+        <div hidden={hidden}>
           <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
 
           <Hairline />
@@ -254,7 +256,7 @@ export const ReviewConfirm = ({
               okText="Submit"
             />
           </FooterWrapper>
-        </>
+        </div>
       )}
     </EditableTxParameters>
   )

@@ -60,9 +60,13 @@ export const ConfirmTxModal = (props: ConfirmTxModalProps): ReactElement | null 
           decodedTxData={decodedTxDetails}
         />
       )}
-      {!areTxsMalformed && !decodedTxDetails && (
-        <ReviewConfirm {...props} areTxsMalformed={areTxsMalformed} showDecodedTxData={showDecodedTxData} />
-      )}
+
+      <ReviewConfirm
+        {...props}
+        areTxsMalformed={areTxsMalformed}
+        showDecodedTxData={showDecodedTxData}
+        hidden={areTxsMalformed || !!decodedTxDetails}
+      />
     </Modal>
   )
 }
