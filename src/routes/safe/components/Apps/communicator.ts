@@ -15,14 +15,14 @@ type MessageHandler = (
 ) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
 class AppCommunicator {
-  private iframe: HTMLIFrameElement
+  private iframeRef: MutableRefObject<HTMLIFrameElement | null>
   private handlers = new Map<Methods, MessageHandler>()
   private app: SafeApp
 
-  constructor(iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) {
-    this.iframe = iframeRef.current
+  constructor(iframeRef: MutableRefObject<HTMLIFrameElement | null>, app: SafeApp) {
+    this.iframeRef = iframeRef
     this.app = app
-
+    console.log('communicator initialized')
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
@@ -49,14 +49,15 @@ class AppCommunicator {
       ? MessageFormatter.makeErrorResponse(requestId, data, sdkVersion)
       : MessageFormatter.makeResponse(requestId, data, sdkVersion)
 
-    this.iframe.contentWindow?.postMessage(msg, this.app.url)
+    this.iframeRef.current?.contentWindow?.postMessage(msg, this.app.url)
   }
 
   handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {
     const validMessage = this.isValidMessage(msg)
     const hasHandler = this.canHandleMessage(msg)
-
+    console.log({ msg })
     if (validMessage && hasHandler) {
+      console.log({ msg })
       const handler = this.handlers.get(msg.data.method)
       try {
         // @ts-expect-error Handler existence is checked in this.canHandleMessage
@@ -83,15 +84,14 @@ const useAppCommunicator = (
   app?: SafeApp,
 ): AppCommunicator | undefined => {
   const [communicator, setCommunicator] = useState<AppCommunicator | undefined>(undefined)
-
   useEffect(() => {
     let communicatorInstance
     const initCommunicator = (iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) => {
       communicatorInstance = new AppCommunicator(iframeRef, app)
       setCommunicator(communicatorInstance)
     }
-
-    if (app && iframeRef.current !== null) {
+    console.log({ app, iframeRef })
+    if (app) {
       initCommunicator(iframeRef as MutableRefObject<HTMLIFrameElement>, app)
     }
 
