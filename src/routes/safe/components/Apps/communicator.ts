@@ -55,9 +55,8 @@ class AppCommunicator {
   handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {
     const validMessage = this.isValidMessage(msg)
     const hasHandler = this.canHandleMessage(msg)
-    console.log({ msg })
+
     if (validMessage && hasHandler) {
-      console.log({ msg })
       const handler = this.handlers.get(msg.data.method)
       try {
         // @ts-expect-error Handler existence is checked in this.canHandleMessage
@@ -90,7 +89,7 @@ const useAppCommunicator = (
       communicatorInstance = new AppCommunicator(iframeRef, app)
       setCommunicator(communicatorInstance)
     }
-    console.log({ app, iframeRef })
+
     if (app) {
       initCommunicator(iframeRef as MutableRefObject<HTMLIFrameElement>, app)
     }
