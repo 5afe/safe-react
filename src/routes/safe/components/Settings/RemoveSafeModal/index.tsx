@@ -77,25 +77,6 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
             showCopyBtn
             explorerUrl={getExplorerInfo(safeAddress)}
           />
-
-          {/* <Col align="center" xs={1}>
-            <Identicon address={safeAddress} diameter={32} />
-          </Col>
-          <Col xs={11}>
-            <Block className={classNames(classes.name, classes.userName)}>
-              <Paragraph noMargin size="lg" weight="bolder">
-                {safeName}
-              </Paragraph>
-              <Block className={classes.user} justify="center">
-                <Paragraph color="disabled" noMargin size="md">
-                  {safeAddress}
-                </Paragraph>
-                <Link className={classes.open} target="_blank" to={url}>
-                  <OpenInNew style={openIconStyle} />
-                </Link>
-              </Block>
-            </Block>
-          </Col> */}
         </Row>
         <Row className={classes.description}>
           <Paragraph size="lg" noMargin>
