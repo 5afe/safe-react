@@ -95,6 +95,12 @@ const styles = createStyles({
 const StyledCard = styled(Card)`
   padding: 0px;
 `
+
+/* To-do Add Identicon xl size (60px) in SRC and remove this*/
+const StyledIdenticon = styled(Identicon)`
+  height: 60px;
+  width: 60px;
+`
 type Props = {
   connected: boolean
   network: ETHEREUM_NETWORK
@@ -124,7 +130,7 @@ export const UserDetails = ({
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
-            <Identicon address={userAddress || 'random'} size="lg" />
+            <StyledIdenticon address={userAddress || 'random'} size="lg" />
           ) : (
             <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
@@ -189,7 +195,7 @@ export const UserDetails = ({
           variant="contained"
           data-testid="disconnect-btn"
         >
-          <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
+          <Paragraph className={classes.disconnectText} color="white" noMargin size="lg">
             Disconnect
           </Paragraph>
         </Button>
