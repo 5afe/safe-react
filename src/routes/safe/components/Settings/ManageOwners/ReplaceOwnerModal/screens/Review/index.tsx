@@ -120,6 +120,8 @@ export const ReviewReplaceOwnerModal = ({
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -261,6 +263,7 @@ export const ReviewReplaceOwnerModal = ({
             compact={false}
             isTransactionCreation={isCreation}
             isTransactionExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
           />
 
           <Block className={classes.gasCostsContainer}>
