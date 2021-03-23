@@ -1,4 +1,4 @@
-import { Text } from '@gnosis.pm/safe-react-components'
+import { ModalFooterConfirmation, Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useState } from 'react'
 
 import TextField from 'src/components/forms/TextField'
@@ -22,12 +22,19 @@ export default {
   compositionElements: [
     {
       title: 'Modal.Header',
-      component: <Modal.Header title="hello" />,
+      component: <Modal.Header />,
       parameters: {
         title: 'The title that will be displayed in the modal',
         titleNote: 'An annotation for the title, like "1 of 2"',
         onClose: 'Callback to be called when attempt to close the modal',
       },
+      compositionElements: [
+        {
+          title: 'Modal.Header.Title',
+          component: <Modal.Header.Title size="xs">{}</Modal.Header.Title>,
+          description: 'safe-react-component exposed with a few styles added to personalize the modal header',
+        },
+      ],
     },
     {
       title: 'Modal.Header',
@@ -66,7 +73,11 @@ export const Base = (): ReactElement => {
       <button onClick={() => setIsOpen(true)}>Open Modal</button>
       <Modal title="My first modal" description="My first modal description" handleClose={handleClose} open={isOpen}>
         {/* header */}
-        <Modal.Header title="My first modal" onClose={handleClose} />
+        <Modal.Header onClose={handleClose}>
+          <Modal.Header.Title size="xs" withoutMargin>
+            My First Modal
+          </Modal.Header.Title>
+        </Modal.Header>
 
         <GnoForm onSubmit={handleSubmit}>
           {() => (
@@ -88,10 +99,12 @@ export const Base = (): ReactElement => {
 
               {/* footer */}
               <Modal.Footer>
-                <button onClick={handleClose} type="button">
-                  close
-                </button>
-                <button type="submit">submit</button>
+                <ModalFooterConfirmation
+                  cancelText="Close"
+                  handleCancel={handleClose}
+                  handleOk={() => {}}
+                  okText="Submit"
+                />
               </Modal.Footer>
             </>
           )}
