@@ -15,12 +15,12 @@ type MessageHandler = (
 ) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
 class AppCommunicator {
-  private iframe: HTMLIFrameElement
+  private iframeRef: MutableRefObject<HTMLIFrameElement | null>
   private handlers = new Map<Methods, MessageHandler>()
   private app: SafeApp
 
-  constructor(iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) {
-    this.iframe = iframeRef.current
+  constructor(iframeRef: MutableRefObject<HTMLIFrameElement | null>, app: SafeApp) {
+    this.iframeRef = iframeRef
     this.app = app
 
     window.addEventListener('message', this.handleIncomingMessage)
@@ -49,7 +49,7 @@ class AppCommunicator {
       ? MessageFormatter.makeErrorResponse(requestId, data, sdkVersion)
       : MessageFormatter.makeResponse(requestId, data, sdkVersion)
 
-    this.iframe.contentWindow?.postMessage(msg, this.app.url)
+    this.iframeRef.current?.contentWindow?.postMessage(msg, this.app.url)
   }
 
   handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {
@@ -83,7 +83,6 @@ const useAppCommunicator = (
   app?: SafeApp,
 ): AppCommunicator | undefined => {
   const [communicator, setCommunicator] = useState<AppCommunicator | undefined>(undefined)
-
   useEffect(() => {
     let communicatorInstance
     const initCommunicator = (iframeRef: MutableRefObject<HTMLIFrameElement>, app: SafeApp) => {
@@ -91,7 +90,7 @@ const useAppCommunicator = (
       setCommunicator(communicatorInstance)
     }
 
-    if (app && iframeRef.current !== null) {
+    if (app) {
       initCommunicator(iframeRef as MutableRefObject<HTMLIFrameElement>, app)
     }
 
