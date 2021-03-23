@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react'
 import { ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import DividerLine from 'src/components/DividerLine'
 import TextBox from 'src/components/TextBox'
@@ -14,7 +14,6 @@ import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/trans
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getNetworkInfo } from 'src/config'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -74,7 +73,6 @@ export const ReviewConfirm = ({
   showDecodedTxData,
 }: Props): React.ReactElement => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
-  const threshold = useSelector(safeThresholdSelector) || 1
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
@@ -140,8 +138,6 @@ export const ReviewConfirm = ({
     onClose()
   }
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   const confirmTransactions = async (txParameters: TxParameters) => {
     await dispatch(
       createTransaction(
@@ -186,8 +182,9 @@ export const ReviewConfirm = ({
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
-      parametersStatus={getParametersStatus()}
       closeEditModalCallback={closeEditModalCallback}
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
     >
       {(txParameters, toggleEditMode) => (
         <div hidden={hidden}>
@@ -227,9 +224,9 @@ export const ReviewConfirm = ({
             <TxParametersDetail
               txParameters={txParameters}
               onEdit={toggleEditMode}
-              parametersStatus={getParametersStatus()}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
           </Container>
 
