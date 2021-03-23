@@ -8,6 +8,7 @@ import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
 import Collapse from 'src/components/Collapse'
 import TextBox from 'src/components/TextBox'
+import ModalTitle from 'src/components/ModalTitle'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import Bold from 'src/components/layout/Bold'
 import Heading from 'src/components/layout/Heading'
@@ -25,11 +26,13 @@ import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
 import { TransactionParams } from './AppFrame'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { Modal } from 'src/components/Modal'
+import Modal from 'src/components/Modal'
+import Row from 'src/components/layout/Row'
+import Hairline from 'src/components/layout/Hairline'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { lg, sm } from 'src/theme/variables'
+import { md, lg, sm } from 'src/theme/variables'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const isTxValid = (t: Transaction): boolean => {
@@ -73,6 +76,15 @@ const StyledTextBox = styled(TextBox)`
   max-width: 444px;
 `
 
+const Container = styled.div`
+  max-width: 480px;
+  padding: ${md} ${lg};
+`
+
+const ModalFooter = styled(Row)`
+  padding: ${md} ${lg};
+  justify-content: center;
+`
 const TransactionFeesWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: ${sm} ${lg};
@@ -203,7 +215,7 @@ export const ConfirmTransactionModal = ({
 
   const body = areTxsMalformed
     ? () => (
-        <Modal.Body>
+        <>
           <IconText>
             <Icon color="error" size="md" type="info" />
             <Title size="xs">Transaction error</Title>
@@ -212,12 +224,12 @@ export const ConfirmTransactionModal = ({
             This Safe App initiated a transaction which cannot be processed. Please get in touch with the developer of
             this Safe App for more information.
           </Text>
-        </Modal.Body>
+        </>
       )
     : (txParameters, toggleEditMode) => {
         return (
           <>
-            <Modal.Body>
+            <Container>
               <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
               <DividerLine withArrow />
               {txs.map((tx, index) => (
@@ -262,7 +274,7 @@ export const ConfirmTransactionModal = ({
                 isTransactionExecution={isExecution}
                 isOffChainSignature={isOffChainSignature}
               />
-            </Modal.Body>
+            </Container>
             {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
               <TransactionFeesWrapper>
                 <TransactionFees
@@ -279,7 +291,7 @@ export const ConfirmTransactionModal = ({
       }
 
   return (
-    <Modal description="Safe App transaction" title="Safe App transaction" open handleClose={handleTxRejection}>
+    <Modal description="Safe App transaction" title="Safe App transaction" open>
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
         isExecution={isExecution}
@@ -290,11 +302,12 @@ export const ConfirmTransactionModal = ({
       >
         {(txParameters, toggleEditMode) => (
           <>
-            <Modal.Header title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+            <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
+            <Hairline />
 
             {body(txParameters, toggleEditMode)}
 
-            <Modal.Footer>
+            <ModalFooter align="center" grow>
               <ModalFooterConfirmation
                 cancelText="Cancel"
                 handleCancel={handleTxRejection}
@@ -302,7 +315,7 @@ export const ConfirmTransactionModal = ({
                 okDisabled={areTxsMalformed}
                 okText="Submit"
               />
-            </Modal.Footer>
+            </ModalFooter>
           </>
         )}
       </EditableTxParameters>
