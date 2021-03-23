@@ -94,7 +94,13 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
   }
 
   return (
-    <EditableTxParameters ethGasLimit={gasLimit} ethGasPrice={gasPriceFormatted} safeTxGas={gasEstimation.toString()}>
+    <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
+      ethGasLimit={gasLimit}
+      ethGasPrice={gasPriceFormatted}
+      safeTxGas={gasEstimation.toString()}
+    >
       {(txParameters, toggleEditMode) => (
         <>
           <Row align="center" className={classes.heading} grow>
@@ -168,6 +174,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
           </Block>
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (

@@ -317,6 +317,8 @@ export const ApproveTxModal = ({
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
+        isOffChainSignature={isOffChainSignature}
+        isExecution={isExecution}
         parametersStatus={getParametersStatus()}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
@@ -370,13 +372,14 @@ export const ApproveTxModal = ({
                   )}
 
                   {/* Tx Parameters */}
-                  {approveAndExecute && (
+                  {(approveAndExecute || !isOffChainSignature) && (
                     <TxParametersDetail
                       txParameters={txParameters}
                       onEdit={toggleEditMode}
                       parametersStatus={getParametersStatus()}
                       isTransactionCreation={isCreation}
                       isTransactionExecution={isExecution}
+                      isOffChainSignature={isOffChainSignature}
                     />
                   )}
                 </Row>
@@ -396,8 +399,8 @@ export const ApproveTxModal = ({
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Exit
+                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                  Close
                 </Button>
                 <Button
                   color={isCancelTx ? 'secondary' : 'primary'}

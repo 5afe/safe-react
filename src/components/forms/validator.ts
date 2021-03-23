@@ -80,9 +80,7 @@ export const mustBeEthereumContractAddress = memoize(
   async (address: string): Promise<ValidatorReturnType> => {
     const contractCode = await getWeb3().eth.getCode(address)
 
-    const errorMessage = `Input must be a valid Ethereum contract address${
-      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
-    }`
+    const errorMessage = `Must resolve to a valid smart contract address.`
 
     return !contractCode || contractCode.replace('0x', '').replace(/0/g, '') === '' ? errorMessage : undefined
   },
@@ -92,11 +90,15 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
   value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
+export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 
 export const uniqueAddress = (addresses: string[] | List<string> = []) => (address?: string): string | undefined => {
   const addressExists = addresses.some((addressFromList) => sameAddress(addressFromList, address))
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }
+
+export const addressIsNotCurrentSafe = (safeAddress: string) => (address?: string): string | undefined =>
+  sameAddress(safeAddress, address) ? OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR : undefined
 
 export const composeValidators = (...validators: Validator[]) => (value: unknown): ValidatorReturnType =>
   validators.reduce(

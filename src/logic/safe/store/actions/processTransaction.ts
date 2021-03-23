@@ -11,6 +11,7 @@ import {
 } from 'src/logic/safe/safeTxSigner'
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffchainSigning } from 'src/logic/safe/transactions/offchainSigner'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -117,8 +118,6 @@ export const processTransaction = ({
 
         dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
         await saveTxToHistory({ ...txArgs, signature })
-        // TODO: while we wait for the tx to be stored in the service and later update the tx info
-        //  we should update the tx status in the store to disable owners' action buttons
 
         dispatch(fetchTransactions(safeAddress))
         return
@@ -154,6 +153,10 @@ export const processTransaction = ({
 
         try {
           await saveTxToHistory({ ...txArgs, txHash })
+
+          // store the pending transaction's nonce
+          isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
+
           dispatch(fetchTransactions(safeAddress))
         } catch (e) {
           console.error(e)
@@ -172,10 +175,6 @@ export const processTransaction = ({
         console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
-        if (isExecution) {
-          dispatch(enqueueSnackbar(notificationsQueue.afterExecution.noMoreConfirmationsNeeded))
-        }
-
         dispatch(fetchTransactions(safeAddress))
 
         if (isExecution) {

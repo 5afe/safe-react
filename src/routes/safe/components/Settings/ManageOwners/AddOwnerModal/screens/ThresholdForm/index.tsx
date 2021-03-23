@@ -1,8 +1,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { withStyles } from '@material-ui/core/styles'
+import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -21,10 +21,24 @@ import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
 
-const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
+const useStyles = makeStyles(styles)
+
+type SubmitProps = {
+  threshold: number
+}
+
+type Props = {
+  onClickBack: () => void
+  onClose: () => void
+  onSubmit: (values: SubmitProps) => void
+}
+
+export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
+  const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector) as number
   const owners = useSelector(safeOwnersSelector)
-  const handleSubmit = (values) => {
+
+  const handleSubmit = (values: SubmitProps) => {
     onSubmit(values)
   }
 
@@ -110,5 +124,3 @@ const ThresholdForm = ({ classes, onClickBack, onClose, onSubmit }) => {
     </>
   )
 }
-
-export default withStyles(styles as any)(ThresholdForm)

@@ -2,7 +2,7 @@ import { List, Map } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { ADD_TOKEN } from 'src/logic/tokens/store/actions/addToken'
-import { ADD_TOKENS } from 'src/logic/tokens/store/actions/saveTokens'
+import { ADD_TOKENS } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { AppReduxState } from 'src/store'
 
