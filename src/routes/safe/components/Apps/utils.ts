@@ -3,7 +3,6 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
@@ -17,7 +16,6 @@ const removeLastTrailingSlash = (url) => {
   return url
 }
 
-const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
 export type StaticAppInfo = {
   url: string
   disabled: boolean
