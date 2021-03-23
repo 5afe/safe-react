@@ -160,7 +160,7 @@ export const ChangeThresholdModal = ({
                         name={THRESHOLD_FIELD_NAME}
                         onChange={({ target }) => {
                           const value = parseInt(target.value)
-                          setDisabledSubmitForm(value === editedThreshold)
+                          setDisabledSubmitForm(value === editedThreshold || value === threshold)
                           setEditedThreshold(value)
                         }}
                         render={(props) => (
@@ -172,11 +172,6 @@ export const ChangeThresholdModal = ({
                                 </MenuItem>
                               ))}
                             </SelectField>
-                            {props.meta.error && props.meta.touched && (
-                              <Paragraph className={classes.errorText} color="error" noMargin>
-                                {props.meta.error}
-                              </Paragraph>
-                            )}
                           </>
                         )}
                         validate={composeValidators(required, mustBeInteger, minValue(1), differentFrom(threshold))}
