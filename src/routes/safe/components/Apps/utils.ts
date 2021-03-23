@@ -26,7 +26,7 @@ export type StaticAppInfo = {
 export const staticAppsList: Array<StaticAppInfo> = [
   // 1inch
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTrqw5cptrZdJU2nWyxaddQpeg5gLEws7tBj3uB1TaqNH`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
