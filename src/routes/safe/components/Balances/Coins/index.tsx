@@ -32,9 +32,11 @@ import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
 const StyledButton = styled(Button)`
-  margin: 4px 12px 4px 0px;
-  padding: 0 12px !important;
-  min-width: auto !important;
+  &&.MuiButton-root {
+    margin: 4px 12px 4px 0px;
+    padding: 0 12px;
+    min-width: auto;
+  }
   svg {
     margin: 0 6px 0 0;
   }
