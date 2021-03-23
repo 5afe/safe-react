@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useState } from 'react'
 import { Icon, ModalFooterConfirmation, Text, Title } from '@gnosis.pm/safe-react-components'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 import styled from 'styled-components'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import AddressInfo from 'src/components/AddressInfo'
 import DividerLine from 'src/components/DividerLine'
@@ -26,7 +26,6 @@ import GasEstimationInfo from './GasEstimationInfo'
 import { getNetworkInfo } from 'src/config'
 import { TransactionParams } from './AppFrame'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import Modal from 'src/components/Modal'
 import Row from 'src/components/layout/Row'
 import Hairline from 'src/components/layout/Hairline'
@@ -123,7 +122,6 @@ export const ConfirmTransactionModal = ({
   onTxReject,
 }: OwnProps): React.ReactElement | null => {
   const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
-  const threshold = useSelector(safeThresholdSelector) || 1
 
   const txRecipient: string | undefined = useMemo(() => (txs.length > 1 ? MULTI_SEND_ADDRESS : txs[0]?.to), [txs])
   const txData: string | undefined = useMemo(() => (txs.length > 1 ? encodeMultiSendCall(txs) : txs[0]?.data), [txs])
@@ -173,8 +171,6 @@ export const ConfirmTransactionModal = ({
     onUserConfirm(safeTxHash)
     onClose()
   }
-
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
 
   const confirmTransactions = async (txParameters: TxParameters) => {
     await dispatch(
@@ -274,9 +270,9 @@ export const ConfirmTransactionModal = ({
               <TxParametersDetail
                 txParameters={txParameters}
                 onEdit={toggleEditMode}
-                parametersStatus={getParametersStatus()}
                 isTransactionCreation={isCreation}
                 isTransactionExecution={isExecution}
+                isOffChainSignature={isOffChainSignature}
               />
             </Container>
             {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
@@ -297,16 +293,16 @@ export const ConfirmTransactionModal = ({
   return (
     <Modal description="Safe App transaction" title="Safe App transaction" open>
       <EditableTxParameters
+        isOffChainSignature={isOffChainSignature}
+        isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
-        parametersStatus={getParametersStatus()}
         closeEditModalCallback={closeEditModalCallback}
       >
         {(txParameters, toggleEditMode) => (
           <>
             <ModalTitle title={app.name} iconUrl={app.iconUrl} onClose={handleTxRejection} />
-
             <Hairline />
 
             {body(txParameters, toggleEditMode)}
