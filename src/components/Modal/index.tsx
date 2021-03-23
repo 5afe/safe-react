@@ -2,7 +2,6 @@ import { Icon, Text, Title } from '@gnosis.pm/safe-react-components'
 import ModalMUI from '@material-ui/core/Modal'
 import cn from 'classnames'
 import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
-import { StyledScrollableBar } from 'src/routes/safe/components/Transactions/TxList/styled'
 import styled from 'styled-components'
 
 const ModalStyled = styled(ModalMUI)`
@@ -47,7 +46,6 @@ const ModalStyled = styled(ModalMUI)`
     &.modal {
       height: auto;
       max-width: calc(100% - 130px);
-      overflow: hidden;
     }
   }
 `
@@ -146,9 +144,7 @@ const Header = ({ title, titleNote, iconUrl, onClose }: HeaderProps): ReactEleme
 }
 
 /*** Body ***/
-const BodySection = styled(StyledScrollableBar)<{ withoutPadding: BodyProps['withoutPadding'] }>`
-  max-height: calc(90vh - 300px);
-  overflow-y: scroll;
+const BodySection = styled.div<{ withoutPadding: BodyProps['withoutPadding'] }>`
   padding: ${({ withoutPadding }) => (withoutPadding ? 0 : '24px')};
 `
 
