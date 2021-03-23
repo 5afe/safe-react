@@ -1,4 +1,4 @@
-import { Icon, Text, Title } from '@gnosis.pm/safe-react-components'
+import { Icon, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import ModalMUI from '@material-ui/core/Modal'
 import cn from 'classnames'
 import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
@@ -80,15 +80,6 @@ const HeaderSection = styled.div`
   padding: 16px 24px;
   border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
 
-  .title-icon {
-    width: 20px;
-    margin-right: 10px;
-  }
-
-  .title-note {
-    margin-left: 12px;
-  }
-
   .close-button {
     align-self: flex-end;
     background: none;
@@ -109,30 +100,32 @@ const HeaderSection = styled.div`
   }
 `
 
-const HeaderTitle = styled(Title)`
+const Title = styled(TitleSRC)`
+  display: flex;
+  align-items: center;
   flex-basis: 100%;
+
+  .image,
+  img {
+    width: 20px;
+    margin-right: 10px;
+  }
+
+  .note,
+  span {
+    margin-left: 12px;
+  }
 `
 
 interface HeaderProps {
-  title: string
-  iconUrl?: string
-  titleNote?: string
+  children?: ReactNode
   onClose?: (event: any) => void
 }
 
-const Header = ({ title, titleNote, iconUrl, onClose }: HeaderProps): ReactElement => {
+const Header = ({ children, onClose }: HeaderProps): ReactElement => {
   return (
     <HeaderSection className="modal-header">
-      {iconUrl && <img alt={title} className="title-icon" src={iconUrl} />}
-
-      <HeaderTitle size="xs" withoutMargin>
-        {title}
-        {titleNote && (
-          <Text size="lg" color="secondaryLight" as="span" className="title-note">
-            {titleNote}
-          </Text>
-        )}
-      </HeaderTitle>
+      {children}
 
       {onClose && (
         <button className="close-button" onClick={onClose}>
@@ -142,6 +135,8 @@ const Header = ({ title, titleNote, iconUrl, onClose }: HeaderProps): ReactEleme
     </HeaderSection>
   )
 }
+
+Header.Title = Title
 
 /*** Body ***/
 const BodySection = styled.div<{ withoutPadding: BodyProps['withoutPadding'] }>`
