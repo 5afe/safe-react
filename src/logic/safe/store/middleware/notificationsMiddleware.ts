@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router'
+import { Action } from 'redux-actions'
 
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
@@ -8,14 +9,19 @@ import { getSafeVersionInfo } from 'src/logic/safe/utils/safeVersion'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { ADD_QUEUED_TRANSACTIONS } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import {
+  ADD_QUEUED_TRANSACTIONS,
+  ADD_HISTORY_TRANSACTIONS,
+} from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
+import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
+import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/logic/safe/store/selectors'
 
-import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTransactionSummary, TransactionGatewayResult } from 'src/logic/safe/store/models/types/gateway.d'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 
-const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS]
+const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
 const LAST_TIME_USED_LOGGED_IN_ID = 'LAST_TIME_USED_LOGGED_IN_ID'
 
@@ -70,9 +76,21 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
     const state = store.getState()
 
     switch (action.type) {
+      case ADD_HISTORY_TRANSACTIONS: {
+        const userAddress: string = userAccountSelector(state)
+        const safes = safesMapSelector(state)
+
+        const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safes)
+        // if we have a notification, dispatch it depending on transaction's status
+        executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
+
+        break
+      }
       case ADD_QUEUED_TRANSACTIONS: {
-        const { safeAddress, values } = action.payload
-        const transactions = values.filter((tx) => isTransactionSummary(tx)).map((item) => item.transaction)
+        const { safeAddress, values } = (action as Action<QueuedPayload>).payload
+        const transactions = values
+          .filter((tx) => isTransactionSummary(tx))
+          .map((item: TransactionGatewayResult) => item.transaction)
         const userAddress: string = userAccountSelector(state)
         const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
 
