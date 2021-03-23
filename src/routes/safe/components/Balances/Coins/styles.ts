@@ -1,4 +1,4 @@
-import { sm, xs } from 'src/theme/variables'
+import { sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -24,23 +24,6 @@ export const styles = createStyles({
   actions: {
     justifyContent: 'flex-end',
     visibility: 'hidden',
-  },
-  receive: {
-    width: '95px',
-    minWidth: '95px',
-    marginLeft: sm,
-    borderRadius: xs,
-    '& > span': {
-      fontSize: '14px',
-    },
-  },
-  send: {
-    width: '75px',
-    minWidth: '75px',
-    borderRadius: xs,
-    '& > span': {
-      fontSize: '14px',
-    },
   },
   leftIcon: {
     marginRight: sm,
