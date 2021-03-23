@@ -56,7 +56,11 @@ export const staticAppsList: Array<StaticAppInfo> = [
     networks: [ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.XDAI],
   },
   // Compound
-  { url: `${gnosisAppsUrl}/compound`, disabled: false, networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY] },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // dHedge
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaiemnumMaaK9wE1pbMfm3YSBUpcFNgDh3Bf6VZCZq57Q`,
