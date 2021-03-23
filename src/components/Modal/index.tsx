@@ -156,7 +156,6 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 
 /*** Footer ***/
 const FooterSection = styled.div`
-  flex: 1 1 auto;
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
   padding: 16px 24px;
 `
