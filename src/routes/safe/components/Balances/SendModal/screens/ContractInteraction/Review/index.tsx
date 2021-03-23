@@ -126,6 +126,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -210,6 +212,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
           </Block>
           <div className={classes.gasCostsContainer}>

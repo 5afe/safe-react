@@ -123,6 +123,8 @@ export const ReviewRemoveOwnerModal = ({
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -241,6 +243,7 @@ export const ReviewRemoveOwnerModal = ({
             compact={false}
             isTransactionCreation={isCreation}
             isTransactionExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
           />
 
           {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
