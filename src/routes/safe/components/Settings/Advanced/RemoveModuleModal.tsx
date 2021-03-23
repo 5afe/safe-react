@@ -127,6 +127,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       open
     >
       <EditableTxParameters
+        isOffChainSignature={isOffChainSignature}
+        isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
@@ -181,6 +183,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
+                  isOffChainSignature={isOffChainSignature}
                 />
               </Block>
               <Row className={cn(classes.modalDescription, classes.gasCostsContainer)}>
