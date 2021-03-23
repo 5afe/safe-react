@@ -1,4 +1,4 @@
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Text } from '@gnosis.pm/safe-react-components'
 import { FormState, Mutator } from 'final-form'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
@@ -55,7 +55,16 @@ const canReview = ({
 const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): ReactElement => {
   return (
     <>
-      <Modal.Header title="New Spending Limit" titleNote="1 of 2" onClose={onCancel} />
+      <Modal.Header onClose={onCancel}>
+        <Modal.Header.Title size="xs" withoutMargin>
+          <>
+            New Spending Limit
+            <Text size="lg" color="secondaryLight" as="span">
+              1 of 2
+            </Text>
+          </>
+        </Modal.Header.Title>
+      </Modal.Header>
 
       <GnoForm formMutators={formMutators} onSubmit={onReview} initialValues={initialValues}>
         {(...args) => {

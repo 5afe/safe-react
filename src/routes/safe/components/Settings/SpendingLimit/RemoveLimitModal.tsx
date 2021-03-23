@@ -125,7 +125,11 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         {(txParameters, toggleEditMode) => {
           return (
             <>
-              <Modal.Header title="Remove Spending Limit" onClose={onClose} />
+              <Modal.Header onClose={onClose}>
+                <Modal.Header.Title size="xs" withoutMargin>
+                  Remove Spending Limit
+                </Modal.Header.Title>
+              </Modal.Header>
 
               <Modal.Body>
                 <Col margin="lg">

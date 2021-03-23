@@ -241,7 +241,14 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Modal.Header title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
+          <Modal.Header onClose={onClose}>
+            <Modal.Header.Title size="xs" withoutMargin>
+              New Spending Limit
+              <Text size="lg" color="secondaryLight" as="span">
+                2 of 2
+              </Text>
+            </Modal.Header.Title>
+          </Modal.Header>
 
           <Modal.Body>
             <Col margin="lg">
