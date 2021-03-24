@@ -38,7 +38,7 @@ const styles = () => ({
     zIndex: 1301,
   },
   logo: {
-    flexBasis: '114px',
+    flexBasis: '140px',
     flexShrink: '0',
     flexGrow: '0',
     maxWidth: '55px',

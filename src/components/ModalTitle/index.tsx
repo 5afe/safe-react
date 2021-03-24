@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
+import { Icon } from '@gnosis.pm/safe-react-components'
 
 import Paragraph from 'src/components/layout/Paragraph'
 import { md, lg } from 'src/theme/variables'
@@ -33,18 +34,28 @@ const StyledClose = styled(Close)`
   width: 35px;
 `
 
-const ModalTitle = ({
-  iconUrl,
-  title,
-  onClose,
-}: {
+const GoBackWrapper = styled.div`
+  margin-right: 15px;
+`
+
+type Props = {
   title: string
-  iconUrl: string
+  goBack?: () => void
+  iconUrl?: string
   onClose?: () => void
-}): React.ReactElement => {
+}
+
+const ModalTitle = ({ goBack, iconUrl, title, onClose }: Props): React.ReactElement => {
   return (
     <StyledRow align="center" grow>
       <TitleWrapper>
+        {goBack && (
+          <GoBackWrapper>
+            <IconButton onClick={goBack}>
+              <Icon type="arrowLeft" size="md" />
+            </IconButton>
+          </GoBackWrapper>
+        )}
         {iconUrl && <IconImg alt={title} src={iconUrl} />}
         <StyledParagraph noMargin weight="bolder">
           {title}
