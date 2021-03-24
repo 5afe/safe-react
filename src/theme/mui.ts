@@ -455,7 +455,7 @@ export const DropdownListTheme = {
       },
       button: {
         '&:hover': {
-          backgroundColor: '#fff3e2',
+          backgroundColor: '#f7f5f5',
         },
       },
     },
