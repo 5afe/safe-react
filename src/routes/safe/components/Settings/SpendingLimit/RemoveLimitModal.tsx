@@ -116,6 +116,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
       description="Remove the selected Spending Limit"
     >
       <EditableTxParameters
+        isOffChainSignature={isOffChainSignature}
+        isExecution={isExecution}
         ethGasLimit={gasLimit}
         ethGasPrice={gasPriceFormatted}
         safeTxGas={gasEstimation.toString()}
@@ -148,6 +150,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                   onEdit={toggleEditMode}
                   isTransactionCreation={isCreation}
                   isTransactionExecution={isExecution}
+                  isOffChainSignature={isOffChainSignature}
                 />
               </Block>
 

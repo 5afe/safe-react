@@ -7,6 +7,8 @@ import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
+  isOffChainSignature: boolean
+  isExecution: boolean
   parametersStatus?: ParametersStatus
   ethGasLimit?: TxParameters['ethGasLimit']
   ethGasPrice?: TxParameters['ethGasPrice']
@@ -17,6 +19,8 @@ type Props = {
 
 export const EditableTxParameters = ({
   children,
+  isOffChainSignature,
+  isExecution,
   parametersStatus,
   ethGasLimit,
   ethGasPrice,
@@ -27,7 +31,7 @@ export const EditableTxParameters = ({
   const [isEditMode, toggleEditMode] = useState(false)
   const [useManualValues, setUseManualValues] = useState(false)
   const threshold = useSelector(safeThresholdSelector) || 1
-  const defaultParameterStatus = threshold > 1 ? 'ETH_DISABLED' : 'ENABLED'
+  const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
   const txParameters = useTransactionParameters({
     parameterStatus: parametersStatus || defaultParameterStatus,
     initialEthGasLimit: ethGasLimit,
@@ -65,6 +69,7 @@ export const EditableTxParameters = ({
 
   return isEditMode ? (
     <EditTxParametersForm
+      isExecution={isExecution}
       txParameters={txParameters}
       onClose={closeEditFormHandler}
       parametersStatus={parametersStatus ? parametersStatus : defaultParameterStatus}
