@@ -67,7 +67,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Idle
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVkGHm6gfQumJhnRfFCh7m2oSYwLXb51EKHzChpcV9J3N`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTvrLwJtyjG8QFHgvqdPhcV5DBMQ7oZceSU4uvPw9vQaj`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },

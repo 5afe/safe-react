@@ -56,6 +56,7 @@ const AppWrapper = styled.div`
 
 const StyledCard = styled(Card)`
   flex-grow: 1;
+  padding: 0;
 `
 
 const StyledIframe = styled.iframe`
