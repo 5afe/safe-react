@@ -11,8 +11,6 @@ import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { getNetworkInfo } from 'src/config'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 
@@ -27,24 +25,20 @@ interface ExtractedData {
   tokens: List<Token>
 }
 
-const { nativeCoin } = getNetworkInfo()
-
 const extractDataFromResult = (currentTokens: TokenState) => (
   acc: ExtractedData,
   { balance, fiatBalance, tokenInfo }: TokenBalance,
 ): ExtractedData => {
-  const { address: tokenAddress, decimals } = tokenInfo
-  if (sameAddress(tokenAddress, ZERO_ADDRESS) || sameAddress(tokenAddress, nativeCoin.address)) {
-    acc.ethBalance = humanReadableValue(balance, 18)
-  }
+  const { address, decimals } = tokenInfo
+
   acc.balances = acc.balances.merge({
-    [tokenAddress]: {
+    [address]: {
       fiatBalance,
       tokenBalance: humanReadableValue(balance, Number(decimals)),
     },
   })
 
-  if (currentTokens && !currentTokens.get(tokenAddress)) {
+  if (currentTokens && !currentTokens.get(address)) {
     acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
   }
 

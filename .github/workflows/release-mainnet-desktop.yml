@@ -19,17 +19,18 @@ jobs:
       fail-fast: false
       max-parallel: 15
       matrix:
-        os: [macos-latest, windows-latest, ubuntu-20.04]
+        os: [macos-latest, windows-latest, ubuntu-18.04]
 
     steps:
       - name: Check out Git repository
         uses: actions/checkout@v2
 
-      - uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+      # Linux build patches
+      - name: Install linux dependencies
+        if: startsWith(matrix.os, 'ubuntu')
+        run: sudo apt-get update && sudo apt-get install libudev-dev libusb-1.0-0-dev
 
+      # Windows build patches
       - name: Patch node gyp on windows to support Visual Studio 2019
         if: startsWith(matrix.os, 'windows')
         shell: powershell
@@ -41,18 +42,20 @@ jobs:
         run: |
           yarn global add node-gyp
           yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
+
+      # Load node_modules cache action
+      - uses: actions/cache@v2
+        with:
+          path: '**/node_modules'
+          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
+
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
           node-version: 14
-      - run: |
-          # Due to some dependencies yarn may randomly throw an error about invalid cache
-          # This approach is taken from https://github.com/yarnpkg/yarn/issues/7212#issuecomment-506155894 to fix the issue
-          # Another approach is to install with flag --network-concurrency 1, but this will make the installation pretty slow (default value is 8)
-          mkdir .yarncache
-          yarn install --cache-folder ./.yarncache --frozen-lockfile
-          rm -rf .yarncache
-          yarn cache clean      
+
+      - name: Run yarn install
+        run: yarn install --frozen-lockfile --network-concurrency 1
 
       - name: Build/Release Desktop App
         env:

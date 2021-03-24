@@ -178,6 +178,8 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -260,10 +262,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               onEdit={toggleEditMode}
               isTransactionCreation={isCreation}
               isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
             />
-
-            {/* Disclaimer */}
           </Block>
+
+          {/* Disclaimer */}
           {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <div className={classes.gasCostsContainer}>
               <TransactionFees

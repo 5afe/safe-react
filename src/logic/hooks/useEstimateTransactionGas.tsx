@@ -218,10 +218,9 @@ export const useEstimateTransactionGas = ({
       )
 
       const fixedGasCosts = getFixedGasCosts(Number(threshold))
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
-        const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
-
         const gasEstimation = await estimateTransactionGas({
           safeAddress,
           txRecipient,
@@ -279,7 +278,7 @@ export const useEstimateTransactionGas = ({
           gasLimit: '0',
           isExecution,
           isCreation,
-          isOffChainSignature: false,
+          isOffChainSignature,
         })
       }
     }
