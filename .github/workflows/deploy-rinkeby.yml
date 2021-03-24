@@ -66,7 +66,7 @@ jobs:
           yarn cache clean
 
         # Set production flag
-      - name: Set production flag for tag build
+      - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
         if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'master'
 
@@ -103,7 +103,6 @@ jobs:
             * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: true
         if: success() && github.event.number
         env:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
