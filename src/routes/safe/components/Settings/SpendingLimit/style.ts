@@ -21,7 +21,7 @@ export const useStyles = makeStyles(
     },
     hide: {
       '&:hover': {
-        backgroundColor: '#fff3e2',
+        backgroundColor: '#f7f5f5',
       },
       '&:hover $actions': {
         visibility: 'initial',
