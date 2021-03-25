@@ -20,7 +20,7 @@ const ModalStyled = styled(ModalMUI)`
     width: 500px;
     border-radius: 8px;
     background-color: #ffffff;
-    box-shadow: 0 0 5px 0 rgba(74, 85, 121, 0.5);
+    box-shadow: 1px 2px 10px 0 rgba(40, 54, 61, 0.18);
     display: flex;
     flex-direction: column;
 
@@ -79,8 +79,12 @@ export default GnoModal
 /*** Header ***/
 const HeaderSection = styled.div`
   display: flex;
-  padding: 16px 24px;
+  padding: 24px 18px 24px 24px;
   border-bottom: 2px solid ${({ theme }) => theme.colors.separator};
+
+  h5 {
+    color: ${({ theme }) => theme.colors.text};
+  }
 
   .close-button {
     align-self: flex-end;
@@ -172,9 +176,21 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 /*** Footer ***/
 const FooterSection = styled.div`
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
-  padding: 16px 24px;
+  padding: 24px;
+
+  button:first-child {
+    margin: 0 20px 0 0;
+
+    :hover {
+      background: ${({ theme }) => theme.colors.background};
+    }
+  }
+
+  button {
+    font-size: 16px;
+  }
 `
 
 interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
@@ -195,7 +211,7 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
 
   return (
     <>
-      <Button size="md" color="secondary" {...cancelButtonProps}>
+      <Button size="md" color="primary" variant="outlined" {...cancelButtonProps}>
         {cancelText}
       </Button>
       <Button size="md" type="submit" {...submitButtonProps}>
