@@ -1,8 +1,10 @@
-import { Icon, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
-import ModalMUI from '@material-ui/core/Modal'
+import { Button, Icon, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import { Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
-import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
+import React, { HTMLAttributes, ReactElement, ReactNode, ReactNodeArray } from 'react'
 import styled from 'styled-components'
+
+type Theme = typeof theme
 
 const ModalStyled = styled(ModalMUI)`
   & {
@@ -100,7 +102,7 @@ const HeaderSection = styled.div`
   }
 `
 
-const Title = styled(TitleSRC)`
+const TitleStyled = styled(TitleSRC)`
   display: flex;
   align-items: center;
   flex-basis: 100%;
@@ -116,6 +118,19 @@ const Title = styled(TitleSRC)`
     margin-left: 12px;
   }
 `
+
+interface TitleProps {
+  children: string | ReactNode
+  size?: keyof Theme['title']['size']
+  withoutMargin?: boolean
+  strong?: boolean
+}
+
+const Title = ({ children, ...props }: TitleProps): ReactElement => (
+  <TitleStyled size="xs" withoutMargin {...props}>
+    {children}
+  </TitleStyled>
+)
 
 interface HeaderProps {
   children?: ReactNode
@@ -156,9 +171,39 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 
 /*** Footer ***/
 const FooterSection = styled.div`
+  display: flex;
+  justify-content: space-around;
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
   padding: 16px 24px;
 `
+
+interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+  text?: string
+  size?: keyof Theme['buttons']['size']
+  color?: 'primary' | 'secondary' | 'error'
+  variant?: 'bordered' | 'contained' | 'outlined'
+}
+
+interface ButtonsProps {
+  cancelButtonProps?: ButtonProps
+  actionButtonProps?: ButtonProps
+}
+
+const Buttons = ({ cancelButtonProps = {}, actionButtonProps = {} }: ButtonsProps): ReactElement => {
+  const { text: cancelText = 'Cancel' } = cancelButtonProps
+  const { text: actionText = 'Submit' } = actionButtonProps
+
+  return (
+    <>
+      <Button size="md" color="secondary" {...cancelButtonProps}>
+        {cancelText}
+      </Button>
+      <Button size="md" type="submit" {...actionButtonProps}>
+        {actionText}
+      </Button>
+    </>
+  )
+}
 
 interface FooterProps {
   children: ReactNode | ReactNodeArray
@@ -167,6 +212,8 @@ interface FooterProps {
 const Footer = ({ children }: FooterProps): ReactElement => (
   <FooterSection className="modal-footer">{children}</FooterSection>
 )
+
+Footer.Buttons = Buttons
 
 interface ModalProps {
   children: ReactNode
