@@ -32,7 +32,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { ConfirmTransactionModal } from '../components/ConfirmTransactionModal'
+import { ConfirmTxModal } from '../components/ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
@@ -56,6 +56,7 @@ const AppWrapper = styled.div`
 
 const StyledCard = styled(Card)`
   flex-grow: 1;
+  padding: 0;
 `
 
 const StyledIframe = styled.iframe`
@@ -354,7 +355,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
         />
       )}
 
-      <ConfirmTransactionModal
+      <ConfirmTxModal
         isOpen={confirmTransactionModal.isOpen}
         app={safeApp as SafeApp}
         safeAddress={safeAddress}

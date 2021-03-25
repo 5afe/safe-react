@@ -140,6 +140,7 @@ const SendModal = ({
 
         {activeScreen === 'sendFunds' && (
           <SendFunds
+            initialValues={tx as ReviewTxProp}
             onClose={onClose}
             onReview={handleTxCreation}
             recipientAddress={recipientAddress}
