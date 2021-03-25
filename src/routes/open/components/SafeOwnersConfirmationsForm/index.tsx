@@ -88,7 +88,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
         return newValues
       }
 
-      const ownerToRemove = new RegExp(`owner${index}(Name|Address)`)
+      const ownerToRemove = new RegExp(`owner${index.toString().padStart(4, '0')}(Name|Address)`)
 
       if (ownerToRemove.test(key)) {
         // skip, doing anything with the removed field
@@ -101,7 +101,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
 
       if (Number(ownerOrder) > index) {
         // reduce by one the order of the owner
-        newValues[`owner${Number(ownerOrder) - 1}${ownerField}`] = values[key]
+        newValues[`owner${(Number(ownerOrder) - 1).toString().padStart(4, '0')}${ownerField}`] = values[key]
       } else {
         // previous owners to the deleted row
         newValues[key] = values[key]
