@@ -13,6 +13,7 @@ import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/sel
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 
 export type BalanceRecord = {
   tokenBalance: string
@@ -37,6 +38,11 @@ const extractDataFromResult = (currentTokens: TokenState) => (
       tokenBalance: humanReadableValue(balance, Number(decimals)),
     },
   })
+
+  // Extract network token balance from backend balances
+  if (address === ZERO_ADDRESS) {
+    acc.ethBalance = humanReadableValue(balance, Number(decimals))
+  }
 
   if (currentTokens && !currentTokens.get(address)) {
     acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
