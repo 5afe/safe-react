@@ -14,6 +14,10 @@ const ModalStyled = styled(ModalMUI)`
     overflow-y: scroll;
   }
 
+  .overlay {
+    background-color: rgba(232, 231, 230, 0.75) !important;
+  }
+
   .paper {
     position: relative;
     top: 68px;
@@ -64,7 +68,13 @@ interface GnoModalProps {
 
 const GnoModal = ({ children, description, handleClose, open, paperClassName, title }: GnoModalProps): ReactElement => {
   return (
-    <ModalStyled aria-describedby={description} aria-labelledby={title} onClose={handleClose} open={open}>
+    <ModalStyled
+      BackdropProps={{ className: 'overlay' }}
+      aria-describedby={description}
+      aria-labelledby={title}
+      onClose={handleClose}
+      open={open}
+    >
       <div className={cn('paper', paperClassName)}>{children}</div>
     </ModalStyled>
   )
@@ -179,17 +189,10 @@ const FooterSection = styled.div`
   justify-content: center;
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
   padding: 24px;
-
-  button:first-child {
-    margin: 0 20px 0 0;
-
-    :hover {
-      background: ${({ theme }) => theme.colors.background};
-    }
-  }
-
-  button {
-    font-size: 16px;
+`
+const StyledButton = styled(Button)`
+  &.MuiButtonBase-root {
+    margin: 0 10px;
   }
 `
 
@@ -211,12 +214,12 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
 
   return (
     <>
-      <Button size="md" color="primary" variant="outlined" {...cancelButtonProps}>
+      <StyledButton size="md" color="primary" variant="outlined" {...cancelButtonProps}>
         {cancelText}
-      </Button>
-      <Button size="md" type="submit" {...submitButtonProps}>
+      </StyledButton>
+      <StyledButton size="md" type="submit" {...submitButtonProps}>
         {actionText}
-      </Button>
+      </StyledButton>
     </>
   )
 }
