@@ -165,7 +165,7 @@ export const RemoveSomething = (): ReactElement => {
         <Modal.Footer>
           <Modal.Footer.Buttons
             cancelButtonProps={{ onClick: handleClose }}
-            actionButtonProps={{ onClick: handleSubmit, color: 'error', text: 'Remove' }}
+            submitButtonProps={{ onClick: handleSubmit, color: 'error', text: 'Remove' }}
           />
         </Modal.Footer>
       </Modal>

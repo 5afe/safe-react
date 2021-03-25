@@ -186,19 +186,19 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 interface ButtonsProps {
   cancelButtonProps?: ButtonProps
-  actionButtonProps?: ButtonProps
+  submitButtonProps?: ButtonProps
 }
 
-const Buttons = ({ cancelButtonProps = {}, actionButtonProps = {} }: ButtonsProps): ReactElement => {
+const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProps): ReactElement => {
   const { text: cancelText = 'Cancel' } = cancelButtonProps
-  const { text: actionText = 'Submit' } = actionButtonProps
+  const { text: actionText = 'Submit' } = submitButtonProps
 
   return (
     <>
       <Button size="md" color="secondary" {...cancelButtonProps}>
         {cancelText}
       </Button>
-      <Button size="md" type="submit" {...actionButtonProps}>
+      <Button size="md" type="submit" {...submitButtonProps}>
         {actionText}
       </Button>
     </>
