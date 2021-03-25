@@ -1,4 +1,4 @@
-import { ModalFooterConfirmation, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useState } from 'react'
 
 import TextField from 'src/components/forms/TextField'
@@ -50,11 +50,57 @@ export default {
       parameters: {
         children: 'whatever is required to be rendered in the footer. Usually buttons.',
       },
+      compositionElements: [
+        {
+          title: 'Modal.Footer.Buttons',
+          component: <Modal.Footer.Buttons />,
+          description: 'standard two buttons wrapped implementation. One "Cancel" and one "Submit" button.',
+        },
+      ],
     },
   ],
 }
 
-export const Base = (): ReactElement => {
+const SimpleFormModal = ({ title, description, handleClose, handleSubmit, isOpen, children }) => (
+  <Modal title={title} description={description} handleClose={handleClose} open={isOpen}>
+    {/* header */}
+    <Modal.Header onClose={handleClose}>
+      <Modal.Header.Title>{title}</Modal.Header.Title>
+    </Modal.Header>
+
+    <GnoForm onSubmit={handleSubmit}>
+      {() => (
+        <>
+          {/* body */}
+          <Modal.Body>{children}</Modal.Body>
+
+          {/* footer */}
+          <Modal.Footer>
+            <Modal.Footer.Buttons cancelButtonProps={{ text: 'Close', onClick: handleClose }} />
+          </Modal.Footer>
+        </>
+      )}
+    </GnoForm>
+  </Modal>
+)
+
+const Username = () => (
+  <label htmlFor="username">
+    <Text size="lg" strong>
+      Username
+    </Text>
+    <GnoField
+      autoComplete="off"
+      component={TextField}
+      name="username"
+      id="username"
+      placeholder="your username"
+      validate={required}
+    />
+  </label>
+)
+
+export const FormModal = (): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
 
   const handleClose = () => {
@@ -71,44 +117,57 @@ export const Base = (): ReactElement => {
   return (
     <div>
       <button onClick={() => setIsOpen(true)}>Open Modal</button>
-      <Modal title="My first modal" description="My first modal description" handleClose={handleClose} open={isOpen}>
-        {/* header */}
+      {/* Modal with Form */}
+      <SimpleFormModal
+        title="My first modal"
+        description="My first modal description"
+        handleClose={handleClose}
+        handleSubmit={handleSubmit}
+        isOpen={isOpen}
+      >
+        {/* Form Fields */}
+        <Username />
+      </SimpleFormModal>
+    </div>
+  )
+}
+
+export const RemoveSomething = (): ReactElement => {
+  const [isOpen, setIsOpen] = useState(false)
+  const title = 'Remove Something'
+
+  const handleClose = () => {
+    setIsOpen(false)
+    console.log('modal closed')
+  }
+
+  const handleSubmit = () => {
+    alert('Something was removed')
+    handleClose()
+  }
+
+  return (
+    <div>
+      <button onClick={() => setIsOpen(true)}>Open Modal</button>
+      {/* Modal */}
+      <Modal handleClose={handleClose} title={title} description={title} open={isOpen}>
+        {/* Header */}
         <Modal.Header onClose={handleClose}>
-          <Modal.Header.Title size="xs" withoutMargin>
-            My First Modal
-          </Modal.Header.Title>
+          <Modal.Header.Title>{title}</Modal.Header.Title>
         </Modal.Header>
 
-        <GnoForm onSubmit={handleSubmit}>
-          {() => (
-            <>
-              {/* body */}
-              <Modal.Body>
-                <Text size="lg" strong>
-                  Username
-                </Text>
-                <GnoField
-                  autoComplete="off"
-                  component={TextField}
-                  name="username"
-                  placeholder="your username"
-                  validate={required}
-                  required
-                />
-              </Modal.Body>
+        {/* Body */}
+        <Modal.Body>
+          <Text size="md">You are about to remove something</Text>
+        </Modal.Body>
 
-              {/* footer */}
-              <Modal.Footer>
-                <ModalFooterConfirmation
-                  cancelText="Close"
-                  handleCancel={handleClose}
-                  handleOk={() => {}}
-                  okText="Submit"
-                />
-              </Modal.Footer>
-            </>
-          )}
-        </GnoForm>
+        {/* Footer */}
+        <Modal.Footer>
+          <Modal.Footer.Buttons
+            cancelButtonProps={{ onClick: handleClose }}
+            actionButtonProps={{ onClick: handleSubmit, color: 'error', text: 'Remove' }}
+          />
+        </Modal.Footer>
       </Modal>
     </div>
   )
