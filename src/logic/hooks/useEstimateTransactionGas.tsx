@@ -2,8 +2,8 @@ import { useEffect, useState } from 'react'
 
 import {
   estimateGasForTransactionApproval,
-  estimateGasForTransactionCreation,
-  estimateGasForTransactionExecution,
+  estimateSafeTxGas,
+  estimateTransactionGasLimit,
   getFixedGasCosts,
   SAFE_TX_GAS_DATA_COST,
 } from 'src/logic/safe/transactions/gas'
@@ -83,7 +83,6 @@ type TransactionEstimationProps = {
   safeTxGas?: number
   from?: string
   isExecution: boolean
-  isCreation: boolean
   isOffChainSignature?: boolean
   approvalAndExecution?: boolean
 }
@@ -101,27 +100,15 @@ const estimateTransactionGas = async ({
   safeTxGas,
   from,
   isExecution,
-  isCreation,
   isOffChainSignature = false,
   approvalAndExecution,
 }: TransactionEstimationProps): Promise<number> => {
-  if (isCreation) {
-    return estimateGasForTransactionCreation(
-      safeAddress,
-      txData,
-      txRecipient,
-      txAmount || '0',
-      operation || CALL,
-      safeTxGas,
-    )
-  }
-
   if (!from) {
     throw new Error('No from provided for approving or execute transaction')
   }
 
   if (isExecution) {
-    return estimateGasForTransactionExecution({
+    return estimateTransactionGasLimit({
       safeAddress,
       txRecipient,
       txConfirmations,
@@ -221,22 +208,34 @@ export const useEstimateTransactionGas = ({
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
-        const gasEstimation = await estimateTransactionGas({
-          safeAddress,
-          txRecipient,
-          txData,
-          txAmount,
-          txConfirmations,
-          isExecution,
-          isCreation,
-          isOffChainSignature,
-          operation,
-          from,
-          safeTxGas,
-          approvalAndExecution,
-        })
+        let gasEstimation = safeTxGas || 0
+        let gasLimitEstimation = 0
+        if (isCreation) {
+          gasEstimation = await estimateSafeTxGas(
+            safeAddress,
+            txData,
+            txRecipient,
+            txAmount || '0',
+            operation || CALL,
+            safeTxGas,
+          )
+        } else {
+          gasLimitEstimation = await estimateTransactionGas({
+            safeAddress,
+            txRecipient,
+            txData,
+            txAmount,
+            txConfirmations,
+            isExecution,
+            isOffChainSignature,
+            operation,
+            from,
+            safeTxGas,
+            approvalAndExecution,
+          })
+        }
 
-        const totalGasEstimation = (gasEstimation + fixedGasCosts) * 2
+        const totalGasEstimation = gasLimitEstimation
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
         const estimatedGasCosts = totalGasEstimation * parseInt(gasPrice, 10)

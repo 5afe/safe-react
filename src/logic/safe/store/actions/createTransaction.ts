@@ -11,7 +11,7 @@ import {
   saveTxToHistory,
   tryOffchainSigning,
 } from 'src/logic/safe/transactions'
-import { estimateGasForTransactionCreation } from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -88,7 +88,7 @@ export const createTransaction = (
   let safeTxGas = safeTxGasArg || 0
   try {
     if (safeTxGasArg === undefined) {
-      safeTxGas = await estimateGasForTransactionCreation(safeAddress, txData, to, valueInWei, operation)
+      safeTxGas = await estimateSafeTxGas(safeAddress, txData, to, valueInWei, operation)
     }
   } catch (error) {
     safeTxGas = safeTxGasArg || 0
