@@ -26,10 +26,8 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
       })
     }
 
-    if (safeAddress && safeLoaded) {
-      if (mounted && !timer.current) {
-        timer.current = window.setTimeout(() => fetchSafeData(safeAddress), TIMEOUT * 3)
-      }
+    if (safeAddress && safeLoaded && mounted && !timer.current) {
+      timer.current = window.setTimeout(() => fetchSafeData(safeAddress), TIMEOUT * 3)
     }
 
     return () => {
