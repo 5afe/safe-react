@@ -1,7 +1,6 @@
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import React, { ReactElement, useContext } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import {
@@ -12,7 +11,6 @@ import {
   MultiSigExecutionDetails,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
@@ -30,13 +28,11 @@ const NormalBreakingText = styled(Text)`
 `
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-
   if (isTransferTxInfo(txDetails.txInfo) || isSettingsChangeTxInfo(txDetails.txInfo)) {
     return <TxInfo txInfo={txDetails.txInfo} />
   }
 
-  if (isCancelTxDetails({ executedAt: txDetails.executedAt, txInfo: txDetails.txInfo, safeAddress })) {
+  if (isCancelTxDetails(txDetails.txInfo)) {
     return (
       <>
         <NormalBreakingText size="xl">

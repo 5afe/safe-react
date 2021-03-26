@@ -7,7 +7,6 @@ import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
 import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
-import { isCancelTransaction } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export type TxTypeProps = {
   icon: string
@@ -40,19 +39,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        // TODO: isCancel
-        //  there are two 'cancelling' tx identification
-        //  this one is the candidate to remain when the client gateway implements
-        //  https://github.com/gnosis/safe-client-gateway/issues/255
-        if (typeof tx.txInfo.isCancellation === 'boolean' && tx.txInfo.isCancellation) {
-          setType({ icon: CustomTxIcon, text: 'Cancelling transaction' })
-          break
-        }
-
-        // TODO: isCancel
-        //  remove the following condition when issue#255 is implemented
-        //  also remove `isCancelTransaction` function
-        if (isCancelTransaction({ txInfo: tx.txInfo, safeAddress })) {
+        if (tx.txInfo.isCancellation) {
           setType({ icon: CustomTxIcon, text: 'Cancelling transaction' })
           break
         }
