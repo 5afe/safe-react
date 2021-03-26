@@ -190,7 +190,8 @@ const FooterSection = styled.div`
   border-top: 2px solid ${({ theme }) => theme.colors.separator};
   padding: 24px;
 `
-const StyledButton = styled(Button)`
+
+const ButtonStyled = styled(Button)`
   &.MuiButtonBase-root {
     margin: 0 10px;
   }
@@ -214,7 +215,7 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
 
   return (
     <>
-      <StyledButton
+      <ButtonStyled
         size="md"
         color="primary"
         variant="outlined"
@@ -222,10 +223,10 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
         {...cancelButtonProps}
       >
         {cancelText}
-      </StyledButton>
-      <StyledButton size="md" type={submitButtonProps?.onClick ? 'button' : 'submit'} {...submitButtonProps}>
+      </ButtonStyled>
+      <ButtonStyled size="md" type={submitButtonProps?.onClick ? 'button' : 'submit'} {...submitButtonProps}>
         {submitText}
-      </StyledButton>
+      </ButtonStyled>
     </>
   )
 }
