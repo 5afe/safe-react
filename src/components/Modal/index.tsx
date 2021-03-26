@@ -210,7 +210,7 @@ interface ButtonsProps {
 
 const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProps): ReactElement => {
   const { text: cancelText = 'Cancel' } = cancelButtonProps
-  const { text: actionText = 'Submit' } = submitButtonProps
+  const { text: submitText = 'Submit' } = submitButtonProps
 
   return (
     <>
@@ -224,7 +224,7 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
         {cancelText}
       </StyledButton>
       <StyledButton size="md" type={submitButtonProps?.onClick ? 'button' : 'submit'} {...submitButtonProps}>
-        {actionText}
+        {submitText}
       </StyledButton>
     </>
   )
