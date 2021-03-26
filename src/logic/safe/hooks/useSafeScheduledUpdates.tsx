@@ -3,7 +3,6 @@ import { batch, useDispatch } from 'react-redux'
 
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import { fetchEtherBalance } from 'src/logic/safe/store/actions/fetchEtherBalance'
 import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
@@ -17,25 +16,18 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
     // has to run again
     let mounted = true
     const fetchSafeData = async (address: string): Promise<void> => {
-      await batch(async () => {
+      batch(async () => {
         await Promise.all([
-          dispatch(fetchEtherBalance(address)),
           dispatch(fetchSafeTokens(address)),
           dispatch(fetchTransactions(address)),
           dispatch(fetchCollectibles(address)),
           dispatch(checkAndUpdateSafe(address)),
         ])
       })
-
-      if (mounted) {
-        timer.current = window.setTimeout(() => {
-          fetchSafeData(address)
-        }, TIMEOUT * 3)
-      }
     }
 
-    if (safeAddress && safeLoaded) {
-      fetchSafeData(safeAddress)
+    if (safeAddress && safeLoaded && mounted && !timer.current) {
+      timer.current = window.setTimeout(() => fetchSafeData(safeAddress), TIMEOUT * 3)
     }
 
     return () => {
