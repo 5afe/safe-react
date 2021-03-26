@@ -214,10 +214,16 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
 
   return (
     <>
-      <StyledButton size="md" color="primary" variant="outlined" {...cancelButtonProps}>
+      <StyledButton
+        size="md"
+        color="primary"
+        variant="outlined"
+        type={cancelButtonProps?.onClick ? 'button' : 'submit'}
+        {...cancelButtonProps}
+      >
         {cancelText}
       </StyledButton>
-      <StyledButton size="md" type="submit" {...submitButtonProps}>
+      <StyledButton size="md" type={submitButtonProps?.onClick ? 'button' : 'submit'} {...submitButtonProps}>
         {actionText}
       </StyledButton>
     </>
