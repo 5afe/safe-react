@@ -10,35 +10,49 @@ import CheckCircleGreen from './assets/check-circle-green.svg'
 import PlusCircleGreen from './assets/plus-circle-green.svg'
 import { OwnerRow } from './OwnerRow'
 import { OwnerList, OwnerListItem } from './styled'
-
-type TxOwnersProps = {
-  detailedExecutionInfo: ExpandedTxDetails['detailedExecutionInfo']
-}
+import { isCancelTxDetails } from './utils'
 
 const StyledImg = styled(Img)`
   background-color: transparent;
   border-radius: 50%;
 `
 
-export const TxOwners = ({ detailedExecutionInfo }: TxOwnersProps): ReactElement | null => {
+export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
+  const { txInfo, detailedExecutionInfo } = txDetails
+
   if (!detailedExecutionInfo || isModuleExecutionDetails(detailedExecutionInfo)) {
     return null
   }
 
   const confirmationsNeeded = detailedExecutionInfo.confirmationsRequired - detailedExecutionInfo.confirmations.length
 
+  const CreationNode = isCancelTxDetails(txInfo) ? (
+    <OwnerListItem>
+      <span className="icon">
+        <StyledImg alt="" src={PlusCircleGreen} />
+      </span>
+      <div className="legend">
+        <Text color="primary" size="xl" strong>
+          On-chain rejection created
+        </Text>
+      </div>
+    </OwnerListItem>
+  ) : (
+    <OwnerListItem>
+      <span className="icon">
+        <StyledImg alt="" src={PlusCircleGreen} />
+      </span>
+      <div className="legend">
+        <Text color="primary" size="xl" strong>
+          Created
+        </Text>
+      </div>
+    </OwnerListItem>
+  )
+
   return (
     <OwnerList>
-      <OwnerListItem>
-        <span className="icon">
-          <StyledImg alt="" src={PlusCircleGreen} />
-        </span>
-        <div className="legend">
-          <Text color="primary" size="xl" strong>
-            Created
-          </Text>
-        </div>
-      </OwnerListItem>
+      {CreationNode}
       {detailedExecutionInfo.confirmations.map(({ signer }) => (
         <OwnerListItem key={signer}>
           <span className="icon">

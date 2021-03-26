@@ -40,7 +40,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         if (tx.txInfo.isCancellation) {
-          setType({ icon: CustomTxIcon, text: 'Cancelling transaction' })
+          setType({ icon: CustomTxIcon, text: 'On-chain rejection' })
           break
         }
 

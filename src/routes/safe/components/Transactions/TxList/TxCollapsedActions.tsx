@@ -46,7 +46,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
         </span>
       </Tooltip>
       {canCancel && (
-        <Tooltip title="Cancel" placement="top">
+        <Tooltip title="Reject" placement="top">
           <span>
             <IconButton size="small" type="button" onClick={handleCancelButtonClick} disabled={isPending}>
               <Icon type="circleCross" color="error" size="sm" />
