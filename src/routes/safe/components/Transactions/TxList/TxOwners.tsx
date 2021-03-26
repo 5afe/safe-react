@@ -7,6 +7,7 @@ import { ExpandedTxDetails, isModuleExecutionDetails } from 'src/logic/safe/stor
 import TransactionListActive from './assets/transactions-list-active.svg'
 import TransactionListInactive from './assets/transactions-list-inactive.svg'
 import CheckCircleGreen from './assets/check-circle-green.svg'
+import CircleCrossRed from './assets/circle-cross-red.svg'
 import PlusCircleGreen from './assets/plus-circle-green.svg'
 import { OwnerRow } from './OwnerRow'
 import { OwnerList, OwnerListItem } from './styled'
@@ -29,10 +30,10 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
   const CreationNode = isCancelTxDetails(txInfo) ? (
     <OwnerListItem>
       <span className="icon">
-        <StyledImg alt="" src={PlusCircleGreen} />
+        <StyledImg alt="" src={CircleCrossRed} />
       </span>
       <div className="legend">
-        <Text color="primary" size="xl" strong>
+        <Text color="error" size="xl" strong>
           On-chain rejection created
         </Text>
       </div>

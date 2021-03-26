@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
+import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
 import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
@@ -40,7 +41,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         if (tx.txInfo.isCancellation) {
-          setType({ icon: CustomTxIcon, text: 'On-chain rejection' })
+          setType({ icon: CircleCrossRed, text: 'On-chain rejection' })
           break
         }
 
