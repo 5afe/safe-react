@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,10 +13,9 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { composeValidators, minValue } from 'src/components/forms/validator'
+import { minValue } from 'src/components/forms/validator'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
-import { getNetworkInfo } from 'src/config'
 
 const StyledDivider = styled(Divider)`
   margin: 16px 0;
@@ -59,8 +58,6 @@ const StyledTextMt = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
-const { label } = getNetworkInfo()
-
 interface Props {
   txParameters: TxParameters
   onClose: (txParameters?: TxParameters) => void
@@ -79,15 +76,7 @@ const formValidation = (values) => {
 
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
-  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
-    if (!value) {
-      return
-    }
-
-    if (Number(value) > Number(ethGasLimit)) {
-      return `Bigger than ${label} gas limit.`
-    }
-  })(safeTxGas)
+  const safeTxGasValidation = minValue(0, true)(safeTxGas)
 
   return {
     ethGasLimit: ethGasLimitValidation,
@@ -103,7 +92,7 @@ export const EditTxParametersForm = ({
   txParameters,
   parametersStatus = 'ENABLED',
   isExecution,
-}: Props): React.ReactElement => {
+}: Props): ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
