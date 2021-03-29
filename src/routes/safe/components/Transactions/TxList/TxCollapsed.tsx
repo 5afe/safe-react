@@ -24,6 +24,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
+import { isCancelTxDetails } from './utils'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -116,6 +117,8 @@ export const TxCollapsed = ({
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
+  const onChainRejection =
+    isCancelTxDetails(transaction.txInfo) && txLocation !== 'history' ? ' on-chain-rejection' : ''
 
   const txCollapsedNonce = (
     <div className={'tx-nonce' + willBeReplaced}>
@@ -124,7 +127,7 @@ export const TxCollapsed = ({
   )
 
   const txCollapsedType = (
-    <div className={'tx-type' + willBeReplaced}>
+    <div className={'tx-type' + willBeReplaced + onChainRejection}>
       <CustomIconText iconUrl={type.icon} text={type.text} />
     </div>
   )
