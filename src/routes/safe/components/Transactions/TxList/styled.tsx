@@ -165,8 +165,7 @@ const failedTransaction = css`
 
 const onChainRejection = css`
   &.on-chain-rejection {
-    // TODO replace color from SRC background-color: errorTooltip};
-    background-color: #ffe6ea;
+    background-color: ${({ theme }) => theme.colors.errorTooltip};
     border-left: 4px solid ${({ theme }) => theme.colors.error};
     border-radius: 4px;
     padding-left: 7px;
