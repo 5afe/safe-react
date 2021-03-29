@@ -3,7 +3,7 @@ import { batch, useDispatch } from 'react-redux'
 
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
+import fetchSafe, { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
@@ -24,10 +24,14 @@ export const useSafeScheduledUpdates = (safeLoaded: boolean, safeAddress?: strin
           dispatch(checkAndUpdateSafe(address)),
         ])
       })
+
+      if (mounted) {
+        timer.current = window.setTimeout(() => fetchSafeData(address), TIMEOUT * 3)
+      }
     }
 
-    if (safeAddress && safeLoaded && mounted && !timer.current) {
-      timer.current = window.setTimeout(() => fetchSafeData(safeAddress), TIMEOUT * 3)
+    if (safeAddress && safeLoaded) {
+      fetchSafeData(safeAddress)
     }
 
     return () => {
