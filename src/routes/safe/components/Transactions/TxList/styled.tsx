@@ -165,13 +165,13 @@ const failedTransaction = css`
 
 const onChainRejection = css`
   &.on-chain-rejection {
-    // TODO safe-react-components: add error-tooltip color => #ffe6ea
+    // TODO replace color from SRC background-color: errorTooltip};
     background-color: #ffe6ea;
     border-left: 4px solid ${({ theme }) => theme.colors.error};
     border-radius: 4px;
-    padding-left: 4px;
+    padding-left: 7px;
     height: 22px;
-    max-width: 190px;
+    max-width: 165px;
 
     > div {
       height: 17px;
@@ -185,6 +185,7 @@ const onChainRejection = css`
       letter-spacing: 1px;
       font-weight: bold;
       text-transform: uppercase;
+      margin-left: -2px;
     }
   }
 `
