@@ -65,9 +65,9 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   useEffect(() => {
     let isCurrent = true
 
-    const calculateAddOwnerData = async () => {
+    const calculateAddOwnerData = () => {
       try {
-        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
         const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
         if (isCurrent) {

@@ -70,8 +70,8 @@ export const ChangeThresholdModal = ({
 
   useEffect(() => {
     let isCurrent = true
-    const calculateChangeThresholdData = async () => {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const calculateChangeThresholdData = () => {
+      const safeInstance = getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.methods.changeThreshold(editedThreshold).encodeABI()
       if (isCurrent) {
         setData(txData)

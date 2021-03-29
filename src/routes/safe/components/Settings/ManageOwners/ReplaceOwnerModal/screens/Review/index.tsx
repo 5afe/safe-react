@@ -87,7 +87,7 @@ export const ReviewReplaceOwnerModal = ({
   useEffect(() => {
     let isCurrent = true
     const calculateReplaceOwnerData = async () => {
-      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]

@@ -23,6 +23,8 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
+let spendingLimitModule: AllowanceModule
+let gnosisSafeInstanceCache: GnosisSafe[] = []
 
 /**
  * Creates a Contract instance of the GnosisSafe contract
@@ -50,17 +52,6 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
   //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
   const contractAddress = networks[networkId]?.address ?? networks[ETHEREUM_NETWORK.MAINNET].address
   return (new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafeProxyFactory
-}
-
-/**
- * Creates a Contract instance of the GnosisSafeProxyFactory contract
- */
-export const getSpendingLimitContract = () => {
-  const web3 = getWeb3()
-  return (new web3.eth.Contract(
-    SpendingLimitModule.abi as AbiItem[],
-    SPENDING_LIMIT_MODULE_ADDRESS,
-  ) as unknown) as AllowanceModule
 }
 
 export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
@@ -115,7 +106,7 @@ export const estimateGasForDeployingSafe = async (
   userAccount: string,
   safeCreationSalt: number,
 ) => {
-  const gnosisSafeData = await safeMaster.methods
+  const gnosisSafeData = safeMaster.methods
     .setup(
       safeAccounts,
       numConfirmations,
@@ -139,5 +130,26 @@ export const estimateGasForDeployingSafe = async (
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
-  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+  const providerAddress = web3.eth.givenProvider.selectedAddress
+  const cacheKey = providerAddress + '-' + safeAddress
+  if (!gnosisSafeInstanceCache[cacheKey]) {
+    gnosisSafeInstanceCache[cacheKey] = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+  }
+  return gnosisSafeInstanceCache[cacheKey]
+}
+
+/**
+ * Creates a Contract instance of the SpendingLimitModule contract
+ */
+ export const getSpendingLimitContract = () => {
+  const web3 = getWeb3()
+
+  if (!spendingLimitModule) {
+    spendingLimitModule = (new web3.eth.Contract(
+     SpendingLimitModule.abi as AbiItem[],
+     SPENDING_LIMIT_MODULE_ADDRESS,
+   ) as unknown) as AllowanceModule
+  }
+
+  return spendingLimitModule
 }

@@ -86,7 +86,7 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
-        const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]

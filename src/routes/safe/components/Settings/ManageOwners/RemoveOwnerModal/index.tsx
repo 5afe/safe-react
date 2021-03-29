@@ -39,7 +39,7 @@ export const sendRemoveOwner = async (
   txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),

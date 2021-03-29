@@ -78,7 +78,7 @@ export const createTransaction = (
   if (!ready) return
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
   const lastTx = await getLastTx(safeAddress)
   const nextNonce = await getNewTxNonce(lastTx, safeInstance)
   const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
