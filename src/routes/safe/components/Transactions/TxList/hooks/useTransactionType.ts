@@ -62,6 +62,12 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
+        const toInfo = tx.txInfo.toInfo
+        if (toInfo) {
+          setType({ icon: toInfo.logoUri as string, text: toInfo.name })
+          break
+        }
+
         setType({ icon: CustomTxIcon, text: 'Contract interaction' })
         break
       }
