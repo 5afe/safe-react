@@ -88,7 +88,7 @@ export const createTransaction = (
   let safeTxGas = safeTxGasArg || 0
   try {
     if (safeTxGasArg === undefined) {
-      safeTxGas = await estimateSafeTxGas(safeAddress, txData, to, valueInWei, operation)
+      safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
     }
   } catch (error) {
     safeTxGas = safeTxGasArg || 0

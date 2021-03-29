@@ -1,17 +1,17 @@
+import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
+import { List } from 'immutable'
 
+import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { generateSignaturesFromTxConfirmations } from 'src/logic/safe/safeTxSigner'
 import { fetchSafeTxGasEstimation } from 'src/logic/safe/api/fetchSafeTxGasEstimation'
-import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import axios from 'axios'
-import { getRpcServiceUrl, usesInfuraRPC } from 'src/config'
-import { sameString } from 'src/utils/strings'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { sameString } from 'src/utils/strings'
 
 // 21000 - additional gas costs (e.g. base tx costs, transfer costs)
 export const MINIMUM_TRANSACTION_GAS = 21000
@@ -55,7 +55,7 @@ const getJSONOrNullFromString = (stringInput: string): ErrorDataJson | null => {
 }
 
 // Parses the result from the error message (GETH, OpenEthereum/Parity and Nethermind) and returns the data value
-export const getDataFromNodeErrorMessage = (errorMessage: string): string | undefined => {
+const getDataFromNodeErrorMessage = (errorMessage: string): string | undefined => {
   // Replace illegal characters that often comes within the error string (like � for example)
   // https://stackoverflow.com/questions/12754256/removing-invalid-characters-in-javascript
   const normalizedErrorString = errorMessage.replace(/\uFFFD/g, '')
@@ -165,7 +165,7 @@ const estimateGasWithRPCCall = async (txConfig: {
   throw new Error('Error while estimating the gas required for tx')
 }
 
-export const getGasEstimationTxResponse = async (txConfig: {
+const getGasEstimationTxResponse = async (txConfig: {
   to: string
   from: string
   data: string
@@ -186,20 +186,29 @@ export const getFixedGasCosts = (threshold: number): number => {
   return MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
 }
 
-export const estimateSafeTxGas = async (
-  safeAddress: string,
-  data: string,
-  to: string,
-  valueInWei: string,
-  operation: number,
-  safeTxGas?: number,
-): Promise<number> => {
+type SafeTxGasEstimationProps = {
+  safeAddress: string
+  txData: string
+  txRecipient: string
+  txAmount: string
+  operation: number
+  safeTxGas?: number
+}
+
+export const estimateSafeTxGas = async ({
+  safeAddress,
+  txData,
+  txRecipient,
+  txAmount,
+  operation,
+  safeTxGas,
+}: SafeTxGasEstimationProps): Promise<number> => {
   try {
     const safeTxGasEstimation = await fetchSafeTxGasEstimation({
       safeAddress,
-      to: checksumAddress(to),
-      value: valueInWei,
-      data,
+      to: checksumAddress(txRecipient),
+      value: txAmount,
+      data: txData,
       operation,
     })
 
@@ -219,6 +228,71 @@ export const estimateSafeTxGas = async (
   }
 }
 
+type TransactionEstimationProps = {
+  txData: string
+  safeAddress: string
+  txRecipient: string
+  txConfirmations?: List<Confirmation>
+  txAmount: string
+  operation: number
+  gasPrice?: string
+  gasToken?: string
+  refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
+  safeTxGas?: number
+  from?: string
+  isExecution: boolean
+  isOffChainSignature?: boolean
+  approvalAndExecution?: boolean
+}
+
+export const estimateTransactionGasLimit = async ({
+  txData,
+  safeAddress,
+  txRecipient,
+  txConfirmations,
+  txAmount,
+  operation,
+  gasPrice,
+  gasToken,
+  refundReceiver,
+  safeTxGas,
+  from,
+  isExecution,
+  isOffChainSignature = false,
+  approvalAndExecution,
+}: TransactionEstimationProps): Promise<number> => {
+  if (!from) {
+    throw new Error('No from provided for approving or execute transaction')
+  }
+
+  if (isExecution) {
+    return estimateGasForTransactionExecution({
+      safeAddress,
+      txRecipient,
+      txConfirmations,
+      txAmount,
+      txData,
+      operation,
+      from,
+      gasPrice: gasPrice || '0',
+      gasToken: gasToken || ZERO_ADDRESS,
+      refundReceiver: refundReceiver || ZERO_ADDRESS,
+      safeTxGas: safeTxGas || 0,
+      approvalAndExecution,
+    })
+  }
+
+  return estimateGasForTransactionApproval({
+    safeAddress,
+    operation,
+    txData,
+    txAmount,
+    txRecipient,
+    from,
+    isOffChainSignature,
+  })
+}
+
 type TransactionExecutionEstimationProps = {
   txData: string
   safeAddress: string
@@ -234,7 +308,7 @@ type TransactionExecutionEstimationProps = {
   approvalAndExecution?: boolean
 }
 
-export const estimateTransactionGasLimit = async ({
+const estimateGasForTransactionExecution = async ({
   safeAddress,
   txRecipient,
   txConfirmations,
@@ -248,23 +322,23 @@ export const estimateTransactionGasLimit = async ({
   safeTxGas,
   approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<number> => {
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
+
+  const executeSafeTransactionMethod = safeInstance.methods.execTransaction(
+    txRecipient,
+    txAmount,
+    txData,
+    operation,
+    safeTxGas,
+    0,
+    gasPrice,
+    gasToken,
+    refundReceiver,
+    sigs,
+  )
+
   try {
-    const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
-
-    const executeSafeTransactionMethod = safeInstance.methods.execTransaction(
-      txRecipient,
-      txAmount,
-      txData,
-      operation,
-      safeTxGas,
-      0,
-      gasPrice,
-      gasToken,
-      refundReceiver,
-      sigs,
-    )
-
     console.info(`Estimating transaction necessary gasLimit...`)
     const estimationData = executeSafeTransactionMethod.encodeABI()
 
@@ -281,7 +355,9 @@ export const estimateTransactionGasLimit = async ({
     }
 
     console.info(`Check transaction success with gas amount: ${gasEstimation}...`)
-    await executeSafeTransactionMethod.call()
+    await executeSafeTransactionMethod.call({
+      from,
+    })
     console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
     return gasEstimation
   } catch (error) {
@@ -290,10 +366,10 @@ export const estimateTransactionGasLimit = async ({
 }
 
 type TransactionApprovalEstimationProps = {
-  txData: string
   safeAddress: string
   txRecipient: string
   txAmount: string
+  txData: string
   operation: number
   from: string
   isOffChainSignature: boolean
@@ -312,7 +388,7 @@ export const estimateGasForTransactionApproval = async ({
     return 0
   }
 
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
 
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods
@@ -320,7 +396,7 @@ export const estimateGasForTransactionApproval = async ({
     .call({
       from,
     })
-  const approveTransactionTxData = await safeInstance.methods.approveHash(txHash).encodeABI()
+  const approveTransactionTxData = safeInstance.methods.approveHash(txHash).encodeABI()
   return calculateGasOf({
     data: approveTransactionTxData,
     from,

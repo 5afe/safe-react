@@ -1,12 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import {
-  estimateGasForTransactionApproval,
-  estimateSafeTxGas,
-  estimateTransactionGasLimit,
-  getFixedGasCosts,
-  SAFE_TX_GAS_DATA_COST,
-} from 'src/logic/safe/transactions/gas'
+import { estimateSafeTxGas, estimateTransactionGasLimit } from 'src/logic/safe/transactions/gas'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
@@ -24,7 +18,6 @@ import { providerSelector } from 'src/logic/wallets/store/selectors'
 import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checkIfOffChainSignatureIsPossible } from 'src/logic/safe/safeTxSigner'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
 
 export enum EstimationStatus {
@@ -69,71 +62,6 @@ export const checkIfTxIsApproveAndExecution = (
 
 export const checkIfTxIsCreation = (txConfirmations: number, txType?: string): boolean =>
   txConfirmations === 0 && !sameString(txType, 'spendingLimit')
-
-type TransactionEstimationProps = {
-  txData: string
-  safeAddress: string
-  txRecipient: string
-  txConfirmations?: List<Confirmation>
-  txAmount?: string
-  operation?: number
-  gasPrice?: string
-  gasToken?: string
-  refundReceiver?: string // Address of receiver of gas payment (or 0 if tx.origin).
-  safeTxGas?: number
-  from?: string
-  isExecution: boolean
-  isOffChainSignature?: boolean
-  approvalAndExecution?: boolean
-}
-
-const estimateTransactionGas = async ({
-  txData,
-  safeAddress,
-  txRecipient,
-  txConfirmations,
-  txAmount,
-  operation,
-  gasPrice,
-  gasToken,
-  refundReceiver,
-  safeTxGas,
-  from,
-  isExecution,
-  isOffChainSignature = false,
-  approvalAndExecution,
-}: TransactionEstimationProps): Promise<number> => {
-  if (!from) {
-    throw new Error('No from provided for approving or execute transaction')
-  }
-
-  if (isExecution) {
-    return estimateTransactionGasLimit({
-      safeAddress,
-      txRecipient,
-      txConfirmations,
-      txAmount: txAmount || '0',
-      txData,
-      operation: operation || CALL,
-      from,
-      gasPrice: gasPrice || '0',
-      gasToken: gasToken || ZERO_ADDRESS,
-      refundReceiver: refundReceiver || ZERO_ADDRESS,
-      safeTxGas: safeTxGas || 0,
-      approvalAndExecution,
-    })
-  }
-
-  return estimateGasForTransactionApproval({
-    safeAddress,
-    operation: operation || CALL,
-    txData,
-    txAmount: txAmount || '0',
-    txRecipient,
-    from,
-    isOffChainSignature,
-  })
-}
 
 type UseEstimateTransactionGasProps = {
   txData: string
@@ -204,44 +132,42 @@ export const useEstimateTransactionGas = ({
         preApprovingOwner,
       )
 
-      const fixedGasCosts = getFixedGasCosts(Number(threshold))
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
         let gasEstimation = safeTxGas || 0
         let gasLimitEstimation = 0
         if (isCreation) {
-          gasEstimation = await estimateSafeTxGas(
+          gasEstimation = await estimateSafeTxGas({
             safeAddress,
             txData,
             txRecipient,
-            txAmount || '0',
-            operation || CALL,
+            txAmount: txAmount || '0',
+            operation: operation || CALL,
             safeTxGas,
-          )
+          })
         } else {
-          gasLimitEstimation = await estimateTransactionGas({
+          gasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             txRecipient,
             txData,
-            txAmount,
+            txAmount: txAmount || '0',
             txConfirmations,
             isExecution,
             isOffChainSignature,
-            operation,
+            operation: operation || CALL,
             from,
             safeTxGas,
             approvalAndExecution,
           })
         }
 
-        const totalGasEstimation = gasLimitEstimation
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
-        const estimatedGasCosts = totalGasEstimation * parseInt(gasPrice, 10)
+        const estimatedGasCosts = gasLimitEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = totalGasEstimation.toString()
+        const gasLimit = gasLimitEstimation.toString()
 
         let txEstimationExecutionStatus = EstimationStatus.SUCCESS
 
@@ -263,15 +189,12 @@ export const useEstimateTransactionGas = ({
         })
       } catch (error) {
         console.warn(error.message)
-        // We put a fixed the amount of gas to let the user try to execute the tx, but it's not accurate so it will probably fail
-        const gasEstimation = fixedGasCosts + SAFE_TX_GAS_DATA_COST
-        const gasCost = fromTokenUnit(gasEstimation, nativeCoin.decimals)
-        const gasCostFormatted = formatAmount(gasCost)
+        // If safeTxGas estimation fail we set this value to 0 (so up to all gasLimit can be used)
         setGasEstimation({
           txEstimationExecutionStatus: EstimationStatus.FAILURE,
-          gasEstimation,
-          gasCost,
-          gasCostFormatted,
+          gasEstimation: 0,
+          gasCost: '0',
+          gasCostFormatted: '< 0.001',
           gasPrice: '1',
           gasPriceFormatted: '1',
           gasLimit: '0',
