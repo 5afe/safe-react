@@ -3,7 +3,7 @@ import { batch, useDispatch } from 'react-redux'
 
 import { fetchCollectibles } from 'src/logic/collectibles/store/actions/fetchCollectibles'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
-import fetchSafe, { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
+import { checkAndUpdateSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { TIMEOUT } from 'src/utils/constants'
 
