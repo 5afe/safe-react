@@ -163,6 +163,32 @@ const failedTransaction = css`
   }
 `
 
+const onChainRejection = css`
+  &.on-chain-rejection {
+    // TODO safe-react-components: add error-tooltip color => #ffe6ea
+    background-color: #ffe6ea;
+    border-left: 4px solid ${({ theme }) => theme.colors.error};
+    border-radius: 4px;
+    padding-left: 4px;
+    height: 22px;
+    max-width: 190px;
+
+    > div {
+      height: 17px;
+      align-items: center;
+      padding-top: 3px;
+    }
+
+    p {
+      font-size: 11px;
+      line-height: 16px;
+      letter-spacing: 1px;
+      font-weight: bold;
+      text-transform: uppercase;
+    }
+  }
+`
+
 export const StyledTransaction = styled.div`
   ${willBeReplaced};
   ${failedTransaction};
@@ -173,6 +199,10 @@ export const StyledTransaction = styled.div`
 
   & > div {
     align-self: center;
+  }
+
+  .tx-type {
+    ${onChainRejection};
   }
 
   .tx-votes {
