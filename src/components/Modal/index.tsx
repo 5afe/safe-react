@@ -206,12 +206,12 @@ interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
 
 interface ButtonsProps {
   cancelButtonProps?: ButtonProps
-  submitButtonProps?: ButtonProps
+  confirmButtonProps?: ButtonProps
 }
 
-const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProps): ReactElement => {
+const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsProps): ReactElement => {
   const { text: cancelText = 'Cancel' } = cancelButtonProps
-  const { text: submitText = 'Submit' } = submitButtonProps
+  const { text: confirmText = 'Submit' } = confirmButtonProps
 
   return (
     <>
@@ -224,8 +224,8 @@ const Buttons = ({ cancelButtonProps = {}, submitButtonProps = {} }: ButtonsProp
       >
         {cancelText}
       </ButtonStyled>
-      <ButtonStyled size="md" type={submitButtonProps?.onClick ? 'button' : 'submit'} {...submitButtonProps}>
-        {submitText}
+      <ButtonStyled size="md" type={confirmButtonProps?.onClick ? 'button' : 'submit'} {...confirmButtonProps}>
+        {confirmText}
       </ButtonStyled>
     </>
   )
