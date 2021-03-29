@@ -3,7 +3,6 @@ import memoize from 'lodash.memoize'
 
 import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 
-import { getGnosisSafeAppsUrl } from 'src/config'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
@@ -17,7 +16,6 @@ const removeLastTrailingSlash = (url) => {
   return url
 }
 
-const gnosisAppsUrl = removeLastTrailingSlash(getGnosisSafeAppsUrl())
 export type StaticAppInfo = {
   url: string
   disabled: boolean
@@ -26,7 +24,7 @@ export type StaticAppInfo = {
 export const staticAppsList: Array<StaticAppInfo> = [
   // 1inch
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRWtuktjfU6WMAEJFgzBC4cUfqp3FF5uN9QoWb55SdGG5`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmUXF1yVGdqUfMbhNyfM3jpP6Bw66cYnKPoWq6iHkhd3Aw`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -56,7 +54,11 @@ export const staticAppsList: Array<StaticAppInfo> = [
     networks: [ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.XDAI],
   },
   // Compound
-  { url: `${gnosisAppsUrl}/compound`, disabled: false, networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY] },
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX31xCdhFDmJzoVG33Y6kJtJ5Ujw8r5EJJBrsp8Fbjm7k`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // dHedge
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaiemnumMaaK9wE1pbMfm3YSBUpcFNgDh3Bf6VZCZq57Q`,
@@ -65,7 +67,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Idle
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVkGHm6gfQumJhnRfFCh7m2oSYwLXb51EKHzChpcV9J3N`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTvrLwJtyjG8QFHgvqdPhcV5DBMQ7oZceSU4uvPw9vQaj`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
@@ -131,7 +133,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Wallet-Connect
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRMGTA5ARMwfhYbdmK83zzMd13NnEUKFJSZEgEjKa8YQm`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmU1pT35yPXxpnABcH3pZ1MxFeyYVtftT5RKhWopQmZHQV`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
