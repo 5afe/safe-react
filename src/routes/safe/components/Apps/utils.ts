@@ -133,7 +133,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Wallet-Connect
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmU1pT35yPXxpnABcH3pZ1MxFeyYVtftT5RKhWopQmZHQV`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmX9B982ZAaBzbm6yBoZUS3uLgcizYA6wW65RCXVRZkG6f`,
     disabled: false,
     networks: [
       ETHEREUM_NETWORK.MAINNET,
