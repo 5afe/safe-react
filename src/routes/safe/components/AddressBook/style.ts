@@ -1,4 +1,4 @@
-import { lg, marginButtonImg, md, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -37,7 +37,7 @@ export const styles = createStyles({
   },
   editEntryButton: {
     cursor: 'pointer',
-    marginBottom: marginButtonImg,
+    marginBottom: '16px',
   },
   editEntryButtonNonOwner: {
     cursor: 'pointer',
@@ -45,13 +45,13 @@ export const styles = createStyles({
   removeEntryButton: {
     marginLeft: lg,
     marginRight: lg,
-    marginBottom: marginButtonImg,
+    marginBottom: '16px',
     cursor: 'pointer',
   },
   removeEntryButtonDisabled: {
     marginLeft: lg,
     marginRight: lg,
-    marginBottom: marginButtonImg,
+    marginBottom: '16px',
     cursor: 'default',
   },
   removeEntryButtonNonOwner: {
@@ -64,14 +64,6 @@ export const styles = createStyles({
     maxHeight: '54px',
     boxSizing: 'border-box',
     justifyContent: 'flex-end',
-  },
-  send: {
-    width: '75px',
-    minWidth: '75px',
-    borderRadius: '4px',
-    '& > span': {
-      fontSize: '14px',
-    },
   },
   leftIcon: {
     marginRight: sm,
