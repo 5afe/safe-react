@@ -5,7 +5,7 @@ import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
 import { AppReduxState } from 'src/store'
 
-const fetchEtherBalance = (safeAddress: string) => async (
+export const fetchEtherBalance = (safeAddress: string) => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
@@ -21,5 +21,3 @@ const fetchEtherBalance = (safeAddress: string) => async (
     console.error('Error when fetching Ether balance:', err)
   }
 }
-
-export default fetchEtherBalance

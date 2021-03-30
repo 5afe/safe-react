@@ -4,8 +4,10 @@ import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
-import { styles } from './style'
+import styled from 'styled-components'
 
+import { styles } from './style'
+import { padOwnerIndex } from 'src/routes/open/utils/padOwnerIndex'
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import trash from 'src/assets/icons/trash.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
@@ -45,6 +47,10 @@ const { useState } = React
 
 export const ADD_OWNER_BUTTON = '+ Add another owner'
 
+const StyledAddressInput = styled(AddressInput)`
+  width: 460px;
+`
+
 /**
  * Validates the whole OwnersForm, specially checks for non-repeated addresses
  *
@@ -83,7 +89,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
         return newValues
       }
 
-      const ownerToRemove = new RegExp(`owner${index}(Name|Address)`)
+      const ownerToRemove = new RegExp(`owner${padOwnerIndex(index)}(Name|Address)`)
 
       if (ownerToRemove.test(key)) {
         // skip, doing anything with the removed field
@@ -96,7 +102,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
 
       if (Number(ownerOrder) > index) {
         // reduce by one the order of the owner
-        newValues[`owner${Number(ownerOrder) - 1}${ownerField}`] = values[key]
+        newValues[`owner${padOwnerIndex(Number(ownerOrder) - 1)}${ownerField}`] = values[key]
       } else {
         // previous owners to the deleted row
         newValues[key] = values[key]
@@ -152,7 +158,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
   return (
     <>
       <Block className={classes.title}>
-        <Paragraph color="primary" noMargin size="md" data-testid="create-safe-step-two">
+        <Paragraph color="primary" noMargin size="lg" data-testid="create-safe-step-two">
           Your Safe will have one or more owners. We have prefilled the first owner with your connected wallet details,
           but you are free to change this to a different owner.
           <br />
@@ -167,7 +173,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
             rel="noreferrer"
             title="Learn about which Safe setup to use"
           >
-            <Text size="lg" as="span" color="primary">
+            <Text size="xl" as="span" color="primary">
               Learn about which Safe setup to use
             </Text>
             <Icon size="sm" type="externalLink" color="primary" />
@@ -176,8 +182,8 @@ const SafeOwnersForm = (props): React.ReactElement => {
       </Block>
       <Hairline />
       <Row className={classes.header}>
-        <Col xs={4}>NAME</Col>
-        <Col xs={8}>ADDRESS</Col>
+        <Col xs={3}>NAME</Col>
+        <Col xs={7}>ADDRESS</Col>
       </Row>
       <Hairline />
       <Block margin="md" padding="md">
@@ -187,7 +193,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
 
           return (
             <Row className={classes.owner} key={`owner${index}`} data-testid={`create-safe-owner-row`}>
-              <Col className={classes.ownerName} xs={4}>
+              <Col className={classes.ownerName} xs={3}>
                 <Field
                   className={classes.name}
                   component={TextField}
@@ -199,8 +205,8 @@ const SafeOwnersForm = (props): React.ReactElement => {
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
-              <Col className={classes.ownerAddress} xs={6}>
-                <AddressInput
+              <Col className={classes.ownerAddress} xs={7}>
+                <StyledAddressInput
                   fieldMutator={(newOwnerAddress) => {
                     const newOwnerName = getNameFromAddressBook(addressBook, newOwnerAddress, {
                       filterOnlyValidName: true,
@@ -246,7 +252,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
       </Block>
       <Row align="center" className={classes.add} grow margin="xl">
         <Button color="secondary" data-testid="add-owner-btn" onClick={onAddOwner}>
-          <Paragraph noMargin size="md">
+          <Paragraph noMargin size="lg">
             {ADD_OWNER_BUTTON}
           </Paragraph>
         </Button>
@@ -256,7 +262,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
           Any transaction requires the confirmation of:
         </Paragraph>
         <Row align="center" className={classes.ownersAmount} margin="xl">
-          <Col className={classes.ownersAmountItem} xs={2}>
+          <Col className={classes.ownersAmountItem} xs={1}>
             <Field
               component={SelectField}
               data-testid="threshold-select-input"

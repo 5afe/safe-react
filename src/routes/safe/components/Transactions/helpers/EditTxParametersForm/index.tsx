@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,13 +13,12 @@ import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { composeValidators, minValue } from 'src/components/forms/validator'
+import { minValue } from 'src/components/forms/validator'
 
-import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
-import { getNetworkInfo } from 'src/config'
+import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
 
 const StyledDivider = styled(Divider)`
-  margin: 0px;
+  margin: 16px 0;
 `
 
 const SafeOptions = styled.div`
@@ -39,7 +38,7 @@ const EthereumOptions = styled.div`
   }
 `
 const StyledLink = styled(Link)`
-  margin: 16px 0;
+  margin: 16px 0 0 0;
   display: inline-flex;
   align-items: center;
 
@@ -59,12 +58,11 @@ const StyledTextMt = styled(Text)`
 
 const useStyles = makeStyles(styles)
 
-const { label } = getNetworkInfo()
-
 interface Props {
   txParameters: TxParameters
   onClose: (txParameters?: TxParameters) => void
   parametersStatus: ParametersStatus
+  isExecution: boolean
 }
 
 const formValidation = (values) => {
@@ -78,15 +76,7 @@ const formValidation = (values) => {
 
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
-  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
-    if (!value) {
-      return
-    }
-
-    if (Number(value) > Number(ethGasLimit)) {
-      return `Bigger than ${label} gas limit.`
-    }
-  })(safeTxGas)
+  const safeTxGasValidation = minValue(0, true)(safeTxGas)
 
   return {
     ethGasLimit: ethGasLimitValidation,
@@ -101,7 +91,8 @@ export const EditTxParametersForm = ({
   onClose,
   txParameters,
   parametersStatus = 'ENABLED',
-}: Props): React.ReactElement => {
+  isExecution,
+}: Props): ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
@@ -142,7 +133,7 @@ export const EditTxParametersForm = ({
           {() => (
             <>
               <StyledText size="xl" strong>
-                Safe transactions parameters
+                Safe transaction
               </StyledText>
 
               <SafeOptions>
@@ -168,49 +159,53 @@ export const EditTxParametersForm = ({
                 />
               </SafeOptions>
 
-              <StyledTextMt size="xl" strong>
-                Ethereum transactions parameters
-              </StyledTextMt>
+              {areEthereumParamsVisible(parametersStatus) && (
+                <>
+                  <StyledTextMt size="xl" strong>
+                    {ethereumTxParametersTitle(isExecution)}
+                  </StyledTextMt>
 
-              <EthereumOptions>
-                <Field
-                  name="ethNonce"
-                  defaultValue={ethNonce}
-                  placeholder="Ethereum nonce"
-                  text="Ethereum nonce"
-                  type="number"
-                  component={TextField}
-                  disabled={!areEthereumParamsEnabled(parametersStatus)}
-                />
-                <Field
-                  name="ethGasLimit"
-                  defaultValue={ethGasLimit}
-                  placeholder="Ethereum gas limit"
-                  text="Ethereum gas limit"
-                  type="number"
-                  component={TextField}
-                  disabled={parametersStatus === 'CANCEL_TRANSACTION'}
-                />
-                <Field
-                  name="ethGasPrice"
-                  defaultValue={ethGasPrice}
-                  type="number"
-                  placeholder="Ethereum gas price (GWEI)"
-                  text="Ethereum gas price (GWEI)"
-                  component={TextField}
-                  disabled={!areEthereumParamsEnabled(parametersStatus)}
-                />
-              </EthereumOptions>
+                  <EthereumOptions>
+                    <Field
+                      name="ethNonce"
+                      defaultValue={ethNonce}
+                      placeholder="Nonce"
+                      text="Nonce"
+                      type="number"
+                      component={TextField}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
+                    />
+                    <Field
+                      name="ethGasLimit"
+                      defaultValue={ethGasLimit}
+                      placeholder="Gas limit"
+                      text="Gas limit"
+                      type="number"
+                      component={TextField}
+                      disabled={parametersStatus === 'CANCEL_TRANSACTION'}
+                    />
+                    <Field
+                      name="ethGasPrice"
+                      defaultValue={ethGasPrice}
+                      type="number"
+                      placeholder="Gas price (GWEI)"
+                      text="Gas price (GWEI)"
+                      component={TextField}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
+                    />
+                  </EthereumOptions>
 
-              <StyledLink
-                href="https://help.gnosis-safe.io/en/articles/4738445-configure-advanced-transaction-parameters-manually"
-                target="_blank"
-              >
-                <Text size="xl" color="primary">
-                  How can I configure the gas price manually?
-                </Text>
-                <Icon size="sm" type="externalLink" color="primary" />
-              </StyledLink>
+                  <StyledLink
+                    href="https://help.gnosis-safe.io/en/articles/4738445-configure-advanced-transaction-parameters-manually"
+                    target="_blank"
+                  >
+                    <Text size="xl" color="primary">
+                      How can I configure these parameters manually?
+                    </Text>
+                    <Icon size="sm" type="externalLink" color="primary" />
+                  </StyledLink>
+                </>
+              )}
 
               <StyledDivider />
 

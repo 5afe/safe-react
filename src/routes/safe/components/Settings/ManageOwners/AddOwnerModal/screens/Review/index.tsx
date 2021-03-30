@@ -101,6 +101,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -214,6 +216,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             compact={false}
             isTransactionCreation={isCreation}
             isTransactionExecution={isExecution}
+            isOffChainSignature={isOffChainSignature}
           />
 
           <Block className={classes.gasCostsContainer}>

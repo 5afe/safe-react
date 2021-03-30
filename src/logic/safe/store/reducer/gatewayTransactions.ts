@@ -344,6 +344,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
         case 'queued.queued': {
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
+            // TODO: review if is this `PENDING` status required under `queued.queued` list
             // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
             if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
               return txToUpdate

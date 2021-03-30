@@ -8,14 +8,14 @@ import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
-import addSafeOwner from 'src/logic/safe/store/actions/addSafeOwner'
-import removeSafeOwner from 'src/logic/safe/store/actions/removeSafeOwner'
+import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
+import { removeSafeOwner } from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
-import { latestMasterContractVersionSelector } from 'src/logic/safe/store/selectors'
+import { latestMasterContractVersionSelector, safeTotalFiatBalanceSelector } from 'src/logic/safe/store/selectors'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
@@ -46,6 +46,7 @@ export const buildSafe = async (
   safeAdd: string,
   safeName: string,
   latestMasterContractVersion?: string,
+  totalFiatBalance?: number,
 ): Promise<SafeRecordProps> => {
   const safeAddress = checksumAddress(safeAdd)
 
@@ -80,16 +81,14 @@ export const buildSafe = async (
     threshold,
     owners,
     ethBalance,
+    totalFiatBalance: totalFiatBalance || 0,
     nonce,
     currentVersion: currentVersion ?? '',
     needsUpdate,
     featuresEnabled,
     balances: localSafe?.balances || Map(),
     latestIncomingTxBlock: 0,
-    activeAssets: Set(),
     activeTokens: Set(),
-    blacklistedAssets: Set(),
-    blacklistedTokens: Set(),
     modules,
     spendingLimits,
   }
@@ -162,7 +161,8 @@ export default (safeAdd: string) => async (
     const safeAddress = checksumAddress(safeAdd)
     const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
-    const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion)
+    const totalFiatBalance = safeTotalFiatBalanceSelector(getState())
+    const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion, totalFiatBalance)
 
     // `updateSafe`, as `loadSafesFromStorage` will populate the store previous to this call
     // and `addSafe` will only add a newly non-existent safe

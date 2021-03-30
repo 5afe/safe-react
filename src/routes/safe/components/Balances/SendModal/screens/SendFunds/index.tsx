@@ -68,6 +68,7 @@ export type SendFundsTx = {
 }
 
 type SendFundsProps = {
+  initialValues: SendFundsTx
   onClose: () => void
   onReview: (txInfo: unknown) => void
   recipientAddress?: string
@@ -80,6 +81,7 @@ const InputAdornmentChildSymbol = ({ symbol }: { symbol?: string }): ReactElemen
 }
 
 const SendFunds = ({
+  initialValues,
   onClose,
   onReview,
   recipientAddress,
@@ -93,12 +95,14 @@ const SendFunds = ({
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
     // if there's nothing to lookup for, we return the default entry
-    if (!recipientAddress) {
+    if (!initialValues?.recipientAddress && !recipientAddress) {
       return defaultEntry
     }
 
+    // if there's something to lookup for, `initialValues` has precedence over `recipientAddress`
+    const predefinedAddress = initialValues?.recipientAddress ?? recipientAddress
     const addressBookEntry = addressBook.find(({ address }) => {
-      return sameAddress(recipientAddress, address)
+      return sameAddress(predefinedAddress, address)
     })
 
     // if found in the Address Book, then we return the entry
@@ -170,7 +174,11 @@ const SendFunds = ({
       <Hairline />
       <GnoForm
         formMutators={formMutators}
-        initialValues={{ amount, recipientAddress, token: selectedToken }}
+        initialValues={{
+          amount: initialValues?.amount || amount,
+          recipientAddress: initialValues.recipientAddress || recipientAddress,
+          token: initialValues?.token || selectedToken,
+        }}
         onSubmit={handleSubmit}
         validation={sendFundsValidation}
       >
@@ -208,7 +216,7 @@ const SendFunds = ({
 
           const setMaxAllowedAmount = () => {
             const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
-            let maxAmount = selectedToken?.balance ?? 0
+            let maxAmount = selectedToken?.balance.tokenBalance ?? 0
 
             if (isSpendingLimit) {
               const spendingLimitBalance = fromTokenUnit(

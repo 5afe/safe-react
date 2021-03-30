@@ -84,8 +84,6 @@ export const ChangeThresholdModal = ({
     }
   }, [safeAddress, editedThreshold])
 
-  const getParametersStatus = () => (threshold > 1 ? 'ETH_DISABLED' : 'ENABLED')
-
   const handleSubmit = async ({ txParameters }) => {
     await dispatch(
       createTransaction({
@@ -120,6 +118,8 @@ export const ChangeThresholdModal = ({
 
   return (
     <EditableTxParameters
+      isOffChainSignature={isOffChainSignature}
+      isExecution={isExecution}
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
       safeTxGas={gasEstimation.toString()}
@@ -181,9 +181,9 @@ export const ChangeThresholdModal = ({
                   <TxParametersDetail
                     txParameters={txParameters}
                     onEdit={toggleEditMode}
-                    parametersStatus={getParametersStatus()}
                     isTransactionCreation={isCreation}
                     isTransactionExecution={isExecution}
+                    isOffChainSignature={isOffChainSignature}
                   />
                 </Block>
                 {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
@@ -199,8 +199,8 @@ export const ChangeThresholdModal = ({
                 )}
 
                 <Row align="center" className={classes.buttonRow}>
-                  <Button minWidth={140} onClick={onClose}>
-                    Back
+                  <Button minWidth={140} onClick={onClose} color="secondary">
+                    Cancel
                   </Button>
                   <Button
                     color="primary"
@@ -209,7 +209,7 @@ export const ChangeThresholdModal = ({
                     variant="contained"
                     disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
                   >
-                    Change
+                    Submit
                   </Button>
                 </Row>
               </>
