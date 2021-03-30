@@ -21,8 +21,8 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(fetchSafe(safeAddress))
         setIsSafeLoaded(true)
         await dispatch(fetchSafeTokens(safeAddress))
-        dispatch(updateAvailableCurrencies())
-        dispatch(fetchTransactions(safeAddress))
+        await dispatch(updateAvailableCurrencies())
+        await dispatch(fetchTransactions(safeAddress))
         dispatch(addViewedSafe(safeAddress))
       }
     }
