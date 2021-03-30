@@ -4,9 +4,10 @@ import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import * as React from 'react'
-import { styles } from './style'
 import styled from 'styled-components'
 
+import { styles } from './style'
+import { padOwnerIndex } from 'src/routes/open/utils/padOwnerIndex'
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import trash from 'src/assets/icons/trash.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
@@ -88,7 +89,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
         return newValues
       }
 
-      const ownerToRemove = new RegExp(`owner${index}(Name|Address)`)
+      const ownerToRemove = new RegExp(`owner${padOwnerIndex(index)}(Name|Address)`)
 
       if (ownerToRemove.test(key)) {
         // skip, doing anything with the removed field
@@ -101,7 +102,7 @@ export const calculateValuesAfterRemoving = (index: number, values: Record<strin
 
       if (Number(ownerOrder) > index) {
         // reduce by one the order of the owner
-        newValues[`owner${Number(ownerOrder) - 1}${ownerField}`] = values[key]
+        newValues[`owner${padOwnerIndex(Number(ownerOrder) - 1)}${ownerField}`] = values[key]
       } else {
         // previous owners to the deleted row
         newValues[key] = values[key]
