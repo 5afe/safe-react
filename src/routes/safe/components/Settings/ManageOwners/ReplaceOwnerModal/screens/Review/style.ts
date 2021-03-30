@@ -69,7 +69,7 @@ export const styles = createStyles({
   selectedOwnerAdded: {
     padding: sm,
     alignItems: 'center',
-    backgroundColor: '#fff3e2',
+    backgroundColor: '#f7f5f5',
   },
   user: {
     justifyContent: 'left',
