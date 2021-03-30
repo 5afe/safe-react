@@ -127,6 +127,6 @@ export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelec
   return addresses
 })
 
-export const safeFiatBalancesTotalSelector = createSelector(safeSelector, (currentSafe) => {
-  return currentSafe?.totalFiatBalance.toString()
+export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
+  return currentSafe?.totalFiatBalance
 })
