@@ -12,7 +12,7 @@ export const OwnerRow = ({ ownerAddress }: { ownerAddress: string }): ReactEleme
     <EthHashInfo
       hash={ownerAddress}
       name={ownerName === 'UNKNOWN' ? '' : ownerName}
-      showIdenticon
+      withAvatar
       showCopyBtn
       explorerUrl={getExplorerInfo(ownerAddress)}
       shortenHash={4}

@@ -81,7 +81,7 @@ const Beneficiary = (): ReactElement => {
         hash={selectedEntry.address}
         name={selectedEntry.name}
         showCopyBtn
-        showIdenticon
+        withAvatar
         textSize="lg"
         shortenHash={4}
         explorerUrl={getExplorerInfo(selectedEntry.address)}

@@ -16,7 +16,7 @@ export const AddressInfo = ({ address }: { address: string }): ReactElement | nu
     <EthHashInfo
       hash={address}
       name={recipientName === 'UNKNOWN' ? undefined : recipientName}
-      showIdenticon
+      withAvatar
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
     />
