@@ -45,7 +45,7 @@ const IconContainer = styled.div`
 `
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
-    padding: 0 16px;
+    padding: 0 12px;
   }
   *:first-child {
     margin: 0 4px 0 0;
@@ -170,7 +170,7 @@ const SafeHeader = ({
         <StyledText size="xl">{balance}</StyledText>
         <StyledButton size="md" disabled={!granted} color="primary" variant="contained" onClick={onNewTransactionClick}>
           <FixedIcon type="arrowSentWhite" />
-          <Text size="lg" color="white">
+          <Text size="xl" color="white">
             New transaction
           </Text>
         </StyledButton>
