@@ -1,7 +1,13 @@
 import React, { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { ExpandedTxDetails, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
+import {
+  ExpandedTxDetails,
+  isCustomTxInfo,
+  TransactionData,
+  TransactionInfo,
+  Custom,
+} from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
   DeleteSpendingLimitDetails,
@@ -20,23 +26,36 @@ const { nativeCoin } = getNetworkInfo()
 type DetailsWithTxInfoProps = {
   children: ReactNode
   txData: TransactionData
+  txInfo: TransactionInfo
 }
 
-const DetailsWithTxInfo = ({ children, txData }: DetailsWithTxInfoProps): ReactElement => (
-  <>
-    <TxInfoDetails
-      address={txData.to}
-      title={`Send ${txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'} ${nativeCoin.symbol} to:`}
-    />
-    {children}
-  </>
-)
+const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps): ReactElement => {
+  const isCustomTx = isCustomTxInfo(txInfo)
+  const name = isCustomTx ? (txInfo as Custom).toInfo.name : undefined
+  const avatarUrl = isCustomTx ? (txInfo as Custom).toInfo.logoUri || undefined : undefined
+
+  return (
+    <>
+      <TxInfoDetails
+        address={txData.to}
+        name={name}
+        avatarUrl={avatarUrl}
+        title={`Send ${txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'} ${
+          nativeCoin.symbol
+        } to:`}
+      />
+
+      {children}
+    </>
+  )
+}
 
 type TxDataProps = {
   txData: ExpandedTxDetails['txData']
+  txInfo: TransactionInfo
 }
 
-export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
+export const TxData = ({ txData, txInfo }: TxDataProps): ReactElement | null => {
   // nothing to render
   if (!txData) {
     return null
@@ -51,7 +70,7 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
 
     // we render the hex encoded data
     return (
-      <DetailsWithTxInfo txData={txData}>
+      <DetailsWithTxInfo txData={txData} txInfo={txInfo}>
         <HexEncodedData title="Data (hex encoded)" hexData={txData.hexData} />
       </DetailsWithTxInfo>
     )
@@ -74,7 +93,7 @@ export const TxData = ({ txData }: TxDataProps): ReactElement | null => {
 
   // we render the decoded data
   return (
-    <DetailsWithTxInfo txData={txData}>
+    <DetailsWithTxInfo txData={txData} txInfo={txInfo}>
       <MethodDetails data={txData.dataDecoded} />
     </DetailsWithTxInfo>
   )

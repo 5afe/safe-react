@@ -5,7 +5,13 @@ import { getExplorerInfo } from 'src/config'
 
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
-export const AddressInfo = ({ address }: { address: string }): ReactElement | null => {
+type Props = {
+  address: string
+  name?: string | undefined
+  avatarUrl?: string | undefined
+}
+
+export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement | null => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
 
   if (address === '') {
@@ -15,8 +21,8 @@ export const AddressInfo = ({ address }: { address: string }): ReactElement | nu
   return (
     <EthHashInfo
       hash={address}
-      name={recipientName === 'UNKNOWN' ? undefined : recipientName}
-      withAvatar
+      name={recipientName === 'UNKNOWN' ? name : recipientName}
+      withAvatar={avatarUrl ?? true}
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
     />

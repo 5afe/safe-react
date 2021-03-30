@@ -66,7 +66,7 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
     return null
   }
 
-  return <TxData txData={txDetails.txData} />
+  return <TxData txData={txDetails.txData} txInfo={txDetails.txInfo} />
 }
 
 type TxDetailsProps = {
