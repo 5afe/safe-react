@@ -2,7 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import classNames from 'classnames'
 import * as React from 'react'
-import { EthHashInfo, Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -18,6 +18,7 @@ import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { CircleDot } from '../CircleDot'
 import { createStyles } from '@material-ui/core'
+import styled from 'styled-components'
 
 import WalletIcon from '../../assets/wallet.svg'
 
@@ -91,6 +92,9 @@ const styles = createStyles({
   },
 })
 
+const StyledCard = styled(Card)`
+  padding: 0px;
+`
 type Props = {
   connected: boolean
   network: ETHEREUM_NETWORK
@@ -116,11 +120,11 @@ export const UserDetails = ({
   const classes = useStyles()
 
   return (
-    <>
+    <StyledCard>
       <Block className={classes.container}>
         <Row align="center" className={classes.identicon} margin="md">
           {connected ? (
-            <Identicon address={userAddress || 'random'} size="lg" />
+            <Identicon address={userAddress || 'random'} size="xxl" />
           ) : (
             <KeyRing circleSize={75} dotRight={25} dotSize={25} dotTop={50} hideDot keySize={30} mode="warning" />
           )}
@@ -185,11 +189,11 @@ export const UserDetails = ({
           variant="contained"
           data-testid="disconnect-btn"
         >
-          <Paragraph className={classes.disconnectText} color="white" noMargin size="md">
+          <Paragraph className={classes.disconnectText} color="white" noMargin size="lg">
             Disconnect
           </Paragraph>
         </Button>
       </Row>
-    </>
+    </StyledCard>
   )
 }
