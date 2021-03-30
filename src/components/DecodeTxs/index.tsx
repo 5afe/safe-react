@@ -5,7 +5,7 @@ import { Text, EthHashInfo, CopyToClipboardBtn, IconText, FixedIcon } from '@gno
 import get from 'lodash.get'
 
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { DecodedData, DecodedDataBasicParameter, DecodedDataParameterValue } from 'src/types/transactions/decode.d'
 import { DecodedTxDetail } from 'src/routes/safe/components/Apps/components/ConfirmTxModal'
 
@@ -58,12 +58,14 @@ export const BasicTxInfo = ({
   txData: string
   txValue: string
 }): ReactElement => {
+  const { nativeCoin } = getNetworkInfo()
+
   return (
     <BasicTxInfoWrapper>
       {/* TO */}
       <>
         <Text size="lg" strong>
-          {`Send ${txValue} ETH to:`}
+          {`Send ${txValue} ${nativeCoin.symbol} to:`}
         </Text>
         <EthHashInfo
           hash={txRecipient}
