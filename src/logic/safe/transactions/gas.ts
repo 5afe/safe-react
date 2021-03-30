@@ -165,7 +165,7 @@ const estimateGasWithRPCCall = async (txConfig: {
   throw new Error('Error while estimating the gas required for tx')
 }
 
-const getGasEstimationTxResponse = async (txConfig: {
+export const getGasEstimationTxResponse = async (txConfig: {
   to: string
   from: string
   data: string
