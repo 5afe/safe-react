@@ -4,7 +4,7 @@ import CircularProgress from '@material-ui/core/CircularProgress'
 import React, { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 
-import CustomIconText from 'src/components/CustomIconText'
+import { CustomIconText } from 'src/components/CustomIconText'
 import {
   isCustomTxInfo,
   isMultiSendTxInfo,
