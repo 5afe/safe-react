@@ -6,7 +6,7 @@ import { getGasPrice, getGasPriceOracle } from 'src/config'
 
 export const EMPTY_DATA = '0x'
 
-export const checkReceiptStatus = async (hash) => {
+export const checkReceiptStatus = async (hash: string): Promise<void> => {
   if (!hash) {
     return Promise.reject(new Error('No valid Tx hash to get receipt from'))
   }
@@ -61,7 +61,7 @@ export const calculateGasOf = async (txConfig: {
   try {
     const gas = await web3.eth.estimateGas(txConfig)
 
-    return gas * 2
+    return gas
   } catch (err) {
     return Promise.reject(err)
   }

@@ -302,6 +302,7 @@ type TransactionExecutionEstimationProps = {
   operation: number
   gasPrice: string
   gasToken: string
+  gasLimit?: string
   refundReceiver: string // Address of receiver of gas payment (or 0 if tx.origin).
   safeTxGas: number
   from: string
@@ -323,46 +324,46 @@ const estimateGasForTransactionExecution = async ({
   approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<number> => {
   const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
   const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
 
-  const executeSafeTransactionMethod = safeInstance.methods.execTransaction(
-    txRecipient,
-    txAmount,
-    txData,
-    operation,
-    safeTxGas,
-    0,
-    gasPrice,
-    gasToken,
-    refundReceiver,
-    sigs,
-  )
+  const estimationData = safeInstance.methods
+    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .encodeABI()
 
-  try {
-    console.info(`Estimating transaction necessary gasLimit...`)
-    const estimationData = executeSafeTransactionMethod.encodeABI()
+  return calculateGasOf({
+    data: estimationData,
+    from,
+    to: safeAddress,
+  })
+}
 
-    const gasEstimation = await calculateGasOf({
-      data: estimationData,
+export const checkTransactionExecution = async ({
+  safeAddress,
+  txRecipient,
+  txConfirmations,
+  txAmount,
+  txData,
+  operation,
+  from,
+  gasPrice,
+  gasToken,
+  gasLimit,
+  refundReceiver,
+  safeTxGas,
+  approvalAndExecution,
+}: TransactionExecutionEstimationProps): Promise<boolean> => {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
+  const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
+
+  return safeInstance.methods
+    .execTransaction(txRecipient, txAmount, txData, operation, safeTxGas, 0, gasPrice, gasToken, refundReceiver, sigs)
+    .call({
       from,
-      to: safeAddress,
+      gas: gasLimit,
     })
-
-    if (approvalAndExecution) {
-      // If it's approve and execute we don't have all the signatures to do a complete simulation, we return the gas estimation
-      console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
-      return gasEstimation
-    }
-
-    console.info(`Check transaction success with gas amount: ${gasEstimation}...`)
-    await executeSafeTransactionMethod.call({
-      from,
-    })
-    console.info(`Gas estimation successfully finished with gas amount: ${gasEstimation}`)
-    return gasEstimation
-  } catch (error) {
-    throw new Error(`Gas estimation failed with gas amount: ${safeTxGas}`)
-  }
+    .catch(() => false)
 }
 
 type TransactionApprovalEstimationProps = {

@@ -45,6 +45,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const owners = useSelector(safeOwnersSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -60,6 +61,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     txRecipient: safeAddress,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -92,6 +94,10 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {

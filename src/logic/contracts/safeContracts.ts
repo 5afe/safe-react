@@ -23,8 +23,6 @@ export const SAFE_MASTER_COPY_ADDRESS_V10 = '0xb6029EA3B2c51D09a50B53CA8012FeEB0
 
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
-let spendingLimitModule: AllowanceModule
-let gnosisSafeInstanceCache: GnosisSafe[] = []
 
 /**
  * Creates a Contract instance of the GnosisSafe contract
@@ -125,17 +123,13 @@ export const estimateGasForDeployingSafe = async (
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
-  })
+  }).then(value => value * 2)
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
-  const providerAddress = web3.eth.givenProvider.selectedAddress
-  const cacheKey = providerAddress + '-' + safeAddress
-  if (!gnosisSafeInstanceCache[cacheKey]) {
-    gnosisSafeInstanceCache[cacheKey] = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
-  }
-  return gnosisSafeInstanceCache[cacheKey]
+  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+  
 }
 
 /**
@@ -144,12 +138,8 @@ export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
  export const getSpendingLimitContract = () => {
   const web3 = getWeb3()
 
-  if (!spendingLimitModule) {
-    spendingLimitModule = (new web3.eth.Contract(
+    return (new web3.eth.Contract(
      SpendingLimitModule.abi as AbiItem[],
      SPENDING_LIMIT_MODULE_ADDRESS,
    ) as unknown) as AllowanceModule
-  }
-
-  return spendingLimitModule
 }

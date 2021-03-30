@@ -67,6 +67,7 @@ export const ReviewReplaceOwnerModal = ({
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -82,6 +83,7 @@ export const ReviewReplaceOwnerModal = ({
     txRecipient: safeAddress,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -111,6 +113,10 @@ export const ReviewReplaceOwnerModal = ({
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {

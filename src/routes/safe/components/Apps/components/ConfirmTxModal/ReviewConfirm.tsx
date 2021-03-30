@@ -93,6 +93,7 @@ export const ReviewConfirm = ({
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -110,6 +111,7 @@ export const ReviewConfirm = ({
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -170,6 +172,10 @@ export const ReviewConfirm = ({
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {

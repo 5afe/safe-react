@@ -57,6 +57,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -79,6 +80,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     txData: txInfo?.txData,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -117,6 +119,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
