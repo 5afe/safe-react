@@ -58,6 +58,10 @@ type Props = ConfirmTxModalProps & {
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
 
+const parseTxValue = (value: string | number): string => {
+  return web3ReadOnly.utils.toBN(value).toString()
+}
+
 export const ReviewConfirm = ({
   app,
   txs,
@@ -85,8 +89,10 @@ export const ReviewConfirm = ({
     txs,
     isMultiSend,
   ])
-  const txValue: string | undefined = useMemo(() => (isMultiSend ? '0' : txs[0]?.value), [txs, isMultiSend])
-
+  const txValue: string | undefined = useMemo(
+    () => (txs.length > 1 ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
+    [txs],
+  )
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
