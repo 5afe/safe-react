@@ -91,8 +91,8 @@ export const ReviewConfirm = ({
     isMultiSend,
   ])
   const txValue: string | undefined = useMemo(
-    () => (txs.length > 1 ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
-    [txs],
+    () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
+    [txs, isMultiSend],
   )
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
