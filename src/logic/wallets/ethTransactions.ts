@@ -27,10 +27,6 @@ export const checkReceiptStatus = async (hash: string): Promise<void> => {
 }
 
 export const calculateGasPrice = async (): Promise<string> => {
-  if (process.env.NODE_ENV === 'test') {
-    return '20000000000'
-  }
-
   const gasPrice = getGasPrice()
   const gasPriceOracle = getGasPriceOracle()
 
