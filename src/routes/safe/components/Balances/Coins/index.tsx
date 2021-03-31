@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo } from 'react'
+import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
 import TableCell from '@material-ui/core/TableCell'
@@ -8,11 +9,11 @@ import TableRow from '@material-ui/core/TableRow'
 import { Skeleton } from '@material-ui/lab'
 
 import InfoIcon from 'src/assets/icons/info_red.svg'
+import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
 
 import Img from 'src/components/layout/Img'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
-import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
 import { BALANCE_ROW_TEST_ID } from 'src/routes/safe/components/Balances'
 import AssetTableCell from 'src/routes/safe/components/Balances/AssetTableCell'
@@ -29,6 +30,17 @@ import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { makeStyles } from '@material-ui/core/styles'
 import { styles } from './styles'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+
+const StyledButton = styled(Button)`
+  &&.MuiButton-root {
+    margin: 4px 12px 4px 0px;
+    padding: 0 12px;
+    min-width: auto;
+  }
+  svg {
+    margin: 0 6px 0 0;
+  }
+`
 
 const useStyles = makeStyles(styles)
 
@@ -137,31 +149,25 @@ const Coins = (props: Props): React.ReactElement => {
               <TableCell component="td">
                 <Row align="end" className={classes.actions}>
                   {granted && (
-                    <Button
-                      className={classes.send}
+                    <StyledButton
                       color="primary"
                       onClick={() => showSendFunds(row.asset.address)}
-                      size="small"
-                      testId="balance-send-btn"
+                      size="md"
                       variant="contained"
+                      data-testid="balance-send-btn"
                     >
-                      {/* <CallMade alt="Send Transaction" className={classNames(classes.leftIcon, classes.iconSmall)} /> */}
-                      Send
-                    </Button>
+                      <FixedIcon type="arrowSentWhite" />
+                      <Text size="xl" color="white">
+                        Send
+                      </Text>
+                    </StyledButton>
                   )}
-                  <Button
-                    className={classes.receive}
-                    color="primary"
-                    onClick={showReceiveFunds}
-                    size="small"
-                    variant="contained"
-                  >
-                    {/* <CallReceived
-                      alt="Receive Transaction"
-                      className={classNames(classes.leftIcon, classes.iconSmall)}
-                    /> */}
-                    Receive
-                  </Button>
+                  <StyledButton color="primary" onClick={showReceiveFunds} size="md" variant="contained">
+                    <FixedIcon type="arrowReceivedWhite" />
+                    <Text size="xl" color="white">
+                      Receive
+                    </Text>
+                  </StyledButton>
                 </Row>
               </TableCell>
             </TableRow>
