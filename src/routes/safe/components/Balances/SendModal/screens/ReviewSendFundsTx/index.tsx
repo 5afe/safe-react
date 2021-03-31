@@ -263,17 +263,21 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             </Row>
 
             {/* Tx Parameters */}
-            <TxParametersDetail
-              txParameters={txParameters}
-              onEdit={toggleEditMode}
-              isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
-            />
+            {/* FIXME TxParameters should be updated to be used with spending limits */}
+            {!sameString(tx.txType, 'spendingLimit') && (
+              <TxParametersDetail
+                txParameters={txParameters}
+                onEdit={toggleEditMode}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={isExecution}
+                isOffChainSignature={isOffChainSignature}
+              />
+            )}
           </Block>
 
           {/* Disclaimer */}
-          {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+          {/* FIXME Estimation should be fixed to be used with spending limits */}
+          {!sameString(tx.txType, 'spendingLimit') && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
