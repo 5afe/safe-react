@@ -6,7 +6,6 @@ import {
   isCustomTxInfo,
   TransactionData,
   TransactionInfo,
-  Custom,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
@@ -30,9 +29,14 @@ type DetailsWithTxInfoProps = {
 }
 
 const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps): ReactElement => {
-  const isCustomTx = isCustomTxInfo(txInfo)
-  const name = isCustomTx ? (txInfo as Custom).toInfo.name : undefined
-  const avatarUrl = isCustomTx ? (txInfo as Custom).toInfo.logoUri || undefined : undefined
+  const amount = txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'
+  let name
+  let avatarUrl
+
+  if (isCustomTxInfo(txInfo)) {
+    name = txInfo.toInfo.name
+    avatarUrl = txInfo.toInfo.logoUri
+  }
 
   return (
     <>
@@ -40,9 +44,7 @@ const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps)
         address={txData.to}
         name={name}
         avatarUrl={avatarUrl}
-        title={`Send ${txData.value ? fromTokenUnit(txData.value, nativeCoin.decimals) : 'n/a'} ${
-          nativeCoin.symbol
-        } to:`}
+        title={`Send ${amount} ${nativeCoin.symbol} to:`}
       />
 
       {children}

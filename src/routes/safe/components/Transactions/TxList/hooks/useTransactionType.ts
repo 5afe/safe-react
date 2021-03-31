@@ -10,7 +10,7 @@ import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import { isCancelTransaction } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export type TxTypeProps = {
-  icon: string
+  icon: string | null
   text: string
 }
 
@@ -64,7 +64,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         const toInfo = tx.txInfo.toInfo
         if (toInfo) {
-          setType({ icon: toInfo.logoUri as string, text: toInfo.name })
+          setType({ icon: toInfo.logoUri, text: toInfo.name })
           break
         }
 
