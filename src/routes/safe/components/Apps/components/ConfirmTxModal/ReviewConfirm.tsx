@@ -85,10 +85,7 @@ export const ReviewConfirm = ({
     txs,
     isMultiSend,
   ])
-  const txValue: string | undefined = useMemo(
-    () => (isMultiSend ? '0' : txs[0]?.value && fromTokenUnit(txs[0]?.value, nativeCoin.decimals)),
-    [txs, isMultiSend],
-  )
+  const txValue: string | undefined = useMemo(() => (isMultiSend ? '0' : txs[0]?.value), [txs, isMultiSend])
 
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
@@ -199,7 +196,11 @@ export const ReviewConfirm = ({
             <DividerLine withArrow />
 
             {/* Txs decoded */}
-            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={txValue} />
+            <BasicTxInfo
+              txRecipient={txRecipient}
+              txData={txData}
+              txValue={fromTokenUnit(txValue, nativeCoin.decimals)}
+            />
 
             <DecodeTxsWrapper>
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
