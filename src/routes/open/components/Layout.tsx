@@ -117,7 +117,7 @@ export const Layout = (props: LayoutProps): React.ReactElement => {
           <ChevronLeft />
         </IconButton>
         <Heading tag="h2" testId="create-safe-form-title">
-          Create new account
+          Create new Safe
         </Heading>
       </Row>
       <Stepper

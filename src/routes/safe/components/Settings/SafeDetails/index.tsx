@@ -148,7 +148,7 @@ const SafeDetails = (): React.ReactElement => {
             ) : null}
           </Block>
           <Block className={classes.formContainer}>
-            <Heading tag="h2">Modify account name</Heading>
+            <Heading tag="h2">Modify Safe name</Heading>
             <Paragraph size="lg">
               You can change the name of this account. This name is only stored locally <br />
               and never shared with Gnosis or any third parties.

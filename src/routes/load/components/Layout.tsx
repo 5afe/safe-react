@@ -48,7 +48,7 @@ const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProp
           <IconButton disableRipple onClick={back} style={iconStyle}>
             <ChevronLeft />
           </IconButton>
-          <Heading tag="h2">Add existing account</Heading>
+          <Heading tag="h2">Add existing Safe</Heading>
         </Row>
         <Stepper<LoadFormValues>
           buttonLabels={buttonLabels}

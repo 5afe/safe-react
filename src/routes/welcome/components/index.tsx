@@ -152,7 +152,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
               </Text>
               <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
                 <Text size="xl" color="white">
-                  + Create new account
+                  + Create new Safe
                 </Text>
               </StyledButton>
             </CardsCol>
@@ -162,7 +162,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
             {/* Load safe */}
             <CardsCol>
               <StyledTitleOnly size="sm" strong withoutMargin>
-                Add existing account
+                Add existing Safe
               </StyledTitleOnly>
               <Text size="xl">
                 Already have a Gnosis Safe account? Do you want to access your account from a different device? Easily
@@ -178,7 +178,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 to={LOAD_ADDRESS}
               >
                 <Text size="xl" color="secondary">
-                  Add existing account
+                  Add existing Safe
                 </Text>
               </StyledButton>
             </CardsCol>
