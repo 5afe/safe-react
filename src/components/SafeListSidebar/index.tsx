@@ -39,7 +39,7 @@ type Props = {
 export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
-  const safes = useSelector(sortedSafeListSelector).filter((safe) => safe.name !== 'LOADED SAFE')
+  const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const defaultSafe = useSelector(defaultSafeSelector)
   const currentSafe = useSelector(safeParamAddressFromStateSelector)
 
