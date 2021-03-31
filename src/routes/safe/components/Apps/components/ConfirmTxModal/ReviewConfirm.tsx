@@ -13,6 +13,7 @@ import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getNetworkInfo } from 'src/config'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -58,6 +59,10 @@ type Props = ConfirmTxModalProps & {
   hidden: boolean // used to prevent re-rendering the modal each time a tx is inspected
 }
 
+const parseTxValue = (value: string | number): string => {
+  return web3ReadOnly.utils.toBN(value).toString()
+}
+
 export const ReviewConfirm = ({
   app,
   txs,
@@ -86,10 +91,9 @@ export const ReviewConfirm = ({
     isMultiSend,
   ])
   const txValue: string | undefined = useMemo(
-    () => (isMultiSend ? '0' : txs[0]?.value && fromTokenUnit(txs[0]?.value, nativeCoin.decimals)),
+    () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
   )
-
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -205,7 +209,11 @@ export const ReviewConfirm = ({
             <DividerLine withArrow />
 
             {/* Txs decoded */}
-            <BasicTxInfo txRecipient={txRecipient} txData={txData} txValue={txValue} />
+            <BasicTxInfo
+              txRecipient={txRecipient}
+              txData={txData}
+              txValue={fromTokenUnit(txValue, nativeCoin.decimals)}
+            />
 
             <DecodeTxsWrapper>
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
