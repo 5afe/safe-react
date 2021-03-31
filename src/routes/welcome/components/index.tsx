@@ -143,7 +143,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                   <Title size="xs">2</Title>
                 </Dot>
                 <StyledTitle size="sm" strong withoutMargin>
-                  Create account
+                  Create Safe
                 </StyledTitle>
               </TitleWrapper>
               <Text size="xl">
