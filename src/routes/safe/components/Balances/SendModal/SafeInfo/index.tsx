@@ -32,7 +32,7 @@ const SafeInfo = (): React.ReactElement => {
         hash={safeAddress}
         name={safeName}
         explorerUrl={getExplorerInfo(safeAddress)}
-        withAvatar
+        showAvatar
         showCopyBtn
       />
       {ethBalance && (

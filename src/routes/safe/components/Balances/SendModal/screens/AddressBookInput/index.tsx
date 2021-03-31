@@ -148,7 +148,7 @@ const BaseAddressBookInput = ({
         />
       )}
       getOptionLabel={({ address }) => address}
-      renderOption={({ address, name }) => <EthHashInfo hash={address} name={name} withAvatar />}
+      renderOption={({ address, name }) => <EthHashInfo hash={address} name={name} showAvatar />}
       role="listbox"
       style={{ display: 'flex', flexGrow: 1 }}
     />

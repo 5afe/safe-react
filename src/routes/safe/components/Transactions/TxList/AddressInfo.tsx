@@ -22,7 +22,8 @@ export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement |
     <EthHashInfo
       hash={address}
       name={recipientName === 'UNKNOWN' ? name : recipientName}
-      withAvatar={avatarUrl ?? true}
+      showAvatar
+      customAvatar={avatarUrl}
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
     />

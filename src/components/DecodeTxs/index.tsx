@@ -69,7 +69,7 @@ export const BasicTxInfo = ({
         </Text>
         <EthHashInfo
           hash={txRecipient}
-          withAvatar
+          showAvatar
           textSize="lg"
           showCopyBtn
           explorerUrl={getExplorerInfo(txRecipient)}
@@ -96,7 +96,7 @@ export const getParameterElement = (parameter: DecodedDataBasicParameter, index:
     valueElement = (
       <EthHashInfo
         hash={parameter.value}
-        withAvatar
+        showAvatar
         textSize="lg"
         showCopyBtn
         explorerUrl={getExplorerInfo(parameter.value)}

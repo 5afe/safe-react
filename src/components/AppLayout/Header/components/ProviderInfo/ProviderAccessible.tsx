@@ -89,7 +89,7 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
             <EthHashInfo
               hash={userAddress}
               shortenHash={4}
-              withAvatar
+              showAvatar
               avatarSize="xs"
               textColor={addressColor}
               textSize="sm"
