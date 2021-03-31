@@ -1,10 +1,9 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { FormState, Mutator } from 'final-form'
 import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import GnoForm from 'src/components/forms/GnoForm'
-import GnoButton from 'src/components/layout/Button'
 import { Modal } from 'src/components/Modal'
 import { Amount, Beneficiary, ResetTime, Token } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields'
 
@@ -22,14 +21,6 @@ const FormContainer = styled.div`
     'resetTimeLabel resetTimeLabel'
     'resetTimeToggle resetTimeToggle'
     'resetTimeOption resetTimeOption';
-`
-
-const YetAnotherButton = styled(GnoButton)`
-  &.Mui-disabled {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
-    opacity: 0.5;
-  }
 `
 
 const formMutators: Record<string, Mutator<{ beneficiary: { name: string } }>> = {
@@ -78,21 +69,10 @@ const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): R
               </FormContainer>
 
               <Modal.Footer>
-                <Button color="primary" size="md" onClick={onCancel}>
-                  Cancel
-                </Button>
-
-                {/* TODO: replace this with safe-react-components button. */}
-                {/*  This is used as "submit" SRC Button does not triggers submission up until the 2nd click */}
-                <YetAnotherButton
-                  color="primary"
-                  size="medium"
-                  variant="contained"
-                  type="submit"
-                  disabled={!canReview(args[2])}
-                >
-                  Review
-                </YetAnotherButton>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onCancel }}
+                  confirmButtonProps={{ disabled: !canReview(args[2]), text: 'Review' }}
+                />
               </Modal.Footer>
             </>
           )

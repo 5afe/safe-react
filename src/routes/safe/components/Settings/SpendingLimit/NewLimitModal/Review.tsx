@@ -1,4 +1,4 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -304,23 +304,17 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
           </div>
 
           <Modal.Footer>
-            <Button
-              color="primary"
-              size="md"
-              onClick={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}
-            >
-              Back
-            </Button>
-
-            <Button
-              color="primary"
-              size="md"
-              variant="contained"
-              onClick={() => handleSubmit(txParameters)}
-              disabled={existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => handleSubmit(txParameters),
+                disabled:
+                  existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING,
+              }}
+            />
           </Modal.Footer>
         </>
       )}
