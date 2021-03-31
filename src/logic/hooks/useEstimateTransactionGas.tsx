@@ -62,6 +62,10 @@ export const checkIfTxIsApproveAndExecution = (
     return txConfirmations + 1 === threshold || sameString(txType, 'spendingLimit')
   }
 
+  if (threshold === 1) {
+    return true
+  }
+
   return false
 }
 
@@ -130,15 +134,14 @@ export const useEstimateTransactionGas = ({
         return
       }
 
-      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
+      const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
       const approvalAndExecution = checkIfTxIsApproveAndExecution(
         Number(threshold),
         txConfirmations?.size || 0,
         txType,
         preApprovingOwner,
       )
-
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
@@ -156,7 +159,8 @@ export const useEstimateTransactionGas = ({
             operation: operation || CALL,
             safeTxGas,
           })
-        } else {
+        }
+        if (isExecution || approvalAndExecution) {
           gasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             txRecipient,
@@ -167,7 +171,7 @@ export const useEstimateTransactionGas = ({
             isOffChainSignature,
             operation: operation || CALL,
             from,
-            safeTxGas,
+            safeTxGas: gasEstimation,
             approvalAndExecution,
           })
         }
@@ -193,7 +197,7 @@ export const useEstimateTransactionGas = ({
             gasToken: ZERO_ADDRESS,
             gasLimit,
             refundReceiver: ZERO_ADDRESS,
-            safeTxGas: safeTxGas || 0,
+            safeTxGas: gasEstimation,
             approvalAndExecution,
           })
         }
