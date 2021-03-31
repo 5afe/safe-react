@@ -73,7 +73,7 @@ export const onConnectButtonClick = async () => {
 }
 
 const ConnectButton = (props): React.ReactElement => (
-  <Button color="primary" minWidth={140} onClick={onConnectButtonClick} variant="contained" {...props}>
+  <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
     Connect
   </Button>
 )
