@@ -1,7 +1,7 @@
 import { Button, Icon, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
-import { Modal as ModalMUI } from '@material-ui/core'
+import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
-import React, { HTMLAttributes, ReactElement, ReactNode, ReactNodeArray } from 'react'
+import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
 import styled from 'styled-components'
 
 type Theme = typeof theme
@@ -197,7 +197,12 @@ const ButtonStyled = styled(Button)`
   }
 `
 
-interface ButtonProps extends HTMLAttributes<HTMLButtonElement> {
+type CustomButtonMUIProps = Omit<ButtonPropsMUI, 'size' | 'color' | 'variant'> & {
+  to?: string
+  component?: ReactNode
+}
+
+interface ButtonProps extends CustomButtonMUIProps {
   text?: string
   size?: keyof Theme['buttons']['size']
   color?: 'primary' | 'secondary' | 'error'
