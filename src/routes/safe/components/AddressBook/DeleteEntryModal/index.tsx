@@ -25,7 +25,7 @@ const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDe
       description="Delete entry"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.smallerModalWindow}
+      paperClassName="smaller-modal-window"
       title="Delete entry"
     >
       <Row align="center" className={classes.heading} grow>

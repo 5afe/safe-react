@@ -120,10 +120,6 @@ export const useStyles = makeStyles(
         cursor: 'pointer',
       },
     },
-    modal: {
-      height: 'auto',
-      maxWidth: 'calc(100% - 30px)',
-    },
     amountInput: {
       width: '100% !important',
     },
