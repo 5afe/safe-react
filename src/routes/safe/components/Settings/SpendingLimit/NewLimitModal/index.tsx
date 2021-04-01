@@ -2,10 +2,10 @@ import { List } from 'immutable'
 import React, { ReactElement, Reducer, useCallback, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 
+import { Modal } from 'src/components/Modal'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
 import { ReviewSpendingLimits } from './Review'

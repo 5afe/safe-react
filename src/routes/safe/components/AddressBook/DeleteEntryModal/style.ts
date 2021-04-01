@@ -27,7 +27,4 @@ export const styles = () => ({
   buttonCancel: {
     color: '#008c73',
   },
-  smallerModalWindow: {
-    height: 'auto',
-  },
 })
