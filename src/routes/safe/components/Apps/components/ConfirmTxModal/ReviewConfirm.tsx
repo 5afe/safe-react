@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react'
-import { ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
+import { Text, EthHashInfo, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
@@ -20,11 +20,12 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg, sm } from 'src/theme/variables'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import AddressInfo from 'src/components/AddressInfo'
 import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
 import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import { getExplorerInfo } from 'src/config'
+import Block from 'src/components/layout/Block'
 
 import GasEstimationInfo from '../GasEstimationInfo'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
@@ -51,6 +52,19 @@ const FooterWrapper = styled.div`
 
 const DecodeTxsWrapper = styled.div`
   margin: 24px -24px;
+`
+
+const StyledBlock = styled(Block)`
+  background-color: ${({ theme }) => theme.colors.separator};
+  width: fit-content;
+  padding: 5px 10px;
+  border-radius: 3px;
+  margin: 4px 0 0 40px;
+
+  display: flex;
+  > :nth-child(1) {
+    margin-right: 5px;
+  }
 `
 
 type Props = ConfirmTxModalProps & {
@@ -81,6 +95,7 @@ export const ReviewConfirm = ({
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
+  const explorerUrl = getExplorerInfo(safeAddress)
 
   const txRecipient: string | undefined = useMemo(() => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to), [
     txs,
@@ -204,7 +219,11 @@ export const ReviewConfirm = ({
 
           <Container>
             {/* Safe */}
-            <AddressInfo ethBalance={ethBalance} safeAddress={safeAddress} safeName={safeName} />
+            <EthHashInfo name={safeName} hash={safeAddress} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
+            <StyledBlock>
+              <Text size="md">Balance:</Text>
+              <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>
+            </StyledBlock>
 
             <DividerLine withArrow />
 
@@ -218,9 +237,7 @@ export const ReviewConfirm = ({
             <DecodeTxsWrapper>
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
-
             {!isMultiSend && <DividerLine withArrow={false} />}
-
             {/* Warning gas estimation */}
             {params?.safeTxGas && (
               <div className="section">
@@ -233,7 +250,6 @@ export const ReviewConfirm = ({
                 />
               </div>
             )}
-
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}
