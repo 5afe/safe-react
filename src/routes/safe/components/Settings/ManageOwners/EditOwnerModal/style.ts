@@ -32,7 +32,4 @@ export const styles = createStyles({
       cursor: 'pointer',
     },
   },
-  smallerModalWindow: {
-    height: 'auto',
-  },
 })

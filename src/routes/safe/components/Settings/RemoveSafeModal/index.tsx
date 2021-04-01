@@ -55,7 +55,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       description="Remove the selected Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.modal}
+      paperClassName="modal"
       title="Remove Safe"
     >
       <Row align="center" className={classes.heading} grow>
