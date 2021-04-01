@@ -3,13 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Button } from '@gnosis.pm/safe-react-components'
 
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -87,14 +86,15 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+        <Button size="md" onClick={onClose} color="secondary" variant="outlined">
           Cancel
         </Button>
         <Button
           className={classes.buttonRemove}
-          minWidth={140}
+          size="md"
           onClick={onRemoveSafeHandler}
           type="submit"
+          color="error"
           variant="contained"
         >
           Remove

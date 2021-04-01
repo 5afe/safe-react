@@ -38,7 +38,6 @@ const ChooseTxType = ({
   setActiveScreen,
 }: ChooseTxTypeProps): React.ReactElement => {
   const classes = useStyles()
-  console.log('name', recipientName)
   const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)

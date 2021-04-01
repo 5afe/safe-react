@@ -2,6 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -12,7 +13,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import SelectField from 'src/components/forms/SelectField'
 import { composeValidators, differentFrom, minValue, mustBeInteger, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -94,6 +94,12 @@ export const ChangeThresholdModal = ({
     }
   }, [safeAddress, editedThreshold])
 
+  const handleThreshold = ({ target }) => {
+    const value = parseInt(target.value)
+    setDisabledSubmitForm(value === editedThreshold || value === threshold)
+    setEditedThreshold(value)
+  }
+
   const handleSubmit = async ({ txParameters }) => {
     await dispatch(
       createTransaction({
@@ -158,11 +164,7 @@ export const ChangeThresholdModal = ({
                       <Field
                         data-testid="threshold-select-input"
                         name={THRESHOLD_FIELD_NAME}
-                        onChange={({ target }) => {
-                          const value = parseInt(target.value)
-                          setDisabledSubmitForm(value === editedThreshold || value === threshold)
-                          setEditedThreshold(value)
-                        }}
+                        onChange={handleThreshold}
                         render={(props) => (
                           <>
                             <SelectField {...props} disableError>
@@ -206,12 +208,12 @@ export const ChangeThresholdModal = ({
                 )}
 
                 <Row align="center" className={classes.buttonRow}>
-                  <Button minWidth={140} onClick={onClose} color="secondary">
+                  <Button size="md" onClick={onClose} variant="outlined" color="primary">
                     Cancel
                   </Button>
                   <StyledButton
                     color="primary"
-                    minWidth={140}
+                    size="md"
                     type="submit"
                     variant="contained"
                     disabled={txEstimationExecutionStatus === EstimationStatus.LOADING || disabledSubmitForm}
