@@ -11,7 +11,6 @@ import { styles } from './style'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
@@ -40,7 +39,19 @@ import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/saf
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
+import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
+const StyledButton = styled(Button)`
+  &&.MuiButton-root {
+    margin: 4px 12px 4px 0px;
+    padding: 0 12px;
+    min-width: auto;
+  }
+  svg {
+    margin: 0 6px 0 0;
+  }
+`
 const useStyles = makeStyles(styles)
 
 interface AddressBookSelectedEntry extends AddressBookEntry {
@@ -202,19 +213,21 @@ const AddressBookTable = (): ReactElement => {
                           testId={REMOVE_ENTRY_BUTTON}
                         />
                         {granted ? (
-                          <Button
-                            className={classes.send}
+                          <StyledButton
                             color="primary"
                             onClick={() => {
                               setSelectedEntry({ entry: row })
                               setSendFundsModalOpen(true)
                             }}
-                            size="small"
-                            testId={SEND_ENTRY_BUTTON}
+                            size="md"
                             variant="contained"
+                            data-testid={SEND_ENTRY_BUTTON}
                           >
-                            Send
-                          </Button>
+                            <FixedIcon type="arrowSentWhite" />
+                            <Text size="xl" color="white">
+                              Send
+                            </Text>
+                          </StyledButton>
                         ) : null}
                       </Row>
                     </TableCell>
