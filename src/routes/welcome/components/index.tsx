@@ -107,8 +107,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
               </StyledTitle>
             </TitleWrapper>
             <Text size="xl">
-              Gnosis Safe supports a wide range of wallets that you can choose to interact with your Gnosis Safe
-              account.
+              Gnosis Safe supports a wide range of wallets that you can choose to interact with your Safe.
             </Text>
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
               <LinkSRC
@@ -147,8 +146,8 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 </StyledTitle>
               </TitleWrapper>
               <Text size="xl">
-                Create a new Gnosis Safe account that is controlled by one or more owners. <br />
-                You will be required to pay a network fee for creating the account.
+                Create a new Gnosis Safe that is controlled by one or more owners. <br />
+                You will be required to pay a network fee for creating the Safe.
               </Text>
               <StyledButton size="lg" color="primary" variant="contained" component={Link} to={OPEN_ADDRESS}>
                 <Text size="xl" color="white">
@@ -165,8 +164,8 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
                 Add existing Safe
               </StyledTitleOnly>
               <Text size="xl">
-                Already have a Gnosis Safe account? Do you want to access your account from a different device? Easily
-                add it using your Gnosis Safe address.
+                Already have a Safe? Do you want to access your Safe from a different device? Easily add it using your
+                Safe address.
               </Text>
               <StyledButton
                 variant="bordered"

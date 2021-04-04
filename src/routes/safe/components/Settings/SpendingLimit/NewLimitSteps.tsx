@@ -56,7 +56,7 @@ export const NewLimitSteps = (): ReactElement => (
       </Text>
 
       <Text size="lg" color="placeHolder" center>
-        You can set a spending limit for any asset stored in your account
+        You can set a spending limit for any asset stored in your Safe
       </Text>
     </Step>
 

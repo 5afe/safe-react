@@ -7,7 +7,7 @@ export const steps = [
     id: '1',
     label: 'Waiting for transaction confirmation',
     description: undefined,
-    instruction: 'Please confirm the account creation in your wallet',
+    instruction: 'Please confirm the Safe creation in your wallet',
     footerComponent: null,
   },
   {
@@ -33,7 +33,7 @@ export const steps = [
   },
   {
     id: '5',
-    label: 'Generating your account',
+    label: 'Generatin your Safe',
     description: undefined,
     instruction: 'Please do not leave the page',
     footerComponent: GenericFooter,
@@ -41,7 +41,7 @@ export const steps = [
   {
     id: '6',
     label: 'Success',
-    description: 'Your account was created successfully',
+    description: 'Your Safe was created successfully',
     instruction: 'Click below to get started',
     footerComponent: ContinueFooter,
   },

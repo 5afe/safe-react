@@ -71,8 +71,8 @@ export const Advanced = (): React.ReactElement => {
           Safe Modules
         </Title>
         <InfoText size="lg">
-          Modules allow you to customize the access-control logic of your account. Modules are potentially risky, so
-          make sure to only use modules from trusted sources. Learn more about modules{' '}
+          Modules allow you to customize the access-control logic of your Safe. Modules are potentially risky, so make
+          sure to only use modules from trusted sources. Learn more about modules{' '}
           <a
             href="https://docs.gnosis.io/safe/docs/contracts_architecture/#3-module-management"
             rel="noopener noreferrer"
