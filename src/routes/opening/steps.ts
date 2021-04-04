@@ -33,7 +33,7 @@ export const steps = [
   },
   {
     id: '5',
-    label: 'Generatin your Safe',
+    label: 'Generating your Safe',
     description: undefined,
     instruction: 'Please do not leave the page',
     footerComponent: GenericFooter,
