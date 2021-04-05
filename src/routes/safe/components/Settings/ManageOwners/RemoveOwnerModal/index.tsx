@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -14,15 +13,6 @@ import { removeSafeOwner } from 'src/logic/safe/store/actions/removeSafeOwner'
 import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const styles = createStyles({
-  biggerModalWindow: {
-    width: '775px',
-    height: 'auto',
-  },
-})
-
-const useStyles = makeStyles(styles)
 
 type OwnerValues = {
   ownerAddress: string
@@ -78,7 +68,6 @@ export const RemoveOwnerModal = ({
   ownerAddress,
   ownerName,
 }: RemoveOwnerProps): React.ReactElement => {
-  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerAddress, ownerName, threshold: '' })
   const dispatch = useDispatch()
@@ -120,7 +109,7 @@ export const RemoveOwnerModal = ({
       description="Remove owner from Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.biggerModalWindow}
+      paperClassName="bigger-modal-window"
       title="Remove owner from Safe"
     >
       <>

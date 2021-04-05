@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,15 +16,6 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const styles = createStyles({
-  biggerModalWindow: {
-    width: '775px',
-    height: 'auto',
-  },
-})
-
-const useStyles = makeStyles(styles)
 
 type OwnerValues = {
   newOwnerAddress: string
@@ -84,7 +74,6 @@ export const ReplaceOwnerModal = ({
   ownerAddress,
   ownerName,
 }: ReplaceOwnerProps): React.ReactElement => {
-  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState({
     newOwnerAddress: '',
@@ -137,7 +126,7 @@ export const ReplaceOwnerModal = ({
       description="Replace owner from Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.biggerModalWindow}
+      paperClassName="bigger-modal-window"
       title="Replace owner from Safe"
     >
       <>

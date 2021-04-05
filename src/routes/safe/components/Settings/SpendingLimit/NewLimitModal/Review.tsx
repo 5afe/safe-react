@@ -1,10 +1,10 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import { Modal } from 'src/components/Modal'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -22,7 +22,6 @@ import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadable
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -248,9 +247,16 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     >
       {(txParameters, toggleEditMode) => (
         <>
-          <Modal.TopBar title="New Spending Limit" titleNote="2 of 2" onClose={onClose} />
+          <Modal.Header onClose={onClose}>
+            <Modal.Header.Title size="xs" withoutMargin>
+              New Spending Limit
+              <Text size="lg" color="secondaryLight" as="span">
+                2 of 2
+              </Text>
+            </Modal.Header.Title>
+          </Modal.Header>
 
-          <Block className={classes.container}>
+          <Modal.Body>
             <Col margin="lg">
               <AddressInfo address={values.beneficiary} title="Beneficiary" />
             </Col>
@@ -292,7 +298,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               isTransactionExecution={isExecution}
               isOffChainSignature={isOffChainSignature}
             />
-          </Block>
+          </Modal.Body>
           <div className={classes.gasCostsContainer}>
             <TransactionFees
               gasCostFormatted={gasCostFormatted}
@@ -304,23 +310,17 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
           </div>
 
           <Modal.Footer>
-            <Button
-              color="primary"
-              size="md"
-              onClick={() => onBack({ values: {}, txToken: makeToken(), step: CREATE })}
-            >
-              Back
-            </Button>
-
-            <Button
-              color="primary"
-              size="md"
-              variant="contained"
-              onClick={() => handleSubmit(txParameters)}
-              disabled={existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => handleSubmit(txParameters),
+                disabled:
+                  existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING,
+              }}
+            />
           </Modal.Footer>
         </>
       )}
