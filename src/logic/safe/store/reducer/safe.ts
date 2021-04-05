@@ -88,7 +88,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
-            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
+            makeSafe({ name: safe?.name || 'Gnosis Safe', address: safeAddress }),
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state
@@ -106,7 +106,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
-            makeSafe({ name: safe?.name || 'LOADED SAFE', address: safeAddress }),
+            makeSafe({ name: safe?.name || 'Gnosis Safe', address: safeAddress }),
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state

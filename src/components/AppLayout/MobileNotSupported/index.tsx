@@ -112,7 +112,7 @@ export const MobileNotSupported = ({ onClose }: Props): ReactElement => {
       <Overlay>
         <ModalApp>
           <StyledCard>
-            <Text size="lg">The Safe Multisig web app is not optimized for mobile.</Text>
+            <Text size="lg">The Gnosis Safe web app is not optimized for mobile.</Text>
             <Text size="lg">Get the mobile app for a better experience.</Text>
             <Button size="md" color="primary" variant="contained">
               <StyledLink target="_blank" href="https://gnosis-safe.io/#mobile" rel="noopener noreferrer">

@@ -159,7 +159,7 @@ export default (safeAdd: string) => async (
 ): Promise<Action | void> => {
   try {
     const safeAddress = checksumAddress(safeAdd)
-    const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
+    const safeName = (await getSafeName(safeAddress)) || 'Gnosis Safe'
     const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
     const totalFiatBalance = safeTotalFiatBalanceSelector(getState())
     const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion, totalFiatBalance)
