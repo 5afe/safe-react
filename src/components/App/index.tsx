@@ -21,7 +21,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import {
-  safeFiatBalancesTotalSelector,
+  safeTotalFiatBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
@@ -50,12 +50,6 @@ const notificationStyles = {
   info: {
     background: '#fff',
   },
-  receiveModal: {
-    height: 'auto',
-    maxWidth: 'calc(100% - 30px)',
-    minHeight: '544px',
-    overflow: 'hidden',
-  },
 }
 
 const Frame = styled.div`
@@ -79,7 +73,7 @@ const App: React.FC = ({ children }) => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSelector(safeNameSelector) ?? ''
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
-  const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
+  const currentSafeBalance = useSelector(safeTotalFiatBalanceSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
@@ -88,7 +82,7 @@ const App: React.FC = ({ children }) => {
   useSafeScheduledUpdates(safeLoaded, safeAddress)
 
   const sendFunds = safeActionsState.sendFunds
-  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
+  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
 
@@ -149,7 +143,7 @@ const App: React.FC = ({ children }) => {
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
               open={safeActionsState.showReceive}
-              paperClassName={classes.receiveModal}
+              paperClassName="receive-modal"
               title="Receive Tokens"
             >
               <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />

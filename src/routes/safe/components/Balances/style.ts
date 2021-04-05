@@ -58,12 +58,6 @@ export const styles = createStyles({
       marginLeft: '0',
     },
   },
-  receiveModal: {
-    height: 'auto',
-    maxWidth: 'calc(100% - 30px)',
-    minHeight: '544px',
-    overflow: 'hidden',
-  },
   send: {
     width: '75px',
     minWidth: '75px',

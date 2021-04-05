@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -17,15 +16,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { OwnerForm } from './screens/OwnerForm'
 import { ReviewAddOwner } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
-
-const styles = createStyles({
-  biggerModalWindow: {
-    width: '775px',
-    height: 'auto',
-  },
-})
-
-const useStyles = makeStyles(styles)
 
 export type OwnerValues = {
   ownerAddress: string
@@ -66,7 +56,6 @@ type Props = {
 }
 
 export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement => {
-  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
@@ -123,7 +112,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
       description="Add owner to Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.biggerModalWindow}
+      paperClassName="bigger-modal-window"
       title="Add owner to Safe"
     >
       <>

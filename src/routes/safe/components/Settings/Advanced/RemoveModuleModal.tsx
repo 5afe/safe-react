@@ -122,7 +122,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     <Modal
       description="Remove the selected Module"
       handleClose={onClose}
-      paperClassName={classes.modal}
+      paperClassName="modal"
       title="Remove Module"
       open
     >
