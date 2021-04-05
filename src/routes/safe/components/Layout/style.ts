@@ -1,3 +1,4 @@
+// TODO: remove this file. It's no longer used
 import { screenSm, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 

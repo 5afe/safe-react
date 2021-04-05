@@ -67,7 +67,7 @@ export const CreateEditEntryModal = ({
       description={isNew ? 'Create new addressBook entry' : 'Edit addressBook entry'}
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.smallerModalWindow}
+      paperClassName="smaller-modal-window"
       title={isNew ? 'Create new entry' : 'Edit entry'}
     >
       <Row align="center" className={classes.heading} grow>

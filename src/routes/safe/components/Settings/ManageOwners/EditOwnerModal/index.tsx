@@ -60,7 +60,7 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
       description="Edit owner from Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.smallerModalWindow}
+      paperClassName="smaller-modal-window"
       title="Edit owner from Safe"
     >
       <Row align="center" className={classes.heading} grow>
