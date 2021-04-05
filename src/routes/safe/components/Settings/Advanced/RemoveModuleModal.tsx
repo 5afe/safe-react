@@ -1,4 +1,4 @@
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Identicon } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -8,7 +8,6 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import styled from 'styled-components'
 
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -149,7 +148,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               <Block>
                 <Row className={classes.modalOwner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={moduleAddress} diameter={32} />
+                    <Identicon address={moduleAddress} size="md" />
                   </Col>
                   <Col xs={11}>
                     <Block className={cn(classes.modalName, classes.modalUserName)}>

@@ -8,7 +8,6 @@ import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -24,7 +23,7 @@ import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -108,7 +107,7 @@ const OwnerListComponent = (props) => {
                 </Col>
                 <Col xs={8}>
                   <Row className={classes.ownerAddresses}>
-                    <Identicon address={address} diameter={32} />
+                    <Identicon address={address} size="md" />
                     <Paragraph className={classes.address} color="disabled" noMargin size="md">
                       {address}
                     </Paragraph>

@@ -16,7 +16,6 @@ import {
   required,
   uniqueAddress,
 } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -28,7 +27,7 @@ import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } fr
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -107,7 +106,7 @@ export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerF
                 </Row>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={ownerAddress} diameter={32} />
+                    <Identicon address={ownerAddress} size="md" />
                   </Col>
                   <Col xs={7}>
                     <Block className={classNames(classes.name, classes.userName)}>

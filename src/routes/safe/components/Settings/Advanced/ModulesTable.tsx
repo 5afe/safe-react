@@ -1,4 +1,4 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Text, Identicon } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import styled from 'styled-components'
@@ -15,7 +15,6 @@ import { ModulePair } from 'src/logic/safe/store/models/safe'
 import Table from 'src/components/Table'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
-import Identicon from 'src/components/Identicon'
 import Row from 'src/components/layout/Row'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
@@ -87,7 +86,7 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                       <TableCell align={column.align} component="td" key={columnId}>
                         {columnId === MODULES_TABLE_ADDRESS_ID ? (
                           <Block justify="left">
-                            <Identicon address={moduleAddress} diameter={32} />
+                            <Identicon address={moduleAddress} size="md" />
                             <AddressText size="lg">{moduleAddress}</AddressText>
                           </Block>
                         ) : (

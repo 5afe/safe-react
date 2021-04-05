@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -26,7 +25,7 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -176,7 +175,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
             </Row>
             <Row align="center" margin="md">
               <Col xs={1}>
-                <Identicon address={tx.recipientAddress} diameter={32} />
+                <Identicon address={tx.recipientAddress} size="md" />
               </Col>
               <Col layout="column" xs={11}>
                 <Block justify="left">

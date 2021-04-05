@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { ReactElement, useEffect, useState } from 'react'
 
-import Identicon from 'src/components/Identicon'
+import { Identicon } from '@gnosis.pm/safe-react-components'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getValidAddressBookName } from 'src/logic/addressBook/utils'
@@ -33,7 +33,7 @@ export const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): ReactE
 
   return (
     <Block justify="left">
-      <Identicon address={address} diameter={32} />
+      <Identicon address={address} size="md" />
       {showLinks ? (
         <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
           {userName && getValidAddressBookName(userName)}

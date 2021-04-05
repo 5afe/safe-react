@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import React from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -16,7 +15,7 @@ import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { LoadFormValues } from 'src/routes/load/container/Load'
 
 const checkIfUserAddressIsAnOwner = (values: LoadFormValues, userAddress: string): boolean => {
@@ -73,7 +72,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                 Safe address
               </Paragraph>
               <Row className={classes.container}>
-                <Identicon address={safeAddress} diameter={32} />
+                <Identicon address={safeAddress} size="md" />
                 <Paragraph className={classes.address} color="disabled" noMargin size="md">
                   {shortVersionOf(safeAddress, 4)}
                 </Paragraph>
@@ -111,7 +110,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
               <>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={address} diameter={32} />
+                    <Identicon address={address} size="md" />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>

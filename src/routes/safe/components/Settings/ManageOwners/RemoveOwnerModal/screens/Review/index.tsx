@@ -4,12 +4,11 @@ import Close from '@material-ui/icons/Close'
 import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { List } from 'immutable'
 
 import { getExplorerInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -184,7 +183,7 @@ export const ReviewRemoveOwnerModal = ({
                       <React.Fragment key={owner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={1}>
-                            <Identicon address={owner.address} diameter={32} />
+                            <Identicon address={owner.address} size="md" />
                           </Col>
                           <Col xs={11}>
                             <Block className={classNames(classes.name, classes.userName)}>
@@ -213,7 +212,7 @@ export const ReviewRemoveOwnerModal = ({
                 <Hairline />
                 <Row className={classes.selectedOwner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={ownerAddress} diameter={32} />
+                    <Identicon address={ownerAddress} size="md" />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>

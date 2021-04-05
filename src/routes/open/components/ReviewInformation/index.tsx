@@ -3,7 +3,6 @@ import classNames from 'classnames'
 import React, { ReactElement, useEffect, useMemo } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -19,7 +18,7 @@ import {
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import { FormApi } from 'final-form'
 import { StepperPageFormProps } from 'src/components/Stepper'
@@ -99,7 +98,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
               <React.Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={addresses[index]} diameter={32} />
+                    <Identicon address={addresses[index]} size="md" />
                   </Col>
                   <Col xs={11}>
                     <Block className={classNames(classes.name, classes.userName)}>

@@ -13,7 +13,6 @@ import GnoForm from 'src/components/forms/GnoForm'
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -33,7 +32,7 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 
 export interface CreatedTx {
   contractAddress: string
@@ -166,7 +165,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                     </Row>
                     <Row align="center" margin="md">
                       <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
+                        <Identicon address={selectedEntry.address} size="md" />
                       </Col>
                       <Col layout="column" xs={11}>
                         <Block justify="left">

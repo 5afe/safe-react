@@ -5,7 +5,6 @@ import classNames from 'classnames/bind'
 import React from 'react'
 
 import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -14,7 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 import { getExplorerInfo } from 'src/config'
 
 export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
@@ -42,7 +41,7 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
         </Row>
         <Row className={classes.owner}>
           <Col align="center" xs={1}>
-            <Identicon address={ownerAddress} diameter={32} />
+            <Identicon address={ownerAddress} size="md" />
           </Col>
           <Col xs={7}>
             <Block className={classNames(classes.name, classes.userName)}>

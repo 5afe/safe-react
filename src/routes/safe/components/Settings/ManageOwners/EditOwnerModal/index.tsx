@@ -9,7 +9,6 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
@@ -26,7 +25,7 @@ import { sm } from 'src/theme/variables'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -92,7 +91,7 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
                 </Row>
                 <Row>
                   <Block justify="center">
-                    <Identicon address={ownerAddress} diameter={32} />
+                    <Identicon address={ownerAddress} size="md" />
                     <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
                       {ownerAddress}
                     </Paragraph>

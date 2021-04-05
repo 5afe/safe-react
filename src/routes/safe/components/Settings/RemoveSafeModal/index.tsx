@@ -9,7 +9,7 @@ import { getExplorerInfo } from 'src/config'
 
 import { styles } from './style'
 
-import Identicon from 'src/components/Identicon'
+import { Identicon } from '@gnosis.pm/safe-react-components'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -83,7 +83,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       <Block className={classes.container}>
         <Row className={classes.owner}>
           <Col align="center" xs={1}>
-            <Identicon address={safeAddress} diameter={32} />
+            <Identicon address={safeAddress} size="md" />
           </Col>
           <Col xs={11}>
             <Block className={classNames(classes.name, classes.userName)}>
