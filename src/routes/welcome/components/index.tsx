@@ -77,7 +77,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
     <Block>
       {/* Title */}
       <Title size="md" strong>
-        Welcome to Gnosis Safe Multisig.
+        Welcome to Gnosis Safe.
       </Title>
 
       {/* Subtitle */}
@@ -89,8 +89,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
           </>
         ) : (
           <>
-            Gnosis Safe Multisig is the most trusted platform to manage digital assets. <br /> Here is how to get
-            started:{' '}
+            Gnosis Safe is the most trusted platform to manage digital assets. <br /> Here is how to get started:{' '}
           </>
         )}
       </Title>
@@ -108,8 +107,7 @@ export const WelcomeLayout = ({ isOldMultisigMigration }: Props): React.ReactEle
               </StyledTitle>
             </TitleWrapper>
             <Text size="xl">
-              Gnosis Safe Multisig supports a wide range of wallets that you can choose to be one of the authentication
-              factors.
+              Gnosis Safe supports a wide range of wallets that you can choose to be one of the authentication factors.
             </Text>
             <StyledButtonLink textSize="xl" color="primary" iconType="externalLink" iconSize="sm">
               <LinkSRC
