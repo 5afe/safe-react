@@ -11,7 +11,7 @@ These instructions will get you a copy of the project up and running on your loc
 What things you need to install globally:
 
 ```
-yarn add truffle ganache-cli flow-type -g
+yarn global add truffle ganache-cli
 ```
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
