@@ -68,13 +68,13 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
         <OwnerListItem>
           <span className="icon">
             {detailedExecutionInfo.executor ? (
-              <Icon type="circleCheck" size="sm" />
+              <Icon type="circleCheck" size="sm" color="primary" />
             ) : (
               <StyledImg alt="" src={TransactionListActive} />
             )}
           </span>
           <div className="legend">
-            <Text color="primary" size="xl" strong>
+            <Text color={detailedExecutionInfo.executor ? 'primary' : 'icon'} size="xl" strong>
               {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
             </Text>
             {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
