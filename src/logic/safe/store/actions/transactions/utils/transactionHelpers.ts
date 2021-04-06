@@ -1,7 +1,5 @@
-import { getNetworkInfo } from 'src/config'
-import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { Transaction, TxArgs, RefundParams } from 'src/logic/safe/store/models/types/transaction'
+import { Transaction, TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import {
   BatchProcessTxsProps,
   TxServiceModel,
