@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-// import { getSafeServiceBaseUrl } from 'src/config'
+import { SAFE_APPS_LIST_URL } from 'src/utils/constants'
 
 export type TokenListResult = {
   name: string
@@ -15,8 +15,6 @@ export type AppData = {
   networks: number[]
 }
 
-export const fetchAppList = (): Promise<TokenListResult> => {
-  const url = 'https://raw.githubusercontent.com/gnosis/safe-apps-list/main/public/gnosis-default.applist.json'
-
-  return axios.get(url).then(({ data }) => data)
+export const fetchAppList = async (): Promise<TokenListResult> => {
+  return axios.get(SAFE_APPS_LIST_URL).then(({ data }) => data)
 }
