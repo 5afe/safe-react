@@ -32,7 +32,6 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
     owners,
     balances,
     activeTokens,
-    latestIncomingTxBlock: 0,
     modules: null,
   }
 }

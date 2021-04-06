@@ -36,7 +36,6 @@ export type SafeRecordProps = {
   activeTokens: Set<string>
   balances: Map<string, BalanceRecord>
   nonce: number
-  latestIncomingTxBlock: number
   recurringUser?: boolean
   currentVersion: string
   needsUpdate: boolean
@@ -55,7 +54,6 @@ const makeSafe = Record<SafeRecordProps>({
   activeTokens: Set(),
   balances: Map(),
   nonce: 0,
-  latestIncomingTxBlock: 0,
   recurringUser: undefined,
   currentVersion: '',
   needsUpdate: false,
