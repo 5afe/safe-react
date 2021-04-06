@@ -74,7 +74,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             )}
           </span>
           <div className="legend">
-            <Text color={detailedExecutionInfo.executor ? 'primary' : 'icon'} size="xl" strong>
+            <Text color="primary" size="xl" strong>
               {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
             </Text>
             {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
