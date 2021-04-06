@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { loadFromStorage } from 'src/utils/storage'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp, staticAppsList } from '../utils'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } from '../utils'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
 
@@ -27,6 +27,8 @@ const useAppList = (): UseAppListReturnType => {
     }
 
     const loadApps = async () => {
+      const staticAppsList = await getAppsList()
+
       // recover apps from storage (third-party apps added by the user)
       const persistedAppList =
         (await loadFromStorage<(StoredSafeApp & { networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
