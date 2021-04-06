@@ -8,7 +8,7 @@ const baseConfig: EnvironmentSettings = {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
     gasParameter: 'average',
   },
-  rpcServiceUrl: 'https://bsc-dataseed.binance.org/',
+  rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
   networkExplorerUrl: 'https://bscscan.com',
   networkExplorerApiUrl: 'https://api.bscscan.com/api',
