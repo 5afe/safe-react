@@ -1,4 +1,4 @@
-import { getNetworkId, getNetworkInfo } from 'src/config'
+import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -13,45 +13,8 @@ export const CK_ADDRESS = {
   [ETHEREUM_NETWORK.RINKEBY]: '0x16baf0de678e52367adc69fd067e5edd1d33e3bf',
 }
 
-// Note: xDAI ENS is missing, once we have it we need to add it here
-const ENS_CONTRACT_ADDRESS = {
-  [ETHEREUM_NETWORK.MAINNET]: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
-  [ETHEREUM_NETWORK.RINKEBY]: '0x57f1887a8BF19b14fC0dF6Fd9B2acc9Af147eA85',
-  [ETHEREUM_NETWORK.ENERGY_WEB_CHAIN]: '0x0A6d64413c07E10E890220BBE1c49170080C6Ca0',
-  [ETHEREUM_NETWORK.VOLTA]: '0xd7CeF70Ba7efc2035256d828d5287e2D285CD1ac',
-}
-
 // safeTransferFrom(address,address,uint256)
 export const SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH = '42842e0e'
-
-/**
- * Returns the symbol of the provided ERC721 contract
- * @param {string} contractAddress
- * @returns Promise<string>
- */
-export const getERC721Symbol = async (contractAddress: string): Promise<string> => {
-  let tokenSymbol = 'UNKNOWN'
-
-  try {
-    const ERC721token = await getERC721TokenContract()
-    const tokenInstance = await ERC721token.at(contractAddress)
-    tokenSymbol = await tokenInstance.symbol()
-  } catch (err) {
-    // If the contract address is an ENS token contract, we know that the ERC721 standard is not proper implemented
-    // The method symbol() is missing
-    if (isENSContract(contractAddress)) {
-      return 'ENS'
-    }
-    console.error(`Failed to retrieve token symbol for ERC721 token ${contractAddress}`)
-  }
-
-  return tokenSymbol
-}
-
-export const isENSContract = (contractAddress: string): boolean => {
-  const { id } = getNetworkInfo()
-  return sameAddress(contractAddress, ENS_CONTRACT_ADDRESS[id])
-}
 
 /**
  * Returns a method identifier based on the asset specified and the current network
