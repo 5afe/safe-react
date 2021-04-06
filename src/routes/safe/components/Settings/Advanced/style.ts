@@ -101,11 +101,6 @@ export const styles = createStyles({
       cursor: 'pointer',
     },
   },
-  modal: {
-    height: 'auto',
-    maxWidth: 'calc(100% - 30px)',
-    overflow: 'hidden',
-  },
   gasCostsContainer: {
     backgroundColor: background,
     padding: `0 ${lg}`,
