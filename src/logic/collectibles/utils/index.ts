@@ -54,25 +54,6 @@ export const isENSContract = (contractAddress: string): boolean => {
 }
 
 /**
- * Verifies if the provided contract is a valid ERC721
- * @param {string} contractAddress
- * @returns boolean
- */
-export const isERC721Contract = async (contractAddress: string): Promise<boolean> => {
-  const ERC721Token = await getStandardTokenContract()
-  let isERC721 = false
-
-  try {
-    await ERC721Token.at(contractAddress)
-    isERC721 = true
-  } catch (error) {
-    console.warn('Asset not found')
-  }
-
-  return isERC721
-}
-
-/**
  * Returns a method identifier based on the asset specified and the current network
  * @param {string} contractAddress
  * @returns string

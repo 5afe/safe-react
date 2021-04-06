@@ -25,42 +25,6 @@ export const isUpgradeTransaction = (tx: BuildTx['tx']): boolean => {
   )
 }
 
-export const getRefundParams = async (
-  tx: BuildTx['tx'],
-  tokenInfo: (string) => Promise<{ decimals: number; symbol: string } | null>,
-): Promise<RefundParams | null> => {
-  const { nativeCoin } = getNetworkInfo()
-  const txGasPrice = Number(tx.gasPrice)
-  let refundParams: RefundParams | null = null
-
-  if (txGasPrice > 0) {
-    let refundSymbol = nativeCoin.symbol
-    let refundDecimals = nativeCoin.decimals
-
-    if (tx.gasToken !== ZERO_ADDRESS) {
-      const gasToken = await tokenInfo(tx.gasToken)
-
-      if (gasToken !== null) {
-        refundSymbol = gasToken.symbol
-        refundDecimals = gasToken.decimals
-      }
-    }
-
-    const feeString = (txGasPrice * (Number(tx.baseGas) + Number(tx.safeTxGas)))
-      .toString()
-      .padStart(refundDecimals, '0')
-    const whole = feeString.slice(0, feeString.length - refundDecimals) || '0'
-    const fraction = feeString.slice(feeString.length - refundDecimals)
-
-    refundParams = {
-      fee: `${whole}.${fraction}`,
-      symbol: refundSymbol,
-    }
-  }
-
-  return refundParams
-}
-
 export type ServiceTx = TxServiceModel | TxToMock
 
 export type BuildTx = BatchProcessTxsProps & {
