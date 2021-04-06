@@ -145,13 +145,13 @@ export const useEstimateTransactionGas = ({
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
       try {
-        let gasEstimation = safeTxGas || 0
-        let gasLimitEstimation = 0
+        let safeTxGasEstimation = safeTxGas || 0
+        let ethGasLimitEstimation = 0
         let transactionCallSuccess = true
         let txEstimationExecutionStatus = EstimationStatus.LOADING
 
         if (isCreation) {
-          gasEstimation = await estimateSafeTxGas({
+          safeTxGasEstimation = await estimateSafeTxGas({
             safeAddress,
             txData,
             txRecipient,
@@ -161,7 +161,7 @@ export const useEstimateTransactionGas = ({
           })
         }
         if (isExecution || approvalAndExecution) {
-          gasLimitEstimation = await estimateTransactionGasLimit({
+          ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
             txRecipient,
             txData,
@@ -171,17 +171,17 @@ export const useEstimateTransactionGas = ({
             isOffChainSignature,
             operation: operation || CALL,
             from,
-            safeTxGas: gasEstimation,
+            safeTxGas: safeTxGasEstimation,
             approvalAndExecution,
           })
         }
 
         const gasPrice = manualGasPrice ? web3.utils.toWei(manualGasPrice, 'gwei') : await calculateGasPrice()
         const gasPriceFormatted = web3.utils.fromWei(gasPrice, 'gwei')
-        const estimatedGasCosts = gasLimitEstimation * parseInt(gasPrice, 10)
+        const estimatedGasCosts = ethGasLimitEstimation * parseInt(gasPrice, 10)
         const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
         const gasCostFormatted = formatAmount(gasCost)
-        const gasLimit = manualGasLimit || gasLimitEstimation.toString()
+        const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
 
         txEstimationExecutionStatus = EstimationStatus.SUCCESS
         if (isExecution) {
@@ -197,7 +197,7 @@ export const useEstimateTransactionGas = ({
             gasToken: ZERO_ADDRESS,
             gasLimit,
             refundReceiver: ZERO_ADDRESS,
-            safeTxGas: gasEstimation,
+            safeTxGas: safeTxGasEstimation,
             approvalAndExecution,
           })
         }
@@ -206,7 +206,7 @@ export const useEstimateTransactionGas = ({
 
         setGasEstimation({
           txEstimationExecutionStatus,
-          gasEstimation,
+          gasEstimation: safeTxGasEstimation,
           gasCost,
           gasCostFormatted,
           gasPrice,
