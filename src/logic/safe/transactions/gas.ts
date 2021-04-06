@@ -13,32 +13,6 @@ import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { sameString } from 'src/utils/strings'
 
-// 21000 - additional gas costs (e.g. base tx costs, transfer costs)
-export const MINIMUM_TRANSACTION_GAS = 21000
-// Estimation of gas required for each signature (aproximately 7800, roundup to 8000)
-export const GAS_REQUIRED_PER_SIGNATURE = 8000
-// We require some gas to emit the events (at least 2500) after the execution and some to perform code until the execution (500)
-// We also add 3k pay when processing safeTxGas value. We don't know this value when creating the transaction
-// Hex values different than 0 has some gas cost
-export const SAFE_TX_GAS_DATA_COST = 6000
-
-// Receives the response data of the safe method requiredTxGas() and parses it to get the gas amount
-// const parseRequiredTxGasResponse = (data: string): number => {
-//   const reducer = (accumulator, currentValue) => {
-//     if (currentValue === EMPTY_DATA) {
-//       return accumulator + 0
-//     }
-
-//     if (currentValue === '00') {
-//       return accumulator + 4
-//     }
-
-//     return accumulator + 16
-//   }
-
-//   return data.match(/.{2}/g)?.reduce(reducer, 0)
-// }
-
 interface ErrorDataJson extends JSON {
   originalError?: {
     data?: string
@@ -178,12 +152,6 @@ export const getGasEstimationTxResponse = async (txConfig: {
   }
   // Otherwise we estimate using the current connected provider
   return estimateGasWithWeb3Provider(txConfig)
-}
-
-export const getFixedGasCosts = (threshold: number): number => {
-  // There are some minimum gas costs to execute an Ethereum transaction
-  // We add this fixed network minimum gas, the gas required to check each signature
-  return MINIMUM_TRANSACTION_GAS + (threshold || 1) * GAS_REQUIRED_PER_SIGNATURE
 }
 
 type SafeTxGasEstimationProps = {
