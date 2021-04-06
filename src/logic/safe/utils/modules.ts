@@ -1,5 +1,3 @@
-import semverLessThan from 'semver/functions/lt'
-
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
@@ -51,7 +49,6 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
  *   we'll fallback to `getModulesPaginated` RPC call when needed.
  *
  * @todo: Implement pagination for `getModulesPaginated`. We're passing an arbitrary large number to avoid pagination.
- * @todo: remove safeInfo version-based condition when https://github.com/gnosis/gnosis-py/issues/28 is resolved
  *
  * @param {SafeInfo | undefined } safeInfo
  * @returns Array<ModulePair> | null | undefined
@@ -63,32 +60,7 @@ export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<Modul
 
   const safeInfoModules = safeInfo.modules.map(({ value }) => value)
 
-  if (semverLessThan(safeInfo.version, '1.1.1')) {
-    // we can use the `safeInfo.modules`, as versions previous to 1.1.1 return the whole list of modules
-    return buildModulesLinkedList(safeInfoModules)
-  } else {
-    // newer versions `getModules` call returns up to 10 modules
-    if (safeInfoModules.length < 10) {
-      // we're sure that we got all the modules
-      return buildModulesLinkedList(safeInfoModules)
-    }
-
-    try {
-      // lastly, if `safeInfo.modules` have 10 items,
-      // we'll fallback to `getModulesPaginated` RPC call
-      // as we're not sure if there are more than 10 modules enabled for the current Safe
-      const safeInstance = getGnosisSafeInstanceAt(safeInfo.address.value)
-
-      // TODO: 100 is an arbitrary large number, to avoid the need for pagination.
-      //  But pagination must be properly handled
-      //  if `modules.next !== SENTINEL_ADDRESS`, then we have more modules to retrieve
-      const modules = await safeInstance.methods.getModulesPaginated(SENTINEL_ADDRESS, 100).call()
-
-      return buildModulesLinkedList(modules.array)
-    } catch (e) {
-      console.error('Failed to retrieve Safe modules', e)
-    }
-  }
+  return buildModulesLinkedList(safeInfoModules)
 }
 
 export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string): string => {
