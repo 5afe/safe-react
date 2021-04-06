@@ -51,6 +51,7 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
  *   we'll fallback to `getModulesPaginated` RPC call when needed.
  *
  * @todo: Implement pagination for `getModulesPaginated`. We're passing an arbitrary large number to avoid pagination.
+ * @todo: remove safeInfo version-based condition when https://github.com/gnosis/gnosis-py/issues/28 is resolved
  *
  * @param {SafeInfo | undefined } safeInfo
  * @returns Array<ModulePair> | null | undefined
