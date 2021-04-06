@@ -12,6 +12,7 @@ export type AppData = {
   name?: string
   url: string
   disabled?: boolean
+  description?: string
   networks: number[]
 }
 
