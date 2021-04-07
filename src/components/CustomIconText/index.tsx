@@ -14,11 +14,9 @@ const Icon = styled.img`
 
 type Props = { iconUrl: string | null | undefined; text?: string }
 
-const CustomIconText = ({ iconUrl, text }: Props): ReactElement => (
+export const CustomIconText = ({ iconUrl, text }: Props): ReactElement => (
   <Wrapper>
     {iconUrl && <Icon alt={text} src={iconUrl} />}
     {text && <Text size="xl">{text}</Text>}
   </Wrapper>
 )
-
-export default CustomIconText
