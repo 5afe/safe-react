@@ -30,7 +30,7 @@ export const sendReplaceOwner = async (
   txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]

@@ -112,6 +112,7 @@ export const ReviewConfirm = ({
   const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -129,6 +130,7 @@ export const ReviewConfirm = ({
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -191,6 +193,10 @@ export const ReviewConfirm = ({
       setManualGasPrice(txParameters.ethGasPrice)
     }
 
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
+    }
+
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
@@ -213,7 +219,7 @@ export const ReviewConfirm = ({
 
           <Container>
             {/* Safe */}
-            <EthHashInfo name={safeName} hash={safeAddress} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
+            <EthHashInfo name={safeName} hash={safeAddress} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             <StyledBlock>
               <Text size="md">Balance:</Text>
               <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>

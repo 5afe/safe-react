@@ -58,6 +58,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -80,6 +81,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     txData: txInfo?.txData,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -120,6 +122,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       setManualGasPrice(txParameters.ethGasPrice)
     }
 
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
+    }
+
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
@@ -145,7 +151,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <EthHashInfo hash={tx.contractAddress as string} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
+              <EthHashInfo hash={tx.contractAddress as string} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             </Row>
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>

@@ -2,7 +2,6 @@ import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
 import {
-  Custom,
   isCustomTxInfo,
   isTransferTxInfo,
   Transaction,
@@ -12,7 +11,6 @@ import {
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { sameString } from 'src/utils/strings'
 
 export const NOT_AVAILABLE = 'n/a'
 
@@ -90,27 +88,11 @@ export const getTxTokenData = (txInfo: Transfer): txTokenData => {
   }
 }
 
-// TODO: isCancel
-//  how can we be sure that it's a cancel tx without asking for tx-details?
-//  can the client-gateway service provide info about the tx, Like: `isCancelTransaction: boolean`?
-//  it will be solved as part of: https://github.com/gnosis/safe-client-gateway/issues/255
-export const isCancelTransaction = ({ txInfo, safeAddress }: { txInfo: Custom; safeAddress: string }): boolean =>
-  sameAddress(txInfo.to, safeAddress) &&
-  sameString(txInfo.dataSize, '0') &&
-  sameString(txInfo.value, '0') &&
-  txInfo.methodName === null
-
-type IsCancelTxDetailsProps = {
-  executedAt: number | null
-  txInfo: Transaction['txInfo']
-  safeAddress: string
-}
-export const isCancelTxDetails = ({ executedAt, txInfo, safeAddress }: IsCancelTxDetailsProps): boolean =>
-  !executedAt &&
+export const isCancelTxDetails = (txInfo: Transaction['txInfo']): boolean =>
   // custom transaction
   isCustomTxInfo(txInfo) &&
-  // verify that it's a cancel tx based on it's info
-  isCancelTransaction({ safeAddress, txInfo })
+  // flag-based identification
+  txInfo.isCancellation
 
 export const addressInList = (list: string[] = []) => (address: string): boolean =>
   list.some((ownerAddress) => sameAddress(ownerAddress, address))
