@@ -7,7 +7,6 @@ import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gat
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
-import { isCancelTransaction } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { AppReduxState } from 'src/store'
 
@@ -60,14 +59,7 @@ export const useTransactionActions = (transaction: Transaction): TransactionActi
         canConfirm,
         canConfirmThenExecute: txLocation === 'queued.next' && canConfirm && oneToGo,
         canExecute: txLocation === 'queued.next' && thresholdReached,
-        canCancel: !transactionsByNonce.some(
-          ({ txInfo }) =>
-            isCustomTxInfo(txInfo) &&
-            isCancelTransaction({
-              txInfo,
-              safeAddress,
-            }),
-        ),
+        canCancel: !transactionsByNonce.some(({ txInfo }) => isCustomTxInfo(txInfo) && txInfo.isCancellation),
         isUserAnOwner,
         oneToGo,
       })
