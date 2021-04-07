@@ -27,7 +27,7 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
           </Text>
         )}
       </div>
-      {nonce && (
+      {nonce !== undefined && (
         <div className="tx-nonce">
           <Text size="xl" strong as="span">
             Nonce:{' '}

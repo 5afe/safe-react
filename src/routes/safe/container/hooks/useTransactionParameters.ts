@@ -81,7 +81,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
-        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
         const lastTx = await getLastTx(safeAddress)
         const nonce = await getNewTxNonce(lastTx, safeInstance)
         setSafeNonce(nonce)

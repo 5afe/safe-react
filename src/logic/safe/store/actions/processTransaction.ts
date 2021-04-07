@@ -73,7 +73,7 @@ export const processTransaction = ({
   const state = getState()
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-  const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
 
   const lastTx = await getLastTx(safeAddress)
   const nonce = await getNewTxNonce(lastTx, safeInstance)

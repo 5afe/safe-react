@@ -24,7 +24,7 @@ const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): ReactElemen
         hash={address}
         name={sameString(name, 'UNKNOWN') ? undefined : name}
         showCopyBtn
-        showIdenticon
+        showAvatar
         textSize="lg"
         explorerUrl={explorerUrl}
         shortenHash={cut}
