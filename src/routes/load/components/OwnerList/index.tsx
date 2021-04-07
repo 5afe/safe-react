@@ -4,7 +4,6 @@ import React, { useEffect, useState } from 'react'
 
 import { useSelector } from 'react-redux'
 
-import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
@@ -23,7 +22,7 @@ import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -107,12 +106,7 @@ const OwnerListComponent = (props) => {
                 </Col>
                 <Col xs={8}>
                   <Row className={classes.ownerAddresses}>
-                    <Identicon address={address} size="md" />
-                    <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                      {address}
-                    </Paragraph>
-                    <CopyBtn content={address} />
-                    <ExplorerButton explorerUrl={getExplorerInfo(address)} />
+                    <EthHashInfo hash={address} showIdenticon showCopyBtn explorerUrl={getExplorerInfo(address)} />
                   </Row>
                 </Col>
               </Row>
