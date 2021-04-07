@@ -29,7 +29,7 @@ export const sendAddOwner = async (
   txParameters: TxParameters,
   dispatch: Dispatch,
 ): Promise<void> => {
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const txData = gnosisSafe.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
   const txHash = await dispatch(

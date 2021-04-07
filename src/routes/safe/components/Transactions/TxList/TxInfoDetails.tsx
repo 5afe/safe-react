@@ -21,11 +21,20 @@ const SingleRow = styled.div`
 type TxInfoDetailsProps = {
   title: string
   address: string
+  name?: string | undefined
+  avatarUrl?: string | undefined
   isTransferType?: boolean
   txInfo?: Transfer
 }
 
-export const TxInfoDetails = ({ title, address, isTransferType, txInfo }: TxInfoDetailsProps): ReactElement => {
+export const TxInfoDetails = ({
+  title,
+  address,
+  isTransferType,
+  txInfo,
+  name,
+  avatarUrl,
+}: TxInfoDetailsProps): ReactElement => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
   const knownAddress = recipientName !== 'UNKNOWN'
 
@@ -59,6 +68,7 @@ export const TxInfoDetails = ({ title, address, isTransferType, txInfo }: TxInfo
     selectedToken: ZERO_ADDRESS,
     tokenAmount: '0',
   })
+
   useEffect(() => {
     if (txInfo) {
       const isCollectible = txInfo.transferInfo.type === 'ERC721'
@@ -76,7 +86,7 @@ export const TxInfoDetails = ({ title, address, isTransferType, txInfo }: TxInfo
   return (
     <InfoDetails title={title}>
       <SingleRow>
-        <AddressInfo address={address} />
+        <AddressInfo address={address} name={name} avatarUrl={avatarUrl} />
         <EllipsisTransactionDetails
           address={address}
           knownAddress={knownAddress}

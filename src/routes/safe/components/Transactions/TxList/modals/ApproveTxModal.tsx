@@ -229,6 +229,7 @@ export const ApproveTxModal = ({
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const {
     confirmations,
     data,
@@ -262,7 +263,8 @@ export const ApproveTxModal = ({
     preApprovingOwner: approveAndExecute ? userAddress : undefined,
     safeTxGas,
     operation,
-    manualGasPrice: manualGasPrice,
+    manualGasPrice,
+    manualGasLimit,
   })
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
@@ -311,6 +313,10 @@ export const ApproveTxModal = ({
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(newGasPrice.toString())
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit.toString())
     }
   }
 
