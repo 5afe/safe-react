@@ -50,6 +50,7 @@ export const ChangeThresholdModal = ({
   const [data, setData] = useState('')
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
   const [editedThreshold, setEditedThreshold] = useState<number>(threshold)
 
   const {
@@ -66,12 +67,13 @@ export const ChangeThresholdModal = ({
     txRecipient: safeAddress,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
     let isCurrent = true
-    const calculateChangeThresholdData = async () => {
-      const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+    const calculateChangeThresholdData = () => {
+      const safeInstance = getGnosisSafeInstanceAt(safeAddress)
       const txData = safeInstance.methods.changeThreshold(editedThreshold).encodeABI()
       if (isCurrent) {
         setData(txData)
@@ -109,6 +111,10 @@ export const ChangeThresholdModal = ({
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
