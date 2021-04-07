@@ -44,6 +44,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const owners = useSelector(safeOwnersSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -59,14 +60,15 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     txRecipient: safeAddress,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
     let isCurrent = true
 
-    const calculateAddOwnerData = async () => {
+    const calculateAddOwnerData = () => {
       try {
-        const safeInstance = await getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
         const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
         if (isCurrent) {
@@ -91,6 +93,10 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {

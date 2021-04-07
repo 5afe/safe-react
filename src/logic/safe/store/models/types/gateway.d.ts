@@ -236,7 +236,7 @@ type MultiSigExecutionDetails = {
 type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails
 
 type ExpandedTxDetails = {
-  executedAt: number
+  executedAt: number | null
   txStatus: TransactionStatus
   txInfo: TransactionInfo
   txData: TransactionData | null

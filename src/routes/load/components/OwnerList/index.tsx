@@ -54,7 +54,7 @@ const OwnerListComponent = (props) => {
 
     const fetchSafe = async () => {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
-      const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const threshold = await gnosisSafe.methods.getThreshold().call()
 

@@ -58,6 +58,7 @@ export const ReviewRemoveOwnerModal = ({
   const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasLimit,
@@ -73,6 +74,7 @@ export const ReviewRemoveOwnerModal = ({
     txRecipient: safeAddress,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -85,7 +87,7 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
-        const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -113,6 +115,10 @@ export const ReviewRemoveOwnerModal = ({
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
