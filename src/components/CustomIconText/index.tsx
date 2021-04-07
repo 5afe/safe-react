@@ -12,9 +12,11 @@ const Icon = styled.img`
   margin-right: 9px;
 `
 
-export const CustomIconText = ({ iconUrl, text }: { iconUrl: string; text?: string }): ReactElement => (
+type Props = { iconUrl: string | null | undefined; text?: string }
+
+export const CustomIconText = ({ iconUrl, text }: Props): ReactElement => (
   <Wrapper>
-    <Icon alt={text} src={iconUrl} />
+    {iconUrl && <Icon alt={text} src={iconUrl} />}
     {text && <Text size="xl">{text}</Text>}
   </Wrapper>
 )

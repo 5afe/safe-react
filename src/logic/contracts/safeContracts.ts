@@ -123,23 +123,22 @@ export const estimateGasForDeployingSafe = async (
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
-  }).then(value => value * 2)
+  }).then((value) => value * 2)
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
   return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
-  
 }
 
 /**
  * Creates a Contract instance of the SpendingLimitModule contract
  */
- export const getSpendingLimitContract = () => {
+export const getSpendingLimitContract = () => {
   const web3 = getWeb3()
 
-    return (new web3.eth.Contract(
-     SpendingLimitModule.abi as AbiItem[],
-     SPENDING_LIMIT_MODULE_ADDRESS,
-   ) as unknown) as AllowanceModule
+  return (new web3.eth.Contract(
+    SpendingLimitModule.abi as AbiItem[],
+    SPENDING_LIMIT_MODULE_ADDRESS,
+  ) as unknown) as AllowanceModule
 }

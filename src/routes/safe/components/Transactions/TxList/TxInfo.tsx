@@ -1,18 +1,10 @@
 import React, { ReactElement } from 'react'
 
-import {
-  ExpandedTxDetails,
-  isSettingsChangeTxInfo,
-  isTransferTxInfo,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { TransactionInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { TxInfoSettings } from './TxInfoSettings'
 import { TxInfoTransfer } from './TxInfoTransfer'
 
-type TxInfoProps = {
-  txInfo: ExpandedTxDetails['txInfo']
-}
-
-export const TxInfo = ({ txInfo }: TxInfoProps): ReactElement | null => {
+export const TxInfo = ({ txInfo }: { txInfo: TransactionInfo }): ReactElement | null => {
   if (isSettingsChangeTxInfo(txInfo)) {
     return <TxInfoSettings settingsInfo={txInfo.settingsInfo} />
   }

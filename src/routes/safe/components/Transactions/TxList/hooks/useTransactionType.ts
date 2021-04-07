@@ -10,7 +10,7 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 
 export type TxTypeProps = {
-  icon: string
+  icon: string | null
   text: string
 }
 
@@ -47,6 +47,12 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         if (tx.safeAppInfo) {
           setType({ icon: tx.safeAppInfo.logoUrl, text: tx.safeAppInfo.name })
+          break
+        }
+
+        const toInfo = tx.txInfo.toInfo
+        if (toInfo) {
+          setType({ icon: toInfo.logoUri, text: toInfo.name })
           break
         }
 

@@ -151,7 +151,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <EthHashInfo hash={tx.contractAddress as string} showIdenticon showCopyBtn explorerUrl={explorerUrl} />
+              <EthHashInfo hash={tx.contractAddress as string} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             </Row>
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>

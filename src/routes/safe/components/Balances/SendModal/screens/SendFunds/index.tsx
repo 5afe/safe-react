@@ -265,7 +265,7 @@ const SendFunds = ({
                       <EthHashInfo
                         hash={selectedEntry.address}
                         name={selectedEntry.name}
-                        showIdenticon
+                        showAvatar
                         showCopyBtn
                         explorerUrl={getExplorerInfo(selectedEntry.address)}
                       />
