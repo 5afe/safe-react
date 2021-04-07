@@ -100,6 +100,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const data = useTxData(isSendingNativeToken, tx.amount, tx.recipientAddress, txToken)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const {
     gasCostFormatted,
@@ -117,6 +118,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     txAmount: txValue,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   const submitTx = async (txParameters: TxParameters) => {
@@ -169,6 +171,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
     if (newGasPrice && oldGasPrice !== newGasPrice) {
       setManualGasPrice(txParameters.ethGasPrice)
+    }
+
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
     }
 
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
@@ -257,17 +263,21 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             </Row>
 
             {/* Tx Parameters */}
-            <TxParametersDetail
-              txParameters={txParameters}
-              onEdit={toggleEditMode}
-              isTransactionCreation={isCreation}
-              isTransactionExecution={isExecution}
-              isOffChainSignature={isOffChainSignature}
-            />
+            {/* FIXME TxParameters should be updated to be used with spending limits */}
+            {!sameString(tx.txType, 'spendingLimit') && (
+              <TxParametersDetail
+                txParameters={txParameters}
+                onEdit={toggleEditMode}
+                isTransactionCreation={isCreation}
+                isTransactionExecution={isExecution}
+                isOffChainSignature={isOffChainSignature}
+              />
+            )}
           </Block>
 
           {/* Disclaimer */}
-          {txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+          {/* FIXME Estimation should be fixed to be used with spending limits */}
+          {!sameString(tx.txType, 'spendingLimit') && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
