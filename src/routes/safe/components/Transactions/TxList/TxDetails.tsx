@@ -1,7 +1,6 @@
 import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import cn from 'classnames'
 import React, { ReactElement, useContext } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import {
@@ -12,7 +11,6 @@ import {
   MultiSigExecutionDetails,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionDetails } from './hooks/useTransactionDetails'
 import { TxDetailsContainer, Centered, AlignItemsWithMargin } from './styled'
@@ -30,34 +28,44 @@ const NormalBreakingText = styled(Text)`
 `
 
 const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-
   if (isTransferTxInfo(txDetails.txInfo) || isSettingsChangeTxInfo(txDetails.txInfo)) {
     return <TxInfo txInfo={txDetails.txInfo} />
   }
 
-  if (isCancelTxDetails({ executedAt: txDetails.executedAt, txInfo: txDetails.txInfo, safeAddress })) {
+  if (isCancelTxDetails(txDetails.txInfo)) {
+    const txNonce = `${(txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE}`
+    const isTxExecuted = txDetails.executedAt
+
+    // executed rejection transaction
+    let message = `This is an on-chain rejection that didn't send any funds.
+     This on-chain rejection replaced all transactions with nonce ${txNonce}.`
+
+    if (!isTxExecuted) {
+      // queued rejection transaction
+      message = `This is an on-chain rejection that doesn't send any funds.
+ Executing this on-chain rejection will replace all currently awaiting transactions with nonce ${txNonce}.`
+    }
     return (
       <>
-        <NormalBreakingText size="xl">
-          {`This is an empty cancelling transaction that doesn't send any funds.
-       Executing this transaction will replace all currently awaiting transactions with nonce ${
-         (txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE
-       }.`}
-        </NormalBreakingText>
-        <Link
-          href="https://help.gnosis-safe.io/en/articles/4738501-why-do-i-need-to-pay-for-cancelling-a-transaction"
-          target="_blank"
-          rel="noreferrer"
-          title="Why do I need to pay for cancelling a transaction?"
-        >
-          <AlignItemsWithMargin>
-            <Text size="xl" as="span" color="primary">
-              Why do I need to pay for cancelling a transaction?
-            </Text>
-            <Icon size="sm" type="externalLink" color="primary" />
-          </AlignItemsWithMargin>
-        </Link>
+        <NormalBreakingText size="xl">{message}</NormalBreakingText>
+        {!isTxExecuted && (
+          <>
+            <br />
+            <Link
+              href="https://help.gnosis-safe.io/en/articles/4738501-why-do-i-need-to-pay-for-cancelling-a-transaction"
+              target="_blank"
+              rel="noreferrer"
+              title="Why do I need to pay for rejecting a transaction?"
+            >
+              <AlignItemsWithMargin>
+                <Text size="xl" as="span" color="primary">
+                  Why do I need to pay for rejecting a transaction?
+                </Text>
+                <Icon size="sm" type="externalLink" color="primary" />
+              </AlignItemsWithMargin>
+            </Link>
+          </>
+        )}
       </>
     )
   }
@@ -116,7 +124,7 @@ export const TxDetails = ({ transaction, actions }: TxDetailsProps): ReactElemen
           'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED',
         })}
       >
-        <TxOwners detailedExecutionInfo={data.detailedExecutionInfo} />
+        <TxOwners txDetails={data} />
       </div>
       {!data.executedAt && txLocation !== 'history' && actions?.isUserAnOwner && (
         <div className={cn('tx-details-actions', { 'will-be-replaced': transaction.txStatus === 'WILL_BE_REPLACED' })}>
