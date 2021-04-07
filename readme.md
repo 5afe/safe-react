@@ -4,16 +4,14 @@ The most trusted platform to store digital assets on Ethereum
 
 ## Getting Started
 
-These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See deployment for notes on how to deploy the project on a live system. 
+These instructions will get you a copy of the project up and running on your local machine for development and testing purposes. See [Deployment](#deployment) for notes on how to deploy the project on a live system.
 
 ### Prerequisites
 
-What things you need to install the software and how to install them
+What things you need to install globally:
 
 ```
-yarn add truffle // recommended usage of -g flag
-yarn add ganache-cli // recommended usage of -g flag
-yarn add flow-type // recommended usage of -g flag
+yarn global add truffle ganache-cli
 ```
 
 We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
@@ -36,6 +34,18 @@ If you prefer using Mainnet ones:
 ```
 yarn start-mainnet
 ```
+
+### Environment variables
+The app grabs environment variables from the `.env` file. Copy our template to your own local file:
+```
+cp .env.example .env
+```
+
+To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
+```
+REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+Once done, you'll need to restart the app.
 
 ### Building
 For Rinkeby:
@@ -120,7 +130,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags). 
+We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
 
 ## Authors
 
