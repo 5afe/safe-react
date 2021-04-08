@@ -6,12 +6,10 @@ import { getLocalSafe } from 'src/logic/safe/utils'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
-import { removeSafeOwner } from 'src/logic/safe/store/actions/removeSafeOwner'
 import updateSafe from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
@@ -95,7 +93,6 @@ const extractLocalSafeInfo = (
         safeInfo.modules = localSafeInfo.modules
       }
 
-      safeInfo.owners = List(localSafeInfo.owners)
       safeInfo.name = localSafeInfo.name
     }
   } else {
@@ -105,25 +102,12 @@ const extractLocalSafeInfo = (
   return safeInfo
 }
 
-const updateSafeOwners = (
+const extractSafeOwners = (
   remoteSafeInfoSettled: PromiseSettledResult<SafeInfo>,
   localSafeInfoSettled: PromiseSettledResult<SafeRecordProps | undefined>,
-  checksummedSafeAddress: string,
-  dispatch: Dispatch,
-): void => {
+): List<SafeOwner> | undefined => {
+  let localOwners
   let remoteOwners
-  let localOwners = List()
-
-  if (remoteSafeInfoSettled.status === 'fulfilled') {
-    const remoteSafeInfo = remoteSafeInfoSettled.value
-
-    remoteOwners = List(
-      remoteSafeInfo.owners.map(({ value }) => makeOwner({ name: 'UNKNOWN', address: checksumAddress(value) })),
-    )
-  } else {
-    // nothing to do without remote owners
-    return
-  }
 
   if (localSafeInfoSettled.status === 'fulfilled' && localSafeInfoSettled.value !== undefined) {
     const localSafeInfo = localSafeInfoSettled.value
@@ -131,27 +115,20 @@ const updateSafeOwners = (
     localOwners = localSafeInfo.owners
   }
 
-  // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach(({ address }) => {
-    const remoteOwnerIndex = remoteOwners.findIndex((remote) => sameAddress(remote.address, address))
-    if (remoteOwnerIndex === -1) {
-      dispatch(removeSafeOwner({ safeAddress: checksummedSafeAddress, ownerAddress: address }))
-    }
-  })
+  if (remoteSafeInfoSettled.status === 'fulfilled') {
+    const remoteSafeInfo = remoteSafeInfoSettled.value
 
-  // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach(({ address, name }) => {
-    const localOwnerIndex = localOwners.findIndex((local) => sameAddress(address, local.address))
-    if (localOwnerIndex === -1) {
-      dispatch(
-        addSafeOwner({
-          safeAddress: checksummedSafeAddress,
-          ownerAddress: address,
-          ownerName: name,
-        }),
-      )
-    }
-  })
+    remoteOwners = remoteSafeInfo.owners.map(({ value }) => {
+      const localOwner = localOwners?.find(({ address }) => sameAddress(address, value))
+      const name = localOwner?.name ?? 'UNKNOWN'
+      return makeOwner({ name, address: checksumAddress(value) })
+    })
+
+    return List<SafeOwner>(remoteOwners)
+  }
+
+  // nothing to do without remote owners, so we return the stored list
+  return localOwners
 }
 
 export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
@@ -173,12 +150,15 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
   // local (localStorage)
   const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled, remoteSafeInfoSettled.status === 'fulfilled')
 
+  // update owner's information
+  const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
+
   // remote (client-gateway)
   // TODO: REVIEW: do we really need to load ethBalance?
   //  it's being loaded by the `fetchSafeTokens` action anyway
   safeInfo.ethBalance = extractSafeNativeBalance(safeBalancesSettled)
 
-  return { ...safeInfo, ...remoteSafeInfo, ...localSafeInfo } as SafeRecordProps
+  return { ...safeInfo, ...remoteSafeInfo, ...localSafeInfo, owners } as SafeRecordProps
 }
 
 export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
@@ -199,7 +179,8 @@ export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Pr
   // local (localStorage)
   const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled, remoteSafeInfoSettled.status === 'fulfilled')
 
-  dispatch(updateSafe({ ...safeInfo, ...remoteSafeInfo, ...localSafeInfo }))
+  // update owner's information
+  const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
 
-  updateSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled, checksummedSafeAddress, dispatch)
+  dispatch(updateSafe({ ...safeInfo, ...remoteSafeInfo, ...localSafeInfo, owners }))
 }

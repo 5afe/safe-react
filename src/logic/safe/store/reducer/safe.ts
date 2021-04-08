@@ -52,7 +52,7 @@ const updateSafeProps = (prevSafe, safe) => {
           // If type is Immutable List we replace current List
           // If type is Object we do a merge
           List.isList(safe[key])
-            ? record.update(key, (current) => current.set(safe[key]))
+            ? record.set(key, safe[key])
             : record.update(key, (current) => current.merge(safe[key]))
         }
       } else {
