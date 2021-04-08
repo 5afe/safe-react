@@ -41,7 +41,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
       </Button>
       {canCancel && (
         <Button size="md" color="error" onClick={handleCancelButtonClick} className="error" disabled={isPending}>
-          Cancel
+          Reject
         </Button>
       )}
     </>

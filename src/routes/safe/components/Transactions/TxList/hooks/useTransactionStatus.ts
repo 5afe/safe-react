@@ -37,10 +37,10 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
 
       switch (transaction.txStatus) {
         case 'AWAITING_CONFIRMATIONS':
-          text = signaturePending(currentUser) ? 'Awaiting your confirmation' : 'Awaiting confirmations'
+          text = signaturePending(currentUser) ? 'Needs your confirmation' : 'Needs confirmations'
           break
         case 'AWAITING_EXECUTION':
-          text = 'Awaiting execution'
+          text = 'Needs execution'
           break
         case 'PENDING':
         case 'PENDING_FAILED':
