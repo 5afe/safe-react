@@ -72,7 +72,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                 <EthHashInfo
                   hash={safeAddress}
                   shortenHash={4}
-                  showIdenticon
+                  showAvatar
                   showCopyBtn
                   explorerUrl={getExplorerInfo(safeAddress)}
                 />
@@ -111,7 +111,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                     <EthHashInfo
                       hash={address}
                       name={values[getOwnerNameBy(index)]}
-                      showIdenticon
+                      showAvatar
                       showCopyBtn
                       explorerUrl={getExplorerInfo(address)}
                     />

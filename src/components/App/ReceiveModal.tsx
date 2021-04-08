@@ -103,7 +103,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           <QRCode size={135} value={safeAddress} />
         </Block>
         <Block className={classes.addressContainer} justify="center">
-          <EthHashInfo hash={safeAddress} showIdenticon showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
+          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
       </Col>
       <Hairline />
