@@ -78,7 +78,7 @@ const ChooseTxType = ({
             <EthHashInfo
               hash={recipientAddress}
               name={recipientName}
-              showIdenticon
+              showAvatar
               showCopyBtn
               explorerUrl={getExplorerInfo(recipientAddress)}
             />

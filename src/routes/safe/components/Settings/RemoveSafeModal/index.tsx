@@ -72,7 +72,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
           <EthHashInfo
             hash={safeAddress}
             name={safeName}
-            showIdenticon
+            showAvatar
             showCopyBtn
             explorerUrl={getExplorerInfo(safeAddress)}
           />
