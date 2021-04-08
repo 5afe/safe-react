@@ -10,7 +10,7 @@ import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTr
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { updateAvailableCurrencies } from 'src/logic/currencyValues/store/actions/updateAvailableCurrencies'
 
-export const useLoadSafe = (safeAddress?: string): boolean => {
+export const useLoadSafe = (safeAddress?: string, loadedViaUrl = true): boolean => {
   const dispatch = useDispatch<Dispatch>()
   const [isSafeLoaded, setIsSafeLoaded] = useState(false)
 
@@ -23,7 +23,9 @@ export const useLoadSafe = (safeAddress?: string): boolean => {
         await dispatch(fetchSafeTokens(safeAddress))
         await dispatch(updateAvailableCurrencies())
         await dispatch(fetchTransactions(safeAddress))
-        dispatch(addViewedSafe(safeAddress))
+        if (!loadedViaUrl) {
+          dispatch(addViewedSafe(safeAddress))
+        }
       }
     }
     dispatch(loadAddressBookFromStorage())
