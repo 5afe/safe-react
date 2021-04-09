@@ -4,7 +4,6 @@ import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
@@ -21,11 +20,10 @@ import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { sm } from 'src/theme/variables'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
@@ -91,12 +89,12 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
                 </Row>
                 <Row>
                   <Block justify="center">
-                    <Identicon address={ownerAddress} size="md" />
-                    <Paragraph color="disabled" noMargin size="md" style={{ marginLeft: sm, marginRight: sm }}>
-                      {ownerAddress}
-                    </Paragraph>
-                    <CopyBtn content={ownerAddress} />
-                    <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
+                    <EthHashInfo
+                      hash={ownerAddress}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(ownerAddress)}
+                    />
                   </Block>
                 </Row>
               </Block>
