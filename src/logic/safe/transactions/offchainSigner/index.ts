@@ -19,7 +19,7 @@ export const SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES = '>=1.0.0'
 
 // hardware wallets support eth_sign only
 // eth_sign is only supported by safes >= 1.1.0
-const getSignersByWallet = (isHW: boolean, safeVersion: string) => {
+const getSupportedSigners = (isHW: boolean, safeVersion: string) => {
   const safeSupportsEthSigner = semverSatisfies(safeVersion, '>=1.1.0')
 
   const signers = isHW ? [] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712]
@@ -39,7 +39,7 @@ export const tryOffChainSigning = async (
 ): Promise<string | undefined> => {
   let signature
 
-  const signerByWallet = getSignersByWallet(isHW, safeVersion)
+  const signerByWallet = getSupportedSigners(isHW, safeVersion)
   for (const signingFunc of signerByWallet) {
     try {
       signature = await signingFunc({ ...txArgs, safeTxHash })
