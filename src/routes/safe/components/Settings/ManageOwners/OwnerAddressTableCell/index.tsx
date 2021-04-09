@@ -1,52 +1,23 @@
 import * as React from 'react'
-import { ReactElement, useEffect, useState } from 'react'
+import { ReactElement } from 'react'
 
-import { Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import Block from 'src/components/layout/Block'
-import Paragraph from 'src/components/layout/Paragraph'
-import { getValidAddressBookName } from 'src/logic/addressBook/utils'
-import { useWindowDimensions } from 'src/logic/hooks/useWindowDimensions'
-import { EtherscanLink } from 'src/components/EtherscanLink'
+import { getExplorerInfo } from 'src/config'
 
 type OwnerAddressTableCellProps = {
   address: string
   knownAddress?: boolean
   showLinks: boolean
   userName?: string
-  sendModalOpenHandler?: () => void
 }
 
 export const OwnerAddressTableCell = (props: OwnerAddressTableCellProps): ReactElement => {
-  const { address, knownAddress, showLinks, userName, sendModalOpenHandler } = props
-  const [cut, setCut] = useState(0)
-  const { width } = useWindowDimensions()
-
-  useEffect(() => {
-    if (width <= 900) {
-      setCut(6)
-    } else if (width <= 1024) {
-      setCut(12)
-    } else {
-      setCut(0)
-    }
-  }, [width])
+  const { address, userName } = props
 
   return (
     <Block justify="left">
-      <Identicon address={address} size="md" />
-      {showLinks ? (
-        <div style={{ marginLeft: 10, flexShrink: 1, minWidth: 0 }}>
-          {userName && getValidAddressBookName(userName)}
-          <EtherscanLink
-            knownAddress={knownAddress}
-            value={address}
-            cut={cut}
-            sendModalOpenHandler={sendModalOpenHandler}
-          />
-        </div>
-      ) : (
-        <Paragraph style={{ marginLeft: 10 }}>{address}</Paragraph>
-      )}
+      <EthHashInfo hash={address} name={userName} showCopyBtn showAvatar explorerUrl={getExplorerInfo(address)} />
     </Block>
   )
 }
