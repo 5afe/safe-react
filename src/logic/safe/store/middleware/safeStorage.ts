@@ -31,7 +31,7 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
     const state = store.getState()
     const { dispatch } = store
     const safes = safesMapSelector(state)
-    await saveSafes(safes.toJSON())
+    await saveSafes(safes.filter((safe) => !safe.loadedViaUrl).toJSON())
 
     switch (action.type) {
       case ADD_OR_UPDATE_SAFE: {
