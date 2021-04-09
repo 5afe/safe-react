@@ -85,7 +85,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Liquity
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVfeXEAJ5QsJALLTHHdaoYycmKC7BwPLyvYeK3z76cpzJ`,
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
