@@ -36,7 +36,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Aave v2
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVg7aXr5S8sT2iUdUwdkfTJNknmB7rcE3t92HiGoVsYDj`,
+    url: `https://app.aave.com/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
