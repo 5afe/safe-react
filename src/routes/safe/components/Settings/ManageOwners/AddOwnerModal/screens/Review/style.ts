@@ -47,9 +47,6 @@ export const styles = createStyles({
   ownersTitle: {
     padding: lg,
   },
-  address: {
-    marginRight: sm,
-  },
   owner: {
     padding: sm,
     alignItems: 'center',
@@ -58,16 +55,10 @@ export const styles = createStyles({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
   selectedOwner: {
     padding: sm,
     alignItems: 'center',
     backgroundColor: '#f7f5f5',
-  },
-  user: {
-    justifyContent: 'left',
   },
   open: {
     paddingLeft: sm,
