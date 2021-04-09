@@ -13,6 +13,7 @@ import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
+import { LOADED_SAFE_KEY } from 'src/utils/constants'
 
 const extractSafeNativeBalance = (safeBalancesSettled: PromiseSettledResult<BalanceEndpoint>): string => {
   let nativeCoinBalance = '0'
@@ -165,7 +166,7 @@ export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Pr
   const checksummedSafeAddress = checksumAddress(safeAddress)
   const safeInfo: Partial<SafeRecordProps> = {
     address: checksummedSafeAddress,
-    name: 'UNNAMED',
+    name: LOADED_SAFE_KEY,
   }
 
   const [remoteSafeInfoSettled, localSafeInfoSettled] = await Promise.allSettled([

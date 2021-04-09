@@ -24,6 +24,7 @@ import {
   safeTotalFiatBalanceSelector,
   safeNameSelector,
   safeParamAddressFromStateSelector,
+  safeLoadedViaUrlSelector,
 } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
@@ -77,8 +78,8 @@ const App: React.FC = ({ children }) => {
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-
-  const safeLoaded = useLoadSafe(safeAddress)
+  const isSafeLoadedViaUrl = useSelector(safeLoadedViaUrlSelector)
+  const safeLoaded = useLoadSafe(safeAddress, isSafeLoadedViaUrl)
   useSafeScheduledUpdates(safeLoaded, safeAddress)
 
   const sendFunds = safeActionsState.sendFunds

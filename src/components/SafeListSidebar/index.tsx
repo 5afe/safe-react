@@ -39,7 +39,7 @@ type Props = {
 export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
-  const safes = useSelector(sortedSafeListSelector)
+  const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const defaultSafe = useSelector(defaultSafeSelector)
   const currentSafe = useSelector(safeParamAddressFromStateSelector)
 
@@ -75,7 +75,6 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   }
 
   const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
-
   useEffect(() => {
     setTimeout(() => {
       setFilter('')
