@@ -103,7 +103,7 @@ export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerF
                   <Paragraph>Current owner</Paragraph>
                 </Row>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={1}>
+                  <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={ownerAddress}
                       name={ownerName}
