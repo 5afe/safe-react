@@ -28,10 +28,10 @@ export const useLoadSafe = (safeAddress?: string, loadedViaUrl = true): boolean 
         }
       }
     }
-    dispatch(loadAddressBookFromStorage())
 
+    dispatch(loadAddressBookFromStorage())
     fetchData()
-  }, [dispatch, safeAddress])
+  }, [dispatch, safeAddress, loadedViaUrl])
 
   return isSafeLoaded
 }
