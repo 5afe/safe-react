@@ -17,7 +17,7 @@ const SIGNERS = {
 const getSignersByWallet = (isHW) =>
   isHW ? [SIGNERS.ETH_SIGN] : [SIGNERS.EIP712_V3, SIGNERS.EIP712_V4, SIGNERS.EIP712, SIGNERS.ETH_SIGN]
 
-export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.0.0'
+export const SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES = '>=1.1.1'
 
 export const tryOffchainSigning = async (safeTxHash: string, txArgs, isHW: boolean): Promise<string> => {
   let signature
