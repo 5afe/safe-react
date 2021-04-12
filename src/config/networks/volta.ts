@@ -36,8 +36,8 @@ const mainnet: NetworkConfig = {
     isTestNet: true,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
-      name: 'Energy web token',
-      symbol: 'EWT',
+      name: 'Volta Token',
+      symbol: 'VT',
       decimals: 18,
       logoUri: EwcLogo,
     },
