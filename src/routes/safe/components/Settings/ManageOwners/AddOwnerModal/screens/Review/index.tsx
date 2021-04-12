@@ -189,20 +189,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       explorerUrl={getExplorerInfo(values.ownerAddress)}
                     />
                   </Col>
-                  {/* <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {values.ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {values.ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={values.ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(values.ownerAddress)} />
-                      </Block>
-                    </Block>
-                  </Col> */}
                 </Row>
                 <Hairline />
               </Col>
