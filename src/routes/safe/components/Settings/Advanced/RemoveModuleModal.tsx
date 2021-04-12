@@ -151,8 +151,6 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                       showAvatar
                       explorerUrl={getExplorerInfo(moduleAddress)}
                     />
-
-                    {/* <Identicon address={moduleAddress} size="md" /> */}
                   </Col>
                 </Row>
                 <Row className={classes.modalDescription}>

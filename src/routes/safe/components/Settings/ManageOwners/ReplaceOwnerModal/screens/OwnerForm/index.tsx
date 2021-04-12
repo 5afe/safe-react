@@ -1,10 +1,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
-import classNames from 'classnames/bind'
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import CopyBtn from 'src/components/CopyBtn'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -27,7 +25,7 @@ import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } fr
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton, Identicon } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -106,21 +104,13 @@ export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerF
                 </Row>
                 <Row className={classes.owner}>
                   <Col align="center" xs={1}>
-                    <Identicon address={ownerAddress} size="md" />
-                  </Col>
-                  <Col xs={7}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
-                      </Block>
-                    </Block>
+                    <EthHashInfo
+                      hash={ownerAddress}
+                      name={ownerName}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(ownerAddress)}
+                    />
                   </Col>
                 </Row>
                 <Row>
