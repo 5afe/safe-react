@@ -230,7 +230,7 @@ describe('isValidAddressBookName', () => {
     // then
     expect(result).toStrictEqual(expectedResult)
   })
-  it('It should return false if given a blacklisted name like Gnossis Safe', () => {
+  it('It should return false if given a blacklisted name like Gnosis Safe', () => {
     // given
     const addressNameInput = 'Gnosis Safe'
 

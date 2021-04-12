@@ -74,7 +74,7 @@ export const getNameFromAddressBook = (
 
 export const isValidAddressBookName = (addressBookName: string): boolean => {
   const hasInvalidName = ADDRESSBOOK_INVALID_NAMES.find((invalidName) =>
-    addressBookName.toUpperCase().includes(invalidName),
+    addressBookName.toUpperCase().includes(invalidName.toUpperCase()),
   )
   return !hasInvalidName
 }
