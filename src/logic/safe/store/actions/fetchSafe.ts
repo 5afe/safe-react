@@ -142,7 +142,7 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
   const [remoteSafeInfoSettled, localSafeInfoSettled, safeBalancesSettled] = await Promise.allSettled([
     getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
-    fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: 'UDS' }),
+    fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: 'USD' }),
   ])
 
   // remote (client-gateway)
