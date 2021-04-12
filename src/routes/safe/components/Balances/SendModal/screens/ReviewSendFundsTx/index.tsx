@@ -3,11 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ExplorerButton, Button, Identicon } from '@gnosis.pm/safe-react-components'
+import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -224,22 +223,13 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <Col xs={1}>
-                <Identicon address={tx.recipientAddress} size="md" />
-              </Col>
-              <Col layout="column" xs={11}>
-                <Block justify="left">
-                  <Paragraph
-                    className={classes.address}
-                    noMargin
-                    weight="bolder"
-                    data-testid="recipient-address-review-step"
-                  >
-                    {tx.recipientAddress}
-                  </Paragraph>
-                  <CopyBtn content={tx.recipientAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
-                </Block>
+              <Col xs={12}>
+                <EthHashInfo
+                  hash={tx.recipientAddress}
+                  showCopyBtn
+                  showAvatar
+                  explorerUrl={getExplorerInfo(tx.recipientAddress)}
+                />
               </Col>
             </Row>
 
