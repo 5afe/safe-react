@@ -10,7 +10,14 @@ import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  maxValue,
+  minValue,
+  minMaxLength,
+  mustBeFloat,
+  required,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -136,8 +143,7 @@ const SendFunds = ({
   const currentUser = useSelector(userAccountSelector)
 
   const sendFundsValidation = (values) => {
-    const { amount, token: tokenAddress, txType } = values ?? {}
-
+    const { amount, token: tokenAddress, txType, recipientAddress } = values ?? {}
     if (!amount || !tokenAddress) {
       return
     }
@@ -147,6 +153,7 @@ const SendFunds = ({
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
+      minMaxLength(1, 24),
       minValue(0, false),
       maxValue(
         isSpendingLimit
@@ -155,8 +162,11 @@ const SendFunds = ({
       ),
     )(amount)
 
+    const addressValidation = composeValidators(minMaxLength(1, 42))(recipientAddress)
+
     return {
       amount: amountValidation,
+      recipientAddress: addressValidation,
     }
   }
 
