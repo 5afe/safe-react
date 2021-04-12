@@ -133,7 +133,7 @@ type BaseCustom = {
   dataSize: string
   value: string
   isCancellation: boolean
-  toInfo: AddressInfo
+  toInfo?: AddressInfo
 }
 
 type Custom = BaseCustom & {
@@ -236,7 +236,7 @@ type MultiSigExecutionDetails = {
 type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails
 
 type ExpandedTxDetails = {
-  executedAt: number
+  executedAt: number | null
   txStatus: TransactionStatus
   txInfo: TransactionInfo
   txData: TransactionData | null
