@@ -1,4 +1,3 @@
-import { createStyles, makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -18,15 +17,6 @@ import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/Repl
 import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-const styles = createStyles({
-  biggerModalWindow: {
-    width: '775px',
-    height: 'auto',
-  },
-})
-
-const useStyles = makeStyles(styles)
-
 type OwnerValues = {
   newOwnerAddress: string
   newOwnerName: string
@@ -40,7 +30,7 @@ export const sendReplaceOwner = async (
   txParameters: TxParameters,
   threshold?: number,
 ): Promise<void> => {
-  const gnosisSafe = await getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -84,7 +74,6 @@ export const ReplaceOwnerModal = ({
   ownerAddress,
   ownerName,
 }: ReplaceOwnerProps): React.ReactElement => {
-  const classes = useStyles()
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState({
     newOwnerAddress: '',
@@ -137,7 +126,7 @@ export const ReplaceOwnerModal = ({
       description="Replace owner from Safe"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={classes.biggerModalWindow}
+      paperClassName="bigger-modal-window"
       title="Replace owner from Safe"
     >
       <>

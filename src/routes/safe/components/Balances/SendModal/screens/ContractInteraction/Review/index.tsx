@@ -2,9 +2,8 @@ import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { getNetworkInfo } from 'src/config'
+import { getNetworkInfo, getExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import AddressInfo from 'src/components/AddressInfo'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -30,6 +29,7 @@ import {
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
 
@@ -52,11 +52,13 @@ type Props = {
 const { nativeCoin } = getNetworkInfo()
 
 const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+  const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -79,6 +81,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     txData: txInfo?.txData,
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -119,6 +122,10 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       setManualGasPrice(txParameters.ethGasPrice)
     }
 
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
+    }
+
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
@@ -144,7 +151,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <AddressInfo safeAddress={tx.contractAddress as string} />
+              <EthHashInfo hash={tx.contractAddress as string} showAvatar showCopyBtn explorerUrl={explorerUrl} />
             </Row>
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>

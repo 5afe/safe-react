@@ -92,7 +92,7 @@ const Balances = (): React.ReactElement => {
     }))
   }
 
-  const { assetDivider, assetTab, assetTabActive, assetTabs, controls, receiveModal, tokenControls } = classes
+  const { assetDivider, assetTab, assetTabActive, assetTabs, controls, tokenControls } = classes
   const { erc721Enabled, sendFunds, showReceive } = state
 
   return (
@@ -174,7 +174,7 @@ const Balances = (): React.ReactElement => {
         description="Receive Tokens Form"
         handleClose={() => onHide('Receive')}
         open={showReceive}
-        paperClassName={receiveModal}
+        paperClassName="receive-modal"
         title="Receive Tokens"
       >
         <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />

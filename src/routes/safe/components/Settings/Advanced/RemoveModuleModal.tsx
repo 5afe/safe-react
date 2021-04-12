@@ -57,6 +57,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
+  const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
 
   const [, moduleAddress] = selectedModulePair
   const explorerInfo = getExplorerInfo(moduleAddress)
@@ -77,6 +78,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     txAmount: '0',
     safeTxGas: manualSafeTxGas,
     manualGasPrice,
+    manualGasLimit,
   })
 
   useEffect(() => {
@@ -113,6 +115,10 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
       setManualGasPrice(txParameters.ethGasPrice)
     }
 
+    if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
+      setManualGasLimit(txParameters.ethGasLimit)
+    }
+
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
@@ -122,7 +128,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     <Modal
       description="Remove the selected Module"
       handleClose={onClose}
-      paperClassName={classes.modal}
+      paperClassName="modal"
       title="Remove Module"
       open
     >
