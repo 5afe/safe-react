@@ -3,7 +3,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
-  txServiceUrl: 'https://safe-transaction.staging.gnosisdev.com/api/v1',
+  txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
