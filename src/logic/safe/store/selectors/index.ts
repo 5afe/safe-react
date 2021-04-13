@@ -117,18 +117,6 @@ export const safeOwnersAddressesListSelector = createSelector(
   },
 )
 
-export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
-  const addresses = Set().withMutations((set) => {
-    safes.forEach((safe) => {
-      safe.activeTokens.forEach((tokenAddress) => {
-        set.add(tokenAddress)
-      })
-    })
-  })
-
-  return addresses
-})
-
 export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance
 })
