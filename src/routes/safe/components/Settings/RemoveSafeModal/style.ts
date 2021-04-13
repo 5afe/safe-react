@@ -5,11 +5,12 @@ export const styles = createStyles({
   heading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
-    minHeight: '75px',
+    minHeight: '74px',
     padding: `${sm} ${lg}`,
   },
   container: {
     minHeight: '369px',
+    padding: `${sm}`,
   },
   manage: {
     fontSize: lg,

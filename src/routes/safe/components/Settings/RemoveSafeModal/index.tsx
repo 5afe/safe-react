@@ -3,15 +3,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { getExplorerInfo } from 'src/config'
 
 import { styles } from './style'
 
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
-import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -24,6 +21,8 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
+
+import { getExplorerInfo } from 'src/config'
 
 const useStyles = makeStyles(styles)
 
@@ -81,7 +80,6 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
             />
           </Col>
         </Row>
-        <Hairline />
         <Row className={classes.description}>
           <Paragraph noMargin size="lg">
             Removing a Safe only removes it from your interface. <b>It does not delete the Safe</b>. You can always add
@@ -96,9 +94,10 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
         </Button>
         <Button
           className={classes.buttonRemove}
-          minWidth={140}
+          size="md"
           onClick={onRemoveSafeHandler}
           type="submit"
+          color="error"
           variant="contained"
         >
           Remove
