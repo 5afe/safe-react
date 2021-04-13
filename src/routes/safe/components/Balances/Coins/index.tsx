@@ -97,7 +97,7 @@ const Coins = (props: Props): React.ReactElement => {
         data={filteredData}
         defaultFixed
         defaultOrderBy={BALANCE_TABLE_ASSET_ID}
-        defaultRowsPerPage={15}
+        defaultRowsPerPage={100}
         label="Balances"
         size={filteredData.size}
       >

@@ -105,11 +105,12 @@ class GnoTable extends React.Component<any, any> {
     height: FIXED_HEIGHT * emptyRows,
     borderTopRightRadius: sm,
     borderTopLeftRadius: sm,
+    paddingTop: xl,
     backgroundColor: 'white',
     width: '100%',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
+    alignItems: 'flex-start',
   })
 
   handleChangePage = (e, page) => {
