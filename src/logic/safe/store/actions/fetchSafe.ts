@@ -74,7 +74,6 @@ const extractRemoteSafeInfo = async (
 
 const extractLocalSafeInfo = (
   localSafeInfoSettled: PromiseSettledResult<SafeRecordProps | undefined>,
-  remoteSafeInfoRetrievedSuccessfully: boolean,
 ): Partial<SafeRecordProps> => {
   const safeInfo: Partial<SafeRecordProps> = {}
 
@@ -82,18 +81,13 @@ const extractLocalSafeInfo = (
     if (localSafeInfoSettled.value !== undefined) {
       const localSafeInfo = localSafeInfoSettled.value
 
-      if (!remoteSafeInfoRetrievedSuccessfully) {
-        // if for any reason we failed to retrieve safe's remote information,
-        // we default to what we had locally stored
-        safeInfo.nonce = localSafeInfo.nonce
-        safeInfo.threshold = localSafeInfo.threshold
-        safeInfo.currentVersion = localSafeInfo.currentVersion
-        safeInfo.needsUpdate = localSafeInfo.needsUpdate
-        safeInfo.featuresEnabled = localSafeInfo.featuresEnabled
-        safeInfo.spendingLimits = localSafeInfo.spendingLimits
-        safeInfo.modules = localSafeInfo.modules
-      }
-
+      safeInfo.nonce = localSafeInfo.nonce
+      safeInfo.threshold = localSafeInfo.threshold
+      safeInfo.currentVersion = localSafeInfo.currentVersion
+      safeInfo.needsUpdate = localSafeInfo.needsUpdate
+      safeInfo.featuresEnabled = localSafeInfo.featuresEnabled
+      safeInfo.spendingLimits = localSafeInfo.spendingLimits
+      safeInfo.modules = localSafeInfo.modules
       safeInfo.name = localSafeInfo.name
     }
   } else {
@@ -149,7 +143,7 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
   const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoSettled, checksummedSafeAddress)
 
   // local (localStorage)
-  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled, remoteSafeInfoSettled.status === 'fulfilled')
+  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled)
 
   // update owner's information
   const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
@@ -159,7 +153,7 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
   //  it's being loaded by the `fetchSafeTokens` action anyway
   safeInfo.ethBalance = extractSafeNativeBalance(safeBalancesSettled)
 
-  return { ...safeInfo, ...remoteSafeInfo, ...localSafeInfo, owners } as SafeRecordProps
+  return { ...safeInfo, ...localSafeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
 
 export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
@@ -178,10 +172,10 @@ export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Pr
   const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoSettled, checksummedSafeAddress)
 
   // local (localStorage)
-  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled, remoteSafeInfoSettled.status === 'fulfilled')
+  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled)
 
   // update owner's information
   const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
 
-  dispatch(updateSafe({ ...safeInfo, ...remoteSafeInfo, ...localSafeInfo, owners }))
+  dispatch(updateSafe({ ...safeInfo, ...localSafeInfo, ...remoteSafeInfo, owners }))
 }
