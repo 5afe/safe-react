@@ -56,6 +56,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
+  recipientName?: string
   selectedToken?: string | NFTToken | Erc721Transfer
   tokenAmount?: string
 }
@@ -65,6 +66,7 @@ const SendModal = ({
   isOpen,
   onClose,
   recipientAddress,
+  recipientName,
   selectedToken,
   tokenAmount,
 }: Props): React.ReactElement => {
@@ -119,7 +121,12 @@ const SendModal = ({
         }
       >
         {activeScreen === 'chooseTxType' && (
-          <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
+          <ChooseTxType
+            onClose={onClose}
+            recipientName={recipientName}
+            recipientAddress={recipientAddress}
+            setActiveScreen={setActiveScreen}
+          />
         )}
 
         {activeScreen === 'sendFunds' && (
