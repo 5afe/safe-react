@@ -23,6 +23,8 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 import { getExplorerInfo } from 'src/config'
+import Button from 'src/components/layout/Button'
+import Col from 'src/components/layout/Col'
 
 const useStyles = makeStyles(styles)
 
