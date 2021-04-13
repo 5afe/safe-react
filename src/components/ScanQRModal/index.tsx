@@ -36,14 +36,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
   }, [scannerRef])
 
   useEffect(() => {
-    checkWebcam(
-      () => {
-        setUseWebcam(true)
-      },
-      () => {
-        setUseWebcam(false)
-      },
-    )
+    checkWebcam().then((isAvailable) => setUseWebcam(isAvailable))
   }, [])
 
   useEffect(() => {
@@ -92,6 +85,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
             onScan={(data) => onFileScannedResolve(null, data)}
             ref={scannerRef}
             style={{ width: '400px', height: '400px' }}
+            facingMode="user"
           />
         )}
       </Col>
