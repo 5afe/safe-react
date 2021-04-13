@@ -36,7 +36,6 @@ const styles = {
   },
 }
 
-const FIXED_HEIGHT = 49
 const FIXED_EMPTY_HEIGHT = 255
 
 const backProps = {
@@ -102,8 +101,8 @@ class GnoTable extends React.Component<any, any> {
     }))
   }
 
-  getEmptyStyle = (emptyRows, isEmpty) => ({
-    height: isEmpty ? `calc(100vh - ${FIXED_EMPTY_HEIGHT}px)` : FIXED_HEIGHT * emptyRows,
+  getEmptyStyle = () => ({
+    height: `calc(100vh - ${FIXED_EMPTY_HEIGHT}px)`,
     borderTopRightRadius: sm,
     borderTopLeftRadius: sm,
     backgroundColor: 'white',
@@ -156,7 +155,6 @@ class GnoTable extends React.Component<any, any> {
       sortedData = sortedData.slice(page * displayRows, page * displayRows + displayRows)
     }
 
-    const emptyRows = displayRows - Math.min(displayRows, data.size - page * displayRows)
     const isEmpty = size === 0 && !disableLoadingOnEmptyTable
 
     return (
@@ -168,7 +166,7 @@ class GnoTable extends React.Component<any, any> {
           </Table>
         )}
         {isEmpty && (
-          <Row className={classes.loader} style={this.getEmptyStyle(emptyRows + 1, isEmpty)}>
+          <Row className={classes.loader} style={this.getEmptyStyle()}>
             <CircularProgress size={60} />
           </Row>
         )}
