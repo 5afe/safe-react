@@ -28,6 +28,7 @@ import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { staticAppsList } from 'src/routes/safe/components/Apps/utils'
+import { useAppList } from '../hooks/useAppList'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -103,6 +104,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
+  const { appList } = useAppList()
 
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
 
@@ -263,13 +265,13 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
     const loadApp = async () => {
       const app = await getAppInfoFromUrl(appUrl)
 
-      const existsStaticApp = staticAppsList.some((staticApp) => staticApp.url === app.url)
+      const existsStaticApp = appList.some((staticApp) => staticApp.url === app.url)
       setIsAppDeletable(!existsStaticApp)
       setSafeApp(app)
     }
 
     loadApp()
-  }, [appUrl])
+  }, [appUrl, appList])
 
   //track GA
   useEffect(() => {
