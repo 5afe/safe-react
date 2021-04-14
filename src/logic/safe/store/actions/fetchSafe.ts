@@ -31,7 +31,7 @@ const extractRemoteSafeInfo = async (
   }
   const safeInfoModules = remoteSafeInfo.modules.map(({ value }) => value)
 
-  if (safeInfoModules) {
+  if (safeInfoModules.length) {
     const [spendingLimits, modules] = await allSettled<[SpendingLimit[] | null, ModulePair[] | null | undefined]>(
       getSpendingLimits(safeInfoModules, checksummedSafeAddress),
       getModules(remoteSafeInfo),
