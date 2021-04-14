@@ -16,6 +16,6 @@ export type AppData = {
   networks: number[]
 }
 
-export const fetchAppList = async (): Promise<TokenListResult> => {
+export const fetchSafeAppsList = async (): Promise<TokenListResult> => {
   return axios.get(SAFE_APPS_LIST_URL).then(({ data }) => data)
 }

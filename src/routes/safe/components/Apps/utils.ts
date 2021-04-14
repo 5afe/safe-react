@@ -6,7 +6,7 @@ import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { AppData, fetchAppList } from './api/fetchAppList'
+import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -153,7 +153,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
 ]
 
 export const getAppsList = async (): Promise<AppData[]> => {
-  const result = await fetchAppList()
+  const result = await fetchSafeAppsList()
 
   return result.apps && result.apps.length ? result.apps : staticAppsList
 }
