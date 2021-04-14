@@ -46,9 +46,19 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
     }
   }, [useWebcam, openImageDialog, fileUploadModalOpen, setFileUploadModalOpen, error])
 
-  const onFileScannedResolve = (error: string | null, successData: string | null) => {
+  // A timeout before unmounting to let the camera stop
+  const unmountDelay = (callback: () => void) => {
+    scannerRef.current?.stopCamera()
+    setTimeout(callback, 300)
+  }
+
+  const onModalClose = () => {
+    unmountDelay(() => onClose())
+  }
+
+  const onFileScannedResolve = (error: Error | null, successData: string | null) => {
     if (successData) {
-      onScan(successData)
+      unmountDelay(() => onScan(successData))
     }
     if (error) {
       console.error('Error uploading file', error)
@@ -62,12 +72,12 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
   }
 
   return (
-    <Modal description="Receive Tokens Form" handleClose={onClose} open={isOpen} title="Receive Tokens">
+    <Modal description="Receive Tokens Form" handleClose={onModalClose} open={isOpen} title="Receive Tokens">
       <Row align="center" className={classes.heading} grow>
         <Paragraph noMargin size="xl">
           Scan QR
         </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
+        <IconButton disableRipple onClick={onModalClose}>
           <Close className={classes.close} />
         </IconButton>
       </Row>
@@ -81,8 +91,8 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
         ) : (
           <QrReader
             legacyMode={!useWebcam}
-            onError={(err) => onFileScannedResolve(err, null)}
-            onScan={(data) => onFileScannedResolve(null, data)}
+            onError={(err: Error) => onFileScannedResolve(err, null)}
+            onScan={(data: string) => onFileScannedResolve(null, data)}
             ref={scannerRef}
             style={{ width: '400px', height: '400px' }}
             facingMode="user"
@@ -91,7 +101,7 @@ export const ScanQRModal = ({ isOpen, onClose, onScan }: Props): React.ReactElem
       </Col>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button className={classes.button} color="secondary" minWidth={154} onClick={onClose}>
+        <Button className={classes.button} color="secondary" minWidth={154} onClick={onModalClose}>
           Close
         </Button>
         <Button

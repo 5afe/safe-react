@@ -1,22 +1,12 @@
-const navigatorCp: any = navigator
-
-navigatorCp.getMedia =
-  navigatorCp.getUserMedia || // use the proper vendor prefix
-  navigatorCp.webkitGetUserMedia ||
-  navigatorCp.mozGetUserMedia ||
-  navigatorCp.msGetUserMedia
-
-export const checkWebcam = (): Promise<boolean> => {
-  return new Promise((resolve) => {
-    navigatorCp.getMedia(
-      { video: true },
-      (stream: MediaStream) => {
-        stream.getTracks().forEach((track) => track.stop())
-        resolve(true)
-      },
-      () => {
-        resolve(false)
-      },
-    )
-  })
+export const checkWebcam = async (): Promise<boolean> => {
+  if (!navigator.mediaDevices?.getUserMedia) {
+    return false
+  }
+  try {
+    const stream = await navigator.mediaDevices.getUserMedia({ video: true })
+    stream.getTracks().forEach((track) => track.stop())
+    return true
+  } catch (err) {
+    return false
+  }
 }
