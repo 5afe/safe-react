@@ -516,7 +516,7 @@ export const Centered = styled.div<{ padding?: number }>`
 
 export const HorizontallyCentered = styled(Centered)<{ isVisible: boolean }>`
   visibility: ${({ isVisible }) => (isVisible ? 'visible' : 'hidden')};
-  height: auto;
+  height: 100px;
 `
 
 export const StyledAccordionSummary = styled(AccordionSummary)`
