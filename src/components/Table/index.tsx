@@ -1,4 +1,4 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { Loader } from '@gnosis.pm/safe-react-components'
 import Table from '@material-ui/core/Table'
 import TableBody from '@material-ui/core/TableBody'
 import TablePagination from '@material-ui/core/TablePagination'
@@ -167,7 +167,7 @@ class GnoTable extends React.Component<any, any> {
         )}
         {isEmpty && (
           <Row className={classes.loader} style={this.getEmptyStyle()}>
-            <CircularProgress size={60} />
+            <Loader size="sm" />
           </Row>
         )}
         {!disablePagination && (

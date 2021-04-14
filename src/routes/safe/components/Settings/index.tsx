@@ -1,4 +1,5 @@
-import { IconText } from '@gnosis.pm/safe-react-components'
+import { IconText, Loader } from '@gnosis.pm/safe-react-components'
+import { LoadingContainer } from 'src/components/LoaderContainer'
 import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
@@ -15,7 +16,6 @@ import ThresholdSettings from './ThresholdSettings'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
-import Loader from 'src/components/Loader'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
@@ -60,7 +60,9 @@ const Settings: React.FC = () => {
   const { menuOptionIndex, showRemoveSafe } = state
 
   return !owners ? (
-    <Loader />
+    <LoadingContainer>
+      <Loader size="md" />
+    </LoadingContainer>
   ) : (
     <>
       <Row className={classes.message}>

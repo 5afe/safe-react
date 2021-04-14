@@ -1,4 +1,4 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { Loader } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { Suspense, useEffect, useState } from 'react'
 
@@ -116,7 +116,7 @@ const SendModal = ({
       <Suspense
         fallback={
           <div className={classes.loaderStyle}>
-            <CircularProgress size={40} />
+            <Loader size="md" />
           </div>
         }
       >

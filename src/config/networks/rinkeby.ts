@@ -1,5 +1,5 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
@@ -45,6 +45,7 @@ const rinkeby: NetworkConfig = {
       logoUri: EtherLogo,
     },
   },
+  disabledWallets: [WALLETS.FORTMATIC],
 }
 
 export default rinkeby
