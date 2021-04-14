@@ -33,7 +33,7 @@ const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps)
   let name
   let avatarUrl
 
-  if (isCustomTxInfo(txInfo)) {
+  if (isCustomTxInfo(txInfo) && txInfo.toInfo) {
     name = txInfo.toInfo.name
     avatarUrl = txInfo.toInfo.logoUri
   }

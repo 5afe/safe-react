@@ -59,11 +59,12 @@ const StyledCard = styled(Card)`
   padding: 0;
 `
 
-const StyledIframe = styled.iframe`
+const StyledIframe = styled.iframe<{ isLoading: boolean }>`
   height: 100%;
   width: 100%;
   overflow: auto;
   box-sizing: border-box;
+  display: ${({ isLoading }) => (isLoading ? 'none' : 'block')};
 `
 
 const Breadcrumb = styled.div`
@@ -326,6 +327,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
         )}
 
         <StyledIframe
+          isLoading={appIsLoading}
           frameBorder="0"
           id={`iframe-${appUrl}`}
           ref={iframeRef}

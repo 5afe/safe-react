@@ -17,6 +17,7 @@ export const SQUARELINK_ID = {
  */
 export const INFURA_TOKEN = process.env.REACT_APP_INFURA_TOKEN || ''
 export const LATEST_SAFE_VERSION = process.env.REACT_APP_LATEST_SAFE_VERSION || '1.1.1'
+export const LOADED_SAFE_KEY = 'LOADED SAFE'
 export const APP_VERSION = process.env.REACT_APP_APP_VERSION || 'not-defined'
 export const OPENSEA_API_KEY = process.env.REACT_APP_OPENSEA_API_KEY || ''
 export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 'Gnosis'
