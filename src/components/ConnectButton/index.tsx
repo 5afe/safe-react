@@ -1,8 +1,8 @@
 import Onboard from 'bnc-onboard'
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
-import { getNetworkId } from 'src/config'
+import { getNetworkId, getNetworkName } from 'src/config'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
@@ -10,6 +10,7 @@ import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
 
 const networkId = getNetworkId()
+const networkName = getNetworkName().toLowerCase()
 
 let lastUsedAddress = ''
 let providerName
@@ -17,7 +18,8 @@ let providerName
 const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
-  networkId: networkId,
+  networkId,
+  networkName,
   subscriptions: {
     wallet: (wallet) => {
       if (wallet.provider) {
@@ -72,7 +74,7 @@ export const onConnectButtonClick = async () => {
   }
 }
 
-const ConnectButton = (props): React.ReactElement => (
+const ConnectButton = (props): ReactElement => (
   <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
     Connect
   </Button>
