@@ -1,5 +1,4 @@
 import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
-import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
 import React, { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -68,10 +67,6 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   }
   return null
 }
-
-const CircularProgressPainter = styled.div<{ color: ThemeColors }>`
-  color: ${({ theme, color }) => theme.colors[color]};
-`
 
 const SmallDot = styled(Dot)`
   height: 8px;
@@ -169,9 +164,7 @@ export const TxCollapsed = ({
   const txCollapsedStatus = (
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
       {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
-        <CircularProgressPainter color={status.color}>
-          <Loader size="xs" color="pending" />
-        </CircularProgressPainter>
+        <Loader size="xs" />
       ) : (
         (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
           <SmallDot color={status.color} />
