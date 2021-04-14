@@ -1,6 +1,5 @@
-import { Dot, IconText as IconTextSrc, Text, Tooltip } from '@gnosis.pm/safe-react-components'
+import { Dot, IconText as IconTextSrc, Loader, Text, Tooltip } from '@gnosis.pm/safe-react-components'
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
-import CircularProgress from '@material-ui/core/CircularProgress'
 import React, { ReactElement, useContext, useRef } from 'react'
 import styled from 'styled-components'
 
@@ -171,7 +170,7 @@ export const TxCollapsed = ({
     <div className="tx-status" ref={sameString(lastItemId, transaction.id) ? ref : null}>
       {transaction?.txStatus === 'PENDING' || transaction?.txStatus === 'PENDING_FAILED' ? (
         <CircularProgressPainter color={status.color}>
-          <CircularProgress size={14} color="inherit" />
+          <Loader size="xs" color="pending" />
         </CircularProgressPainter>
       ) : (
         (transaction?.txStatus === 'AWAITING_EXECUTION' || transaction?.txStatus === 'AWAITING_CONFIRMATIONS') && (
