@@ -76,7 +76,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     dispatch(
       updateSafe({
         address: safeAddress,
-        activeTokens: balances,
         balances,
         ethBalance,
         totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),

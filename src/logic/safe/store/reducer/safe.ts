@@ -25,14 +25,11 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
   const names = storedSafe.owners.map((owner) => owner.name)
   const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
-  const activeTokens = []
-  const balances = Map(storedSafe.balances)
 
   return {
     ...storedSafe,
     owners,
-    balances,
-    activeTokens,
+    balances: [],
     latestIncomingTxBlock: 0,
     modules: null,
   }

@@ -66,14 +66,14 @@ export const safeSelector = createSelector(
   },
 )
 
-export const safeActiveTokensSelector = createSelector(
+export const safeBalancesSelector = createSelector(
   safeSelector,
   (safe): Array<BalanceRecord> => {
     if (!safe) {
       return []
     }
 
-    return safe.activeTokens
+    return safe.balances
   },
 )
 
@@ -86,8 +86,6 @@ export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
 export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
-
-export const safeBalancesSelector = createSelector(safeSelector, safeFieldSelector('balances'))
 
 export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))
 

@@ -7,7 +7,7 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserAnOwner, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
-import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { safeBalancesSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 
 export const grantedSelector = createSelector(
@@ -25,14 +25,14 @@ const safeEthAsTokenSelector = createSelector(safeSelector, (safe?: SafeRecord):
 })
 
 export const extendedSafeTokensSelector = createSelector(
-  safeActiveTokensSelector,
+  safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens, tokensList, ethAsToken): List<Token> => {
+  (safeBalances, tokensList, ethAsToken): List<Token> => {
     const extendedTokens: Array<Token> = []
 
-    safeTokens.forEach((safeToken) => {
-      const tokenAddress = safeToken.tokenAddress
+    safeBalances.forEach((safeBalance) => {
+      const tokenAddress = safeBalance.tokenAddress
 
       if (!tokenAddress) {
         return
@@ -44,7 +44,7 @@ export const extendedSafeTokensSelector = createSelector(
         return
       }
 
-      const token = baseToken.set('balance', safeToken)
+      const token = baseToken.set('balance', safeBalance)
       extendedTokens.push(token)
     })
 
