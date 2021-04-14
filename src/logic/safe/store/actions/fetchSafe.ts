@@ -1,131 +1,92 @@
 import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
-import { BalanceEndpoint, fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
-import { getLocalSafe } from 'src/logic/safe/utils'
-import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { getLocalSafe } from 'src/logic/safe/utils'
 import { getModules } from 'src/logic/safe/utils/modules'
+import { allSettled } from 'src/logic/safe/utils/allSettled'
+import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { AppReduxState } from 'src/store'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
-const extractSafeNativeBalance = (safeBalancesSettled: PromiseSettledResult<BalanceEndpoint>): string => {
-  let nativeCoinBalance = '0'
-  if (safeBalancesSettled.status === 'fulfilled') {
-    const safeBalances = safeBalancesSettled.value
-    const nativeCoin = safeBalances.items.find(({ tokenInfo }) => sameAddress(tokenInfo.address, ZERO_ADDRESS))
-
-    if (nativeCoin) {
-      nativeCoinBalance = fromTokenUnit(nativeCoin.balance, nativeCoin.tokenInfo.decimals)
-    }
-  } else {
-    console.error('Failed to load Native coin balance information', safeBalancesSettled.reason)
-  }
-
-  return nativeCoinBalance
-}
-
+/**
+ * Recovers Safe's remote information along with its modules and spendingLimits if there's any
+ * @param {SafeInfo} remoteSafeInfo
+ * @param {string} checksummedSafeAddress
+ * @returns Promise<Partial<SafeRecordProps>>
+ */
 const extractRemoteSafeInfo = async (
-  remoteSafeInfoSettled: PromiseSettledResult<SafeInfo>,
+  remoteSafeInfo: SafeInfo,
   checksummedSafeAddress: string,
 ): Promise<Partial<SafeRecordProps>> => {
-  const safeInfo: Partial<SafeRecordProps> = {}
+  const safeInfo: Partial<SafeRecordProps> = {
+    spendingLimits: undefined,
+    modules: undefined,
+  }
+  const safeInfoModules = remoteSafeInfo.modules.map(({ value }) => value)
 
-  if (remoteSafeInfoSettled.status === 'fulfilled') {
-    const remoteSafeInfo = remoteSafeInfoSettled.value
-    const safeInfoModules = remoteSafeInfo.modules.map(({ value }) => value)
-
-    const [spendingLimitsSettled, modulesSettled] = await Promise.allSettled([
-      // request SpendingLimit info
+  if (safeInfoModules) {
+    const [spendingLimits, modules] = await allSettled<[SpendingLimit[] | null, ModulePair[] | null | undefined]>(
       getSpendingLimits(safeInfoModules, checksummedSafeAddress),
-      // request Modules info
       getModules(remoteSafeInfo),
-    ])
+    )
 
-    if (spendingLimitsSettled.status === 'fulfilled') {
-      safeInfo.spendingLimits = spendingLimitsSettled.value
-    } else {
-      console.error('Failed to load Spending Limits information', spendingLimitsSettled.reason)
-    }
-
-    if (modulesSettled.status === 'fulfilled') {
-      safeInfo.modules = modulesSettled.value
-    } else {
-      console.error('Failed to load Modules information', modulesSettled.reason)
-    }
-
-    safeInfo.nonce = remoteSafeInfo.nonce
-    safeInfo.threshold = remoteSafeInfo.threshold
-    safeInfo.currentVersion = remoteSafeInfo.version
-    safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, '1.1.1')
-    safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
-  } else {
-    console.error('Failed to load Safe information from client-gateway', remoteSafeInfoSettled.reason)
+    safeInfo.spendingLimits = spendingLimits
+    safeInfo.modules = modules
   }
+
+  safeInfo.nonce = remoteSafeInfo.nonce
+  safeInfo.threshold = remoteSafeInfo.threshold
+  safeInfo.currentVersion = remoteSafeInfo.version
+  // FixMe: replace '1.1.1' hardcoded value in favor of data provided by services
+  //  see: https://github.com/gnosis/safe-react/issues/1383#issuecomment-815425652
+  safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, '1.1.1')
+  safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
 
   return safeInfo
 }
 
-const extractLocalSafeInfo = (
-  localSafeInfoSettled: PromiseSettledResult<SafeRecordProps | undefined>,
-): Partial<SafeRecordProps> => {
-  const safeInfo: Partial<SafeRecordProps> = {}
-
-  if (localSafeInfoSettled.status === 'fulfilled') {
-    if (localSafeInfoSettled.value !== undefined) {
-      const localSafeInfo = localSafeInfoSettled.value
-
-      safeInfo.nonce = localSafeInfo.nonce
-      safeInfo.threshold = localSafeInfo.threshold
-      safeInfo.currentVersion = localSafeInfo.currentVersion
-      safeInfo.needsUpdate = localSafeInfo.needsUpdate
-      safeInfo.featuresEnabled = localSafeInfo.featuresEnabled
-      safeInfo.spendingLimits = localSafeInfo.spendingLimits
-      safeInfo.modules = localSafeInfo.modules
-      safeInfo.name = localSafeInfo.name
-    }
-  } else {
-    console.error('Failed to load locally stored Safe information', localSafeInfoSettled.reason)
-  }
-
-  return safeInfo
-}
-
+/**
+ * Merges remote owner's information with the locally stored data.
+ * If there's no remote data, it will go with the locally stored information.
+ * @param {SafeInfo['owners']} remoteSafeOwners
+ * @param {SafeRecordProps['owners']} localSafeOwners
+ * @returns List<SafeOwners> | undefined
+ */
 const extractSafeOwners = (
-  remoteSafeInfoSettled: PromiseSettledResult<SafeInfo>,
-  localSafeInfoSettled: PromiseSettledResult<SafeRecordProps | undefined>,
+  remoteSafeOwners?: SafeInfo['owners'],
+  localSafeOwners?: SafeRecordProps['owners'],
 ): List<SafeOwner> | undefined => {
-  let localOwners
-  let remoteOwners
-
-  if (localSafeInfoSettled.status === 'fulfilled' && localSafeInfoSettled.value !== undefined) {
-    const localSafeInfo = localSafeInfoSettled.value
-
-    localOwners = localSafeInfo.owners
-  }
-
-  if (remoteSafeInfoSettled.status === 'fulfilled') {
-    const remoteSafeInfo = remoteSafeInfoSettled.value
-
-    remoteOwners = remoteSafeInfo.owners.map(({ value }) => {
-      const localOwner = localOwners?.find(({ address }) => sameAddress(address, value))
-      const name = localOwner?.name ?? 'UNKNOWN'
+  if (remoteSafeOwners) {
+    const remoteOwners = remoteSafeOwners.map(({ value }) => {
+      const localOwner = localSafeOwners?.find(({ address }) => sameAddress(address, value))
+      const name = localOwner?.name
       return makeOwner({ name, address: checksumAddress(value) })
     })
 
-    return List<SafeOwner>(remoteOwners)
+    return List(remoteOwners)
   }
 
   // nothing to do without remote owners, so we return the stored list
-  return localOwners
+  return localSafeOwners
 }
 
+/**
+ * Builds a Safe Record that will be added to the app's store
+ * It recovers, and merges information from client-gateway and localStore
+ *
+ * @note It's being used by "Load Existing Safe" and "Create New Safe" flows
+ *
+ * @param {string} safeAddress
+ * @param {string} safeName
+ * @returns Promise<SafeRecordProps>
+ */
 export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
   const checksummedSafeAddress = checksumAddress(safeAddress)
   const safeInfo: Partial<SafeRecordProps> = {
@@ -133,49 +94,47 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
     name: safeName,
   }
 
-  const [remoteSafeInfoSettled, localSafeInfoSettled, safeBalancesSettled] = await Promise.allSettled([
+  const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
     getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
-    fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: 'USD' }),
-  ])
+  )
 
   // remote (client-gateway)
-  const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoSettled, checksummedSafeAddress)
-
-  // local (localStorage)
-  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled)
+  const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote, checksummedSafeAddress) : {}
 
   // update owner's information
-  const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
-
-  // remote (client-gateway)
-  // TODO: REVIEW: do we really need to load ethBalance?
-  //  it's being loaded by the `fetchSafeTokens` action anyway
-  safeInfo.ethBalance = extractSafeNativeBalance(safeBalancesSettled)
+  const owners = extractSafeOwners(remote?.owners, localSafeInfo?.owners)
 
   return { ...safeInfo, ...localSafeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
 
-export const fetchSafe = (safeAddress: string) => async (dispatch: Dispatch): Promise<void> => {
-  const checksummedSafeAddress = checksumAddress(safeAddress)
-  const safeInfo: Partial<SafeRecordProps> = {
-    address: checksummedSafeAddress,
-    name: LOADED_SAFE_KEY,
-  }
+/**
+ * Updates the app's store with Safe Record built from data provided by client-gateway
+ *
+ * @note It's being used by the app when it loads for the first time and for the Safe's data polling
+ *
+ * @param {string} safeAddress
+ */
+export const fetchSafe = (safeAddress: string) => async (
+  dispatch: Dispatch,
+  getState: () => AppReduxState,
+): Promise<void> => {
+  const address = checksumAddress(safeAddress)
 
-  const [remoteSafeInfoSettled, localSafeInfoSettled] = await Promise.allSettled([
-    getSafeInfo(checksummedSafeAddress),
-    getLocalSafe(checksummedSafeAddress),
-  ])
+  const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
 
   // remote (client-gateway)
-  const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoSettled, checksummedSafeAddress)
+  const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo, address) : {}
 
-  // local (localStorage)
-  const localSafeInfo = await extractLocalSafeInfo(localSafeInfoSettled)
-
+  // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
+  const state = getState()
+  const addressBook = addressBookSelector(state)
   // update owner's information
-  const owners = extractSafeOwners(remoteSafeInfoSettled, localSafeInfoSettled)
+  const owners = remoteSafeInfo
+    ? // if we have remote info, we can enrich it with local address book information
+      extractSafeOwners(remoteSafeInfo.owners, List(addressBook))
+    : // if there's no remote info, we keep what's in memory
+      undefined
 
-  dispatch(updateSafe({ ...safeInfo, ...localSafeInfo, ...remoteSafeInfo, owners }))
+  dispatch(updateSafe({ address, ...safeInfo, owners }))
 }
