@@ -4,10 +4,11 @@ import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-route
 
 import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
 
-import Loader from 'src/components/Loader'
+import { Loader } from '@gnosis.pm/safe-react-components'
 import { defaultSafeSelector } from 'src/logic/safe/store/selectors'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
+import { LoadingContainer } from 'src/components/LoaderContainer'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
 
@@ -60,7 +61,11 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe === DEFAULT_SAFE_INITIAL_STATE) {
-            return <Loader />
+            return (
+              <LoadingContainer>
+                <Loader size="md" />
+              </LoadingContainer>
+            )
           }
 
           if (defaultSafe) {
