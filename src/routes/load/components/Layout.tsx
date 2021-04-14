@@ -15,7 +15,7 @@ import { secondary, sm } from 'src/theme/variables'
 import { LoadFormValues } from '../container/Load'
 
 const steps = ['Name and address', 'Owners', 'Review']
-const buttonLabels = ['Next', 'Review', 'Load']
+const buttonLabels = ['Next', 'Review', 'Add']
 
 const iconStyle = {
   color: secondary,
