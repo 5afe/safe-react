@@ -6,7 +6,7 @@ import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/f
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { safeActiveTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'

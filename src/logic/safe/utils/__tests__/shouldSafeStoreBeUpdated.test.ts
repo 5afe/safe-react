@@ -11,7 +11,6 @@ const getMockedOldSafe = ({
   owners,
   featuresEnabled,
   currentVersion,
-  latestIncomingTxBlock,
   ethBalance,
   threshold,
   name,
@@ -46,12 +45,11 @@ const getMockedOldSafe = ({
         [mockedActiveTokenAddress2]: { tokenBalance: '10' },
       }),
     nonce: nonce || 2,
-    latestIncomingTxBlock: latestIncomingTxBlock || 1,
     recurringUser: recurringUser || false,
     currentVersion: currentVersion || 'v1.1.1',
     needsUpdate: needsUpdate || false,
     featuresEnabled: featuresEnabled || [],
-    totalFiatBalance: 110,
+    totalFiatBalance: '110',
   }
 }
 
@@ -223,21 +221,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ nonce: oldNonce })
     const newSafeProps: Partial<SafeRecordProps> = {
       nonce: newNonce,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old newLatestIncomingTxBlock and a new newLatestIncomingTxBlock for the safe, should return true`, () => {
-    // given
-    const oldLatestIncomingTxBlock = 1
-    const newLatestIncomingTxBlock = 2
-    const oldSafe = getMockedOldSafe({ latestIncomingTxBlock: oldLatestIncomingTxBlock })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      latestIncomingTxBlock: newLatestIncomingTxBlock,
     }
 
     // When

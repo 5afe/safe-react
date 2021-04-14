@@ -1,5 +1,5 @@
 import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { Dispatch } from 'redux'
 import { backOff } from 'exponential-backoff'
