@@ -77,7 +77,7 @@ const Coins = (props: Props): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const selectedCurrency = useSelector(currentCurrencySelector)
-  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
   const { trackEvent } = useAnalytics()
 
@@ -85,8 +85,8 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(activeTokens, selectedCurrency), [
-    activeTokens,
+  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(safeTokens, selectedCurrency), [
+    safeTokens,
     selectedCurrency,
   ])
 

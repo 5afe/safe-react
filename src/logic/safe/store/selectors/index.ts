@@ -1,4 +1,4 @@
-import { List, Set } from 'immutable'
+import { List } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
@@ -9,6 +9,7 @@ import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -67,9 +68,9 @@ export const safeSelector = createSelector(
 
 export const safeActiveTokensSelector = createSelector(
   safeSelector,
-  (safe): Set<string> => {
+  (safe): Array<BalanceRecord> => {
     if (!safe) {
-      return Set()
+      return []
     }
 
     return safe.activeTokens

@@ -22,8 +22,8 @@ export interface BalanceData {
   valueOrder: number
 }
 
-export const getBalanceData = (activeTokens: List<Token>, currencySelected?: string): List<BalanceData> => {
-  return activeTokens.map((token) => {
+export const getBalanceData = (safeTokens: List<Token>, currencySelected?: string): List<BalanceData> => {
+  return safeTokens.map((token) => {
     const { tokenBalance, fiatBalance } = token.balance
 
     return {
