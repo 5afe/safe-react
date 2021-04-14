@@ -61,7 +61,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // dHedge
   {
-    url: `https://dhedge-gnosis-app.web.app/`,
+    url: `https://app.dhedge.org/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
