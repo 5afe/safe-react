@@ -4,7 +4,7 @@
  * @param args
  * @returns ExpectedValues
  */
-export const allSettled = async <ExpectedValues>(...args): Promise<ExpectedValues> => {
+export const allSettled = async <ExpectedValues extends unknown[]>(...args: unknown[]): Promise<ExpectedValues> => {
   const data = new Array(args.length).fill(null)
   const promises = await Promise.allSettled(args)
 
@@ -18,5 +18,5 @@ export const allSettled = async <ExpectedValues>(...args): Promise<ExpectedValue
     }
   }
 
-  return (data as unknown) as ExpectedValues
+  return data as ExpectedValues
 }
