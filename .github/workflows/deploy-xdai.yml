@@ -8,6 +8,7 @@ on:
   pull_request:
     branches:
       - master
+      - feature/enable-wallet-connect-xdai
   # Launches build when release is published
   release:
       types: [published]
