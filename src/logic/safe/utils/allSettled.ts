@@ -8,15 +8,13 @@ export const allSettled = async <ExpectedValues extends unknown[]>(...args: unkn
   const data = new Array(args.length).fill(null)
   const promises = await Promise.allSettled(args)
 
-  for (let i = 0; i < promises.length; i++) {
-    const promise = promises[i]
-
+  promises.forEach((promise, index) => {
     if (promise.status !== 'fulfilled') {
       console.error('Failed to retrieve async information', promise.reason)
     } else {
-      data[i] = promise.value
+      data[index] = promise.value
     }
-  }
+  })
 
   return data as ExpectedValues
 }
