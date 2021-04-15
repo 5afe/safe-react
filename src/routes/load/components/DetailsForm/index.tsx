@@ -80,7 +80,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
     <>
       <Block margin="md">
         <Paragraph color="primary" noMargin size="md">
-          You are about to load an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
+          You are about to add an existing Gnosis Safe. First, choose a name and enter the Safe address. The name is
           only stored locally and will never be shared with Gnosis or any third parties.
           <br />
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
