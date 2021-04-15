@@ -16,7 +16,7 @@ export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): R
       <div className="tx-summary">
         <div className="tx-hash">
           <Text size="xl" strong as="span">
-            Hash:{' '}
+            Transaction hash:{' '}
           </Text>
           <InlineEthHashInfo
             textSize="xl"
