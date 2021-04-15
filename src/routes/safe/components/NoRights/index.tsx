@@ -12,7 +12,7 @@ const NoRights = () => (
   <Row>
     <Col center="xs" margin="md" sm={10} smOffset={2} start="sm" xs={12}>
       <Paragraph size="lg">
-        <Bold>Impossible load Safe, check its address and ownership</Bold>
+        <Bold>Not possible to add Safe, check its address and ownership</Bold>
       </Paragraph>
     </Col>
     <Col center="xs" margin="md" sm={10} smOffset={2} start="sm" xs={12}>

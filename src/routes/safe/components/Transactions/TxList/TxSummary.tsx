@@ -12,12 +12,13 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
   const explorerUrl = txHash ? getExplorerInfo(txHash) : null
   const nonce = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.nonce : undefined
   const created = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.submittedAt : undefined
+  const safeTxHash = isMultiSigExecutionDetails(detailedExecutionInfo) ? detailedExecutionInfo.safeTxHash : undefined
 
   return (
     <>
       <div className="tx-hash">
         <Text size="xl" strong as="span">
-          Hash:{' '}
+          Transaction hash:{' '}
         </Text>
         {txHash ? (
           <InlineEthHashInfo textSize="xl" hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
@@ -27,6 +28,14 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
           </Text>
         )}
       </div>
+      {safeTxHash !== undefined && (
+        <div className="tx-hash">
+          <Text size="xl" strong as="span">
+            SafeTxHash:{' '}
+          </Text>
+          <InlineEthHashInfo textSize="xl" hash={safeTxHash} shortenHash={8} showCopyBtn />
+        </div>
+      )}
       {nonce !== undefined && (
         <div className="tx-nonce">
           <Text size="xl" strong as="span">
