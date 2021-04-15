@@ -18,7 +18,7 @@ export const TxSummary = ({ txDetails }: { txDetails: ExpandedTxDetails }): Reac
     <>
       <div className="tx-hash">
         <Text size="xl" strong as="span">
-          Hash:{' '}
+          Transaction hash:{' '}
         </Text>
         {txHash ? (
           <InlineEthHashInfo textSize="xl" hash={txHash} shortenHash={8} showCopyBtn explorerUrl={explorerUrl} />
