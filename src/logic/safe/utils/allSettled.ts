@@ -2,7 +2,7 @@
  * Helper function to handle multiple async calls
  * It will return the expected value for each parameter passed when fulfilled or a `null` in case of an error
  * @param args
- * @returns ExpectedValues
+ * @returns Array<ExpectedValues>
  */
 export const allSettled = async <ExpectedValues extends unknown[]>(...args: unknown[]): Promise<ExpectedValues> => {
   const data = new Array(args.length).fill(null)
