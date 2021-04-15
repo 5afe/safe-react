@@ -15,7 +15,7 @@ import { secondary, sm } from 'src/theme/variables'
 import { LoadFormValues } from '../container/Load'
 
 const steps = ['Name and address', 'Owners', 'Review']
-const buttonLabels = ['Next', 'Review', 'Load']
+const buttonLabels = ['Next', 'Review', 'Add']
 
 const iconStyle = {
   color: secondary,
@@ -48,7 +48,7 @@ const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProp
           <IconButton disableRipple onClick={back} style={iconStyle}>
             <ChevronLeft />
           </IconButton>
-          <Heading tag="h2">Load existing Safe</Heading>
+          <Heading tag="h2">Add existing Safe</Heading>
         </Row>
         <Stepper<LoadFormValues>
           buttonLabels={buttonLabels}
