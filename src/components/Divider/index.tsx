@@ -5,7 +5,7 @@ import { Icon, Divider as DividerSRC } from '@gnosis.pm/safe-react-components'
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  margin: 4px 0;
+  margin: 8px 0;
 
   svg {
     margin: 0 12px 0 4px;
