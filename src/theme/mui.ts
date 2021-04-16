@@ -281,7 +281,7 @@ const theme = createMuiTheme({
           flexDirection: 'row',
           alignItems: 'normal',
           overflow: 'hidden',
-          maxHeight: '80px',
+          maxHeight: '160px',
           wordBreak: 'break-word',
           '& > img': {
             display: 'block',
