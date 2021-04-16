@@ -35,6 +35,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
+  // Aave v2
+  {
+    url: `https://app.aave.com/`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
   //Balancer Exchange
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmRb2VfPVYBrv6gi2zDywgVgTg3A19ZCRMqwL13Ez5f5AS`,
