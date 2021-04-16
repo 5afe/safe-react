@@ -52,7 +52,7 @@ jobs:
       - name: Install Node.js, NPM and Yarn
         uses: actions/setup-node@v2
         with:
-          node-version: 12
+          node-version: 14
 
       - name: Run yarn install
         run: yarn install --frozen-lockfile --network-concurrency 1
