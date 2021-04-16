@@ -32,15 +32,13 @@ import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/scre
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
+import Divider from 'src/components/Divider'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -234,14 +232,7 @@ const SendFunds = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
