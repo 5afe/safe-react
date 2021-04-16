@@ -9,8 +9,8 @@ export type TokenListResult = {
 }
 
 export type AppData = {
-  name?: string
   url: string
+  name?: string
   disabled?: boolean
   description?: string
   networks: number[]

@@ -153,9 +153,14 @@ export const staticAppsList: Array<StaticAppInfo> = [
 ]
 
 export const getAppsList = async (): Promise<AppData[]> => {
-  const result = await fetchSafeAppsList()
+  let result
+  try {
+    result = await fetchSafeAppsList()
+  } catch (error) {
+    console.error('Could not fetch remote apps list', error)
+  }
 
-  return result.apps && result.apps.length ? result.apps : staticAppsList
+  return result?.apps && result?.apps.length ? result.apps : staticAppsList
 }
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
