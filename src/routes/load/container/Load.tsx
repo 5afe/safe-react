@@ -66,7 +66,7 @@ const Load = (): React.ReactElement => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
     // TODO: review this check. It doesn't seems to be necessary at this point
     if (!safeAddress) {
-      console.error('failed to load Safe address', JSON.stringify(values))
+      console.error('failed to add Safe address', JSON.stringify(values))
       return
     }
 
