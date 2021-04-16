@@ -11,6 +11,9 @@ import Row from 'src/components/layout/Row'
 const StyledParagraph = styled(Paragraph)`
   && {
     font-size: ${lg};
+    white-space: nowrap;
+    max-width: 370px;
+    overflow: hidden;
   }
 `
 const IconImg = styled.img`
