@@ -2,8 +2,7 @@ import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  //clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
-  clientGatewayUrl: 'https://safe-client.mainnet.gnosis.io/v1',
+  clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
