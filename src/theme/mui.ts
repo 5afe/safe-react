@@ -279,6 +279,10 @@ const theme = createMuiTheme({
         '& > span': {
           display: 'flex',
           flexDirection: 'row',
+          alignItems: 'normal',
+          overflow: 'hidden',
+          maxHeight: '80px',
+          wordBreak: 'break-word',
           '& > img': {
             display: 'block',
             marginRight: '13px',
