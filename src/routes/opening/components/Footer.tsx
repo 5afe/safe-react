@@ -1,7 +1,7 @@
 import React, { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
 import { getExplorerInfo } from 'src/config'
@@ -75,7 +75,13 @@ export const ContinueFooter = ({
       variant="contained"
       data-testid="continue-btn"
     >
-      Get started
+      {continueButtonDisabled ? (
+        <>
+          <Loader size="xs" color="secondaryLight" /> Loading your safe
+        </>
+      ) : (
+        <>Get started</>
+      )}
     </Button>
   </FooterContainer>
 )

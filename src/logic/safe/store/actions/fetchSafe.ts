@@ -4,7 +4,7 @@ import { Dispatch } from 'redux'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { makeOwner } from 'src/logic/safe/store/models/owner'
-import { ModulePair, SafeOwner, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
+import { ModulePair, SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { allSettled } from 'src/logic/safe/utils/allSettled'
@@ -55,14 +55,14 @@ const extractRemoteSafeInfo = async (
 /**
  * Merges remote owner's information with the locally stored data.
  * If there's no remote data, it will go with the locally stored information.
- * @param {SafeInfo['owners']} remoteSafeOwners
- * @param {SafeRecordProps['owners']} localSafeOwners
- * @returns List<SafeOwners> | undefined
+ * @param {SafeInfo['owners'] | undefined} remoteSafeOwners
+ * @param {SafeRecordProps['owners'] | undefined} localSafeOwners
+ * @returns SafeRecordProps['owners'] | undefined
  */
 const extractSafeOwners = (
   remoteSafeOwners?: SafeInfo['owners'],
   localSafeOwners?: SafeRecordProps['owners'],
-): List<SafeOwner> | undefined => {
+): SafeRecordProps['owners'] | undefined => {
   if (remoteSafeOwners) {
     const remoteOwners = remoteSafeOwners.map(({ value }) => {
       const localOwner = localSafeOwners?.find(({ address }) => sameAddress(address, value))

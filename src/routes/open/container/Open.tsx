@@ -9,6 +9,7 @@ import { SafeDeployment } from 'src/routes/opening'
 import { Layout } from 'src/routes/open/components/Layout'
 import Page from 'src/components/layout/Page'
 import { getSafeDeploymentTransaction } from 'src/logic/contracts/safeContracts'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { checkReceiptStatus } from 'src/logic/wallets/ethTransactions'
 import {
   CreateSafeValues,
@@ -27,6 +28,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
+import { sleep } from 'src/utils/timer'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -90,8 +92,6 @@ export const getSafeProps = async (
 
 export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
-  const name = getSafeNameFrom(values)
-  const ownersNames = getNamesFrom(values)
   const ownerAddresses = getAccountsFrom(values)
   const safeCreationSalt = getSafeCreationSaltFrom(values)
 
@@ -108,9 +108,8 @@ export const createSafe = (values: CreateSafeValues, userAccount: string): Promi
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
       const safeAddress = receipt.events?.ProxyCreation.returnValues.proxy
-      const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
       // returning info for testing purposes, in app is fully async
-      return { safeAddress: safeProps.address, safeTx: receipt }
+      return { safeAddress, safeTx: receipt }
     })
     .catch((error) => {
       console.error(error)
@@ -192,7 +191,18 @@ const Open = (): React.ReactElement => {
       action: 'Created a safe',
     })
 
-    removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
+    let safeInfo
+    while (safeInfo === undefined) {
+      try {
+        // we wait first, as we just retrieved information with `getSafeProps`
+        await sleep(5000)
+        safeInfo = await getSafeInfo(safeAddress)
+      } catch (error) {
+        console.info('waiting for client-gateway to retrieve information', error)
+      }
+    }
+
+    await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
       pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
       state: {
