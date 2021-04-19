@@ -27,6 +27,9 @@ export const styles = createStyles({
   formContainer: {
     padding: `${md} ${lg}`,
     wordBreak: 'break-word',
+    maxHeight: '50vh',
+    overflow: 'hidden',
+    overflowY: 'auto',
   },
   value: {
     marginLeft: sm,
