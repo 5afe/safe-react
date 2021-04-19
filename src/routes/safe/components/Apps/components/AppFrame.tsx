@@ -277,7 +277,7 @@ const AppFrame = ({ appUrl }: Props): React.ReactElement => {
           <LoadingContainer style={{ flexDirection: 'column' }}>
             {appTimeout && (
               <Title size="xs">
-                The safe-app is taking longer than usual to load. There might be a problem with the safe-app provider.
+                The safe app is taking longer than usual to load. There might be a problem with the app provider.
               </Title>
             )}
             <Loader size="md" />

@@ -56,6 +56,8 @@ const Breadcrumb = styled.div`
   height: 51px;
 `
 
+const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
+
 const AppsList = (): React.ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
@@ -65,8 +67,6 @@ const AppsList = (): React.ReactElement => {
   const openAddAppModal = () => setIsAddAppModalOpen(true)
 
   const closeAddAppModal = () => setIsAddAppModalOpen(false)
-
-  const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
 
   if (!appList.length || !safeAddress) {
     return (
