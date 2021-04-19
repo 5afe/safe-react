@@ -50,10 +50,8 @@ const useAppList = (): UseAppListReturnType => {
       apps.forEach((app) => getAppInfoFromUrl(app.url).then(fetchAppCallback))
     }
 
-    if (!appList.length) {
-      loadApps()
-    }
-  }, [appList])
+    loadApps()
+  }, [])
 
   return {
     appList,

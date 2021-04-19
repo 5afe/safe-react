@@ -1,5 +1,7 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
+import IconButton from '@material-ui/core/IconButton'
+import { Icon } from '@gnosis.pm/safe-react-components'
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
@@ -58,6 +60,7 @@ export enum TriggerType {
 
 type Props = {
   onClick?: () => void
+  onRemoveClick?: () => void
   isLoading?: boolean
   className?: string
   name?: string
@@ -76,6 +79,7 @@ const AppCard = ({
   iconSize = 'md',
   buttonText,
   onClick = () => undefined,
+  onRemoveClick,
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
@@ -90,6 +94,12 @@ const AppCard = ({
 
   return (
     <StyledAppCard className={className} onClick={onClick}>
+      {
+        <IconButton>
+          <Icon size="sm" type="delete" color="error" />
+        </IconButton>
+      }
+
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
       {name && <AppName size="xs">{name}</AppName>}
