@@ -60,7 +60,7 @@ const ModalTitle = ({ goBack, iconUrl, title, onClose }: Props): React.ReactElem
           </GoBackWrapper>
         )}
         {iconUrl && <IconImg alt={title} src={iconUrl} />}
-        <StyledParagraph noMargin weight="bolder">
+        <StyledParagraph noMargin weight="bolder" title={title}>
           {title}
         </StyledParagraph>
       </TitleWrapper>
