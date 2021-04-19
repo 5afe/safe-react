@@ -8,7 +8,6 @@ on:
   pull_request:
     branches:
       - master
-      - development
   # Launches build when release is published
   release:
       types: [published]
