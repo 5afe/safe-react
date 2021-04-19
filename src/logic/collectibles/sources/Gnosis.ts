@@ -29,16 +29,13 @@ class Gnosis {
       erc721Assets: [],
       erc721Tokens: [],
     }
-    const [tokens] = await Promise.allSettled([fetchSafeCollectibles(safeAddress)])
 
-    switch (tokens.status) {
-      case 'fulfilled':
-        collectibles.erc721Assets = this._getAssetsFromTokens(tokens.value.data)
-        collectibles.erc721Tokens = tokens.value.data || []
-        break
-      case 'rejected':
-        console.error('no erc721 tokens for the current safe', tokens.reason)
-        break
+    try {
+      const tokens = await fetchSafeCollectibles(safeAddress)
+      collectibles.erc721Assets = this._getAssetsFromTokens(tokens.data)
+      collectibles.erc721Tokens = tokens.data || []
+    } catch (error) {
+      console.error('no erc721 tokens for the current safe', error)
     }
 
     return collectibles
