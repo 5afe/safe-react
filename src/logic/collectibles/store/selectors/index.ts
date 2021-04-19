@@ -28,6 +28,8 @@ export const nftAssetsFromNftTokensSelector = createSelector(
   nftAssetsToListSelector,
   nftAssetsAddressFromNftTokensSelector,
   (nftAssets, nftAssetsFromNftTokens): NFTAsset[] => {
-    return nftAssets.filter(({ address }) => nftAssetsFromNftTokens.includes(address))
+    return nftAssets
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter(({ address }) => nftAssetsFromNftTokens.includes(address))
   },
 )
