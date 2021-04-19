@@ -1,5 +1,5 @@
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import { List, Set, Map } from 'immutable'
+import { List } from 'immutable'
 import { Action, Dispatch } from 'redux'
 import { AbiItem } from 'web3-utils'
 
@@ -87,9 +87,8 @@ export const buildSafe = async (
     currentVersion: currentVersion ?? '',
     needsUpdate,
     featuresEnabled,
-    balances: localSafe?.balances || Map(),
+    balances: [],
     latestIncomingTxBlock: 0,
-    activeTokens: Set(),
     modules,
     spendingLimits,
   }
