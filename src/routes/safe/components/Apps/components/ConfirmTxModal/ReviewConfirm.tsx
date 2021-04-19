@@ -3,10 +3,8 @@ import { Text, EthHashInfo, ModalFooterConfirmation } from '@gnosis.pm/safe-reac
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
-import DividerLine from 'src/components/DividerLine'
 import TextBox from 'src/components/TextBox'
 import ModalTitle from 'src/components/ModalTitle'
-import Hairline from 'src/components/layout/Hairline'
 import Heading from 'src/components/layout/Heading'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
@@ -26,9 +24,11 @@ import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
+import Divider from 'src/components/Divider'
 
 import GasEstimationInfo from '../GasEstimationInfo'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
+import Hairline from 'src/components/layout/Hairline'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -225,7 +225,7 @@ export const ReviewConfirm = ({
               <Text size="md" strong>{`${ethBalance} ${nativeCoin.symbol}`}</Text>
             </StyledBlock>
 
-            <DividerLine withArrow />
+            <Divider withArrow />
 
             {/* Txs decoded */}
             <BasicTxInfo
@@ -237,7 +237,7 @@ export const ReviewConfirm = ({
             <DecodeTxsWrapper>
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
-            {!isMultiSend && <DividerLine withArrow={false} />}
+            {!isMultiSend && <Divider />}
             {/* Warning gas estimation */}
             {params?.safeTxGas && (
               <div className="section">
