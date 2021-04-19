@@ -16,6 +16,7 @@ import {
   minValue,
   minMaxLength,
   mustBeFloat,
+  mustBeEthereumAddress,
   required,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
@@ -122,6 +123,7 @@ const SendFunds = ({
   })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
 
   useEffect(() => {
     if (selectedEntry === null && pristine) {
@@ -143,7 +145,7 @@ const SendFunds = ({
   const currentUser = useSelector(userAccountSelector)
 
   const sendFundsValidation = (values) => {
-    const { amount, token: tokenAddress, txType, recipientAddress } = values ?? {}
+    const { amount, token: tokenAddress, txType } = values ?? {}
     if (!amount || !tokenAddress) {
       return
     }
@@ -162,11 +164,8 @@ const SendFunds = ({
       ),
     )(amount)
 
-    const addressValidation = composeValidators(minMaxLength(1, 42))(recipientAddress)
-
     return {
       amount: amountValidation,
-      recipientAddress: addressValidation,
     }
   }
 
@@ -211,11 +210,15 @@ const SendFunds = ({
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
             const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName || '',
-              address: scannedAddress,
-            })
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -287,6 +290,7 @@ const SendFunds = ({
                       <AddressBookInput
                         fieldMutator={mutators.setRecipient}
                         pristine={pristine}
+                        errorMsg={addressErrorMsg}
                         setIsValidAddress={setIsValidAddress}
                         setSelectedEntry={setSelectedEntry}
                       />
