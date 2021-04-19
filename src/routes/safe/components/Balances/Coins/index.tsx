@@ -77,7 +77,7 @@ const Coins = (props: Props): React.ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
   const selectedCurrency = useSelector(currentCurrencySelector)
-  const activeTokens = useSelector(extendedSafeTokensSelector)
+  const safeTokens = useSelector(extendedSafeTokensSelector)
   const granted = useSelector(grantedSelector)
   const { trackEvent } = useAnalytics()
 
@@ -85,22 +85,14 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(activeTokens, selectedCurrency), [
-    activeTokens,
+  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(safeTokens, selectedCurrency), [
+    safeTokens,
     selectedCurrency,
   ])
 
   return (
     <TableContainer>
-      <Table
-        columns={columns}
-        data={filteredData}
-        defaultFixed
-        defaultOrderBy={BALANCE_TABLE_ASSET_ID}
-        defaultRowsPerPage={100}
-        label="Balances"
-        size={filteredData.size}
-      >
+      <Table columns={columns} data={filteredData} defaultRowsPerPage={100} label="Balances" size={filteredData.size}>
         {(sortedData) =>
           sortedData.map((row, index) => (
             <TableRow className={classes.hide} data-testid={BALANCE_ROW_TEST_ID} key={index} tabIndex={-1}>
