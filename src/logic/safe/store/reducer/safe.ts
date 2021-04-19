@@ -1,4 +1,4 @@
-import { Map, Set, List } from 'immutable'
+import { Map, List } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
@@ -25,14 +25,10 @@ export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
   const names = storedSafe.owners.map((owner) => owner.name)
   const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
   const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
-  const activeTokens = Set(storedSafe.activeTokens)
-  const balances = Map(storedSafe.balances)
 
   return {
     ...storedSafe,
     owners,
-    balances,
-    activeTokens,
     latestIncomingTxBlock: 0,
     modules: null,
   }
