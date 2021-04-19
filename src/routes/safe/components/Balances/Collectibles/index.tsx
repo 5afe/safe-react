@@ -99,10 +99,12 @@ const Collectibles = (): React.ReactElement => {
     <Card className={classes.cardOuter}>
       <div className={classes.cardInner}>
         {/* No collectibles */}
-        {!nftAssetsFromNftTokens.length && <Paragraph className={classes.noData}>No collectibles available</Paragraph>}
+        {nftAssetsFromNftTokens.length === 0 && (
+          <Paragraph className={classes.noData}>No collectibles available</Paragraph>
+        )}
 
         {/* collectibles List*/}
-        {nftAssetsFromNftTokens.length &&
+        {nftAssetsFromNftTokens.length > 0 &&
           nftAssetsFromNftTokens.map((nftAsset) => {
             return (
               <React.Fragment key={nftAsset.slug}>
