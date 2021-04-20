@@ -1,7 +1,5 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
-import IconButton from '@material-ui/core/IconButton'
-import { Icon } from '@gnosis.pm/safe-react-components'
 import { fade } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
@@ -60,7 +58,6 @@ export enum TriggerType {
 
 type Props = {
   onClick?: () => void
-  onRemoveClick?: () => void
   isLoading?: boolean
   className?: string
   name?: string
