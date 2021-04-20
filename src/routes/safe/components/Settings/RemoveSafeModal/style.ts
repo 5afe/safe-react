@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { error, lg, md, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   heading: {
@@ -24,9 +24,7 @@ export const styles = createStyles({
     justifyContent: 'center',
   },
   buttonRemove: {
-    color: '#fff',
-    backgroundColor: error,
-    height: '42px',
+    marginLeft: '16px',
   },
   name: {
     textOverflow: 'ellipsis',
