@@ -13,6 +13,7 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types.d'
 import AddAppForm from './AddAppForm'
+import { staticAppsList } from '../utils'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -69,11 +70,12 @@ const IconBtn = styled(IconButton)`
 `
 
 const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
+const isCustomApp = (appUrl: string) => !staticAppsList.some(({ url }) => url === appUrl)
 
 const AppsList = (): React.ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const { appList } = useAppList()
+  const { appList, removeApp } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
 
   const openAddAppModal = () => setIsAddAppModalOpen(true)
@@ -106,14 +108,17 @@ const AppsList = (): React.ReactElement => {
                 <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
                   <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
                 </StyledLink>
-                <IconBtn
-                  onClick={(e) => {
-                    console.log('clicked')
-                    e.stopPropagation()
-                  }}
-                >
-                  <Icon size="sm" type="delete" color="error" />
-                </IconBtn>
+                {isCustomApp(a.url) && (
+                  <IconBtn
+                    onClick={(e) => {
+                      e.stopPropagation()
+
+                      removeApp(a.url)
+                    }}
+                  >
+                    <Icon size="sm" type="delete" color="error" />
+                  </IconBtn>
+                )}
               </AppContainer>
             ))}
         </CardsWrapper>

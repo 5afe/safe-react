@@ -1,11 +1,12 @@
-import { useState, useEffect } from 'react'
-import { loadFromStorage } from 'src/utils/storage'
+import { useState, useEffect, useCallback } from 'react'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp, staticAppsList } from '../utils'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
+  removeApp: (appUrl: string) => void
 }
 
 const useAppList = (): UseAppListReturnType => {
@@ -53,8 +54,19 @@ const useAppList = (): UseAppListReturnType => {
     loadApps()
   }, [])
 
+  const removeApp = useCallback((appUrl: string): void => {
+    setAppList((list) => {
+      const newList = list.filter(({ url }) => url !== appUrl)
+      const persistedAppList = newList.map(({ url, disabled }) => ({ url, disabled }))
+      saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+
+      return newList
+    })
+  }, [])
+
   return {
     appList,
+    removeApp,
   }
 }
 
