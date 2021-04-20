@@ -36,7 +36,7 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // Aave v2
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmVg7aXr5S8sT2iUdUwdkfTJNknmB7rcE3t92HiGoVsYDj`,
+    url: `https://app.aave.com/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -67,9 +67,21 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // dHedge
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaiemnumMaaK9wE1pbMfm3YSBUpcFNgDh3Bf6VZCZq57Q`,
+    url: `https://app.dhedge.org/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // ENS
+  {
+    url: `https://app.ens.domains/`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
+  // Gnosis Starter
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdCwUutYH8GXXNgTShB4cKJ8YJq4PqZ55QxMznKc9DbeS`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Idle
   {
@@ -82,6 +94,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmde8dsa9r8bB59CNGww6LRiaZABuKaJfuzvu94hFkatJC`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Liquity
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Mushrooms finance
   {

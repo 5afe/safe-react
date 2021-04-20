@@ -133,7 +133,7 @@ type BaseCustom = {
   dataSize: string
   value: string
   isCancellation: boolean
-  toInfo: AddressInfo
+  toInfo?: AddressInfo
 }
 
 type Custom = BaseCustom & {
