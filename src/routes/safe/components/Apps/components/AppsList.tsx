@@ -67,15 +67,25 @@ const Breadcrumb = styled.div`
   height: 51px;
 `
 
-const AppContainer = styled.div`
-  position: relative;
-`
-
 const IconBtn = styled(IconButton)`
   position: absolute;
-  top: 15px;
-  right: 15px;
+  top: 10px;
+  right: 10px;
   z-index: 10;
+  padding: 5px;
+  opacity: 0;
+
+  transition: opacity 0.2s ease-in-out;
+`
+
+const AppContainer = styled.div`
+  position: relative;
+
+  &:hover {
+    ${IconBtn} {
+      opacity: 1;
+    }
+  }
 `
 
 const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
@@ -120,6 +130,7 @@ const AppsList = (): React.ReactElement => {
                 </StyledLink>
                 {isCustomApp(a.url) && (
                   <IconBtn
+                    title="Remove"
                     onClick={(e) => {
                       e.stopPropagation()
 
