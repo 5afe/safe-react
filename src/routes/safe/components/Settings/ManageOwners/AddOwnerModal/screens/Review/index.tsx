@@ -236,12 +236,12 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           </Block>
           <Hairline />
           <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
+            <Button minWidth={140} onClick={onClickBack}>
               Back
             </Button>
             <Button
+              className={classes.submitButton}
               color="primary"
-              minHeight={42}
               minWidth={140}
               onClick={() => onSubmit(txParameters)}
               testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}

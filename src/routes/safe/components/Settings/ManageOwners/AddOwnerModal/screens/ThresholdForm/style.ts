@@ -35,6 +35,9 @@ export const styles = createStyles({
     height: '84px',
     justifyContent: 'center',
   },
+  reviewButton: {
+    marginLeft: '16px',
+  },
   inputRow: {
     position: 'relative',
   },

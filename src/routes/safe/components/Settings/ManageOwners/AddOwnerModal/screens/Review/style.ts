@@ -35,6 +35,9 @@ export const styles = createStyles({
     height: '84px',
     justifyContent: 'center',
   },
+  submitButton: {
+    marginLeft: '16px',
+  },
   details: {
     padding: lg,
     borderRight: `solid 2px ${border}`,

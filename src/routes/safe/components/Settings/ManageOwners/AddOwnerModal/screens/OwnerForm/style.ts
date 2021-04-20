@@ -29,4 +29,7 @@ export const styles = createStyles({
     height: '84px',
     justifyContent: 'center',
   },
+  nextButton: {
+    marginLeft: '16px',
+  },
 })
