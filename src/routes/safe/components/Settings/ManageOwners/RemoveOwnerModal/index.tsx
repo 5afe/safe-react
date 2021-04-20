@@ -117,7 +117,12 @@ export const RemoveOwnerModal = ({
           <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
+          <ThresholdForm
+            onClickBack={onClickBack}
+            initialValues={{ threshold: values.threshold }}
+            onClose={onClose}
+            onSubmit={thresholdSubmitted}
+          />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
           <ReviewRemoveOwnerModal

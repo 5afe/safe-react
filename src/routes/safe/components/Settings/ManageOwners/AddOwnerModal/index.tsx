@@ -116,9 +116,16 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
       title="Add owner to Safe"
     >
       <>
-        {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} />}
+        {activeScreen === 'selectOwner' && (
+          <OwnerForm initialValues={values} onClose={onClose} onSubmit={ownerSubmitted} />
+        )}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
+          <ThresholdForm
+            onClickBack={onClickBack}
+            initialValues={{ threshold: values.threshold }}
+            onClose={onClose}
+            onSubmit={thresholdSubmitted}
+          />
         )}
         {activeScreen === 'reviewAddOwner' && (
           <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />

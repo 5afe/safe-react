@@ -24,13 +24,18 @@ export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-n
 
 const useStyles = makeStyles(styles)
 
+type ThresholdValues = {
+  threshold: string
+}
+
 type Props = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (txParameters: TxParameters) => void
+  initialValues: ThresholdValues
 }
 
-export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
+export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
   const owners = useSelector(safeOwnersSelector)
   const threshold = useSelector(safeThresholdSelector) as number
@@ -51,7 +56,10 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm initialValues={{ threshold: defaultThreshold.toString() }} onSubmit={handleSubmit}>
+      <GnoForm
+        initialValues={{ threshold: initialValues.threshold || defaultThreshold.toString() }}
+        onSubmit={handleSubmit}
+      >
         {() => {
           const numOptions = owners && owners.size > 1 ? owners.size - 1 : 1
 
