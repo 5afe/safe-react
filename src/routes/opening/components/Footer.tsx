@@ -30,6 +30,10 @@ const FooterContainer = styled.div`
   }
 `
 
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
   const explorerInfo = getExplorerInfo(safeCreationTxHash)
   const { url, alt } = explorerInfo()
@@ -77,7 +81,7 @@ export const ContinueFooter = ({
     >
       {continueButtonDisabled ? (
         <>
-          <Loader size="xs" color="secondaryLight" /> Loading your safe
+          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your safe</LoaderText>
         </>
       ) : (
         <>Get started</>
