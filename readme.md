@@ -1,6 +1,19 @@
-# Gnosis Safe Multisig
+# Gnosis Safe
 
-The most trusted platform to store digital assets on Ethereum
+The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
+
+This repository contains the code for the frontend code hosted at [https://gnosis-safe.io/app/]
+
+Besides Ethereum Mainnet, the following networks are supported:
+
+- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
+- [xDai](https://xdai.gnosis-safe.io/app/)
+- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
+- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+
+For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
+
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
 
 ## Getting Started
 
@@ -132,17 +145,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
 
-## Authors
-
-- Germán Martínez([germartinez](https://github.com/germartinez))
-- Mikhail Mikheev([mikheevm](https://github.com/mikheevm))
-
-See the full list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Thanks for Gnosis Team for providing the Safe contracts.

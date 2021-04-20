@@ -9,7 +9,7 @@ import {
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
-  tryOffchainSigning,
+  tryOffChainSigning,
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
@@ -118,7 +118,7 @@ export const createTransaction = (
 
   try {
     if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
-      const signature = await tryOffchainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet)
+      const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
       if (signature) {
         dispatch(closeSnackbarAction({ key: beforeExecutionKey }))

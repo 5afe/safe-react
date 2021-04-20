@@ -255,7 +255,8 @@ const AddressBookTable = (): ReactElement => {
         activeScreenType="chooseTxType"
         isOpen={sendFundsModalOpen}
         onClose={() => setSendFundsModalOpen(false)}
-        recipientAddress={selectedEntry && selectedEntry.entry ? selectedEntry.entry.address : undefined}
+        recipientAddress={selectedEntry?.entry?.address}
+        recipientName={selectedEntry?.entry?.name}
       />
     </>
   )
