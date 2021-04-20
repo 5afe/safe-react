@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
-import { GenericModal, IconText, Loader, Menu } from '@gnosis.pm/safe-react-components'
+import { GenericModal, IconText, Loader, Menu, Icon } from '@gnosis.pm/safe-react-components'
+import IconButton from '@material-ui/core/IconButton'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
@@ -56,6 +57,17 @@ const Breadcrumb = styled.div`
   height: 51px;
 `
 
+const AppContainer = styled.div`
+  position: relative;
+`
+
+const IconBtn = styled(IconButton)`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  z-index: 10;
+`
+
 const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
 
 const AppsList = (): React.ReactElement => {
@@ -90,9 +102,19 @@ const AppsList = (): React.ReactElement => {
           {appList
             .filter((a) => a.fetchStatus !== SAFE_APP_FETCH_STATUS.ERROR)
             .map((a) => (
-              <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
-                <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
-              </StyledLink>
+              <AppContainer key={a.url}>
+                <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
+                  <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
+                </StyledLink>
+                <IconBtn
+                  onClick={(e) => {
+                    console.log('clicked')
+                    e.stopPropagation()
+                  }}
+                >
+                  <Icon size="sm" type="delete" color="error" />
+                </IconBtn>
+              </AppContainer>
             ))}
         </CardsWrapper>
 

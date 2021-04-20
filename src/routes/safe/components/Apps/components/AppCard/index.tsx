@@ -79,7 +79,6 @@ const AppCard = ({
   iconSize = 'md',
   buttonText,
   onClick = () => undefined,
-  onRemoveClick,
 }: Props): React.ReactElement => {
   if (isLoading) {
     return (
@@ -94,12 +93,6 @@ const AppCard = ({
 
   return (
     <StyledAppCard className={className} onClick={onClick}>
-      {
-        <IconButton>
-          <Icon size="sm" type="delete" color="error" />
-        </IconButton>
-      }
-
       <IconImg alt={`${name || 'App'} Logo`} src={iconUrl} onError={setAppImageFallback} size={iconSize} />
 
       {name && <AppName size="xs">{name}</AppName>}
