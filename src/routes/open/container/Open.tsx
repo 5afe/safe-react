@@ -1,4 +1,5 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
+import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
@@ -84,8 +85,7 @@ export const getSafeProps = async (
   ownerAddresses: string[],
 ): Promise<SafeRecordProps> => {
   const safeProps = await buildSafe(safeAddress, safeName)
-  const owners = getOwnersFrom(ownersNames, ownerAddresses)
-  safeProps.owners = owners
+  safeProps.owners = getOwnersFrom(ownersNames, ownerAddresses)
 
   return safeProps
 }
@@ -191,16 +191,16 @@ const Open = (): React.ReactElement => {
       action: 'Created a safe',
     })
 
-    let safeInfo
-    while (safeInfo === undefined) {
-      try {
-        // we wait first, as we just retrieved information with `getSafeProps`
-        await sleep(5000)
-        safeInfo = await getSafeInfo(safeAddress)
-      } catch (error) {
-        console.info('waiting for client-gateway to retrieve information', error)
-      }
-    }
+    // a default 5s wait before starting to request safe information
+    await sleep(5000)
+
+    await backOff(() => getSafeInfo(safeAddress), {
+      startingDelay: 750,
+      retry: (e) => {
+        console.info('waiting for client-gateway to provide safe information', e)
+        return true
+      },
+    })
 
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
