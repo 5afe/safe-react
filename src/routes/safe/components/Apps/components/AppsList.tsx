@@ -1,7 +1,16 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
-import { GenericModal, IconText, Loader, Menu, Icon } from '@gnosis.pm/safe-react-components'
+import {
+  GenericModal,
+  IconText,
+  Loader,
+  Menu,
+  Icon,
+  ModalFooterConfirmation,
+  Title,
+  Text,
+} from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
@@ -77,6 +86,7 @@ const AppsList = (): React.ReactElement => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const { appList, removeApp } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
+  const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
 
   const openAddAppModal = () => setIsAddAppModalOpen(true)
 
@@ -113,7 +123,7 @@ const AppsList = (): React.ReactElement => {
                     onClick={(e) => {
                       e.stopPropagation()
 
-                      removeApp(a.url)
+                      setAppToRemove(a)
                     }}
                   >
                     <Icon size="sm" type="delete" color="error" />
@@ -137,6 +147,29 @@ const AppsList = (): React.ReactElement => {
           title="Add custom app"
           body={<AddAppForm closeModal={closeAddAppModal} appList={appList} />}
           onClose={closeAddAppModal}
+        />
+      )}
+
+      {appToRemove && (
+        <GenericModal
+          title={
+            <Title size="sm" withoutMargin>
+              Remove app
+            </Title>
+          }
+          body={<Text size="md">This action will remove {appToRemove.name} from the interface</Text>}
+          footer={
+            <ModalFooterConfirmation
+              cancelText="Cancel"
+              handleCancel={() => setAppToRemove(null)}
+              handleOk={() => {
+                removeApp(appToRemove.url)
+                setAppToRemove(null)
+              }}
+              okText="Remove"
+            />
+          }
+          onClose={() => setAppToRemove(null)}
         />
       )}
     </Wrapper>
