@@ -6,12 +6,14 @@ export const styles = createStyles({
     padding: lg,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
+    height: '74px',
   },
   manage: {
     fontSize: lg,
   },
   container: {
     padding: `${md} ${lg}`,
+    minHeight: '200px',
   },
   close: {
     height: '35px',
@@ -24,6 +26,9 @@ export const styles = createStyles({
   buttonEdit: {
     color: '#fff',
     backgroundColor: error,
+  },
+  saveButton: {
+    marginLeft: '16px',
   },
   open: {
     paddingLeft: sm,
