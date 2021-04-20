@@ -145,7 +145,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
             <>
               <Row align="center" className={classes.modalHeading} grow>
                 <Paragraph className={classes.modalManage} noMargin weight="bolder">
-                  Remove Module
+                  Remove module
                 </Paragraph>
                 <IconButton disableRipple onClick={onClose}>
                   <Close className={classes.modalClose} />
@@ -203,10 +203,11 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               </Row>
               <Row align="center" className={classes.modalButtonRow}>
                 <FooterWrapper>
-                  <Button size="md" color="secondary" onClick={onClose}>
+                  <Button size="md" color="primary" variant="outlined" onClick={onClose}>
                     Cancel
                   </Button>
                   <Button
+                    className={classes.removeButton}
                     color="error"
                     size="md"
                     variant="contained"
