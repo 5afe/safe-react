@@ -67,9 +67,15 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // dHedge
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaiemnumMaaK9wE1pbMfm3YSBUpcFNgDh3Bf6VZCZq57Q`,
+    url: `https://app.dhedge.org/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // ENS
+  {
+    url: `https://app.ens.domains/`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Idle
   {
