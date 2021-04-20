@@ -44,7 +44,7 @@ export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
 const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   const modalInfo = {
-    title: 'Execute Transaction Rejection',
+    title: 'Execute transaction rejection',
     description: 'This action will execute this transaction.',
   }
 
@@ -53,7 +53,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   }
 
   if (thresholdReached) {
-    modalInfo.title = 'Execute Transaction'
+    modalInfo.title = 'Execute transaction'
     modalInfo.description =
       'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
   } else {
