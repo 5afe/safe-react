@@ -77,6 +77,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
+  // Gnosis Starter
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdCwUutYH8GXXNgTShB4cKJ8YJq4PqZ55QxMznKc9DbeS`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // Idle
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTvrLwJtyjG8QFHgvqdPhcV5DBMQ7oZceSU4uvPw9vQaj`,
@@ -88,6 +94,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmde8dsa9r8bB59CNGww6LRiaZABuKaJfuzvu94hFkatJC`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Liquity
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Mushrooms finance
   {
