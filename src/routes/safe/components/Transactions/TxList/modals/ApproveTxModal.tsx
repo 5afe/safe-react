@@ -409,6 +409,7 @@ export const ApproveTxModal = ({
                   Close
                 </Button>
                 <Button
+                  className={classes.submitButton}
                   color={isCancelTx ? 'secondary' : 'primary'}
                   minHeight={42}
                   minWidth={214}

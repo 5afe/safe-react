@@ -26,6 +26,9 @@ export const styles = createStyles({
     width: '100%',
     borderTop: `1px solid ${border}`,
   },
+  submitButton: {
+    marginLeft: '16px',
+  },
   nonceNumber: {
     marginTop: sm,
     fontSize: md,
