@@ -51,7 +51,7 @@ export const styles = createStyles({
     lineHeight: '1.43',
   },
   buttonRow: {
-    height: '84px',
+    padding: '25px',
     justifyContent: 'center',
     '& > button': {
       fontFamily: 'Averta',
