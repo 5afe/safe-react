@@ -5,7 +5,7 @@ export const styles = () => ({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     lineHeight: 'normal',
@@ -30,6 +30,9 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+  },
+  nextButton: {
+    marginLeft: '16px',
   },
   name: {
     textOverflow: 'ellipsis',

@@ -264,12 +264,12 @@ export const ReviewRemoveOwnerModal = ({
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
+            <Button minWidth={140} onClick={onClickBack}>
               Back
             </Button>
             <Button
+              className={classes.submitButton}
               color="primary"
-              minHeight={42}
               minWidth={140}
               onClick={() => onSubmit(txParameters)}
               testId={REMOVE_OWNER_REVIEW_BTN_TEST_ID}

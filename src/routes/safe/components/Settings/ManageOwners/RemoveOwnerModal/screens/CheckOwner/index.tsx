@@ -62,12 +62,12 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minHeight={42} minWidth={140} onClick={onClose}>
+        <Button minWidth={140} onClick={onClose}>
           Cancel
         </Button>
         <Button
+          className={classes.nextButton}
           color="primary"
-          minHeight={42}
           minWidth={140}
           onClick={handleSubmit}
           testId={REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID}

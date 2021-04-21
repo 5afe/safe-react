@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     lineHeight: 'normal',
@@ -34,6 +34,9 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+  },
+  reviewButton: {
+    marginLeft: '16px',
   },
   inputRow: {
     position: 'relative',
