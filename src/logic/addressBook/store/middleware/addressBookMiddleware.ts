@@ -23,11 +23,7 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
     const safes = safesListSelector(state)
 
     if (addressBook.length) {
-      const filteredSafeAddresses = safes
-        .filter((safe) => !safe.loadedViaUrl)
-        .map((safe) => safe.address)
-        .toJS()
-      await saveAddressBook(addressBook.filter((entry) => filteredSafeAddresses.includes(entry.address)))
+      await saveAddressBook(addressBook)
     }
 
     switch (action.type) {
