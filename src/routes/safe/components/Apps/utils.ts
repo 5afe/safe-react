@@ -6,6 +6,7 @@ import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -31,6 +32,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
   // Aave
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmQ3w2ezp2zx3u2LYQHyuNzMrLDJFjyL1rjAFTjNMcQ4cK`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Aave v2
+  {
+    url: `https://app.aave.com/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
@@ -61,9 +68,21 @@ export const staticAppsList: Array<StaticAppInfo> = [
   },
   // dHedge
   {
-    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmaiemnumMaaK9wE1pbMfm3YSBUpcFNgDh3Bf6VZCZq57Q`,
+    url: `https://app.dhedge.org/`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // ENS
+  {
+    url: `https://app.ens.domains/`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
+  // Gnosis Starter
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdCwUutYH8GXXNgTShB4cKJ8YJq4PqZ55QxMznKc9DbeS`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Idle
   {
@@ -76,6 +95,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmde8dsa9r8bB59CNGww6LRiaZABuKaJfuzvu94hFkatJC`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Liquity
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Mushrooms finance
   {
@@ -150,6 +175,17 @@ export const staticAppsList: Array<StaticAppInfo> = [
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
 ]
+
+export const getAppsList = async (): Promise<AppData[]> => {
+  let result
+  try {
+    result = await fetchSafeAppsList()
+  } catch (error) {
+    console.error('Could not fetch remote apps list', error)
+  }
+
+  return result?.apps && result?.apps.length ? result.apps : staticAppsList
+}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {

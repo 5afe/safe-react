@@ -19,7 +19,7 @@ export const styles = createStyles({
   },
   detailsContainer: {
     backgroundColor: background,
-    maxHeight: '420px',
+    maxHeight: '450px',
   },
   buttonRow: {
     height: '84px',
