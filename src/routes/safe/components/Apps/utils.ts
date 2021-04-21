@@ -6,6 +6,7 @@ import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -95,6 +96,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
+  // Liquity
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // Mushrooms finance
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmT96aES2YA9BssByc6DVizQDkofmKRErs8gJyqWipjyS8`,
@@ -168,6 +175,17 @@ export const staticAppsList: Array<StaticAppInfo> = [
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
 ]
+
+export const getAppsList = async (): Promise<AppData[]> => {
+  let result
+  try {
+    result = await fetchSafeAppsList()
+  } catch (error) {
+    console.error('Could not fetch remote apps list', error)
+  }
+
+  return result?.apps && result?.apps.length ? result.apps : staticAppsList
+}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
