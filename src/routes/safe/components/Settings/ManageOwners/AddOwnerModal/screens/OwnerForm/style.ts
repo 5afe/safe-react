@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     color: secondaryText,
