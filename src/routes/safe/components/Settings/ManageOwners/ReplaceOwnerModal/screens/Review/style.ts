@@ -9,7 +9,7 @@ export const styles = createStyles({
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '75px',
   },
   annotation: {
     color: secondaryText,
@@ -37,6 +37,9 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+  },
+  submitButton: {
+    marginLeft: '16px',
   },
   details: {
     padding: lg,
