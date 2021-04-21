@@ -1,16 +1,30 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp, staticAppsList } from '../utils'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } from '../utils'
+import { AppData } from '../api/fetchSafeAppsList'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
   removeApp: (appUrl: string) => void
+  staticAppsList: AppData[]
 }
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
+  const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
+
+  useEffect(() => {
+    const loadAppsList = async () => {
+      const remoteAppsList = await getAppsList()
+      setStaticAppsList(remoteAppsList)
+    }
+
+    if (!staticAppsList.length) {
+      loadAppsList()
+    }
+  }, [staticAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -43,16 +57,25 @@ const useAppList = (): UseAppListReturnType => {
         .filter((app) => (!app.networks ? true : app.networks.includes(getNetworkId())))
         .map((app) => ({
           ...getEmptySafeApp(),
+          ...app,
           url: app.url.trim(),
         }))
 
       setAppList(apps)
 
-      apps.forEach((app) => getAppInfoFromUrl(app.url).then(fetchAppCallback))
+      apps.forEach((app) => {
+        if (!app.name || app.name === 'unknown') {
+          // We are using legacy mode, we have to fetch info from manifest
+          getAppInfoFromUrl(app.url).then(fetchAppCallback)
+        } else {
+          // We already have manifest information so we directly add the app
+          fetchAppCallback(app)
+        }
+      })
     }
 
     loadApps()
-  }, [])
+  }, [staticAppsList])
 
   const removeApp = useCallback((appUrl: string): void => {
     setAppList((list) => {
@@ -66,6 +89,7 @@ const useAppList = (): UseAppListReturnType => {
 
   return {
     appList,
+    staticAppsList,
     removeApp,
   }
 }
