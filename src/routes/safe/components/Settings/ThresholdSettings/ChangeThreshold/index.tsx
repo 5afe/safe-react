@@ -218,6 +218,7 @@ export const ChangeThresholdModal = ({
                     Cancel
                   </Button>
                   <StyledButton
+                    className={classes.submitButton}
                     color="primary"
                     size="md"
                     type="submit"

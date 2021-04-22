@@ -34,6 +34,9 @@ export const styles = createStyles({
     bottom: 0,
     width: '100%',
   },
+  submitButton: {
+    marginLeft: '16px',
+  },
   inputRow: {
     position: 'relative',
   },
