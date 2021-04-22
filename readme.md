@@ -122,7 +122,7 @@ This is done manually by the devops team for extra safety.
 
 ## Releasing to production
 
-We prepare a new release every sprint. Sprints are two week long.
+We prepare a new release every sprint. Sprints are two weeks long.
 
 * A separate code-freeze branch named `release/X.Y.Z` is created
 * The QA team do regression testing on this branch
