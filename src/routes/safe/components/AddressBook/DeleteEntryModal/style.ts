@@ -5,6 +5,7 @@ export const styles = () => ({
     padding: lg,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
+    height: '74px',
   },
   manage: {
     fontSize: lg,
@@ -23,6 +24,7 @@ export const styles = () => ({
   buttonDelete: {
     color: '#fff',
     backgroundColor: error,
+    marginLeft: '16px',
   },
   buttonCancel: {
     color: '#008c73',
