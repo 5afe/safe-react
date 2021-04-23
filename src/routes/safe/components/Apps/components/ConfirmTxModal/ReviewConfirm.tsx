@@ -1,13 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { Text, EthHashInfo, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
 import DividerLine from 'src/components/DividerLine'
-import TextBox from 'src/components/TextBox'
 import ModalTitle from 'src/components/ModalTitle'
 import Hairline from 'src/components/layout/Hairline'
-import Heading from 'src/components/layout/Heading'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
@@ -27,14 +25,9 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 
-import GasEstimationInfo from '../GasEstimationInfo'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 
 const { nativeCoin } = getNetworkInfo()
-
-const StyledTextBox = styled(TextBox)`
-  max-width: 444px;
-`
 
 const Container = styled.div`
   max-width: 480px;
@@ -90,8 +83,7 @@ export const ReviewConfirm = ({
   onTxReject,
   areTxsMalformed,
   showDecodedTxData,
-}: Props): React.ReactElement => {
-  const [estimatedSafeTxGas, setEstimatedSafeTxGas] = useState(0)
+}: Props): ReactElement => {
   const isMultiSend = txs.length > 1
   const [decodedData, setDecodedData] = useState<DecodedData | null>(null)
   const dispatch = useDispatch()
@@ -133,12 +125,6 @@ export const ReviewConfirm = ({
     manualGasLimit,
   })
 
-  useEffect(() => {
-    if (params?.safeTxGas) {
-      setEstimatedSafeTxGas(gasEstimation)
-    }
-  }, [params, gasEstimation])
-
   // Decode tx data.
   useEffect(() => {
     const decodeTxData = async () => {
@@ -171,9 +157,7 @@ export const ReviewConfirm = ({
           origin: app.id,
           navigateToTransactionsTab: false,
           txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas
-            ? Number(txParameters.safeTxGas)
-            : Math.max(params?.safeTxGas || 0, estimatedSafeTxGas),
+          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
           ethParameters: txParameters,
           notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
         },
@@ -206,7 +190,7 @@ export const ReviewConfirm = ({
     <EditableTxParameters
       ethGasLimit={gasLimit}
       ethGasPrice={gasPriceFormatted}
-      safeTxGas={gasEstimation.toString()}
+      safeTxGas={Math.max(gasEstimation, params?.safeTxGas || 0).toString()}
       closeEditModalCallback={closeEditModalCallback}
       isOffChainSignature={isOffChainSignature}
       isExecution={isExecution}
@@ -238,18 +222,6 @@ export const ReviewConfirm = ({
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
             {!isMultiSend && <DividerLine withArrow={false} />}
-            {/* Warning gas estimation */}
-            {params?.safeTxGas && (
-              <div className="section">
-                <Heading tag="h3">SafeTxGas</Heading>
-                <StyledTextBox>{params?.safeTxGas}</StyledTextBox>
-                <GasEstimationInfo
-                  appEstimation={params.safeTxGas}
-                  internalEstimation={estimatedSafeTxGas}
-                  loading={txEstimationExecutionStatus === EstimationStatus.LOADING}
-                />
-              </div>
-            )}
             {/* Tx Parameters */}
             <TxParametersDetail
               txParameters={txParameters}

@@ -160,7 +160,6 @@ type SafeTxGasEstimationProps = {
   txRecipient: string
   txAmount: string
   operation: number
-  safeTxGas?: number
 }
 
 export const estimateSafeTxGas = async ({
@@ -169,7 +168,6 @@ export const estimateSafeTxGas = async ({
   txRecipient,
   txAmount,
   operation,
-  safeTxGas,
 }: SafeTxGasEstimationProps): Promise<number> => {
   try {
     const safeTxGasEstimation = await fetchSafeTxGasEstimation({
@@ -179,15 +177,6 @@ export const estimateSafeTxGas = async ({
       data: txData,
       operation,
     })
-
-    console.log('Backend gas estimation', safeTxGasEstimation)
-
-    if (safeTxGas) {
-      // If safeTxGas was already defined we leave it but log our estimation for debug purposes
-      console.info('This is the smart contract minimum expected safeTxGas', safeTxGasEstimation)
-      // We return set safeTxGas
-      return safeTxGas
-    }
 
     return parseInt(safeTxGasEstimation)
   } catch (error) {
