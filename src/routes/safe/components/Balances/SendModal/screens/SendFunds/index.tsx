@@ -49,6 +49,7 @@ import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -99,6 +100,7 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
+  const { nativeCoin } = getNetworkInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -151,11 +153,12 @@ const SendFunds = ({
     }
 
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
-
+    const tokenDecimals =
+      Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals) || nativeCoin.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
-      minMaxLength(1, 24),
+      minMaxLength(1, tokenDecimals),
       minValue(0, false),
       maxValue(
         isSpendingLimit
