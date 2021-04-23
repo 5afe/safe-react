@@ -1,22 +1,30 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, Custom } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
 import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
+import { useKnownAddress } from './useKnownAddress'
+import { useGetTxTo } from './useGetTxTo'
 
 export type TxTypeProps = {
-  icon: string | null
-  text: string
+  icon: string | undefined
+  text: string | undefined
 }
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const toAddress = useGetTxTo(tx)
+  // Fixed casting because known address only works for Custom tx
+  const addressInfo = useKnownAddress(toAddress || '', {
+    name: (tx.txInfo as Custom)?.toInfo?.name,
+    image: (tx.txInfo as Custom)?.toInfo?.logoUri || undefined,
+  })
 
   useEffect(() => {
     switch (tx.txInfo.type) {
@@ -52,7 +60,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         const toInfo = tx.txInfo.toInfo
         if (toInfo) {
-          setType({ icon: toInfo.logoUri, text: toInfo.name })
+          setType({ icon: CustomTxIcon, text: addressInfo.name })
           break
         }
 
@@ -60,7 +68,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         break
       }
     }
-  }, [tx, safeAddress])
+  }, [tx, safeAddress, addressInfo.name])
 
   return type
 }
