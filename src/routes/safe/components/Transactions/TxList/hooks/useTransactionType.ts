@@ -8,8 +8,8 @@ import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/asset
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
 import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
+import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
-import { useGetTxTo } from './useGetTxTo'
 
 export type TxTypeProps = {
   icon: string | undefined
@@ -19,7 +19,7 @@ export type TxTypeProps = {
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const toAddress = useGetTxTo(tx)
+  const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
   const addressInfo = useKnownAddress(toAddress || '', {
     name: (tx.txInfo as Custom)?.toInfo?.name,
