@@ -10,7 +10,6 @@ import DataDisplay from './DataDisplay'
 
 interface AddressInfoProps {
   address: string
-  cut?: number
   title?: string
 }
 
