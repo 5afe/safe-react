@@ -14,7 +14,7 @@ import {
   composeValidators,
   maxValue,
   minValue,
-  minMaxLength,
+  minMaxDecimalsLength,
   mustBeFloat,
   mustBeEthereumAddress,
   required,
@@ -158,7 +158,7 @@ const SendFunds = ({
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
-      minMaxLength(1, tokenDecimals),
+      minMaxDecimalsLength(1, tokenDecimals),
       minValue(0, false),
       maxValue(
         isSpendingLimit
