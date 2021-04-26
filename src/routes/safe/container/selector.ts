@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
@@ -31,24 +32,31 @@ export const extendedSafeTokensSelector = createSelector(
   (safeBalances, tokensList, ethAsToken): List<Token> => {
     const extendedTokens: Array<Token> = []
 
-    safeBalances.forEach((safeBalance) => {
-      const tokenAddress = safeBalance.tokenAddress
+    try {
+      safeBalances.forEach((safeBalance) => {
+        const tokenAddress = safeBalance.tokenAddress
 
-      if (!tokenAddress) {
-        return
-      }
+        if (!tokenAddress) {
+          return
+        }
 
-      const baseToken = sameAddress(tokenAddress, ethAsToken?.address) ? ethAsToken : tokensList.get(tokenAddress)
+        const baseToken = sameAddress(tokenAddress, ethAsToken?.address) ? ethAsToken : tokensList.get(tokenAddress)
 
-      if (!baseToken) {
-        return
-      }
+        if (!baseToken) {
+          return
+        }
 
-      const token = baseToken.set('balance', safeBalance)
-      extendedTokens.push(token)
-    })
+        const token = baseToken.set('balance', safeBalance)
+        extendedTokens.push(token)
+      })
 
-    return List(extendedTokens)
+      return List(extendedTokens)
+    } catch (e) {
+      Sentry.captureMessage(
+        'There was an error loading `safeBalances` in `extendedSafeTokensSelector`, probably safe loaded prior to v3.5.0',
+      )
+      return List([])
+    }
   },
 )
 
