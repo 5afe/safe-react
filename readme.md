@@ -103,26 +103,32 @@ npx truffle migrate
 yarn test
 ```
 
+### Lint
 
-### Break down into end to end tests
+ESLint will be run automatically before you commit. To run it manually:
 
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
 
 ```
-Give an example
+yarn lint:fix
 ```
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+The code is deployed to a testing website automatically on each push via a GitHub Action.
+The GitHub Action will create a new subdomain and post the link as a comment in the PR.
+
+When pushing to the `master` branch, the code will be uploaded to the production bucket but not deployed automatically.
+This is done manually by the devops team for extra safety.
+
+## Releasing to production
+
+We prepare a new release every sprint. Sprints are two weeks long.
+
+* A separate code-freeze branch named `release/X.Y.Z` is created
+* The QA team do regression testing on this branch
+* If issues are found, bugfixes are merged into this branch
+* Once the QA is done, we push the branch to `master` (which is deployed to production)
+* Master is afterwards backmerged into the main `development` branch.
 
 ## Configuring the app for running on different networks
 
