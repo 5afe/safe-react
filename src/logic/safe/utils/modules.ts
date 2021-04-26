@@ -2,7 +2,6 @@ import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/s
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 /**
  * Builds a collection of tuples with (prev, module) module addresses
@@ -35,32 +34,6 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
 
   // no modules
   return null
-}
-
-/**
- * Returns a list of Modules if there's any, in the form of [module, prevModule][]
- * so we have an easy track of the prevModule and the currentModule when calling `disableModule`
- *
- * There's a slight difference on how many modules `getModules` return, depending on the Safe's version we're in:
- *  - for >= v1.1.1 it will return a list of up to 10 modules
- *  - for previous version it will return a list of all the modules enabled
- *
- * As we're using the safe-transactions service, and it's querying `getModules`,
- *   we'll fallback to `getModulesPaginated` RPC call when needed.
- *
- * @todo: Implement pagination for `getModulesPaginated`. We're passing an arbitrary large number to avoid pagination.
- *
- * @param {SafeInfo | undefined } safeInfo
- * @returns Array<ModulePair> | null | undefined
- */
-export const getModules = async (safeInfo: SafeInfo | void): Promise<Array<ModulePair> | null | undefined> => {
-  if (!safeInfo) {
-    return
-  }
-
-  const safeInfoModules = safeInfo.modules.map(({ value }) => value)
-
-  return buildModulesLinkedList(safeInfoModules)
 }
 
 export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string): string => {
