@@ -22,9 +22,9 @@ import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
  * @returns Promise<SafeRecordProps>
  */
 export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
-  const checksummedSafeAddress = checksumAddress(safeAddress)
+  const address = checksumAddress(safeAddress)
   const safeInfo: Partial<SafeRecordProps> = {
-    address: checksummedSafeAddress,
+    address,
     name: safeName,
   }
 
@@ -39,7 +39,7 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
   // update owner's information
   const owners = buildSafeOwners(remote?.owners, localSafeInfo?.owners)
 
-  return { ...safeInfo, ...localSafeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
+  return { ...localSafeInfo, ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
 
 /**
