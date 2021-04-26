@@ -14,7 +14,7 @@ interface AddressInfoProps {
   title?: string
 }
 
-const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): ReactElement => {
+const AddressInfo = ({ address, title }: AddressInfoProps): ReactElement => {
   const name = useSelector((state) => getNameFromAddressBookSelector(state, address))
   const explorerUrl = getExplorerInfo(address)
 
@@ -27,7 +27,6 @@ const AddressInfo = ({ address, cut = 4, title }: AddressInfoProps): ReactElemen
         showAvatar
         textSize="lg"
         explorerUrl={explorerUrl}
-        shortenHash={cut}
       />
     </DataDisplay>
   )
