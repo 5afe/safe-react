@@ -41,7 +41,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} cut={0} />
+        <AddressInfo title="Beneficiary" address={beneficiary} />
       </SpendingLimitRow>
       <SpendingLimitRow>
         {tokenInfo && <TokenInfo amount={fromTokenUnit(amount, tokenInfo.decimals)} title="Amount" token={tokenInfo} />}
@@ -67,7 +67,7 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} cut={0} />
+        <AddressInfo title="Beneficiary" address={beneficiary} />
       </SpendingLimitRow>
       <SpendingLimitRow>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</SpendingLimitRow>
     </>
