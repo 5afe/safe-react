@@ -103,8 +103,6 @@ export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFiel
 
 export const safeSpendingLimitsSelector = createSelector(safeSelector, safeFieldSelector('spendingLimits'))
 
-export const safeLoadedViaUrlSelector = createSelector(safeSelector, safeFieldSelector('loadedViaUrl'))
-
 export const safeOwnersAddressesListSelector = createSelector(
   safeOwnersSelector,
   (owners): List<string> => {

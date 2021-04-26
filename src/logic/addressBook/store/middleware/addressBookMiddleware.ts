@@ -21,7 +21,6 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
     const { dispatch } = store
     const addressBook = addressBookSelector(state)
     const safes = safesListSelector(state)
-
     if (addressBook.length) {
       await saveAddressBook(addressBook)
     }

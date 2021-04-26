@@ -19,7 +19,6 @@ import { latestMasterContractVersionSelector, safeTotalFiatBalanceSelector } fro
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { getModules } from 'src/logic/safe/utils/modules'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
 
 const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
   const ownersList = safeOwners.map((ownerAddress) => {
@@ -159,7 +158,7 @@ export default (safeAdd: string) => async (
 ): Promise<Action | void> => {
   try {
     const safeAddress = checksumAddress(safeAdd)
-    const safeName = (await getSafeName(safeAddress)) || LOADED_SAFE_KEY
+    const safeName = (await getSafeName(safeAddress)) || 'LOADED SAFE'
     const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
     const totalFiatBalance = safeTotalFiatBalanceSelector(getState())
     const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion, totalFiatBalance)
