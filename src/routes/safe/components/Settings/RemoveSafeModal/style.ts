@@ -22,9 +22,7 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  buttonRemove: {
-    marginLeft: '16px',
+    gap: '16px',
   },
   owner: {
     padding: md,

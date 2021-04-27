@@ -91,17 +91,10 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+        <Button minWidth={140} onClick={onClose} color="secondary">
           Cancel
         </Button>
-        <Button
-          className={classes.buttonRemove}
-          size="md"
-          onClick={onRemoveSafeHandler}
-          type="submit"
-          color="error"
-          variant="contained"
-        >
+        <Button minWidth={140} size="md" onClick={onRemoveSafeHandler} type="submit" color="error" variant="contained">
           Remove
         </Button>
       </Row>
