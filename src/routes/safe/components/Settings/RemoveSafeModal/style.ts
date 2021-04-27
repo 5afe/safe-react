@@ -26,28 +26,11 @@ export const styles = createStyles({
   buttonRemove: {
     marginLeft: '16px',
   },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
   owner: {
     padding: md,
     alignItems: 'center',
   },
-  user: {
-    justifyContent: 'left',
-  },
   description: {
     padding: md,
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
   },
 })

@@ -20,9 +20,6 @@ export const styles = createStyles({
   manage: {
     fontSize: lg,
   },
-  address: {
-    marginRight: sm,
-  },
   closeIcon: {
     height: '35px',
     width: '35px',
@@ -61,9 +58,6 @@ export const styles = createStyles({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
   selectedOwnerRemoved: {
     padding: sm,
     alignItems: 'center',
@@ -73,9 +67,6 @@ export const styles = createStyles({
     padding: sm,
     alignItems: 'center',
     backgroundColor: '#f7f5f5',
-  },
-  user: {
-    justifyContent: 'left',
   },
   open: {
     paddingLeft: sm,

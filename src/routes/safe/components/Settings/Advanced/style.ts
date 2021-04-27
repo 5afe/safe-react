@@ -57,7 +57,7 @@ export const styles = createStyles({
   modalHeading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
-    height: '75px',
+    height: '74px',
     padding: `${sm} ${lg}`,
   },
   modalManage: {
@@ -82,7 +82,6 @@ export const styles = createStyles({
     whiteSpace: 'nowrap',
   },
   modalOwner: {
-    backgroundColor: background,
     padding: md,
     alignItems: 'center',
   },

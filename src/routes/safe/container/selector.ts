@@ -1,3 +1,4 @@
+import * as Sentry from '@sentry/react'
 import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
@@ -30,6 +31,15 @@ export const extendedSafeTokensSelector = createSelector(
   safeEthAsTokenSelector,
   (safeBalances, tokensList, ethAsToken): List<Token> => {
     const extendedTokens: Array<Token> = []
+
+    if (!Array.isArray(safeBalances)) {
+      // We migrated from immutable Map to array in v3.5.0. Previously stored safes could be still using an object
+      // to store balances. We add this check to avoid the app to break and refetch the information correctly
+      Sentry.captureMessage(
+        'There was an error loading `safeBalances` in `extendedSafeTokensSelector`, probably safe loaded prior to v3.5.0',
+      )
+      return List([])
+    }
 
     safeBalances.forEach((safeBalance) => {
       const tokenAddress = safeBalance.tokenAddress

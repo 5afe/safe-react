@@ -1,15 +1,12 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { List } from 'immutable'
 
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -189,22 +186,14 @@ export const ReviewRemoveOwnerModal = ({
                     owner.address !== ownerAddress && (
                       <React.Fragment key={owner.address}>
                         <Row className={classes.owner}>
-                          <Col align="center" xs={1}>
-                            <Identicon address={owner.address} diameter={32} />
-                          </Col>
-                          <Col xs={11}>
-                            <Block className={classNames(classes.name, classes.userName)}>
-                              <Paragraph noMargin size="lg" weight="bolder">
-                                {owner.name}
-                              </Paragraph>
-                              <Block className={classes.user} justify="center">
-                                <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                                  {owner.address}
-                                </Paragraph>
-                                <CopyBtn content={owner.address} />
-                                <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
-                              </Block>
-                            </Block>
+                          <Col align="center" xs={12}>
+                            <EthHashInfo
+                              hash={owner.address}
+                              name={owner.name}
+                              showCopyBtn
+                              showAvatar
+                              explorerUrl={getExplorerInfo(owner.address)}
+                            />
                           </Col>
                         </Row>
                         <Hairline />
@@ -218,22 +207,14 @@ export const ReviewRemoveOwnerModal = ({
                 </Row>
                 <Hairline />
                 <Row className={classes.selectedOwner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={ownerAddress} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      hash={ownerAddress}
+                      name={ownerName}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(ownerAddress)}
+                    />
                   </Col>
                 </Row>
                 <Hairline />
