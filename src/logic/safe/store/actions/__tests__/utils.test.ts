@@ -18,7 +18,7 @@ import {
   localSafesInfo,
   remoteSafeInfoWithModules,
   remoteSafeInfoWithoutModules,
-} from './safeInformationMocks'
+} from '../mocks/safeInformation'
 
 describe('shouldExecuteTransaction', () => {
   it('It should return false if given a safe with a threshold > 1', async () => {
@@ -217,6 +217,8 @@ describe('extractRemoteSafeInfo', () => {
 })
 
 describe('buildSafeOwners', () => {
+  const SAFE_ADDRESS = '0xe414604Ad49602C0b9c0b08D0781ECF96740786a'
+
   it('should return `undefined` if no arguments were provided', () => {
     expect(buildSafeOwners()).toBeUndefined()
   })
@@ -233,9 +235,7 @@ describe('buildSafeOwners', () => {
     expect(buildSafeOwners(remoteSafeInfoWithModules.owners)).toStrictEqual(expectedOwners)
   })
   it('should discard those owners that are not present in `remoteSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(
-      localSafesInfo['0xe414604ad49602c0b9c0b08d0781ecf96740786a'].owners.map(makeOwner),
-    )
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.map(makeOwner))
     const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
     const expectedOwners = List(
       [
@@ -261,9 +261,7 @@ describe('buildSafeOwners', () => {
     expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })
   it('should add those owners that are not present in `localSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(
-      localSafesInfo['0xe414604ad49602c0b9c0b08d0781ecf96740786a'].owners.slice(0, 4).map(makeOwner),
-    )
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
     const remoteOwners = remoteSafeInfoWithModules.owners
     const expectedOwners = List(
       [
@@ -293,9 +291,7 @@ describe('buildSafeOwners', () => {
     expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })
   it('should preserve those owners that are present in `remoteSafeOwners` with data present in `localSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(
-      localSafesInfo['0xe414604ad49602c0b9c0b08d0781ecf96740786a'].owners.slice(0, 4).map(makeOwner),
-    )
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
     const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
     const expectedOwners = List(
       [

@@ -11,7 +11,7 @@ import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { Overwrite } from 'src/types/helpers'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
-import { inMemoryPartialSafeInformation, localSafesInfo, remoteSafeInfoWithoutModules } from './safeInformationMocks'
+import { inMemoryPartialSafeInformation, localSafesInfo, remoteSafeInfoWithoutModules } from '../mocks/safeInformation'
 
 jest.mock('axios')
 jest.mock('src/utils/storage/index')
