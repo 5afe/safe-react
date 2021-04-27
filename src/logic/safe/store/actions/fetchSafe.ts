@@ -10,6 +10,7 @@ import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
+import { Action } from 'redux-actions'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -52,7 +53,7 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
 export const fetchSafe = (safeAddress: string) => async (
   dispatch: Dispatch,
   getState: () => AppReduxState,
-): Promise<void> => {
+): Promise<Action<Partial<SafeRecordProps>>> => {
   const address = checksumAddress(safeAddress)
 
   const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
@@ -70,5 +71,5 @@ export const fetchSafe = (safeAddress: string) => async (
     : // if there's no remote info, we keep what's in memory
       undefined
 
-  dispatch(updateSafe({ address, ...safeInfo, owners }))
+  return dispatch(updateSafe({ address, ...safeInfo, owners }))
 }
