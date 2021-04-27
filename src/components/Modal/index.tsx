@@ -47,6 +47,9 @@ const ModalStyled = styled(ModalMUI)`
 
     &.smaller-modal-window {
       height: auto;
+      max-height: 90vh;
+      overflow: hidden;
+      overflow-y: auto;
     }
 
     &.modal {
