@@ -37,7 +37,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     <>
       <SpendingLimitRow>
         <Text size="xl" strong>
-          Modify Spending Limit:
+          Modify spending limit:
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
@@ -63,7 +63,7 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     <>
       <SpendingLimitRow>
         <Text size="xl" strong>
-          Delete Spending Limit:
+          Delete spending limit:
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>

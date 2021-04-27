@@ -116,8 +116,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     <Modal
       handleClose={onClose}
       open={open}
-      title="Remove Spending Limit"
-      description="Remove the selected Spending Limit"
+      title="Remove spending limit"
+      description="Remove the selected spending limit"
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
@@ -132,7 +132,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
             <>
               <Modal.Header onClose={onClose}>
                 <Modal.Header.Title size="xs" withoutMargin>
-                  Remove Spending Limit
+                  Remove spending limit
                 </Modal.Header.Title>
               </Modal.Header>
 

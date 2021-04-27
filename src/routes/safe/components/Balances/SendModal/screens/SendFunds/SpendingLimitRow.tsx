@@ -45,7 +45,7 @@ export const SpendingLimitRow = ({ tokenSpendingLimit, selectedToken }: Spending
               options={[
                 { label: 'Multisig Transaction', value: 'multiSig' },
                 {
-                  label: `Spending Limit Transaction (${availableAmount} ${selectedToken.symbol})`,
+                  label: `Spending limit Transaction (${availableAmount} ${selectedToken.symbol})`,
                   value: 'spendingLimit',
                 },
               ]}
