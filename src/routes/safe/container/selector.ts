@@ -32,31 +32,33 @@ export const extendedSafeTokensSelector = createSelector(
   (safeBalances, tokensList, ethAsToken): List<Token> => {
     const extendedTokens: Array<Token> = []
 
-    try {
-      safeBalances.forEach((safeBalance) => {
-        const tokenAddress = safeBalance.tokenAddress
-
-        if (!tokenAddress) {
-          return
-        }
-
-        const baseToken = sameAddress(tokenAddress, ethAsToken?.address) ? ethAsToken : tokensList.get(tokenAddress)
-
-        if (!baseToken) {
-          return
-        }
-
-        const token = baseToken.set('balance', safeBalance)
-        extendedTokens.push(token)
-      })
-
-      return List(extendedTokens)
-    } catch (e) {
+    if (!Array.isArray(safeBalances)) {
+      // We migrated from immutable Map to array in v3.5.0. Previously stored safes could be still using an object
+      // to store balances. We add this check to avoid the app to break and refetch the information correctly
       Sentry.captureMessage(
         'There was an error loading `safeBalances` in `extendedSafeTokensSelector`, probably safe loaded prior to v3.5.0',
       )
       return List([])
     }
+
+    safeBalances.forEach((safeBalance) => {
+      const tokenAddress = safeBalance.tokenAddress
+
+      if (!tokenAddress) {
+        return
+      }
+
+      const baseToken = sameAddress(tokenAddress, ethAsToken?.address) ? ethAsToken : tokensList.get(tokenAddress)
+
+      if (!baseToken) {
+        return
+      }
+
+      const token = baseToken.set('balance', safeBalance)
+      extendedTokens.push(token)
+    })
+
+    return List(extendedTokens)
   },
 )
 
