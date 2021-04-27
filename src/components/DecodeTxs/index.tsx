@@ -81,7 +81,7 @@ export const BasicTxInfo = ({
           Data (hex encoded):
         </Text>
         <FlexWrapper margin={5}>
-          <Text size="lg">{web3.utils.hexToBytes(txData).length} bytes</Text>
+          <Text size="lg">{txData?.length ? web3.utils.hexToBytes(txData).length : 0} bytes</Text>
           <CopyToClipboardBtn textToCopy={txData} />
         </FlexWrapper>
       </>
