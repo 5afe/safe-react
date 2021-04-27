@@ -134,7 +134,6 @@ export const CreateEditEntryModal = ({
                   Cancel
                 </Button>
                 <Button
-                  className={classes.submitButton}
                   color="primary"
                   minWidth={140}
                   testId={SAVE_NEW_ENTRY_BTN_ID}

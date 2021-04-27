@@ -23,9 +23,7 @@ export const useStyles = makeStyles(
     buttonRow: {
       height: '84px',
       justifyContent: 'center',
-    },
-    submitButton: {
-      marginLeft: '16px',
+      gap: '16px',
     },
   }),
 )

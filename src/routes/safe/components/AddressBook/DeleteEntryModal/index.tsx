@@ -30,7 +30,7 @@ const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDe
     >
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Delete Entry
+          Delete entry
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />

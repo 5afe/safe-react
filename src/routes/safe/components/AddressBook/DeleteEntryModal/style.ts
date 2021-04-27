@@ -20,11 +20,11 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    gap: '16px',
   },
   buttonDelete: {
     color: '#fff',
     backgroundColor: error,
-    marginLeft: '16px',
   },
   buttonCancel: {
     color: '#008c73',
