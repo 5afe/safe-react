@@ -33,20 +33,11 @@ export const useStyles = makeStyles({
     textOverflow: 'ellipsis',
     overflow: 'hidden',
   },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
   owner: {
     alignItems: 'center',
     minWidth: 'fit-content',
     padding: sm,
     paddingLeft: lg,
-  },
-  user: {
-    justifyContent: 'left',
-    '& > p': {
-      marginRight: sm,
-    },
   },
   open: {
     paddingLeft: sm,
