@@ -277,7 +277,6 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
             </Button>
             <Button
               size="md"
-              className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
               disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
