@@ -238,7 +238,6 @@ export const ReviewConfirm = ({
               <DecodeTxs txs={txs} decodedData={decodedData} onTxItemClick={showDecodedTxData} />
             </DecodeTxsWrapper>
             {!isMultiSend && <DividerLine withArrow={false} />}
-
             {/* Warning gas estimation */}
             {params?.safeTxGas && (
               <div className="section">
