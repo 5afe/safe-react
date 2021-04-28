@@ -3,7 +3,7 @@ import { Checkbox, Text } from '@gnosis.pm/safe-react-components'
 
 interface FinalFormCheckboxProps {
   name: string
-  label: React.ReactNode | string
+  label: React.ReactNode
   input: CheckboxInput
 }
 
@@ -13,7 +13,7 @@ type CheckboxInput = {
   onChange: (ev: React.ChangeEvent<HTMLInputElement>) => void
 }
 const FinalFormCheckbox = ({ input, name, label }: FinalFormCheckboxProps): React.ReactElement => {
-  const [checked, setCheck] = useState(false)
+  const [checked, setChecked] = useState(false)
 
   const handleOnChange = (
     { onBlur, onFocus, onChange }: CheckboxInput,
@@ -23,17 +23,15 @@ const FinalFormCheckbox = ({ input, name, label }: FinalFormCheckboxProps): Reac
     onFocus(event)
     onChange(event)
     onBlur(event)
-    setCheck(value)
+    setChecked(value)
   }
   return (
-    <>
-      <Checkbox
-        checked={checked}
-        name={name}
-        label={<Text size="xl">{label}</Text>}
-        onChange={(ev: React.ChangeEvent<HTMLInputElement>, value: boolean) => handleOnChange(input, ev, value)}
-      />
-    </>
+    <Checkbox
+      checked={checked}
+      name={name}
+      label={<Text size="xl">{label}</Text>}
+      onChange={(ev: React.ChangeEvent<HTMLInputElement>, value: boolean) => handleOnChange(input, ev, value)}
+    />
   )
 }
 
