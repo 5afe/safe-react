@@ -70,9 +70,7 @@ export const styles = createStyles({
   modalButtonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  removeButton: {
-    marginLeft: '16px',
+    gap: '16px',
   },
   modalName: {
     textOverflow: 'ellipsis',
