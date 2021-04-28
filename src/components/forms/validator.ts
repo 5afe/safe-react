@@ -91,7 +91,8 @@ export const minMaxLength = (minLen: number, maxLen: number) => (value: string):
 
 export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
   const decimals = value.split('.')[1] || '0'
-  return minMaxLength(minLen, maxLen)(decimals)
+  const minMaxLengthErrMsg = minMaxLength(minLen, maxLen)(decimals)
+  return minMaxLengthErrMsg ? `Should be ${minLen} to ${maxLen} decimals` : undefined
 }
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
