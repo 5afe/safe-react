@@ -3,10 +3,10 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { EthHashInfo, Button } from '@gnosis.pm/safe-react-components'
 
 import { styles } from './style'
 
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
@@ -21,7 +21,10 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
+
 import { getExplorerInfo } from 'src/config'
+import Button from 'src/components/layout/Button'
+import Col from 'src/components/layout/Col'
 
 const useStyles = makeStyles(styles)
 
@@ -69,16 +72,18 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       <Hairline />
       <Block className={classes.container}>
         <Row className={classes.owner}>
-          <EthHashInfo
-            hash={safeAddress}
-            name={safeName}
-            showAvatar
-            showCopyBtn
-            explorerUrl={getExplorerInfo(safeAddress)}
-          />
+          <Col align="center" xs={12}>
+            <EthHashInfo
+              hash={safeAddress}
+              name={safeName}
+              showAvatar
+              showCopyBtn
+              explorerUrl={getExplorerInfo(safeAddress)}
+            />
+          </Col>
         </Row>
         <Row className={classes.description}>
-          <Paragraph size="lg" noMargin>
+          <Paragraph noMargin size="lg">
             Removing a Safe only removes it from your interface. <b>It does not delete the Safe</b>. You can always add
             it back using the Safe&apos;s address.
           </Paragraph>
@@ -86,7 +91,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
       </Block>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button size="md" onClick={onClose} color="secondary" variant="outlined">
+        <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
           Cancel
         </Button>
         <Button

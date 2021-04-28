@@ -7,13 +7,11 @@ import Switch from '@material-ui/core/Switch'
 import Close from '@material-ui/icons/Close'
 
 import QRIcon from 'src/assets/icons/qrcode.svg'
-import CopyBtn from 'src/components/CopyBtn'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -33,7 +31,7 @@ import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export interface CreatedTx {
   contractAddress: string
@@ -62,7 +60,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
   const classes = useStyles()
   const { ethBalance } = useSelector(safeSelector) || {}
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name?: string | null } | null>({
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name: string } | null>({
     address: contractAddress || initialValues.contractAddress,
     name: '',
   })
@@ -165,32 +163,14 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
-                      <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
-                      </Col>
-                      <Col layout="column" xs={11}>
-                        <Block justify="left">
-                          <Block>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry(null)}
-                              weight="bolder"
-                            >
-                              {selectedEntry.name}
-                            </Paragraph>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry(null)}
-                              weight="bolder"
-                            >
-                              {selectedEntry.address}
-                            </Paragraph>
-                          </Block>
-                          <CopyBtn content={selectedEntry.address} />
-                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
-                        </Block>
+                      <Col xs={12}>
+                        <EthHashInfo
+                          hash={selectedEntry.address}
+                          name={selectedEntry.name}
+                          showAvatar
+                          showCopyBtn
+                          explorerUrl={getExplorerInfo(selectedEntry.address)}
+                        />
                       </Col>
                     </Row>
                   </div>
