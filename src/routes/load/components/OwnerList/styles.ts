@@ -23,10 +23,6 @@ export const styles = createStyles({
     alignItems: 'center',
     marginLeft: `${sm}`,
   },
-  address: {
-    paddingLeft: '6px',
-    marginRight: sm,
-  },
   open: {
     paddingLeft: sm,
     width: 'auto',

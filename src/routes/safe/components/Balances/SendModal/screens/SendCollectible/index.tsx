@@ -1,13 +1,12 @@
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import CopyBtn from 'src/components/CopyBtn'
+import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -25,10 +24,7 @@ import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { getExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 
 import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
@@ -161,14 +157,7 @@ const SendCollectible = ({
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
@@ -189,32 +178,14 @@ const SendCollectible = ({
                       </Paragraph>
                     </Row>
                     <Row align="center" margin="md">
-                      <Col xs={1}>
-                        <Identicon address={selectedEntry.address} diameter={32} />
-                      </Col>
-                      <Col layout="column" xs={11}>
-                        <Block justify="left">
-                          <Block>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
-                              weight="bolder"
-                            >
-                              {selectedEntry.name}
-                            </Paragraph>
-                            <Paragraph
-                              className={classes.selectAddress}
-                              noMargin
-                              onClick={() => setSelectedEntry({ address: '', name: 'string' })}
-                              weight="bolder"
-                            >
-                              {selectedEntry.address}
-                            </Paragraph>
-                          </Block>
-                          <CopyBtn content={selectedEntry.address} />
-                          <ExplorerButton explorerUrl={getExplorerInfo(selectedEntry.address)} />
-                        </Block>
+                      <Col xs={12}>
+                        <EthHashInfo
+                          hash={selectedEntry.address}
+                          name={selectedEntry.name}
+                          showAvatar
+                          showCopyBtn
+                          explorerUrl={getExplorerInfo(selectedEntry.address)}
+                        />
                       </Col>
                     </Row>
                   </div>
