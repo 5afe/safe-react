@@ -216,7 +216,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               Back
             </Button>
             <Button
-              className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
               disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
