@@ -238,7 +238,6 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   Cancel
                 </Button>
                 <Button
-                  className={classes.submitButton}
                   color="primary"
                   data-testid="review-tx-btn"
                   disabled={shouldDisableSubmitButton}

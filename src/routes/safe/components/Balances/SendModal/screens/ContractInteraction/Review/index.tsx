@@ -237,7 +237,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               Back
             </Button>
             <Button
-              className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
               minWidth={140}

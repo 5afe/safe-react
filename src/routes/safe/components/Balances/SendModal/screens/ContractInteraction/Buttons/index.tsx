@@ -34,7 +34,6 @@ const Buttons = ({ onClose }: ButtonProps) => {
         Cancel
       </Button>
       <Button
-        className={classes.submitButton}
         color="primary"
         data-testid={`${isReadMethod(method) ? 'call' : 'review'}-tx-btn`}
         disabled={submitting || validating || ((!valid || !!submitError) && !modifiedSinceLastSubmit) || !method}

@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${md} ${lg}`,
     justifyContent: 'flex-start',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    maxHeight: '74px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -46,14 +46,7 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    '& > button': {
-      fontFamily: 'Averta',
-      fontSize: md,
-    },
-  },
-  submitButton: {
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-    marginLeft: '15px',
+    gap: '16px',
   },
   gasCostsContainer: {
     backgroundColor: background,

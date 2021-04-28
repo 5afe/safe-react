@@ -179,7 +179,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               Back
             </Button>
             <Button
-              className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
               minWidth={140}
