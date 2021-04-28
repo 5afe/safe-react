@@ -137,12 +137,11 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 </Block>
               )}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                <Button minWidth={140} onClick={onClose} color="secondary">
                   Close
                 </Button>
                 <Button
                   color="secondary"
-                  minHeight={42}
                   minWidth={214}
                   onClick={() => sendReplacementTransaction(txParameters)}
                   type="submit"

@@ -405,13 +405,11 @@ export const ApproveTxModal = ({
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
+                <Button minWidth={140} onClick={onClose} color="secondary">
                   Close
                 </Button>
                 <Button
-                  className={classes.submitButton}
                   color={isCancelTx ? 'secondary' : 'primary'}
-                  minHeight={42}
                   minWidth={214}
                   onClick={() => approveTx(txParameters)}
                   testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
