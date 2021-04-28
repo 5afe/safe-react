@@ -28,8 +28,6 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  nextButton: {
-    marginLeft: '16px',
+    gap: '16px',
   },
 })

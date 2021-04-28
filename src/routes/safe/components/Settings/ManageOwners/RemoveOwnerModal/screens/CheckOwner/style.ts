@@ -27,8 +27,6 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  nextButton: {
-    marginLeft: '16px',
+    gap: '16px',
   },
 })

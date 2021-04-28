@@ -55,7 +55,6 @@ const CheckOwner = ({ classes, onClose, onSubmit, ownerAddress, ownerName }) => 
           Cancel
         </Button>
         <Button
-          className={classes.nextButton}
           color="primary"
           minWidth={140}
           onClick={handleSubmit}

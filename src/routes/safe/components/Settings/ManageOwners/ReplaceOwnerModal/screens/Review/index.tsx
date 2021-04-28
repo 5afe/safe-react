@@ -259,7 +259,6 @@ export const ReviewReplaceOwnerModal = ({
               Back
             </Button>
             <Button
-              className={classes.submitButton}
               color="primary"
               minWidth={140}
               onClick={() => onSubmit(txParameters)}

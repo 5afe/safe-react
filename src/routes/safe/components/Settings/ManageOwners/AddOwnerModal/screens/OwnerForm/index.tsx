@@ -120,7 +120,6 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
                   Cancel
                 </Button>
                 <Button
-                  className={classes.nextButton}
                   color="primary"
                   minWidth={140}
                   testId={ADD_OWNER_NEXT_BTN_TEST_ID}

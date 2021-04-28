@@ -151,7 +151,6 @@ export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerF
                   Cancel
                 </Button>
                 <Button
-                  className={classes.nextButton}
                   color="primary"
                   minWidth={140}
                   testId={REPLACE_OWNER_NEXT_BTN_TEST_ID}

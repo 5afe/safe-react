@@ -221,7 +221,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               Back
             </Button>
             <Button
-              className={classes.submitButton}
               color="primary"
               minWidth={140}
               onClick={() => onSubmit(txParameters)}

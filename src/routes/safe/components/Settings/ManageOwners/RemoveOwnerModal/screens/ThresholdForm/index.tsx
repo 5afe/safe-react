@@ -103,7 +103,6 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
                   Back
                 </Button>
                 <Button
-                  className={classes.reviewButton}
                   color="primary"
                   data-testid={REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID}
                   minWidth={140}

@@ -22,13 +22,11 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    gap: '16px',
   },
   buttonEdit: {
     color: '#fff',
     backgroundColor: error,
-  },
-  saveButton: {
-    marginLeft: '16px',
   },
   open: {
     paddingLeft: sm,

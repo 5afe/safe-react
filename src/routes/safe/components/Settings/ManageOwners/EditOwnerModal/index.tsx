@@ -104,7 +104,6 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
                   Cancel
                 </Button>
                 <Button
-                  className={classes.saveButton}
                   color="primary"
                   minWidth={140}
                   testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
