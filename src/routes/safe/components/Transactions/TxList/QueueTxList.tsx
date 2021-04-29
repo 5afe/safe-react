@@ -1,8 +1,11 @@
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import React, { Fragment, ReactElement, useContext } from 'react'
+import { useSelector } from 'react-redux'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameString } from 'src/utils/strings'
+import { safeNonceSelector } from 'src/logic/safe/store/selectors'
+
 import {
   DisclaimerContainer,
   GroupedTransactions,
@@ -79,7 +82,13 @@ type QueueTxListProps = {
 
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const title = txLocation === 'queued.next' ? 'NEXT TRANSACTION' : 'QUEUE'
+  const nonce = useSelector(safeNonceSelector)
+
+  const getTitle = () => {
+    return txLocation === 'queued.next'
+      ? 'NEXT TRANSACTION'
+      : `QUEUE - Transaction with nonce ${nonce} needs to be executed next`
+  }
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {
@@ -93,7 +102,7 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
 
   return (
     <StyledTransactionsGroup>
-      <SubTitle size="lg">{title}</SubTitle>
+      <SubTitle size="lg">{getTitle()}</SubTitle>
       <StyledTransactions>
         {transactions.map(([nonce, txs]) => (
           <QueueTransaction key={nonce} nonce={nonce} transactions={txs} />
