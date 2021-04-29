@@ -7,7 +7,7 @@ export const useStyles = makeStyles(
       padding: `${md} ${lg}`,
       justifyContent: 'space-between',
       boxSizing: 'border-box',
-      maxHeight: '75px',
+      height: '74px',
     },
     manage: {
       fontSize: lg,
@@ -26,15 +26,10 @@ export const useStyles = makeStyles(
       width: '35px',
     },
     buttonColumn: {
-      margin: '16px 0 44px 0',
-      '& > button': {
-        fontSize: md,
-        fontFamily: 'Averta',
-      },
+      margin: '52px 0 44px 0',
     },
     firstButton: {
-      boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-      marginBottom: 15,
+      marginBottom: 12,
     },
     iconSmall: {
       fontSize: 16,
