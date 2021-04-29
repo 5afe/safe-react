@@ -18,7 +18,7 @@ import { minValue } from 'src/components/forms/validator'
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
 
 const StyledDivider = styled(Divider)`
-  margin: 16px 0;
+  margin: 0px;
 `
 
 const SafeOptions = styled.div`
@@ -45,9 +45,6 @@ const StyledLink = styled(Link)`
   > :first-of-type {
     margin-right: 5px;
   }
-`
-const StyledIconButton = styled(IconButton)`
-  margin: 10px 0 0 0;
 `
 const StyledText = styled(Text)`
   margin: 0 0 4px 0;
@@ -111,9 +108,9 @@ export const EditTxParametersForm = ({
         <Title size="sm" withoutMargin>
           Advanced options
         </Title>
-        <StyledIconButton disableRipple onClick={onCloseFormHandler}>
+        <IconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
-        </StyledIconButton>
+        </IconButton>
       </Row>
 
       <StyledDivider />
@@ -207,7 +204,7 @@ export const EditTxParametersForm = ({
                 </>
               )}
 
-              <StyledDivider />
+              <Divider />
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>

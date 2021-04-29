@@ -1,15 +1,16 @@
 import { createStyles } from '@material-ui/core/styles'
-import { background, error, lg, md, sm } from 'src/theme/variables'
+import { error, lg, md, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   heading: {
     boxSizing: 'border-box',
     justifyContent: 'space-between',
-    maxHeight: '75px',
+    minHeight: '74px',
     padding: `${sm} ${lg}`,
   },
   container: {
     minHeight: '369px',
+    padding: `${sm}`,
   },
   manage: {
     fontSize: lg,
@@ -27,29 +28,11 @@ export const styles = createStyles({
     backgroundColor: error,
     height: '42px',
   },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
   owner: {
-    backgroundColor: background,
     padding: md,
     alignItems: 'center',
   },
-  user: {
-    justifyContent: 'left',
-  },
   description: {
     padding: md,
-  },
-  open: {
-    paddingLeft: sm,
-    width: 'auto',
-    '&:hover': {
-      cursor: 'pointer',
-    },
   },
 })

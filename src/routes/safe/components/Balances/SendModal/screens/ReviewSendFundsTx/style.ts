@@ -27,9 +27,6 @@ export const styles = createStyles({
   amount: {
     marginLeft: sm,
   },
-  address: {
-    marginRight: sm,
-  },
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
