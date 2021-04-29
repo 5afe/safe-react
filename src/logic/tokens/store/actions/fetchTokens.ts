@@ -15,6 +15,7 @@ import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
+import CodedException from 'src/logic/exceptions/CodedException'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -109,6 +110,7 @@ export const fetchTokens = () => async (
 
     dispatch(addTokens(tokens))
   } catch (err) {
+    CodedException.throwError(100)
     console.error('Error fetching token list', err)
   }
 }
