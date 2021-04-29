@@ -42,6 +42,7 @@ const { nativeCoin } = getNetworkInfo()
 
 export type ReviewTxProp = {
   recipientAddress: string
+  recipientName?: string
   amount: string
   txRecipient: string
   token: string
@@ -218,6 +219,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.recipientAddress}
+                  name={tx.recipientName}
                   showCopyBtn
                   showAvatar
                   explorerUrl={getExplorerInfo(tx.recipientAddress)}
