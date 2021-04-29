@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { Checkbox, Text } from '@gnosis.pm/safe-react-components'
+import { Checkbox } from '@gnosis.pm/safe-react-components'
 
 interface FinalFormCheckboxProps {
   name: string
@@ -29,7 +29,7 @@ const FinalFormCheckbox = ({ input, name, label }: FinalFormCheckboxProps): Reac
     <Checkbox
       checked={checked}
       name={name}
-      label={<Text size="xl">{label}</Text>}
+      label={label}
       onChange={(ev: React.ChangeEvent<HTMLInputElement>, value: boolean) => handleOnChange(input, ev, value)}
     />
   )

@@ -1,6 +1,7 @@
 import React from 'react'
 import { useFormState } from 'react-final-form'
 import styled from 'styled-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 
 import { required } from 'src/components/forms/validator'
 import Field from 'src/components/forms/Field'
@@ -29,11 +30,11 @@ const AppAgreement = (): React.ReactElement => {
         name="agreementAccepted"
         type="checkbox"
         label={
-          <>
+          <Text size="xl">
             This app is not a Gnosis product and I agree to use this app
             <br />
             at my own risk.
-          </>
+          </Text>
         }
         component={StyledCheckbox}
         validate={validate}
