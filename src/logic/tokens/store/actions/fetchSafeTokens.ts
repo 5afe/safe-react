@@ -1,4 +1,3 @@
-import { backOff } from 'exponential-backoff'
 import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
@@ -60,9 +59,10 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     }
     const selectedCurrency = currentCurrencySelector(state)
 
-    const tokenCurrenciesBalances = await backOff(() =>
-      fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currencySelected ?? selectedCurrency }),
-    )
+    const tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+      safeAddress,
+      selectedCurrency: currencySelected ?? selectedCurrency,
+    })
 
     const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
       extractDataFromResult,
