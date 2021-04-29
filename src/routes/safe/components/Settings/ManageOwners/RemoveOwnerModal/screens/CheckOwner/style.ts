@@ -1,6 +1,7 @@
+import { createStyles } from '@material-ui/core'
 import { lg, md, secondaryText, sm } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: `${sm} ${lg}`,
     justifyContent: 'flex-start',

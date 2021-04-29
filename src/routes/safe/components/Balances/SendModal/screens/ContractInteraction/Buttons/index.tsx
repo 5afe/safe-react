@@ -13,7 +13,7 @@ export interface ButtonProps {
   onClose: () => void
 }
 
-const Buttons = ({ onClose }: ButtonProps) => {
+const Buttons = ({ onClose }: ButtonProps): React.ReactElement => {
   const classes = useStyles()
   const {
     input: { value: method },
