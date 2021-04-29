@@ -1,6 +1,7 @@
+import * as Sentry from '@sentry/react'
 import registry, { ExceptionContent } from './registry'
+import { IS_PRODUCTION } from 'src/utils/constants'
 
-// import { IS_PRODUCTION } from 'src/utils/constants'
 class CodedException extends Error {
   public code: number
   public content: ExceptionContent
@@ -20,11 +21,17 @@ class CodedException extends Error {
       isTracked: isTracked == null ? content.isTracked : isTracked,
       isLogged: isLogged == null ? content.isLogged : isLogged,
     }
-    this.message = content.description
+    this.message = `${code}: ${content.description}`
   }
 
   log(): void {
-    console.error(this.code, this)
+    if (!IS_PRODUCTION || this.content.isLogged) {
+      console.error(IS_PRODUCTION ? this.message : this)
+    }
+
+    if (this.content.isTracked) {
+      Sentry.captureException(this)
+    }
   }
 }
 
