@@ -50,12 +50,15 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = (page) => {
-    if (!analyticsAllowed || !analyticsLoaded) {
-      return
-    }
-    ReactGA.pageview(page)
-  }
+  const trackPage = useCallback(
+    (page) => {
+      if (!analyticsAllowed || !analyticsLoaded) {
+        return
+      }
+      ReactGA.pageview(page)
+    },
+    [analyticsAllowed],
+  )
 
   const trackEvent = useCallback(
     (event: EventArgs) => {
