@@ -10,22 +10,26 @@ export const nftAssetsSelector = createSelector(nftAssets, (assets) => assets)
 
 export const nftTokensSelector = createSelector(nftTokens, (tokens) => tokens)
 
-export const nftAssetsListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
+const nftAssetsToListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
   return assets ? Object.values(assets) : []
 })
 
-export const availableNftAssetsAddresses = createSelector(nftTokensSelector, (userNftTokens): string[] => {
-  return Array.from(new Set(userNftTokens.map((nftToken) => nftToken.assetAddress)))
+const nftAssetsAddressFromNftTokensSelector = createSelector(nftTokensSelector, (userNftTokens): string[] => {
+  const addresses = userNftTokens.map((nftToken) => nftToken.assetAddress)
+  const uniqueAddresses = new Set(addresses)
+  return Array.from(uniqueAddresses)
 })
 
 export const orderedNFTAssets = createSelector(nftTokensSelector, (userNftTokens): NFTToken[] =>
   userNftTokens.sort((a, b) => a.name.localeCompare(b.name)),
 )
 
-export const activeNftAssetsListSelector = createSelector(
-  nftAssetsListSelector,
-  availableNftAssetsAddresses,
-  (assets, availableNftAssetsAddresses): NFTAsset[] => {
-    return assets.filter(({ address }) => availableNftAssetsAddresses.includes(address))
+export const nftAssetsFromNftTokensSelector = createSelector(
+  nftAssetsToListSelector,
+  nftAssetsAddressFromNftTokensSelector,
+  (nftAssets, nftAssetsFromNftTokens): NFTAsset[] => {
+    return nftAssets
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter(({ address }) => nftAssetsFromNftTokens.includes(address))
   },
 )
