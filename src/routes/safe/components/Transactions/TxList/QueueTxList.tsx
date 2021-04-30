@@ -86,7 +86,7 @@ export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement =>
   const title =
     txLocation === 'queued.next'
       ? 'NEXT TRANSACTION'
-      : `QUEUE - Transaction with nonce ${nonce} needs to be executed next`
+      : `QUEUE - Transaction with nonce ${nonce} needs to be executed fisrt`
 
   const { lastItemId, setLastItemId } = useContext(TxsInfiniteScrollContext)
   if (transactions.length) {

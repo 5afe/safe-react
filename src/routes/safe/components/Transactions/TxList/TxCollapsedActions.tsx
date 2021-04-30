@@ -36,7 +36,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
     if (transaction.txStatus === 'AWAITING_EXECUTION') {
       return transaction.executionInfo?.nonce === nonce
         ? 'Execute'
-        : `Transaction with nonce ${nonce} needs to be executed next`
+        : `Transaction with nonce ${nonce} needs to be executed first`
     }
     return 'Confirm'
   }
