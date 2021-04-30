@@ -122,10 +122,14 @@ export const getSpendingLimits = async (
 ): Promise<SpendingLimit[] | null> => {
   const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
 
-  if (isSpendingLimitEnabled) {
-    const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
-    const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-    return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+  try {
+    if (isSpendingLimitEnabled) {
+      const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
+      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+      return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+    }
+  } catch (error) {
+    console.error('Failed to retrieve SpendingLimits module information', error.message)
   }
 
   return null

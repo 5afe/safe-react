@@ -42,6 +42,12 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
             dispatch(addOrUpdateAddressBookEntry(checksumEntry))
           }
         })
+
+        // add the recently loaded safe as an entry in the address book
+        // if it exists already, it will be replaced with the recently added name
+        if (safe.name) {
+          dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: safe.name, address: safe.address })))
+        }
         break
       }
       case UPDATE_SAFE: {
