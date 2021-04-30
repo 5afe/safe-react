@@ -68,7 +68,7 @@ export const mustBeEthereumAddress = memoize(
     const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
 
-    const errorMessage = `Input must be a valid Ethereum address${
+    const errorMessage = `Must be a valid checksummed address${
       isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
     }`
 
