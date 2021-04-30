@@ -6,6 +6,7 @@ import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
@@ -77,6 +78,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
+  // Gnosis Starter
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmdCwUutYH8GXXNgTShB4cKJ8YJq4PqZ55QxMznKc9DbeS`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
+  },
   // Idle
   {
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmTvrLwJtyjG8QFHgvqdPhcV5DBMQ7oZceSU4uvPw9vQaj`,
@@ -88,6 +95,12 @@ export const staticAppsList: Array<StaticAppInfo> = [
     url: `${process.env.REACT_APP_IPFS_GATEWAY}/Qmde8dsa9r8bB59CNGww6LRiaZABuKaJfuzvu94hFkatJC`,
     disabled: false,
     networks: [ETHEREUM_NETWORK.MAINNET],
+  },
+  // Liquity
+  {
+    url: `${process.env.REACT_APP_IPFS_GATEWAY}/QmYzTAH6Nzexu35tbWmhVrLYwWj9MdbD1iECejgaGHFk8P`,
+    disabled: false,
+    networks: [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY],
   },
   // Mushrooms finance
   {
@@ -162,6 +175,17 @@ export const staticAppsList: Array<StaticAppInfo> = [
     networks: [ETHEREUM_NETWORK.MAINNET],
   },
 ]
+
+export const getAppsList = async (): Promise<AppData[]> => {
+  let result
+  try {
+    result = await fetchSafeAppsList()
+  } catch (error) {
+    console.error('Could not fetch remote apps list', error)
+  }
+
+  return result?.apps && result?.apps.length ? result.apps : staticAppsList
+}
 
 export const getAppInfoFromOrigin = (origin: string): { url: string; name: string } | null => {
   try {
