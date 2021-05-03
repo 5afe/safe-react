@@ -1,9 +1,10 @@
+import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Button, EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -85,6 +86,17 @@ const useTxData = (
   return data
 }
 
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
+
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -118,10 +130,23 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     manualGasLimit,
   })
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
+
   const submitTx = async (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
     if (!safeAddress) {
+      setButtonStatus(ButtonStatus.READY)
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
       return
     }
@@ -142,7 +167,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
         )
         .send({ from: tx.tokenSpendingLimit.delegate })
         .on('transactionHash', () => onClose())
-        .catch(console.error)
+        .catch((error) => {
+          setButtonStatus(ButtonStatus.READY)
+          console.error(error)
+        })
     } else {
       dispatch(
         createTransaction({
@@ -280,11 +308,20 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
               className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
-              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
               onClick={() => submitTx(txParameters)}
               variant="contained"
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

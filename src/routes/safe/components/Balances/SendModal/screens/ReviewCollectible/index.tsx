@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import styled from 'styled-components'
+
 import { getExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
@@ -22,7 +24,7 @@ import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
 import { styles } from './style'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -30,6 +32,17 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 export type CollectibleTx = {
   recipientAddress: string
@@ -96,7 +109,20 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }, [safeAddress, tx])
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
+
   const submitTx = async (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     try {
       if (safeAddress) {
         dispatch(
@@ -117,6 +143,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     } catch (error) {
       console.error('Error creating sendCollectible Tx:', error)
     } finally {
+      setButtonStatus(ButtonStatus.READY)
       onClose()
     }
   }
@@ -219,13 +246,22 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               className={classes.submitButton}
               color="primary"
               data-testid="submit-tx-btn"
-              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
               minWidth={140}
               onClick={() => submitTx(txParameters)}
               type="submit"
               variant="contained"
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

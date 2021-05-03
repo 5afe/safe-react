@@ -1,6 +1,8 @@
+import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { getNetworkInfo, getExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -29,9 +31,19 @@ import {
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 export type TransactionReviewType = {
   abi?: string
@@ -91,6 +103,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       txData: tx.data ? tx.data.trim() : '',
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (txInfo?.txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [txInfo?.txData, txEstimationExecutionStatus])
 
   const submitTx = async (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
@@ -243,9 +266,18 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               minWidth={140}
               onClick={() => submitTx(txParameters)}
               variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

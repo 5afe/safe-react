@@ -1,8 +1,10 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -27,6 +29,17 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type Props = {
   isOpen: boolean
@@ -58,7 +71,18 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
 
   const nonce = gwTransaction.executionInfo?.nonce ?? 0
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    setButtonStatus(ButtonStatus.LOADING)
+
+    if (txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+  }, [txEstimationExecutionStatus])
+
   const sendReplacementTransaction = (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     dispatch(
       createTransaction({
         safeAddress,
@@ -72,6 +96,8 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         navigateToTransactionsTab: false,
       }),
     )
+
+    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 
@@ -147,9 +173,18 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   onClick={() => sendReplacementTransaction(txParameters)}
                   type="submit"
                   variant="contained"
-                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                  disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
                 >
-                  Reject Transaction
+                  {ButtonStatus.LOADING === buttonStatus ? (
+                    <>
+                      <Loader size="xs" color="secondaryLight" />
+                      <LoaderText>
+                        {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                      </LoaderText>
+                    </>
+                  ) : (
+                    'Reject Transaction'
+                  )}
                 </Button>
               </Row>
             </>

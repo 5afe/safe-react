@@ -1,11 +1,13 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import { List } from 'immutable'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useMemo, useRef, useState } from 'react'
+import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -141,15 +143,12 @@ const useTxInfo = (transaction: Props['transaction']) => {
         } else {
           return t.current.txDetails.txData?.value ?? '0'
         }
-        break
       case 'Custom':
         return t.current.txInfo.value
-        break
       case 'Creation':
       case 'SettingsChange':
       default:
         return '0'
-        break
     }
   }, [])
 
@@ -161,15 +160,12 @@ const useTxInfo = (transaction: Props['transaction']) => {
         } else {
           return t.current.txInfo.transferInfo.tokenAddress
         }
-        break
       case 'Custom':
         return t.current.txInfo.to
-        break
       case 'Creation':
       case 'SettingsChange':
       default:
         return safeAddress
-        break
     }
   }, [safeAddress])
 
@@ -199,6 +195,17 @@ const useTxInfo = (transaction: Props['transaction']) => {
     origin,
     id,
   }
+}
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
 }
 
 type Props = {
@@ -269,7 +276,20 @@ export const ApproveTxModal = ({
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
+
   const approveTx = (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     dispatch(
       processTransaction({
         safeAddress,
@@ -296,6 +316,8 @@ export const ApproveTxModal = ({
         thresholdReached,
       }),
     )
+
+    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 
@@ -416,9 +438,18 @@ export const ApproveTxModal = ({
                   testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
                   type="submit"
                   variant="contained"
-                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+                  disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
                 >
-                  {title}
+                  {ButtonStatus.LOADING === buttonStatus ? (
+                    <>
+                      <Loader size="xs" color="secondaryLight" />
+                      <LoaderText>
+                        {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                      </LoaderText>
+                    </>
+                  ) : (
+                    title
+                  )}
                 </Button>
               </Row>
             </>
