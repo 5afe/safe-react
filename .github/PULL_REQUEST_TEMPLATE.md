@@ -31,7 +31,6 @@ merge of your pull request!
 
 <!-- to check an item, place an "x" in the box like so: "- [x] Documentation" -->
 
-- [ ] Documentation added/updated
 - [ ] Tests added/updated
 - [ ] TypeScript definitions updated
 - [ ] Ready to be merged
