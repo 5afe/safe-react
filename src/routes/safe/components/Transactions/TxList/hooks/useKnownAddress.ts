@@ -4,7 +4,9 @@ import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/sele
 
 type AddressInfo = { name: string | undefined; image: string | undefined }
 
-export const useKnownAddress = (address: string, addressInfo: AddressInfo): AddressInfo => {
+type UseKnownAddressResponse = AddressInfo & { isAddressBook: boolean }
+
+export const useKnownAddress = (address: string, addressInfo: AddressInfo): UseKnownAddressResponse => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
 
   const isInAddressBook = recipientName !== 'UNKNOWN'
@@ -13,6 +15,7 @@ export const useKnownAddress = (address: string, addressInfo: AddressInfo): Addr
     ? {
         name: recipientName,
         image: undefined,
+        isAddressBook: true,
       }
-    : addressInfo
+    : { ...addressInfo, isAddressBook: false }
 }
