@@ -55,6 +55,7 @@ const StyledBlock = styled(Block)`
   margin: 4px 0 0 40px;
 
   display: flex;
+
   > :nth-child(1) {
     margin-right: 5px;
   }
@@ -68,6 +69,13 @@ type Props = ConfirmTxModalProps & {
 
 const parseTxValue = (value: string | number): string => {
   return web3ReadOnly.utils.toBN(value).toString()
+}
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
 }
 
 export const ReviewConfirm = ({
@@ -145,7 +153,20 @@ export const ReviewConfirm = ({
     onClose()
   }
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [txData, txEstimationExecutionStatus])
+
   const confirmTransactions = async (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     await dispatch(
       createTransaction(
         {
@@ -165,6 +186,8 @@ export const ReviewConfirm = ({
         handleTxRejection,
       ),
     )
+
+    setButtonStatus(ButtonStatus.READY)
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
@@ -251,8 +274,14 @@ export const ReviewConfirm = ({
               cancelText="Cancel"
               handleCancel={handleTxRejection}
               handleOk={() => confirmTransactions(txParameters)}
-              okDisabled={areTxsMalformed}
-              okText="Submit"
+              okDisabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus) || areTxsMalformed}
+              okText={
+                ButtonStatus.LOADING === buttonStatus
+                  ? txEstimationExecutionStatus === EstimationStatus.LOADING
+                    ? 'Estimating'
+                    : 'Submitting'
+                  : 'Submit'
+              }
             />
           </FooterWrapper>
         </div>
