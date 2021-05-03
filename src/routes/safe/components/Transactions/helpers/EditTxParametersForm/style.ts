@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '75px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -31,8 +31,9 @@ export const styles = createStyles({
     marginRight: sm,
   },
   buttonRow: {
-    height: '84px',
+    height: '52px',
     justifyContent: 'center',
+    alignItems: 'center',
     '& > button': {
       fontFamily: 'Averta',
       fontSize: md,

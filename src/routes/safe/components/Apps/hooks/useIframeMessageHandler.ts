@@ -66,7 +66,6 @@ const useIframeMessageHandler = (
       requestId: RequestId,
     ): void => {
       if (!messageId) {
-        console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
 

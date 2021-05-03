@@ -3,6 +3,7 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
 import { styles } from './style'
+import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
@@ -12,7 +13,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import { EthAddressInput } from './EthAddressInput'
-import FormDivisor from './FormDivisor'
 import FormErrorMessage from './FormErrorMessage'
 import { Header } from './Header'
 import { MethodsDropdown } from './MethodsDropdown'
@@ -108,7 +108,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <FormDivisor />
+                <Divider withArrow />
                 <EthAddressInput
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}

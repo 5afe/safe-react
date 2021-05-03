@@ -7,6 +7,7 @@ import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
+import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -24,14 +25,12 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
-import ArrowDown from '../assets/arrow-down.svg'
 import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -207,14 +206,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           <Block className={classes.container}>
             {/* SafeInfo */}
             <SafeInfo />
-            <Row margin="md">
-              <Col xs={1}>
-                <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-              </Col>
-              <Col center="xs" layout="column" xs={11}>
-                <Hairline />
-              </Col>
-            </Row>
+            <Divider withArrow />
 
             {/* Recipient */}
             <Row margin="xs">

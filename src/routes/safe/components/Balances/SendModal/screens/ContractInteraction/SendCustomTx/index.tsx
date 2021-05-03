@@ -6,6 +6,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Switch from '@material-ui/core/Switch'
 import Close from '@material-ui/icons/Close'
 
+import Divider from 'src/components/Divider'
 import QRIcon from 'src/assets/icons/qrcode.svg'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -24,10 +25,7 @@ import { ScanQRModal } from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from '../../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -135,14 +133,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {

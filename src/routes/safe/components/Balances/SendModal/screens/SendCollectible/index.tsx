@@ -5,6 +5,7 @@ import Close from '@material-ui/icons/Close'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -23,10 +24,7 @@ import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { getExplorerInfo } from 'src/config'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from 'src/routes/safe/components/Balances/SendModal/screens/assets/arrow-down.svg'
 
 import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
@@ -159,14 +157,7 @@ const SendCollectible = ({
               <WhenFieldChanges field="assetAddress" set="nftTokenId" to={''} />
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {

@@ -157,7 +157,6 @@ export const useEstimateTransactionGas = ({
             txRecipient,
             txAmount: txAmount || '0',
             operation: operation || CALL,
-            safeTxGas,
           })
         }
         if (isExecution || approvalAndExecution) {

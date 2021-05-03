@@ -23,6 +23,7 @@ export interface AddressBookProps {
   label?: string
   pristine?: boolean
   recipientAddress?: string
+  errorMsg?: string
   setIsValidAddress: (valid: boolean) => void
   setSelectedEntry: Dispatch<SetStateAction<{ address: string; name: string }> | null>
 }
@@ -158,6 +159,12 @@ const BaseAddressBookInput = ({
 export const AddressBookInput = (props: AddressBookProps): ReactElement => {
   const addressBookEntries = useSelector(addressBookSelector)
   const [validationText, setValidationText] = useState<string>('')
+
+  useEffect(() => {
+    if (props.errorMsg) {
+      setValidationText(props.errorMsg)
+    }
+  }, [props.errorMsg])
 
   return (
     <BaseAddressBookInput

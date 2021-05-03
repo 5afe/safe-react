@@ -89,6 +89,12 @@ export const mustBeEthereumContractAddress = memoize(
 export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType =>
   value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
 
+export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
+  const decimals = value.split('.')[1] || '0'
+  const minMaxLengthErrMsg = minMaxLength(minLen, maxLen)(decimals)
+  return minMaxLengthErrMsg ? `Should be ${minLen} to ${maxLen} decimals` : undefined
+}
+
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 

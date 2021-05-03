@@ -1,11 +1,10 @@
-import { backOff } from 'exponential-backoff'
 import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
 import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
 import { safeSelector } from 'src/logic/safe/store/selectors'
@@ -60,9 +59,10 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     }
     const selectedCurrency = currentCurrencySelector(state)
 
-    const tokenCurrenciesBalances = await backOff(() =>
-      fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currencySelected ?? selectedCurrency }),
-    )
+    const tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+      safeAddress,
+      selectedCurrency: currencySelected ?? selectedCurrency,
+    })
 
     const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
       extractDataFromResult,
