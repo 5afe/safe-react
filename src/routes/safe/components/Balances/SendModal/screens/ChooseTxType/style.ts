@@ -1,5 +1,5 @@
 import { createStyles, makeStyles } from '@material-ui/core/styles'
-import { lg, md, sm } from 'src/theme/variables'
+import { lg, md, sm, xs } from 'src/theme/variables'
 
 export const useStyles = makeStyles(
   createStyles({
@@ -11,6 +11,7 @@ export const useStyles = makeStyles(
     },
     manage: {
       fontSize: lg,
+      marginTop: `${xs}`,
     },
     disclaimer: {
       marginBottom: `-${md}`,
@@ -24,6 +25,7 @@ export const useStyles = makeStyles(
     closeIcon: {
       height: '35px',
       width: '35px',
+      marginBottom: `-${xs}`,
     },
     buttonColumn: {
       margin: '52px 0 44px 0',
