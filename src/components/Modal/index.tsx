@@ -1,4 +1,4 @@
-import { Button, Icon, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
 import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
@@ -200,13 +200,25 @@ const ButtonStyled = styled(Button)`
   }
 `
 
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+export enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
+
 type CustomButtonMUIProps = Omit<ButtonPropsMUI, 'size' | 'color' | 'variant'> & {
   to?: string
   component?: ReactNode
 }
 
-interface ButtonProps extends CustomButtonMUIProps {
+export interface ButtonProps extends CustomButtonMUIProps {
   text?: string
+  status?: ButtonStatus
   size?: keyof Theme['buttons']['size']
   color?: 'primary' | 'secondary' | 'error'
   variant?: 'bordered' | 'contained' | 'outlined'
@@ -218,8 +230,19 @@ interface ButtonsProps {
 }
 
 const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsProps): ReactElement => {
-  const { text: cancelText = 'Cancel' } = cancelButtonProps
-  const { text: confirmText = 'Submit' } = confirmButtonProps
+  const {
+    text: cancelText = 'Cancel',
+    disabled: cancelDisabled,
+    status: cancelStatus = ButtonStatus.READY,
+    ...cancelProps
+  } = cancelButtonProps
+  const {
+    text: confirmText = 'Submit',
+    disabled: confirmDisabled,
+    status: confirmStatus = ButtonStatus.READY,
+    ...confirmProps
+  } = confirmButtonProps
+  console.log({ confirmButtonProps, confirmProps })
 
   return (
     <>
@@ -227,13 +250,33 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         size="md"
         color="primary"
         variant="outlined"
-        type={cancelButtonProps?.onClick ? 'button' : 'submit'}
-        {...cancelButtonProps}
+        type={cancelProps?.onClick ? 'button' : 'submit'}
+        disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
+        {...cancelProps}
       >
-        {cancelText}
+        {ButtonStatus.LOADING === cancelStatus ? (
+          <>
+            <Loader size="xs" color="secondaryLight" />
+            <LoaderText>{cancelText}</LoaderText>
+          </>
+        ) : (
+          cancelText
+        )}
       </ButtonStyled>
-      <ButtonStyled size="md" type={confirmButtonProps?.onClick ? 'button' : 'submit'} {...confirmButtonProps}>
-        {confirmText}
+      <ButtonStyled
+        size="md"
+        type={confirmProps?.onClick ? 'button' : 'submit'}
+        disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
+        {...confirmProps}
+      >
+        {ButtonStatus.LOADING === confirmStatus ? (
+          <>
+            <Loader size="xs" color="secondaryLight" />
+            <LoaderText>{confirmText}</LoaderText>
+          </>
+        ) : (
+          confirmText
+        )}
       </ButtonStyled>
     </>
   )

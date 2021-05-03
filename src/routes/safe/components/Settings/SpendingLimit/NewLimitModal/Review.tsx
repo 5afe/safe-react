@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -186,7 +186,20 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     setEstimateGasArgs(spendingLimitTxData)
   }, [safeAddress, spendingLimits, existentSpendingLimit, txToken, values])
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (estimateGasArgs?.txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [estimateGasArgs?.txData, txEstimationExecutionStatus])
+
   const handleSubmit = (txParameters: TxParameters): void => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
     const advancedOptionsTxParameters = {
       ...txParameters,
@@ -194,6 +207,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ethGasPriceInGWei: ethGasPriceInGWei || gasPriceFormatted,
       ethGasLimit: ethGasLimit || gasLimit,
     }
+
     if (safeAddress) {
       const { spendingLimitTxData } = calculateSpendingLimitsTxData(
         safeAddress,
@@ -206,6 +220,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
       dispatch(createTransaction(spendingLimitTxData))
     }
+
+    setButtonStatus(ButtonStatus.READY)
   }
 
   const resetTimeLabel = useMemo(
@@ -234,6 +250,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -317,8 +338,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               }}
               confirmButtonProps={{
                 onClick: () => handleSubmit(txParameters),
-                disabled:
-                  existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING,
+                disabled: existentSpendingLimit === undefined,
+                status: buttonStatus,
+                text: confirmButtonText,
               }}
             />
           </Modal.Footer>
