@@ -10,11 +10,6 @@ export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
   return loadFromStorage<StoredSafes>(SAFES_KEY)
 }
 
-export const getSafeName = async (safeAddress: string): Promise<string | undefined> => {
-  const safes = await loadStoredSafes()
-  return safes?.[safeAddress]?.name
-}
-
 export const saveSafes = async (safes: StoredSafes): Promise<void> => {
   try {
     await saveToStorage(SAFES_KEY, safes)
