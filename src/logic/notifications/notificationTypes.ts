@@ -141,45 +141,45 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
 
-  // Spending Limit
+  // Spending limit
   SIGN_NEW_SPENDING_LIMIT_MSG: {
-    message: 'Please sign the new Spending Limit',
+    message: 'Please sign the new spending limit',
     options: { variant: INFO, persist: true },
   },
   NEW_SPENDING_LIMIT_REJECTED_MSG: {
-    message: 'New Spending Limit rejected',
+    message: 'New spending limit rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_EXECUTED_MSG: {
-    message: 'New Spending Limit successfully executed',
+    message: 'New spending limit successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
-    message: 'New Spending Limit successfully created. More confirmations needed to execute',
+    message: 'New spending limit successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   NEW_SPENDING_LIMIT_FAILED_MSG: {
-    message: 'New Spending Limit failed',
+    message: 'New spending limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   SIGN_REMOVE_SPENDING_LIMIT_MSG: {
-    message: 'Please sign the remove Spending Limit',
+    message: 'Please sign the remove Spending limit',
     options: { variant: INFO, persist: true },
   },
   REMOVE_SPENDING_LIMIT_REJECTED_MSG: {
-    message: 'Remove Spending Limit rejected',
+    message: 'Remove spending limit rejected',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG: {
-    message: 'Remove Spending Limit successfully executed',
+    message: 'Remove spending limit successfully executed',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG: {
-    message: 'Remove Spending Limit successfully created. More confirmations needed to execute',
+    message: 'Remove spending limit successfully created. More confirmations needed to execute',
     options: { variant: SUCCESS, persist: false, autoHideDuration: longDuration },
   },
   REMOVE_SPENDING_LIMIT_FAILED_MSG: {
-    message: 'Remove Spending Limit failed',
+    message: 'Remove spending limit failed',
     options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
 

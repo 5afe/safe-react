@@ -10,7 +10,15 @@ import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  maxValue,
+  minValue,
+  minMaxDecimalsLength,
+  mustBeFloat,
+  mustBeEthereumAddress,
+  required,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -32,15 +40,14 @@ import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/scre
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
 import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { sm } from 'src/theme/variables'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
+import Divider from 'src/components/Divider'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -91,6 +98,7 @@ const SendFunds = ({
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
   const addressBook = useSelector(addressBookSelector)
+  const { nativeCoin } = getNetworkInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -115,6 +123,7 @@ const SendFunds = ({
   })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
 
   useEffect(() => {
     if (selectedEntry === null && pristine) {
@@ -137,16 +146,17 @@ const SendFunds = ({
 
   const sendFundsValidation = (values) => {
     const { amount, token: tokenAddress, txType } = values ?? {}
-
     if (!amount || !tokenAddress) {
       return
     }
 
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
-
+    const tokenDecimals =
+      Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals) || nativeCoin.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
+      minMaxDecimalsLength(1, tokenDecimals),
       minValue(0, false),
       maxValue(
         isSpendingLimit
@@ -201,11 +211,15 @@ const SendFunds = ({
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
             const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName || '',
-              address: scannedAddress,
-            })
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -234,14 +248,7 @@ const SendFunds = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
@@ -277,6 +284,7 @@ const SendFunds = ({
                       <AddressBookInput
                         fieldMutator={mutators.setRecipient}
                         pristine={pristine}
+                        errorMsg={addressErrorMsg}
                         setIsValidAddress={setIsValidAddress}
                         setSelectedEntry={setSelectedEntry}
                       />
