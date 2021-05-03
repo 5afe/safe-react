@@ -12,8 +12,9 @@ import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
 
 export type TxTypeProps = {
-  icon: string | undefined
-  text: string | undefined
+  icon?: string
+  fallbackIcon?: string
+  text?: string
 }
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
@@ -60,7 +61,11 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         const toInfo = tx.txInfo.toInfo
         if (toInfo) {
-          setType({ icon: CustomTxIcon, text: addressInfo.name })
+          setType({
+            icon: addressInfo.image,
+            fallbackIcon: CustomTxIcon,
+            text: addressInfo.name,
+          })
           break
         }
 
