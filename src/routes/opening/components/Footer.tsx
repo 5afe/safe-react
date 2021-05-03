@@ -1,7 +1,7 @@
 import React, { ReactElement, SyntheticEvent } from 'react'
 import styled from 'styled-components'
 
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 
 import Button from 'src/components/layout/Button'
 import { getExplorerInfo } from 'src/config'
@@ -28,6 +28,10 @@ const FooterContainer = styled.div`
   button {
     margin-top: 24px;
   }
+`
+
+const LoaderText = styled.span`
+  margin-left: 10px;
 `
 
 export const GenericFooter = ({ safeCreationTxHash }: { safeCreationTxHash: string }): ReactElement => {
@@ -75,7 +79,13 @@ export const ContinueFooter = ({
       variant="contained"
       data-testid="continue-btn"
     >
-      Get started
+      {continueButtonDisabled ? (
+        <>
+          <Loader size="xs" color="secondaryLight" /> <LoaderText>Loading your safe</LoaderText>
+        </>
+      ) : (
+        <>Get started</>
+      )}
     </Button>
   </FooterContainer>
 )

@@ -1,4 +1,4 @@
-import React, { useState, useRef, useCallback, useEffect } from 'react'
+import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import { MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
@@ -82,7 +82,7 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
-const AppFrame = ({ appUrl }: Props): React.ReactElement => {
+const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)

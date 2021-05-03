@@ -1,8 +1,8 @@
 import { Record } from 'immutable'
 
 export const makeOwner = Record({
-  name: '',
+  name: 'UNKNOWN',
   address: '',
 })
 
-// Useage const someRecord: Owner = makeOwner({ name: ... })
+// Usage const someRecord: Owner = makeOwner({ name: ... })
