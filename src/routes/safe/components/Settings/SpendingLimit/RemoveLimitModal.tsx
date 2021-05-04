@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
@@ -68,7 +68,19 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     manualGasLimit,
   })
 
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [txData, txEstimationExecutionStatus])
+
   const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
+    setButtonStatus(ButtonStatus.LOADING)
     try {
       dispatch(
         createTransaction({
@@ -87,6 +99,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         `failed to remove spending limit ${spendingLimit.beneficiary} -> ${spendingLimit.spent.tokenAddress}`,
         e.message,
       )
+    } finally {
+      setButtonStatus(ButtonStatus.READY)
     }
   }
 
@@ -110,6 +124,11 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -178,8 +197,8 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                   confirmButtonProps={{
                     color: 'error',
                     onClick: () => removeSelectedSpendingLimit(txParameters),
-                    disabled: txEstimationExecutionStatus === EstimationStatus.LOADING,
-                    text: 'Remove',
+                    status: buttonStatus,
+                    text: confirmButtonText,
                   }}
                 />
               </Modal.Footer>
