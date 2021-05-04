@@ -1,4 +1,4 @@
-import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { Button, EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -35,6 +35,17 @@ const FooterWrapper = styled.div`
   display: flex;
   justify-content: space-around;
 `
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -75,6 +86,17 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
     setTxData(txData)
   }, [selectedModulePair, safeAddress])
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [txData, txEstimationExecutionStatus])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {
@@ -189,10 +211,19 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                     color="error"
                     size="md"
                     variant="contained"
-                    disabled={!txData || txEstimationExecutionStatus === EstimationStatus.LOADING}
+                    disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
                     onClick={() => removeSelectedModule(txParameters)}
                   >
-                    Remove
+                    {ButtonStatus.LOADING === buttonStatus ? (
+                      <>
+                        <Loader size="xs" color="secondaryLight" />
+                        <LoaderText>
+                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                        </LoaderText>
+                      </>
+                    ) : (
+                      'Remove'
+                    )}
                   </Button>
                 </FooterWrapper>
               </Row>

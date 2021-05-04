@@ -4,7 +4,8 @@ import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { List } from 'immutable'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -33,6 +34,17 @@ import { styles } from './style'
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type ReplaceOwnerProps = {
   onClose: () => void
@@ -120,6 +132,17 @@ export const ReviewReplaceOwnerModal = ({
       setManualSafeTxGas(newSafeTxGas)
     }
   }
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters
@@ -266,9 +289,18 @@ export const ReviewReplaceOwnerModal = ({
               testId={REPLACE_OWNER_SUBMIT_BTN_TEST_ID}
               type="submit"
               variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

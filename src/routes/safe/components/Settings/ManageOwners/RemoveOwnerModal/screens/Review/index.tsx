@@ -3,8 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
 import { List } from 'immutable'
+import styled from 'styled-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -29,6 +30,17 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -123,6 +135,17 @@ export const ReviewRemoveOwnerModal = ({
       setManualSafeTxGas(newSafeTxGas)
     }
   }
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters
@@ -256,9 +279,18 @@ export const ReviewRemoveOwnerModal = ({
               testId={REMOVE_OWNER_REVIEW_BTN_TEST_ID}
               type="submit"
               variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

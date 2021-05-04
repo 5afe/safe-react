@@ -3,7 +3,8 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -26,6 +27,17 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void
@@ -101,6 +113,17 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       setManualSafeTxGas(newSafeTxGas)
     }
   }
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters
@@ -226,10 +249,19 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               minWidth={140}
               onClick={() => onSubmit(txParameters)}
               testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
+              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
               variant="contained"
             >
-              Submit
+              {ButtonStatus.LOADING === buttonStatus ? (
+                <>
+                  <Loader size="xs" color="secondaryLight" />
+                  <LoaderText>
+                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                  </LoaderText>
+                </>
+              ) : (
+                'Submit'
+              )}
             </Button>
           </Row>
         </>

@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { Button } from '@gnosis.pm/safe-react-components'
+import { Button, Loader } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
@@ -40,6 +40,17 @@ const StyledButton = styled(Button)`
 `
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type ChangeThresholdModalProps = {
   onClose: () => void
@@ -101,6 +112,17 @@ export const ChangeThresholdModal = ({
     setDisabledSubmitForm(value === editedThreshold || value === threshold)
     setEditedThreshold(value)
   }
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [data, txEstimationExecutionStatus])
 
   const handleSubmit = async ({ txParameters }) => {
     await dispatch(
@@ -222,9 +244,20 @@ export const ChangeThresholdModal = ({
                     size="md"
                     type="submit"
                     variant="contained"
-                    disabled={txEstimationExecutionStatus === EstimationStatus.LOADING || disabledSubmitForm}
+                    disabled={
+                      [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus) || disabledSubmitForm
+                    }
                   >
-                    Submit
+                    {ButtonStatus.LOADING === buttonStatus ? (
+                      <>
+                        <Loader size="xs" color="secondaryLight" />
+                        <LoaderText>
+                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                        </LoaderText>
+                      </>
+                    ) : (
+                      'Submit'
+                    )}
                   </StyledButton>
                 </Row>
               </>

@@ -1,7 +1,9 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -24,6 +26,17 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
+
+const LoaderText = styled.span`
+  margin-left: 10px;
+`
+
+enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type Props = {
   onClose: () => void
@@ -74,6 +87,17 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     txData: multiSendCallData,
     txRecipient: safeAddress,
   })
+
+  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
+  useEffect(() => {
+    if (multiSendCallData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.READY)
+    }
+
+    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+      setButtonStatus(ButtonStatus.LOADING)
+    }
+  }, [multiSendCallData, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters
@@ -145,9 +169,18 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                     minWidth={140}
                     type="submit"
                     variant="contained"
-                    disabled={!multiSendCallData || txEstimationExecutionStatus === EstimationStatus.LOADING}
+                    disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
                   >
-                    Update Safe
+                    {ButtonStatus.LOADING === buttonStatus ? (
+                      <>
+                        <Loader size="xs" color="secondaryLight" />
+                        <LoaderText>
+                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
+                        </LoaderText>
+                      </>
+                    ) : (
+                      'Update Safe'
+                    )}
                   </Button>
                 </Row>
               </>
