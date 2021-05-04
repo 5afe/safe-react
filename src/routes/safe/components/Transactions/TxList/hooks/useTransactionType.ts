@@ -68,7 +68,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         break
       }
     }
-  }, [tx, safeAddress, knownAddress.name])
+  }, [tx, safeAddress, knownAddress.name, knownAddress.image, knownAddress.isAddressBook])
 
   return type
 }
