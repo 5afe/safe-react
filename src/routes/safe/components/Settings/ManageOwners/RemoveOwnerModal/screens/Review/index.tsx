@@ -22,9 +22,10 @@ import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/use
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 import { styles } from './style'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
@@ -76,6 +77,8 @@ export const ReviewRemoveOwnerModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -124,17 +127,6 @@ export const ReviewRemoveOwnerModal = ({
       setManualSafeTxGas(newSafeTxGas)
     }
   }
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters

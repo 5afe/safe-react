@@ -13,11 +13,12 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
@@ -62,6 +63,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -102,17 +105,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       setManualSafeTxGas(newSafeTxGas)
     }
   }
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters

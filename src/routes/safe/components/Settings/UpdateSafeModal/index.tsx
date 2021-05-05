@@ -16,6 +16,7 @@ import { makeStyles } from '@material-ui/core'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -34,6 +35,22 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const classes = useStyles()
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
+
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+    gasPriceFormatted,
+    gasLimit,
+    gasEstimation,
+  } = useEstimateTransactionGas({
+    txData: multiSendCallData,
+    txRecipient: safeAddress,
+  })
+
+  const [buttonStatus] = useButtonStatus(multiSendCallData, txEstimationExecutionStatus)
 
   useEffect(() => {
     const calculateUpgradeSafeModal = async () => {
@@ -60,31 +77,6 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     )
     onClose()
   }
-
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isExecution,
-    isCreation,
-    isOffChainSignature,
-    gasPriceFormatted,
-    gasLimit,
-    gasEstimation,
-  } = useEstimateTransactionGas({
-    txData: multiSendCallData,
-    txRecipient: safeAddress,
-  })
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (multiSendCallData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [multiSendCallData, txEstimationExecutionStatus])
 
   let confirmButtonText = 'Update Safe'
   if (ButtonStatus.LOADING === buttonStatus) {

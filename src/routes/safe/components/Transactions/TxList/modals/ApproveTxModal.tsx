@@ -4,12 +4,12 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useMemo, useRef, useState } from 'react'
+import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
+import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
@@ -19,6 +19,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -260,18 +261,9 @@ export const ApproveTxModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
 
   const approveTx = (txParameters: TxParameters) => {
     dispatch(

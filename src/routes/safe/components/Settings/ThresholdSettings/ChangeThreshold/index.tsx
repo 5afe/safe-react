@@ -16,9 +16,10 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -71,6 +72,8 @@ export const ChangeThresholdModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
     const calculateChangeThresholdData = () => {
@@ -93,21 +96,8 @@ export const ChangeThresholdModal = ({
     setEditedThreshold(value)
   }
 
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
-
-  const handleSubmit = async ({ txParameters }) => {
-    setButtonStatus(ButtonStatus.LOADING)
-
-    await dispatch(
+  const handleSubmit = ({ txParameters }) => {
+    dispatch(
       createTransaction({
         safeAddress,
         to: safeAddress,
@@ -119,8 +109,6 @@ export const ChangeThresholdModal = ({
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
     )
-
-    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 

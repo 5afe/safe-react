@@ -21,10 +21,11 @@ import {
 } from 'src/logic/safe/store/selectors'
 import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
@@ -83,6 +84,8 @@ export const ReviewReplaceOwnerModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
     const calculateReplaceOwnerData = async () => {
@@ -120,17 +123,6 @@ export const ReviewReplaceOwnerModal = ({
       setManualSafeTxGas(newSafeTxGas)
     }
   }
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
 
   return (
     <EditableTxParameters

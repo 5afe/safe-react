@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -68,16 +69,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     manualGasLimit,
   })
 
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [txData, txEstimationExecutionStatus])
+  const [buttonStatus] = useButtonStatus(txData, txEstimationExecutionStatus)
 
   const removeSelectedSpendingLimit = (txParameters: TxParameters) => {
     try {
