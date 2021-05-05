@@ -100,11 +100,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     onClose()
   }
 
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -198,7 +193,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               confirmButtonProps={{
                 onClick: () => submitTx(txParameters),
                 status: buttonStatus,
-                text: confirmButtonText,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                 testId: 'submit-tx-btn',
               }}
             />

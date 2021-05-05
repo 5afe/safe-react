@@ -324,11 +324,6 @@ export const ApproveTxModal = ({
     }
   }
 
-  let confirmButtonText = title
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <Modal description={description} handleClose={onClose} open={isOpen} title={title}>
       <EditableTxParameters
@@ -423,7 +418,7 @@ export const ApproveTxModal = ({
                     onClick: () => approveTx(txParameters),
                     type: 'submit',
                     status: buttonStatus,
-                    text: confirmButtonText,
+                    text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                     testId: isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID,
                   }}
                 />

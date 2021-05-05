@@ -152,11 +152,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }
 
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -239,7 +234,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
                 onClick: () => submitTx(txParameters),
                 type: 'submit',
                 status: buttonStatus,
-                text: confirmButtonText,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                 testId: 'submit-tx-btn',
               }}
             />

@@ -114,11 +114,6 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     }
   }, [data, txEstimationExecutionStatus])
 
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -245,7 +240,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               confirmButtonProps={{
                 onClick: () => onSubmit(txParameters),
                 status: buttonStatus,
-                text: confirmButtonText,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                 testId: ADD_OWNER_SUBMIT_BTN_TEST_ID,
               }}
             />

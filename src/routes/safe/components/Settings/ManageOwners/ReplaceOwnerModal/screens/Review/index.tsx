@@ -132,11 +132,6 @@ export const ReviewReplaceOwnerModal = ({
     }
   }, [data, txEstimationExecutionStatus])
 
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -279,7 +274,7 @@ export const ReviewReplaceOwnerModal = ({
               confirmButtonProps={{
                 onClick: () => onSubmit(txParameters),
                 status: buttonStatus,
-                text: confirmButtonText,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                 type: 'submit',
                 testId: REPLACE_OWNER_SUBMIT_BTN_TEST_ID,
               }}

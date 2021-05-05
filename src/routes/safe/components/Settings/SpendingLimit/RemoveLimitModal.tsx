@@ -123,11 +123,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     }
   }
 
-  let confirmButtonText = 'Remove'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <Modal
       handleClose={onClose}
@@ -195,7 +190,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                     color: 'error',
                     onClick: () => removeSelectedSpendingLimit(txParameters),
                     status: buttonStatus,
-                    text: confirmButtonText,
+                    text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                   }}
                 />
               </Modal.Footer>

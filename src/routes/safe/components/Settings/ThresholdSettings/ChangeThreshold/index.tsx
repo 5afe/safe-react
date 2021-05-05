@@ -143,11 +143,6 @@ export const ChangeThresholdModal = ({
     }
   }
 
-  let confirmButtonText = 'Submit'
-  if (ButtonStatus.LOADING === buttonStatus) {
-    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
-  }
-
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -229,7 +224,7 @@ export const ChangeThresholdModal = ({
                     confirmButtonProps={{
                       disabled: disabledSubmitForm,
                       status: buttonStatus,
-                      text: confirmButtonText,
+                      text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                     }}
                   />
                 </Row>
