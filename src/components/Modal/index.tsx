@@ -222,6 +222,7 @@ export interface ButtonProps extends CustomButtonMUIProps {
   size?: keyof Theme['buttons']['size']
   color?: 'primary' | 'secondary' | 'error'
   variant?: 'bordered' | 'contained' | 'outlined'
+  testId?: string
 }
 
 interface ButtonsProps {
@@ -234,15 +235,16 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
     text: cancelText = 'Cancel',
     disabled: cancelDisabled,
     status: cancelStatus = ButtonStatus.READY,
+    testId: cancelTestId = '',
     ...cancelProps
   } = cancelButtonProps
   const {
     text: confirmText = 'Submit',
     disabled: confirmDisabled,
     status: confirmStatus = ButtonStatus.READY,
+    testId: confirmTestId = '',
     ...confirmProps
   } = confirmButtonProps
-  console.log({ confirmButtonProps, confirmProps })
 
   return (
     <>
@@ -252,6 +254,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         variant="outlined"
         type={cancelProps?.onClick ? 'button' : 'submit'}
         disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
+        data-testid={cancelTestId}
         {...cancelProps}
       >
         {ButtonStatus.LOADING === cancelStatus ? (
@@ -267,6 +270,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         size="md"
         type={confirmProps?.onClick ? 'button' : 'submit'}
         disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
+        data-testid={confirmTestId}
         {...confirmProps}
       >
         {ButtonStatus.LOADING === confirmStatus ? (
