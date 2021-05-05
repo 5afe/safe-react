@@ -1,4 +1,4 @@
-import { Button, EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -13,7 +13,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -35,17 +35,6 @@ const FooterWrapper = styled.div`
   display: flex;
   justify-content: space-around;
 `
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -136,6 +125,11 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     }
   }
 
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
+  }
+
   return (
     <Modal
       description="Remove the selected Module"
@@ -204,27 +198,15 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
               </Row>
               <Row align="center" className={classes.modalButtonRow}>
                 <FooterWrapper>
-                  <Button size="md" variant="outlined" color="primary" onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    color="error"
-                    size="md"
-                    variant="contained"
-                    disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-                    onClick={() => removeSelectedModule(txParameters)}
-                  >
-                    {ButtonStatus.LOADING === buttonStatus ? (
-                      <>
-                        <Loader size="xs" color="secondaryLight" />
-                        <LoaderText>
-                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                        </LoaderText>
-                      </>
-                    ) : (
-                      'Remove'
-                    )}
-                  </Button>
+                  <GenericModal.Footer.Buttons
+                    cancelButtonProps={{ onClick: onClose }}
+                    confirmButtonProps={{
+                      color: 'error',
+                      onClick: () => removeSelectedModule(txParameters),
+                      status: buttonStatus,
+                      text: confirmButtonText,
+                    }}
+                  />
                 </FooterWrapper>
               </Row>
             </>

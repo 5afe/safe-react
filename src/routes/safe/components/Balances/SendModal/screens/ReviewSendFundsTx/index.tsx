@@ -1,10 +1,9 @@
-import styled from 'styled-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { Button, EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -30,6 +29,7 @@ import { sameString } from 'src/utils/strings'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { styles } from './style'
@@ -86,17 +86,6 @@ const useTxData = (
   return data
 }
 
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
-
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
@@ -141,7 +130,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     }
   }, [data, txEstimationExecutionStatus])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
     const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
@@ -205,6 +194,11 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -300,29 +294,18 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
           {/* Footer */}
           <Row align="center" className={classes.buttonRow}>
-            <Button size="md" color="primary" variant="outlined" onClick={onPrev}>
-              Back
-            </Button>
-            <Button
-              size="md"
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-            >
-              {ButtonStatus.LOADING === buttonStatus ? (
-                <>
-                  <Loader size="xs" color="secondaryLight" />
-                  <LoaderText>
-                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                  </LoaderText>
-                </>
-              ) : (
-                'Submit'
-              )}
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: onPrev,
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: confirmButtonText,
+                testId: 'submit-tx-btn',
+              }}
+            />
           </Row>
         </>
       )}

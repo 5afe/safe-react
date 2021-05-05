@@ -1,21 +1,19 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 
 import { styles } from './style'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { makeStyles } from '@material-ui/core'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
@@ -26,17 +24,6 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 type Props = {
   onClose: () => void
@@ -56,7 +43,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     calculateUpgradeSafeModal()
   }, [safeAddress])
 
-  const handleSubmit = async (txParameters: TxParameters) => {
+  const handleSubmit = (txParameters: TxParameters) => {
     // Call the update safe method
     dispatch(
       createTransaction({
@@ -98,6 +85,11 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
       setButtonStatus(ButtonStatus.LOADING)
     }
   }, [multiSendCallData, txEstimationExecutionStatus])
+
+  let confirmButtonText = 'Update Safe'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Updating'
+  }
 
   return (
     <EditableTxParameters
@@ -161,27 +153,16 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                   </Block>
                 )}
                 <Row align="center" className={classes.buttonRow}>
-                  <Button minWidth={140} onClick={onClose}>
-                    Back
-                  </Button>
-                  <Button
-                    color="primary"
-                    minWidth={140}
-                    type="submit"
-                    variant="contained"
-                    disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-                  >
-                    {ButtonStatus.LOADING === buttonStatus ? (
-                      <>
-                        <Loader size="xs" color="secondaryLight" />
-                        <LoaderText>
-                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                        </LoaderText>
-                      </>
-                    ) : (
-                      'Update Safe'
-                    )}
-                  </Button>
+                  <Modal.Footer.Buttons
+                    cancelButtonProps={{
+                      onClick: onClose,
+                      text: 'Back',
+                    }}
+                    confirmButtonProps={{
+                      status: buttonStatus,
+                      text: confirmButtonText,
+                    }}
+                  />
                 </Row>
               </>
             )}

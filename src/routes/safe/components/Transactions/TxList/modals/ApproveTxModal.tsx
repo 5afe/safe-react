@@ -1,4 +1,3 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
 import { List } from 'immutable'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
@@ -7,14 +6,12 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { styles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -197,17 +194,6 @@ const useTxInfo = (transaction: Props['transaction']) => {
   }
 }
 
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
-
 type Props = {
   onClose: () => void
   canExecute?: boolean
@@ -288,8 +274,6 @@ export const ApproveTxModal = ({
   }, [data, txEstimationExecutionStatus])
 
   const approveTx = (txParameters: TxParameters) => {
-    setButtonStatus(ButtonStatus.LOADING)
-
     dispatch(
       processTransaction({
         safeAddress,
@@ -316,8 +300,6 @@ export const ApproveTxModal = ({
         thresholdReached,
       }),
     )
-
-    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 
@@ -340,6 +322,11 @@ export const ApproveTxModal = ({
     if (txParameters.ethGasLimit && gasLimit !== txParameters.ethGasLimit) {
       setManualGasLimit(txParameters.ethGasLimit.toString())
     }
+  }
+
+  let confirmButtonText = title
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -427,30 +414,19 @@ export const ApproveTxModal = ({
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
-                  Close
-                </Button>
-                <Button
-                  color={isCancelTx ? 'secondary' : 'primary'}
-                  minHeight={42}
-                  minWidth={214}
-                  onClick={() => approveTx(txParameters)}
-                  testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                  disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-                >
-                  {ButtonStatus.LOADING === buttonStatus ? (
-                    <>
-                      <Loader size="xs" color="secondaryLight" />
-                      <LoaderText>
-                        {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                      </LoaderText>
-                    </>
-                  ) : (
-                    title
-                  )}
-                </Button>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{
+                    onClick: onClose,
+                    text: 'Close',
+                  }}
+                  confirmButtonProps={{
+                    onClick: () => approveTx(txParameters),
+                    type: 'submit',
+                    status: buttonStatus,
+                    text: confirmButtonText,
+                    testId: isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID,
+                  }}
+                />
               </Row>
             </>
           )

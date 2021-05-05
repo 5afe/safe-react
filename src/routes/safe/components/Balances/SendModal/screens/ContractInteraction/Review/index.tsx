@@ -1,13 +1,11 @@
-import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { getNetworkInfo, getExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -29,21 +27,11 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
 const useStyles = makeStyles(styles)
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 export type TransactionReviewType = {
   abi?: string
@@ -115,7 +103,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     }
   }, [txInfo?.txData, txEstimationExecutionStatus])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
       dispatch(
         createTransaction({
@@ -152,6 +140,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -256,29 +249,18 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
           </div>
 
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-            >
-              {ButtonStatus.LOADING === buttonStatus ? (
-                <>
-                  <Loader size="xs" color="secondaryLight" />
-                  <LoaderText>
-                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                  </LoaderText>
-                </>
-              ) : (
-                'Submit'
-              )}
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: onPrev,
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: confirmButtonText,
+                testId: 'submit-tx-btn',
+              }}
+            />
           </Row>
         </>
       )}

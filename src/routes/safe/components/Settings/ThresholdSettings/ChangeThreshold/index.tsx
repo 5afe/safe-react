@@ -2,10 +2,8 @@ import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { Button, Loader } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
@@ -20,6 +18,7 @@ import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -31,26 +30,7 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 
 const THRESHOLD_FIELD_NAME = 'threshold'
 
-const StyledButton = styled(Button)`
-  &.Mui-disabled {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
-    opacity: 0.5;
-  }
-`
-
 const useStyles = makeStyles(styles)
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 type ChangeThresholdModalProps = {
   onClose: () => void
@@ -125,6 +105,8 @@ export const ChangeThresholdModal = ({
   }, [data, txEstimationExecutionStatus])
 
   const handleSubmit = async ({ txParameters }) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     await dispatch(
       createTransaction({
         safeAddress,
@@ -138,6 +120,7 @@ export const ChangeThresholdModal = ({
       }),
     )
 
+    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 
@@ -158,6 +141,11 @@ export const ChangeThresholdModal = ({
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -236,29 +224,14 @@ export const ChangeThresholdModal = ({
                 )}
 
                 <Row align="center" className={classes.buttonRow}>
-                  <Button size="md" onClick={onClose} variant="outlined" color="primary">
-                    Cancel
-                  </Button>
-                  <StyledButton
-                    color="primary"
-                    size="md"
-                    type="submit"
-                    variant="contained"
-                    disabled={
-                      [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus) || disabledSubmitForm
-                    }
-                  >
-                    {ButtonStatus.LOADING === buttonStatus ? (
-                      <>
-                        <Loader size="xs" color="secondaryLight" />
-                        <LoaderText>
-                          {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                        </LoaderText>
-                      </>
-                    ) : (
-                      'Submit'
-                    )}
-                  </StyledButton>
+                  <Modal.Footer.Buttons
+                    cancelButtonProps={{ onClick: onClose }}
+                    confirmButtonProps={{
+                      disabled: disabledSubmitForm,
+                      status: buttonStatus,
+                      text: confirmButtonText,
+                    }}
+                  />
                 </Row>
               </>
             )}

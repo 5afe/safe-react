@@ -79,8 +79,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     }
   }, [txData, txEstimationExecutionStatus])
 
-  const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
-    setButtonStatus(ButtonStatus.LOADING)
+  const removeSelectedSpendingLimit = (txParameters: TxParameters) => {
     try {
       dispatch(
         createTransaction({
@@ -99,8 +98,6 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
         `failed to remove spending limit ${spendingLimit.beneficiary} -> ${spendingLimit.spent.tokenAddress}`,
         e.message,
       )
-    } finally {
-      setButtonStatus(ButtonStatus.READY)
     }
   }
 

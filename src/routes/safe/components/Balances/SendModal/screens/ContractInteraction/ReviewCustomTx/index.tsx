@@ -3,14 +3,12 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -24,22 +22,12 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 export type CustomTx = {
   contractAddress?: string
@@ -88,9 +76,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     }
   }, [tx.data, txEstimationExecutionStatus])
 
-  const submitTx = async (txParameters: TxParameters): Promise<void> => {
-    setButtonStatus(ButtonStatus.LOADING)
-
+  const submitTx = (txParameters: TxParameters) => {
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
@@ -111,9 +97,12 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     } else {
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
     }
-
-    setButtonStatus(ButtonStatus.READY)
     onClose()
+  }
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
   }
 
   return (
@@ -201,29 +190,18 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-            >
-              {ButtonStatus.LOADING === buttonStatus ? (
-                <>
-                  <Loader size="xs" color="secondaryLight" />
-                  <LoaderText>
-                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                  </LoaderText>
-                </>
-              ) : (
-                'Submit'
-              )}
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: onPrev,
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: confirmButtonText,
+                testId: 'submit-tx-btn',
+              }}
+            />
           </Row>
         </>
       )}

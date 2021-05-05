@@ -3,8 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { EthHashInfo, Loader } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
@@ -18,6 +17,7 @@ import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
@@ -27,17 +27,6 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void
@@ -124,6 +113,11 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
       setButtonStatus(ButtonStatus.LOADING)
     }
   }, [data, txEstimationExecutionStatus])
+
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
+  }
 
   return (
     <EditableTxParameters
@@ -243,26 +237,18 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
             <Button minHeight={42} minWidth={140} onClick={onClickBack}>
               Back
             </Button>
-            <Button
-              color="primary"
-              minHeight={42}
-              minWidth={140}
-              onClick={() => onSubmit(txParameters)}
-              testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
-              disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-              variant="contained"
-            >
-              {ButtonStatus.LOADING === buttonStatus ? (
-                <>
-                  <Loader size="xs" color="secondaryLight" />
-                  <LoaderText>
-                    {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                  </LoaderText>
-                </>
-              ) : (
-                'Submit'
-              )}
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: onClickBack,
+                text: 'Back',
+              }}
+              confirmButtonProps={{
+                onClick: () => onSubmit(txParameters),
+                status: buttonStatus,
+                text: confirmButtonText,
+                testId: ADD_OWNER_SUBMIT_BTN_TEST_ID,
+              }}
+            />
           </Row>
         </>
       )}
