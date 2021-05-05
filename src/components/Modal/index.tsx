@@ -232,16 +232,16 @@ interface ButtonsProps {
 
 const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsProps): ReactElement => {
   const {
-    text: cancelText = 'Cancel',
     disabled: cancelDisabled,
     status: cancelStatus = ButtonStatus.READY,
+    text: cancelText = ButtonStatus.LOADING === cancelStatus ? 'Cancelling' : 'Cancel',
     testId: cancelTestId = '',
     ...cancelProps
   } = cancelButtonProps
   const {
-    text: confirmText = 'Submit',
     disabled: confirmDisabled,
     status: confirmStatus = ButtonStatus.READY,
+    text: confirmText = ButtonStatus.LOADING === confirmStatus ? 'Submitting' : 'Submit',
     testId: confirmTestId = '',
     ...confirmProps
   } = confirmButtonProps
