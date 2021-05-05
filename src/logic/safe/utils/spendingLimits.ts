@@ -168,6 +168,17 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
   }
 }
 
+export const resetSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string, token: string): MultiSendTx => {
+  const spendingLimitContract = getSpendingLimitContract()
+
+  return {
+    to: SPENDING_LIMIT_MODULE_ADDRESS,
+    value: 0,
+    data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
+    operation: DELEGATE_CALL,
+  }
+}
+
 type SpendingLimitTxParams = {
   spendingLimitArgs: {
     beneficiary: string

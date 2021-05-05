@@ -11,6 +11,7 @@ import {
   addSpendingLimitBeneficiaryMultiSendTx,
   currentMinutes,
   enableSpendingLimitModuleMultiSendTx,
+  resetSpendingLimitBeneficiaryMultiSendTx,
   setSpendingLimitMultiSendTx,
   setSpendingLimitTx,
   spendingLimitMultiSendTx,
@@ -96,6 +97,10 @@ const calculateSpendingLimitsTxData = (
   // if `delegate` does not exist, add it by calling `addDelegate(beneficiary)`
   if (!isDelegateAlreadyAdded && values?.beneficiary) {
     transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
+  }
+
+  if (existentSpendingLimit && existentSpendingLimit.spent !== '0') {
+    transactions.push(resetSpendingLimitBeneficiaryMultiSendTx(existentSpendingLimit.delegate, txToken.address))
   }
 
   // prepare the setAllowance tx
