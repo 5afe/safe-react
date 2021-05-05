@@ -1,7 +1,24 @@
-import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
-import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import axios from 'axios'
+import { List } from 'immutable'
+
+import { FEATURES } from 'src/config/networks/network.d'
+import {
+  buildSafeOwners,
+  extractRemoteSafeInfo,
+  getLastTx,
+  getNewTxNonce,
+  shouldExecuteTransaction,
+} from 'src/logic/safe/store/actions/utils'
+import { makeOwner } from 'src/logic/safe/store/models/owner'
+import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'
+import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
+import {
+  inMemoryPartialSafeInformation,
+  localSafesInfo,
+  remoteSafeInfoWithModules,
+  remoteSafeInfoWithoutModules,
+} from '../mocks/safeInformation'
 
 describe('shouldExecuteTransaction', () => {
   it('It should return false if given a safe with a threshold > 1', async () => {
@@ -154,5 +171,149 @@ describe('getLastTx', () => {
     expect(axios.get).toHaveBeenCalled()
     expect(axios.get).toBeCalledWith(url, { params: { limit: 1 } })
     expect(spyConsole).toHaveBeenCalled()
+  })
+})
+
+jest.mock('src/logic/safe/utils/spendingLimits')
+describe('extractRemoteSafeInfo', () => {
+  afterAll(() => {
+    jest.unmock('src/logic/safe/utils/spendingLimits')
+  })
+
+  it('should build a Partial SafeRecord without modules information', async () => {
+    const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
+      modules: undefined,
+      spendingLimits: undefined,
+      nonce: 492,
+      threshold: 2,
+      currentVersion: '1.1.1',
+      needsUpdate: false,
+      featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+    }
+
+    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules)
+
+    expect(remoteSafeInfo).toStrictEqual(extractedRemoteSafeInfo)
+  })
+
+  it('should build a Partial SafeRecord with modules information', async () => {
+    const spendingLimits = require('src/logic/safe/utils/spendingLimits')
+    spendingLimits.getSpendingLimits.mockImplementationOnce(async () => inMemoryPartialSafeInformation.spendingLimits)
+
+    const extractedRemoteSafeInfo: Partial<SafeRecordProps> = {
+      modules: inMemoryPartialSafeInformation.modules as SafeRecordProps['modules'],
+      spendingLimits: inMemoryPartialSafeInformation.spendingLimits,
+      nonce: 492,
+      threshold: 2,
+      currentVersion: '1.1.1',
+      needsUpdate: false,
+      featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+    }
+
+    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules)
+
+    expect(remoteSafeInfo).toStrictEqual(extractedRemoteSafeInfo)
+  })
+})
+
+describe('buildSafeOwners', () => {
+  const SAFE_ADDRESS = '0xe414604Ad49602C0b9c0b08D0781ECF96740786a'
+
+  it('should return `undefined` if no arguments were provided', () => {
+    expect(buildSafeOwners()).toBeUndefined()
+  })
+  it('should return `localSafeOwners` if no `remoteSafeOwners` were provided', () => {
+    const expectedOwners = List(
+      [
+        { address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875' },
+        { address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F' },
+        { address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47' },
+        { address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2' },
+        { address: '0x5e47249883F6a1d639b84e8228547fB289e222b6' },
+      ].map(makeOwner),
+    )
+    expect(buildSafeOwners(remoteSafeInfoWithModules.owners)).toStrictEqual(expectedOwners)
+  })
+  it('should discard those owners that are not present in `remoteSafeOwners`', () => {
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.map(makeOwner))
+    const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
+    const expectedOwners = List(
+      [
+        {
+          name: 'UNKNOWN',
+          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+        },
+        {
+          name: 'Owner B',
+          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+        },
+        {
+          name: 'Owner A',
+          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+        },
+      ].map(makeOwner),
+    )
+
+    expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
+  })
+  it('should add those owners that are not present in `localSafeOwners`', () => {
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
+    const remoteOwners = remoteSafeInfoWithModules.owners
+    const expectedOwners = List(
+      [
+        {
+          name: 'UNKNOWN',
+          address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+        },
+        {
+          name: 'Owner B',
+          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+        },
+      ].map(makeOwner),
+    )
+
+    expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
+  })
+  it('should preserve those owners that are present in `remoteSafeOwners` with data present in `localSafeOwners`', () => {
+    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
+    const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
+    const expectedOwners = List(
+      [
+        {
+          name: 'UNKNOWN',
+          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+        },
+        {
+          name: 'Owner B',
+          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+        },
+        {
+          name: 'UNKNOWN',
+          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+        },
+      ].map(makeOwner),
+    )
+
+    expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })
 })

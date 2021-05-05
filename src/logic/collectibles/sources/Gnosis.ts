@@ -1,46 +1,41 @@
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
-import { fetchErc20AndErc721AssetsList, fetchSafeCollectibles } from 'src/logic/tokens/api'
+import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
-import { sameString } from 'src/utils/strings'
+import { TokenType } from 'src/logic/safe/store/models/types/gateway.d'
 
 type FetchResult = {
   erc721Assets: TokenResult[]
   erc721Tokens: CollectibleResult[]
 }
-
 class Gnosis {
+  _getAssetsFromTokens = (tokens: CollectibleResult[]): TokenResult[] => {
+    const assets: TokenResult[] = tokens.map(({ address, logoUri, tokenName, tokenSymbol }) => ({
+      address,
+      decimals: undefined,
+      logoUri,
+      name: tokenName,
+      symbol: tokenSymbol,
+      type: 'ERC721' as TokenType,
+    }))
+
+    return assets
+  }
+
   _fetch = async (safeAddress: string): Promise<FetchResult> => {
     const collectibles: FetchResult = {
       erc721Assets: [],
       erc721Tokens: [],
     }
-    const [assets, tokens] = await Promise.allSettled([
-      fetchErc20AndErc721AssetsList(),
-      fetchSafeCollectibles(safeAddress),
-    ])
 
-    switch (assets.status) {
-      case 'fulfilled':
-        const {
-          data: { results = [] },
-        } = assets.value
-        collectibles.erc721Assets = results.filter((token) => sameString(token.type, 'erc721'))
-        break
-      case 'rejected':
-        console.error('no erc721 assets could be fetched', assets.reason)
-        break
-    }
-
-    switch (tokens.status) {
-      case 'fulfilled':
-        collectibles.erc721Tokens = tokens.value.data || []
-        break
-      case 'rejected':
-        console.error('no erc721 tokens for the current safe', tokens.reason)
-        break
+    try {
+      const tokens = await fetchSafeCollectibles(safeAddress)
+      collectibles.erc721Assets = this._getAssetsFromTokens(tokens.data)
+      collectibles.erc721Tokens = tokens.data || []
+    } catch (error) {
+      console.error('no erc721 tokens for the current safe', error)
     }
 
     return collectibles

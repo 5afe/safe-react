@@ -29,13 +29,12 @@ export type SafeRecordProps = {
   address: string
   threshold: number
   ethBalance: string
-  totalFiatBalance: number
+  totalFiatBalance: string
   owners: List<SafeOwner>
   modules?: ModulePair[] | null
   spendingLimits?: SpendingLimit[] | null
   balances: BalanceRecord[]
   nonce: number
-  latestIncomingTxBlock: number
   recurringUser?: boolean
   loadedViaUrl?: boolean
   currentVersion: string
@@ -48,14 +47,13 @@ const makeSafe = Record<SafeRecordProps>({
   address: '',
   threshold: 0,
   ethBalance: '0',
-  totalFiatBalance: 0,
+  totalFiatBalance: '0',
   owners: List([]),
   modules: [],
   spendingLimits: [],
   balances: [],
   nonce: 0,
   loadedViaUrl: false,
-  latestIncomingTxBlock: 0,
   recurringUser: undefined,
   currentVersion: '',
   needsUpdate: false,
