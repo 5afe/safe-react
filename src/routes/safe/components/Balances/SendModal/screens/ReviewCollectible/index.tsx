@@ -4,8 +4,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
+import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -19,14 +18,11 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -167,31 +163,20 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           <Hairline />
           <Block className={classes.container}>
             <SafeInfo />
-            <Row margin="md">
-              <Col xs={1}>
-                <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-              </Col>
-              <Col center="xs" layout="column" xs={11}>
-                <Hairline />
-              </Col>
-            </Row>
+            <Divider withArrow />
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                 Recipient
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <Col xs={1}>
-                <Identicon address={tx.recipientAddress} diameter={32} />
-              </Col>
-              <Col layout="column" xs={11}>
-                <Block justify="left">
-                  <Paragraph className={classes.address} noMargin weight="bolder">
-                    {tx.recipientAddress}
-                  </Paragraph>
-                  <CopyBtn content={tx.recipientAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
-                </Block>
+              <Col xs={12}>
+                <EthHashInfo
+                  hash={tx.recipientAddress}
+                  showAvatar
+                  showCopyBtn
+                  explorerUrl={getExplorerInfo(tx.recipientAddress)}
+                />
               </Col>
             </Row>
             <Row margin="xs">

@@ -44,7 +44,7 @@ const SidebarWrapper = styled.aside`
   box-shadow: 0 2px 4px 0 rgba(40, 54, 61, 0.18);
 `
 
-const ContentWrapper = styled.section`
+const ContentWrapper = styled.div`
   width: 100%;
   display: flex;
   flex-direction: column;

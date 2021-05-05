@@ -1,9 +1,6 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import classNames from 'classnames'
 import React, { ReactElement, useEffect, useMemo } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -19,7 +16,7 @@ import {
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import { FormApi } from 'final-form'
 import { StepperPageFormProps } from 'src/components/Stepper'
@@ -98,27 +95,15 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
             {names.map((name, index) => (
               <React.Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={addresses[index]} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" data-testid={`create-safe-owner-name-${index}`}>
-                        {name}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph
-                          color="disabled"
-                          noMargin
-                          size="md"
-                          data-testid={`create-safe-owner-address-${index}`}
-                        >
-                          {addresses[index]}
-                        </Paragraph>
-                        <CopyBtn content={addresses[index]} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(addresses[index])} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      data-testid={`create-safe-owner-name-${index}`}
+                      hash={addresses[index]}
+                      name={name}
+                      showAvatar
+                      showCopyBtn
+                      explorerUrl={getExplorerInfo(addresses[index])}
+                    />
                   </Col>
                 </Row>
                 <Hairline />

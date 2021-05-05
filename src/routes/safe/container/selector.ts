@@ -1,4 +1,5 @@
-import { List, Map } from 'immutable'
+import * as Sentry from '@sentry/react'
+import { List } from 'immutable'
 import { createSelector } from 'reselect'
 
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -7,7 +8,7 @@ import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { isUserAnOwner, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
-import { safeActiveTokensSelector, safeBalancesSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { safeBalancesSelector, safeSelector } from 'src/logic/safe/store/selectors'
 import { SafeRecord } from 'src/logic/safe/store/models/safe'
 
 export const grantedSelector = createSelector(
@@ -25,28 +26,39 @@ const safeEthAsTokenSelector = createSelector(safeSelector, (safe?: SafeRecord):
 })
 
 export const extendedSafeTokensSelector = createSelector(
-  safeActiveTokensSelector,
   safeBalancesSelector,
   tokensSelector,
   safeEthAsTokenSelector,
-  (safeTokens, balances, tokensList, ethAsToken): List<Token> => {
-    const extendedTokens = Map<string, Token>().withMutations((map) => {
-      safeTokens.forEach((tokenAddress) => {
-        const baseToken = tokensList.get(tokenAddress)
-        const tokenBalance = balances?.get(tokenAddress)
+  (safeBalances, tokensList, ethAsToken): List<Token> => {
+    const extendedTokens: Array<Token> = []
 
-        if (baseToken) {
-          const updatedBaseToken = baseToken.set('balance', tokenBalance || { tokenBalance: '0', fiatBalance: '0' })
-          if (sameAddress(tokenAddress, ethAsToken?.address)) {
-            map.set(tokenAddress, updatedBaseToken.set('logoUri', ethAsToken?.logoUri || baseToken.logoUri))
-          } else {
-            map.set(tokenAddress, updatedBaseToken)
-          }
-        }
-      })
+    if (!Array.isArray(safeBalances)) {
+      // We migrated from immutable Map to array in v3.5.0. Previously stored safes could be still using an object
+      // to store balances. We add this check to avoid the app to break and refetch the information correctly
+      Sentry.captureMessage(
+        'There was an error loading `safeBalances` in `extendedSafeTokensSelector`, probably safe loaded prior to v3.5.0',
+      )
+      return List([])
+    }
+
+    safeBalances.forEach((safeBalance) => {
+      const tokenAddress = safeBalance.tokenAddress
+
+      if (!tokenAddress) {
+        return
+      }
+
+      const baseToken = sameAddress(tokenAddress, ethAsToken?.address) ? ethAsToken : tokensList.get(tokenAddress)
+
+      if (!baseToken) {
+        return
+      }
+
+      const token = baseToken.set('balance', safeBalance)
+      extendedTokens.push(token)
     })
 
-    return extendedTokens.toList()
+    return List(extendedTokens)
   },
 )
 

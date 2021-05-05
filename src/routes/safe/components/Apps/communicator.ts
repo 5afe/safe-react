@@ -33,10 +33,9 @@ class AppCommunicator {
   private isValidMessage = (msg: SDKMessageEvent): boolean => {
     // @ts-expect-error .parent doesn't exist on some possible types
     const sentFromIframe = msg.source.parent === window.parent
-    const knownOrigin = this.app.url.includes(msg.origin)
     const knownMethod = Object.values(METHODS).includes(msg.data.method)
 
-    return knownOrigin && sentFromIframe && knownMethod
+    return sentFromIframe && knownMethod
   }
 
   private canHandleMessage = (msg: SDKMessageEvent): boolean => {
@@ -49,7 +48,7 @@ class AppCommunicator {
       ? MessageFormatter.makeErrorResponse(requestId, data, sdkVersion)
       : MessageFormatter.makeResponse(requestId, data, sdkVersion)
 
-    this.iframeRef.current?.contentWindow?.postMessage(msg, this.app.url)
+    this.iframeRef.current?.contentWindow?.postMessage(msg, '*')
   }
 
   handleIncomingMessage = async (msg: SDKMessageEvent): Promise<void> => {

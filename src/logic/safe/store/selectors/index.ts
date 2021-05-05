@@ -1,4 +1,4 @@
-import { List, Set } from 'immutable'
+import { List } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
@@ -9,6 +9,7 @@ import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
@@ -65,14 +66,14 @@ export const safeSelector = createSelector(
   },
 )
 
-export const safeActiveTokensSelector = createSelector(
+export const safeBalancesSelector = createSelector(
   safeSelector,
-  (safe): Set<string> => {
+  (safe): Array<BalanceRecord> => {
     if (!safe) {
-      return Set()
+      return []
     }
 
-    return safe.activeTokens
+    return safe.balances
   },
 )
 
@@ -85,8 +86,6 @@ export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
 export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
-
-export const safeBalancesSelector = createSelector(safeSelector, safeFieldSelector('balances'))
 
 export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))
 
@@ -116,18 +115,6 @@ export const safeOwnersAddressesListSelector = createSelector(
     return owners?.map(({ address }) => address)
   },
 )
-
-export const getActiveTokensAddressesForAllSafes = createSelector(safesListSelector, (safes) => {
-  const addresses = Set().withMutations((set) => {
-    safes.forEach((safe) => {
-      safe.activeTokens.forEach((tokenAddress) => {
-        set.add(tokenAddress)
-      })
-    })
-  })
-
-  return addresses
-})
 
 export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance

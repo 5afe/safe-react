@@ -1,6 +1,19 @@
 # Gnosis Safe
 
-The most trusted platform to store digital assets on Ethereum
+The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
+
+This repository contains the code for the frontend code hosted at [https://gnosis-safe.io/app/]
+
+Besides Ethereum Mainnet, the following networks are supported:
+
+- [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
+- [xDai](https://xdai.gnosis-safe.io/app/)
+- [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
+- [Volta Testnet](https://volta.gnosis-safe.io/app/)
+
+For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
+
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
 
 ## Getting Started
 
@@ -90,26 +103,32 @@ npx truffle migrate
 yarn test
 ```
 
+### Lint
 
-### Break down into end to end tests
+ESLint will be run automatically before you commit. To run it manually:
 
-Explain what these tests test and why
-
-```
-Give an example
-```
-
-### And coding style tests
-
-Explain what these tests test and why
 
 ```
-Give an example
+yarn lint:fix
 ```
 
 ## Deployment
 
-Add additional notes about how to deploy this on a live system
+The code is deployed to a testing website automatically on each push via a GitHub Action.
+The GitHub Action will create a new subdomain and post the link as a comment in the PR.
+
+When pushing to the `master` branch, the code will be uploaded to the production bucket but not deployed automatically.
+This is done manually by the devops team for extra safety.
+
+## Releasing to production
+
+We prepare a new release every sprint. Sprints are two weeks long.
+
+* A separate code-freeze branch named `release/X.Y.Z` is created
+* The QA team do regression testing on this branch
+* If issues are found, bugfixes are merged into this branch
+* Once the QA is done, we push the branch to `master` (which is deployed to production)
+* Master is afterwards backmerged into the main `development` branch.
 
 ## Configuring the app for running on different networks
 
@@ -132,17 +151,6 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
 
-## Authors
-
-- Germán Martínez([germartinez](https://github.com/germartinez))
-- Mikhail Mikheev([mikheevm](https://github.com/mikheevm))
-
-See the full list of [contributors](https://github.com/gnosis/gnosis-team-safe/contributors) who participated in this project.
-
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Thanks for Gnosis Team for providing the Safe contracts.

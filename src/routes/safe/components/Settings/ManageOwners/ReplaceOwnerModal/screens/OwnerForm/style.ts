@@ -35,13 +35,4 @@ export const styles = createStyles({
   owner: {
     alignItems: 'center',
   },
-  user: {
-    justifyContent: 'left',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
-  name: {
-    marginRight: `${sm}`,
-  },
 })

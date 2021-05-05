@@ -96,17 +96,3 @@ export const getContentFromENS = (name: string): Promise<ContentHash> => web3.et
 export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
-
-export const getBalanceInEtherOf = async (safeAddress: string): Promise<string> => {
-  if (!web3) {
-    return '0'
-  }
-
-  const funds = await web3.eth.getBalance(safeAddress)
-
-  if (!funds) {
-    return '0'
-  }
-
-  return web3.utils.fromWei(funds, 'ether').toString()
-}

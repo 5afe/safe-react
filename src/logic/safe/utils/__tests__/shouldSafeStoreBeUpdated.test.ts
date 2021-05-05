@@ -1,5 +1,5 @@
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { List, Set, Map } from 'immutable'
+import { List } from 'immutable'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
 const getMockedOldSafe = ({
@@ -7,11 +7,9 @@ const getMockedOldSafe = ({
   needsUpdate,
   balances,
   recurringUser,
-  activeTokens,
   owners,
   featuresEnabled,
   currentVersion,
-  latestIncomingTxBlock,
   ethBalance,
   threshold,
   name,
@@ -38,20 +36,16 @@ const getMockedOldSafe = ({
     owners: owners || List([owner1, owner2]),
     modules: modules || [],
     spendingLimits: spendingLimits || [],
-    activeTokens: activeTokens || Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2]),
-    balances:
-      balances ||
-      Map({
-        [mockedActiveTokenAddress1]: { tokenBalance: '100' },
-        [mockedActiveTokenAddress2]: { tokenBalance: '10' },
-      }),
+    balances: balances || [
+      { tokenAddress: mockedActiveTokenAddress1, tokenBalance: '100' },
+      { tokenAddress: mockedActiveTokenAddress2, tokenBalance: '10' },
+    ],
     nonce: nonce || 2,
-    latestIncomingTxBlock: latestIncomingTxBlock || 1,
     recurringUser: recurringUser || false,
     currentVersion: currentVersion || 'v1.1.1',
     needsUpdate: needsUpdate || false,
     featuresEnabled: featuresEnabled || [],
-    totalFiatBalance: 110,
+    totalFiatBalance: '110',
   }
 }
 
@@ -177,34 +171,15 @@ describe('shouldSafeStoreBeUpdated', () => {
     // Then
     expect(expectedResult).toEqual(true)
   })
-  it(`Given an old activeTokens list and a new activeTokens list for the safe, should return true`, () => {
-    // given
-    const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
-    const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-    const oldActiveTokens = Set([mockedActiveTokenAddress1, mockedActiveTokenAddress2])
-    const newActiveTokens = Set([mockedActiveTokenAddress1])
-    const oldSafe = getMockedOldSafe({ activeTokens: oldActiveTokens })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      activeTokens: newActiveTokens,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
   it(`Given an old balances list and a new balances list for the safe, should return true`, () => {
     // given
     const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
     const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
-    const oldBalances = Map({
-      [mockedActiveTokenAddress1]: { tokenBalance: '100' },
-      [mockedActiveTokenAddress2]: { tokenBalance: '100' },
-    })
-    const newBalances = Map({
-      [mockedActiveTokenAddress1]: { tokenBalance: '100' },
-    })
+    const oldBalances = [
+      { tokenAddress: mockedActiveTokenAddress1, tokenBalance: '100' },
+      { tokenAddress: mockedActiveTokenAddress2, tokenBalance: '100' },
+    ]
+    const newBalances = [{ tokenAddress: mockedActiveTokenAddress1, tokenBalance: '100' }]
     const oldSafe = getMockedOldSafe({ balances: oldBalances })
     const newSafeProps: Partial<SafeRecordProps> = {
       balances: newBalances,
@@ -223,21 +198,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ nonce: oldNonce })
     const newSafeProps: Partial<SafeRecordProps> = {
       nonce: newNonce,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old newLatestIncomingTxBlock and a new newLatestIncomingTxBlock for the safe, should return true`, () => {
-    // given
-    const oldLatestIncomingTxBlock = 1
-    const newLatestIncomingTxBlock = 2
-    const oldSafe = getMockedOldSafe({ latestIncomingTxBlock: oldLatestIncomingTxBlock })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      latestIncomingTxBlock: newLatestIncomingTxBlock,
     }
 
     // When

@@ -1,4 +1,4 @@
-import { List, Map, Record, RecordOf, Set } from 'immutable'
+import { List, Record, RecordOf } from 'immutable'
 import { FEATURES } from 'src/config/networks/network.d'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
@@ -29,14 +29,12 @@ export type SafeRecordProps = {
   address: string
   threshold: number
   ethBalance: string
-  totalFiatBalance: number
+  totalFiatBalance: string
   owners: List<SafeOwner>
   modules?: ModulePair[] | null
   spendingLimits?: SpendingLimit[] | null
-  activeTokens: Set<string>
-  balances: Map<string, BalanceRecord>
+  balances: BalanceRecord[]
   nonce: number
-  latestIncomingTxBlock: number
   recurringUser?: boolean
   loadedViaUrl?: boolean
   currentVersion: string
@@ -49,15 +47,13 @@ const makeSafe = Record<SafeRecordProps>({
   address: '',
   threshold: 0,
   ethBalance: '0',
-  totalFiatBalance: 0,
+  totalFiatBalance: '0',
   owners: List([]),
   modules: [],
   spendingLimits: [],
-  activeTokens: Set(),
-  balances: Map(),
+  balances: [],
   nonce: 0,
   loadedViaUrl: false,
-  latestIncomingTxBlock: 0,
   recurringUser: undefined,
   currentVersion: '',
   needsUpdate: false,

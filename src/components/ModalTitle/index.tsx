@@ -11,6 +11,9 @@ import Row from 'src/components/layout/Row'
 const StyledParagraph = styled(Paragraph)`
   && {
     font-size: ${lg};
+    white-space: nowrap;
+    max-width: 370px;
+    overflow: hidden;
   }
 `
 const IconImg = styled.img`
@@ -57,7 +60,7 @@ const ModalTitle = ({ goBack, iconUrl, title, onClose }: Props): React.ReactElem
           </GoBackWrapper>
         )}
         {iconUrl && <IconImg alt={title} src={iconUrl} />}
-        <StyledParagraph noMargin weight="bolder">
+        <StyledParagraph noMargin weight="bolder" title={title}>
           {title}
         </StyledParagraph>
       </TitleWrapper>

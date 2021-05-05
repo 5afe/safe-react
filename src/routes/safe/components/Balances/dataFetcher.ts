@@ -1,6 +1,4 @@
 import { List } from 'immutable'
-import { getNetworkInfo } from 'src/config'
-import { FIXED } from 'src/components/Table/sorting'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { TableColumn } from 'src/components/Table/types.d'
 import { Token } from 'src/logic/tokens/store/model/token'
@@ -20,14 +18,12 @@ export interface BalanceData {
   assetOrder: string
   balance: string
   balanceOrder: number
-  fixed: boolean
   value: string
   valueOrder: number
 }
 
-export const getBalanceData = (activeTokens: List<Token>, currencySelected?: string): List<BalanceData> => {
-  const { nativeCoin } = getNetworkInfo()
-  return activeTokens.map((token) => {
+export const getBalanceData = (safeTokens: List<Token>, currencySelected?: string): List<BalanceData> => {
+  return safeTokens.map((token) => {
     const { tokenBalance, fiatBalance } = token.balance
 
     return {
@@ -40,7 +36,6 @@ export const getBalanceData = (activeTokens: List<Token>, currencySelected?: str
       assetOrder: token.name,
       [BALANCE_TABLE_BALANCE_ID]: `${formatAmountInUsFormat(tokenBalance?.toString() || '0')} ${token.symbol}`,
       balanceOrder: Number(tokenBalance),
-      [FIXED]: token.symbol === nativeCoin.symbol,
       [BALANCE_TABLE_VALUE_ID]: getTokenPriceInCurrency(fiatBalance || '0', currencySelected),
       valueOrder: Number(tokenBalance),
     }

@@ -9,7 +9,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { safesListSelector } from 'src/logic/safe/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 const watchedActions = [ADD_ENTRY, REMOVE_ENTRY, UPDATE_ENTRY, ADD_OR_UPDATE_ENTRY]
 
@@ -23,11 +23,7 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
     const safes = safesListSelector(state)
 
     if (addressBook.length) {
-      const filteredSafeAddresses = safes
-        .filter((safe) => !safe.loadedViaUrl)
-        .map((safe) => safe.address)
-        .toJS()
-      await saveAddressBook(addressBook.filter((entry) => filteredSafeAddresses.includes(entry.address)))
+      await saveAddressBook(addressBook)
     }
 
     switch (action.type) {

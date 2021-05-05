@@ -1,13 +1,16 @@
+import { Button, EthHashInfo, FixedIcon, Text } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
+import styled from 'styled-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
+import { getExplorerInfo } from 'src/config'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
@@ -32,15 +35,12 @@ import {
   generateColumns,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { OwnerAddressTableCell } from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
 import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
 import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
 import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -180,7 +180,14 @@ const AddressBookTable = (): ReactElement => {
                       return (
                         <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                           {column.id === AB_ADDRESS_ID ? (
-                            <OwnerAddressTableCell address={row[column.id]} showLinks />
+                            <Block justify="left">
+                              <EthHashInfo
+                                hash={row[column.id]}
+                                showCopyBtn
+                                showAvatar
+                                explorerUrl={getExplorerInfo(row[column.id])}
+                              />
+                            </Block>
                           ) : (
                             row[column.id]
                           )}

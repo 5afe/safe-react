@@ -41,7 +41,7 @@ const AppDocsInfo = styled.div`
   }
 `
 
-export interface AddAppFormValues {
+interface AddAppFormValues {
   appUrl: string
   agreementAccepted: boolean
 }
