@@ -4,7 +4,7 @@ import { getNetworkName } from 'src/config'
 
 const PREFIX = `v1_${getNetworkName()}`
 
-export const loadFromCookie = async (key) => {
+export const loadFromCookie = async (key: string): Promise<undefined | Record<string, any>> => {
   try {
     const stringifiedValue = await Cookies.get(`${PREFIX}__${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
@@ -18,7 +18,7 @@ export const loadFromCookie = async (key) => {
   }
 }
 
-export const saveCookie = async (key, value, expirationDays) => {
+export const saveCookie = async (key: string, value: Record<string, any>, expirationDays: number): Promise<void> => {
   try {
     const stringifiedValue = JSON.stringify(value)
     const expiration = expirationDays ? { expires: expirationDays } : undefined
@@ -27,3 +27,5 @@ export const saveCookie = async (key, value, expirationDays) => {
     console.error(`Failed to save ${key} in cookies:`, err)
   }
 }
+
+export const removeCookie = (key: string): void => Cookies.remove(key)
