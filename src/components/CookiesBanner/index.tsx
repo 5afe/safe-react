@@ -163,7 +163,8 @@ const CookiesBanner = (): ReactElement => {
 
     // we remove GA cookies manually as react-ga does not provides a utility for it.
     if (!localAnalytics) {
-      COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path))
+      const subDomain = location.host.split('.').slice(-2).join('.')
+      COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
     }
 
     if (!localIntercom && isIntercomLoaded()) {
