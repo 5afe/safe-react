@@ -83,7 +83,6 @@ const Beneficiary = (): ReactElement => {
         showCopyBtn
         showAvatar
         textSize="lg"
-        shortenHash={4}
         explorerUrl={getExplorerInfo(selectedEntry.address)}
       />
     </BeneficiaryInput>
