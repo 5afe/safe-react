@@ -134,8 +134,7 @@ const SendFunds = ({
 
   let tokenSpendingLimit
   const handleSubmit = (values) => {
-    console.log(values)
-    const submitValues = values
+    const submitValues = { ...values }
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry?.address
