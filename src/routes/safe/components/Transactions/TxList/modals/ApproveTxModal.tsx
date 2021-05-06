@@ -19,7 +19,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -261,7 +261,7 @@ export const ApproveTxModal = ({
     manualGasLimit,
   })
 
-  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 

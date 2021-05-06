@@ -22,7 +22,7 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -66,7 +66,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
   })
 
-  const [buttonStatus] = useButtonStatus(tx.data, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
     const txRecipient = tx.contractAddress

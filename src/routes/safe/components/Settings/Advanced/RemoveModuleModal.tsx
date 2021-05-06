@@ -24,7 +24,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { styles } from './style'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -72,7 +72,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     manualGasLimit,
   })
 
-  const [buttonStatus] = useButtonStatus(txData, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     const txData = getDisableModuleTxData(selectedModulePair, safeAddress)

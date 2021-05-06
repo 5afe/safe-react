@@ -24,7 +24,7 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -78,7 +78,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualGasLimit,
   })
 
-  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true

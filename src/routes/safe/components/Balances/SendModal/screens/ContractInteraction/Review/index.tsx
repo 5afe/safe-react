@@ -27,7 +27,7 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -85,7 +85,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
-  const [buttonStatus] = useButtonStatus(txInfo?.txData, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     setTxInfo({

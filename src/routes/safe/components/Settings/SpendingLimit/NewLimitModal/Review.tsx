@@ -31,7 +31,7 @@ import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -176,7 +176,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     manualGasLimit,
   })
 
-  const [buttonStatus] = useButtonStatus(estimateGasArgs?.txData, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(

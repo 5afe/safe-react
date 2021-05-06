@@ -15,7 +15,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg, sm } from 'src/theme/variables'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
@@ -123,7 +123,7 @@ export const ReviewConfirm = ({
     manualGasLimit,
   })
 
-  const [buttonStatus, setButtonStatus] = useButtonStatus(txData, txEstimationExecutionStatus)
+  const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   // Decode tx data.
   useEffect(() => {

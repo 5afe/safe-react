@@ -16,7 +16,7 @@ import { makeStyles } from '@material-ui/core'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -50,7 +50,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     txRecipient: safeAddress,
   })
 
-  const [buttonStatus] = useButtonStatus(multiSendCallData, txEstimationExecutionStatus)
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     const calculateUpgradeSafeModal = async () => {

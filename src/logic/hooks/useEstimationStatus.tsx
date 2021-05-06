@@ -3,8 +3,7 @@ import { Dispatch, SetStateAction, useEffect, useState } from 'react'
 import { EstimationStatus } from './useEstimateTransactionGas'
 import { ButtonStatus } from 'src/components/Modal'
 
-export const useButtonStatus = (
-  data?: string,
+export const useEstimationStatus = (
   txEstimationStatus?: EstimationStatus,
 ): [buttonStatus: ButtonStatus, setButtonStatus: Dispatch<SetStateAction<ButtonStatus>>] => {
   const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
@@ -12,18 +11,22 @@ export const useButtonStatus = (
   useEffect(() => {
     let mounted = true
 
-    if (data && txEstimationStatus !== EstimationStatus.LOADING) {
-      mounted && setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationStatus === EstimationStatus.LOADING) {
-      mounted && setButtonStatus(ButtonStatus.LOADING)
+    if (mounted) {
+      switch (txEstimationStatus) {
+        case EstimationStatus.LOADING:
+          setButtonStatus(ButtonStatus.LOADING)
+          break
+        case EstimationStatus.FAILURE:
+        case EstimationStatus.SUCCESS:
+          setButtonStatus(ButtonStatus.READY)
+          break
+      }
     }
 
     return () => {
       mounted = false
     }
-  }, [data, txEstimationStatus])
+  }, [txEstimationStatus])
 
   return [buttonStatus, setButtonStatus]
 }

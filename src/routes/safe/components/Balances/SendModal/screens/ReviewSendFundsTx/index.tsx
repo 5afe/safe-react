@@ -29,7 +29,7 @@ import { sameString } from 'src/utils/strings'
 import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { RecordOf } from 'immutable'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
@@ -120,7 +120,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
     manualGasLimit,
   })
 
-  const [buttonStatus, setButtonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+  const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const submitTx = (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
