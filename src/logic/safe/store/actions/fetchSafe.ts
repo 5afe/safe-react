@@ -1,177 +1,75 @@
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import { List } from 'immutable'
-import { Action, Dispatch } from 'redux'
-import { AbiItem } from 'web3-utils'
+import { Dispatch } from 'redux'
 
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getLocalSafe, getSafeName } from 'src/logic/safe/utils'
-import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getBalanceInEtherOf } from 'src/logic/wallets/getWeb3'
-import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
-import { removeSafeOwner } from 'src/logic/safe/store/actions/removeSafeOwner'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import { makeOwner } from 'src/logic/safe/store/models/owner'
-import { checksumAddress } from 'src/utils/checksumAddress'
-import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { getLocalSafe } from 'src/logic/safe/utils'
+import { allSettled } from 'src/logic/safe/utils/allSettled'
+import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { AppReduxState } from 'src/store'
-import { latestMasterContractVersionSelector, safeTotalFiatBalanceSelector } from 'src/logic/safe/store/selectors'
-import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { getModules } from 'src/logic/safe/utils/modules'
-import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
+import { Action } from 'redux-actions'
 
-const buildOwnersFrom = (safeOwners: string[], localSafe?: SafeRecordProps): List<SafeOwner> => {
-  const ownersList = safeOwners.map((ownerAddress) => {
-    const convertedAdd = checksumAddress(ownerAddress)
-
-    if (!localSafe) {
-      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
-    }
-
-    const storedOwner = localSafe.owners.find(({ address }) => sameAddress(address, convertedAdd))
-    if (!storedOwner) {
-      return makeOwner({ name: 'UNKNOWN', address: convertedAdd })
-    }
-
-    return makeOwner({
-      name: storedOwner.name || 'UNKNOWN',
-      address: convertedAdd,
-    })
-  })
-
-  return List(ownersList)
-}
-
-export const buildSafe = async (
-  safeAdd: string,
-  safeName: string,
-  latestMasterContractVersion?: string,
-  totalFiatBalance?: number,
-): Promise<SafeRecordProps> => {
-  const safeAddress = checksumAddress(safeAdd)
-
-  const safeParams = ['getThreshold', 'nonce', 'VERSION', 'getOwners']
-  const [
-    [, thresholdStr, nonceStr, currentVersion, remoteOwners = []],
-    safeInfo,
-    localSafe,
-    ethBalance,
-  ] = await Promise.all([
-    generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined, string[]]>({
-      abi: GnosisSafeSol.abi as AbiItem[],
-      address: safeAddress,
-      methods: safeParams,
-    }),
-    getSafeInfo(safeAddress),
-    getLocalSafe(safeAddress),
-    getBalanceInEtherOf(safeAddress),
-  ])
-
-  const threshold = Number(thresholdStr)
-  const nonce = Number(nonceStr)
-  const owners = buildOwnersFrom(remoteOwners, localSafe)
-  const needsUpdate = safeNeedsUpdate(currentVersion, latestMasterContractVersion)
-  const featuresEnabled = enabledFeatures(currentVersion)
-  const modules = await getModules(safeInfo)
-  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
-
-  return {
-    address: safeAddress,
+/**
+ * Builds a Safe Record that will be added to the app's store
+ * It recovers, and merges information from client-gateway and localStore
+ *
+ * @note It's being used by "Load Existing Safe" and "Create New Safe" flows
+ *
+ * @param {string} safeAddress
+ * @param {string} safeName
+ * @returns Promise<SafeRecordProps>
+ */
+export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
+  const address = checksumAddress(safeAddress)
+  const safeInfo: Partial<SafeRecordProps> = {
+    address,
     name: safeName,
-    threshold,
-    owners,
-    ethBalance,
-    totalFiatBalance: totalFiatBalance || 0,
-    nonce,
-    currentVersion: currentVersion ?? '',
-    needsUpdate,
-    featuresEnabled,
-    balances: [],
-    latestIncomingTxBlock: 0,
-    modules,
-    spendingLimits,
   }
-}
 
-export const checkAndUpdateSafe = (safeAdd: string) => async (dispatch: Dispatch): Promise<void> => {
-  const safeAddress = checksumAddress(safeAdd)
-  // Check if the owner's safe did change and update them
-  const safeParams = ['getThreshold', 'nonce', 'getOwners']
-  const [[, remoteThreshold, remoteNonce, remoteOwners = []], safeInfo, localSafe] = await Promise.all([
-    generateBatchRequests<[undefined, string | undefined, string | undefined, string[]]>({
-      abi: GnosisSafeSol.abi as AbiItem[],
-      address: safeAddress,
-      methods: safeParams,
-    }),
+  const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
     getSafeInfo(safeAddress),
     getLocalSafe(safeAddress),
-  ])
+  )
 
-  // request SpendingLimit info
-  const spendingLimits = safeInfo ? await getSpendingLimits(safeInfo.modules, safeAddress) : null
+  // remote (client-gateway)
+  const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
 
-  // Converts from [ { address, ownerName} ] to address array
-  const localOwners = localSafe ? localSafe.owners.map((localOwner) => localOwner.address) : []
+  // update owner's information
+  const owners = buildSafeOwners(remote?.owners, localSafeInfo?.owners)
 
-  const modules = await getModules(safeInfo)
-
-  const updatedSafe = {
-    address: safeAddress,
-    name: localSafe?.name,
-    modules,
-    spendingLimits,
-    nonce: remoteNonce ? Number(remoteNonce) : undefined,
-    threshold: remoteThreshold ? Number(remoteThreshold) : undefined,
-    featuresEnabled: localSafe?.currentVersion ? enabledFeatures(localSafe.currentVersion) : localSafe?.featuresEnabled,
-  }
-
-  dispatch(updateSafe(updatedSafe))
-
-  if (!remoteOwners.length) {
-    return
-  }
-  // If the remote owners does not contain a local address, we remove that local owner
-  localOwners.forEach((localAddress) => {
-    const remoteOwnerIndex = remoteOwners.findIndex((remoteAddress) => sameAddress(remoteAddress, localAddress))
-    if (remoteOwnerIndex === -1) {
-      dispatch(removeSafeOwner({ safeAddress, ownerAddress: localAddress }))
-    }
-  })
-
-  // If the remote has an owner that we don't have locally, we add it
-  remoteOwners.forEach((remoteAddress) => {
-    const localOwnerIndex = localOwners.findIndex((localAddress) => sameAddress(remoteAddress, localAddress))
-    if (localOwnerIndex === -1) {
-      dispatch(
-        addSafeOwner({
-          safeAddress,
-          ownerAddress: remoteAddress,
-          ownerName: 'UNKNOWN',
-        }),
-      )
-    }
-  })
+  return { ...localSafeInfo, ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
-export default (safeAdd: string) => async (
-  dispatch: Dispatch<any>,
+
+/**
+ * Updates the app's store with Safe Record built from data provided by client-gateway
+ *
+ * @note It's being used by the app when it loads for the first time and for the Safe's data polling
+ *
+ * @param {string} safeAddress
+ */
+export const fetchSafe = (safeAddress: string) => async (
+  dispatch: Dispatch,
   getState: () => AppReduxState,
-): Promise<Action | void> => {
-  try {
-    const safeAddress = checksumAddress(safeAdd)
-    const safeName = (await getSafeName(safeAddress)) || LOADED_SAFE_KEY
-    const latestMasterContractVersion = latestMasterContractVersionSelector(getState())
-    const totalFiatBalance = safeTotalFiatBalanceSelector(getState())
-    const safeProps = await buildSafe(safeAddress, safeName, latestMasterContractVersion, totalFiatBalance)
+): Promise<Action<Partial<SafeRecordProps>>> => {
+  const address = checksumAddress(safeAddress)
 
-    // `updateSafe`, as `loadSafesFromStorage` will populate the store previous to this call
-    // and `addSafe` will only add a newly non-existent safe
-    // For the case where the safe does not exist in the localStorage,
-    // `updateSafe` uses a default `notSetValue` to add the Safe to the store
-    dispatch(updateSafe(safeProps))
-  } catch (err) {
-    console.error('Error while updating Safe information: ', err)
+  const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
 
-    return Promise.resolve()
-  }
+  // remote (client-gateway)
+  const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
+
+  // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
+  const state = getState()
+  const addressBook = addressBookSelector(state)
+  // update owner's information
+  const owners = remoteSafeInfo
+    ? // if we have remote info, we can enrich it with local address book information
+      buildSafeOwners(remoteSafeInfo.owners, List(addressBook))
+    : // if there's no remote info, we keep what's in memory
+      undefined
+
+  return dispatch(updateSafe({ address, ...safeInfo, owners }))
 }

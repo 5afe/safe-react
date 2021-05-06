@@ -94,7 +94,7 @@ export const NewLimitModal = ({ close, open }: SpendingLimitModalProps): ReactEl
     <Modal
       handleClose={close}
       open={open}
-      title="New Spending Limit"
+      title="New spending limit"
       description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
     >
       {step === CREATE && <Create initialValues={values} onCancel={close} onReview={handleReview} />}

@@ -37,7 +37,7 @@ export const SpendingLimitSettings = (): ReactElement => {
     <>
       <Block className={classes.container} grow="grow">
         <Title size="xs" withoutMargin>
-          Spending Limit
+          Spending limit
         </Title>
         <InfoText size="lg">
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all
