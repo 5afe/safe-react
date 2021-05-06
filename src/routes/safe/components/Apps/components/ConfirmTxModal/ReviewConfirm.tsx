@@ -272,6 +272,7 @@ export const ReviewConfirm = ({
                 onClick: () => confirmTransactions(txParameters),
                 disabled: areTxsMalformed,
                 status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
               }}
             />
           </Modal.Footer>
