@@ -8,6 +8,10 @@ import { loadFromCookie } from 'src/logic/cookies/utils'
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
+export const COOKIE_GA = { name: '_ga', path: '/' }
+export const COOKIE_GAT = { name: '_gat', path: '/' }
+export const COOKIE_GIT = { name: '_gid', path: '/' }
+
 let analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {

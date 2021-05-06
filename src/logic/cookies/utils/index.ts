@@ -4,9 +4,10 @@ import { getNetworkName } from 'src/config'
 
 const PREFIX = `v1_${getNetworkName()}`
 
-export const loadFromCookie = async (key: string): Promise<undefined | Record<string, any>> => {
+export const loadFromCookie = async (key: string, withoutPrefix = false): Promise<undefined | Record<string, any>> => {
+  const prefix = withoutPrefix ? '' : `${PREFIX}__`
   try {
-    const stringifiedValue = await Cookies.get(`${PREFIX}__${key}`)
+    const stringifiedValue = await Cookies.get(`${prefix}${key}`)
     if (stringifiedValue === null || stringifiedValue === undefined) {
       return undefined
     }
@@ -28,4 +29,4 @@ export const saveCookie = async (key: string, value: Record<string, any>, expira
   }
 }
 
-export const removeCookie = (key: string): void => Cookies.remove(key)
+export const removeCookie = (key: string, path: string): void => Cookies.remove(key, { path })
