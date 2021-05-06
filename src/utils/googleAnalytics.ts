@@ -9,9 +9,9 @@ import { loadFromCookie } from 'src/logic/cookies/utils'
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
 
 export const COOKIES_LIST = [
-  { name: '_ga', path: '' },
-  { name: '_gat', path: '' },
-  { name: '_gid', path: '' },
+  { name: '_ga', path: '/' },
+  { name: '_gat', path: '/' },
+  { name: '_gid', path: '/' },
 ]
 
 let analyticsLoaded = false
