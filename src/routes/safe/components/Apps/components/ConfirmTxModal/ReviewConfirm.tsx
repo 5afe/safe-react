@@ -1,5 +1,5 @@
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
-import { Text, EthHashInfo, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
+import { Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
@@ -26,6 +26,7 @@ import Divider from 'src/components/Divider'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
+import { Modal } from 'src/components/Modal'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -36,11 +37,6 @@ const Container = styled.div`
 const TransactionFeesWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: ${sm} ${lg};
-  margin-bottom: 15px;
-`
-
-const FooterWrapper = styled.div`
-  margin-bottom: 15px;
 `
 
 const DecodeTxsWrapper = styled.div`
@@ -269,21 +265,16 @@ export const ReviewConfirm = ({
           )}
 
           {/* Buttons */}
-          <FooterWrapper>
-            <ModalFooterConfirmation
-              cancelText="Cancel"
-              handleCancel={handleTxRejection}
-              handleOk={() => confirmTransactions(txParameters)}
-              okDisabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus) || areTxsMalformed}
-              okText={
-                ButtonStatus.LOADING === buttonStatus
-                  ? txEstimationExecutionStatus === EstimationStatus.LOADING
-                    ? 'Estimating'
-                    : 'Submitting'
-                  : 'Submit'
-              }
+          <Modal.Footer withoutBorder>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: handleTxRejection }}
+              confirmButtonProps={{
+                onClick: () => confirmTransactions(txParameters),
+                disabled: areTxsMalformed,
+                status: buttonStatus,
+              }}
             />
-          </FooterWrapper>
+          </Modal.Footer>
         </div>
       )}
     </EditableTxParameters>
