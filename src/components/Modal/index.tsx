@@ -187,10 +187,10 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 )
 
 /*** Footer ***/
-const FooterSection = styled.div`
+const FooterSection = styled.div<{ withoutBorder: boolean }>`
   display: flex;
   justify-content: center;
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
+  border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator};
   padding: 24px;
 `
 
@@ -288,10 +288,13 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
 
 interface FooterProps {
   children: ReactNode | ReactNodeArray
+  withoutBorder?: boolean
 }
 
-const Footer = ({ children }: FooterProps): ReactElement => (
-  <FooterSection className="modal-footer">{children}</FooterSection>
+const Footer = ({ children, withoutBorder = false }: FooterProps): ReactElement => (
+  <FooterSection className="modal-footer" withoutBorder={withoutBorder}>
+    {children}
+  </FooterSection>
 )
 
 Footer.Buttons = Buttons
