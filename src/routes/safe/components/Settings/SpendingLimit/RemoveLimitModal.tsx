@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -115,6 +115,11 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     }
   }
 
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
+  }
+
   return (
     <Modal
       handleClose={onClose}
@@ -175,14 +180,14 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 />
               </Row>
 
-              <Modal.Footer>
+              <Modal.Footer withoutBorder>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{
                     color: 'error',
                     onClick: () => removeSelectedSpendingLimit(txParameters),
                     status: buttonStatus,
-                    text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                    text: confirmButtonText,
                   }}
                 />
               </Modal.Footer>
