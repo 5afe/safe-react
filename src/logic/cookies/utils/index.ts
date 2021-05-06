@@ -29,4 +29,9 @@ export const saveCookie = async (key: string, value: Record<string, any>, expira
   }
 }
 
-export const removeCookie = (key: string, path: string): void => Cookies.remove(key, { path })
+export const removeCookie = (key: string, path: string): void => {
+  console.log(path)
+  console.log(document.cookie)
+  debugger
+  Cookies.remove(key, { path: '/', domain: '.gnosisdev.com' })
+}
