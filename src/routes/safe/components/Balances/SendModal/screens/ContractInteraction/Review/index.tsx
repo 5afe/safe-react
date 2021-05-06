@@ -27,7 +27,8 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
@@ -84,6 +85,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(txInfo?.txData, txEstimationExecutionStatus)
+
   useEffect(() => {
     setTxInfo({
       txRecipient: tx.contractAddress as string,
@@ -91,17 +94,6 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
       txData: tx.data ? tx.data.trim() : '',
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (txInfo?.txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [txInfo?.txData, txEstimationExecutionStatus])
 
   const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {

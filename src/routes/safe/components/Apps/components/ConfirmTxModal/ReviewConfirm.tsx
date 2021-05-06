@@ -15,6 +15,7 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { md, lg, sm } from 'src/theme/variables'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
@@ -26,7 +27,7 @@ import Divider from 'src/components/Divider'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -65,13 +66,6 @@ type Props = ConfirmTxModalProps & {
 
 const parseTxValue = (value: string | number): string => {
   return web3ReadOnly.utils.toBN(value).toString()
-}
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
 }
 
 export const ReviewConfirm = ({
@@ -129,6 +123,8 @@ export const ReviewConfirm = ({
     manualGasLimit,
   })
 
+  const [buttonStatus, setButtonStatus] = useButtonStatus(txData, txEstimationExecutionStatus)
+
   // Decode tx data.
   useEffect(() => {
     const decodeTxData = async () => {
@@ -148,17 +144,6 @@ export const ReviewConfirm = ({
     onUserConfirm(safeTxHash)
     onClose()
   }
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [txData, txEstimationExecutionStatus])
 
   const confirmTransactions = async (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)

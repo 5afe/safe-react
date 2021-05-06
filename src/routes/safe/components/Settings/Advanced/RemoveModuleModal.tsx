@@ -24,6 +24,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { styles } from './style'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -71,21 +72,12 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(txData, txEstimationExecutionStatus)
+
   useEffect(() => {
     const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
     setTxData(txData)
   }, [selectedModulePair, safeAddress])
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [txData, txEstimationExecutionStatus])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {

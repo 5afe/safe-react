@@ -24,7 +24,8 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { ButtonStatus, Modal } from 'src/components/Modal'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -77,6 +78,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(data, txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -96,17 +99,6 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
       isCurrent = false
     }
   }, [safeAddress, tx])
-
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (data && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [data, txEstimationExecutionStatus])
 
   const submitTx = (txParameters: TxParameters) => {
     try {

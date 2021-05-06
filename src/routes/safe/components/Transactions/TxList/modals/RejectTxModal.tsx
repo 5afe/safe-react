@@ -1,17 +1,14 @@
-import { Loader } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import styled from 'styled-components'
 
 import { styles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -29,17 +26,6 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 
 const useStyles = makeStyles(styles)
-
-const LoaderText = styled.span`
-  margin-left: 10px;
-`
-
-enum ButtonStatus {
-  ERROR = -1,
-  DISABLED,
-  READY,
-  LOADING,
-}
 
 type Props = {
   isOpen: boolean
@@ -71,18 +57,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
 
   const nonce = gwTransaction.executionInfo?.nonce ?? 0
 
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    setButtonStatus(ButtonStatus.LOADING)
-
-    if (txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-  }, [txEstimationExecutionStatus])
-
   const sendReplacementTransaction = (txParameters: TxParameters) => {
-    setButtonStatus(ButtonStatus.LOADING)
-
     dispatch(
       createTransaction({
         safeAddress,
@@ -96,13 +71,18 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
         navigateToTransactionsTab: false,
       }),
     )
-
-    setButtonStatus(ButtonStatus.READY)
     onClose()
   }
 
   const getParametersStatus = (): ParametersStatus => {
     return 'CANCEL_TRANSACTION'
+  }
+
+  let confirmButtonStatus: ButtonStatus = ButtonStatus.READY
+  let confirmButtonText = 'Reject Transaction'
+  if (txEstimationExecutionStatus === EstimationStatus.FAILURE) {
+    confirmButtonStatus = ButtonStatus.LOADING
+    confirmButtonText = 'Estimating'
   }
 
   return (
@@ -163,29 +143,15 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                 </Block>
               )}
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
-                  Close
-                </Button>
-                <Button
-                  color="secondary"
-                  minHeight={42}
-                  minWidth={214}
-                  onClick={() => sendReplacementTransaction(txParameters)}
-                  type="submit"
-                  variant="contained"
-                  disabled={[ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(buttonStatus)}
-                >
-                  {ButtonStatus.LOADING === buttonStatus ? (
-                    <>
-                      <Loader size="xs" color="secondaryLight" />
-                      <LoaderText>
-                        {txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'}
-                      </LoaderText>
-                    </>
-                  ) : (
-                    'Reject Transaction'
-                  )}
-                </Button>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
+                  confirmButtonProps={{
+                    onClick: () => sendReplacementTransaction(txParameters),
+                    type: 'submit',
+                    status: confirmButtonStatus,
+                    text: confirmButtonText,
+                  }}
+                />
               </Row>
             </>
           )

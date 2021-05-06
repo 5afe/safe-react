@@ -31,6 +31,7 @@ import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useButtonStatus } from 'src/logic/hooks/useButtonStatus'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -175,6 +176,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     manualGasLimit,
   })
 
+  const [buttonStatus] = useButtonStatus(estimateGasArgs?.txData, txEstimationExecutionStatus)
+
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
@@ -186,20 +189,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     setEstimateGasArgs(spendingLimitTxData)
   }, [safeAddress, spendingLimits, existentSpendingLimit, txToken, values])
 
-  const [buttonStatus, setButtonStatus] = useState<ButtonStatus>(ButtonStatus.DISABLED)
-  useEffect(() => {
-    if (estimateGasArgs?.txData && txEstimationExecutionStatus !== EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.READY)
-    }
-
-    if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
-      setButtonStatus(ButtonStatus.LOADING)
-    }
-  }, [estimateGasArgs?.txData, txEstimationExecutionStatus])
-
   const handleSubmit = (txParameters: TxParameters): void => {
-    setButtonStatus(ButtonStatus.LOADING)
-
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
     const advancedOptionsTxParameters = {
       ...txParameters,
@@ -220,8 +210,6 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
       dispatch(createTransaction(spendingLimitTxData))
     }
-
-    setButtonStatus(ButtonStatus.READY)
   }
 
   const resetTimeLabel = useMemo(
