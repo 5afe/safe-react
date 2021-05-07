@@ -179,7 +179,7 @@ export const resetSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string, to
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     value: 0,
     data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
-    operation: DELEGATE_CALL,
+    operation: CALL,
   }
 }
 
