@@ -61,7 +61,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
 
         const toInfo = tx.txInfo.toInfo
         setType({
-          icon: knownAddress.isAddressBook ? undefined : knownAddress.image || CustomTxIcon,
+          icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
           fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
           text: toInfo ? knownAddress.name : 'Contract interaction',
         })
