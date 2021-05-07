@@ -8,9 +8,9 @@ import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
-import { loadFromCookie, saveCookie, removeCookie } from 'src/logic/cookies/utils'
+import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { COOKIES_LIST, loadGoogleAnalytics } from 'src/utils/googleAnalytics'
+import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
@@ -161,10 +161,8 @@ const CookiesBanner = (): ReactElement => {
     setShowAnalytics(localAnalytics)
     setShowIntercom(localIntercom)
 
-    // we remove GA cookies manually as react-ga does not provides a utility for it.
     if (!localAnalytics) {
-      const subDomain = location.host.split('.').slice(-2).join('.')
-      COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
+      removeCookies()
     }
 
     if (!localIntercom && isIntercomLoaded()) {
