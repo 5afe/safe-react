@@ -12,7 +12,7 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, mustBeHexData } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
@@ -224,6 +224,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                       type="text"
+                      validate={mustBeHexData}
                     />
                   </Col>
                 </Row>
