@@ -16,8 +16,7 @@ export const useEstimationStatus = (
         case EstimationStatus.LOADING:
           setButtonStatus(ButtonStatus.LOADING)
           break
-        case EstimationStatus.FAILURE:
-        case EstimationStatus.SUCCESS:
+        default:
           setButtonStatus(ButtonStatus.READY)
           break
       }
