@@ -8,7 +8,6 @@ import { List } from 'immutable'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -249,14 +248,8 @@ export const ReviewRemoveOwnerModal = ({
             </Block>
           )}
           <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-              Back
-            </Button>
             <Modal.Footer.Buttons
-              cancelButtonProps={{
-                onClick: onClickBack,
-                text: 'Back',
-              }}
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
               confirmButtonProps={{
                 onClick: () => onSubmit(txParameters),
                 status: buttonStatus,
