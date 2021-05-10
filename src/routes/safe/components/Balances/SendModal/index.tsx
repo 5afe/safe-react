@@ -74,6 +74,7 @@ const SendModal = ({
   const [activeScreen, setActiveScreen] = useState<TxType>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
+  const [recipient, setRecipient] = useState(recipientAddress)
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
@@ -124,7 +125,7 @@ const SendModal = ({
           <ChooseTxType
             onClose={onClose}
             recipientName={recipientName}
-            recipientAddress={recipientAddress}
+            recipientAddress={recipient}
             setActiveScreen={setActiveScreen}
           />
         )}
@@ -134,21 +135,28 @@ const SendModal = ({
             initialValues={tx as ReviewTxProp}
             onClose={onClose}
             onReview={handleTxCreation}
-            recipientAddress={recipientAddress}
+            recipientAddress={recipient}
             selectedToken={selectedToken as string}
             amount={tokenAmount}
           />
         )}
 
         {activeScreen === 'sendFundsReviewTx' && (
-          <ReviewSendFundsTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx as ReviewTxProp} />
+          <ReviewSendFundsTx
+            onClose={onClose}
+            onPrev={() => {
+              setRecipient((tx as ReviewTxProp).recipientAddress)
+              setActiveScreen('sendFunds')
+            }}
+            tx={tx as ReviewTxProp}
+          />
         )}
 
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
             isABI={isABI}
             switchMethod={handleSwitchMethod}
-            contractAddress={recipientAddress}
+            contractAddress={recipient}
             initialValues={tx as ContractInteractionTx}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
@@ -166,7 +174,7 @@ const SendModal = ({
             switchMethod={handleSwitchMethod}
             onClose={onClose}
             onNext={handleCustomTxCreation}
-            contractAddress={recipientAddress}
+            contractAddress={recipient}
           />
         )}
 
@@ -179,7 +187,7 @@ const SendModal = ({
             initialValues={tx}
             onClose={onClose}
             onNext={handleSendCollectible}
-            recipientAddress={recipientAddress}
+            recipientAddress={recipient}
             selectedToken={selectedToken as NFTToken | undefined}
           />
         )}
