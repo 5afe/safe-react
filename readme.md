@@ -4,7 +4,7 @@ The most trusted platform to store digital assets on Ethereum. More info at [gno
 
 This repository contains the code for the frontend code hosted at [https://gnosis-safe.io/app/]
 
-Besides Ethereum Mainnet, the following networks are supported:
+Besides the Ethereum Mainnet, the following networks are supported:
 
 - [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
 - [xDai](https://xdai.gnosis-safe.io/app/)
@@ -21,7 +21,7 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What things you need to install globally:
+What you need to install globally:
 
 ```
 yarn global add truffle ganache-cli
@@ -31,19 +31,17 @@ We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go wit
 
 ### Installing and running
 
-A step by step series of examples that tell you have to get a development env running
-
 Install dependencies for the project:
 ```
 yarn install
 ```
 
-For using the Rinkeby services:
+To use the Rinkeby services:
 ```
 yarn start
 ```
 
-If you prefer using Mainnet ones:
+If you prefer using the Mainnet ones:
 ```
 yarn start-mainnet
 ```
@@ -141,7 +139,6 @@ We prepare a new release every sprint. Sprints are two weeks long.
 * [React](https://reactjs.org/) - A JS library for building user interfaces
 * [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
-* [Flow](https://flow.org/) - Static Type Checker
 
 ## Contributing
 

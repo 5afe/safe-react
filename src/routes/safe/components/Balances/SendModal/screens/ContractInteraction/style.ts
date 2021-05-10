@@ -27,9 +27,6 @@ export const styles = createStyles({
   formContainer: {
     padding: `${md} ${lg}`,
     wordBreak: 'break-word',
-    maxHeight: '50vh',
-    overflow: 'hidden',
-    overflowY: 'auto',
   },
   value: {
     marginLeft: sm,
@@ -51,7 +48,7 @@ export const styles = createStyles({
     lineHeight: '1.43',
   },
   buttonRow: {
-    padding: '25px',
+    height: '84px',
     justifyContent: 'center',
     '& > button': {
       fontFamily: 'Averta',
