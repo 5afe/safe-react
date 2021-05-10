@@ -1,5 +1,7 @@
 import { List } from 'immutable'
+
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -111,6 +113,7 @@ export const formatAddressListToAddressBookNames = (
     return {
       address: address,
       name: ownerName || '',
+      chainId: ETHEREUM_NETWORK.UNKNOWN,
     }
   })
 }

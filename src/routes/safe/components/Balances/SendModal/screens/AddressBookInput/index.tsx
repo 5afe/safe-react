@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { isFeatureEnabled } from 'src/config'
-import { FEATURES } from 'src/config/networks/network.d'
+import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -65,8 +65,8 @@ const BaseAddressBookInput = ({
   const onChange: AutocompleteProps<AddressBookEntry, false, false, true>['onChange'] = (_, value, reason) => {
     switch (reason) {
       case 'select-option': {
-        const { address, name } = value as AddressBookEntry
-        updateAddressInfo({ address, name })
+        const { address, name, chainId } = value as AddressBookEntry
+        updateAddressInfo({ address, name, chainId })
         break
       }
     }
@@ -99,7 +99,14 @@ const BaseAddressBookInput = ({
             break
           }
 
-          const newEntry = typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
+          const newEntry =
+            typeof validatedAddress === 'string'
+              ? {
+                  address,
+                  name: normalizedValue,
+                  chainId: ETHEREUM_NETWORK.UNKNOWN,
+                }
+              : validatedAddress
 
           updateAddressInfo(newEntry)
           break
@@ -114,7 +121,13 @@ const BaseAddressBookInput = ({
         }
 
         const newEntry =
-          typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+          typeof validatedAddress === 'string'
+            ? {
+                address: validatedAddress,
+                name: '',
+                chainId: ETHEREUM_NETWORK.UNKNOWN,
+              }
+            : validatedAddress
 
         updateAddressInfo(newEntry)
 

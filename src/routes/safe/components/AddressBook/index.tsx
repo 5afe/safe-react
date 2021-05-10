@@ -16,6 +16,7 @@ import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
 import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
@@ -44,6 +45,7 @@ const StyledButton = styled(Button)`
     padding: 0 12px;
     min-width: auto;
   }
+
   svg {
     margin: 0 6px 0 0;
   }
@@ -71,7 +73,7 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const initialEntryState: Entry = { entry: { address: '', name: '', isNew: true } }
+const initialEntryState: Entry = { entry: { address: '', name: '', chainId: ETHEREUM_NETWORK.UNKNOWN, isNew: true } }
 
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
@@ -114,6 +116,7 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
+            chainId: 0,
             isNew: true,
           },
         })
