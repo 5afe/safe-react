@@ -1,4 +1,4 @@
-import { Button, EthHashInfo, FixedIcon, Text } from '@gnosis.pm/safe-react-components'
+import { Button, EthHashInfo, FixedIcon, Text, ButtonLink } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
@@ -14,7 +14,6 @@ import { getExplorerInfo } from 'src/config'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
@@ -147,10 +146,36 @@ const AddressBookTable = (): ReactElement => {
               setSelectedEntry(initialEntryState)
               setEditCreateEntryModalOpen(true)
             }}
-            size="lg"
-            testId="manage-tokens-btn"
+            color="primary"
+            iconType="exportImg"
+            iconSize="sm"
+            textSize="xl"
           >
-            + Create entry
+            Export
+          </ButtonLink>
+          <ButtonLink
+            onClick={() => {
+              setSelectedEntry(initialEntryState)
+              setEditCreateEntryModalOpen(true)
+            }}
+            color="primary"
+            iconType="importImg"
+            iconSize="sm"
+            textSize="xl"
+          >
+            Import
+          </ButtonLink>
+          <ButtonLink
+            onClick={() => {
+              setSelectedEntry(initialEntryState)
+              setEditCreateEntryModalOpen(true)
+            }}
+            color="primary"
+            iconType="add"
+            iconSize="sm"
+            textSize="xl"
+          >
+            Create entry
           </ButtonLink>
         </Col>
       </Row>
