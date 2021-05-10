@@ -74,7 +74,12 @@ const SendModal = ({
   const [activeScreen, setActiveScreen] = useState<TxType>(activeScreenType || 'chooseTxType')
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
-  const [recipient, setRecipient] = useState(recipientAddress)
+
+  const [recipient, setRecipient] = useState<string | undefined>(recipientAddress)
+
+  useEffect(() => {
+    setRecipient(recipientAddress)
+  }, [recipientAddress])
 
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
