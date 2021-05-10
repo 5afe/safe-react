@@ -62,6 +62,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const [isFetching, setIsFetching] = useState(false)
 
   const handleSubmit = () => {
     const newAppList = [
@@ -93,10 +94,11 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <Icon size="sm" type="externalLink" color="primary" />
             </Link>
           </AppDocsInfo>
-          <AppUrl appList={appList} />
+
+          <AppUrl appList={appList} isFetching={isFetching} />
 
           {/* Fetch app from url and return a SafeApp */}
-          <AppInfoUpdater onAppInfo={setAppInfo} />
+          <AppInfoUpdater onAppInfo={setAppInfo} setIsFetching={setIsFetching} />
 
           <AppInfo>
             <Img alt="Token image" height={55} src={appInfo.iconUrl} />

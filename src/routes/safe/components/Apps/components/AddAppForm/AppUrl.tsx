@@ -28,27 +28,39 @@ export const appUrlResolver = createDecorator({
   },
 })
 
-export const AppInfoUpdater = ({ onAppInfo }: { onAppInfo: (appInfo: SafeApp) => void }): null => {
+type AppInfoUpdaterProps = {
+  onAppInfo: (appInfo: SafeApp) => void
+  setIsFetching: (isFetching: boolean) => void
+}
+
+export const AppInfoUpdater = ({ onAppInfo, setIsFetching }: AppInfoUpdaterProps): null => {
   const {
     input: { value: appUrl },
   } = useField('appUrl', { subscription: { value: true } })
+
   const debouncedValue = useDebounce(appUrl, 500)
 
   React.useEffect(() => {
     const updateAppInfo = async () => {
-      const appInfo = await getAppInfoFromUrl(debouncedValue)
-      onAppInfo({ ...appInfo })
+      try {
+        setIsFetching(true)
+        const appInfo = await getAppInfoFromUrl(debouncedValue)
+        onAppInfo({ ...appInfo })
+        setIsFetching(false)
+      } catch (error) {
+        setIsFetching(false)
+      }
     }
 
     if (isValidURL(debouncedValue)) {
       updateAppInfo()
     }
-  }, [debouncedValue, onAppInfo])
+  }, [debouncedValue, onAppInfo, setIsFetching])
 
   return null
 }
 
-const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
+const AppUrl = ({ appList, isFetching }: { appList: SafeApp[]; isFetching: boolean }): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
   // trick to prevent having the field validated by default. Not sure why this happens in this form
@@ -56,7 +68,7 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
 
   return (
     <Field
-      label="App URL"
+      label={isFetching ? 'Loading...' : 'App URL'}
       name="appUrl"
       placeholder="App URL"
       type="text"
