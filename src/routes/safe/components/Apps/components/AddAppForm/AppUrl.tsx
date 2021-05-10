@@ -55,7 +55,15 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const validate = !visited?.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
 
   return (
-    <Field label="App URL" name="appUrl" placeholder="App URL" type="text" component={TextField} validate={validate} />
+    <Field
+      label="App URL"
+      name="appUrl"
+      placeholder="App URL"
+      type="text"
+      component={TextField}
+      validate={validate}
+      autoComplete="off"
+    />
   )
 }
 
