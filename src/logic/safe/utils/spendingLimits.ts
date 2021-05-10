@@ -172,7 +172,7 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
   }
 }
 
-export const resetSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string, token: string): MultiSendTx => {
+export const getResetSpendingLimitTx = (beneficiary: string, token: string): MultiSendTx => {
   const spendingLimitContract = getSpendingLimitContract()
 
   return {
