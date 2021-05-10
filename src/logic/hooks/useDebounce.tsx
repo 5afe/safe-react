@@ -25,6 +25,9 @@ export const useDebounce = <T extends unknown>(value: T, delay = 0, options?: De
   const debouncedCallback = useDebouncedCallback((value: T) => setCurrent(value), delay, options)
 
   useEffect(() => {
+    if (!value) {
+      return
+    }
     // does trigger the debounce timer initially
     if (value !== previousValue.current) {
       debouncedCallback(value)
