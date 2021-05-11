@@ -2,14 +2,13 @@ import { List } from 'immutable'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
-import Modal, { Modal as GenericModal } from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
 import Hairline from 'src/components/layout/Hairline'
@@ -36,8 +35,6 @@ import {
   Operation,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-
-const useStyles = makeStyles(styles)
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -400,12 +397,9 @@ export const ApproveTxModal = ({
               )}
 
               {/* Footer */}
-              <Row align="center" className={classes.buttonRow}>
+              <GenericModal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                 <GenericModal.Footer.Buttons
-                  cancelButtonProps={{
-                    onClick: onClose,
-                    text: 'Close',
-                  }}
+                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
                   confirmButtonProps={{
                     onClick: () => approveTx(txParameters),
                     type: 'submit',
@@ -414,7 +408,7 @@ export const ApproveTxModal = ({
                     testId: isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID,
                   }}
                 />
-              </Row>
+              </GenericModal.Footer>
             </>
           )
         }}
