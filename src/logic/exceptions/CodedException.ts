@@ -1,38 +1,36 @@
 import * as Sentry from '@sentry/react'
-import registry, { ExceptionContent } from './registry'
+import registry from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
 
-class CodedException extends Error {
+export class CodedException extends Error {
   public code: number
-  public content: ExceptionContent
+  public uiMessage: string | undefined
 
-  static throwError(code: number) {
-    const error = new CodedException(code)
-    error.log()
-    throw error
-  }
-
-  constructor(code: number, isTracked?: boolean, isLogged?: boolean) {
+  constructor(code: keyof typeof registry, customMessage?: string) {
     super()
+
     const content = registry[code]
-    this.code = code
-    this.content = {
-      ...content,
-      isTracked: isTracked == null ? content.isTracked : isTracked,
-      isLogged: isLogged == null ? content.isLogged : isLogged,
+    if (!content) {
+      throw new CodedException(0, `${code}`)
     }
-    this.message = `${code}: ${content.description}`
+
+    const extraInfo = customMessage ? ` (${customMessage})` : ''
+    this.message = `${code}: ${content.description}${extraInfo}`
+    this.code = code
+    this.uiMessage = content.uiMessage
   }
 
-  log(): void {
-    if (!IS_PRODUCTION || this.content.isLogged) {
-      console.error(IS_PRODUCTION ? this.message : this)
-    }
+  public log(): void {
+    console.error(this)
 
-    if (this.content.isTracked) {
+    if (IS_PRODUCTION) {
       Sentry.captureException(this)
     }
   }
 }
 
-export default CodedException
+export function logError(code: keyof typeof registry, customMessage?: string): CodedException {
+  const error = new CodedException(code, customMessage)
+  error.log()
+  return error
+}
