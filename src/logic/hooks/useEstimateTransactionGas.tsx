@@ -131,7 +131,7 @@ export const useEstimateTransactionGas = ({
   useEffect(() => {
     const estimateGas = async () => {
       if (!txData.length) {
-        setGasEstimation((prev) => ({ ...prev, txEstimationExecutionStatus: EstimationStatus.FAILURE }))
+        setGasEstimation((prev) => ({ ...prev, txEstimationExecutionStatus: EstimationStatus.SUCCESS }))
         return
       }
 
