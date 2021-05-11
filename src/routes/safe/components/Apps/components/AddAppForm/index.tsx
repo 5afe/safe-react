@@ -1,4 +1,4 @@
-import { TextField } from '@gnosis.pm/safe-react-components'
+import { TextField, Loader } from '@gnosis.pm/safe-react-components'
 import React, { useState, ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -41,6 +41,10 @@ const AppDocsInfo = styled.div`
   }
 `
 
+const StyledLoader = styled(Loader)`
+  margin-right: 15px;
+`
+
 interface AddAppFormValues {
   appUrl: string
   agreementAccepted: boolean
@@ -62,7 +66,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const [isFetching, setIsFetching] = useState(false)
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = () => {
     const newAppList = [
@@ -95,14 +99,23 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
             </Link>
           </AppDocsInfo>
 
-          <AppUrl appList={appList} isFetching={isFetching} />
+          <AppUrl appList={appList} />
 
           {/* Fetch app from url and return a SafeApp */}
-          <AppInfoUpdater onAppInfo={setAppInfo} setIsFetching={setIsFetching} />
+          <AppInfoUpdater onAppInfo={setAppInfo} setIsLoading={setIsLoading} />
 
           <AppInfo>
-            <Img alt="Token image" height={55} src={appInfo.iconUrl} />
-            <StyledTextFileAppName label="App name" readOnly value={appInfo.name} onChange={() => {}} />
+            {isLoading ? (
+              <StyledLoader size="md" />
+            ) : (
+              <Img alt="Token image" height={55} width={55} src={appInfo.iconUrl} />
+            )}
+            <StyledTextFileAppName
+              label="App name"
+              readOnly
+              value={isLoading ? 'Loading...' : appInfo.name}
+              onChange={() => {}}
+            />
           </AppInfo>
 
           <AppAgreement />

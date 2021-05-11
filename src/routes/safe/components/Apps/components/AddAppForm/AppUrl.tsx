@@ -30,10 +30,10 @@ export const appUrlResolver = createDecorator({
 
 type AppInfoUpdaterProps = {
   onAppInfo: (appInfo: SafeApp) => void
-  setIsFetching: (isFetching: boolean) => void
+  setIsLoading: (isLoading: boolean) => void
 }
 
-export const AppInfoUpdater = ({ onAppInfo, setIsFetching }: AppInfoUpdaterProps): null => {
+export const AppInfoUpdater = ({ onAppInfo, setIsLoading }: AppInfoUpdaterProps): null => {
   const {
     input: { value: appUrl },
   } = useField('appUrl', { subscription: { value: true } })
@@ -43,24 +43,24 @@ export const AppInfoUpdater = ({ onAppInfo, setIsFetching }: AppInfoUpdaterProps
   React.useEffect(() => {
     const updateAppInfo = async () => {
       try {
-        setIsFetching(true)
+        setIsLoading(true)
         const appInfo = await getAppInfoFromUrl(debouncedValue)
         onAppInfo({ ...appInfo })
-        setIsFetching(false)
+        setIsLoading(false)
       } catch (error) {
-        setIsFetching(false)
+        setIsLoading(false)
       }
     }
 
     if (isValidURL(debouncedValue)) {
       updateAppInfo()
     }
-  }, [debouncedValue, onAppInfo, setIsFetching])
+  }, [debouncedValue, onAppInfo, setIsLoading])
 
   return null
 }
 
-const AppUrl = ({ appList, isFetching }: { appList: SafeApp[]; isFetching: boolean }): React.ReactElement => {
+const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
   // trick to prevent having the field validated by default. Not sure why this happens in this form
@@ -68,7 +68,7 @@ const AppUrl = ({ appList, isFetching }: { appList: SafeApp[]; isFetching: boole
 
   return (
     <Field
-      label={isFetching ? 'Loading...' : 'App URL'}
+      label="App URL"
       name="appUrl"
       placeholder="App URL"
       type="text"
