@@ -69,6 +69,7 @@ const useStyles = makeStyles(styles)
 export type SendFundsTx = {
   amount?: string
   recipientAddress?: string
+  name?: string
   token?: string
   txType?: string
   tokenSpendingLimit?: SpendingLimit
@@ -133,11 +134,12 @@ const SendFunds = ({
 
   let tokenSpendingLimit
   const handleSubmit = (values) => {
-    const submitValues = values
+    const submitValues = { ...values }
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry?.address
     }
+    submitValues.recipientName = selectedEntry?.name
     onReview({ ...submitValues, tokenSpendingLimit })
   }
 
