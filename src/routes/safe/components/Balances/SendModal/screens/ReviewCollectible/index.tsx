@@ -217,11 +217,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           </div>
           <Row align="center" className={classes.buttonRow}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{
-                color: 'secondary',
-                onClick: onPrev,
-                text: 'Back',
-              }}
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
               confirmButtonProps={{
                 onClick: () => submitTx(txParameters),
                 type: 'submit',

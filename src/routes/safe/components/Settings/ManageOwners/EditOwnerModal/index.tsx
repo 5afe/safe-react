@@ -100,12 +100,11 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
+                <Button minWidth={140} onClick={onClose}>
                   Cancel
                 </Button>
                 <Button
                   color="primary"
-                  minHeight={42}
                   minWidth={140}
                   testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
                   type="submit"

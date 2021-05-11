@@ -30,9 +30,7 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    position: 'relative',
-    bottom: 0,
-    width: '100%',
+    gap: '16px',
   },
   inputRow: {
     position: 'relative',

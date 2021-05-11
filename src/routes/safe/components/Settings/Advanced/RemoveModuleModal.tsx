@@ -6,8 +6,6 @@ import cn from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import styled from 'styled-components'
-
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -31,11 +29,6 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const useStyles = makeStyles(styles)
-
-const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-`
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -143,7 +136,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
             <>
               <Row align="center" className={classes.modalHeading} grow>
                 <Paragraph className={classes.modalManage} noMargin weight="bolder">
-                  Remove Module
+                  Remove module
                 </Paragraph>
                 <IconButton disableRipple onClick={onClose}>
                   <Close className={classes.modalClose} />
@@ -189,17 +182,15 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                 />
               </Row>
               <Row align="center" className={classes.modalButtonRow}>
-                <FooterWrapper>
-                  <GenericModal.Footer.Buttons
-                    cancelButtonProps={{ onClick: onClose }}
-                    confirmButtonProps={{
-                      color: 'error',
-                      onClick: () => removeSelectedModule(txParameters),
-                      status: buttonStatus,
-                      text: confirmButtonText,
-                    }}
-                  />
-                </FooterWrapper>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{
+                    color: 'error',
+                    onClick: () => removeSelectedModule(txParameters),
+                    status: buttonStatus,
+                    text: confirmButtonText,
+                  }}
+                />
               </Row>
             </>
           )

@@ -1,10 +1,12 @@
+import { createStyles } from '@material-ui/core'
 import { error, lg, md } from 'src/theme/variables'
 
-export const styles = () => ({
+export const styles = createStyles({
   heading: {
     padding: lg,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
+    height: '74px',
   },
   manage: {
     fontSize: lg,
@@ -19,6 +21,7 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    gap: '16px',
   },
   buttonDelete: {
     color: '#fff',

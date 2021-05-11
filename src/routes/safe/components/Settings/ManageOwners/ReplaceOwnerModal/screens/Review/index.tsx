@@ -259,10 +259,7 @@ export const ReviewReplaceOwnerModal = ({
           </Block>
           <Row align="center" className={classes.buttonRow}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{
-                onClick: onClickBack,
-                text: 'Back',
-              }}
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
               confirmButtonProps={{
                 onClick: () => onSubmit(txParameters),
                 status: buttonStatus,

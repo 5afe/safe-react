@@ -79,14 +79,14 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
   }
 
   let confirmButtonStatus: ButtonStatus = ButtonStatus.READY
-  let confirmButtonText = 'Reject Transaction'
-  if (txEstimationExecutionStatus === EstimationStatus.FAILURE) {
+  let confirmButtonText = 'Reject transaction'
+  if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
     confirmButtonStatus = ButtonStatus.LOADING
     confirmButtonText = 'Estimating'
   }
 
   return (
-    <Modal description="Reject Transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
+    <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
         isExecution={isExecution}

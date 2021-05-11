@@ -13,9 +13,13 @@ const StyledDivider = styled(Divider)`
 
 const ButtonsContainer = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `
-
+const StyledGnoButton = styled(GnoButton)`
+  &.MuiButtonBase-root {
+    margin-left: 16px;
+  }
+`
 interface Props {
   appInfo: SafeApp
   onCancel: () => void
@@ -37,12 +41,12 @@ const FormButtons = ({ appInfo, onCancel }: Props): ReactElement => {
     <>
       <StyledDivider />
       <ButtonsContainer>
-        <Button size="md" onClick={onCancel} color="secondary">
+        <Button size="md" onClick={onCancel} color="primary" variant="outlined">
           Cancel
         </Button>
-        <GnoButton color="primary" variant="contained" type="submit" disabled={isSubmitDisabled}>
+        <StyledGnoButton color="primary" minWidth={140} variant="contained" type="submit" disabled={isSubmitDisabled}>
           Add
-        </GnoButton>
+        </StyledGnoButton>
       </ButtonsContainer>
     </>
   )

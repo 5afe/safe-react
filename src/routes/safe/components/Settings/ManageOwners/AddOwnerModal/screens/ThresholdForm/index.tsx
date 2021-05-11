@@ -104,12 +104,11 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button minHeight={42} minWidth={140} onClick={onClickBack}>
+              <Button minWidth={140} onClick={onClickBack}>
                 Back
               </Button>
               <Button
                 color="primary"
-                minHeight={42}
                 minWidth={140}
                 testId={ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID}
                 type="submit"

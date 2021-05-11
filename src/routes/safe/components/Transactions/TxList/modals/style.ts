@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core'
-import { background, border, lg, md, sm } from 'src/theme/variables'
+import { background, lg, md, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   heading: {
@@ -21,10 +21,7 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-    position: 'relative',
-    bottom: 0,
-    width: '100%',
-    borderTop: `1px solid ${border}`,
+    gap: '16px',
   },
   nonceNumber: {
     marginTop: sm,

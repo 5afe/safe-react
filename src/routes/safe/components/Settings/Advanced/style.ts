@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core'
-import { background, border, error, fontColor, lg, md, secondaryText, sm, smallFontSize, xl } from 'src/theme/variables'
+import { background, border, fontColor, lg, md, secondaryText, sm, smallFontSize, xl } from 'src/theme/variables'
 
 export const styles = createStyles({
   title: {
@@ -70,11 +70,7 @@ export const styles = createStyles({
   modalButtonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  modalButtonRemove: {
-    color: '#fff',
-    backgroundColor: error,
-    height: '42px',
+    gap: '16px',
   },
   modalName: {
     textOverflow: 'ellipsis',

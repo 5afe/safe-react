@@ -13,7 +13,7 @@ export interface ButtonProps {
   onClose: () => void
 }
 
-const Buttons = ({ onClose }: ButtonProps) => {
+const Buttons = ({ onClose }: ButtonProps): React.ReactElement => {
   const classes = useStyles()
   const {
     input: { value: method },
@@ -34,7 +34,6 @@ const Buttons = ({ onClose }: ButtonProps) => {
         Cancel
       </Button>
       <Button
-        className={classes.submitButton}
         color="primary"
         data-testid={`${isReadMethod(method) ? 'call' : 'review'}-tx-btn`}
         disabled={submitting || validating || ((!valid || !!submitError) && !modifiedSinceLastSubmit) || !method}

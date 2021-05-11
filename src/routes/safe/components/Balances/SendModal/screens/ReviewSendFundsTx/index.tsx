@@ -284,10 +284,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           {/* Footer */}
           <Row align="center" className={classes.buttonRow}>
             <Modal.Footer.Buttons
-              cancelButtonProps={{
-                onClick: onPrev,
-                text: 'Back',
-              }}
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
               confirmButtonProps={{
                 onClick: () => submitTx(txParameters),
                 status: buttonStatus,

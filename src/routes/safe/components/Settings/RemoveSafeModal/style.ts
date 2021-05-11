@@ -22,11 +22,11 @@ export const styles = createStyles({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
+    gap: '16px',
   },
   buttonRemove: {
     color: '#fff',
     backgroundColor: error,
-    height: '42px',
   },
   owner: {
     padding: md,

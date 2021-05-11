@@ -30,7 +30,7 @@ const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDe
     >
       <Row align="center" className={classes.heading} grow>
         <Paragraph className={classes.manage} noMargin weight="bolder">
-          Delete Entry
+          Delete entry
         </Paragraph>
         <IconButton disableRipple onClick={onClose}>
           <Close className={classes.close} />
@@ -47,13 +47,12 @@ const DeleteEntryModalComponent = ({ classes, deleteEntryModalHandler, entryToDe
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button className={classes.buttonCancel} minHeight={42} minWidth={140} onClick={onClose}>
+              <Button className={classes.buttonCancel} minWidth={140} onClick={onClose}>
                 Cancel
               </Button>
               <Button
                 className={classes.buttonDelete}
                 color="primary"
-                minHeight={42}
                 minWidth={140}
                 testId={DELETE_ENTRY_BTN_ID}
                 type="submit"
