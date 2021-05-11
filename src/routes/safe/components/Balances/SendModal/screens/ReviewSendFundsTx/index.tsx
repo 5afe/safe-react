@@ -122,10 +122,10 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   })
 
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+  const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
   const submitTx = (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
-    const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
     if (!safeAddress) {
       setButtonStatus(ButtonStatus.READY)
@@ -256,7 +256,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
             {/* Tx Parameters */}
             {/* FIXME TxParameters should be updated to be used with spending limits */}
-            {!sameString(tx.txType, 'spendingLimit') && (
+            {!isSpendingLimit && (
               <TxParametersDetail
                 txParameters={txParameters}
                 onEdit={toggleEditMode}
@@ -269,7 +269,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
 
           {/* Disclaimer */}
           {/* FIXME Estimation should be fixed to be used with spending limits */}
-          {!sameString(tx.txType, 'spendingLimit') && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
+          {!isSpendingLimit && txEstimationExecutionStatus !== EstimationStatus.LOADING && (
             <div className={classes.gasCostsContainer}>
               <TransactionFees
                 gasCostFormatted={gasCostFormatted}
@@ -282,7 +282,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
           )}
 
           {/* Footer */}
-          <Row align="center" className={classes.buttonRow}>
+          <Modal.Footer withoutBorder={!isSpendingLimit}>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
               confirmButtonProps={{
@@ -292,7 +292,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 testId: 'submit-tx-btn',
               }}
             />
-          </Row>
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>
