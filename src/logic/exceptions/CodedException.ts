@@ -21,10 +21,11 @@ export class CodedException extends Error {
   }
 
   public log(): void {
-    console.error(this)
-
     if (IS_PRODUCTION) {
       Sentry.captureException(this)
+      console.error(this.message) // log only the message w/o the trace
+    } else {
+      console.error(this) // log the full error on dev
     }
   }
 }

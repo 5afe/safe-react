@@ -30,8 +30,9 @@ describe('CodedException', () => {
       jest.mock('console')
       console.error = jest.fn()
     })
-    afterAll(() => {
+    afterEach(() => {
       jest.unmock('console')
+      ;(constants as any).IS_PRODUCTION = false
     })
 
     it('logs to the console', () => {
@@ -47,9 +48,19 @@ describe('CodedException', () => {
       err.log()
       expect(console.error).toHaveBeenCalledWith(err)
     })
+
+    it('logs only the error message on prod', () => {
+      ;(constants as any).IS_PRODUCTION = true
+      logError(100)
+      expect(console.error).toHaveBeenCalledWith('100: Invalid input in the address field')
+    })
   })
 
   describe('Tracking', () => {
+    afterEach(() => {
+      ;(constants as any).IS_PRODUCTION = false
+    })
+
     it('tracks using Sentry on production', () => {
       ;(constants as any).IS_PRODUCTION = true
       logError(100)
