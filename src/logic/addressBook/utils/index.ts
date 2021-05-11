@@ -94,7 +94,7 @@ export const getOwnersWithNameFromAddressBook = (
     const ownerName = getNameFromAddressBook(addressBook, owner.address)
     return {
       address: owner.address,
-      name: ownerName || owner.name,
+      name: ownerName || '',
     }
   })
 }
@@ -116,7 +116,7 @@ export const formatAddressListToAddressBookNames = (
 }
 
 /**
- * If the safe is not loaded, the owner wasn't not deleted
+ * If the safe is not loaded, the owner wasn't deleted
  * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
  * @param name
  * @param address
