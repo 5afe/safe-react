@@ -16,9 +16,6 @@ export const styles = () => ({
   manage: {
     fontSize: lg,
   },
-  address: {
-    marginRight: sm,
-  },
   closeIcon: {
     height: '35px',
     width: '35px',
@@ -30,18 +27,5 @@ export const styles = () => ({
   buttonRow: {
     height: '84px',
     justifyContent: 'center',
-  },
-  name: {
-    textOverflow: 'ellipsis',
-    overflow: 'hidden',
-  },
-  userName: {
-    whiteSpace: 'nowrap',
-  },
-  owner: {
-    alignItems: 'center',
-  },
-  user: {
-    justifyContent: 'left',
   },
 })

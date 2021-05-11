@@ -1,14 +1,11 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -163,22 +160,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 {owners?.map((owner) => (
                   <React.Fragment key={owner.address}>
                     <Row className={classes.owner}>
-                      <Col align="center" xs={1}>
-                        <Identicon address={owner.address} diameter={32} />
-                      </Col>
-                      <Col xs={11}>
-                        <Block className={classNames(classes.name, classes.userName)}>
-                          <Paragraph noMargin size="lg" weight="bolder">
-                            {owner.name}
-                          </Paragraph>
-                          <Block className={classes.user} justify="center">
-                            <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                              {owner.address}
-                            </Paragraph>
-                            <CopyBtn content={owner.address} />
-                            <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
-                          </Block>
-                        </Block>
+                      <Col align="center" xs={12}>
+                        <EthHashInfo
+                          hash={owner.address}
+                          name={owner.name}
+                          showCopyBtn
+                          showAvatar
+                          explorerUrl={getExplorerInfo(owner.address)}
+                        />
                       </Col>
                     </Row>
                     <Hairline />
@@ -191,22 +180,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 </Row>
                 <Hairline />
                 <Row className={classes.selectedOwner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={values.ownerAddress} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {values.ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {values.ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={values.ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(values.ownerAddress)} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      hash={values.ownerAddress}
+                      name={values.ownerName}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(values.ownerAddress)}
+                    />
                   </Col>
                 </Row>
                 <Hairline />

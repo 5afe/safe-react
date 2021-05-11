@@ -4,18 +4,15 @@ import Close from '@material-ui/icons/Close'
 import QRCode from 'qrcode.react'
 import React, { ReactElement } from 'react'
 
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { border, fontColor, lg, md, screenSm, secondaryText, sm } from 'src/theme/variables'
-import { copyToClipboard } from 'src/utils/clipboard'
+import { border, fontColor, lg, md, screenSm, secondaryText } from 'src/theme/variables'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const networkInfo = getNetworkInfo()
 const useStyles = makeStyles(
@@ -68,16 +65,6 @@ const useStyles = makeStyles(
         flexDirection: 'row',
       },
     },
-    address: {
-      marginLeft: sm,
-      marginRight: sm,
-      maxWidth: '70%',
-      overflowWrap: 'break-word',
-
-      [`@media (min-width: ${screenSm}px)`]: {
-        maxWidth: 'none',
-      },
-    },
   }),
 )
 
@@ -116,17 +103,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
           <QRCode size={135} value={safeAddress} />
         </Block>
         <Block className={classes.addressContainer} justify="center">
-          <Identicon address={safeAddress} diameter={32} />
-          <Paragraph
-            className={classes.address}
-            onClick={() => {
-              copyToClipboard(safeAddress)
-            }}
-          >
-            {safeAddress}
-          </Paragraph>
-          <CopyBtn content={safeAddress} />
-          <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
+          <EthHashInfo hash={safeAddress} showAvatar showCopyBtn explorerUrl={getExplorerInfo(safeAddress)} />
         </Block>
       </Col>
       <Hairline />

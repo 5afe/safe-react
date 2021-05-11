@@ -205,7 +205,7 @@ type MultiSigConfirmations = {
   signature: string | null
 }
 
-type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
+export type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
 
 type TokenInfo = {
   tokenType: TokenType

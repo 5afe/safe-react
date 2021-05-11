@@ -1,22 +1,18 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import classNames from 'classnames'
 import React from 'react'
 
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { shortVersionOf } from 'src/logic/wallets/ethAddresses'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME, THRESHOLD } from 'src/routes/load/components/fields'
 import { getNumOwnersFrom, getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useStyles } from './styles'
 import { getExplorerInfo } from 'src/config'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { LoadFormValues } from 'src/routes/load/container/Load'
 
 const checkIfUserAddressIsAnOwner = (values: LoadFormValues, userAddress: string): boolean => {
@@ -73,12 +69,13 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
                 Safe address
               </Paragraph>
               <Row className={classes.container}>
-                <Identicon address={safeAddress} diameter={32} />
-                <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                  {shortVersionOf(safeAddress, 4)}
-                </Paragraph>
-                <CopyBtn content={safeAddress} />
-                <ExplorerButton explorerUrl={getExplorerInfo(safeAddress)} />
+                <EthHashInfo
+                  hash={safeAddress}
+                  shortenHash={4}
+                  showAvatar
+                  showCopyBtn
+                  explorerUrl={getExplorerInfo(safeAddress)}
+                />
               </Row>
             </Block>
             <Block margin="lg">
@@ -110,22 +107,14 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
             {owners.map((address, index) => (
               <>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={address} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" data-testid="load-safe-review-owner-name">
-                        {values[getOwnerNameBy(index)]}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph color="disabled" noMargin size="md">
-                          {address}
-                        </Paragraph>
-                        <CopyBtn content={address} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(address)} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      hash={address}
+                      name={values[getOwnerNameBy(index)]}
+                      showAvatar
+                      showCopyBtn
+                      explorerUrl={getExplorerInfo(address)}
+                    />
                   </Col>
                 </Row>
                 {index !== owners.length - 1 && <Hairline />}
