@@ -1,5 +1,4 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -29,11 +28,9 @@ import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
-
-const useStyles = makeStyles(styles)
 
 type ReplaceOwnerProps = {
   onClose: () => void
@@ -257,7 +254,7 @@ export const ReviewReplaceOwnerModal = ({
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           </Block>
-          <Row align="center" className={classes.buttonRow}>
+          <Modal.Footer withoutBorder>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
               confirmButtonProps={{
@@ -268,7 +265,7 @@ export const ReviewReplaceOwnerModal = ({
                 testId: REPLACE_OWNER_SUBMIT_BTN_TEST_ID,
               }}
             />
-          </Row>
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>
