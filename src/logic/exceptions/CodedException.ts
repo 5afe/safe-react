@@ -15,7 +15,7 @@ export class CodedException extends Error {
     }
 
     const extraInfo = customMessage ? ` (${customMessage})` : ''
-    this.message = `${code}: ${content.description}${extraInfo}`
+    this.message = `${code} – ${content.description}${extraInfo}`
     this.code = code
     this.uiMessage = content.uiMessage
   }
