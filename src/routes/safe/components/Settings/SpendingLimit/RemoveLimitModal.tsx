@@ -180,7 +180,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 />
               </Row>
 
-              <Modal.Footer withoutBorder>
+              <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{

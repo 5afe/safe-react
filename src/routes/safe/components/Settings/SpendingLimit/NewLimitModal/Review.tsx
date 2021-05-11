@@ -318,7 +318,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             />
           </div>
 
-          <Modal.Footer withoutBorder>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
               cancelButtonProps={{
                 onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
