@@ -187,14 +187,10 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 const FooterSection = styled.div<{ withoutBorder: boolean }>`
   display: flex;
   justify-content: center;
+  align-items: center;
   border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator};
-  padding: 24px;
-`
-
-const ButtonStyled = styled(Button)`
-  &.MuiButtonBase-root {
-    margin: 0 10px;
-  }
+  height: 84px;
+  gap: 16px;
 `
 
 const LoaderText = styled.span`
@@ -245,7 +241,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
 
   return (
     <>
-      <ButtonStyled
+      <Button
         size="md"
         color="primary"
         variant="outlined"
@@ -262,8 +258,8 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         ) : (
           cancelText
         )}
-      </ButtonStyled>
-      <ButtonStyled
+      </Button>
+      <Button
         size="md"
         type={confirmProps?.onClick ? 'button' : 'submit'}
         disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
@@ -278,7 +274,7 @@ const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsPro
         ) : (
           confirmText
         )}
-      </ButtonStyled>
+      </Button>
     </>
   )
 }
