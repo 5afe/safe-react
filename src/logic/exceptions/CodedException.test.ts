@@ -51,13 +51,13 @@ describe('CodedException', () => {
 
   describe('Tracking', () => {
     it('tracks using Sentry on production', () => {
-      constants.IS_PRODUCTION = true
+      ;(constants as any).IS_PRODUCTION = true
       logError(100)
       expect(Sentry.captureException).toHaveBeenCalled()
     })
 
     it('does not track using Sentry in non-production envs', () => {
-      constants.IS_PRODUCTION = false
+      ;(constants as any).IS_PRODUCTION = false
       logError(100)
       expect(Sentry.captureException).not.toHaveBeenCalled()
     })
