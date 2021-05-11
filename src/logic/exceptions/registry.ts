@@ -11,6 +11,9 @@ const registry: Record<number, ExceptionContent> = {
     description: 'Invalid input in the address field',
     uiMessage: 'Please enter a valid address',
   },
+  600: {
+    description: 'Error fetching token list',
+  },
 }
 
 export default registry

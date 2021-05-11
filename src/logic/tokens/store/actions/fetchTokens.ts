@@ -15,7 +15,8 @@ import { AppReduxState, store } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import CodedException from 'src/logic/exceptions/CodedException'
+import { logError } from 'src/logic/exceptions/CodedException'
+import { TokenResult } from '../../api/fetchErc20AndErc721AssetsList'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -93,24 +94,24 @@ export const fetchTokens = () => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
   getState: () => AppReduxState,
 ): Promise<void> => {
+  const currentSavedTokens = tokensSelector(getState())
+
+  let tokenList: TokenResult[]
   try {
-    const currentSavedTokens = tokensSelector(getState())
-
-    const {
-      data: { results: tokenList },
-    } = await fetchErc20AndErc721AssetsList()
-
-    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
-
-    if (currentSavedTokens?.size === erc20Tokens.length) {
-      return
-    }
-
-    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
-
-    dispatch(addTokens(tokens))
+    const resp = await fetchErc20AndErc721AssetsList()
+    tokenList = resp.data.results
   } catch (err) {
-    CodedException.throwError(100)
-    console.error('Error fetching token list', err)
+    logError(600)
+    return
   }
+
+  const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+  if (currentSavedTokens?.size === erc20Tokens.length) {
+    return
+  }
+
+  const tokens = List(erc20Tokens.map((token) => makeToken(token)))
+
+  dispatch(addTokens(tokens))
 }
