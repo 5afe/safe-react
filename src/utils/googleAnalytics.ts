@@ -4,9 +4,15 @@ import { getNetworkInfo } from 'src/config'
 
 import { getGoogleAnalyticsTrackingID } from 'src/config'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
-import { loadFromCookie } from 'src/logic/cookies/utils'
+import { loadFromCookie, removeCookie } from 'src/logic/cookies/utils'
 
 export const SAFE_NAVIGATION_EVENT = 'Safe Navigation'
+
+export const COOKIES_LIST = [
+  { name: '_ga', path: '/' },
+  { name: '_gat', path: '/' },
+  { name: '_gid', path: '/' },
+]
 
 let analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
@@ -50,12 +56,15 @@ export const useAnalytics = (): UseAnalyticsResponse => {
     fetchCookiesFromStorage()
   }, [])
 
-  const trackPage = (page) => {
-    if (!analyticsAllowed || !analyticsLoaded) {
-      return
-    }
-    ReactGA.pageview(page)
-  }
+  const trackPage = useCallback(
+    (page) => {
+      if (!analyticsAllowed || !analyticsLoaded) {
+        return
+      }
+      ReactGA.pageview(page)
+    },
+    [analyticsAllowed],
+  )
 
   const trackEvent = useCallback(
     (event: EventArgs) => {
@@ -68,4 +77,10 @@ export const useAnalytics = (): UseAnalyticsResponse => {
   )
 
   return { trackPage, trackEvent }
+}
+
+// we remove GA cookies manually as react-ga does not provides a utility for it.
+export const removeCookies = (): void => {
+  const subDomain = location.host.split('.').slice(-2).join('.')
+  COOKIES_LIST.forEach((cookie) => removeCookie(cookie.name, cookie.path, `.${subDomain}`))
 }

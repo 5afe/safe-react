@@ -243,6 +243,7 @@
     "@typechain/web3-v1": "^2.2.0",
     "@types/history": "4.6.2",
     "@types/jest": "^26.0.22",
+    "@types/js-cookie": "^2.2.6",
     "@types/lodash.get": "^4.4.6",
     "@types/lodash.memoize": "^4.1.6",
     "@types/node": "^14.14.37",
