@@ -1,6 +1,5 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
@@ -19,19 +18,17 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
-
-const useStyles = makeStyles(styles)
 
 type ChangeThresholdModalProps = {
   onClose: () => void
@@ -206,7 +203,7 @@ export const ChangeThresholdModal = ({
                   </div>
                 )}
 
-                <Row align="center" className={classes.buttonRow}>
+                <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                   <Modal.Footer.Buttons
                     cancelButtonProps={{ onClick: onClose }}
                     confirmButtonProps={{
@@ -215,7 +212,7 @@ export const ChangeThresholdModal = ({
                       text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
                     }}
                   />
-                </Row>
+                </Modal.Footer>
               </>
             )}
           </GnoForm>
