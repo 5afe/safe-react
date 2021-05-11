@@ -78,14 +78,11 @@ const SendModal = ({
   const [recipient, setRecipient] = useState<string | undefined>(recipientAddress)
 
   useEffect(() => {
-    setRecipient(recipientAddress)
-  }, [recipientAddress])
-
-  useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setIsABI(true)
     setTx({})
-  }, [activeScreenType, isOpen])
+    setRecipient(recipientAddress)
+  }, [activeScreenType, isOpen, recipientAddress])
 
   const handleTxCreation = (txInfo: SendCollectibleTxInfo) => {
     setActiveScreen('sendFundsReviewTx')
