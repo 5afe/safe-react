@@ -24,6 +24,7 @@ const StyledTextFileAppName = styled(TextField)`
 `
 
 const AppInfo = styled.div`
+  display: flex;
   margin: 36px 0 24px 0;
 
   img {
@@ -39,6 +40,14 @@ const AppDocsInfo = styled.div`
     top: 4px;
     left: 4px;
   }
+`
+
+const WrapperLoader = styled.div`
+  height: 55px;
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 `
 
 const StyledLoader = styled(Loader)`
@@ -106,9 +115,11 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
 
           <AppInfo>
             {isLoading ? (
-              <StyledLoader size="md" />
+              <WrapperLoader>
+                <StyledLoader size="sm" />
+              </WrapperLoader>
             ) : (
-              <Img alt="Token image" height={55} width={55} src={appInfo.iconUrl} />
+              <Img alt="Token image" width={55} src={appInfo.iconUrl} />
             )}
             <StyledTextFileAppName
               label="App name"
