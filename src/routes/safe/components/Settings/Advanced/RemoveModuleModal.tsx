@@ -1,6 +1,5 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
 import React, { useEffect, useState } from 'react'
@@ -20,15 +19,13 @@ import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const useStyles = makeStyles(styles)
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -181,7 +178,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>
-              <Row align="center" className={classes.modalButtonRow}>
+              <GenericModal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                 <GenericModal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{
@@ -191,7 +188,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                     text: confirmButtonText,
                   }}
                 />
-              </Row>
+              </GenericModal.Footer>
             </>
           )
         }}
