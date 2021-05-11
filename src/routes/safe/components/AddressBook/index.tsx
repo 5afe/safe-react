@@ -24,6 +24,7 @@ import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/upda
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
+import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
 import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
@@ -77,6 +78,7 @@ const AddressBookTable = (): ReactElement => {
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
+  const [exportEntriesModalOpen, setExportEntriesModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
   const { trackEvent } = useAnalytics()
 
@@ -144,7 +146,7 @@ const AddressBookTable = (): ReactElement => {
           <ButtonLink
             onClick={() => {
               setSelectedEntry(initialEntryState)
-              setEditCreateEntryModalOpen(true)
+              setExportEntriesModalOpen(true)
             }}
             color="primary"
             iconType="exportImg"
@@ -283,6 +285,7 @@ const AddressBookTable = (): ReactElement => {
         isOpen={deleteEntryModalOpen}
         onClose={() => setDeleteEntryModalOpen(false)}
       />
+      <ExportEntriesModal isOpen={exportEntriesModalOpen} onClose={() => setExportEntriesModalOpen(false)} />
       <SendModal
         activeScreenType="chooseTxType"
         isOpen={sendFundsModalOpen}
