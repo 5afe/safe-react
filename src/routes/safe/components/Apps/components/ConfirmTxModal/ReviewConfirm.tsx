@@ -1,27 +1,26 @@
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
-import { Text, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
+import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { md, lg, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
+import { BasicTxInfo, DecodeTxs } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
 import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
 
@@ -250,7 +249,7 @@ export const ReviewConfirm = ({
           )}
 
           {/* Buttons */}
-          <Modal.Footer withoutBorder>
+          <Modal.Footer withoutBorder={txEstimationExecutionStatus !== EstimationStatus.LOADING}>
             <Modal.Footer.Buttons
               cancelButtonProps={{ onClick: handleTxRejection }}
               confirmButtonProps={{
