@@ -32,6 +32,8 @@ export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
 export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
+import { OwnerValues } from '../..'
+
 const formMutators = {
   setOwnerAddress: (args, state, utils) => {
     utils.changeValue(state, 'ownerAddress', () => args[0])
@@ -50,9 +52,16 @@ type OwnerFormProps = {
   onSubmit: (values: NewOwnerProps) => void
   ownerAddress: string
   ownerName: string
+  initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerFormProps): ReactElement => {
+export const OwnerForm = ({
+  onClose,
+  onSubmit,
+  ownerAddress,
+  ownerName,
+  initialValues,
+}: OwnerFormProps): ReactElement => {
   const classes = useStyles()
 
   const handleSubmit = (values: NewOwnerProps) => {
@@ -75,7 +84,14 @@ export const OwnerForm = ({ onClose, onSubmit, ownerAddress, ownerName }: OwnerF
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        onSubmit={handleSubmit}
+        initialValues={{
+          ownerName: initialValues?.newOwnerName,
+          ownerAddress: initialValues?.newOwnerAddress,
+        }}
+      >
         {(...args) => {
           const mutators = args[3]
 
