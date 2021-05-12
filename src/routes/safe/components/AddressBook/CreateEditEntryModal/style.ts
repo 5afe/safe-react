@@ -20,10 +20,5 @@ export const useStyles = makeStyles(
       height: '35px',
       width: '35px',
     },
-    buttonRow: {
-      height: '84px',
-      justifyContent: 'center',
-      gap: '16px',
-    },
   }),
 )
