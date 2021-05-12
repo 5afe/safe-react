@@ -20,7 +20,7 @@ const useStyles = makeStyles(
     heading: {
       padding: `${md} ${lg}`,
       justifyContent: 'space-between',
-      maxHeight: '75px',
+      height: '74px',
       boxSizing: 'border-box',
     },
     close: {
