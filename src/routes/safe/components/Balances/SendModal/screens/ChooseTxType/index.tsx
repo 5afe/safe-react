@@ -91,7 +91,7 @@ const ChooseTxType = ({
             className={classes.firstButton}
             color="primary"
             minHeight={52}
-            minWidth={260}
+            minWidth={240}
             onClick={() => setActiveScreen('sendFunds')}
             variant="contained"
             testId="modal-send-funds-btn"
@@ -104,7 +104,7 @@ const ChooseTxType = ({
               className={classes.firstButton}
               color="primary"
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('sendCollectible')}
               variant="contained"
               testId="modal-send-collectible-btn"
@@ -122,7 +122,7 @@ const ChooseTxType = ({
               color="primary"
               disabled={disableContractInteraction}
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('contractInteraction')}
               variant="outlined"
               testId="modal-contract-interaction-btn"
