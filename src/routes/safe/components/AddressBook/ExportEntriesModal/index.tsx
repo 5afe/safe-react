@@ -1,4 +1,5 @@
 import React, { ReactElement, useEffect, useState } from 'react'
+import { format } from 'date-fns'
 import { useSelector, useDispatch } from 'react-redux'
 import { CSVDownloader, jsonToCSV } from 'react-papaparse'
 import styled from 'styled-components'
@@ -7,18 +8,15 @@ import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { Button, Loader } from '@gnosis.pm/safe-react-components'
-import IconButton from '@material-ui/core/IconButton'
-import Close from '@material-ui/icons/Close'
+import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
+
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 import { useStyles } from './style'
 
-import Modal from 'src/components/Modal'
-import Block from 'src/components/layout/Block'
-import Hairline from 'src/components/layout/Hairline'
+import { Modal } from 'src/components/Modal'
 import Img from 'src/components/layout/Img'
-import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 
 import SuccessSvg from './assets/success.svg'
@@ -33,107 +31,100 @@ type ExportEntriesModalProps = {
 const BodyImage = styled.div`
   grid-row: 1;
 `
-
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
   const classes = useStyles()
-  const addressBook = useSelector(addressBookSelector)
   const dispatch = useDispatch()
-  const [loading, setLoading] = useState(true)
+  const addressBook: AddressBookState = useSelector(addressBookSelector)
+  const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | undefined>('')
   const [csvData, setCsvData] = useState<string>('')
   const [doRetry, setDoRetry] = useState<boolean>(false)
 
-  const handleClose = () => {
-    const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
-    if (!loading && !error) {
-      dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
-    } else if (error) {
-      dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.afterExecutionError)))
-    }
-    onClose()
-  }
+  const date = format(new Date(), 'MM-dd-yyyy')
 
-  const getImage = () => {
-    if (error) {
-      return ErrorSvg
-    }
-
-    if (loading) {
-      return LoadingSvg
-    }
-
-    return SuccessSvg
-  }
+  const handleClose = () =>
+    setTimeout(() => {
+      if (!loading) {
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
+        const action = error
+          ? notification.afterExecution.afterExecutionError
+          : notification.afterExecution.noMoreConfirmationsNeeded
+        dispatch(enqueueSnackbar(enhanceSnackbarForAction(action)))
+      }
+      onClose()
+    }, 600)
 
   useEffect(() => {
     const handleCsvData = () => {
+      if (!isOpen && !doRetry) return
       setLoading(true)
-      setError(undefined)
+      setError('')
       try {
         setCsvData(jsonToCSV(addressBook))
+      } catch (e) {
+        setError(e.message)
+      }
+      if (csvData) {
         setLoading(false)
         setDoRetry(false)
-      } catch (e) {
-        setError(e)
       }
     }
-    if (isOpen || doRetry) {
-      handleCsvData()
-    }
-  }, [addressBook, isOpen, doRetry])
+
+    handleCsvData()
+  }, [addressBook, isOpen, doRetry, csvData])
 
   return (
-    <Modal
-      description="Export address book"
-      handleClose={handleClose}
-      open={isOpen}
-      paperClassName="smaller-modal-window"
-      title="Export address book"
-    >
-      <Row align="center" className={classes.heading} grow>
-        <Paragraph className={classes.manage} noMargin weight="bolder">
-          Export address book
-        </Paragraph>
-        <IconButton disableRipple onClick={onClose}>
-          <Close className={classes.close} />
-        </IconButton>
-      </Row>
-      <Hairline />
-      <Block>
+    <Modal description="Export address book" handleClose={onClose} open={isOpen} title="Export address book">
+      <Modal.Header onClose={onClose}>
+        <Modal.Header.Title withoutMargin>Export address book</Modal.Header.Title>
+      </Modal.Header>
+      <Modal.Body withoutPadding>
         <Row className={classes.imageContainer} align="center">
           <BodyImage>
-            <Img alt="Export" height={92} src={getImage()} />
+            <Img alt="Export" height={92} src={error ? ErrorSvg : loading ? LoadingSvg : SuccessSvg} />
           </BodyImage>
         </Row>
         <Row align="center" className={classes.info}>
-          <Paragraph color="primary" noMargin size="lg">
+          <Text color="primary" as="p" size="xl">
             {!error ? (
-              <span>
-                You&apos;re about to export a CSV file with your{' '}
-                <strong>{addressBook.length} Address Book entries</strong>
-                &nbsp;(only addresses and names).
-              </span>
+              <Text size="xl" as="span">
+                You&apos;re about to export a CSV file with{' '}
+                <Text size="xl" strong as="span">
+                  {addressBook.length} address book entries
+                </Text>
+                .
+              </Text>
             ) : (
-              <span>An error occurred while generating the address book CSV.</span>
+              <Text size="xl" as="span">
+                An error occurred while generating the address book CSV.
+              </Text>
             )}
-          </Paragraph>
+          </Text>
         </Row>
-      </Block>
-      <Row align="center" className={classes.buttonRow}>
-        <Button size="md" variant="outlined" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
-          {!error ? (
-            <CSVDownloader className={classes.downloader} data={csvData} bom={true} filename="addressBook" type="link">
-              {loading && <Loader className={classes.loader} color="secondaryLight" size="xs" />}
-              Download
-            </CSVDownloader>
-          ) : (
-            'Retry'
-          )}
-        </Button>
-      </Row>
+      </Modal.Body>
+      <Modal.Footer withoutPadding withoutBorder>
+        <Row align="center" className={classes.buttonRow}>
+          <Button size="md" variant="outlined" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
+            {!error ? (
+              <CSVDownloader
+                className={classes.downloader}
+                data={csvData}
+                bom={true}
+                filename={`gnosis-safe-address-book-${date}`}
+                type="link"
+              >
+                {loading && <Loader className={classes.loader} color="secondaryLight" size="xs" />}
+                Download
+              </CSVDownloader>
+            ) : (
+              'Retry'
+            )}
+          </Button>
+        </Row>
+      </Modal.Footer>
     </Modal>
   )
 }
