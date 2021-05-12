@@ -136,7 +136,7 @@ type BaseCustom = {
   toInfo?: AddressInfo
 }
 
-type Custom = BaseCustom & {
+export type Custom = BaseCustom & {
   methodName: string | null
 }
 
