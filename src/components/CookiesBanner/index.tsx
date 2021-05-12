@@ -10,7 +10,7 @@ import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBann
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
-import { loadGoogleAnalytics } from 'src/utils/googleAnalytics'
+import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
@@ -160,6 +160,11 @@ const CookiesBanner = (): ReactElement => {
     await saveCookie(COOKIES_KEY, newState, expDays)
     setShowAnalytics(localAnalytics)
     setShowIntercom(localIntercom)
+
+    if (!localAnalytics) {
+      removeCookies()
+    }
+
     if (!localIntercom && isIntercomLoaded()) {
       closeIntercom()
     }
