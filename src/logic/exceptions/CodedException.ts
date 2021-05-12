@@ -3,8 +3,8 @@ import registry from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
 
 export class CodedException extends Error {
-  public code: number
-  public uiMessage: string | undefined
+  public readonly code: number
+  public readonly uiMessage: string | undefined
 
   constructor(code: keyof typeof registry, extraMessage?: string) {
     super()
