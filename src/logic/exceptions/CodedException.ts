@@ -3,6 +3,7 @@ import registry from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
 
 export class CodedException extends Error {
+  public readonly message: string
   public readonly code: number
   public readonly uiMessage: string | undefined
 
@@ -20,18 +21,21 @@ export class CodedException extends Error {
     this.uiMessage = content.uiMessage
   }
 
-  public log(): void {
-    if (IS_PRODUCTION) {
+  /**
+   * Log the error in the console and send to Sentry
+   */
+  public log(isTracked = true): void {
+    // Log only the message on prod, and the full error on dev
+    console.error(IS_PRODUCTION ? this.message : this)
+
+    if (IS_PRODUCTION && isTracked) {
       Sentry.captureException(this)
-      console.error(this.message) // log only the message w/o the trace
-    } else {
-      console.error(this) // log the full error on dev
     }
   }
 }
 
-export function logError(code: keyof typeof registry, customMessage?: string): CodedException {
+export function logError(code: keyof typeof registry, customMessage?: string, isTracked?: boolean): CodedException {
   const error = new CodedException(code, customMessage)
-  error.log()
+  error.log(isTracked)
   return error
 }
