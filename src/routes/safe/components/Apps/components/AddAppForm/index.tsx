@@ -111,7 +111,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
           <AppUrl appList={appList} />
 
           {/* Fetch app from url and return a SafeApp */}
-          <AppInfoUpdater onAppInfo={setAppInfo} setIsLoading={setIsLoading} />
+          <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
 
           <AppInfo>
             {isLoading ? (

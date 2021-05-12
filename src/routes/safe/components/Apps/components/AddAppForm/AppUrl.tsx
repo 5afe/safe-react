@@ -30,10 +30,10 @@ export const appUrlResolver = createDecorator({
 
 type AppInfoUpdaterProps = {
   onAppInfo: (appInfo: SafeApp) => void
-  setIsLoading: (isLoading: boolean) => void
+  onLoading: (isLoading: boolean) => void
 }
 
-export const AppInfoUpdater = ({ onAppInfo, setIsLoading }: AppInfoUpdaterProps): null => {
+export const AppInfoUpdater = ({ onAppInfo, onLoading }: AppInfoUpdaterProps): null => {
   const {
     input: { value: appUrl },
   } = useField('appUrl', { subscription: { value: true } })
@@ -43,19 +43,19 @@ export const AppInfoUpdater = ({ onAppInfo, setIsLoading }: AppInfoUpdaterProps)
   React.useEffect(() => {
     const updateAppInfo = async () => {
       try {
-        setIsLoading(true)
+        onLoading(true)
         const appInfo = await getAppInfoFromUrl(debouncedValue)
         onAppInfo({ ...appInfo })
-        setIsLoading(false)
+        onLoading(false)
       } catch (error) {
-        setIsLoading(false)
+        onLoading(false)
       }
     }
 
     if (isValidURL(debouncedValue)) {
       updateAppInfo()
     }
-  }, [debouncedValue, onAppInfo, setIsLoading])
+  }, [debouncedValue, onAppInfo, onLoading])
 
   return null
 }
