@@ -41,9 +41,9 @@ describe('CodedException', () => {
       expect(console.error).toHaveBeenCalledWith(err)
     })
 
-    it('logs to the console using the public method', () => {
-      const err = new CodedException(100)
-      expect(err.message).toBe('100 – Invalid input in the address field')
+    it('logs to the console via the public log method', () => {
+      const err = new CodedException(601)
+      expect(err.message).toBe('601 – Error fetching balances')
       expect(console.error).not.toHaveBeenCalled()
       err.log()
       expect(console.error).toHaveBeenCalledWith(err)

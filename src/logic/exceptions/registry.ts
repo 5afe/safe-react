@@ -15,7 +15,7 @@ const registry: Record<number, ExceptionContent> = {
     description: 'Error fetching token list',
   },
   601: {
-    description: 'Error fetching active token list',
+    description: 'Error fetching balances',
   },
 }
 

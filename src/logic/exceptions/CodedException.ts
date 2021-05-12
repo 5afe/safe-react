@@ -6,7 +6,7 @@ export class CodedException extends Error {
   public code: number
   public uiMessage: string | undefined
 
-  constructor(code: keyof typeof registry, customMessage?: string) {
+  constructor(code: keyof typeof registry, extraMessage?: string) {
     super()
 
     const content = registry[code]
@@ -14,7 +14,7 @@ export class CodedException extends Error {
       throw new CodedException(0, `${code}`)
     }
 
-    const extraInfo = customMessage ? ` (${customMessage})` : ''
+    const extraInfo = extraMessage ? ` (${extraMessage})` : ''
     this.message = `${code} – ${content.description}${extraInfo}`
     this.code = code
     this.uiMessage = content.uiMessage
