@@ -1,9 +1,8 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
-import { useSelector } from 'react-redux'
-import { getExplorerInfo } from 'src/config'
 
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getExplorerInfo } from 'src/config'
+import { useKnownAddress } from './hooks/useKnownAddress'
 
 type Props = {
   address: string
@@ -12,7 +11,7 @@ type Props = {
 }
 
 export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement | null => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+  const toInfo = useKnownAddress(address, { name, image: avatarUrl })
 
   if (address === '') {
     return null
@@ -21,9 +20,9 @@ export const AddressInfo = ({ address, name, avatarUrl }: Props): ReactElement |
   return (
     <EthHashInfo
       hash={address}
-      name={recipientName === 'UNKNOWN' ? name : recipientName}
+      name={toInfo.name}
       showAvatar
-      customAvatar={avatarUrl}
+      customAvatar={toInfo.image}
       showCopyBtn
       explorerUrl={getExplorerInfo(address)}
     />
