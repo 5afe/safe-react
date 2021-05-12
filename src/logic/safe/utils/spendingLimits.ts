@@ -177,7 +177,6 @@ export const getResetSpendingLimitTx = (beneficiary: string, token: string): Mul
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     value: 0,
     data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
-    operation: CALL,
   }
 }
 
