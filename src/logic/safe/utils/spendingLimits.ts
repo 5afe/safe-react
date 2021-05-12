@@ -157,7 +157,6 @@ export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): Multi
     to: multiSendTx.to,
     value: Number(multiSendTx.valueInWei),
     data: multiSendTx.txData as string,
-    operation: DELEGATE_CALL,
   }
 }
 
@@ -168,7 +167,6 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     value: 0,
     data: spendingLimitContract.methods.addDelegate(beneficiary).encodeABI(),
-    operation: DELEGATE_CALL,
   }
 }
 
@@ -221,7 +219,6 @@ export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiS
     to: tx.to,
     value: Number(tx.valueInWei),
     data: tx.txData as string,
-    operation: DELEGATE_CALL,
   }
 }
 
