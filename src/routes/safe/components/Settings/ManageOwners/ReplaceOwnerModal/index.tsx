@@ -17,7 +17,7 @@ import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/Repl
 import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-type OwnerValues = {
+export type OwnerValues = {
   newOwnerAddress: string
   newOwnerName: string
 }
@@ -131,7 +131,13 @@ export const ReplaceOwnerModal = ({
     >
       <>
         {activeScreen === 'checkOwner' && (
-          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
+          <OwnerForm
+            onClose={onClose}
+            onSubmit={ownerSubmitted}
+            initialValues={values}
+            ownerAddress={ownerAddress}
+            ownerName={ownerName}
+          />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
           <ReviewReplaceOwnerModal
