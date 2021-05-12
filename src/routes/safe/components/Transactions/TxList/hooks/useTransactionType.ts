@@ -1,22 +1,31 @@
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, Custom } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import CustomTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import CircleCrossRed from 'src/routes/safe/components/Transactions/TxList/assets/circle-cross-red.svg'
 import IncomingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/incoming.svg'
 import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/outgoing.svg'
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
+import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
+import { useKnownAddress } from './useKnownAddress'
 
 export type TxTypeProps = {
-  icon: string | null
-  text: string
+  icon?: string
+  fallbackIcon?: string
+  text?: string
 }
 
 export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const [type, setType] = useState<TxTypeProps>({ icon: CustomTxIcon, text: 'Contract interaction' })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const toAddress = getTxTo(tx)
+  // Fixed casting because known address only works for Custom tx
+  const knownAddress = useKnownAddress(toAddress || '0x', {
+    name: (tx.txInfo as Custom)?.toInfo?.name,
+    image: (tx.txInfo as Custom)?.toInfo?.logoUri || undefined,
+  })
 
   useEffect(() => {
     switch (tx.txInfo.type) {
@@ -51,16 +60,15 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         const toInfo = tx.txInfo.toInfo
-        if (toInfo) {
-          setType({ icon: toInfo.logoUri, text: toInfo.name })
-          break
-        }
-
-        setType({ icon: CustomTxIcon, text: 'Contract interaction' })
+        setType({
+          icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
+          fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
+          text: toInfo ? knownAddress.name : 'Contract interaction',
+        })
         break
       }
     }
-  }, [tx, safeAddress])
+  }, [tx, safeAddress, knownAddress.name, knownAddress.image, knownAddress.isAddressBook])
 
   return type
 }
