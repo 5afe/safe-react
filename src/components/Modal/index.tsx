@@ -170,6 +170,7 @@ Header.Title = Title
 /*** Body ***/
 const BodySection = styled.div<{ withoutPadding: BodyProps['withoutPadding'] }>`
   padding: ${({ withoutPadding }) => (withoutPadding ? 0 : '24px')};
+  min-height: 200px;
 `
 
 interface BodyProps {
@@ -294,15 +295,15 @@ Footer.Buttons = Buttons
 
 interface ModalProps {
   children: ReactNode
-  description: string
+  description?: string
   handleClose: () => void
-  open: boolean
-  title: string
+  open?: boolean
+  title?: string
 }
 
-export const Modal = ({ children, ...props }: ModalProps): ReactElement => {
+export const Modal = ({ children, description = '', open = true, title = '', ...props }: ModalProps): ReactElement => {
   return (
-    <GnoModal {...props} paperClassName="modal">
+    <GnoModal {...props} description={description} open={open} title={title} paperClassName="modal">
       {children}
     </GnoModal>
   )
