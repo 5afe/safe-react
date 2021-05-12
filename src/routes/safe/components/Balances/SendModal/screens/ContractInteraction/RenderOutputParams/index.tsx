@@ -27,7 +27,7 @@ export const RenderOutputParams = (): ReactElement | null => {
   }: any = useField('callResults', { subscription: { value: true } })
   const multipleResults = !!method && method.outputs.length > 1
 
-  if (results === null || results === undefined || results === '') {
+  if (results == null || results === '') {
     return null
   }
 
