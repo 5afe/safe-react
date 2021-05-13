@@ -63,6 +63,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
   const date = format(new Date(), 'MM-dd-yyyy')
 
   const handleClose = () =>
+    //This timeout prevents modal to be closed abruptly
     setTimeout(() => {
       if (!loading) {
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
