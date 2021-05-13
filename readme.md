@@ -27,7 +27,7 @@ What you need to install globally:
 yarn global add truffle ganache-cli
 ```
 
-We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
+We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go with yarn in the README
 
 ### Installing and running
 
