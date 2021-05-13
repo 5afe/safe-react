@@ -5,9 +5,9 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-
-const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
+// import { loadFromStorage, saveToStorage } from 'src/utils/storage'
+//
+// const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
 
 export type OldAddressBookEntry = {
   address: string
@@ -19,7 +19,7 @@ export type OldAddressBookType = {
   [safeAddress: string]: [OldAddressBookEntry]
 }
 
-const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
+const ADDRESS_BOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
 
 export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
   const values: AddressBookState = []
@@ -36,27 +36,27 @@ export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): Addre
   return values
 }
 
-export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
-  const result: OldAddressBookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+// export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
+//   const result: OldAddressBookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
+//
+//   if (!result) {
+//     return null
+//   }
+//
+//   if (typeof result === 'string') {
+//     return JSON.parse(result)
+//   }
+//
+//   return migrateOldAddressBook(result as OldAddressBookType)
+// }
 
-  if (!result) {
-    return null
-  }
-
-  if (typeof result === 'string') {
-    return JSON.parse(result)
-  }
-
-  return migrateOldAddressBook(result as OldAddressBookType)
-}
-
-export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
-  try {
-    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, JSON.stringify(addressBook))
-  } catch (err) {
-    console.error('Error storing addressBook in localstorage', err)
-  }
-}
+// export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
+//   try {
+//     await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, JSON.stringify(addressBook))
+//   } catch (err) {
+//     console.error('Error storing addressBook in localstorage', err)
+//   }
+// }
 
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean
@@ -75,16 +75,21 @@ export const getNameFromAddressBook = (
 }
 
 export const isValidAddressBookName = (addressBookName: string): boolean => {
-  const hasInvalidName = ADDRESSBOOK_INVALID_NAMES.find((invalidName) =>
+  // TODO: this is filtering names that includes any of the keywords in the `ADDRESS_BOOK_INVALID_NAMES`
+  //  So a name in the order of 'This is an unknown user' will be filtered too. Is this intentional?
+  const hasInvalidName = ADDRESS_BOOK_INVALID_NAMES.find((invalidName) =>
     addressBookName.toUpperCase().includes(invalidName),
   )
   return !hasInvalidName
 }
 
+// TODO: is this really required?
 export const getValidAddressBookName = (addressBookName: string): string | null => {
   return isValidAddressBookName(addressBookName) ? addressBookName : null
 }
 
+// TODO: Shouldn't this be implemented as a selector?
+//  or it's used to extract data from the `localStorage`?
 export const getOwnersWithNameFromAddressBook = (
   addressBook: AddressBookState,
   ownerList: List<SafeOwner>,

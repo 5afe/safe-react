@@ -2,6 +2,7 @@ import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
+import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
 import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
@@ -38,11 +39,12 @@ import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/
 
 export const history = createHashHistory()
 
-// eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const abConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'gnosis_safe', namespaceSeparator: '::' }
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
+    save(abConfig),
     routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
@@ -82,7 +84,7 @@ export type AppReduxState = CombinedState<{
   router: RouterState
 }>
 
-export const store: any = createStore(reducers, finalCreateStore)
+export const store: any = createStore(reducers, load(abConfig), finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)

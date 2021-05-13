@@ -2,8 +2,8 @@ import { ADD_ENTRY } from 'src/logic/addressBook/store/actions/addAddressBookEnt
 import { ADD_OR_UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import { REMOVE_ENTRY } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
 import { UPDATE_ENTRY } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { saveAddressBook } from 'src/logic/addressBook/utils'
+// import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+// import { saveAddressBook } from 'src/logic/addressBook/utils'
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
@@ -19,12 +19,12 @@ const addressBookMiddleware = (store) => (next) => async (action) => {
   if (watchedActions.includes(action.type)) {
     const state = store.getState()
     const { dispatch } = store
-    const addressBook = addressBookSelector(state)
+    // const addressBook = addressBookSelector(state)
     const safes = safesListSelector(state)
 
-    if (addressBook.length) {
-      await saveAddressBook(addressBook)
-    }
+    // if (addressBook.length) {
+    //   await saveAddressBook(addressBook)
+    // }
 
     switch (action.type) {
       case ADD_ENTRY: {

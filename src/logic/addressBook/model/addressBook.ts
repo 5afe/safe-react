@@ -1,4 +1,5 @@
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getNetworkId } from '../../../config'
 
 export type AddressBookEntry = {
   address: string // the contact address
@@ -9,7 +10,7 @@ export type AddressBookEntry = {
 export const makeAddressBookEntry = ({
   address = '',
   name = '',
-  chainId = ETHEREUM_NETWORK.UNKNOWN,
+  chainId = getNetworkId(),
 }: {
   address: string
   name?: string
