@@ -76,9 +76,16 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
     setImportError('')
   }
 
+  const handleClose = () => {
+    setCsvLoaded(false)
+    setEntryList([])
+    setImportError('')
+    onClose()
+  }
+
   return (
-    <Modal description="Import Entries" handleClose={onClose} open={isOpen} title="Import Entries">
-      <Modal.Header onClose={onClose}>
+    <Modal description="Import Entries" handleClose={handleClose} open={isOpen} title="Import Entries">
+      <Modal.Header onClose={handleClose}>
         <Modal.Header.Title>Import Addresbook</Modal.Header.Title>
       </Modal.Header>
       <Modal.Body>
@@ -95,7 +102,7 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
       </Modal.Body>
       <Modal.Footer>
         <Modal.Footer.Buttons
-          cancelButtonProps={{ onClick: () => onClose() }}
+          cancelButtonProps={{ onClick: () => handleClose() }}
           confirmButtonProps={{
             color: 'primary',
             disabled: !csvLoaded || importError !== '',
