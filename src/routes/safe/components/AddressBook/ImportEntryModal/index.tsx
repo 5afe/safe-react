@@ -17,10 +17,10 @@ const FILE_SIZE_TOO_BIG = 'The size of the file is over 1mb'
 const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [csvLoaded, setCsvLoaded] = useState(false)
   const [importError, setImportError] = useState('')
-  const [addressList, setAddressList] = useState<AddressBookEntry[]>([])
+  const [entryList, setEntryList] = useState<AddressBookEntry[]>([])
 
   const handleImportEntrySubmit = () => {
-    importEntryModalHandler(addressList)
+    importEntryModalHandler(entryList)
   }
 
   const handleOnDrop = (data, file) => {
@@ -62,7 +62,7 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
         }
       }
       if (importError === '') {
-        setAddressList(list)
+        setEntryList(list)
       }
     }
   }
@@ -88,6 +88,9 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
             <span>Drop CSV file here or click to upload.</span>
           </CSVReader>
           {importError !== '' && <Text size="xl">{importError}</Text>}
+          {csvLoaded && importError === '' && (
+            <Text size="xl">{`You're about to import ${entryList.length} entries to your address book`}</Text>
+          )}
         </Row>
       </Modal.Body>
       <Modal.Footer>
