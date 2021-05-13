@@ -2,18 +2,17 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useSelector, useDispatch } from 'react-redux'
 import { CSVDownloader, jsonToCSV } from 'react-papaparse'
+import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
-
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
-import { useStyles } from './style'
+import { lg, md, background } from 'src/theme/variables'
 
 import { Modal } from 'src/components/Modal'
 import Img from 'src/components/layout/Img'
@@ -28,11 +27,32 @@ type ExportEntriesModalProps = {
   onClose: () => void
 }
 
+const ImageContainer = styled(Row)`
+  padding: ${md} ${lg};
+  justify-content: center;
+`
+
+const InfoContainer = styled(Row)`
+  background-color: ${background};
+  flex-direction: column;
+  justify-content: center;
+  padding: ${lg};
+  text-align: center;
+`
+
 const BodyImage = styled.div`
   grid-row: 1;
 `
+const StyledLoader = styled(Loader)`
+  margin-right: 5px;
+`
+const StyledCSVLink = styled(CSVDownloader)`
+  display: flex;
+  flex: 1;
+  justify-content: center;
+`
+
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
-  const classes = useStyles()
   const dispatch = useDispatch()
   const addressBook: AddressBookState = useSelector(addressBookSelector)
   const [loading, setLoading] = useState<boolean>(true)
@@ -63,11 +83,10 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
         setCsvData(jsonToCSV(addressBook))
       } catch (e) {
         setError(e.message)
+        return
       }
-      if (csvData) {
-        setLoading(false)
-        setDoRetry(false)
-      }
+      setLoading(false)
+      setDoRetry(false)
     }
 
     handleCsvData()
@@ -79,12 +98,12 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
         <Modal.Header.Title withoutMargin>Export address book</Modal.Header.Title>
       </Modal.Header>
       <Modal.Body withoutPadding>
-        <Row className={classes.imageContainer} align="center">
+        <ImageContainer>
           <BodyImage>
             <Img alt="Export" height={92} src={error ? ErrorSvg : loading ? LoadingSvg : SuccessSvg} />
           </BodyImage>
-        </Row>
-        <Row align="center" className={classes.info}>
+        </ImageContainer>
+        <InfoContainer>
           <Text color="primary" as="p" size="xl">
             {!error ? (
               <Text size="xl" as="span">
@@ -100,25 +119,19 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
               </Text>
             )}
           </Text>
-        </Row>
+        </InfoContainer>
       </Modal.Body>
-      <Modal.Footer withoutPadding withoutBorder>
-        <Row align="center" className={classes.buttonRow}>
+      <Modal.Footer withoutBorder>
+        <Row>
           <Button size="md" variant="outlined" onClick={onClose}>
             Cancel
           </Button>
           <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
             {!error ? (
-              <CSVDownloader
-                className={classes.downloader}
-                data={csvData}
-                bom={true}
-                filename={`gnosis-safe-address-book-${date}`}
-                type="link"
-              >
-                {loading && <Loader className={classes.loader} color="secondaryLight" size="xs" />}
+              <StyledCSVLink data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
+                {loading && <StyledLoader color="secondaryLight" size="xs" />}
                 Download
-              </CSVDownloader>
+              </StyledCSVLink>
             ) : (
               'Retry'
             )}
