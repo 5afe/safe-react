@@ -23,7 +23,7 @@ import { TokenTransferAmount } from './TokenTransferAmount'
 import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
-import { isCancelTxDetails } from './utils'
+import { getTxTo, isCancelTxDetails } from './utils'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -114,6 +114,7 @@ export const TxCollapsed = ({
 }: TxCollapsedProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
   const { ref, lastItemId } = useContext(TxsInfiniteScrollContext)
+  const toAddress = getTxTo(transaction)
 
   const willBeReplaced = transaction?.txStatus === 'WILL_BE_REPLACED' ? ' will-be-replaced' : ''
   const onChainRejection =
@@ -127,7 +128,12 @@ export const TxCollapsed = ({
 
   const txCollapsedType = (
     <div className={'tx-type' + willBeReplaced + onChainRejection}>
-      <CustomIconText iconUrl={type.icon} text={type.text} />
+      <CustomIconText
+        address={toAddress || '0x'}
+        iconUrl={type.icon}
+        iconUrlFallback={type.fallbackIcon}
+        text={type.text}
+      />
     </div>
   )
 
