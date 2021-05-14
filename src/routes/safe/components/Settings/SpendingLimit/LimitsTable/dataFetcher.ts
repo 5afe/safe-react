@@ -55,6 +55,7 @@ export const generateColumns = (): List<TableColumn> => {
     id: SPENDING_LIMIT_TABLE_SPENT_ID,
     label: 'Spent',
     order: false,
+    static: true,
   }
 
   const resetColumn: TableColumn = {
@@ -64,6 +65,7 @@ export const generateColumns = (): List<TableColumn> => {
     id: SPENDING_LIMIT_TABLE_RESET_TIME_ID,
     label: 'Reset Time',
     order: false,
+    static: true,
   }
 
   const actionsColumn: TableColumn = {
