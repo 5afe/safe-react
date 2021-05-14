@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -25,10 +25,10 @@ import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import {
   latestMasterContractVersionSelector,
   safeCurrentVersionSelector,
-  safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
@@ -51,18 +51,18 @@ const StyledIcon = styled(Icon)`
   left: 6px;
 `
 
-const SafeDetails = (): React.ReactElement => {
+const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const dispatch = useDispatch()
-  const safeName = useSelector(safeNameSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSafeName(safeAddress)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
   const { trackEvent } = useAnalytics()
 
-  const [isModalOpen, setModalOpen] = React.useState(false)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
 
   const toggleModal = () => {

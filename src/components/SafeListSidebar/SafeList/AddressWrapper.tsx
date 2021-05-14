@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 import { ButtonLink, EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -51,9 +51,8 @@ type Props = {
 
 const { nativeCoin } = getNetworkInfo()
 
-export const AddressWrapper = (props: Props): React.ReactElement => {
+export const AddressWrapper = ({ safe, defaultSafe }: Props): ReactElement => {
   const classes = useStyles()
-  const { safe, defaultSafe } = props
   const dispatch = useDispatch()
 
   const setDefaultSafeAction = (safeAddress: string) => {
