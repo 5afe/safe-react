@@ -60,7 +60,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
   const [csvData, setCsvData] = useState<string>('')
   const [doRetry, setDoRetry] = useState<boolean>(false)
 
-  const date = format(new Date(), 'MM-dd-yyyy')
+  const date = format(new Date(), 'yyyy-MM-dd')
 
   const handleClose = () =>
     //This timeout prevents modal to be closed abruptly
@@ -83,6 +83,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
       try {
         setCsvData(jsonToCSV(addressBook))
       } catch (e) {
+        setLoading(false)
         setError(e.message)
         return
       }
