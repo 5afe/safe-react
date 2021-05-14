@@ -15,13 +15,14 @@ import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
@@ -35,6 +36,7 @@ import {
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
+
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -70,7 +72,7 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
+    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
