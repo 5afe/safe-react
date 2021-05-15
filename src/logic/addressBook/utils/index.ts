@@ -5,9 +5,9 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-// import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-//
-// const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
+import { getNetworkName } from 'src/config'
+import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
+import { removeFromStorage } from 'src/utils/storage'
 
 export type OldAddressBookEntry = {
   address: string
@@ -35,28 +35,6 @@ export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): Addre
 
   return values
 }
-
-// export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
-//   const result: OldAddressBookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
-//
-//   if (!result) {
-//     return null
-//   }
-//
-//   if (typeof result === 'string') {
-//     return JSON.parse(result)
-//   }
-//
-//   return migrateOldAddressBook(result as OldAddressBookType)
-// }
-
-// export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
-//   try {
-//     await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, JSON.stringify(addressBook))
-//   } catch (err) {
-//     console.error('Error storing addressBook in localstorage', err)
-//   }
-// }
 
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean
@@ -180,3 +158,41 @@ export const filterAddressEntries = (
 
     return foundName || foundAddress
   })
+
+/**
+ * Migrates the AddressBook from a per-network to a global storage
+ * under the key `ADDRESS_BOOK` in `localStorage`
+ *
+ * @note Also, adds `chainId` to every entry in the AddressBook list
+ * @note the migrated structure will be `{ address, name, chainId }`
+ */
+export const migrateAddressBook = ({
+  states,
+  namespace,
+  namespaceSeparator,
+}: {
+  states: string[]
+  namespace: string
+  namespaceSeparator: string
+}): void => {
+  const [state] = states
+  const PREFIX = `v2_${getNetworkName()}`
+  const storedAddressBook = localStorage.getItem(`_immortal|${PREFIX}__ADDRESS_BOOK_STORAGE_KEY`)
+
+  if (storedAddressBook === null) {
+    // nothing left to migrate
+    return
+  }
+
+  const legacyAddressBook = buildAddressBook(JSON.parse(storedAddressBook))
+
+  try {
+    localStorage.setItem(
+      `${namespace}${namespaceSeparator}${state}`,
+      JSON.stringify(legacyAddressBook.map(makeAddressBookEntry)),
+    )
+    removeFromStorage('ADDRESS_BOOK_STORAGE_KEY').then(() => console.info('legacy Address Book removed'))
+  } catch (error) {
+    console.error('failed to persist the migrated address book', error.message)
+  }
+}

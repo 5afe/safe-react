@@ -1,5 +1,5 @@
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getNetworkId } from '../../../config'
+import { getNetworkId } from 'src/config'
 
 export type AddressBookEntry = {
   address: string // the contact address
