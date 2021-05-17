@@ -16,9 +16,8 @@ const FILE_BYTES_LIMIT = 1000000
 const IMPORT_SUPPORTED_FORMATS = [
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  '	text/csv',
+  'text/csv',
 ]
-const ENTRY_LIST_COLUMNS = 2
 
 const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [csvLoaded, setCsvLoaded] = useState(false)
@@ -68,10 +67,7 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
   const validateCsvData = (data) => {
     for (let index = 0; index < data.length; index++) {
       const entry = data[index]
-      if (entry.data.length !== ENTRY_LIST_COLUMNS) {
-        return `Invalid amount of columns on row ${index + 2}`
-      }
-      if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string') {
+      if (!entry.data[0] || !entry.data[1]) {
         return `Invalid amount of columns on row ${index + 2}`
       }
       // Verify address properties
