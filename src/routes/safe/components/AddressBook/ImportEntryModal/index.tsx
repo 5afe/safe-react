@@ -1,13 +1,35 @@
-import { withStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 
-import { styles } from './style'
+import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
-import Row from 'src/components/layout/Row'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+
+const ImportContainer = styled.div`
+  flex-direction: column;
+  justify-content: center;
+  margin: 24px;
+  align-items: center;
+  /* width: 200px;*/
+  height: 100px;
+  display: flex;
+`
+
+const StyledCSVReader = styled(CSVReader)`
+  :hover {
+  }
+`
+
+const InfoContainer = styled.div`
+  background-color: ${({ theme }) => theme.colors.background};
+  flex-direction: column;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+  margin-top: 16px;
+`
 
 const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
 const FILE_SIZE_TOO_BIG = 'The size of the file is over 1 MB'
@@ -18,7 +40,7 @@ const IMPORT_SUPPORTED_FORMATS = [
   'text/csv',
 ]
 
-const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose }) => {
+const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [csvLoaded, setCsvLoaded] = useState(false)
   const [importError, setImportError] = useState('')
   const [entryList, setEntryList] = useState<AddressBookEntry[]>([])
@@ -95,21 +117,39 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
   }
 
   return (
-    <Modal description="Import Entries" handleClose={handleClose} open={isOpen} title="Import Entries">
+    <Modal description="Import address book" handleClose={handleClose} open={isOpen} title="Import address book">
       <Modal.Header onClose={handleClose}>
-        <Modal.Header.Title>Import Addresbook</Modal.Header.Title>
+        <Modal.Header.Title>Import address book</Modal.Header.Title>
       </Modal.Header>
-      <Modal.Body>
-        <Row margin="md">
-          <Text size="xl">Only Address-Name, comma separated CSV files are allowed</Text>
-          <CSVReader onDrop={handleOnDrop} onError={handleOnError} addRemoveButton onRemoveFile={handleOnRemoveFile}>
-            <span>Drop CSV file here or click to upload.</span>
-          </CSVReader>
+      <Modal.Body withoutPadding>
+        <ImportContainer>
+          <StyledCSVReader
+            onDrop={handleOnDrop}
+            onError={handleOnError}
+            addRemoveButton
+            onRemoveFile={handleOnRemoveFile}
+          >
+            <Text size="xl">
+              Drop your CSV file here <br />
+              or click to upload.
+            </Text>
+          </StyledCSVReader>
+        </ImportContainer>
+        <InfoContainer>
           {importError !== '' && <Text size="xl">{importError}</Text>}
-          {csvLoaded && importError === '' && (
-            <Text size="xl">{`You're about to import ${entryList.length} entries to your address book`}</Text>
+          {!csvLoaded && importError === '' && (
+            <Text color="text" as="p" size="xl">
+              Only CSV files are allowed in the format [Address, Name] separated by comma. Learn more about importing /
+              exporting an address book.
+            </Text>
           )}
-        </Row>
+          {csvLoaded && importError === '' && (
+            <>
+              <Text size="xl" as="span">{`You're about to import`}</Text>
+              <Text size="xl" strong as="span">{` ${entryList.length} entries to your address book`}</Text>
+            </>
+          )}
+        </InfoContainer>
       </Modal.Body>
       <Modal.Footer>
         <Modal.Footer.Buttons
@@ -125,7 +165,5 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
     </Modal>
   )
 }
-
-const ImportEntryModal = withStyles(styles as any)(ImportEntryModalComponent)
 
 export default ImportEntryModal
