@@ -214,6 +214,7 @@
     "react-ga": "3.3.0",
     "react-hot-loader": "4.13.0",
     "react-intersection-observer": "^8.31.0",
+    "react-papaparse": "^3.14.0",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.3",
     "react-router-dom": "5.2.0",

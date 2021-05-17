@@ -52,6 +52,8 @@ const NOTIFICATION_IDS = {
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: 'ADDRESS_BOOK_NEW_ENTRY_SUCCESS',
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: 'ADDRESS_BOOK_EDIT_ENTRY_SUCCESS',
   ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: 'ADDRESS_BOOK_DELETE_ENTRY_SUCCESS',
+  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: 'ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS',
+  ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: 'ADDRESS_BOOK_EXPORT_ENTRIES_ERROR',
   SAFE_NEW_VERSION_AVAILABLE: 'SAFE_NEW_VERSION_AVAILABLE',
 }
 
@@ -205,6 +207,14 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
     message: 'Entry deleted successfully',
     options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: {
+    message: 'Address book exported',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: {
+    message: 'An error occurred while generating the address book CSV.',
+    options: { variant: ERROR, persist: false, preventDuplicate: false },
   },
 
   // Safe Version

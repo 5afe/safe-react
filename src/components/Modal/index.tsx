@@ -184,12 +184,20 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 )
 
 /*** Footer ***/
-const FooterSection = styled.div`
+const FooterSection = styled.div<{
+  withoutPadding: FooterProps['withoutPadding']
+  withoutBorder: FooterProps['withoutBorder']
+}>`
   display: flex;
   justify-content: center;
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
-  padding: 24px;
+  border-top: ${({ withoutBorder }) => (withoutBorder ? 0 : `2px solid ${({ theme }) => theme.colors.separator}`)};
+  padding: ${({ withoutPadding }) => (withoutPadding ? 0 : '24px')};
 `
+
+interface FooterProps {
+  withoutPadding?: boolean
+  withoutBorder?: boolean
+}
 
 const ButtonStyled = styled(Button)`
   &.MuiButtonBase-root {
@@ -240,8 +248,10 @@ interface FooterProps {
   children: ReactNode | ReactNodeArray
 }
 
-const Footer = ({ children }: FooterProps): ReactElement => (
-  <FooterSection className="modal-footer">{children}</FooterSection>
+const Footer = ({ children, withoutPadding = false, withoutBorder = false }: FooterProps): ReactElement => (
+  <FooterSection className="modal-footer" withoutPadding={withoutPadding} withoutBorder={withoutBorder}>
+    {children}
+  </FooterSection>
 )
 
 Footer.Buttons = Buttons
