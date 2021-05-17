@@ -5,8 +5,10 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { AppReduxState } from 'src/store'
+import { Overwrite } from 'src/types/helpers'
 import { getNetworkName } from 'src/config'
-import { buildAddressBook } from 'src/logic/addressBook/store/reducer/addressBook'
+import { checksumAddress } from 'src/utils/checksumAddress'
 import { removeFromStorage } from 'src/utils/storage'
 
 export type OldAddressBookEntry = {
@@ -20,21 +22,6 @@ export type OldAddressBookType = {
 }
 
 const ADDRESS_BOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
-
-export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
-  const values: AddressBookState = []
-  const adbkValues = Object.values(oldAddressBook)
-
-  for (const safeIterator of adbkValues) {
-    for (const safeAddressBook of safeIterator) {
-      if (!values.find((entry) => sameAddress(entry.address, safeAddressBook.address))) {
-        values.push(makeAddressBookEntry({ address: safeAddressBook.address, name: safeAddressBook.name }))
-      }
-    }
-  }
-
-  return values
-}
 
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean
@@ -159,6 +146,14 @@ export const filterAddressEntries = (
     return foundName || foundAddress
   })
 
+export const getEntryIndex = (
+  state: AppReduxState['addressBook'],
+  addressBookEntry: Overwrite<AddressBookEntry, { name?: string }>,
+): number =>
+  state.findIndex(
+    ({ address, chainId }) => chainId === addressBookEntry.chainId && sameAddress(address, addressBookEntry.address),
+  )
+
 /**
  * Migrates the AddressBook from a per-network to a global storage
  * under the key `ADDRESS_BOOK` in `localStorage`
@@ -184,13 +179,15 @@ export const migrateAddressBook = ({
     return
   }
 
-  const legacyAddressBook = buildAddressBook(JSON.parse(storedAddressBook))
+  const migratedAddressBook = JSON.parse(storedAddressBook).map(({ address, ...entry }) =>
+    makeAddressBookEntry({
+      address: checksumAddress(address),
+      ...entry,
+    }),
+  )
 
   try {
-    localStorage.setItem(
-      `${namespace}${namespaceSeparator}${state}`,
-      JSON.stringify(legacyAddressBook.map(makeAddressBookEntry)),
-    )
+    localStorage.setItem(`${namespace}${namespaceSeparator}${state}`, JSON.stringify(migratedAddressBook))
     removeFromStorage('ADDRESS_BOOK_STORAGE_KEY').then(() => console.info('legacy Address Book removed'))
   } catch (error) {
     console.error('failed to persist the migrated address book', error.message)
