@@ -7,7 +7,6 @@ import { Modal } from 'src/components/Modal'
 import Row from 'src/components/layout/Row'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { checksumAddress } from 'src/utils/checksumAddress'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
 const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
@@ -72,9 +71,7 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
       }
       // Verify address properties
       const address = entry.data[0].toLowerCase()
-      try {
-        checksumAddress(address)
-      } catch (error) {
+      if (!getWeb3().utils.isAddress(address)) {
         return `Invalid address on row ${index + 2}`
       }
       return
