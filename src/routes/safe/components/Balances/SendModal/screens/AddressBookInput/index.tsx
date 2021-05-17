@@ -5,8 +5,8 @@ import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } fr
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { isFeatureEnabled } from 'src/config'
-import { ETHEREUM_NETWORK, FEATURES } from 'src/config/networks/network.d'
+import { getNetworkId, isFeatureEnabled } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
@@ -17,6 +17,8 @@ import {
   useTextFieldLabelStyle,
 } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
 import { trimSpaces } from 'src/utils/strings'
+
+const chainId = getNetworkId()
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -104,7 +106,7 @@ const BaseAddressBookInput = ({
               ? {
                   address,
                   name: normalizedValue,
-                  chainId: ETHEREUM_NETWORK.UNKNOWN,
+                  chainId,
                 }
               : validatedAddress
 
@@ -125,7 +127,7 @@ const BaseAddressBookInput = ({
             ? {
                 address: validatedAddress,
                 name: '',
-                chainId: ETHEREUM_NETWORK.UNKNOWN,
+                chainId,
               }
             : validatedAddress
 

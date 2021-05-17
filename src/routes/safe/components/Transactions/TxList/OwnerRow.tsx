@@ -2,19 +2,21 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
-export const OwnerRow = ({ ownerAddress }: { ownerAddress: string }): ReactElement => {
-  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, ownerAddress))
+const chainId = getNetworkId()
+
+export const OwnerRow = ({ address }: { address: string }): ReactElement => {
+  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, { address, chainId }))
 
   return (
     <EthHashInfo
-      hash={ownerAddress}
+      hash={address}
       name={ownerName === 'UNKNOWN' ? '' : ownerName}
       showAvatar
       showCopyBtn
-      explorerUrl={getExplorerInfo(ownerAddress)}
+      explorerUrl={getExplorerInfo(address)}
       shortenHash={4}
       className="owner-info"
     />

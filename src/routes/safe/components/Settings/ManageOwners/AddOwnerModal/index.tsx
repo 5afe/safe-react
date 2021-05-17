@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
@@ -99,9 +99,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
 
     try {
       await sendAddOwner(values, safeAddress, txParameters, dispatch)
-      dispatch(
-        addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
-      )
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }

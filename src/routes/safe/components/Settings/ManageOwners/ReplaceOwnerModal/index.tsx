@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -112,9 +112,7 @@ export const ReplaceOwnerModal = ({
       await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters, threshold)
 
       dispatch(
-        addOrUpdateAddressBookEntry(
-          makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName }),
-        ),
+        addressBookAddOrUpdate(makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName })),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)

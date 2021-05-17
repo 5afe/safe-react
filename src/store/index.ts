@@ -5,8 +5,8 @@ import { applyMiddleware, combineReducers, compose, createStore, CombinedState, 
 import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,

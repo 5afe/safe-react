@@ -204,15 +204,15 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
       notificationsQueue = waitingTransactionNotificationsQueue
       break
     }
-    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_NEW_ENTRY: {
+    case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_NEW_ENTRY: {
       notificationsQueue = addressBookNewEntry
       break
     }
-    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_EDIT_ENTRY: {
+    case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EDIT_ENTRY: {
       notificationsQueue = addressBookEditEntry
       break
     }
-    case TX_NOTIFICATION_TYPES.ADDRESSBOOK_DELETE_ENTRY: {
+    case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_DELETE_ENTRY: {
       notificationsQueue = addressBookDeleteEntry
       break
     }

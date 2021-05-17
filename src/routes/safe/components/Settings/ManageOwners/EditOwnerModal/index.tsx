@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Modal from 'src/components/Modal'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
@@ -46,7 +46,7 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
     // Update the value only if the ownerName really changed
     if (ownerName !== selectedOwnerName) {
       dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
-      dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
       dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
     }
     onClose()
