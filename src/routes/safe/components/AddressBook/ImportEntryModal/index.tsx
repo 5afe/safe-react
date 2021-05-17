@@ -18,6 +18,7 @@ const IMPORT_SUPPORTED_FORMATS = [
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
   '	text/csv',
 ]
+const ENTRY_LIST_COLUMNS = 2
 
 const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [csvLoaded, setCsvLoaded] = useState(false)
@@ -29,44 +30,58 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
   }
 
   const handleOnDrop = (data, file) => {
-    if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
-      setImportError(WRONG_FILE_EXTENSION_ERROR)
+    const slicedData = data.slice(1)
+
+    const fileError = validateFile(file)
+    if (fileError) {
+      setImportError(fileError)
       return
     }
 
-    if (file.size >= FILE_BYTES_LIMIT) {
-      setImportError(FILE_SIZE_TOO_BIG)
+    const dataError = validateCsvData(slicedData)
+    if (dataError) {
+      setImportError(dataError)
       return
     }
-    setCsvLoaded(true)
-    const list: { address: string; name: string }[] = []
-    const slicedData = data.slice(1)
+
+    const formatedList = slicedData.map((entry) => {
+      const address = entry.data[0].toLowerCase()
+      return { address: getWeb3().utils.toChecksumAddress(address), name: entry.data[1] }
+    })
+    setEntryList(formatedList)
     setImportError('')
-    for (let index = 0; index < slicedData.length; index++) {
-      const entry = slicedData[index]
-      if (entry.data.length !== 2) {
-        setImportError(`Invalid amount of columns on row ${index + 2}`)
-        break
+    setCsvLoaded(true)
+  }
+
+  const validateFile = (file) => {
+    if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
+      return WRONG_FILE_EXTENSION_ERROR
+    }
+
+    if (file.size >= FILE_BYTES_LIMIT) {
+      return FILE_SIZE_TOO_BIG
+    }
+
+    return
+  }
+
+  const validateCsvData = (data) => {
+    for (let index = 0; index < data.length; index++) {
+      const entry = data[index]
+      if (entry.data.length !== ENTRY_LIST_COLUMNS) {
+        return `Invalid amount of columns on row ${index + 2}`
       }
       if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string') {
-        setImportError(`Invalid entry on row ${index + 2}`)
-        break
+        return `Invalid amount of columns on row ${index + 2}`
       }
       // Verify address properties
       const address = entry.data[0].toLowerCase()
       try {
         checksumAddress(address)
       } catch (error) {
-        setImportError(`Invalid address on row ${index + 2}`)
-        break
+        return `Invalid address on row ${index + 2}`
       }
-      list.push({
-        address: getWeb3().utils.toChecksumAddress(address),
-        name: entry.data[1],
-      })
-    }
-    if (importError === '') {
-      setEntryList(list)
+      return
     }
   }
 
