@@ -104,7 +104,7 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
       </Modal.Header>
       <Modal.Body>
         <Row margin="md">
-          <Text size="xl">Only Name-Address, comma separeted CSV files are allowed</Text>
+          <Text size="xl">Only Address-Name, comma separated CSV files are allowed</Text>
           <CSVReader onDrop={handleOnDrop} onError={handleOnError} addRemoveButton onRemoveFile={handleOnRemoveFile}>
             <span>Drop CSV file here or click to upload.</span>
           </CSVReader>
