@@ -34,8 +34,8 @@ export class CodedException extends Error {
   }
 }
 
-export function logError(code: keyof typeof registry, customMessage?: string, isTracked?: boolean): CodedException {
-  const error = new CodedException(code, customMessage)
+export function logError(code: keyof typeof registry, extraMessage?: string, isTracked?: boolean): CodedException {
+  const error = new CodedException(code, extraMessage)
   error.log(isTracked)
   return error
 }
