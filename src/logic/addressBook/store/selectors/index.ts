@@ -1,27 +1,27 @@
-import { AppReduxState } from 'src/store'
-
 import { createSelector } from 'reselect'
 
-import { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { getEntryIndex } from 'src/logic/addressBook/utils'
+import { AppReduxState } from 'src/store'
+import { Overwrite } from 'src/types/helpers'
 
-import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+export const addressBookSelector = (state: AppReduxState): AppReduxState['addressBook'] => state['addressBook']
 
-export const addressBookSelector = (state: AppReduxState): AddressBookState => state[ADDRESS_BOOK_REDUCER_ID]
+export const addressBookAddressesListSelector = createSelector([addressBookSelector], (addressBook): string[] =>
+  addressBook.map(({ address }) => address),
+)
 
-export const addressBookAddressesListSelector = (state: AppReduxState): string[] => {
-  const addressBook = addressBookSelector(state)
-  return addressBook.map((entry) => entry.address)
-}
+type GetNameParams = Overwrite<AddressBookEntry, { name?: string }>
 
 export const getNameFromAddressBookSelector = createSelector(
-  addressBookSelector,
-  (_, address) => address,
-  (addressBook, address) => {
-    const adbkEntry = addressBook.find((addressBookItem) => addressBookItem.address === address)
+  [addressBookSelector, (_, { address, chainId }: GetNameParams): GetNameParams => ({ address, chainId })],
+  (addressBook, entry) => {
+    const entryIndex = getEntryIndex(addressBook, entry)
 
-    if (adbkEntry) {
-      return adbkEntry.name
+    if (entryIndex >= 0) {
+      return addressBook[entryIndex].name
     }
-    return 'UNKNOWN'
+
+    return ADDRESS_BOOK_DEFAULT_NAME
   },
 )
