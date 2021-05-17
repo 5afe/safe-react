@@ -1,5 +1,5 @@
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
@@ -15,20 +15,21 @@ import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import {
   latestMasterContractVersionSelector,
   safeCurrentVersionSelector,
-  safeNameSelector,
   safeNeedsUpdateSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
@@ -51,18 +52,18 @@ const StyledIcon = styled(Icon)`
   left: 6px;
 `
 
-const SafeDetails = (): React.ReactElement => {
+const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const dispatch = useDispatch()
-  const safeName = useSelector(safeNameSelector)
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeName = useSafeName(safeAddress)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
   const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
   const { trackEvent } = useAnalytics()
 
-  const [isModalOpen, setModalOpen] = React.useState(false)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
 
   const toggleModal = () => {
@@ -70,7 +71,7 @@ const SafeDetails = (): React.ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
+    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))

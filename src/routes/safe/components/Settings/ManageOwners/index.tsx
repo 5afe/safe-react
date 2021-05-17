@@ -15,7 +15,7 @@ import { RemoveOwnerModal } from './RemoveOwnerModal'
 import { ReplaceOwnerModal } from './ReplaceOwnerModal'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
-import { OWNERS_TABLE_ADDRESS_ID, OWNERS_TABLE_NAME_ID, generateColumns, getOwnerData } from './dataFetcher'
+import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData } from './dataFetcher'
 import { styles } from './style'
 
 import { getExplorerInfo } from 'src/config'
@@ -103,7 +103,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
             columns={columns}
             data={ownerData}
             defaultFixed
-            defaultOrderBy={OWNERS_TABLE_NAME_ID}
+            defaultOrderBy={OWNERS_TABLE_ADDRESS_ID}
             disablePagination
             label="Owners"
             noBorder

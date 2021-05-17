@@ -1,3 +1,4 @@
+import { List } from 'immutable'
 import React, { useEffect, useMemo, useState, ReactElement } from 'react'
 import Drawer from '@material-ui/core/Drawer'
 import SearchIcon from '@material-ui/icons/Search'
@@ -18,6 +19,9 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 export const SafeListSidebarContext = React.createContext({
   isOpen: false,
@@ -31,6 +35,15 @@ const filterBy = (filter, safes) =>
       safe.address.toLowerCase().includes(filter.toLowerCase()) ||
       safe.name.toLowerCase().includes(filter.toLowerCase()),
   )
+const useAddressBookSafeNames = (safeList: List<SafeRecord>): List<SafeRecordProps> => {
+  const addressBook = useSelector(addressBookSelector)
+
+  return safeList.map((safeRecord) => {
+    const safe = safeRecord.toObject()
+    const name = getNameFromAddressBook(addressBook, safe.address) || ''
+    return { ...safe, name }
+  })
+}
 
 type Props = {
   children: ReactElement
@@ -39,9 +52,10 @@ type Props = {
 export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
-  const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
+  const safesFromStore = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
   const defaultSafe = useSelector(defaultSafeSelector)
   const currentSafe = useSelector(safeParamAddressFromStateSelector)
+  const safes = useAddressBookSafeNames(safesFromStore)
 
   const classes = useSidebarStyles()
   const { trackEvent } = useAnalytics()

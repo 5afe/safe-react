@@ -92,7 +92,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
           <Field
             component={TextField}
             name={FIELD_LOAD_NAME}
-            placeholder="Name of the Safe"
+            placeholder="Name of the Safe*"
             text="Safe name"
             type="text"
             validate={composeValidators(required, minMaxLength(1, 50))}

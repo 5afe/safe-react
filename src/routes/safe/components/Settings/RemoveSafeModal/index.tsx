@@ -1,3 +1,4 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -6,17 +7,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import Modal from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import {
-  defaultSafeSelector,
-  safeNameSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
+import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -36,7 +33,7 @@ type RemoveSafeModalProps = {
 export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeName = useSafeName(safeAddress)
   const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
 
