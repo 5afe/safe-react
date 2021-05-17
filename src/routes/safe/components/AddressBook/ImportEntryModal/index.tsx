@@ -10,9 +10,14 @@ import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 
-export const IMPORT_ENTRY_BTN_ID = 'import-entry-btn-id'
 const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
-const FILE_SIZE_TOO_BIG = 'The size of the file is over 1mb'
+const FILE_SIZE_TOO_BIG = 'The size of the file is over 1 MB'
+const FILE_BYTES_LIMIT = 1000000
+const IMPORT_SUPPORTED_FORMATS = [
+  'application/vnd.ms-excel',
+  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+  '	text/csv',
+]
 
 const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [csvLoaded, setCsvLoaded] = useState(false)
@@ -24,46 +29,44 @@ const ImportEntryModalComponent = ({ importEntryModalHandler, isOpen, onClose })
   }
 
   const handleOnDrop = (data, file) => {
-    if (
-      file.type !== 'application/vnd.ms-excel' &&
-      file.type !== 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' &&
-      file.type !== '	text/csv'
-    ) {
+    if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
       setImportError(WRONG_FILE_EXTENSION_ERROR)
-    } else if (file.size >= 1000000) {
+      return
+    }
+
+    if (file.size >= FILE_BYTES_LIMIT) {
       setImportError(FILE_SIZE_TOO_BIG)
-    } else {
-      setCsvLoaded(true)
-      const list: { address: string; name: string }[] = []
-      const slicedData = data.slice(1)
-      setImportError('')
-      for (let index = 0; index < slicedData.length; index++) {
-        const entry = slicedData[index]
-        if (entry.data.length !== 2) {
-          console.log(entry.data)
-          setImportError(`Invalid amount of columns on row ${index + 2}`)
-          break
-        } else if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string') {
-          setImportError(`Invalid entry on row ${index + 2}`)
-          break
-        } else {
-          // Verify address properties
-          const address = entry.data[0].toLowerCase()
-          try {
-            checksumAddress(address)
-          } catch (error) {
-            setImportError(`Invalid address on row ${index + 2}`)
-            break
-          }
-          list.push({
-            address: getWeb3().utils.toChecksumAddress(address),
-            name: entry.data[1],
-          })
-        }
+      return
+    }
+    setCsvLoaded(true)
+    const list: { address: string; name: string }[] = []
+    const slicedData = data.slice(1)
+    setImportError('')
+    for (let index = 0; index < slicedData.length; index++) {
+      const entry = slicedData[index]
+      if (entry.data.length !== 2) {
+        setImportError(`Invalid amount of columns on row ${index + 2}`)
+        break
       }
-      if (importError === '') {
-        setEntryList(list)
+      if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string') {
+        setImportError(`Invalid entry on row ${index + 2}`)
+        break
       }
+      // Verify address properties
+      const address = entry.data[0].toLowerCase()
+      try {
+        checksumAddress(address)
+      } catch (error) {
+        setImportError(`Invalid address on row ${index + 2}`)
+        break
+      }
+      list.push({
+        address: getWeb3().utils.toChecksumAddress(address),
+        name: entry.data[1],
+      })
+    }
+    if (importError === '') {
+      setEntryList(list)
     }
   }
 
