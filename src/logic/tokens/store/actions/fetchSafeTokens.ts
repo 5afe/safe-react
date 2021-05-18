@@ -15,7 +15,7 @@ import { safeSelector } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { logError } from 'src/logic/exceptions/CodedException'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type BalanceRecord = {
   tokenAddress?: string
@@ -70,7 +70,7 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
       selectedCurrency: currencySelected ?? selectedCurrency,
     })
   } catch (e) {
-    logError(601, e.message, false)
+    logError(Errors._601, e.message, false)
     return
   }
 

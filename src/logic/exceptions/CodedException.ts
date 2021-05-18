@@ -1,24 +1,27 @@
 import * as Sentry from '@sentry/react'
-import registry from './registry'
+import ErrorCodes from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
+
+function getRegisryCode(content: ErrorCodes): number {
+  const key = Object.keys(ErrorCodes).find((key) => ErrorCodes[key] === content)
+  if (!key) {
+    throw new CodedException(ErrorCodes._0)
+  }
+  const code = Number(key.slice(1))
+  return code
+}
 
 export class CodedException extends Error {
   public readonly message: string
   public readonly code: number
-  public readonly uiMessage: string | undefined
 
-  constructor(code: keyof typeof registry, extraMessage?: string) {
+  constructor(content: ErrorCodes, extraMessage?: string) {
     super()
 
-    const content = registry[code]
-    if (!content) {
-      throw new CodedException(0, `${code}`)
-    }
-
+    const code = getRegisryCode(content)
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
-    this.message = `${code} – ${content.description}${extraInfo}`
+    this.message = `${code} – ${content}${extraInfo}`
     this.code = code
-    this.uiMessage = content.uiMessage
   }
 
   /**
@@ -34,8 +37,10 @@ export class CodedException extends Error {
   }
 }
 
-export function logError(code: keyof typeof registry, extraMessage?: string, isTracked?: boolean): CodedException {
-  const error = new CodedException(code, extraMessage)
+export function logError(content: ErrorCodes, extraMessage?: string, isTracked?: boolean): CodedException {
+  const error = new CodedException(content, extraMessage)
   error.log(isTracked)
   return error
 }
+
+export const Errors = ErrorCodes

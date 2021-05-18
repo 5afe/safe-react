@@ -12,7 +12,7 @@ import { AppReduxState } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
-import { logError } from 'src/logic/exceptions/CodedException'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TokenResult } from '../../api/fetchErc20AndErc721AssetsList'
 
 const createStandardTokenContract = async () => {
@@ -61,7 +61,7 @@ export const fetchTokens = () => async (
     const resp = await fetchErc20AndErc721AssetsList()
     tokenList = resp.data.results
   } catch (e) {
-    logError(600, e.message, false)
+    logError(Errors._600, e.message, false)
     return
   }
 
