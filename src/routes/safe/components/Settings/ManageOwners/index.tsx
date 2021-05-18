@@ -5,7 +5,6 @@ import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
-import { List } from 'immutable'
 
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
 
@@ -29,10 +28,8 @@ import Heading from 'src/components/layout/Heading'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -43,12 +40,11 @@ export const OWNERS_ROW_TEST_ID = 'owners-row'
 const useStyles = makeStyles(styles)
 
 type Props = {
-  addressBook: AddressBookState
   granted: boolean
-  owners: List<SafeOwner>
+  owners: AddressBookState
 }
 
-const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactElement => {
+const ManageOwners = ({ granted, owners }: Props): React.ReactElement => {
   const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
@@ -85,8 +81,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
 
   const columns = generateColumns()
   const autoColumns = columns.filter((c) => !c.custom)
-  const ownersWithAddressBookName = getOwnersWithNameFromAddressBook(addressBook, owners)
-  const ownerData = getOwnerData(ownersWithAddressBookName)
+  const ownerData = getOwnerData(owners)
 
   return (
     <>
@@ -107,7 +102,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
             disablePagination
             label="Owners"
             noBorder
-            size={ownerData.size}
+            size={ownerData.length}
           >
             {(sortedData) =>
               sortedData.map((row, index) => (
@@ -150,7 +145,7 @@ const ManageOwners = ({ addressBook, granted, owners }: Props): React.ReactEleme
                             src={ReplaceOwnerIcon}
                             testId={REPLACE_OWNER_BTN_TEST_ID}
                           />
-                          {ownerData.size > 1 && (
+                          {ownerData.length > 1 && (
                             <Img
                               alt="Remove owner"
                               className={classes.removeOwnerIcon}

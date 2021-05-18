@@ -1,9 +1,6 @@
-import { List } from 'immutable'
-
 import {
   checkIfEntryWasDeletedFromAddressBook,
   getNameFromAddressBook,
-  getOwnersWithNameFromAddressBook,
   isValidAddressBookName,
 } from 'src/logic/addressBook/utils'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -28,30 +25,6 @@ describe('getNameFromSafeAddressBook', () => {
 
     // then
     expect(result).toBe(expectedResult)
-  })
-})
-
-describe('getOwnersWithNameFromAddressBook', () => {
-  const entry1 = getMockAddressBookEntry('123456', 'test1')
-  const entry2 = getMockAddressBookEntry('78910', 'test2')
-  const entry3 = getMockAddressBookEntry('4781321', 'test3')
-  it('It should returns the list of owners with their names given a safeAddressBook and a list of owners', () => {
-    // given
-    const safeAddressBook = [entry1, entry2, entry3]
-    const ownerList = List([
-      { address: entry1.address, name: '' },
-      { address: entry2.address, name: '' },
-    ])
-    const expectedResult = List([
-      { address: entry1.address, name: entry1.name },
-      { address: entry2.address, name: entry2.name },
-    ])
-
-    // when
-    const result = getOwnersWithNameFromAddressBook(safeAddressBook, ownerList)
-
-    // then
-    expect(result).toStrictEqual(expectedResult)
   })
 })
 

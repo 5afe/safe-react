@@ -50,13 +50,22 @@ export const sendReplaceOwner = async (
   )
 
   if (txHash && threshold === 1) {
+    // replace in owner's list
     dispatch(
       replaceSafeOwner({
         safeAddress,
         oldOwnerAddress: ownerAddressToRemove,
         ownerAddress: values.newOwnerAddress,
-        ownerName: values.newOwnerName,
       }),
+    )
+    // update the AB
+    dispatch(
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({
+          address: values.newOwnerAddress,
+          name: values.newOwnerName,
+        }),
+      ),
     )
   }
 }

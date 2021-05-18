@@ -21,7 +21,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
@@ -67,9 +67,10 @@ export const OwnerForm = ({
   const handleSubmit = (values: NewOwnerProps) => {
     onSubmit(values)
   }
-  const owners = useSelector(safeOwnersAddressesListSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const owners = useSelector(safeOwnersSelector)
   const ownerDoesntExist = uniqueAddress(owners)
+
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
   return (

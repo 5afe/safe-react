@@ -1,9 +1,6 @@
-import { List } from 'immutable'
-
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
@@ -51,24 +48,6 @@ export const isValidAddressBookName = (addressBookName: string): boolean => {
 // TODO: is this really required?
 export const getValidAddressBookName = (addressBookName: string): string | null => {
   return isValidAddressBookName(addressBookName) ? addressBookName : null
-}
-
-// TODO: Shouldn't this be implemented as a selector?
-//  or it's used to extract data from the `localStorage`?
-export const getOwnersWithNameFromAddressBook = (
-  addressBook: AddressBookState,
-  ownerList: List<SafeOwner>,
-): List<SafeOwner> => {
-  if (!ownerList) {
-    return List([])
-  }
-  return ownerList.map((owner) => {
-    const ownerName = getNameFromAddressBook(addressBook, owner.address)
-    return {
-      address: owner.address,
-      name: ownerName || '',
-    }
-  })
 }
 
 export const formatAddressListToAddressBookNames = (

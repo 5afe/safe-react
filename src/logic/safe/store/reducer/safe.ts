@@ -9,11 +9,10 @@ import { REPLACE_SAFE_OWNER } from 'src/logic/safe/store/actions/replaceSafeOwne
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
-import { makeOwner } from 'src/logic/safe/store/models/owner'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { ADD_OR_UPDATE_SAFE, buildOwnersFrom } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 import { LOADED_SAFE_KEY } from 'src/utils/constants'
@@ -22,9 +21,7 @@ export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
 
 export const buildSafe = (storedSafe: SafeRecordProps): SafeRecordProps => {
-  const names = storedSafe.owners.map((owner) => owner.name)
-  const addresses = storedSafe.owners.map((owner) => checksumAddress(owner.address))
-  const owners = buildOwnersFrom(Array.from(names), Array.from(addresses))
+  const owners = storedSafe.owners.map(checksumAddress)
 
   return {
     ...storedSafe,
@@ -124,7 +121,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return newState
     },
     [ADD_SAFE_OWNER]: (state, action: Action<FullOwnerPayload>) => {
-      const { ownerAddress, ownerName, safeAddress } = action.payload
+      const { ownerAddress, safeAddress } = action.payload
 
       const addressFound = state
         .getIn(['safes', safeAddress])
@@ -136,7 +133,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
         prevSafe.merge({
-          owners: prevSafe.owners.push(makeOwner({ address: ownerAddress, name: ownerName })),
+          owners: prevSafe.owners.push(ownerAddress),
         }),
       )
     },
@@ -150,13 +147,11 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       )
     },
     [REPLACE_SAFE_OWNER]: (state, action: Action<ReplaceOwnerPayload>) => {
-      const { oldOwnerAddress, ownerAddress, ownerName, safeAddress } = action.payload
+      const { oldOwnerAddress, ownerAddress, safeAddress } = action.payload
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
         prevSafe.merge({
-          owners: prevSafe.owners
-            .filter((o) => o.address.toLowerCase() !== oldOwnerAddress.toLowerCase())
-            .push(makeOwner({ address: ownerAddress, name: ownerName })),
+          owners: prevSafe.owners.filter((owner) => !sameAddress(owner, oldOwnerAddress)).push(ownerAddress),
         }),
       )
     },

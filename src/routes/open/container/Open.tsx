@@ -16,7 +16,6 @@ import {
   CreateSafeValues,
   getAccountsFrom,
   getNamesFrom,
-  getOwnersFrom,
   getSafeCreationSaltFrom,
   getSafeNameFrom,
   getThresholdFrom,
@@ -25,8 +24,9 @@ import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookBatchLoad } from 'src/logic/addressBook/store/actions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
@@ -76,18 +76,6 @@ const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams)
     ownerAddresses: Array.isArray(ownerAddresses) ? ownerAddresses : [ownerAddresses as string],
     ownerNames: Array.isArray(ownerNames) ? ownerNames : [ownerNames as string],
   }
-}
-
-export const getSafeProps = async (
-  safeAddress: string,
-  safeName: string,
-  ownersNames: string[],
-  ownerAddresses: string[],
-): Promise<SafeRecordProps> => {
-  const safeProps = await buildSafe(safeAddress, safeName)
-  safeProps.owners = getOwnersFrom(ownersNames, ownerAddresses)
-
-  return safeProps
 }
 
 export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
@@ -179,12 +167,21 @@ const Open = (): React.ReactElement => {
   const onSafeCreated = async (safeAddress): Promise<void> => {
     const pendingCreation = await loadFromStorage<LoadedSafeType>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
-    const name = pendingCreation ? getSafeNameFrom(pendingCreation) : ''
-    const ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
-    const ownerAddresses = pendingCreation ? getAccountsFrom(pendingCreation) : []
-    const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
+    let name = ''
+    let ownersNames: string[] = []
+    let ownersAddresses: string[] = []
 
+    if (pendingCreation) {
+      name = getSafeNameFrom(pendingCreation)
+      ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
+      ownersAddresses = getAccountsFrom(pendingCreation)
+    }
+
+    const safeProps = await buildSafe(safeAddress, name)
     await dispatch(addOrUpdateSafe(safeProps))
+
+    const owners = ownersAddresses.map((address, index) => makeAddressBookEntry({ address, name: ownersNames[index] }))
+    await dispatch(addressBookBatchLoad(owners))
 
     trackEvent({
       category: 'User',

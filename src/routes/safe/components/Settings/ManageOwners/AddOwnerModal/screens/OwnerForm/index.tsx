@@ -24,7 +24,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { OwnerValues } from '../..'
 
@@ -51,7 +51,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const owners = useSelector(safeOwnersAddressesListSelector)
+  const owners = useSelector(safeOwnersSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)

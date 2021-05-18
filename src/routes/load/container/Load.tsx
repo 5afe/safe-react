@@ -3,17 +3,17 @@ import { useDispatch, useSelector } from 'react-redux'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 import Layout from 'src/routes/load/components/Layout'
-import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from '../components/fields'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookBatchLoad } from 'src/logic/addressBook/store/actions'
+import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 
 import Page from 'src/components/layout/Page'
-import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
-import { getNamesFrom, getOwnersFrom } from 'src/routes/open/utils/safeDataExtractor'
+import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
-import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { List } from 'immutable'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
@@ -21,11 +21,9 @@ import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 export const loadSafe = async (
   safeName: string,
   safeAddress: string,
-  owners: List<SafeOwner>,
   addSafe: (safe: SafeRecordProps) => void,
 ): Promise<void> => {
   const safeProps = await buildSafe(safeAddress, safeName)
-  safeProps.owners = owners
 
   const storedSafes = (await loadStoredSafes()) || {}
 
@@ -70,16 +68,21 @@ const Load = (): React.ReactElement => {
       return
     }
 
+    const ownersNames = getNamesFrom(values)
+    const ownersAddresses = getAccountsFrom(values)
+
+    const owners = ownersAddresses.map((address, index) =>
+      makeAddressBookEntry({
+        address,
+        name: ownersNames[index],
+      }),
+    )
+    await dispatch(addressBookBatchLoad(owners))
+
     try {
       const safeName = values[FIELD_LOAD_NAME]
       safeAddress = checksumAddress(safeAddress)
-      const ownerNames = getNamesFrom(values)
-
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
-      const ownerAddresses = await gnosisSafe.methods.getOwners().call()
-      const owners = getOwnersFrom(ownerNames, ownerAddresses.slice().sort())
-
-      await loadSafe(safeName, safeAddress, owners, addSafeHandler)
+      await loadSafe(safeName, safeAddress, addSafeHandler)
 
       const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
       history.push(url)

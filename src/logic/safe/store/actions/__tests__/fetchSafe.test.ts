@@ -1,13 +1,12 @@
 // --no-ignore
 import axios from 'axios'
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 
 import { buildSafe, fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import * as storageUtils from 'src/utils/storage'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { Overwrite } from 'src/types/helpers'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
 import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
@@ -61,15 +60,13 @@ describe('buildSafe', () => {
       name,
       address: SAFE_ADDRESS,
       threshold: 2,
-      owners: List(
-        [
-          { address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875' },
-          { address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F' },
-          { address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47' },
-          { address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2' },
-          { address: '0x5e47249883F6a1d639b84e8228547fB289e222b6' },
-        ].map(makeOwner),
-      ),
+      owners: [
+        '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+        '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+        '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+        '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+        '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+      ],
       modules: undefined,
       spendingLimits: undefined,
       nonce: 492,
@@ -99,7 +96,6 @@ describe('buildSafe', () => {
 describe('fetchSafe', () => {
   const SAFE_ADDRESS = '0xe414604Ad49602C0b9c0b08D0781ECF96740786a'
   const mockedAxios = axios as jest.Mocked<typeof axios>
-  const storageUtil = require('src/utils/storage/index') as jest.Mocked<typeof storageUtils>
   const middlewares = [thunk]
   const mockStore = configureMockStore(middlewares)
 
@@ -115,15 +111,13 @@ describe('fetchSafe', () => {
         payload: {
           address: SAFE_ADDRESS,
           threshold: 2,
-          owners: List(
-            [
-              { address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875' },
-              { address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F' },
-              { address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47' },
-              { address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2' },
-              { address: '0x5e47249883F6a1d639b84e8228547fB289e222b6' },
-            ].map(makeOwner),
-          ),
+          owners: [
+            '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+            '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+            '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+            '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+            '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+          ],
           modules: undefined,
           spendingLimits: undefined,
           nonce: 492,

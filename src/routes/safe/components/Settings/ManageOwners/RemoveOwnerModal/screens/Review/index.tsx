@@ -4,9 +4,8 @@ import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { List } from 'immutable'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -14,10 +13,11 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeOwnersWithAddressBookDataSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -30,6 +30,8 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
 const useStyles = makeStyles(styles)
+
+const chainId = getNetworkId()
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -52,9 +54,8 @@ export const ReviewRemoveOwnerModal = ({
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSafeName(safeAddress)
-  const owners = useSelector(safeOwnersSelector)
-  const addressBook = useSelector(addressBookSelector)
-  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
+  const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -86,6 +87,8 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
+        // FixMe: if the order returned by the service is the same as in the contracts
+        //  the data lookup can be removed from here
         const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
@@ -169,7 +172,7 @@ export const ReviewRemoveOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                      {`${threshold} out of ${numOptions} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -178,11 +181,11 @@ export const ReviewRemoveOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners ? owners.size - 1 : 0} Safe owner(s)`}
+                    {`${numOptions} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
-                {ownersWithAddressBookName?.map(
+                {owners?.map(
                   (owner) =>
                     owner.address !== ownerAddress && (
                       <React.Fragment key={owner.address}>

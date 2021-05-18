@@ -46,7 +46,8 @@ export const sendAddOwner = async (
   )
 
   if (txHash) {
-    dispatch(addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress }))
+    dispatch(addSafeOwner({ safeAddress, ownerAddress: values.ownerAddress }))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
   }
 }
 
