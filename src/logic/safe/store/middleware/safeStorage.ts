@@ -55,6 +55,7 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
         if (name) {
           dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
         }
+
         break
       }
       case SET_DEFAULT_SAFE: {

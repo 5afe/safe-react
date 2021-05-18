@@ -80,17 +80,13 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const safeAddress = safe.address
 
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
-      let loadedViaUrl = safe.loadedViaUrl
-
-      if (!state.hasIn(['safes', safeAddress])) {
-        loadedViaUrl = !safe?.name || safe?.name === LOADED_SAFE_KEY
-      }
+      const loadedViaUrl = !safe?.name || safe?.name === LOADED_SAFE_KEY
 
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
             makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress, loadedViaUrl }),
-            (prevSafe) => updateSafeProps(prevSafe, safe),
+            (prevSafe) => updateSafeProps(prevSafe, { ...safe, loadedViaUrl }),
           )
         : state
     },
