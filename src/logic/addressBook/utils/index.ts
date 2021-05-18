@@ -18,7 +18,7 @@ export type OldAddressBookType = {
   [safeAddress: string]: [OldAddressBookEntry]
 }
 
-const ADDRESS_BOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
+const ADDRESS_BOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET', '']
 
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean

@@ -2,7 +2,7 @@ import { Action, handleActions } from 'redux-actions'
 
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
-import { getEntryIndex } from 'src/logic/addressBook/utils'
+import { getEntryIndex, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
@@ -15,6 +15,12 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       const newState = [...state]
       const { address, ...rest } = action.payload
+
+      if (!isValidAddressBookName(rest.name)) {
+        // prevent adding an invalid name
+        return newState
+      }
+
       // always checksum the address before storing it
       const addressBookEntry = { address: checksumAddress(address), ...rest }
 
@@ -46,19 +52,24 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
       const newState = [...state]
       const addressBookEntries = action.payload
 
-      for (const { address, ...rest } of addressBookEntries) {
-        // always checksum the address before storing it
-        const addressBookEntry = { address: checksumAddress(address), ...rest }
-        const entryIndex = getEntryIndex(newState, addressBookEntry)
+      addressBookEntries
+        // exclude those entries with invalid name
+        .filter(({ name }) => isValidAddressBookName(name))
+        .forEach((addressBookEntry) => {
+          const { address, ...rest } = addressBookEntry
 
-        if (entryIndex >= 0) {
-          // update
-          newState[entryIndex] = addressBookEntry
-        } else {
-          // add
-          newState.push(addressBookEntry)
-        }
-      }
+          // always checksum the address before storing it
+          const newAddressBookEntry = { address: checksumAddress(address), ...rest }
+          const entryIndex = getEntryIndex(newState, newAddressBookEntry)
+
+          if (entryIndex >= 0) {
+            // update
+            newState[entryIndex] = newAddressBookEntry
+          } else {
+            // add
+            newState.push(newAddressBookEntry)
+          }
+        })
 
       return newState
     },
