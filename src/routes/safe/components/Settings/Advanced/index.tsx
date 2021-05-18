@@ -1,4 +1,4 @@
-import { Loader, Text, theme, Title } from '@gnosis.pm/safe-react-components'
+import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect } from 'react'
 import { useSelector } from 'react-redux'
@@ -27,16 +27,6 @@ const NoModuleLegend = (): React.ReactElement => (
     No modules enabled
   </InfoText>
 )
-
-const LoadingModules = (): React.ReactElement => {
-  const classes = useStyles()
-
-  return (
-    <Block className={classes.container}>
-      <Loader size="md" />
-    </Block>
-  )
-}
 
 export const Advanced = (): React.ReactElement => {
   const classes = useStyles()
@@ -83,13 +73,7 @@ export const Advanced = (): React.ReactElement => {
           .
         </InfoText>
 
-        {!moduleData ? (
-          <NoModuleLegend />
-        ) : moduleData?.length === 0 ? (
-          <LoadingModules />
-        ) : (
-          <ModulesTable moduleData={moduleData} />
-        )}
+        {!moduleData || !moduleData.length ? <NoModuleLegend /> : <ModulesTable moduleData={moduleData} />}
       </Block>
     </>
   )
