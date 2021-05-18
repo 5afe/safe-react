@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 
 import styled from 'styled-components'
-import { Text } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -17,8 +17,6 @@ const ImportContainer = styled.div`
   display: flex;
 `
 
-const StyledCSVReader = styled(CSVReader)``
-
 const InfoContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   flex-direction: column;
@@ -26,6 +24,13 @@ const InfoContainer = styled.div`
   padding: 24px;
   text-align: center;
   margin-top: 16px;
+`
+const StyledIcon = styled(Icon)`
+  svg {
+    position: relative;
+    top: 4px;
+    left: 4px;
+  }
 `
 
 const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
@@ -120,7 +125,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
       </Modal.Header>
       <Modal.Body withoutPadding>
         <ImportContainer>
-          <StyledCSVReader
+          <CSVReader
             onDrop={handleOnDrop}
             onError={handleOnError}
             addRemoveButton
@@ -168,14 +173,24 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
               Drop your CSV file here <br />
               or click to upload.
             </Text>
-          </StyledCSVReader>
+          </CSVReader>
         </ImportContainer>
         <InfoContainer>
           {importError !== '' && <Text size="xl">{importError}</Text>}
           {!csvLoaded && importError === '' && (
             <Text color="text" as="p" size="xl">
-              Only CSV files are allowed in the format [Address, Name] separated by comma. Learn more about importing /
-              exporting an address book.
+              Only CSV files are allowed in the format [Address, Name] separated by comma. <br />
+              <Link
+                href="https://help.gnosis-safe.io/en/"
+                target="_blank"
+                rel="noreferrer"
+                title="Learn more about importing / exporting an address book."
+              >
+                <Text size="xl" as="span" color="primary">
+                  Learn more about importing / exporting an address book.
+                </Text>
+                <StyledIcon size="sm" type="externalLink" color="primary" />
+              </Link>
             </Text>
           )}
           {csvLoaded && importError === '' && (
