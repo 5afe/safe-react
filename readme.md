@@ -27,7 +27,7 @@ What you need to install globally:
 yarn global add truffle ganache-cli
 ```
 
-We use [yarn](https://yarnpkg.com) in our infrastacture, so we decided to go with yarn in the README
+We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go with yarn in the README
 
 ### Installing and running
 
@@ -146,7 +146,7 @@ Please read [CONTRIBUTING.md](https://gist.github.com/PurpleBooth/b24679402957c6
 
 ## Versioning
 
-We use [SemVer](http://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
+We use [SemVer](https://semver.org/) for versioning. For the versions available, see the [tags on this repository](https://github.com/gnosis/gnosis-team-safe/tags).
 
 ## License
 
