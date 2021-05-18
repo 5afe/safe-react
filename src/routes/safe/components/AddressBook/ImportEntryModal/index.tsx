@@ -48,6 +48,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
   const [entryList, setEntryList] = useState<AddressBookEntry[]>([])
 
   const handleImportEntrySubmit = () => {
+    setCsvLoaded(false)
     importEntryModalHandler(entryList)
   }
 
