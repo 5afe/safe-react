@@ -26,6 +26,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
+import { OwnerValues } from '../..'
+
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
 export const ADD_OWNER_NEXT_BTN_TEST_ID = 'add-owner-next-btn'
@@ -41,9 +43,10 @@ const useStyles = makeStyles(styles)
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values) => void
+  initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactElement => {
+export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps): React.ReactElement => {
   const classes = useStyles()
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -65,7 +68,14 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={{
+          ownerName: initialValues?.ownerName,
+          ownerAddress: initialValues?.ownerAddress,
+        }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const mutators = args[3]
 

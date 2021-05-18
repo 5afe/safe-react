@@ -62,9 +62,6 @@ const AddressInput = ({
           } catch (err) {
             console.error('Failed to resolve address for ENS name: ', err)
           }
-        } else {
-          const formattedAddress = checksumAddress(address)
-          fieldMutator(formattedAddress)
         }
       }}
     </OnChange>
