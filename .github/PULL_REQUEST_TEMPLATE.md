@@ -1,10 +1,9 @@
-### What / Why
+## What it solves
+
+## How this PR fixes it <!-- A technical description of what have changed -->
 
 
-### How
+## How to test it
 
 
-### How to test it
-
-
-### Any extra information
+## Any extra information
