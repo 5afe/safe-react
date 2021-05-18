@@ -108,6 +108,11 @@ const SendModal = ({
     setIsABI(!isABI)
   }
 
+  const handleOnPrev = (screen: TxType) => {
+    setRecipient((tx as ReviewTxProp).recipientAddress)
+    setActiveScreen(screen)
+  }
+
   return (
     <Modal
       description="Send Tokens Form"
@@ -147,8 +152,7 @@ const SendModal = ({
           <ReviewSendFundsTx
             onClose={onClose}
             onPrev={() => {
-              setRecipient((tx as ReviewTxProp).recipientAddress)
-              setActiveScreen('sendFunds')
+              handleOnPrev('sendFunds')
             }}
             tx={tx as ReviewTxProp}
           />
@@ -166,7 +170,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
-          <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
+          <ContractInteractionReview onClose={onClose} onPrev={() => handleOnPrev('contractInteraction')} tx={tx} />
         )}
 
         {activeScreen === 'contractInteraction' && !isABI && (
@@ -181,7 +185,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
+          <ReviewCustomTx onClose={onClose} onPrev={() => handleOnPrev('contractInteraction')} tx={tx as CustomTx} />
         )}
 
         {activeScreen === 'sendCollectible' && (
@@ -197,7 +201,7 @@ const SendModal = ({
         {activeScreen === 'reviewCollectible' && (
           <ReviewCollectible
             onClose={onClose}
-            onPrev={() => setActiveScreen('sendCollectible')}
+            onPrev={() => handleOnPrev('sendCollectible')}
             tx={tx as CollectibleTx}
           />
         )}
