@@ -20,7 +20,7 @@ import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
 import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
@@ -104,7 +104,7 @@ const calculateSpendingLimitsTxData = (
     beneficiary: values.beneficiary,
     token: values.token,
     spendingLimitInWei: toTokenUnit(values.amount, txToken.decimals),
-    resetTimeMin: values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+    resetTimeMin: values.withResetTime ? +values.resetTime : 0,
     resetBaseMin: values.withResetTime ? startTime : 0,
   }
 
@@ -209,13 +209,13 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   }
 
   const resetTimeLabel = useMemo(
-    () => (values.withResetTime ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime)?.label : ''),
+    () => (values.withResetTime ? getResetTimeOptions().find(({ value }) => value === values.resetTime)?.label : ''),
     [values.resetTime, values.withResetTime],
   )
 
   const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
-    RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
-      ?.label ?? 'One-time spending limit'
+    getResetTimeOptions().find(({ value }) => value === (+existentSpendingLimit.resetTimeMin).toString())?.label ??
+    'One-time spending limit'
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
