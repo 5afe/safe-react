@@ -12,12 +12,12 @@ export type AddressBookEntry = {
 const networkId = getNetworkId()
 
 export const makeAddressBookEntry = ({
-  address = '',
-  name = '',
+  address,
+  name,
   chainId = networkId,
 }: {
   address: string
-  name?: string
+  name: string
   chainId?: number
 }): AddressBookEntry => ({
   address,

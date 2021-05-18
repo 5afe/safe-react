@@ -158,12 +158,15 @@ export const migrateAddressBook = ({
     return
   }
 
-  const migratedAddressBook = JSON.parse(storedAddressBook).map(({ address, ...entry }) =>
-    makeAddressBookEntry({
-      address: checksumAddress(address),
-      ...entry,
-    }),
-  )
+  const migratedAddressBook = (JSON.parse(storedAddressBook) as Omit<AddressBookEntry, 'chainId'>[])
+    // exclude those addresses with invalid names
+    .filter(({ name }) => isValidAddressBookName(name))
+    .map(({ address, ...entry }) =>
+      makeAddressBookEntry({
+        address: checksumAddress(address),
+        ...entry,
+      }),
+    )
 
   try {
     localStorage.setItem(`${namespace}${namespaceSeparator}${state}`, JSON.stringify(migratedAddressBook))

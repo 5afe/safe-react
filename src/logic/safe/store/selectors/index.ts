@@ -125,6 +125,6 @@ export const safeOwnersWithAddressBookDataSelector = createSelector(
       }
 
       // if there's no owner's data in the AB, we create an in-memory AB-like structure
-      return makeAddressBookEntry({ address: ownerAddress })
+      return makeAddressBookEntry({ address: ownerAddress, name: '' })
     }),
 )
