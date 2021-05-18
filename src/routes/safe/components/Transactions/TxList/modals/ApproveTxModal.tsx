@@ -246,7 +246,6 @@ export const ApproveTxModal = ({
     origin,
     id,
   } = useTxInfo(transaction)
-
   const {
     gasLimit,
     gasPriceFormatted,
@@ -270,32 +269,36 @@ export const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = (txParameters: TxParameters) => {
-    dispatch(
-      processTransaction({
-        safeAddress,
-        tx: {
-          id,
-          baseGas,
-          confirmations,
-          data,
-          gasPrice,
-          gasToken,
-          nonce,
-          operation,
-          origin,
-          refundReceiver,
-          safeTxGas,
-          safeTxHash,
-          to,
-          value,
-        },
-        userAddress,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
-        approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
-        ethParameters: txParameters,
-        thresholdReached,
-      }),
-    )
+    if (thresholdReached && confirmations.size <= _threshold) {
+      console.error('Couldn’t fetch all signatures for this transaction')
+    } else {
+      dispatch(
+        processTransaction({
+          safeAddress,
+          tx: {
+            id,
+            baseGas,
+            confirmations,
+            data,
+            gasPrice,
+            gasToken,
+            nonce,
+            operation,
+            origin,
+            refundReceiver,
+            safeTxGas,
+            safeTxHash,
+            to,
+            value,
+          },
+          userAddress,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+          approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+          ethParameters: txParameters,
+          thresholdReached,
+        }),
+      )
+    }
     onClose()
   }
 
