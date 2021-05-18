@@ -8,8 +8,10 @@ export enum ADDRESS_BOOK_ACTIONS {
   ADD_OR_UPDATE = 'addressBook/addOrUpdate',
   REMOVE = 'addressBook/remove',
   IMPORT = 'addressBook/import',
+  BATCH_LOAD = 'addressBook/batchLoad',
 }
 
 export const addressBookAddOrUpdate = createAction<AddressBookEntry>(ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE)
 export const addressBookRemove = createAction<AddressBookEntry>(ADDRESS_BOOK_ACTIONS.REMOVE)
+export const addressBookBatchLoad = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.BATCH_LOAD)
 export const addressBookImport = createAction<AddressBookState>(ADDRESS_BOOK_ACTIONS.IMPORT)

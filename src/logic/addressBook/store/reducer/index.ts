@@ -42,7 +42,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
 
       return newState
     },
-    [ADDRESS_BOOK_ACTIONS.IMPORT]: (state, action: Action<AddressBookState>) => {
+    [ADDRESS_BOOK_ACTIONS.BATCH_LOAD]: (state, action: Action<AddressBookState>) => {
       const newState = [...state]
       const addressBookEntries = action.payload
 
@@ -61,6 +61,10 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
       }
 
       return newState
+    },
+    [ADDRESS_BOOK_ACTIONS.IMPORT](...args) {
+      // same functionality, but `IMPORT` will trigger notifications when called
+      return this[ADDRESS_BOOK_ACTIONS.BATCH_LOAD](...args)
     },
   },
   [],
