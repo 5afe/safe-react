@@ -13,14 +13,11 @@ const ImportContainer = styled.div`
   margin: 24px;
   align-items: center;
   /* width: 200px;*/
-  height: 100px;
+  min-height: 100px;
   display: flex;
 `
 
-const StyledCSVReader = styled(CSVReader)`
-  :hover {
-  }
-`
+const StyledCSVReader = styled(CSVReader)``
 
 const InfoContainer = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
@@ -128,6 +125,44 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
             onError={handleOnError}
             addRemoveButton
             onRemoveFile={handleOnRemoveFile}
+            style={{
+              dropArea: {
+                borderColor: '#B2B5B2',
+                borderRadius: 8,
+              },
+              dropAreaActive: {
+                borderColor: '#008C73',
+                /* borderColor: '${({ theme }) => theme.colors.primary}', */
+              },
+              dropFile: {
+                width: 200,
+                height: 100,
+                background: '#fff',
+                boxShadow: 'rgb(40 54 61 / 18%) 1px 2px 10px 0px',
+                borderRadius: 8,
+              },
+              fileSizeInfo: {
+                color: '#001428',
+                borderRadius: 3,
+                lineHeight: 1,
+                padding: '0 0.4em',
+              },
+              fileNameInfo: {
+                color: '#008C73',
+                backgroundColor: '#fff',
+                borderRadius: 3,
+                fontSize: 14,
+                lineHeight: 1.5,
+                padding: '0 0.4em',
+                marginBottom: '0.5em',
+              },
+              progressBar: {
+                backgroundColor: '#008C73',
+              },
+              removeButton: {
+                color: '#DB3A3D',
+              },
+            }}
           >
             <Text size="xl">
               Drop your CSV file here <br />
