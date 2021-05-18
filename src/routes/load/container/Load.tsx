@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
@@ -51,7 +51,7 @@ interface LoadForm {
 
 export type LoadFormValues = ReviewSafeCreationValues | LoadForm
 
-const Load = (): React.ReactElement => {
+const Load = (): ReactElement => {
   const dispatch = useDispatch()
   const provider = useSelector(providerNameSelector)
   const network = useSelector(networkSelector)
@@ -62,7 +62,7 @@ const Load = (): React.ReactElement => {
   }
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
-    // TODO: review this check. It doesn't seems to be necessary at this point
+
     if (!safeAddress) {
       console.error('failed to add Safe address', JSON.stringify(values))
       return
