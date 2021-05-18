@@ -2,14 +2,15 @@ import * as Sentry from '@sentry/react'
 import ErrorCodes from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
 
-function getRegisryCode(content: ErrorCodes): number {
-  const key = Object.keys(ErrorCodes).find((key) => ErrorCodes[key] === content)
-  if (!key) {
-    throw new CodedException(ErrorCodes._0)
-  }
+/**
+ * Convert the ErrorCodes to a map of messages to codes for reverse lookup
+ */
+const errorCodeMap: Record<string, number> = Object.keys(ErrorCodes).reduce((result, key) => {
   const code = Number(key.slice(1))
-  return code
-}
+  const description = ErrorCodes[key]
+  result[description] = code
+  return result
+}, {})
 
 export class CodedException extends Error {
   public readonly message: string
@@ -18,7 +19,11 @@ export class CodedException extends Error {
   constructor(content: ErrorCodes, extraMessage?: string) {
     super()
 
-    const code = getRegisryCode(content)
+    const code = errorCodeMap[content]
+    if (code == null) {
+      throw new CodedException(ErrorCodes._0)
+    }
+
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
     this.message = `${code} – ${content}${extraInfo}`
     this.code = code
