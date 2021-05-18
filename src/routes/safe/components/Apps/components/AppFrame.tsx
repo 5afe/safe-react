@@ -9,7 +9,7 @@ import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@
 import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkName, getTxServiceUrl } from 'src/config'
+import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
@@ -71,6 +71,7 @@ type Props = {
 }
 
 const NETWORK_NAME = getNetworkName()
+const NETWORK_ID = getNetworkId()
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
@@ -163,6 +164,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
       network: NETWORK_NAME,
+      chainId: NETWORK_ID,
     }))
 
     communicator?.on('rpcCall', async (msg) => {
