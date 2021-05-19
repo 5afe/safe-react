@@ -30,12 +30,14 @@ import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxLi
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import {
   ExpandedTxDetails,
   isMultiSigExecutionDetails,
   Operation,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 const useStyles = makeStyles(styles)
 
@@ -270,7 +272,7 @@ export const ApproveTxModal = ({
 
   const approveTx = (txParameters: TxParameters) => {
     if (thresholdReached && confirmations.size <= _threshold) {
-      console.error('Couldn’t fetch all signatures for this transaction')
+      dispatch(enqueueSnackbar(NOTIFICATIONS.COULDNT_FETCH_SIGNATURES_ERROR_MSG))
     } else {
       dispatch(
         processTransaction({
