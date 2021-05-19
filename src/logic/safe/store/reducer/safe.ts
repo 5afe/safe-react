@@ -3,7 +3,6 @@ import { Action, handleActions } from 'redux-actions'
 
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
-import { REMOVE_SAFE_OWNER } from 'src/logic/safe/store/actions/removeSafeOwner'
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
 import { UPDATE_SAFE } from 'src/logic/safe/store/actions/updateSafe'
@@ -130,15 +129,6 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
         prevSafe.merge({
           owners: prevSafe.owners.push(ownerAddress),
-        }),
-      )
-    },
-    [REMOVE_SAFE_OWNER]: (state, action: Action<BaseOwnerPayload>) => {
-      const { ownerAddress, safeAddress } = action.payload
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) =>
-        prevSafe.merge({
-          owners: prevSafe.owners.filter((owner) => !sameAddress(owner, ownerAddress)),
         }),
       )
     },
