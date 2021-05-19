@@ -2,7 +2,6 @@ import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { safeNameSelector } from 'src/logic/safe/store/selectors'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
@@ -11,7 +10,6 @@ import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
 import { Action } from 'redux-actions'
 
 /**
@@ -65,7 +63,6 @@ export const fetchSafe = (safeAddress: string) => async (
   // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
   const state = getState()
   const addressBook = addressBookSelector(state)
-  const safeName = safeNameSelector(state) || LOADED_SAFE_KEY
   // update owner's information
   const owners = remoteSafeInfo
     ? // if we have remote info, we can enrich it with local address book information
@@ -73,5 +70,5 @@ export const fetchSafe = (safeAddress: string) => async (
     : // if there's no remote info, we keep what's in memory
       undefined
 
-  return dispatch(updateSafe({ address, name: safeName, ...safeInfo, owners }))
+  return dispatch(updateSafe({ address, ...safeInfo, owners }))
 }

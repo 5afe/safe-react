@@ -7,11 +7,10 @@ import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeNameSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { safeSelector } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
 
 export type BalanceRecord = {
   tokenAddress?: string
@@ -54,7 +53,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
   try {
     const state = getState()
     const safe = safeSelector(state)
-    const safeName = safeNameSelector(state) || LOADED_SAFE_KEY
 
     if (!safe) {
       return
@@ -78,7 +76,6 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
     dispatch(
       updateSafe({
         address: safeAddress,
-        name: safeName,
         balances,
         ethBalance,
         totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
