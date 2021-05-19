@@ -1,7 +1,6 @@
 ## What it solves
 
-## How this PR fixes it <!-- A technical description of what have changed -->
-
+## How this PR fixes it
 
 ## How to test it
 
