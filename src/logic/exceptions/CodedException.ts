@@ -2,16 +2,6 @@ import * as Sentry from '@sentry/react'
 import ErrorCodes from './registry'
 import { IS_PRODUCTION } from 'src/utils/constants'
 
-/**
- * Convert the ErrorCodes to a map of messages to codes for reverse lookup
- */
-const errorCodeMap: Record<string, number> = Object.keys(ErrorCodes).reduce((result, key) => {
-  const code = Number(key.slice(1))
-  const description = ErrorCodes[key]
-  result[description] = code
-  return result
-}, {})
-
 export class CodedException extends Error {
   public readonly message: string
   public readonly code: number
@@ -19,13 +9,14 @@ export class CodedException extends Error {
   constructor(content: ErrorCodes, extraMessage?: string) {
     super()
 
-    const code = errorCodeMap[content]
-    if (code == null) {
-      throw new CodedException(ErrorCodes._0)
+    const codePrefix = content.split(':')[0]
+    const code = Number(codePrefix)
+    if (isNaN(code)) {
+      throw new CodedException(ErrorCodes.___0, codePrefix)
     }
 
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
-    this.message = `${code} – ${content}${extraInfo}`
+    this.message = `${content}${extraInfo}`
     this.code = code
   }
 
