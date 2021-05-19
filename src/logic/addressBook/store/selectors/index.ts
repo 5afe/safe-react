@@ -9,7 +9,7 @@ export const addressBookSelector = (state: AppReduxState): AppReduxState['addres
 
 type AddressBookMap = {
   [chainId: number]: {
-    [address: string]: [name: string]
+    [address: string]: string
   }
 }
 
