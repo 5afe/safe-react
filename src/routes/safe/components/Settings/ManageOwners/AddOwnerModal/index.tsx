@@ -5,7 +5,6 @@ import Modal from 'src/components/Modal'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
@@ -46,7 +45,6 @@ export const sendAddOwner = async (
   )
 
   if (txHash) {
-    dispatch(addSafeOwner({ safeAddress, ownerAddress: values.ownerAddress }))
     dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
   }
 }

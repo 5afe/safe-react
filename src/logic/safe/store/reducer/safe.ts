@@ -1,7 +1,6 @@
 import { Map, List } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
-import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
 import { SET_DEFAULT_SAFE } from 'src/logic/safe/store/actions/setDefaultSafe'
 import { SET_LATEST_MASTER_CONTRACT_VERSION } from 'src/logic/safe/store/actions/setLatestMasterContractVersion'
@@ -116,21 +115,6 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       }
 
       return newState
-    },
-    [ADD_SAFE_OWNER]: (state, action: Action<FullOwnerPayload>) => {
-      const { ownerAddress, safeAddress } = action.payload
-
-      const addressFound = state.getIn(['safes', safeAddress]).owners.find((owner) => sameAddress(owner, ownerAddress))
-
-      if (addressFound) {
-        return state
-      }
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) =>
-        prevSafe.merge({
-          owners: prevSafe.owners.push(ownerAddress),
-        }),
-      )
     },
     [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>
