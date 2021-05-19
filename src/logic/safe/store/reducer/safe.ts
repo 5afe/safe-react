@@ -2,7 +2,6 @@ import { Map, List } from 'immutable'
 import { Action, handleActions } from 'redux-actions'
 
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
-import { EDIT_SAFE_OWNER } from 'src/logic/safe/store/actions/editSafeOwner'
 import { REMOVE_SAFE } from 'src/logic/safe/store/actions/removeSafe'
 import { REMOVE_SAFE_OWNER } from 'src/logic/safe/store/actions/removeSafeOwner'
 import { REPLACE_SAFE_OWNER } from 'src/logic/safe/store/actions/replaceSafeOwner'
@@ -123,9 +122,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
     [ADD_SAFE_OWNER]: (state, action: Action<FullOwnerPayload>) => {
       const { ownerAddress, safeAddress } = action.payload
 
-      const addressFound = state
-        .getIn(['safes', safeAddress])
-        .owners.find((owner) => sameAddress(owner.address, ownerAddress))
+      const addressFound = state.getIn(['safes', safeAddress]).owners.find((owner) => sameAddress(owner, ownerAddress))
 
       if (addressFound) {
         return state
@@ -142,7 +139,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
         prevSafe.merge({
-          owners: prevSafe.owners.filter((o) => o.address.toLowerCase() !== ownerAddress.toLowerCase()),
+          owners: prevSafe.owners.filter((owner) => !sameAddress(owner, ownerAddress)),
         }),
       )
     },
@@ -151,20 +148,14 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       return state.updateIn(['safes', safeAddress], (prevSafe) =>
         prevSafe.merge({
-          owners: prevSafe.owners.filter((owner) => !sameAddress(owner, oldOwnerAddress)).push(ownerAddress),
+          owners: [
+            // discard the old owner address
+            ...prevSafe.owners.filter((owner) => !sameAddress(owner, oldOwnerAddress)),
+            // add the new owner address
+            ownerAddress,
+          ],
         }),
       )
-    },
-    [EDIT_SAFE_OWNER]: (state, action: Action<FullOwnerPayload>) => {
-      const { ownerAddress, ownerName, safeAddress } = action.payload
-
-      return state.updateIn(['safes', safeAddress], (prevSafe) => {
-        const ownerToUpdateIndex = prevSafe.owners.findIndex(
-          (o) => o.address.toLowerCase() === ownerAddress.toLowerCase(),
-        )
-        const updatedOwners = prevSafe.owners.update(ownerToUpdateIndex, (owner) => owner.set('name', ownerName))
-        return prevSafe.merge({ owners: updatedOwners })
-      })
     },
     [SET_DEFAULT_SAFE]: (state, action: Action<SafeRecord>) => state.set('defaultSafe', action.payload),
     [SET_LATEST_MASTER_CONTRACT_VERSION]: (state, action: Action<SafeRecord>) =>

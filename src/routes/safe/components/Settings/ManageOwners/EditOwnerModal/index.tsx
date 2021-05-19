@@ -2,7 +2,7 @@ import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -18,8 +18,6 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import editSafeOwner from 'src/logic/safe/store/actions/editSafeOwner'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 
 import { styles } from './style'
 import { getExplorerInfo } from 'src/config'
@@ -40,12 +38,10 @@ type OwnProps = {
 export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
     // Update the value only if the ownerName really changed
     if (ownerName !== selectedOwnerName) {
-      dispatch(editSafeOwner({ safeAddress, ownerAddress, ownerName }))
       dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
       dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
     }
