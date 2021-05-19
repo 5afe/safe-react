@@ -154,7 +154,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
                 padding: '0 0.4em',
               },
               fileNameInfo: {
-                color: '#008C73',
+                color: importError === '' ? '#008C73' : 'red',
                 backgroundColor: '#fff',
                 borderRadius: 3,
                 fontSize: 14,
