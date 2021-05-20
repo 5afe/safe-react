@@ -117,19 +117,6 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
                   testId: ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID,
                 }}
               />
-
-              {/* <Button minWidth={140} onClick={onClickBack}>
-                Back
-              </Button>
-              <Button
-                color="primary"
-                minWidth={140}
-                testId={ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID}
-                type="submit"
-                variant="contained"
-              >
-                Review
-              </Button> */}
             </Row>
           </>
         )}
