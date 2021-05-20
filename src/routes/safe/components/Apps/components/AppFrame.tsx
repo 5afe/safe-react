@@ -28,6 +28,7 @@ import LegalDisclaimer from './LegalDisclaimer'
 import { getAppInfoFromUrl } from '../utils'
 import { SafeApp } from '../types.d'
 import { useAppCommunicator } from '../communicator'
+import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -170,7 +171,11 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       chainId: NETWORK_ID,
     }))
 
-    communicator?.on('getSafeBalances', async () => {})
+    communicator?.on('getSafeBalances', async () => {
+      const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: 'usd' })
+
+      return balances
+    })
 
     communicator?.on('rpcCall', async (msg) => {
       const params = msg.data.params as RPCPayload
