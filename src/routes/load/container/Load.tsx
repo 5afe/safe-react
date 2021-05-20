@@ -5,7 +5,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import Layout from 'src/routes/load/components/Layout'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookBatchLoad } from 'src/logic/addressBook/store/actions'
-import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
+import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
 
 import Page from 'src/components/layout/Page'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
@@ -18,12 +18,8 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
-export const loadSafe = async (
-  safeName: string,
-  safeAddress: string,
-  addSafe: (safe: SafeRecordProps) => void,
-): Promise<void> => {
-  const safeProps = await buildSafe(safeAddress, safeName)
+export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordProps) => void): Promise<void> => {
+  const safeProps = await buildSafe(safeAddress)
 
   const storedSafes = (await loadStoredSafes()) || {}
 
@@ -77,12 +73,12 @@ const Load = (): ReactElement => {
         name: ownersNames[index],
       }),
     )
-    await dispatch(addressBookBatchLoad(owners))
+    const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
+    await dispatch(addressBookBatchLoad([...owners, safe]))
 
     try {
-      const safeName = values[FIELD_LOAD_NAME]
       safeAddress = checksumAddress(safeAddress)
-      await loadSafe(safeName, safeAddress, addSafeHandler)
+      await loadSafe(safeAddress, addSafeHandler)
 
       const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
       history.push(url)

@@ -23,7 +23,6 @@ export type SpendingLimit = {
 }
 
 export type SafeRecordProps = {
-  name: string
   address: string
   threshold: number
   ethBalance: string
@@ -41,7 +40,6 @@ export type SafeRecordProps = {
 }
 
 const makeSafe = Record<SafeRecordProps>({
-  name: '',
   address: '',
   threshold: 0,
   ethBalance: '0',

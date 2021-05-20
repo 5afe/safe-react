@@ -1,15 +1,17 @@
-import React, { ReactElement } from 'react'
-import styled from 'styled-components'
 import { ButtonLink, EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { ReactElement } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
+
+import { safeNameSelector } from 'src/logic/safe/store/selectors'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import DefaultBadge from './DefaultBadge'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
-import { makeStyles } from '@material-ui/core/styles'
 import { getNetworkInfo } from 'src/config'
-import { useDispatch } from 'react-redux'
 
 const StyledButtonLink = styled(ButtonLink)`
   visibility: hidden;
@@ -54,6 +56,7 @@ const { nativeCoin } = getNetworkInfo()
 export const AddressWrapper = ({ safe, defaultSafe }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
+  const safeName = useSelector((state) => safeNameSelector(state, safe.address))
 
   const setDefaultSafeAction = (safeAddress: string) => {
     dispatch(setDefaultSafe(safeAddress))
@@ -61,7 +64,7 @@ export const AddressWrapper = ({ safe, defaultSafe }: Props): ReactElement => {
 
   return (
     <div className={classes.wrapper}>
-      <EthHashInfo hash={safe.address} name={safe.name} showAvatar shortenHash={4} />
+      <EthHashInfo hash={safe.address} name={safeName} showAvatar shortenHash={4} />
 
       <div className={classes.addressDetails}>
         <Text size="xl">{`${formatAmount(safe.ethBalance)} ${nativeCoin.name}`}</Text>

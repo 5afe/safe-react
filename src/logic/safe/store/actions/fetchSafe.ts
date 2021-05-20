@@ -16,15 +16,11 @@ import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
  * @note It's being used by "Load Existing Safe" and "Create New Safe" flows
  *
  * @param {string} safeAddress
- * @param {string} safeName
  * @returns Promise<SafeRecordProps>
  */
-export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
+export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> => {
   const address = checksumAddress(safeAddress)
-  const safeInfo: Partial<SafeRecordProps> = {
-    address,
-    name: safeName,
-  }
+  const safeInfo: Partial<SafeRecordProps> = { address }
 
   const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
     getSafeInfo(safeAddress),

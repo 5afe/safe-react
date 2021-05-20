@@ -11,7 +11,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
-import { LOADED_SAFE_KEY } from 'src/utils/constants'
 
 export const SAFE_REDUCER_ID = 'safes'
 export const DEFAULT_SAFE_INITIAL_STATE = 'NOT_ASKED'
@@ -73,17 +72,11 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const safeAddress = safe.address
 
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
-      let loadedViaUrl = safe.loadedViaUrl
-
-      if (!state.hasIn(['safes', safeAddress])) {
-        loadedViaUrl = !safe?.name || safe?.name === LOADED_SAFE_KEY
-      }
+      const loadedViaUrl = safe.loadedViaUrl
 
       return shouldUpdate
-        ? state.updateIn(
-            ['safes', safeAddress],
-            makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress, loadedViaUrl }),
-            (prevSafe) => updateSafeProps(prevSafe, safe),
+        ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress, loadedViaUrl }), (prevSafe) =>
+            updateSafeProps(prevSafe, safe),
           )
         : state
     },
@@ -99,7 +92,8 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
-            makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress, loadedViaUrl: !!safe?.name }),
+            // ToDo: ????? `loadedViaUrl`
+            makeSafe({ address: safeAddress, loadedViaUrl: false }),
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state

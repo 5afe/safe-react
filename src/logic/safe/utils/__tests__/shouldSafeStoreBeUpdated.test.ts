@@ -12,7 +12,6 @@ const getMockedOldSafe = ({
   currentVersion,
   ethBalance,
   threshold,
-  name,
   nonce,
   modules,
   spendingLimits,
@@ -23,7 +22,6 @@ const getMockedOldSafe = ({
   const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
 
   return {
-    name: name || 'MockedSafe',
     address: address || '0xAE173F30ec9A293d37c44BA68d3fCD35F989Ce9F',
     threshold: threshold || 2,
     ethBalance: ethBalance || '10',
@@ -61,21 +59,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ address: oldAddress })
     const newSafeProps: Partial<SafeRecordProps> = {
       address: newAddress,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old safe and a new name for the safe, should return true`, () => {
-    // given
-    const oldName = 'oldName'
-    const newName = 'newName'
-    const oldSafe = getMockedOldSafe({ name: oldName })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      name: newName,
     }
 
     // When
