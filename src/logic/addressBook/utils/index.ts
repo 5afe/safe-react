@@ -248,7 +248,14 @@ export const migrateAddressBook = ({
     return
   }
 
-  const migratedAddressBook = (JSON.parse(storedAddressBook) as Omit<AddressBookEntry, 'chainId'>[])
+  let parsedAddressBook = JSON.parse(storedAddressBook)
+
+  if (typeof parsedAddressBook === 'string') {
+    // double stringify?
+    parsedAddressBook = JSON.parse(parsedAddressBook)
+  }
+
+  const migratedAddressBook = (parsedAddressBook as Omit<AddressBookEntry, 'chainId'>[])
     // exclude those addresses with invalid names
     .filter(({ name }) => isValidAddressBookName(name))
     .map(({ address, ...entry }) =>
