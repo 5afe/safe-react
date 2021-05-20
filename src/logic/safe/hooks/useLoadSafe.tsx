@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-// import loadAddressBookFromStorage from 'src/logic/addressBook/store/actions/loadAddressBookFromStorage'
 import addViewedSafe from 'src/logic/currentSession/store/actions/addViewedSafe'
 import { fetchSafeTokens } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import fetchLatestMasterContractVersion from 'src/logic/safe/store/actions/fetchLatestMasterContractVersion'
@@ -29,7 +28,6 @@ export const useLoadSafe = (safeAddress?: string, loadedViaUrl = true): boolean 
       }
     }
 
-    // dispatch(loadAddressBookFromStorage())
     fetchData()
   }, [dispatch, safeAddress, loadedViaUrl])
 
