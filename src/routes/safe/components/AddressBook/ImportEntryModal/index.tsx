@@ -149,18 +149,24 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
               },
               fileSizeInfo: {
                 color: '#001428',
-                borderRadius: 3,
                 lineHeight: 1,
-                padding: '0 0.4em',
+                position: 'absolute',
+                left: '10px',
+                top: '12px',
               },
               fileNameInfo: {
                 color: importError === '' ? '#008C73' : '#DB3A3D',
                 backgroundColor: '#fff',
-                borderRadius: 3,
                 fontSize: 14,
                 lineHeight: 1.5,
                 padding: '0 0.4em',
-                marginBottom: '0.5em',
+                margin: '1em 0 0.5em 0',
+                /* To-Do: improve this in order to truncate big file names                
+                overflow: 'hidden',
+                textOverflow: 'ellipsis',
+                whiteSpace: 'nowrap',
+                lineClamp: '2',
+                wordBreak: 'break-all', */
               },
               progressBar: {
                 backgroundColor: '#008C73',
@@ -177,7 +183,11 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
           </CSVReader>
         </ImportContainer>
         <InfoContainer>
-          {importError !== '' && <Text size="xl">{importError}</Text>}
+          {importError !== '' && (
+            <Text size="xl" color="error">
+              {importError}
+            </Text>
+          )}
           {!csvLoaded && importError === '' && (
             <Text color="text" as="p" size="xl">
               Only CSV files are allowed in the format [Address, Name] separated by comma. <br />
