@@ -67,7 +67,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: ERROR, persist: true },
   },
   COULDNT_FETCH_SIGNATURES_ERROR_MSG: {
-    message: 'Couldn’t fetch all signatures for this transaction',
+    message: 'Couldn’t fetch all signatures for this transaction. Please reload page and try again',
     options: { variant: ERROR, persist: true },
   },
   // Regular/Custom Transactions
