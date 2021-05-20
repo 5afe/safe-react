@@ -31,7 +31,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { migrateAddressBook } from 'src/logic/addressBook/utils'
+import { migrateAddressBook, migrateSafeNames } from 'src/logic/addressBook/utils'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
@@ -87,6 +87,11 @@ export type AppReduxState = CombinedState<{
 
 //  migrates address book before creating the store
 migrateAddressBook(abConfig)
+
+// migrates safes
+// removes the `name` key from safe object
+// adds safes with name into de address book
+migrateSafeNames(abConfig)
 
 export const store: any = createStore(reducers, load(abConfig), finalCreateStore)
 

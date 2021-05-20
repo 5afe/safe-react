@@ -1,6 +1,8 @@
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { saveSafes, StoredSafes } from 'src/logic/safe/utils'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
@@ -134,11 +136,99 @@ export const getEntryIndex = (
   )
 
 /**
- * Migrates the AddressBook from a per-network to a global storage
- * under the key `ADDRESS_BOOK` in `localStorage`
+ * Migrates the safes names from the Safe Object to the Address Book
  *
- * @note Also, adds `chainId` to every entry in the AddressBook list
- * @note the migrated structure will be `{ address, name, chainId }`
+ * Works on the persistence layer, reads from the localStorage and stores back the mutated safe info through immortalDB.
+ *
+ * @note If the Safe name is an invalid AB name, it's renamed to "Migrated from: {safe.name}"
+ */
+export const migrateSafeNames = ({
+  states,
+  namespace,
+  namespaceSeparator,
+}: {
+  states: string[]
+  namespace: string
+  namespaceSeparator: string
+}): void => {
+  const PREFIX = `v2_${getNetworkName()}`
+  const storedSafes = localStorage.getItem(`_immortal|${PREFIX}__SAFES`)
+
+  if (storedSafes === null) {
+    // nothing left to migrate
+    return
+  }
+
+  const parsedStoredSafes = JSON.parse(storedSafes) as Record<string, Overwrite<SafeRecordProps, { name: string }>>
+
+  if (Object.entries(parsedStoredSafes).every(([, { name }]) => name === undefined)) {
+    // no name key, safes already migrated
+    return
+  }
+
+  const safesToAddressBook: AddressBookState = []
+  const migratedSafes: StoredSafes =
+    // once removed the name from the safe object, re-create the map
+    Object.fromEntries(
+      // prepare the safe's map to iterate over it
+      Object.entries(parsedStoredSafes)
+        // exclude those safes without name
+        .filter(([, { name }]) => name !== undefined)
+        // iterate over the list of safes
+        .map(([safeAddress, { name, ...safe }]) => {
+          let safeName = name
+
+          if (!isValidAddressBookName(name)) {
+            safeName = `Migrated from: ${name}`
+          }
+
+          // create an entry for the AB
+          safesToAddressBook.push(makeAddressBookEntry({ address: safeAddress, name: safeName }))
+
+          // return the new safe object without the name on it
+          return [safeAddress, safe]
+        }),
+    )
+
+  const [state] = states
+  const addressBookKey = `${namespace}${namespaceSeparator}${state}`
+  const storedAddressBook = localStorage.getItem(addressBookKey)
+  let addressBookToStore: AddressBookState = []
+
+  if (storedAddressBook !== null) {
+    // stored AB information
+    addressBookToStore = JSON.parse(storedAddressBook)
+  }
+
+  // mutate `addressBookToStore` by adding safes' information
+  safesToAddressBook.forEach((entry) => {
+    const safeIndex = getEntryIndex(addressBookToStore, entry)
+
+    if (safeIndex >= 0) {
+      // update AB entry with what was stored in the safe object
+      addressBookToStore[safeIndex] = entry
+    } else {
+      // add the safe entry to the AB
+      addressBookToStore.push(entry)
+    }
+  })
+
+  try {
+    // store the mutated address book
+    localStorage.setItem(addressBookKey, JSON.stringify(addressBookToStore))
+    // update stored safe
+    saveSafes(migratedSafes).then(() => console.info('updated Safe objects'))
+  } catch (error) {
+    console.error('failed to migrate safes names into the address book', error.message)
+  }
+}
+
+/**
+ * Migrates the AddressBook from a per-network to a global storage under the key `ADDRESS_BOOK` in `localStorage`
+ *
+ *  The migrated structure will be `{ address, name, chainId }`
+ *
+ * @note Also, adds `chainId` to every entry in the AddressBook list.
  */
 export const migrateAddressBook = ({
   states,
