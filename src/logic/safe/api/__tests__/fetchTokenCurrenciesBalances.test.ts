@@ -48,7 +48,7 @@ describe('fetchTokenCurrenciesBalances', () => {
 
     const apiUrl = getSafeClientGatewayBaseUrl(safeAddress)
 
-    // @ts-ignore
+    // @ts-expect-error mocking get method
     axios.get.mockImplementationOnce(() => Promise.resolve({ data: expectedResult }))
 
     // when

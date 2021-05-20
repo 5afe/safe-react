@@ -170,6 +170,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       chainId: NETWORK_ID,
     }))
 
+    communicator?.on('getSafeBalances', async () => {})
+
     communicator?.on('rpcCall', async (msg) => {
       const params = msg.data.params as RPCPayload
 
