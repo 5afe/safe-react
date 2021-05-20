@@ -62,8 +62,9 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
 
   const date = format(new Date(), 'yyyy-MM-dd')
 
-  const handleClose = () =>
+  const handleClose = () => {
     //This timeout prevents modal to be closed abruptly
+    setLoading(true)
     setTimeout(() => {
       if (!loading) {
         const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
@@ -74,6 +75,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
       }
       onClose()
     }, 600)
+  }
 
   useEffect(() => {
     const handleCsvData = () => {
