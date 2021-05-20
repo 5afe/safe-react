@@ -6,6 +6,7 @@ import {
   mustBeUrl,
   minValue,
   mustBeEthereumAddress,
+  mustBeAddressHash,
   minMaxLength,
   uniqueAddress,
   differentFrom,
@@ -129,8 +130,24 @@ describe('Forms > Validators', () => {
     })
   })
 
+  describe('mustBeAddressHash validator', () => {
+    const MUST_BE_ETH_ADDRESS_ERR_MSG = 'Must be a valid address'
+
+    it('Returns undefined for a valid ethereum address', async () => {
+      expect(await mustBeAddressHash('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
+    })
+
+    it('Returns an error message for an address with an invalid checksum', async () => {
+      expect(await mustBeAddressHash('0xde0b295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
+    })
+
+    it('Returns an error message for non-address and non-domain string', async () => {
+      expect(await mustBeAddressHash('notanaddress')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
+    })
+  })
+
   describe('mustBeEthereumAddress validator', () => {
-    const MUST_BE_ETH_ADDRESS_ERR_MSG = 'Must be a valid address, ENS or Unstoppable domain'
+    const MUST_BE_ETH_ADDRESS_OR_DOMAIN_ERR_MSG = 'Must be a valid address, ENS or Unstoppable domain'
 
     it('Returns undefined for a valid ethereum address', async () => {
       expect(await mustBeEthereumAddress('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
@@ -138,12 +155,8 @@ describe('Forms > Validators', () => {
 
     it('Returns an error message for an address with an invalid checksum', async () => {
       expect(await mustBeEthereumAddress('0xde0b295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toEqual(
-        MUST_BE_ETH_ADDRESS_ERR_MSG,
+        MUST_BE_ETH_ADDRESS_OR_DOMAIN_ERR_MSG,
       )
-    })
-
-    it('Returns an error message for non-address string', async () => {
-      expect(await mustBeEthereumAddress('notanaddress')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
     })
   })
 

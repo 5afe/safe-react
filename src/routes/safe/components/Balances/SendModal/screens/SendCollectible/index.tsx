@@ -71,7 +71,7 @@ const SendCollectible = ({
   const nftTokens = useSelector(nftTokensSelector)
   const addressBook = useSelector(addressBookSelector)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
-    const defaultEntry = { address: '', name: '' }
+    const defaultEntry = { address: recipientAddress || '', name: '' }
 
     // if there's nothing to lookup for, we return the default entry
     if (!initialValues?.recipientAddress && !recipientAddress) {
