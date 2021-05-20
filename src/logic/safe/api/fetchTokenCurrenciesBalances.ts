@@ -23,7 +23,7 @@ type FetchTokenCurrenciesBalancesProps = {
   trustedTokens?: boolean
 }
 
-export const fetchTokenCurrenciesBalances = async ({
+export const fetchTokenCurrenciesBalances = ({
   safeAddress,
   selectedCurrency,
   excludeSpamTokens = true,

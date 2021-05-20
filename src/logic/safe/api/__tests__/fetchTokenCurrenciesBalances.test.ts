@@ -2,16 +2,12 @@ import axios from 'axios'
 
 import { getSafeClientGatewayBaseUrl } from 'src/config'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
-import { aNewStore } from 'src/store'
 
 jest.mock('axios')
 describe('fetchTokenCurrenciesBalances', () => {
-  let store
   const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
   const excludeSpamTokens = true
-  beforeEach(() => {
-    store = aNewStore()
-  })
+
   afterAll(() => {
     jest.unmock('axios')
   })
