@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 
 const SET_ALLOWANCE = 'setAllowance'
@@ -35,7 +35,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
   )
 
   const resetTimeLabel = React.useMemo(
-    () => RESET_TIME_OPTIONS.find(({ value }) => +value === +resetTimeMin / 24 / 60)?.label ?? '',
+    () => getResetTimeOptions().find(({ value }) => +value === +resetTimeMin)?.label ?? '',
     [resetTimeMin],
   )
 
