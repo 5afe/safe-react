@@ -81,7 +81,8 @@ const calculateSpendingLimitsTxData = (
     resetBaseMin: number
   }
 } => {
-  const isSpendingLimitEnabled = !spendingLimits
+  // enabled if it's an array with at least one element
+  const isSpendingLimitEnabled = !!spendingLimits?.length
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
