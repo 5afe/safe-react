@@ -1,16 +1,17 @@
 import { List } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
+import { getNetworkId } from 'src/config'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookMapSelector, addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -20,6 +21,32 @@ const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 export const safesMapSelector = (state: AppReduxState): SafesMap => safesStateSelector(state).get('safes')
 
 export const safesListSelector = createSelector(safesMapSelector, (safes): List<SafeRecord> => safes.toList())
+
+const chainId = getNetworkId()
+
+type SafeRecordWithName = SafeRecordProps & { name: string }
+
+export const safesListWithAddressBookNameSelector = createSelector(
+  [safesListSelector, addressBookMapSelector],
+  (safesList, addressBookMap): List<SafeRecordWithName> => {
+    const addressBook = addressBookMap[chainId]
+
+    return safesList
+      .map((safeRecord) => {
+        const safe = safeRecord.toObject()
+        const name = addressBook[safe.address]
+        return { ...safe, name }
+      })
+      .filter((safeRecord: SafeRecordWithName) => safeRecord.name)
+  },
+)
+
+export const safeNameSelector = createSelector(
+  [safesListWithAddressBookNameSelector, (_, safeName: string) => safeName],
+  (safes, safeAddress): string => {
+    return safes.find((safe) => sameAddress(safe.address, safeAddress))?.name ?? ''
+  },
+)
 
 export const safesCountSelector = createSelector(safesMapSelector, (safes) => safes.size)
 
