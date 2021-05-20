@@ -5,7 +5,7 @@ import { TokenProps } from 'src/logic/tokens/store/model/token'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type TokenBalance = {
-  tokenInfo: TokenProps
+  tokenInfo: Omit<TokenProps, 'balance'>
   balance: string
   fiatBalance: string
   fiatConversion: string
