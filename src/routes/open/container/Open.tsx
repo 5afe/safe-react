@@ -25,7 +25,7 @@ import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookBatchLoad } from 'src/logic/addressBook/store/actions'
+import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
@@ -182,7 +182,7 @@ const Open = (): ReactElement => {
 
     const owners = ownersAddresses.map((address, index) => makeAddressBookEntry({ address, name: ownersNames[index] }))
     const safe = makeAddressBookEntry({ address: safeAddress, name })
-    await dispatch(addressBookBatchLoad([...owners, safe]))
+    await dispatch(addressBookSafeLoad([...owners, safe]))
 
     trackEvent({
       category: 'User',

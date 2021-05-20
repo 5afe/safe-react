@@ -4,7 +4,7 @@ import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 import Layout from 'src/routes/load/components/Layout'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookBatchLoad } from 'src/logic/addressBook/store/actions'
+import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
 
 import Page from 'src/components/layout/Page'
@@ -74,7 +74,7 @@ const Load = (): ReactElement => {
       }),
     )
     const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
-    await dispatch(addressBookBatchLoad([...owners, safe]))
+    await dispatch(addressBookSafeLoad([...owners, safe]))
 
     try {
       safeAddress = checksumAddress(safeAddress)
