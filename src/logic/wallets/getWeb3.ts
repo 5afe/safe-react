@@ -62,7 +62,7 @@ const isHardwareWallet = (walletName: string) =>
 const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
   const contractCode = await web3Provider.eth.getCode(account)
 
-  return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+  return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
 export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
