@@ -1,7 +1,11 @@
 import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
-import { fetchTokenCurrenciesBalances, TokenBalance } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import {
+  BalanceEndpoint,
+  fetchTokenCurrenciesBalances,
+  TokenBalance,
+} from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
@@ -11,6 +15,7 @@ import { safeSelector } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export type BalanceRecord = {
   tokenAddress?: string
@@ -50,39 +55,38 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
   dispatch: Dispatch,
   getState: () => AppReduxState,
 ): Promise<void> => {
+  const state = getState()
+  const safe = safeSelector(state)
+
+  if (!safe) {
+    return
+  }
+  const selectedCurrency = currentCurrencySelector(state)
+
+  let tokenCurrenciesBalances: BalanceEndpoint
   try {
-    const state = getState()
-    const safe = safeSelector(state)
-
-    if (!safe) {
-      return
-    }
-    const selectedCurrency = currentCurrencySelector(state)
-
-    const tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+    tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
       safeAddress,
       selectedCurrency: currencySelected ?? selectedCurrency,
     })
-
-    const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
-      extractDataFromResult,
-      {
-        balances: [],
-        ethBalance: '0',
-        tokens: List(),
-      },
-    )
-
-    dispatch(
-      updateSafe({
-        address: safeAddress,
-        balances,
-        ethBalance,
-        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
-      }),
-    )
-    dispatch(addTokens(tokens))
-  } catch (err) {
-    console.error('Error fetching active token list', err)
+  } catch (e) {
+    logError(Errors._601, e.message, false)
+    return
   }
+
+  const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(extractDataFromResult, {
+    balances: [],
+    ethBalance: '0',
+    tokens: List(),
+  })
+
+  dispatch(
+    updateSafe({
+      address: safeAddress,
+      balances,
+      ethBalance,
+      totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+    }),
+  )
+  dispatch(addTokens(tokens))
 }
