@@ -26,7 +26,7 @@ import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { getAppInfoFromUrl } from '../utils'
-import { SafeApp } from '../types.d'
+import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 
@@ -66,7 +66,7 @@ export type TransactionParams = {
 type ConfirmTransactionModalState = {
   isOpen: boolean
   txs: Transaction[]
-  requestId?: RequestId
+  requestId: RequestId
   params?: TransactionParams
 }
 
@@ -80,7 +80,7 @@ const NETWORK_ID = getNetworkId()
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
   txs: [],
-  requestId: undefined,
+  requestId: '',
   params: undefined,
 }
 
@@ -225,7 +225,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId)
+    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId as string)
   }
 
   const onTxReject = () => {
@@ -236,7 +236,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId, true)
+    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId as string, true)
   }
 
   useEffect(() => {
