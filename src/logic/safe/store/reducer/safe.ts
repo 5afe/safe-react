@@ -86,7 +86,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
             ['safes', safeAddress],
             makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress }),
             (prevSafe) => {
-              const safeName = !safe?.name ? prevSafe?.name : safe.name
+              const safeName = safe?.name || prevSafe?.name || ''
               return updateSafeProps(prevSafe, { ...safe, loadedViaUrl: !safeName || safeName === LOADED_SAFE_KEY })
             },
           )

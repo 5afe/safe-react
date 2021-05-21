@@ -60,6 +60,7 @@ export const fetchSafe = (safeAddress: string) => async (
 
   // remote (client-gateway)
   const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
+
   // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
   const state = getState()
   const addressBook = addressBookSelector(state)
