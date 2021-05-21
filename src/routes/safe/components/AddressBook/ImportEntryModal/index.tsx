@@ -158,15 +158,11 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
                 color: importError === '' ? '#008C73' : '#DB3A3D',
                 backgroundColor: '#fff',
                 fontSize: 14,
-                lineHeight: 1.5,
+                lineHeight: 1.4,
                 padding: '0 0.4em',
-                margin: '1em 0 0.5em 0',
-                /* To-Do: improve this in order to truncate big file names                
+                margin: '1.2em 0 0.5em 0',
+                maxHeight: '59px',
                 overflow: 'hidden',
-                textOverflow: 'ellipsis',
-                whiteSpace: 'nowrap',
-                lineClamp: '2',
-                wordBreak: 'break-all', */
               },
               progressBar: {
                 backgroundColor: '#008C73',
