@@ -1,7 +1,7 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
+import { SafeApp, SAFE_APP_FETCH_STATUS } from './types'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'

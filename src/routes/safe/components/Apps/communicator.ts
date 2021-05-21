@@ -7,8 +7,9 @@ import {
   ErrorResponse,
   MessageFormatter,
   METHODS,
+  RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { SafeApp } from './types.d'
+import { SafeApp } from './types'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
@@ -42,10 +43,10 @@ class AppCommunicator {
     return Boolean(this.handlers.get(msg.data.method))
   }
 
-  send = (data, requestId, error = false): void => {
+  send = (data: unknown, requestId: RequestId, error = false): void => {
     const sdkVersion = getSDKVersion()
     const msg = error
-      ? MessageFormatter.makeErrorResponse(requestId, data, sdkVersion)
+      ? MessageFormatter.makeErrorResponse(requestId, data as string, sdkVersion)
       : MessageFormatter.makeResponse(requestId, data, sdkVersion)
 
     this.iframeRef.current?.contentWindow?.postMessage(msg, '*')

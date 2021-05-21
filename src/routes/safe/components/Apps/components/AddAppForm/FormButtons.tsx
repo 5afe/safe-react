@@ -4,7 +4,7 @@ import { useFormState } from 'react-final-form'
 import styled from 'styled-components'
 
 import GnoButton from 'src/components/layout/Button'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { isAppManifestValid } from 'src/routes/safe/components/Apps/utils'
 
 const StyledDivider = styled(Divider)`
