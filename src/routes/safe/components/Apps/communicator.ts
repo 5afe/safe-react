@@ -66,7 +66,7 @@ class AppCommunicator {
           this.send(response, msg.data.id)
         }
       } catch (err) {
-        console.log({ err })
+        console.error({ err })
         this.send(err.message, msg.data.id, true)
       }
     }
