@@ -35,8 +35,8 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
       if (transaction.txDetails?.detailedExecutionInfo?.type === 'MULTISIG') {
         const details = transaction.txDetails?.detailedExecutionInfo as MultiSigExecutionDetails
         if (
-          !(canExecute && details.confirmationsRequired <= details.confirmations.length) &&
-          !(canConfirmThenExecute && details.confirmationsRequired - 1 <= details.confirmations.length)
+          (canExecute && details.confirmationsRequired > details.confirmations.length) ||
+          (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
         ) {
           dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
           return

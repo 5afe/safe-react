@@ -271,7 +271,7 @@ export const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = (txParameters: TxParameters) => {
-    if (thresholdReached && confirmations.size <= _threshold) {
+    if (thresholdReached && confirmations.size < _threshold) {
       dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
     } else {
       dispatch(
