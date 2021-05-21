@@ -1,31 +1,32 @@
 import React, { ReactElement, useEffect, useMemo, useState } from 'react'
-import { Text, EthHashInfo, ModalFooterConfirmation } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 import { useDispatch } from 'react-redux'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL, TX_NOTIFICATION_TYPES, CALL } from 'src/logic/safe/transactions'
+import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
-import { getNetworkInfo } from 'src/config'
+import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
-import { md, lg, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { DecodeTxs, BasicTxInfo } from 'src/components/DecodeTxs'
+import { BasicTxInfo, DecodeTxs } from 'src/components/DecodeTxs'
 import { fetchTxDecoder } from 'src/utils/decodeTx'
 import { DecodedData } from 'src/types/transactions/decode.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Divider from 'src/components/Divider'
 
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -36,11 +37,6 @@ const Container = styled.div`
 const TransactionFeesWrapper = styled.div`
   background-color: ${({ theme }) => theme.colors.background};
   padding: ${sm} ${lg};
-  margin-bottom: 15px;
-`
-
-const FooterWrapper = styled.div`
-  margin-bottom: 15px;
 `
 
 const DecodeTxsWrapper = styled.div`
@@ -55,6 +51,7 @@ const StyledBlock = styled(Block)`
   margin: 4px 0 0 40px;
 
   display: flex;
+
   > :nth-child(1) {
     margin-right: 5px;
   }
@@ -125,6 +122,8 @@ export const ReviewConfirm = ({
     manualGasLimit,
   })
 
+  const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   // Decode tx data.
   useEffect(() => {
     const decodeTxData = async () => {
@@ -146,6 +145,8 @@ export const ReviewConfirm = ({
   }
 
   const confirmTransactions = async (txParameters: TxParameters) => {
+    setButtonStatus(ButtonStatus.LOADING)
+
     await dispatch(
       createTransaction(
         {
@@ -165,6 +166,8 @@ export const ReviewConfirm = ({
         handleTxRejection,
       ),
     )
+
+    setButtonStatus(ButtonStatus.READY)
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
@@ -246,15 +249,17 @@ export const ReviewConfirm = ({
           )}
 
           {/* Buttons */}
-          <FooterWrapper>
-            <ModalFooterConfirmation
-              cancelText="Cancel"
-              handleCancel={handleTxRejection}
-              handleOk={() => confirmTransactions(txParameters)}
-              okDisabled={areTxsMalformed}
-              okText="Submit"
+          <Modal.Footer withoutBorder={txEstimationExecutionStatus !== EstimationStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: handleTxRejection }}
+              confirmButtonProps={{
+                onClick: () => confirmTransactions(txParameters),
+                disabled: areTxsMalformed,
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+              }}
             />
-          </FooterWrapper>
+          </Modal.Footer>
         </div>
       )}
     </EditableTxParameters>

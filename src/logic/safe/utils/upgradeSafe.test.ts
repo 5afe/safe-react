@@ -15,13 +15,11 @@ describe('Upgrade a Safe', () => {
     const updateSafeTxData = safeInstance.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
     const txs = [
       {
-        operation: 0,
         to: safeAddress,
         value: 0,
         data: updateSafeTxData,
       },
       {
-        operation: 0,
         to: safeAddress,
         value: 0,
         data: fallbackHandlerTxData,

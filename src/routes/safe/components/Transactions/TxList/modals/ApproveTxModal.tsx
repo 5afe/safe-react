@@ -2,17 +2,15 @@ import { List } from 'immutable'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useMemo, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -20,6 +18,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -37,14 +36,12 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 
-const useStyles = makeStyles(styles)
-
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
 
 const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   const modalInfo = {
-    title: 'Execute Transaction Rejection',
+    title: 'Execute transaction rejection',
     description: 'This action will execute this transaction.',
   }
 
@@ -53,7 +50,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
   }
 
   if (thresholdReached) {
-    modalInfo.title = 'Execute Transaction'
+    modalInfo.title = 'Execute transaction'
     modalInfo.description =
       'This action will execute this transaction. A separate Transaction will be performed to submit the execution.'
   } else {
@@ -141,15 +138,12 @@ const useTxInfo = (transaction: Props['transaction']) => {
         } else {
           return t.current.txDetails.txData?.value ?? '0'
         }
-        break
       case 'Custom':
         return t.current.txInfo.value
-        break
       case 'Creation':
       case 'SettingsChange':
       default:
         return '0'
-        break
     }
   }, [])
 
@@ -161,15 +155,12 @@ const useTxInfo = (transaction: Props['transaction']) => {
         } else {
           return t.current.txInfo.transferInfo.tokenAddress
         }
-        break
       case 'Custom':
         return t.current.txInfo.to
-        break
       case 'Creation':
       case 'SettingsChange':
       default:
         return safeAddress
-        break
     }
   }, [safeAddress])
 
@@ -266,6 +257,8 @@ export const ApproveTxModal = ({
     manualGasPrice,
     manualGasLimit,
   })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
@@ -404,23 +397,18 @@ export const ApproveTxModal = ({
               )}
 
               {/* Footer */}
-              <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
-                  Close
-                </Button>
-                <Button
-                  color={isCancelTx ? 'secondary' : 'primary'}
-                  minHeight={42}
-                  minWidth={214}
-                  onClick={() => approveTx(txParameters)}
-                  testId={isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-                >
-                  {title}
-                </Button>
-              </Row>
+              <GenericModal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
+                  confirmButtonProps={{
+                    onClick: () => approveTx(txParameters),
+                    type: 'submit',
+                    status: buttonStatus,
+                    text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                    testId: isCancelTx ? REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID : APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID,
+                  }}
+                />
+              </GenericModal.Footer>
             </>
           )
         }}
