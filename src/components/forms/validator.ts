@@ -63,6 +63,14 @@ export const maxValue = (max: number | string) => (value: string): ValidatorRetu
 
 export const ok = (): undefined => undefined
 
+export const mustBeHexData = (data: string): ValidatorReturnType => {
+  const isData = getWeb3().utils.isHexStrict(data)
+
+  if (!isData) {
+    return 'Has to be a valid strict hex data (it must start with 0x)'
+  }
+}
+
 export const mustBeAddressHash = memoize(
   (address: string): ValidatorReturnType => {
     const errorMessage = 'Must be a valid address'

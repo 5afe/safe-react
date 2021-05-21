@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
@@ -32,6 +32,7 @@ import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -181,6 +182,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
@@ -200,6 +203,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ethGasPriceInGWei: ethGasPriceInGWei || gasPriceFormatted,
       ethGasLimit: ethGasLimit || gasLimit,
     }
+
     if (safeAddress) {
       const { spendingLimitTxData } = calculateSpendingLimitsTxData(
         safeAddress,
@@ -242,6 +246,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     }
   }
 
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
+  }
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -254,7 +263,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.Header onClose={onClose}>
-            <Modal.Header.Title size="xs" withoutMargin>
+            <Modal.Header.Title>
               New spending limit
               <Text size="lg" color="secondaryLight" as="span">
                 2 of 2
@@ -315,7 +324,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             />
           </div>
 
-          <Modal.Footer>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
               cancelButtonProps={{
                 onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
@@ -323,8 +332,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               }}
               confirmButtonProps={{
                 onClick: () => handleSubmit(txParameters),
-                disabled:
-                  existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING,
+                disabled: existentSpendingLimit === undefined,
+                status: buttonStatus,
+                text: confirmButtonText,
               }}
             />
           </Modal.Footer>

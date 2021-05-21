@@ -2,6 +2,7 @@ import { TextField } from '@gnosis.pm/safe-react-components'
 import createDecorator from 'final-form-calculate'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
+import styled from 'styled-components'
 
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import { getAppInfoFromUrl, getIpfsLinkFromEns, uniqueApp } from 'src/routes/safe/components/Apps/utils'
@@ -60,6 +61,12 @@ export const AppInfoUpdater = ({ onAppInfo, onLoading }: AppInfoUpdaterProps): n
   return null
 }
 
+const StyledAppUrlField = styled(Field)`
+  && {
+    width: 100%;
+  }
+`
+
 const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
@@ -67,7 +74,7 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const validate = !visited?.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
 
   return (
-    <Field
+    <StyledAppUrlField
       label="App URL"
       name="appUrl"
       placeholder="App URL"

@@ -5,7 +5,7 @@ import { useSelector } from 'react-redux'
 
 import { useStyles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -13,14 +13,13 @@ import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required, uniqueAddress } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { addressBookAddressesListSelector } from 'src/logic/addressBook/store/selectors'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { Entry } from 'src/routes/safe/components/AddressBook/index'
+import { Entry } from 'src/routes/safe/components/AddressBook'
 
 export const CREATE_ENTRY_INPUT_NAME_ID = 'create-entry-input-name'
 export const CREATE_ENTRY_INPUT_ADDRESS_ID = 'create-entry-input-address'
@@ -128,23 +127,16 @@ export const CreateEditEntryModal = ({
                   ) : null}
                 </Row>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minHeight={42}
-                  minWidth={140}
-                  testId={SAVE_NEW_ENTRY_BTN_ID}
-                  type="submit"
-                  variant="contained"
-                  disabled={!formState.valid}
-                >
-                  {isNew ? 'Create' : 'Save'}
-                </Button>
-              </Row>
+              <GenericModal.Footer>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{
+                    disabled: !formState.valid,
+                    testId: SAVE_NEW_ENTRY_BTN_ID,
+                    text: isNew ? 'Create' : 'Save',
+                  }}
+                />
+              </GenericModal.Footer>
             </>
           )
         }}
