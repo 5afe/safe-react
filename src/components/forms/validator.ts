@@ -71,16 +71,23 @@ export const mustBeHexData = (data: string): ValidatorReturnType => {
   }
 }
 
-export const mustBeEthereumAddress = memoize(
+export const mustBeAddressHash = memoize(
   (address: string): ValidatorReturnType => {
+    const errorMessage = 'Must be a valid address'
     const startsWith0x = address?.startsWith('0x')
     const isAddress = getWeb3().utils.isAddress(address)
-
-    const errorMessage = `Must be a valid address${
-      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
-    }`
-
     return startsWith0x && isAddress ? undefined : errorMessage
+  },
+)
+
+export const mustBeEthereumAddress = memoize(
+  (address: string): ValidatorReturnType => {
+    const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
+    const result = mustBeAddressHash(address)
+    if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
+      return errorMessage
+    }
+    return result
   },
 )
 

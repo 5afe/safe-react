@@ -1,5 +1,4 @@
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import { TextField } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import React, { useState, ReactElement } from 'react'
 import styled from 'styled-components'
 
@@ -25,6 +24,7 @@ const StyledTextFileAppName = styled(TextField)`
 `
 
 const AppInfo = styled.div`
+  display: flex;
   margin: 36px 0 24px 0;
 
   img {
@@ -40,6 +40,18 @@ const AppDocsInfo = styled.div`
     top: 4px;
     left: 4px;
   }
+`
+
+const WrapperLoader = styled.div`
+  height: 55px;
+  width: 65px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+`
+
+const StyledLoader = styled(Loader)`
+  margin-right: 15px;
 `
 
 interface AddAppFormValues {
@@ -63,6 +75,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = () => {
     const newAppList = [
@@ -96,15 +109,23 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               </Link>
             </AppDocsInfo>
             <AppUrl appList={appList} />
-
             {/* Fetch app from url and return a SafeApp */}
-            <AppInfoUpdater onAppInfo={setAppInfo} />
-
+            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
             <AppInfo>
-              <Img alt="Token image" height={55} src={appInfo.iconUrl} />
-              <StyledTextFileAppName label="App name" readOnly value={appInfo.name} onChange={() => {}} />
+              {isLoading ? (
+                <WrapperLoader>
+                  <StyledLoader size="sm" />
+                </WrapperLoader>
+              ) : (
+                <Img alt="Token image" width={55} src={appInfo.iconUrl} />
+              )}
+              <StyledTextFileAppName
+                label="App name"
+                readOnly
+                value={isLoading ? 'Loading...' : appInfo.name}
+                onChange={() => {}}
+              />
             </AppInfo>
-
             <AppAgreement />
           </Modal.Body>
           <Modal.Footer>

@@ -5,7 +5,7 @@ import Col from 'src/components/layout/Col'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 
-import { composeValidators, mustBeEthereumAddress, required } from 'src/components/forms/validator'
+import { composeValidators, mustBeAddressHash, required } from 'src/components/forms/validator'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import ArrayTypeInput from './ArrayTypeInput'
 
@@ -41,7 +41,7 @@ export const InputComponent = ({ type, keyValue, placeholder }: Props): ReactEle
             testId={keyValue}
             text={placeholder}
             type="text"
-            validate={composeValidators(required, mustBeEthereumAddress)}
+            validate={composeValidators(required, mustBeAddressHash)}
           />
         </Col>
       )
