@@ -38,7 +38,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
           !(canExecute && details.confirmationsRequired <= details.confirmations.length) &&
           !(canConfirmThenExecute && details.confirmationsRequired - 1 <= details.confirmations.length)
         ) {
-          dispatch(enqueueSnackbar(NOTIFICATIONS.COULDNT_FETCH_SIGNATURES_ERROR_MSG))
+          dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
           return
         }
       }

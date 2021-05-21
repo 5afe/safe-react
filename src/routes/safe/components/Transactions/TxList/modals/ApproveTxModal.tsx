@@ -272,7 +272,7 @@ export const ApproveTxModal = ({
 
   const approveTx = (txParameters: TxParameters) => {
     if (thresholdReached && confirmations.size <= _threshold) {
-      dispatch(enqueueSnackbar(NOTIFICATIONS.COULDNT_FETCH_SIGNATURES_ERROR_MSG))
+      dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
     } else {
       dispatch(
         processTransaction({
