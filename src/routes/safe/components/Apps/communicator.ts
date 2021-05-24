@@ -1,4 +1,3 @@
-import { logError } from 'src/logic/exceptions/CodedException'
 import { MutableRefObject, useEffect, useState } from 'react'
 import {
   getSDKVersion,
@@ -10,8 +9,9 @@ import {
   METHODS,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { SafeApp } from './types'
+import { logError } from 'src/logic/exceptions/CodedException'
 import ErrorCodes from 'src/logic/exceptions/registry'
+import { SafeApp } from './types'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
