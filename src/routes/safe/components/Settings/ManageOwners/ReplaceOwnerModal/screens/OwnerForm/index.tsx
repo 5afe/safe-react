@@ -160,7 +160,7 @@ export const OwnerForm = ({
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
                         if (web3ReadOnly.utils.isAddress(address)) {
-                          const ownerName = addressBookMap[chainId][address]
+                          const ownerName = addressBookMap?.[chainId]?.[address]?.name
                           if (ownerName) {
                             mutators.setOwnerName(ownerName)
                           }

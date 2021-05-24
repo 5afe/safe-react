@@ -9,7 +9,7 @@ export const addressBookSelector = (state: AppReduxState): AppReduxState['addres
 
 type AddressBookMap = {
   [chainId: number]: {
-    [address: string]: string
+    [address: string]: AddressBookEntry
   }
 }
 
@@ -18,11 +18,12 @@ export const addressBookMapSelector = createSelector(
   (addressBook): AddressBookMap => {
     const addressBookMap = {}
 
-    addressBook.forEach(({ address, name, chainId }) => {
+    addressBook.forEach((entry) => {
+      const { address, chainId } = entry
       if (!addressBookMap[chainId]) {
-        addressBookMap[chainId] = { [address]: name }
+        addressBookMap[chainId] = { [address]: entry }
       } else {
-        addressBookMap[chainId][address] = name
+        addressBookMap[chainId][address] = entry
       }
     })
 

@@ -29,12 +29,12 @@ type SafeRecordWithName = SafeRecordProps & { name: string }
 export const safesListWithAddressBookNameSelector = createSelector(
   [safesListSelector, addressBookMapSelector],
   (safesList, addressBookMap): List<SafeRecordWithName> => {
-    const addressBook = addressBookMap[chainId]
+    const addressBook = addressBookMap?.[chainId]
 
     return safesList
       .map((safeRecord) => {
         const safe = safeRecord.toObject()
-        const name = addressBook[safe.address]
+        const name = addressBook?.[safe.address]?.name
         return { ...safe, name }
       })
       .filter((safeRecord: SafeRecordWithName) => safeRecord.name)
