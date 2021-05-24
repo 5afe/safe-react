@@ -1,3 +1,4 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
@@ -5,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getNetworkInfo, getExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -27,9 +27,10 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
 
@@ -84,6 +85,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     setTxInfo({
       txRecipient: tx.contractAddress as string,
@@ -92,7 +95,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
       dispatch(
         createTransaction({
@@ -232,22 +235,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             />
           </div>
 
-          <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: 'submit-tx-btn',
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

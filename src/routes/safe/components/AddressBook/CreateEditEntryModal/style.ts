@@ -8,6 +8,7 @@ export const useStyles = makeStyles(
       padding: lg,
       justifyContent: 'space-between',
       boxSizing: 'border-box',
+      height: '74px',
     },
     manage: {
       fontSize: lg,
@@ -18,10 +19,6 @@ export const useStyles = makeStyles(
     close: {
       height: '35px',
       width: '35px',
-    },
-    buttonRow: {
-      height: '84px',
-      justifyContent: 'center',
     },
   }),
 )

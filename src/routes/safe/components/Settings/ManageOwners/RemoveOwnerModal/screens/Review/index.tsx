@@ -1,5 +1,4 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -8,7 +7,6 @@ import { List } from 'immutable'
 
 import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -21,14 +19,14 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-import { styles } from './style'
+import { useStyles } from './style'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
-
-const useStyles = makeStyles(styles)
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -74,6 +72,8 @@ export const ReviewRemoveOwnerModal = ({
     manualGasPrice,
     manualGasLimit,
   })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true
@@ -244,23 +244,18 @@ export const ReviewRemoveOwnerModal = ({
               />
             </Block>
           )}
-          <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-              Back
-            </Button>
-            <Button
-              color="primary"
-              minHeight={42}
-              minWidth={140}
-              onClick={() => onSubmit(txParameters)}
-              testId={REMOVE_OWNER_REVIEW_BTN_TEST_ID}
-              type="submit"
-              variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => onSubmit(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                type: 'submit',
+                testId: REMOVE_OWNER_REVIEW_BTN_TEST_ID,
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

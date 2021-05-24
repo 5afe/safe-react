@@ -1,17 +1,10 @@
 import React, { useState } from 'react'
 import styled, { css } from 'styled-components'
 import { useSelector } from 'react-redux'
-import {
-  GenericModal,
-  IconText,
-  Loader,
-  Menu,
-  Icon,
-  ModalFooterConfirmation,
-  Text,
-} from '@gnosis.pm/safe-react-components'
+import { IconText, Loader, Menu, Text, Icon } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 
+import { Modal } from 'src/components/Modal'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
@@ -153,30 +146,42 @@ const AppsList = (): React.ReactElement => {
       </ContentWrapper>
 
       {isAddAppModalOpen && (
-        <GenericModal
-          title="Add custom app"
-          body={<AddAppForm closeModal={closeAddAppModal} appList={appList} />}
-          onClose={closeAddAppModal}
-        />
+        <Modal title="Add app" description="Add a custom app to the list of apps" handleClose={closeAddAppModal}>
+          <Modal.Header onClose={closeAddAppModal}>
+            <Modal.Header.Title>Add custom app</Modal.Header.Title>
+          </Modal.Header>
+          <AddAppForm closeModal={closeAddAppModal} appList={appList} />
+        </Modal>
       )}
 
       {appToRemove && (
-        <GenericModal
-          title="Remove app"
-          body={<Text size="md">This action will remove {appToRemove.name} from the interface</Text>}
-          footer={
-            <ModalFooterConfirmation
-              cancelText="Cancel"
-              handleCancel={() => setAppToRemove(null)}
-              handleOk={() => {
-                removeApp(appToRemove.url)
-                setAppToRemove(null)
+        <Modal title="Remove app" description="Confirm for the app removal" handleClose={() => setAppToRemove(null)}>
+          <Modal.Header onClose={() => setAppToRemove(null)}>
+            <Modal.Header.Title>Remove app</Modal.Header.Title>
+          </Modal.Header>
+          <Modal.Body>
+            <Text size="xl">
+              This action will remove{' '}
+              <Text size="xl" strong as="span">
+                {appToRemove.name}
+              </Text>{' '}
+              from the interface
+            </Text>
+          </Modal.Body>
+          <Modal.Footer>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: () => setAppToRemove(null) }}
+              confirmButtonProps={{
+                color: 'error',
+                onClick: () => {
+                  removeApp(appToRemove.url)
+                  setAppToRemove(null)
+                },
+                text: 'Remove',
               }}
-              okText="Remove"
             />
-          }
-          onClose={() => setAppToRemove(null)}
-        />
+          </Modal.Footer>
+        </Modal>
       )}
     </Wrapper>
   )

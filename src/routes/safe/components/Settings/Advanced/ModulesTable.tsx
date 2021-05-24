@@ -1,5 +1,4 @@
 import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import styled from 'styled-components'
 import cn from 'classnames'
@@ -8,7 +7,7 @@ import { useSelector } from 'react-redux'
 
 import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from './dataFetcher'
 import { RemoveModuleModal } from './RemoveModuleModal'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
@@ -20,8 +19,6 @@ import { getExplorerInfo } from 'src/config'
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 const MODULES_ROW_TEST_ID = 'owners-row'
-
-const useStyles = makeStyles(styles)
 
 const TableActionButton = styled(Button)`
   background-color: transparent;

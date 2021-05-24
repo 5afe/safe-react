@@ -1,3 +1,4 @@
+import { Button } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import { createStyles, makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
@@ -5,7 +6,6 @@ import QRCode from 'qrcode.react'
 import React, { ReactElement } from 'react'
 
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -20,7 +20,7 @@ const useStyles = makeStyles(
     heading: {
       padding: `${md} ${lg}`,
       justifyContent: 'space-between',
-      maxHeight: '75px',
+      height: '74px',
       boxSizing: 'border-box',
     },
     close: {
@@ -108,7 +108,7 @@ const ReceiveModal = ({ onClose, safeAddress, safeName }: Props): ReactElement =
       </Col>
       <Hairline />
       <Row align="center" className={classes.buttonRow}>
-        <Button color="primary" minWidth={130} onClick={onClose} variant="contained">
+        <Button size="md" color="primary" onClick={onClose} variant="contained">
           Done
         </Button>
       </Row>

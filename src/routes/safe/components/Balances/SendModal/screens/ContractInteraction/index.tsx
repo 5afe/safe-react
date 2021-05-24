@@ -125,7 +125,6 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Hairline />
               <Buttons onClose={onClose} />
             </>
           )

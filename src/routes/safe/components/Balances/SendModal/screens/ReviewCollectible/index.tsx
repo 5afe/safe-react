@@ -3,10 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+
 import { getExplorerInfo } from 'src/config'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -24,6 +24,8 @@ import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -76,6 +78,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -96,7 +100,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }, [safeAddress, tx])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     try {
       if (safeAddress) {
         dispatch(
@@ -211,23 +215,18 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           </div>
-          <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              type="submit"
-              variant="contained"
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                type: 'submit',
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: 'submit-tx-btn',
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

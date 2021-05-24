@@ -12,15 +12,15 @@ import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TextAreaField } from 'src/components/forms/TextAreaField'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat } from 'src/components/forms/validator'
+import { composeValidators, maxValue, minValue, mustBeFloat, mustBeHexData } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { Modal } from 'src/components/Modal'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import { safeSelector } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -224,6 +224,7 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                       placeholder="Data (hex encoded)*"
                       text="Data (hex encoded)*"
                       type="text"
+                      validate={mustBeHexData}
                     />
                   </Col>
                 </Row>
@@ -232,23 +233,12 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
                   Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose} color="secondary">
-                  Cancel
-                </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                  disabled={shouldDisableSubmitButton}
-                  minWidth={140}
-                  type="submit"
-                  variant="contained"
-                >
-                  Review
-                </Button>
-              </Row>
+              <Modal.Footer>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{ disabled: shouldDisableSubmitButton, testId: 'review-tx-btn', text: 'Review' }}
+                />
+              </Modal.Footer>
               {qrModalOpen && <ScanQRModal isOpen={qrModalOpen} onClose={closeQrModal} onScan={handleScan} />}
             </>
           )
