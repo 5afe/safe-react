@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { GetBalanceParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -171,8 +171,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       chainId: NETWORK_ID,
     }))
 
-    communicator?.on('getSafeBalances', async () => {
-      const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: 'usd' })
+    communicator?.on('getSafeBalances', async (msg) => {
+      const { currency = 'usd' } = msg.data.params as GetBalanceParams
+
+      const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
 
       return balances
     })

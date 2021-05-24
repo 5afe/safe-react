@@ -1617,10 +1617,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-0.4.2.tgz#ae87b2164931c006cb0efdede3d82ff210df1648"
   integrity sha512-BwA2dyCebPMdi4JhhTkp6EjkhEM6vAIviKdhqHiHnSmL+sDfxtP1jdOuE8ME2/4+5TiLSS8k8qscYjLSlf1LLw==
 
-"@gnosis.pm/safe-apps-sdk@3.0.0-alpha.4":
-  version "3.0.0-alpha.4"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0-alpha.4.tgz#26008acd173ac0f398d54ea375b848973305e907"
-  integrity sha512-GvIUJWj5SZ90OhXlsajFZMP+QcY9pb4PVam3CzoqPsQqt7zNazrDmeFutDr27/iQMdnWc0ph0Nv7XEdye1Tt6Q==
+"@gnosis.pm/safe-apps-sdk@3.0.0-alpha.5":
+  version "3.0.0-alpha.5"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0-alpha.5.tgz#f939e3a5719f51686151b76cb40af2ca4d410d30"
+  integrity sha512-yVvnJCl3B9Xk68vh+03rej4REx7cTfiR55b9TjqPaBtZLtY+c57UHCslUmkK+0MRMF4SyKaV5S9BOqI/iX9a3Q==
   dependencies:
     semver "7.1.1"
 
