@@ -29,12 +29,14 @@ import { isThresholdReached } from 'src/routes/safe/components/Transactions/TxLi
 import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 import {
   ExpandedTxDetails,
   isMultiSigExecutionDetails,
   Operation,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -237,7 +239,6 @@ export const ApproveTxModal = ({
     origin,
     id,
   } = useTxInfo(transaction)
-
   const {
     gasLimit,
     gasPriceFormatted,
@@ -263,32 +264,36 @@ export const ApproveTxModal = ({
   const handleExecuteCheckbox = () => setApproveAndExecute((prevApproveAndExecute) => !prevApproveAndExecute)
 
   const approveTx = (txParameters: TxParameters) => {
-    dispatch(
-      processTransaction({
-        safeAddress,
-        tx: {
-          id,
-          baseGas,
-          confirmations,
-          data,
-          gasPrice,
-          gasToken,
-          nonce,
-          operation,
-          origin,
-          refundReceiver,
-          safeTxGas,
-          safeTxHash,
-          to,
-          value,
-        },
-        userAddress,
-        notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
-        approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
-        ethParameters: txParameters,
-        thresholdReached,
-      }),
-    )
+    if (thresholdReached && confirmations.size < _threshold) {
+      dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
+    } else {
+      dispatch(
+        processTransaction({
+          safeAddress,
+          tx: {
+            id,
+            baseGas,
+            confirmations,
+            data,
+            gasPrice,
+            gasToken,
+            nonce,
+            operation,
+            origin,
+            refundReceiver,
+            safeTxGas,
+            safeTxHash,
+            to,
+            value,
+          },
+          userAddress,
+          notifiedTransaction: TX_NOTIFICATION_TYPES.CONFIRMATION_TX,
+          approveAndExecute: canExecute && approveAndExecute && isTheTxReadyToBeExecuted,
+          ethParameters: txParameters,
+          thresholdReached,
+        }),
+      )
+    }
     onClose()
   }
 

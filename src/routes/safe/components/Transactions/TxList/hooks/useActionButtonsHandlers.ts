@@ -1,13 +1,15 @@
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
-import { useSelector } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 
-import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { MultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
 import { TransactionActionStateContext } from 'src/routes/safe/components/Transactions/TxList/TxActionProvider'
 import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/TxHoverProvider'
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -24,18 +26,29 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
   const actionContext = useRef(useContext(TransactionActionStateContext))
   const hoverContext = useRef(useContext(TxHoverContext))
   const locationContext = useRef(useContext(TxLocationContext))
+  const dispatch = useDispatch()
   const { canCancel, canConfirmThenExecute, canExecute } = useTransactionActions(transaction)
 
   const handleConfirmButtonClick = useCallback(
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation()
+      if (transaction.txDetails?.detailedExecutionInfo?.type === 'MULTISIG') {
+        const details = transaction.txDetails?.detailedExecutionInfo as MultiSigExecutionDetails
+        if (
+          (canExecute && details.confirmationsRequired > details.confirmations.length) ||
+          (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)
+        ) {
+          dispatch(enqueueSnackbar(NOTIFICATIONS.TX_FETCH_SIGNATURES_ERROR_MSG))
+          return
+        }
+      }
       actionContext.current.selectAction({
         actionSelected: canExecute || canConfirmThenExecute ? 'execute' : 'confirm',
         transactionId: transaction.id,
         txLocation: locationContext.current.txLocation,
       })
     },
-    [canConfirmThenExecute, canExecute, transaction.id],
+    [canConfirmThenExecute, canExecute, dispatch, transaction.id, transaction.txDetails?.detailedExecutionInfo],
   )
 
   const handleCancelButtonClick = useCallback(
