@@ -12,14 +12,11 @@ import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxLocationContext, TxLocationProps } from './TxLocationProvider'
 import { getTxTokenData } from './utils'
-import { getNetworkId } from 'src/config'
 
 const SingleRow = styled.div`
   display: flex;
   align-items: flex-end;
 `
-
-const chainId = getNetworkId()
 
 type TxInfoDetailsProps = {
   title: string
@@ -38,7 +35,7 @@ export const TxInfoDetails = ({
   name,
   avatarUrl,
 }: TxInfoDetailsProps): ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address, chainId }))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
   const knownAddress = recipientName !== 'UNKNOWN'
 
   const { txLocation } = useContext<TxLocationProps>(TxLocationContext)
