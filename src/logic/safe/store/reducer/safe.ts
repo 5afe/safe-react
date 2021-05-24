@@ -84,11 +84,13 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
-            makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress }),
-            (prevSafe) => {
-              const safeName = safe?.name || prevSafe?.name || ''
-              return updateSafeProps(prevSafe, { ...safe, loadedViaUrl: !safeName || safeName === LOADED_SAFE_KEY })
-            },
+            // This intermediate value is used as prevSafe if no previous state. Else is not used
+            makeSafe({
+              name: safe?.name || LOADED_SAFE_KEY,
+              address: safeAddress,
+              loadedViaUrl: !safe?.name || safe?.name === LOADED_SAFE_KEY,
+            }),
+            (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state
     },
@@ -104,7 +106,12 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       return shouldUpdate
         ? state.updateIn(
             ['safes', safeAddress],
-            makeSafe({ name: safe?.name || LOADED_SAFE_KEY, address: safeAddress, loadedViaUrl: !!safe?.name }),
+            // This intermediate value is used as prevSafe if no previous state. Else is not used
+            makeSafe({
+              name: safe?.name || LOADED_SAFE_KEY,
+              address: safeAddress,
+              loadedViaUrl: !safe?.name || safe?.name === LOADED_SAFE_KEY,
+            }),
             (prevSafe) => updateSafeProps(prevSafe, safe),
           )
         : state
