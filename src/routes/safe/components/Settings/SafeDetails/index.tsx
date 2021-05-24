@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { updateSafe } from '../../../../../logic/safe/store/actions/updateSafe'
 
 import { styles } from './style'
 
@@ -72,6 +73,8 @@ const SafeDetails = (): ReactElement => {
 
   const handleSubmit = (values) => {
     dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    // used to trigger safe middleware and persist safe to localStorage
+    dispatch(updateSafe({ address: safeAddress }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))

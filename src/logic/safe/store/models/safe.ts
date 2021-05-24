@@ -33,7 +33,6 @@ export type SafeRecordProps = {
   balances: BalanceRecord[]
   nonce: number
   recurringUser?: boolean
-  loadedViaUrl?: boolean
   currentVersion: string
   needsUpdate: boolean
   featuresEnabled: Array<FEATURES>
@@ -49,7 +48,6 @@ const makeSafe = Record<SafeRecordProps>({
   spendingLimits: [],
   balances: [],
   nonce: 0,
-  loadedViaUrl: false,
   recurringUser: undefined,
   currentVersion: '',
   needsUpdate: false,

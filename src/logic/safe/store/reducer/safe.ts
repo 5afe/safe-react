@@ -72,10 +72,9 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const safeAddress = safe.address
 
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
-      const loadedViaUrl = safe.loadedViaUrl
 
       return shouldUpdate
-        ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress, loadedViaUrl }), (prevSafe) =>
+        ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
             updateSafeProps(prevSafe, safe),
           )
         : state
@@ -90,11 +89,8 @@ export default handleActions<AppReduxState['safes'], Payloads>(
 
       const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
       return shouldUpdate
-        ? state.updateIn(
-            ['safes', safeAddress],
-            // ToDo: ????? `loadedViaUrl`
-            makeSafe({ address: safeAddress, loadedViaUrl: false }),
-            (prevSafe) => updateSafeProps(prevSafe, safe),
+        ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
+            updateSafeProps(prevSafe, safe),
           )
         : state
     },
