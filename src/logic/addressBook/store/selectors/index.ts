@@ -2,7 +2,6 @@ import { createSelector } from 'reselect'
 
 import { getNetworkId } from 'src/config'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { getEntryIndex } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
 
@@ -47,19 +46,11 @@ type GetNameReturnObject = Overwrite<GetNameParams, { chainId: AddressBookEntry[
 
 export const getNameFromAddressBookSelector = createSelector(
   [
-    addressBookSelector,
+    addressBookMapSelector,
     (_, { address, chainId = networkId }: GetNameParams): GetNameReturnObject => ({
       address,
       chainId,
     }),
   ],
-  (addressBook, entry) => {
-    const entryIndex = getEntryIndex(addressBook, entry)
-
-    if (entryIndex >= 0) {
-      return addressBook[entryIndex].name
-    }
-
-    return ADDRESS_BOOK_DEFAULT_NAME
-  },
+  (addressBook, entry) => addressBook?.[entry.chainId]?.[entry.address]?.name ?? ADDRESS_BOOK_DEFAULT_NAME,
 )
