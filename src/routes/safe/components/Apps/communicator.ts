@@ -1,3 +1,4 @@
+import { logError } from 'src/logic/exceptions/CodedException'
 import { MutableRefObject, useEffect, useState } from 'react'
 import {
   getSDKVersion,
@@ -10,6 +11,7 @@ import {
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
 import { SafeApp } from './types'
+import ErrorCodes from 'src/logic/exceptions/registry'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
@@ -67,8 +69,8 @@ class AppCommunicator {
           this.send(response, msg.data.id)
         }
       } catch (err) {
-        console.error({ err })
         this.send(err.message, msg.data.id, true)
+        logError(ErrorCodes._601, err.message)
       }
     }
   }
