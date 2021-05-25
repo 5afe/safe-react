@@ -9,6 +9,7 @@ enum ErrorCodes {
   _100 = '100: Invalid input in the address field',
   _600 = '600: Error fetching token list',
   _601 = '601: Error fetching balances',
+  _602 = '602: Error processing Safe Apps request',
 }
 
 export default ErrorCodes
