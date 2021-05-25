@@ -153,7 +153,7 @@ const AddressBookTable = (): ReactElement => {
         ...entry,
         address: checksumAddress(entry.address),
       }
-      dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(checksumEntries)))
     })
     setImportEntryModalOpen(false)
   }
