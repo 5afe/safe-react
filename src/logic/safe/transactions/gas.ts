@@ -81,7 +81,7 @@ export const getDataFromNodeErrorMessage = (errorMessage: string): string | unde
     // }
     if (errorAsJSON?.data) {
       const [, dataResult] = errorAsJSON.data.split(' ')
-      return dataResult
+      return dataResult || errorAsJSON.data
     }
   } catch (error) {
     console.error(`Error trying to extract data from node error message: ${errorMessage}`)
