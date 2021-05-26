@@ -2,10 +2,11 @@ import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
+import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -30,6 +31,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import { migrateAddressBook, migrateSafeNames } from 'src/logic/addressBook/utils'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
@@ -38,11 +40,12 @@ import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/
 
 export const history = createHashHistory()
 
-// eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+const abConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'gnosis_safe', namespaceSeparator: '::' }
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
+    save(abConfig),
     routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
@@ -82,7 +85,15 @@ export type AppReduxState = CombinedState<{
   router: RouterState
 }>
 
-export const store: any = createStore(reducers, finalCreateStore)
+//  migrates address book before creating the store
+migrateAddressBook(abConfig)
+
+// migrates safes
+// removes the `name` key from safe object
+// adds safes with name into de address book
+migrateSafeNames(abConfig)
+
+export const store: any = createStore(reducers, load(abConfig), finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)

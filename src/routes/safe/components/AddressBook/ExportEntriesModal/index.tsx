@@ -74,7 +74,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
     //This timeout prevents modal to be closed abruptly
     setTimeout(() => {
       if (!loading) {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EXPORT_ENTRIES)
         const action = error
           ? notification.afterExecution.afterExecutionError
           : notification.afterExecution.noMoreConfirmationsNeeded

@@ -35,7 +35,7 @@ export const TxInfoDetails = ({
   name,
   avatarUrl,
 }: TxInfoDetailsProps): ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
   const knownAddress = recipientName !== 'UNKNOWN'
 
   const { txLocation } = useContext<TxLocationProps>(TxLocationContext)

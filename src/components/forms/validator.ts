@@ -1,4 +1,3 @@
-import { List } from 'immutable'
 import memoize from 'lodash.memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -98,7 +97,7 @@ export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 
-export const uniqueAddress = (addresses: string[] | List<string> = []) => (address?: string): string | undefined => {
+export const uniqueAddress = (addresses: string[] = []) => (address?: string): string | undefined => {
   const addressExists = addresses.some((addressFromList) => sameAddress(addressFromList, address))
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }

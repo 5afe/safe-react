@@ -3,10 +3,9 @@ import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { List } from 'immutable'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
@@ -15,13 +14,11 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import {
-  safeOwnersSelector,
+  safeOwnersWithAddressBookDataSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -33,6 +30,8 @@ import { styles } from './style'
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
+
+const chainId = getNetworkId()
 
 type ReplaceOwnerProps = {
   onClose: () => void
@@ -58,10 +57,8 @@ export const ReviewReplaceOwnerModal = ({
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSafeName(safeAddress)
-  const owners = useSelector(safeOwnersSelector)
+  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
   const threshold = useSelector(safeThresholdSelector) || 1
-  const addressBook = useSelector(addressBookSelector)
-  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -164,7 +161,7 @@ export const ReviewReplaceOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners?.size || 0} owner(s)`}
+                      {`${threshold} out of ${owners?.length || 0} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -172,11 +169,11 @@ export const ReviewReplaceOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners?.size || 0} Safe owner(s)`}
+                    {`${owners?.length || 0} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
-                {ownersWithAddressBookName?.map(
+                {owners?.map(
                   (owner) =>
                     owner.address !== ownerAddress && (
                       <React.Fragment key={owner.address}>

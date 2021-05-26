@@ -6,7 +6,6 @@ import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import styled from 'styled-components'
-import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -18,7 +17,6 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -43,14 +41,14 @@ const useStyles = makeStyles(styles)
 
 type ChangeThresholdModalProps = {
   onClose: () => void
-  owners?: List<SafeOwner>
+  ownersCount?: number
   safeAddress: string
   threshold?: number
 }
 
 export const ChangeThresholdModal = ({
   onClose,
-  owners,
+  ownersCount = 0,
   safeAddress,
   threshold = 1,
 }: ChangeThresholdModalProps): ReactElement => {
@@ -174,7 +172,7 @@ export const ChangeThresholdModal = ({
                         render={(props) => (
                           <>
                             <SelectField {...props} disableError>
-                              {[...Array(Number(owners?.size))].map((x, index) => (
+                              {[...Array(Number(ownersCount))].map((x, index) => (
                                 <MenuItem key={index} value={`${index + 1}`}>
                                   {index + 1}
                                 </MenuItem>
@@ -187,7 +185,7 @@ export const ChangeThresholdModal = ({
                     </Col>
                     <Col xs={10}>
                       <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                        {`out of ${owners?.size} owner(s)`}
+                        {`out of ${ownersCount} owner(s)`}
                       </Paragraph>
                     </Col>
                   </Row>

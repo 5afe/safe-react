@@ -4,7 +4,7 @@ import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 export const SAFES_KEY = 'SAFES'
 export const DEFAULT_SAFE_KEY = 'DEFAULT_SAFE'
 
-type StoredSafes = Record<string, SafeRecordProps>
+export type StoredSafes = Record<string, SafeRecordProps>
 
 export const loadStoredSafes = (): Promise<StoredSafes | undefined> => {
   return loadFromStorage<StoredSafes>(SAFES_KEY)

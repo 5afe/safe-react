@@ -5,16 +5,16 @@ import { useSelector } from 'react-redux'
 import { getExplorerInfo } from 'src/config'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 
-export const OwnerRow = ({ ownerAddress }: { ownerAddress: string }): ReactElement => {
-  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, ownerAddress))
+export const OwnerRow = ({ address }: { address: string }): ReactElement => {
+  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
 
   return (
     <EthHashInfo
-      hash={ownerAddress}
+      hash={address}
       name={ownerName === 'UNKNOWN' ? '' : ownerName}
       showAvatar
       showCopyBtn
-      explorerUrl={getExplorerInfo(ownerAddress)}
+      explorerUrl={getExplorerInfo(address)}
       shortenHash={4}
       className="owner-info"
     />

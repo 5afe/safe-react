@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { updateSafe } from '../../../../../logic/safe/store/actions/updateSafe'
 
 import { styles } from './style'
 
@@ -16,7 +17,7 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -71,7 +72,9 @@ const SafeDetails = (): ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    // used to trigger safe middleware and persist safe to localStorage
+    dispatch(updateSafe({ address: safeAddress }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))

@@ -38,6 +38,7 @@ type Props = {
 export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
   const owners = useSelector(safeOwnersSelector)
+  const ownersCount = owners?.length ?? 0
   const threshold = useSelector(safeThresholdSelector) as number
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -61,7 +62,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
         onSubmit={handleSubmit}
       >
         {() => {
-          const numOptions = owners && owners.size > 1 ? owners.size - 1 : 1
+          const numOptions = ownersCount > 1 ? ownersCount - 1 : 1
 
           return (
             <>
@@ -100,7 +101,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
                   </Col>
                   <Col xs={10}>
                     <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                      out of {owners ? owners.size - 1 : 0} owner(s)
+                      out of {ownersCount ? ownersCount - 1 : 0} owner(s)
                     </Paragraph>
                   </Col>
                 </Row>

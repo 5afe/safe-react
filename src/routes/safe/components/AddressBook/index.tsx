@@ -10,16 +10,14 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
-import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
-import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
+import { addressBookAddOrUpdate, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
@@ -44,6 +42,7 @@ const StyledButton = styled(Button)`
     padding: 0 12px;
     min-width: auto;
   }
+
   svg {
     margin: 0 6px 0 0;
   }
@@ -71,7 +70,8 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const initialEntryState: Entry = { entry: { address: '', name: '', isNew: true } }
+const chainId = getNetworkId()
+const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
 
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
@@ -114,6 +114,7 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
+            chainId,
             isNew: true,
           },
         })
@@ -122,29 +123,28 @@ const AddressBookTable = (): ReactElement => {
   }, [addressBook, entryAddressToEditOrCreateNew])
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
+    // close the modal
     setEditCreateEntryModalOpen(false)
-    const checksumEntries = {
-      ...entry,
-      address: checksumAddress(entry.address),
-    }
-    dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+    // update the store
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(entry)))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
+    // reset the form
     setSelectedEntry(initialEntryState)
+    // close the modal
     setEditCreateEntryModalOpen(false)
-    const checksumEntries = {
-      ...entry,
-      address: checksumAddress(entry.address),
-    }
-    dispatch(updateAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+    // update the store
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(entry)))
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = selectedEntry?.entry ? checksumAddress(selectedEntry.entry.address) : ''
+    // reset the form
     setSelectedEntry(initialEntryState)
+    // close the modal
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(entryAddress))
+    // update the store
+    selectedEntry?.entry && dispatch(addressBookRemove(selectedEntry.entry))
   }
 
   const importEntryModalHandler = (addressList: AddressBookEntry[]) => {
@@ -153,7 +153,7 @@ const AddressBookTable = (): ReactElement => {
         ...entry,
         address: checksumAddress(entry.address),
       }
-      dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(checksumEntries)))
     })
     setImportEntryModalOpen(false)
   }
