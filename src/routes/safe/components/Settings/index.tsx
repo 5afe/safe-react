@@ -25,7 +25,11 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import { safeNeedsUpdateSelector, safeOwnersWithAddressBookDataSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeNeedsUpdateSelector,
+  safeOwnersWithAddressBookDataSelector,
+  safeSelector,
+} from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
@@ -45,6 +49,7 @@ const Settings: React.FC = () => {
   const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
   const needsUpdate = useSelector(safeNeedsUpdateSelector)
   const granted = useSelector(grantedSelector)
+  const safe = useSelector(safeSelector)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
@@ -67,11 +72,15 @@ const Settings: React.FC = () => {
   ) : (
     <>
       <Row className={classes.message}>
-        <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
-          <Span className={classes.links}>Remove Safe</Span>
-          <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-        </ButtonLink>
-        <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
+        {!safe?.loadedViaUrl && (
+          <>
+            <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
+              <Span className={classes.links}>Remove Safe</Span>
+              <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
+            </ButtonLink>
+            <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
+          </>
+        )}
       </Row>
       <Block className={classes.root}>
         <Col className={classes.menuWrapper} layout="column">
