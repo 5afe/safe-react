@@ -26,6 +26,18 @@ describe('CodedException', () => {
     expect(err.code).toBe(100)
   })
 
+  it('creates an error with an extra message and a context', () => {
+    const err = new CodedException(Errors._901, 'getSafeBalance: Server responded with 429 Too Many Requests', {
+      tags: {
+        app: 'Sorbet.Finance',
+      },
+    })
+    expect(err.message).toBe(
+      '901: Error processing Safe Apps SDK request (getSafeBalance: Server responded with 429 Too Many Request',
+    )
+    expect(err.code).toBe(100)
+  })
+
   describe('Logging', () => {
     beforeAll(() => {
       jest.mock('console')
@@ -70,7 +82,7 @@ describe('CodedException', () => {
 
     it("doesn't track when isTracked is false", () => {
       ;(constants as any).IS_PRODUCTION = true
-      logError(Errors._100, '', false)
+      logError(Errors._100, '', undefined, false)
       expect(Sentry.captureException).not.toHaveBeenCalled()
     })
 
