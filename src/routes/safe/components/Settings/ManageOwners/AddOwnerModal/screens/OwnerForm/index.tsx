@@ -22,7 +22,6 @@ import {
   uniqueAddress,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -32,6 +31,7 @@ import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import { OwnerValues } from '../..'
+import { Modal } from 'src/components/Modal'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -150,18 +150,14 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minWidth={140}
-                  testId={ADD_OWNER_NEXT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                >
-                  Next
-                </Button>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Cancel' }}
+                  confirmButtonProps={{
+                    type: 'submit',
+                    text: 'Next',
+                    testId: ADD_OWNER_NEXT_BTN_TEST_ID,
+                  }}
+                />
               </Row>
             </>
           )

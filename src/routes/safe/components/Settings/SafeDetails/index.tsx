@@ -1,7 +1,8 @@
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { updateSafe } from '../../../../../logic/safe/store/actions/updateSafe'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -24,8 +25,7 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import {

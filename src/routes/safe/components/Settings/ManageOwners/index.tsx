@@ -3,7 +3,6 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
-import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
 
 import RemoveOwnerIcon from '../assets/icons/bin.svg'
@@ -15,7 +14,7 @@ import { ReplaceOwnerModal } from './ReplaceOwnerModal'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData } from './dataFetcher'
-import { styles } from './style'
+import { useStyles } from './style'
 
 import { getExplorerInfo } from 'src/config'
 import Table from 'src/components/Table'
@@ -36,8 +35,6 @@ export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
 export const ADD_OWNER_BTN_TEST_ID = 'add-owner-btn'
 export const REPLACE_OWNER_BTN_TEST_ID = 'replace-owner-btn'
 export const OWNERS_ROW_TEST_ID = 'owners-row'
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   granted: boolean

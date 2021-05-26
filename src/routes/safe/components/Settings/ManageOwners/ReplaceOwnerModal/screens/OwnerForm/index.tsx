@@ -17,20 +17,19 @@ import {
   uniqueAddress,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
+import { Modal } from 'src/components/Modal'
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { getExplorerInfo, getNetworkId } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { makeStyles } from '@material-ui/core'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
 export const REPLACE_OWNER_ADDRESS_INPUT_TEST_ID = 'replace-owner-address-testid'
@@ -49,8 +48,6 @@ const formMutators: Record<
     utils.changeValue(state, 'ownerName', () => args[0])
   },
 }
-
-const useStyles = makeStyles(styles)
 
 const chainId = getNetworkId()
 
@@ -185,21 +182,12 @@ export const OwnerForm = ({
                   </Col>
                 </Row>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minWidth={140}
-                  testId={REPLACE_OWNER_NEXT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                >
-                  Next
-                </Button>
-              </Row>
+              <Modal.Footer>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{ testId: REPLACE_OWNER_NEXT_BTN_TEST_ID, text: 'Next' }}
+                />
+              </Modal.Footer>
             </>
           )
         }}

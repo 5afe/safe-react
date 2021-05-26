@@ -1,13 +1,12 @@
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -21,12 +20,9 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 import { getExplorerInfo, getNetworkId } from 'src/config'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 
 const chainId = getNetworkId()
-
-const useStyles = makeStyles(styles)
 
 type RemoveSafeModalProps = {
   isOpen: boolean
@@ -94,22 +90,16 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
           </Paragraph>
         </Row>
       </Block>
-      <Hairline />
-      <Row align="center" className={classes.buttonRow}>
-        <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
-          Cancel
-        </Button>
-        <Button
-          className={classes.buttonRemove}
-          size="md"
-          onClick={onRemoveSafeHandler}
-          type="submit"
-          color="error"
-          variant="contained"
-        >
-          Remove
-        </Button>
-      </Row>
+      <GenericModal.Footer>
+        <GenericModal.Footer.Buttons
+          cancelButtonProps={{ onClick: onClose }}
+          confirmButtonProps={{
+            onClick: onRemoveSafeHandler,
+            color: 'error',
+            text: 'Remove',
+          }}
+        />
+      </GenericModal.Footer>
     </Modal>
   )
 }

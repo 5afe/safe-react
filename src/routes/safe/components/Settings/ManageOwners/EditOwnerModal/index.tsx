@@ -1,5 +1,4 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch } from 'react-redux'
@@ -9,24 +8,21 @@ import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
 import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import Modal from 'src/components/Modal'
+import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { getExplorerInfo } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const RENAME_OWNER_INPUT_TEST_ID = 'rename-owner-input'
 export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
-
-const useStyles = makeStyles(styles)
 
 type OwnProps = {
   isOpen: boolean
@@ -94,23 +90,12 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
                   </Block>
                 </Row>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minHeight={42}
-                  minWidth={140}
-                  testId={SAVE_OWNER_CHANGES_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                  disabled={pristine}
-                >
-                  Save
-                </Button>
-              </Row>
+              <GenericModal.Footer>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{ disabled: pristine, testId: SAVE_OWNER_CHANGES_BTN_TEST_ID, text: 'Save' }}
+                />
+              </GenericModal.Footer>
             </>
           )
         }}

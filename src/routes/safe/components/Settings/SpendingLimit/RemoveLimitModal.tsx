@@ -4,8 +4,9 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -68,7 +69,9 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     manualGasLimit,
   })
 
-  const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
+  const removeSelectedSpendingLimit = (txParameters: TxParameters) => {
     try {
       dispatch(
         createTransaction({
@@ -110,6 +113,11 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     if (newSafeTxGas && oldSafeTxGas !== newSafeTxGas) {
       setManualSafeTxGas(newSafeTxGas)
     }
+  }
+
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
   }
 
   return (
@@ -172,14 +180,14 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 />
               </Row>
 
-              <Modal.Footer>
+              <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{
                     color: 'error',
                     onClick: () => removeSelectedSpendingLimit(txParameters),
-                    disabled: txEstimationExecutionStatus === EstimationStatus.LOADING,
-                    text: 'Remove',
+                    status: buttonStatus,
+                    text: confirmButtonText,
                   }}
                 />
               </Modal.Footer>
