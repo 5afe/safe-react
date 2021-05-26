@@ -29,7 +29,19 @@ describe('CodedException', () => {
   it('creates an error with an extra message and a context', () => {
     const context = {
       tags: {
-        app: 'Sorbet.Finance',
+        error_category: 'Safe Apps',
+      },
+      contexts: {
+        safeApp: {
+          name: 'Zorbed.Finance',
+          url: 'https://zorbed.finance',
+        },
+        message: {
+          method: 'getSafeBalance',
+          params: {
+            address: '0x000000',
+          },
+        },
       },
     }
 
