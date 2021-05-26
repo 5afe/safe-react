@@ -39,10 +39,8 @@ export const getNameFromAddressBook = (
 }
 
 export const isValidAddressBookName = (addressBookName: string): boolean => {
-  // TODO: this is filtering names that includes any of the keywords in the `ADDRESS_BOOK_INVALID_NAMES`
-  //  So a name in the order of 'This is an unknown user' will be filtered too. Is this intentional?
   const hasInvalidName = ADDRESS_BOOK_INVALID_NAMES.find((invalidName) =>
-    addressBookName.toUpperCase().includes(invalidName),
+    addressBookName?.toUpperCase().includes(invalidName),
   )
   return !hasInvalidName
 }
