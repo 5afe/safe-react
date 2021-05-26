@@ -38,6 +38,7 @@ const getMockedOldSafe = ({
     needsUpdate: needsUpdate || false,
     featuresEnabled: featuresEnabled || [],
     totalFiatBalance: '110',
+    loadedViaUrl: false,
   }
 }
 
