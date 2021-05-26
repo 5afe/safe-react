@@ -8,7 +8,7 @@ export class CodedException extends Error {
   // the context allows to enrich events, for the list of allowed context keys/data, please check the type or go to
   // https://docs.sentry.io/platforms/javascript/enriching-events/context/
   // The context is not searchable, that means its goal is just to provide additional data for the error
-  public readonly sentryContext?: CaptureContext
+  public readonly context?: CaptureContext
 
   constructor(content: ErrorCodes, extraMessage?: string, context?: CaptureContext) {
     super()
@@ -22,7 +22,7 @@ export class CodedException extends Error {
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
     this.message = `${content}${extraInfo}`
     this.code = code
-    this.sentryContext = context
+    this.context = context
   }
 
   /**
@@ -33,7 +33,7 @@ export class CodedException extends Error {
     console.error(IS_PRODUCTION ? this.message : this)
 
     if (IS_PRODUCTION && isTracked) {
-      Sentry.captureException(this, this.sentryContext)
+      Sentry.captureException(this, this.context)
     }
   }
 }
