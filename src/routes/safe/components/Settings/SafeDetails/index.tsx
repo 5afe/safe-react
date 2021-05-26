@@ -73,8 +73,8 @@ const SafeDetails = (): ReactElement => {
 
   const handleSubmit = (values) => {
     dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
-    // used to trigger safe middleware and persist safe to localStorage
-    dispatch(updateSafe({ address: safeAddress }))
+    // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
+    dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
