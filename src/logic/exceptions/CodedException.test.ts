@@ -27,15 +27,18 @@ describe('CodedException', () => {
   })
 
   it('creates an error with an extra message and a context', () => {
-    const err = new CodedException(Errors._901, 'getSafeBalance: Server responded with 429 Too Many Requests', {
+    const context = {
       tags: {
         app: 'Sorbet.Finance',
       },
-    })
+    }
+
+    const err = new CodedException(Errors._901, 'getSafeBalance: Server responded with 429 Too Many Requests', context)
     expect(err.message).toBe(
-      '901: Error processing Safe Apps SDK request (getSafeBalance: Server responded with 429 Too Many Request',
+      '901: Error processing Safe Apps SDK request (getSafeBalance: Server responded with 429 Too Many Requests)',
     )
-    expect(err.code).toBe(100)
+    expect(err.code).toBe(901)
+    expect(err.sentryContext).toEqual(context)
   })
 
   describe('Logging', () => {

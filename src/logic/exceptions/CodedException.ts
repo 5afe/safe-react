@@ -5,7 +5,10 @@ import { IS_PRODUCTION } from 'src/utils/constants'
 
 export class CodedException extends Error {
   public readonly code: number
-  public readonly context?: CaptureContext
+  // the context allows to enrich events, for the list of allowed context keys/data, please check the type or go to
+  // https://docs.sentry.io/platforms/javascript/enriching-events/context/
+  // The context is not searchable, that means its goal is just to provide additional data for the error
+  public readonly sentryContext?: CaptureContext
 
   constructor(content: ErrorCodes, extraMessage?: string, context?: CaptureContext) {
     super()
@@ -13,13 +16,13 @@ export class CodedException extends Error {
     const codePrefix = content.split(':')[0]
     const code = Number(codePrefix)
     if (isNaN(code)) {
-      throw new CodedException(ErrorCodes.___0, extraMessage, context)
+      throw new CodedException(ErrorCodes.___0, codePrefix, context)
     }
 
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
     this.message = `${content}${extraInfo}`
     this.code = code
-    this.context = context
+    this.sentryContext = context
   }
 
   /**
@@ -30,7 +33,7 @@ export class CodedException extends Error {
     console.error(IS_PRODUCTION ? this.message : this)
 
     if (IS_PRODUCTION && isTracked) {
-      Sentry.captureException(this, this.context)
+      Sentry.captureException(this, this.sentryContext)
     }
   }
 }
