@@ -50,7 +50,7 @@ describe('CodedException', () => {
       '901: Error processing Safe Apps SDK request (getSafeBalance: Server responded with 429 Too Many Requests)',
     )
     expect(err.code).toBe(901)
-    expect(err.sentryContext).toEqual(context)
+    expect(err.context).toEqual(context)
   })
 
   describe('Logging', () => {
