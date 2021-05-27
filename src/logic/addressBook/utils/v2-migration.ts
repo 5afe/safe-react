@@ -86,7 +86,7 @@ const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageCo
   const storageKey = `_immortal|${prefix}__ADDRESS_BOOK_STORAGE_KEY`
   const newKey = `${namespace}${namespaceSeparator}${state}`
 
-  if (!localStorage.getItem(newKey)) {
+  if (localStorage.getItem(newKey)) {
     // already migrated
     return
   }
