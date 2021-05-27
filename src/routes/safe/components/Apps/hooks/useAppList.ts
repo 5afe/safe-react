@@ -4,6 +4,9 @@ import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } fro
 import { AppData } from '../api/fetchSafeAppsList'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
 import { getNetworkId } from 'src/config'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { useDispatch } from 'react-redux'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -13,18 +16,24 @@ type UseAppListReturnType = {
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
+  const dispatch = useDispatch()
   const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
 
   useEffect(() => {
     const loadAppsList = async () => {
-      const remoteAppsList = await getAppsList()
-      setStaticAppsList(remoteAppsList)
+      let result
+      try {
+        result = await getAppsList()
+      } catch (err) {
+        dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_MSG))
+      }
+      setStaticAppsList(result?.apps && result?.apps.length ? result.apps : staticAppsList)
     }
 
     if (!staticAppsList.length) {
       loadAppsList()
     }
-  }, [staticAppsList])
+  }, [dispatch, staticAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status

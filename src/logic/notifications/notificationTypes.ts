@@ -31,6 +31,7 @@ const NOTIFICATION_IDS = {
   TX_CONFIRMATION_EXECUTED_MSG: 'TX_CONFIRMATION_EXECUTED_MSG',
   TX_CONFIRMATION_FAILED_MSG: 'TX_CONFIRMATION_FAILED_MSG',
   TX_FETCH_SIGNATURES_ERROR_MSG: 'TX_FETCH_SIGNATURES_ERROR_MSG',
+  SAFE_APPS_FETCH_MSG: 'SAFE_APPS_FETCH_MSG',
   SAFE_NAME_CHANGED_MSG: 'SAFE_NAME_CHANGED_MSG',
   OWNER_NAME_CHANGE_EXECUTED_MSG: 'OWNER_NAME_CHANGE_EXECUTED_MSG',
   SIGN_SETTINGS_CHANGE_MSG: 'SIGN_SETTINGS_CHANGE_MSG',
@@ -73,6 +74,10 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   },
   TX_REJECTED_MSG: {
     message: 'Transaction rejected',
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
+  },
+  SAFE_APPS_FETCH_MSG: {
+    message: 'Error fetching the Safe Apps, please refresh the page',
     options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
   TX_EXECUTED_MSG: {
