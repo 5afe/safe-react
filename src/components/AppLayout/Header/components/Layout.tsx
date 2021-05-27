@@ -109,7 +109,6 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                   <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
                     <List className={classes.root} component="div">
                       Networks list
-                      {/* {providerDetails} */}
                     </List>
                   </ClickAwayListener>
                 </>

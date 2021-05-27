@@ -16,7 +16,6 @@ import { upperFirst } from 'src/utils/css'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-/* import { CircleDot } from '../CircleDot' */
 import { createStyles } from '@material-ui/core'
 import styled from 'styled-components'
 
@@ -108,7 +107,6 @@ const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,
-  /* network, */
   onDisconnect,
   openDashboard,
   provider,
@@ -160,17 +158,6 @@ export const UserDetails = ({
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
-      {/* <Row className={classes.details}>
-        <Paragraph align="right" className={classes.labels} noMargin>
-          Network
-        </Paragraph>
-        <Spacer />
-        <CircleDot className={classes.logo} />
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(ETHEREUM_NETWORK[network])}
-        </Paragraph>
-      </Row> 
-      <Hairline margin="xs" /> */}
       {openDashboard && (
         <Row className={classes.dashboard}>
           <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
