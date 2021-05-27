@@ -31,6 +31,14 @@ const ImageContainer = styled(Row)`
   padding: ${md} ${lg};
   justify-content: center;
 `
+const StyledButton = styled(Button)`
+  &.MuiButtonBase-root.MuiButton-root {
+    padding: 0;
+    .MuiButton-label {
+      height: 100%;
+    }
+  }
+`
 
 const InfoContainer = styled(Row)`
   background-color: ${background};
@@ -47,9 +55,11 @@ const StyledLoader = styled(Loader)`
   margin-right: 5px;
 `
 const StyledCSVLink = styled(CSVDownloader)`
+  height: 100%;
   display: flex;
   flex: 1;
   justify-content: center;
+  align-items: center;
 `
 
 const StyledIcon = styled(Icon)`
@@ -149,7 +159,12 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
           <Button size="md" variant="outlined" onClick={onClose}>
             Cancel
           </Button>
-          <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
+          <StyledButton
+            color="primary"
+            size="md"
+            disabled={loading}
+            onClick={error ? () => setDoRetry(true) : handleClose}
+          >
             {!error ? (
               <StyledCSVLink data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
                 {loading && <StyledLoader color="secondaryLight" size="xs" />}
@@ -158,7 +173,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
             ) : (
               'Retry'
             )}
-          </Button>
+          </StyledButton>
         </Row>
       </Modal.Footer>
     </Modal>
