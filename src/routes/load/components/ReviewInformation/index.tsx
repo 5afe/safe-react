@@ -106,7 +106,7 @@ const ReviewComponent = ({ userAddress, values }: Props): React.ReactElement => 
             <Hairline />
             {owners.map((address, index) => (
               <>
-                <Row className={classes.owner}>
+                <Row className={classes.owner} testId={'load-safe-review-owner-name-' + index}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={address}
