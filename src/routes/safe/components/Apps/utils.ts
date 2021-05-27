@@ -276,7 +276,7 @@ export const getAppInfoFromUrl = memoize(
     } catch (error) {
       logError(
         Errors._900,
-        `${res.url}: ${error.message}`,
+        error.message,
         {
           extra: {
             appUrl,
