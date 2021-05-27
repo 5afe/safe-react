@@ -18,7 +18,7 @@ const multiSendAbi: AbiItem[] = [
 
 export const encodeMultiSendCall = (txs: Transaction[]): string => {
   const web3 = getWeb3()
-  const multiSend = (new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS) as unknown) as MultiSend
+  const multiSend = new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS) as unknown as MultiSend
 
   const joinedTxs = txs
     .map((tx) =>

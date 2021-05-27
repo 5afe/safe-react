@@ -50,49 +50,51 @@ type TxByLocation = {
 const getTransactionsByLocation = createHashBasedSelector(
   gatewayTransactions,
   safeParamAddressFromStateSelector,
-  (gatewayTransactions, safeAddress) => (rest: TxByLocationAttr): TxByLocation => ({
-    attributeName: rest.attributeName,
-    attributeValue: rest.attributeValue,
-    transactions: get(gatewayTransactions[safeAddress], rest.txLocation),
-  }),
+  (gatewayTransactions, safeAddress) =>
+    (rest: TxByLocationAttr): TxByLocation => ({
+      attributeName: rest.attributeName,
+      attributeValue: rest.attributeValue,
+      transactions: get(gatewayTransactions[safeAddress], rest.txLocation),
+    }),
 )
 
 export const getTransactionByAttribute = createSelector(
   getTransactionsByLocation,
-  (fn: (r: TxByLocationAttr) => TxByLocation) => (rest: TxByLocationAttr): Transaction | undefined => {
-    const { attributeName, attributeValue, transactions } = fn(rest)
+  (fn: (r: TxByLocationAttr) => TxByLocation) =>
+    (rest: TxByLocationAttr): Transaction | undefined => {
+      const { attributeName, attributeValue, transactions } = fn(rest)
 
-    if (transactions && attributeValue) {
-      for (const [, txs] of Object.entries(transactions)) {
-        const foundTx = txs.find((transaction) => transaction[attributeName] === attributeValue)
+      if (transactions && attributeValue) {
+        for (const [, txs] of Object.entries(transactions)) {
+          const foundTx = txs.find((transaction) => transaction[attributeName] === attributeValue)
 
-        if (foundTx) {
-          return foundTx
+          if (foundTx) {
+            return foundTx
+          }
         }
       }
-    }
-  },
+    },
 )
 
 export const getTransactionDetails = createSelector(
   getTransactionByAttribute,
-  (fn: (rest: TxByLocationAttr) => Transaction | undefined) => (
-    rest: TxByLocationAttr,
-  ): Transaction['txDetails'] | undefined => {
-    const transaction = fn(rest)
-    return transaction?.txDetails
-  },
+  (fn: (rest: TxByLocationAttr) => Transaction | undefined) =>
+    (rest: TxByLocationAttr): Transaction['txDetails'] | undefined => {
+      const transaction = fn(rest)
+      return transaction?.txDetails
+    },
 )
 
 export const getQueuedTransactionsByNonce = createSelector(
   getTransactionsByLocation,
-  (fn: (r: TxByLocationAttr) => TxByLocation) => (rest: TxByLocationAttr): Transaction[] => {
-    const { attributeValue, attributeName, transactions } = fn(rest)
+  (fn: (r: TxByLocationAttr) => TxByLocation) =>
+    (rest: TxByLocationAttr): Transaction[] => {
+      const { attributeValue, attributeName, transactions } = fn(rest)
 
-    if (attributeName === 'nonce') {
-      return transactions?.[attributeValue] ?? []
-    }
+      if (attributeName === 'nonce') {
+        return transactions?.[attributeValue] ?? []
+      }
 
-    return []
-  },
+      return []
+    },
 )

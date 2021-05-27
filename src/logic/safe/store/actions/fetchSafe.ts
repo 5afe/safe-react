@@ -50,26 +50,25 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
  *
  * @param {string} safeAddress
  */
-export const fetchSafe = (safeAddress: string) => async (
-  dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<Action<Partial<SafeRecordProps>>> => {
-  const address = checksumAddress(safeAddress)
+export const fetchSafe =
+  (safeAddress: string) =>
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<Action<Partial<SafeRecordProps>>> => {
+    const address = checksumAddress(safeAddress)
 
-  const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
+    const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
 
-  // remote (client-gateway)
-  const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
+    // remote (client-gateway)
+    const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
 
-  // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
-  const state = getState()
-  const addressBook = addressBookSelector(state)
-  // update owner's information
-  const owners = remoteSafeInfo
-    ? // if we have remote info, we can enrich it with local address book information
-      buildSafeOwners(remoteSafeInfo.owners, List(addressBook))
-    : // if there's no remote info, we keep what's in memory
-      undefined
+    // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
+    const state = getState()
+    const addressBook = addressBookSelector(state)
+    // update owner's information
+    const owners = remoteSafeInfo
+      ? // if we have remote info, we can enrich it with local address book information
+        buildSafeOwners(remoteSafeInfo.owners, List(addressBook))
+      : // if there's no remote info, we keep what's in memory
+        undefined
 
-  return dispatch(updateSafe({ address, ...safeInfo, owners }))
-}
+    return dispatch(updateSafe({ address, ...safeInfo, owners }))
+  }

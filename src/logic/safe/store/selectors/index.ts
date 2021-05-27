@@ -66,22 +66,20 @@ export const safeSelector = createSelector(
   },
 )
 
-export const safeBalancesSelector = createSelector(
-  safeSelector,
-  (safe): Array<BalanceRecord> => {
-    if (!safe) {
-      return []
-    }
+export const safeBalancesSelector = createSelector(safeSelector, (safe): Array<BalanceRecord> => {
+  if (!safe) {
+    return []
+  }
 
-    return safe.balances
-  },
-)
+  return safe.balances
+})
 
 const baseSafe = makeSafe()
 
-export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
-  safe: SafeRecord,
-): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
+export const safeFieldSelector =
+  <K extends keyof SafeRecordProps>(field: K) =>
+  (safe: SafeRecord): SafeRecordProps[K] | undefined =>
+    safe ? safe.get(field, baseSafe.get(field)) : undefined
 
 export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
 
@@ -105,16 +103,13 @@ export const safeSpendingLimitsSelector = createSelector(safeSelector, safeField
 
 export const safeLoadedViaUrlSelector = createSelector(safeSelector, safeFieldSelector('loadedViaUrl'))
 
-export const safeOwnersAddressesListSelector = createSelector(
-  safeOwnersSelector,
-  (owners): List<string> => {
-    if (!owners) {
-      return List([])
-    }
+export const safeOwnersAddressesListSelector = createSelector(safeOwnersSelector, (owners): List<string> => {
+  if (!owners) {
+    return List([])
+  }
 
-    return owners?.map(({ address }) => address)
-  },
-)
+  return owners?.map(({ address }) => address)
+})
 
 export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance

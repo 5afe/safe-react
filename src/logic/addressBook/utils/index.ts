@@ -144,11 +144,9 @@ export const checkIfEntryWasDeletedFromAddressBook = (
  */
 export const filterContractAddressBookEntries = async (addressBook: AddressBookState): Promise<AddressBookEntry[]> => {
   const abFlags = await Promise.all(
-    addressBook.map(
-      async ({ address }: AddressBookEntry): Promise<boolean> => {
-        return (await mustBeEthereumContractAddress(address)) === undefined
-      },
-    ),
+    addressBook.map(async ({ address }: AddressBookEntry): Promise<boolean> => {
+      return (await mustBeEthereumContractAddress(address)) === undefined
+    }),
   )
 
   return addressBook.filter((_, index) => abFlags[index])

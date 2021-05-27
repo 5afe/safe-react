@@ -47,9 +47,10 @@ const handleProviderNotification = (provider, dispatch) => {
   }
 }
 
-export default (providerName: string) => async (dispatch: Dispatch): Promise<void> => {
-  const web3 = getWeb3()
-  const providerInfo = await getProviderInfo(web3, providerName)
-  await handleProviderNotification(providerInfo, dispatch)
-  processProviderResponse(dispatch, providerInfo)
-}
+export default (providerName: string) =>
+  async (dispatch: Dispatch): Promise<void> => {
+    const web3 = getWeb3()
+    const providerInfo = await getProviderInfo(web3, providerName)
+    await handleProviderNotification(providerInfo, dispatch)
+    processProviderResponse(dispatch, providerInfo)
+  }
