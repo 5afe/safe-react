@@ -7,6 +7,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
+import NetworkSelector from './NetworkSelector'
 
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
@@ -55,6 +56,7 @@ const styles = () => ({
 
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
+  const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
 
   return (
     <Row className={classes.summary}>
@@ -82,6 +84,32 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                   <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                     <List className={classes.root} component="div">
                       {providerDetails}
+                    </List>
+                  </ClickAwayListener>
+                </>
+              </Grow>
+            )}
+          </Popper>
+        )}
+      />
+      <NetworkSelector
+        open={openNetworks}
+        toggle={toggleNetworks}
+        render={(networkRef) => (
+          <Popper
+            anchorEl={networkRef.current}
+            className={classes.popper}
+            open={openNetworks}
+            placement="bottom"
+            popperOptions={{ positionFixed: true }}
+          >
+            {({ TransitionProps }) => (
+              <Grow {...TransitionProps}>
+                <>
+                  <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
+                    <List className={classes.root} component="div">
+                      Networks list
+                      {/* {providerDetails} */}
                     </List>
                   </ClickAwayListener>
                 </>
