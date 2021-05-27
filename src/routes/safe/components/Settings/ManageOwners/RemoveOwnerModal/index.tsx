@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import CheckOwner from './screens/CheckOwner'
+import { CheckOwner } from './screens/CheckOwner'
 import { ReviewRemoveOwnerModal } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 

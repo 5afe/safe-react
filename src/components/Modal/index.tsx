@@ -1,4 +1,4 @@
-import { Button, Icon, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Loader, theme, Title as TitleSRC } from '@gnosis.pm/safe-react-components'
 import { ButtonProps as ButtonPropsMUI, Modal as ModalMUI } from '@material-ui/core'
 import cn from 'classnames'
 import React, { ReactElement, ReactNode, ReactNodeArray } from 'react'
@@ -170,6 +170,7 @@ Header.Title = Title
 /*** Body ***/
 const BodySection = styled.div<{ withoutPadding: BodyProps['withoutPadding'] }>`
   padding: ${({ withoutPadding }) => (withoutPadding ? 0 : '24px')};
+  min-height: 200px;
 `
 
 interface BodyProps {
@@ -184,29 +185,38 @@ const Body = ({ children, withoutPadding = false }: BodyProps): ReactElement => 
 )
 
 /*** Footer ***/
-const FooterSection = styled.div`
+const FooterSection = styled.div<{ withoutBorder: boolean }>`
   display: flex;
   justify-content: center;
-  border-top: 2px solid ${({ theme }) => theme.colors.separator};
-  padding: 24px;
+  align-items: center;
+  border-top: ${({ withoutBorder }) => (withoutBorder ? '0' : '2px')} solid ${({ theme }) => theme.colors.separator};
+  height: 84px;
+  gap: 16px;
 `
 
-const ButtonStyled = styled(Button)`
-  &.MuiButtonBase-root {
-    margin: 0 10px;
-  }
+const LoaderText = styled.span`
+  margin-left: 10px;
 `
+
+export enum ButtonStatus {
+  ERROR = -1,
+  DISABLED,
+  READY,
+  LOADING,
+}
 
 type CustomButtonMUIProps = Omit<ButtonPropsMUI, 'size' | 'color' | 'variant'> & {
   to?: string
   component?: ReactNode
 }
 
-interface ButtonProps extends CustomButtonMUIProps {
+export interface ButtonProps extends CustomButtonMUIProps {
   text?: string
+  status?: ButtonStatus
   size?: keyof Theme['buttons']['size']
   color?: 'primary' | 'secondary' | 'error'
   variant?: 'bordered' | 'contained' | 'outlined'
+  testId?: string
 }
 
 interface ButtonsProps {
@@ -215,48 +225,85 @@ interface ButtonsProps {
 }
 
 const Buttons = ({ cancelButtonProps = {}, confirmButtonProps = {} }: ButtonsProps): ReactElement => {
-  const { text: cancelText = 'Cancel' } = cancelButtonProps
-  const { text: confirmText = 'Submit' } = confirmButtonProps
+  const {
+    disabled: cancelDisabled,
+    status: cancelStatus = ButtonStatus.READY,
+    text: cancelText = ButtonStatus.LOADING === cancelStatus ? 'Cancelling' : 'Cancel',
+    testId: cancelTestId = '',
+    ...cancelProps
+  } = cancelButtonProps
+  const {
+    disabled: confirmDisabled,
+    status: confirmStatus = ButtonStatus.READY,
+    text: confirmText = ButtonStatus.LOADING === confirmStatus ? 'Submitting' : 'Submit',
+    testId: confirmTestId = '',
+    ...confirmProps
+  } = confirmButtonProps
 
   return (
     <>
-      <ButtonStyled
+      <Button
         size="md"
         color="primary"
         variant="outlined"
-        type={cancelButtonProps?.onClick ? 'button' : 'submit'}
-        {...cancelButtonProps}
+        type={cancelProps?.onClick ? 'button' : 'submit'}
+        disabled={cancelDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(cancelStatus)}
+        data-testid={cancelTestId}
+        {...cancelProps}
       >
-        {cancelText}
-      </ButtonStyled>
-      <ButtonStyled size="md" type={confirmButtonProps?.onClick ? 'button' : 'submit'} {...confirmButtonProps}>
-        {confirmText}
-      </ButtonStyled>
+        {ButtonStatus.LOADING === cancelStatus ? (
+          <>
+            <Loader size="xs" color="secondaryLight" />
+            <LoaderText>{cancelText}</LoaderText>
+          </>
+        ) : (
+          cancelText
+        )}
+      </Button>
+      <Button
+        size="md"
+        type={confirmProps?.onClick ? 'button' : 'submit'}
+        disabled={confirmDisabled || [ButtonStatus.DISABLED, ButtonStatus.LOADING].includes(confirmStatus)}
+        data-testid={confirmTestId}
+        {...confirmProps}
+      >
+        {ButtonStatus.LOADING === confirmStatus ? (
+          <>
+            <Loader size="xs" color="secondaryLight" />
+            <LoaderText>{confirmText}</LoaderText>
+          </>
+        ) : (
+          confirmText
+        )}
+      </Button>
     </>
   )
 }
 
 interface FooterProps {
   children: ReactNode | ReactNodeArray
+  withoutBorder?: boolean
 }
 
-const Footer = ({ children }: FooterProps): ReactElement => (
-  <FooterSection className="modal-footer">{children}</FooterSection>
+const Footer = ({ children, withoutBorder = false }: FooterProps): ReactElement => (
+  <FooterSection className="modal-footer" withoutBorder={withoutBorder}>
+    {children}
+  </FooterSection>
 )
 
 Footer.Buttons = Buttons
 
 interface ModalProps {
   children: ReactNode
-  description: string
+  description?: string
   handleClose: () => void
-  open: boolean
-  title: string
+  open?: boolean
+  title?: string
 }
 
-export const Modal = ({ children, ...props }: ModalProps): ReactElement => {
+export const Modal = ({ children, description = '', open = true, title = '', ...props }: ModalProps): ReactElement => {
   return (
-    <GnoModal {...props} paperClassName="modal">
+    <GnoModal {...props} description={description} open={open} title={title} paperClassName="modal">
       {children}
     </GnoModal>
   )

@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } from '../utils'
 import { AppData } from '../api/fetchSafeAppsList'
-import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types.d'
+import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 import { getNetworkId } from 'src/config'
 
 type UseAppListReturnType = {

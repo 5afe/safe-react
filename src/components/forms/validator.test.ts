@@ -13,6 +13,7 @@ import {
   ADDRESS_REPEATED_ERROR,
   addressIsNotCurrentSafe,
   OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR,
+  mustBeHexData,
 } from 'src/components/forms/validator'
 
 describe('Forms > Validators', () => {
@@ -130,6 +131,33 @@ describe('Forms > Validators', () => {
     })
   })
 
+  describe('mustBeHexData validator', () => {
+    const MUST_BE_HEX_DATA_ERROR_MSG = 'Has to be a valid strict hex data (it must start with 0x)'
+
+    it('should return undefined for `0x`', function () {
+      expect(mustBeHexData('0x')).toBeUndefined()
+    })
+
+    it('should return undefined for an address', function () {
+      expect(mustBeHexData('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
+    })
+
+    it('should return undefined for a valid hex string', function () {
+      expect(
+        mustBeHexData(
+          '0x095ea7b30000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d0000000000000000000000000000000000000000000000000000000000000000',
+        ),
+      ).toBeUndefined()
+    })
+
+    it('should return an error message for an empty string', function () {
+      expect(mustBeHexData('')).toEqual(MUST_BE_HEX_DATA_ERROR_MSG)
+    })
+
+    it('should return the error message for a non-strict hex string', function () {
+      expect(mustBeHexData('0')).toEqual(MUST_BE_HEX_DATA_ERROR_MSG)
+    })
+  })
   describe('mustBeAddressHash validator', () => {
     const MUST_BE_ETH_ADDRESS_ERR_MSG = 'Must be a valid address'
 

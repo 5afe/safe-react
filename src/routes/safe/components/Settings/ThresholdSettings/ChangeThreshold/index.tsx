@@ -1,11 +1,8 @@
 import IconButton from '@material-ui/core/IconButton'
 import MenuItem from '@material-ui/core/MenuItem'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import { Button } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import styled from 'styled-components'
 import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
@@ -18,28 +15,20 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 const THRESHOLD_FIELD_NAME = 'threshold'
-
-const StyledButton = styled(Button)`
-  &.Mui-disabled {
-    background-color: ${({ theme }) => theme.colors.primary};
-    color: ${({ theme }) => theme.colors.white};
-    opacity: 0.5;
-  }
-`
-
-const useStyles = makeStyles(styles)
 
 type ChangeThresholdModalProps = {
   onClose: () => void
@@ -80,6 +69,8 @@ export const ChangeThresholdModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
     const calculateChangeThresholdData = () => {
@@ -102,8 +93,8 @@ export const ChangeThresholdModal = ({
     setEditedThreshold(value)
   }
 
-  const handleSubmit = async ({ txParameters }) => {
-    await dispatch(
+  const handleSubmit = ({ txParameters }) => {
+    dispatch(
       createTransaction({
         safeAddress,
         to: safeAddress,
@@ -115,7 +106,6 @@ export const ChangeThresholdModal = ({
         notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
       }),
     )
-
     onClose()
   }
 
@@ -213,20 +203,16 @@ export const ChangeThresholdModal = ({
                   </div>
                 )}
 
-                <Row align="center" className={classes.buttonRow}>
-                  <Button size="md" onClick={onClose} variant="outlined" color="primary">
-                    Cancel
-                  </Button>
-                  <StyledButton
-                    color="primary"
-                    size="md"
-                    type="submit"
-                    variant="contained"
-                    disabled={txEstimationExecutionStatus === EstimationStatus.LOADING || disabledSubmitForm}
-                  >
-                    Submit
-                  </StyledButton>
-                </Row>
+                <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+                  <Modal.Footer.Buttons
+                    cancelButtonProps={{ onClick: onClose }}
+                    confirmButtonProps={{
+                      disabled: disabledSubmitForm,
+                      status: buttonStatus,
+                      text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                    }}
+                  />
+                </Modal.Footer>
               </>
             )}
           </GnoForm>

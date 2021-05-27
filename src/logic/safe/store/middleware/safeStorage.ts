@@ -1,3 +1,4 @@
+import { Store } from 'redux'
 import { saveDefaultSafe, saveSafes } from 'src/logic/safe/utils'
 import { ADD_SAFE_OWNER } from 'src/logic/safe/store/actions/addSafeOwner'
 import { EDIT_SAFE_OWNER } from 'src/logic/safe/store/actions/editSafeOwner'
@@ -12,6 +13,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { SafeRecord } from '../models/safe'
 
 const watchedActions = [
   UPDATE_SAFE,
@@ -24,7 +26,16 @@ const watchedActions = [
   SET_DEFAULT_SAFE,
 ]
 
-export const safeStorageMiddleware = (store) => (next) => async (action) => {
+type SafeProps = {
+  safe: SafeRecord
+}
+
+export const safeStorageMiddleware = (store: Store) => (
+  next: (arg0: { type: string; payload: string | SafeProps | { address: string; name: string } }) => any,
+) => async (action: {
+  type: string
+  payload: string | SafeProps | { name: string; address: string }
+}): Promise<any> => {
   const handledAction = next(action)
 
   if (watchedActions.includes(action.type)) {
@@ -35,8 +46,8 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
 
     switch (action.type) {
       case ADD_OR_UPDATE_SAFE: {
-        const { safe } = action.payload
-        safe.owners.forEach((owner) => {
+        const { safe } = action.payload as SafeProps
+        safe.owners.forEach((owner: { address: string; name: any }) => {
           const checksumEntry = makeAddressBookEntry({ address: checksumAddress(owner.address), name: owner.name })
           if (isValidAddressBookName(checksumEntry.name)) {
             dispatch(addOrUpdateAddressBookEntry(checksumEntry))
@@ -51,7 +62,7 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
         break
       }
       case UPDATE_SAFE: {
-        const { name, address } = action.payload
+        const { name, address } = action.payload as { name: string; address: string }
         if (name) {
           dispatch(addOrUpdateAddressBookEntry(makeAddressBookEntry({ name, address })))
         }
@@ -59,7 +70,7 @@ export const safeStorageMiddleware = (store) => (next) => async (action) => {
       }
       case SET_DEFAULT_SAFE: {
         if (action.payload) {
-          saveDefaultSafe(action.payload)
+          saveDefaultSafe(action.payload as string)
         }
         break
       }
