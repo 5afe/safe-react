@@ -31,7 +31,7 @@ import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import { migrateAddressBook, migrateSafeNames } from 'src/logic/addressBook/utils'
+import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
@@ -41,11 +41,13 @@ import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/
 export const history = createHashHistory()
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
-const abConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'gnosis_safe', namespaceSeparator: '::' }
+
+const localStorageConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'SAFE', namespaceSeparator: '__' }
+
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
-    save(abConfig),
+    save(localStorageConfig),
     routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
@@ -85,15 +87,10 @@ export type AppReduxState = CombinedState<{
   router: RouterState
 }>
 
-//  migrates address book before creating the store
-migrateAddressBook(abConfig)
+// Address Book v2 migration
+migrateAddressBook(localStorageConfig)
 
-// migrates safes
-// removes the `name` key from safe object
-// adds safes with name into de address book
-migrateSafeNames(abConfig)
-
-export const store: any = createStore(reducers, load(abConfig), finalCreateStore)
+export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)
