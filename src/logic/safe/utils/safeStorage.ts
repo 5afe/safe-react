@@ -18,6 +18,11 @@ export const saveSafes = async (safes: StoredSafes): Promise<void> => {
   }
 }
 
+export const getLocalSafes = async (): Promise<SafeRecordProps[] | undefined> => {
+  const storedSafes = await loadStoredSafes()
+  return storedSafes ? Object.values(storedSafes) : undefined
+}
+
 export const getLocalSafe = async (safeAddress: string): Promise<SafeRecordProps | undefined> => {
   const storedSafes = await loadStoredSafes()
   return storedSafes?.[safeAddress]

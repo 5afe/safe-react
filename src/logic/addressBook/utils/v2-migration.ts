@@ -1,8 +1,6 @@
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { saveSafes, StoredSafes } from 'src/logic/safe/utils'
 import { getNetworkName } from 'src/config'
-import { Overwrite } from 'src/types/helpers'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { getEntryIndex, isValidAddressBookName } from '.'
@@ -22,56 +20,40 @@ interface StorageConfig {
  */
 const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
   const prefix = `v2_${getNetworkName()}`
-  const storedSafes = localStorage.getItem(`_immortal|${prefix}__SAFES`)
+  const safesKey = `_immortal|${prefix}__SAFES`
+  const storedSafes = localStorage.getItem(safesKey)
 
-  if (storedSafes === null) {
+  if (!storedSafes) {
     // nothing left to migrate
     return
   }
 
-  const parsedStoredSafes = JSON.parse(storedSafes) as Record<string, Overwrite<SafeRecordProps, { name: string }>>
+  const parsedStoredSafes = JSON.parse(storedSafes) as Record<string, any>
 
   if (Object.entries(parsedStoredSafes).every(([, { name }]) => name === undefined)) {
     // no name key, safes already migrated
     return
   }
 
-  const safesToAddressBook: AddressBookState = []
-  const migratedSafes: StoredSafes =
-    // once removed the name from the safe object, re-create the map
-    Object.fromEntries(
-      // prepare the safe's map to iterate over it
-      Object.entries(parsedStoredSafes)
-        // exclude those safes without name
-        .filter(([, { name }]) => name !== undefined)
-        // iterate over the list of safes
-        .map(([safeAddress, { name, ...safe }]) => {
-          let safeName = name
+  // make address book entries from the safe names & addresses
+  const safeAbEntries: AddressBookState = Object.values(parsedStoredSafes)
+    .filter(({ name }) => name && isValidAddressBookName(name))
+    .map(({ address, name }) => makeAddressBookEntry({ address, name }))
 
-          if (!isValidAddressBookName(name)) {
-            safeName = `Migrated from: ${name}`
-          }
-
-          // create an entry for the AB
-          safesToAddressBook.push(makeAddressBookEntry({ address: safeAddress, name: safeName }))
-
-          // return the new safe object without the name on it
-          return [safeAddress, safe]
-        }),
-    )
+  // remove names from the safes in place
+  Object.values(parsedStoredSafes).forEach((item) => {
+    item.owners = item.owners.map((owner: any) => owner.address)
+    delete item.name
+  })
+  const migratedSafes = parsedStoredSafes as StoredSafes
 
   const [state] = states
   const addressBookKey = `${namespace}${namespaceSeparator}${state}`
   const storedAddressBook = localStorage.getItem(addressBookKey)
-  let addressBookToStore: AddressBookState = []
-
-  if (storedAddressBook !== null) {
-    // stored AB information
-    addressBookToStore = JSON.parse(storedAddressBook)
-  }
+  const addressBookToStore: AddressBookState = storedAddressBook ? JSON.parse(storedAddressBook) : []
 
   // mutate `addressBookToStore` by adding safes' information
-  safesToAddressBook.forEach((entry) => {
+  safeAbEntries.forEach((entry) => {
     const safeIndex = getEntryIndex(addressBookToStore, entry)
 
     if (safeIndex >= 0) {
@@ -83,15 +65,12 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
     }
   })
 
-  try {
-    // store the mutated address book
-    localStorage.setItem(addressBookKey, JSON.stringify(addressBookToStore))
-  } catch (error) {
-    logError(Errors._200)
-  }
+  // store the mutated address book
+  localStorage.setItem(addressBookKey, JSON.stringify(addressBookToStore))
 
   // update stored safe
-  saveSafes(migratedSafes).then(() => console.info('updated Safe objects'))
+  localStorage.setItem(safesKey, JSON.stringify(migratedSafes))
+  saveSafes(migratedSafes)
 }
 
 /**
@@ -105,28 +84,23 @@ const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageCo
   const [state] = states
   const prefix = `v2_${getNetworkName()}`
   const storageKey = `_immortal|${prefix}__ADDRESS_BOOK_STORAGE_KEY`
-  let storedAddressBook: string | null = null
+  const newKey = `${namespace}${namespaceSeparator}${state}`
 
-  try {
-    storedAddressBook = localStorage.getItem(storageKey) as string | null
-  } catch (e) {
-    logError(Errors._200)
+  if (!localStorage.getItem(newKey)) {
+    // already migrated
+    return
   }
+
+  const storedAddressBook = localStorage.getItem(storageKey)
 
   if (!storedAddressBook) {
-    // nothing left to migrate
+    // nothing to migrate
     return
   }
 
-  let parsedAddressBook: Omit<AddressBookEntry, 'chainId'>[]
-  try {
-    parsedAddressBook = JSON.parse(JSON.parse(storedAddressBook))
-  } catch (e) {
-    logError(Errors._200)
-    return
-  }
+  const parsedAddressBook = JSON.parse(JSON.parse(storedAddressBook as string))
 
-  const migratedAddressBook = parsedAddressBook
+  const migratedAddressBook = (parsedAddressBook as Omit<AddressBookEntry, 'chainId'>[])
     // exclude those addresses with invalid names and addresses
     .filter((item) => {
       return isValidAddressBookName(item.name) && getWeb3().utils.isAddress(item.address)
@@ -138,18 +112,19 @@ const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageCo
       }),
     )
 
-  try {
-    localStorage.setItem(`${namespace}${namespaceSeparator}${state}`, JSON.stringify(migratedAddressBook))
-    localStorage.removeItem(storageKey)
-  } catch (e) {
-    logError(Errors._200)
-    return
-  }
+  localStorage.setItem(newKey, JSON.stringify(migratedAddressBook))
+
+  // Remove the old Address Book storage
+  localStorage.removeItem(storageKey)
 }
 
 const migrate = (storageConfig: StorageConfig): void => {
-  migrateAddressBook(storageConfig)
-  migrateSafeNames(storageConfig)
+  try {
+    migrateAddressBook(storageConfig)
+    migrateSafeNames(storageConfig)
+  } catch (e) {
+    logError(Errors._200, e.message)
+  }
 }
 
 export default migrate
