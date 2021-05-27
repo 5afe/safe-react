@@ -1,15 +1,15 @@
-import { TextField, Loader } from '@gnosis.pm/safe-react-components'
+import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import React, { useState, ReactElement } from 'react'
 import styled from 'styled-components'
 
 import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Modal } from 'src/components/Modal'
 
 import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
-import FormButtons from './FormButtons'
+import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { saveToStorage } from 'src/utils/storage'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -19,7 +19,7 @@ const FORM_ID = 'add-apps-form'
 
 const StyledTextFileAppName = styled(TextField)`
   && {
-    width: 335px;
+    width: 385px;
   }
 `
 
@@ -33,7 +33,7 @@ const AppInfo = styled.div`
 `
 const AppDocsInfo = styled.div`
   display: flex;
-  margin-bottom: 10px;
+  margin-bottom: 24px;
   flex-direction: column;
   svg {
     position: relative;
@@ -91,47 +91,46 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     <GnoForm decorators={[appUrlResolver]} initialValues={INITIAL_VALUES} onSubmit={handleSubmit} testId={FORM_ID}>
       {() => (
         <>
-          <AppDocsInfo>
-            <Text size="xl" as="span" color="secondary">
-              Safe Apps are third-party extensions.
-            </Text>
-            <Link
-              href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
-              target="_blank"
-              rel="noreferrer"
-              title="Learn more about building Safe Apps"
-            >
-              <Text size="xl" as="span" color="primary">
-                Learn more about building Safe Apps.
+          <Modal.Body>
+            <AppDocsInfo>
+              <Text size="xl" as="span" color="secondary">
+                Safe Apps are third-party extensions.
               </Text>
-              <Icon size="sm" type="externalLink" color="primary" />
-            </Link>
-          </AppDocsInfo>
-
-          <AppUrl appList={appList} />
-
-          {/* Fetch app from url and return a SafeApp */}
-          <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
-
-          <AppInfo>
-            {isLoading ? (
-              <WrapperLoader>
-                <StyledLoader size="sm" />
-              </WrapperLoader>
-            ) : (
-              <Img alt="Token image" width={55} src={appInfo.iconUrl} />
-            )}
-            <StyledTextFileAppName
-              label="App name"
-              readOnly
-              value={isLoading ? 'Loading...' : appInfo.name}
-              onChange={() => {}}
-            />
-          </AppInfo>
-
-          <AppAgreement />
-
-          <FormButtons appInfo={appInfo} onCancel={closeModal} />
+              <Link
+                href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
+                target="_blank"
+                rel="noreferrer"
+                title="Learn more about building Safe Apps"
+              >
+                <Text size="xl" as="span" color="primary">
+                  Learn more about building Safe Apps.
+                </Text>
+                <Icon size="sm" type="externalLink" color="primary" />
+              </Link>
+            </AppDocsInfo>
+            <AppUrl appList={appList} />
+            {/* Fetch app from url and return a SafeApp */}
+            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
+            <AppInfo>
+              {isLoading ? (
+                <WrapperLoader>
+                  <StyledLoader size="sm" />
+                </WrapperLoader>
+              ) : (
+                <Img alt="Token image" width={55} src={appInfo.iconUrl} />
+              )}
+              <StyledTextFileAppName
+                label="App name"
+                readOnly
+                value={isLoading ? 'Loading...' : appInfo.name}
+                onChange={() => {}}
+              />
+            </AppInfo>
+            <AppAgreement />
+          </Modal.Body>
+          <Modal.Footer>
+            <FormButtons appInfo={appInfo} onCancel={closeModal} />
+          </Modal.Footer>
         </>
       )}
     </GnoForm>

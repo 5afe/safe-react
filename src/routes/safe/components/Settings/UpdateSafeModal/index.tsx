@@ -7,15 +7,16 @@ import { styles } from './style'
 
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { makeStyles } from '@material-ui/core'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
@@ -35,6 +36,22 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
 
+  const {
+    gasCostFormatted,
+    txEstimationExecutionStatus,
+    isExecution,
+    isCreation,
+    isOffChainSignature,
+    gasPriceFormatted,
+    gasLimit,
+    gasEstimation,
+  } = useEstimateTransactionGas({
+    txData: multiSendCallData,
+    txRecipient: safeAddress,
+  })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     const calculateUpgradeSafeModal = async () => {
       const encodeMultiSendCallData = await getUpgradeSafeTransactionHash(safeAddress)
@@ -43,7 +60,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     calculateUpgradeSafeModal()
   }, [safeAddress])
 
-  const handleSubmit = async (txParameters: TxParameters) => {
+  const handleSubmit = (txParameters: TxParameters) => {
     // Call the update safe method
     dispatch(
       createTransaction({
@@ -61,19 +78,10 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     onClose()
   }
 
-  const {
-    gasCostFormatted,
-    txEstimationExecutionStatus,
-    isExecution,
-    isCreation,
-    isOffChainSignature,
-    gasPriceFormatted,
-    gasLimit,
-    gasEstimation,
-  } = useEstimateTransactionGas({
-    txData: multiSendCallData,
-    txRecipient: safeAddress,
-  })
+  let confirmButtonText = 'Update Safe'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Updating'
+  }
 
   return (
     <EditableTxParameters
@@ -137,18 +145,16 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
                   </Block>
                 )}
                 <Row align="center" className={classes.buttonRow}>
-                  <Button minWidth={140} onClick={onClose}>
-                    Back
-                  </Button>
-                  <Button
-                    color="primary"
-                    minWidth={140}
-                    type="submit"
-                    variant="contained"
-                    disabled={!multiSendCallData || txEstimationExecutionStatus === EstimationStatus.LOADING}
-                  >
-                    Update Safe
-                  </Button>
+                  <Modal.Footer.Buttons
+                    cancelButtonProps={{
+                      onClick: onClose,
+                      text: 'Back',
+                    }}
+                    confirmButtonProps={{
+                      status: buttonStatus,
+                      text: confirmButtonText,
+                    }}
+                  />
                 </Row>
               </>
             )}

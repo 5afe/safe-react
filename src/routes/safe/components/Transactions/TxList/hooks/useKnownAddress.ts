@@ -7,7 +7,7 @@ type AddressInfo = { name: string | undefined; image: string | undefined }
 type UseKnownAddressResponse = AddressInfo & { isAddressBook: boolean }
 
 export const useKnownAddress = (address: string, addressInfo: AddressInfo): UseKnownAddressResponse => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
 
   const isInAddressBook = recipientName !== 'UNKNOWN'
 

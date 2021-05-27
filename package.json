@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.6.0",
+  "version": "3.6.5",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -222,6 +222,7 @@
     "react-window": "^1.8.6",
     "redux": "4.0.5",
     "redux-actions": "^2.6.5",
+    "redux-localstorage-simple": "^2.4.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "semver": "^7.3.2",

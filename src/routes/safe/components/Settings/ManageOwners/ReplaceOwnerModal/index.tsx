@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { replaceSafeOwner } from 'src/logic/safe/store/actions/replaceSafeOwner'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -28,7 +27,6 @@ export const sendReplaceOwner = async (
   ownerAddressToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
-  threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
@@ -49,14 +47,15 @@ export const sendReplaceOwner = async (
     }),
   )
 
-  if (txHash && threshold === 1) {
+  if (txHash) {
+    // update the AB
     dispatch(
-      replaceSafeOwner({
-        safeAddress,
-        oldOwnerAddress: ownerAddressToRemove,
-        ownerAddress: values.newOwnerAddress,
-        ownerName: values.newOwnerName,
-      }),
+      addressBookAddOrUpdate(
+        makeAddressBookEntry({
+          address: values.newOwnerAddress,
+          name: values.newOwnerName,
+        }),
+      ),
     )
   }
 }
@@ -81,7 +80,6 @@ export const ReplaceOwnerModal = ({
   })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector) || 1
 
   useEffect(
     () => () => {
@@ -109,12 +107,10 @@ export const ReplaceOwnerModal = ({
   const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters, threshold)
+      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters)
 
       dispatch(
-        addOrUpdateAddressBookEntry(
-          makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName }),
-        ),
+        addressBookAddOrUpdate(makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName })),
       )
     } catch (error) {
       console.error('Error while removing an owner', error)

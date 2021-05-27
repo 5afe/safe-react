@@ -60,7 +60,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               Confirmed
             </Text>
-            <OwnerRow ownerAddress={signer} />
+            <OwnerRow address={signer} />
           </div>
         </OwnerListItem>
       ))}
@@ -77,7 +77,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
             </Text>
-            {detailedExecutionInfo.executor && <OwnerRow ownerAddress={detailedExecutionInfo.executor} />}
+            {detailedExecutionInfo.executor && <OwnerRow address={detailedExecutionInfo.executor} />}
           </div>
         </OwnerListItem>
       ) : (

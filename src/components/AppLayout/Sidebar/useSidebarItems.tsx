@@ -56,7 +56,7 @@ const useSidebarItems = (): ListItemType[] => {
         href: `${matchSafeWithAddress?.url}/transactions`,
       },
       {
-        label: 'AddressBook',
+        label: 'ADDRESS BOOK',
         icon: <ListIcon type="addressBook" />,
         selected: matchSafeWithAction?.params.safeAction === 'address-book',
         href: `${matchSafeWithAddress?.url}/address-book`,

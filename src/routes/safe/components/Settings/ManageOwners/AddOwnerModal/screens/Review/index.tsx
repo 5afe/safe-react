@@ -5,19 +5,23 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import {
+  safeOwnersWithAddressBookDataSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
@@ -27,6 +31,8 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
+
+const chainId = getNetworkId()
 
 type ReviewAddOwnerProps = {
   onClickBack: () => void
@@ -40,7 +46,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
   const safeName = useSafeName(safeAddress)
-  const owners = useSelector(safeOwnersSelector)
+  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -61,6 +67,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     manualGasPrice,
     manualGasLimit,
   })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true
@@ -146,7 +154,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${values.threshold} out of ${(owners?.size || 0) + 1} owner(s)`}
+                      {`${values.threshold} out of ${(owners?.length || 0) + 1} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -154,7 +162,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${(owners?.size || 0) + 1} Safe owner(s)`}
+                    {`${(owners?.length || 0) + 1} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
@@ -218,20 +226,15 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           </Block>
           <Hairline />
           <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-              Back
-            </Button>
-            <Button
-              color="primary"
-              minHeight={42}
-              minWidth={140}
-              onClick={() => onSubmit(txParameters)}
-              testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-              variant="contained"
-            >
-              Submit
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => onSubmit(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: ADD_OWNER_SUBMIT_BTN_TEST_ID,
+              }}
+            />
           </Row>
         </>
       )}

@@ -1,6 +1,3 @@
-import { List } from 'immutable'
-import { makeOwner } from '../../models/owner'
-
 export const remoteSafeInfoWithModules = {
   address: {
     value: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
@@ -86,30 +83,13 @@ export const localSafesInfo = {
     name: 'Safe A',
     address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
     threshold: 2,
-    owners: List(
-      [
-        {
-          name: 'UNKNOWN',
-          address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-        },
-        {
-          name: 'Owner B',
-          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-        },
-        {
-          name: 'Owner A',
-          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-        },
-      ].map(makeOwner),
-    ),
+    owners: [
+      '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+      '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+      '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+      '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+      '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+    ],
     modules: [['0x0000000000000000000000000000000000000001', '0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134']],
     spendingLimits: [
       {
@@ -177,30 +157,13 @@ export const inMemoryPartialSafeInformation = {
   name: 'Safe A',
   address: '0xe414604Ad49602C0b9c0b08D0781ECF96740786a',
   threshold: 2,
-  owners: List(
-    [
-      {
-        name: 'UNKNOWN',
-        address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
-      },
-      {
-        name: 'UNKNOWN',
-        address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-      },
-      {
-        name: 'UNKNOWN',
-        address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-      },
-      {
-        name: 'Owner B',
-        address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-      },
-      {
-        name: 'Owner A',
-        address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-      },
-    ].map(makeOwner),
-  ),
+  owners: [
+    '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+    '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+    '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+    '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+    '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+  ],
   modules: [['0x0000000000000000000000000000000000000001', '0xCFbFaC74C26F8647cBDb8c5caf80BB5b32E43134']],
   spendingLimits: [
     {

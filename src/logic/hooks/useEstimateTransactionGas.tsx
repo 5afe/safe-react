@@ -182,7 +182,6 @@ export const useEstimateTransactionGas = ({
         const gasCostFormatted = formatAmount(gasCost)
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
 
-        txEstimationExecutionStatus = EstimationStatus.SUCCESS
         if (isExecution) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,

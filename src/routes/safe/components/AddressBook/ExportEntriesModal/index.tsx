@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useSelector, useDispatch } from 'react-redux'
 import { CSVDownloader, jsonToCSV } from 'react-papaparse'
-import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
@@ -52,6 +52,14 @@ const StyledCSVLink = styled(CSVDownloader)`
   justify-content: center;
 `
 
+const StyledIcon = styled(Icon)`
+  svg {
+    position: relative;
+    top: 4px;
+    left: 4px;
+  }
+`
+
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
   const dispatch = useDispatch()
   const addressBook: AddressBookState = useSelector(addressBookSelector)
@@ -67,7 +75,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
     setLoading(true)
     setTimeout(() => {
       if (!loading) {
-        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESSBOOK_EXPORT_ENTRIES)
+        const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EXPORT_ENTRIES)
         const action = error
           ? notification.afterExecution.afterExecutionError
           : notification.afterExecution.noMoreConfirmationsNeeded
@@ -113,7 +121,18 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
               <Text size="xl" as="span">
                 You&apos;re about to export a CSV file with{' '}
                 <Text size="xl" strong as="span">
-                  {addressBook.length} address book entries
+                  {addressBook.length} address book entries. <br />
+                  <Link
+                    href="https://help.gnosis-safe.io/en/"
+                    target="_blank"
+                    rel="noreferrer"
+                    title="Learn more about importing / exporting an address book."
+                  >
+                    <Text size="xl" as="span" color="primary">
+                      Learn more about importing / exporting an address book.
+                    </Text>
+                    <StyledIcon size="sm" type="externalLink" color="primary" />
+                  </Link>
                 </Text>
                 .
               </Text>
