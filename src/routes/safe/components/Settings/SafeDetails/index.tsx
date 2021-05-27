@@ -1,6 +1,8 @@
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -22,8 +24,6 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
 
 import {
   latestMasterContractVersionSelector,
@@ -35,6 +35,7 @@ import {
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
 import { getMasterCopyAddressFromProxyAddress } from 'src/logic/contracts/safeContracts'
+import { LOADED_SAFE_KEY } from 'src/utils/constants'
 
 export const SAFE_NAME_INPUT_TEST_ID = 'safe-name-input'
 export const SAFE_NAME_SUBMIT_BTN_TEST_ID = 'change-safe-name-btn'
@@ -70,7 +71,10 @@ const SafeDetails = (): React.ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
+    // In case they set a name we assume the safe want to be stored even if it was opened via URL
+    dispatch(
+      updateSafe({ address: safeAddress, name: values.safeName, loadedViaUrl: values.safeName === LOADED_SAFE_KEY }),
+    )
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))

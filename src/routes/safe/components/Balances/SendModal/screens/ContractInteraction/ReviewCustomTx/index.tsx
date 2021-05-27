@@ -9,7 +9,6 @@ import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -23,6 +22,8 @@ import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 
@@ -65,7 +66,9 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     txAmount: tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0',
   })
 
-  const submitTx = async (txParameters: TxParameters): Promise<void> => {
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
+  const submitTx = (txParameters: TxParameters) => {
     const txRecipient = tx.contractAddress
     const txData = tx.data ? tx.data.trim() : ''
     const txValue = tx.value ? toTokenUnit(tx.value, nativeCoin.decimals) : '0'
@@ -86,7 +89,6 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
     } else {
       console.error('There was an error trying to submit the transaction, the safeAddress was not found')
     }
-
     onClose()
   }
 
@@ -174,22 +176,17 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               />
             </Block>
           )}
-          <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: 'submit-tx-btn',
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

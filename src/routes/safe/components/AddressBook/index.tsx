@@ -25,7 +25,7 @@ import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/upda
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
-import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
+import { DeleteEntryModal } from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,

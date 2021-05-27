@@ -10,18 +10,16 @@ describe('Upgrade a Safe', () => {
   it('Calls getEncodedMultiSendCallData with a list of MultiSendTransactionInstanceType and returns the multiSend data encoded', async () => {
     const safeAddress = ZERO_ADDRESS
     const web3 = new Web3(new Web3.providers.HttpProvider(''))
-    const safeInstance = (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[]) as unknown) as GnosisSafe
+    const safeInstance = new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[]) as unknown as GnosisSafe
     const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS).encodeABI()
     const updateSafeTxData = safeInstance.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
     const txs = [
       {
-        operation: 0,
         to: safeAddress,
         value: 0,
         data: updateSafeTxData,
       },
       {
-        operation: 0,
         to: safeAddress,
         value: 0,
         data: fallbackHandlerTxData,

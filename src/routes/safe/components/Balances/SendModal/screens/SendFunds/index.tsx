@@ -20,7 +20,6 @@ import {
   required,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -48,6 +47,7 @@ import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
 import { getNetworkInfo } from 'src/config'
 import Divider from 'src/components/Divider'
+import { Modal } from 'src/components/Modal'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -338,23 +338,16 @@ const SendFunds = ({
                   </Col>
                 </Row>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose} color="secondary">
-                  Cancel
-                </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                  disabled={!formState.valid || shouldDisableSubmitButton}
-                  minWidth={140}
-                  type="submit"
-                  variant="contained"
-                >
-                  Review
-                </Button>
-              </Row>
+              <Modal.Footer>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{
+                    disabled: !formState.valid || shouldDisableSubmitButton,
+                    testId: 'review-tx-btn',
+                    text: 'Review',
+                  }}
+                />
+              </Modal.Footer>
             </>
           )
         }}

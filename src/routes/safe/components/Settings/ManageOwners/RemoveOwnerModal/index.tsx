@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import CheckOwner from './screens/CheckOwner'
+import { CheckOwner } from './screens/CheckOwner'
 import { ReviewRemoveOwnerModal } from './screens/Review'
 import { ThresholdForm } from './screens/ThresholdForm'
 
@@ -117,7 +117,12 @@ export const RemoveOwnerModal = ({
           <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
         )}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
+          <ThresholdForm
+            onClickBack={onClickBack}
+            initialValues={{ threshold: values.threshold }}
+            onClose={onClose}
+            onSubmit={thresholdSubmitted}
+          />
         )}
         {activeScreen === 'reviewRemoveOwner' && (
           <ReviewRemoveOwnerModal

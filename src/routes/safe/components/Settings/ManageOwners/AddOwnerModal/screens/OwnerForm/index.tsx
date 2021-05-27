@@ -19,12 +19,14 @@ import {
   uniqueAddress,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+
+import { OwnerValues } from '../..'
+import { Modal } from 'src/components/Modal'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
@@ -41,9 +43,10 @@ const useStyles = makeStyles(styles)
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values) => void
+  initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactElement => {
+export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps): React.ReactElement => {
   const classes = useStyles()
   const handleSubmit = (values) => {
     onSubmit(values)
@@ -65,7 +68,14 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={{
+          ownerName: initialValues?.ownerName,
+          ownerAddress: initialValues?.ownerAddress,
+        }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const mutators = args[3]
 
@@ -116,18 +126,14 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minWidth={140}
-                  testId={ADD_OWNER_NEXT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                >
-                  Next
-                </Button>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Cancel' }}
+                  confirmButtonProps={{
+                    type: 'submit',
+                    text: 'Next',
+                    testId: ADD_OWNER_NEXT_BTN_TEST_ID,
+                  }}
+                />
               </Row>
             </>
           )

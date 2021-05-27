@@ -1,15 +1,13 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Bold from 'src/components/layout/Bold'
-import Button from 'src/components/layout/Button'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
@@ -25,8 +23,6 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   isOpen: boolean
@@ -79,8 +75,15 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     return 'CANCEL_TRANSACTION'
   }
 
+  let confirmButtonStatus: ButtonStatus = ButtonStatus.READY
+  let confirmButtonText = 'Reject transaction'
+  if (txEstimationExecutionStatus === EstimationStatus.LOADING) {
+    confirmButtonStatus = ButtonStatus.LOADING
+    confirmButtonText = 'Estimating'
+  }
+
   return (
-    <Modal description="Reject Transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
+    <Modal description="Reject transaction" handleClose={onClose} open={isOpen} title="Reject Transaction">
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
         isExecution={isExecution}
@@ -136,22 +139,18 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
                   />
                 </Block>
               )}
-              <Row align="center" className={classes.buttonRow}>
-                <Button minHeight={42} minWidth={140} onClick={onClose} color="secondary">
-                  Close
-                </Button>
-                <Button
-                  color="secondary"
-                  minHeight={42}
-                  minWidth={214}
-                  onClick={() => sendReplacementTransaction(txParameters)}
-                  type="submit"
-                  variant="contained"
-                  disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-                >
-                  Reject Transaction
-                </Button>
-              </Row>
+              <GenericModal.Footer withoutBorder={confirmButtonStatus !== ButtonStatus.LOADING}>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Close' }}
+                  confirmButtonProps={{
+                    onClick: () => sendReplacementTransaction(txParameters),
+                    color: 'error',
+                    type: 'submit',
+                    status: confirmButtonStatus,
+                    text: confirmButtonText,
+                  }}
+                />
+              </GenericModal.Footer>
             </>
           )
         }}

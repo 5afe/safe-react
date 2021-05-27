@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { GetBalanceParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -12,7 +12,7 @@ import {
   safeNameSelector,
 } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkName, getTxServiceUrl } from 'src/config'
+import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
@@ -26,8 +26,9 @@ import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
 import { getAppInfoFromUrl } from '../utils'
-import { SafeApp } from '../types.d'
+import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
+import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -65,7 +66,7 @@ export type TransactionParams = {
 type ConfirmTransactionModalState = {
   isOpen: boolean
   txs: Transaction[]
-  requestId?: RequestId
+  requestId: RequestId
   params?: TransactionParams
 }
 
@@ -74,11 +75,12 @@ type Props = {
 }
 
 const NETWORK_NAME = getNetworkName()
+const NETWORK_ID = getNetworkId()
 
 const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   isOpen: false,
   txs: [],
-  requestId: undefined,
+  requestId: '',
   params: undefined,
 }
 
@@ -93,9 +95,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { staticAppsList } = useAppList()
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
-    INITIAL_CONFIRM_TX_MODAL_STATE,
-  )
+  const [confirmTransactionModal, setConfirmTransactionModal] =
+    useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
 
@@ -128,9 +129,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }),
     [setConfirmTransactionModal],
   )
-  const closeConfirmationModal = useCallback(() => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE), [
-    setConfirmTransactionModal,
-  ])
+  const closeConfirmationModal = useCallback(
+    () => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE),
+    [setConfirmTransactionModal],
+  )
 
   const { sendMessageToIframe } = useIframeMessageHandler(
     safeApp,
@@ -166,7 +168,16 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
       network: NETWORK_NAME,
+      chainId: NETWORK_ID,
     }))
+
+    communicator?.on('getSafeBalances', async (msg) => {
+      const { currency = 'usd' } = msg.data.params as GetBalanceParams
+
+      const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
+
+      return balances
+    })
 
     communicator?.on('rpcCall', async (msg) => {
       const params = msg.data.params as RPCPayload
@@ -216,7 +227,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId)
+    communicator?.send({ safeTxHash }, confirmTransactionModal.requestId as string)
   }
 
   const onTxReject = () => {
@@ -227,7 +238,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     )
 
     // Safe Apps SDK V2 Handler
-    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId, true)
+    communicator?.send('Transaction was rejected', confirmTransactionModal.requestId as string, true)
   }
 
   useEffect(() => {

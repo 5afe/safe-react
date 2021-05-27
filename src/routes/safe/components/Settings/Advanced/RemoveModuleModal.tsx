@@ -1,19 +1,16 @@
-import { Button, EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
 import cn from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-
-import styled from 'styled-components'
 
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import Modal from 'src/components/Modal'
+import Modal, { ButtonStatus, Modal as GenericModal } from 'src/components/Modal'
 import { getExplorerInfo } from 'src/config'
 import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -22,19 +19,13 @@ import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { styles } from './style'
+import { useStyles } from './style'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const useStyles = makeStyles(styles)
-
-const FooterWrapper = styled.div`
-  display: flex;
-  justify-content: space-around;
-`
 
 interface RemoveModuleModalProps {
   onClose: () => void
@@ -70,6 +61,8 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     manualGasPrice,
     manualGasLimit,
   })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
@@ -114,6 +107,11 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
     }
   }
 
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
+  }
+
   return (
     <Modal
       description="Remove the selected Module"
@@ -135,7 +133,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
             <>
               <Row align="center" className={classes.modalHeading} grow>
                 <Paragraph className={classes.modalManage} noMargin weight="bolder">
-                  Remove Module
+                  Remove module
                 </Paragraph>
                 <IconButton disableRipple onClick={onClose}>
                   <Close className={classes.modalClose} />
@@ -180,22 +178,17 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
                   txEstimationExecutionStatus={txEstimationExecutionStatus}
                 />
               </Row>
-              <Row align="center" className={classes.modalButtonRow}>
-                <FooterWrapper>
-                  <Button size="md" variant="outlined" color="primary" onClick={onClose}>
-                    Cancel
-                  </Button>
-                  <Button
-                    color="error"
-                    size="md"
-                    variant="contained"
-                    disabled={!txData || txEstimationExecutionStatus === EstimationStatus.LOADING}
-                    onClick={() => removeSelectedModule(txParameters)}
-                  >
-                    Remove
-                  </Button>
-                </FooterWrapper>
-              </Row>
+              <GenericModal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+                <GenericModal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{
+                    color: 'error',
+                    onClick: () => removeSelectedModule(txParameters),
+                    status: buttonStatus,
+                    text: confirmButtonText,
+                  }}
+                />
+              </GenericModal.Footer>
             </>
           )
         }}

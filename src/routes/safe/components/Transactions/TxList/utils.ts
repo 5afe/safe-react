@@ -94,5 +94,24 @@ export const isCancelTxDetails = (txInfo: Transaction['txInfo']): boolean =>
   // flag-based identification
   txInfo.isCancellation
 
-export const addressInList = (list: string[] = []) => (address: string): boolean =>
-  list.some((ownerAddress) => sameAddress(ownerAddress, address))
+export const addressInList =
+  (list: string[] = []) =>
+  (address: string): boolean =>
+    list.some((ownerAddress) => sameAddress(ownerAddress, address))
+
+export const getTxTo = (tx: Transaction): string | undefined => {
+  switch (tx.txInfo.type) {
+    case 'Transfer': {
+      return tx.txInfo.recipient
+    }
+    case 'SettingsChange': {
+      return undefined
+    }
+    case 'Custom': {
+      return tx.txInfo.to
+    }
+    case 'Creation': {
+      return tx.txInfo.factory || undefined
+    }
+  }
+}
