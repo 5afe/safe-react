@@ -1,5 +1,6 @@
 import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { saveSafes, StoredSafes } from 'src/logic/safe/utils'
+import { removeFromStorage } from 'src/utils/storage'
 import { getNetworkName } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
@@ -70,7 +71,7 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
 
   // update stored safe
   localStorage.setItem(safesKey, JSON.stringify(migratedSafes))
-  saveSafes(migratedSafes)
+  saveSafes(migratedSafes).then(() => console.info('Safe objects migrated'))
 }
 
 /**
@@ -83,8 +84,9 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
 const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageConfig): void => {
   const [state] = states
   const prefix = `v2_${getNetworkName()}`
-  const storageKey = `_immortal|${prefix}__ADDRESS_BOOK_STORAGE_KEY`
   const newKey = `${namespace}${namespaceSeparator}${state}`
+  const oldKey = 'ADDRESS_BOOK_STORAGE_KEY'
+  const storageKey = `_immortal|${prefix}__${oldKey}`
 
   if (localStorage.getItem(newKey)) {
     // already migrated
@@ -116,6 +118,7 @@ const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageCo
 
   // Remove the old Address Book storage
   localStorage.removeItem(storageKey)
+  removeFromStorage(oldKey).then(() => console.info('Legacy Address Book removed'))
 }
 
 const migrate = (storageConfig: StorageConfig): void => {
