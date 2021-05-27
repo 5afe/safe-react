@@ -4,6 +4,7 @@ import styled from 'styled-components'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { Erc721Transfer, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
@@ -36,7 +37,7 @@ export const TxInfoDetails = ({
   avatarUrl,
 }: TxInfoDetailsProps): ReactElement => {
   const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
-  const knownAddress = recipientName !== 'UNKNOWN'
+  const knownAddress = recipientName !== ADDRESS_BOOK_DEFAULT_NAME
 
   const { txLocation } = useContext<TxLocationProps>(TxLocationContext)
   const canRepeatTransaction =
