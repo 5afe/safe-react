@@ -12,28 +12,34 @@ type UseAppListReturnType = {
   appList: SafeApp[]
   removeApp: (appUrl: string) => void
   staticAppsList: AppData[]
+  isLoading: boolean
 }
 
-const useAppList = (): UseAppListReturnType => {
+const useAppList = (showError: boolean): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const dispatch = useDispatch()
   const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const loadAppsList = async () => {
+      setIsLoading(true)
       let result
       try {
         result = await getAppsList()
       } catch (err) {
-        dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_MSG))
+        if (showError) {
+          dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_MSG))
+        }
       }
       setStaticAppsList(result?.apps && result?.apps.length ? result.apps : staticAppsList)
+      setIsLoading(false)
     }
 
     if (!staticAppsList.length) {
       loadAppsList()
     }
-  }, [dispatch, staticAppsList])
+  }, [dispatch, showError, staticAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -100,6 +106,7 @@ const useAppList = (): UseAppListReturnType => {
     appList,
     staticAppsList,
     removeApp,
+    isLoading,
   }
 }
 

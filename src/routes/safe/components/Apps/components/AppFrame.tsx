@@ -92,7 +92,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
-  const { staticAppsList } = useAppList()
+  const { isLoading } = useAppList(false)
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
   const [confirmTransactionModal, setConfirmTransactionModal] =
@@ -247,10 +247,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       setSafeApp(app)
     }
-    if (staticAppsList.length) {
+    if (!isLoading) {
       loadApp()
     }
-  }, [appUrl, staticAppsList])
+  }, [appUrl, isLoading])
 
   //track GA
   useEffect(() => {
