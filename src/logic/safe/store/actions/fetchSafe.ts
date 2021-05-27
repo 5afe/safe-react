@@ -20,7 +20,8 @@ import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
  */
 export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> => {
   const address = checksumAddress(safeAddress)
-  const safeInfo: Partial<SafeRecordProps> = { address }
+  // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
+  const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
   const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
     getSafeInfo(safeAddress),

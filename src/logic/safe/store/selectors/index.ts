@@ -32,6 +32,7 @@ export const safesListWithAddressBookNameSelector = createSelector(
     const addressBook = addressBookMap?.[chainId]
 
     return safesList
+      .filter((safeRecord) => !safeRecord.loadedViaUrl)
       .map((safeRecord) => {
         const safe = safeRecord.toObject()
         const name = addressBook?.[safe.address]?.name
