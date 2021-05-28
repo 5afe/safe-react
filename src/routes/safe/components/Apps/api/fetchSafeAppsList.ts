@@ -1,5 +1,5 @@
 import axios from 'axios'
-
+import { getNetworkId } from 'src/config'
 import { SAFE_APPS_LIST_URL } from 'src/utils/constants'
 
 export type TokenListResult = {
@@ -17,5 +17,6 @@ export type AppData = {
 }
 
 export const fetchSafeAppsList = async (): Promise<TokenListResult> => {
-  return axios.get(SAFE_APPS_LIST_URL).then(({ data }) => data)
+  const networkId = getNetworkId()
+  return axios.get(`${SAFE_APPS_LIST_URL}?network_id=${networkId}`).then(({ data }) => data)
 }

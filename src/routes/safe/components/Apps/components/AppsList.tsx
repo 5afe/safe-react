@@ -86,7 +86,7 @@ const isCustomApp = (appUrl: string, staticAppsList: AppData[]) => !staticAppsLi
 const AppsList = (): React.ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const { appList, removeApp, staticAppsList } = useAppList()
+  const { appList, removeApp, staticAppsList, isLoading } = useAppList(true)
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
 
@@ -94,7 +94,7 @@ const AppsList = (): React.ReactElement => {
 
   const closeAddAppModal = () => setIsAddAppModalOpen(false)
 
-  if (!appList.length || !safeAddress) {
+  if (isLoading || !safeAddress) {
     return (
       <LoadingContainer>
         <Loader size="md" />

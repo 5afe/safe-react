@@ -4,27 +4,42 @@ import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } fro
 import { AppData } from '../api/fetchSafeAppsList'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 import { getNetworkId } from 'src/config'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { useDispatch } from 'react-redux'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
   removeApp: (appUrl: string) => void
   staticAppsList: AppData[]
+  isLoading: boolean
 }
 
-const useAppList = (): UseAppListReturnType => {
+const useAppList = (showError: boolean): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(false)
 
   useEffect(() => {
     const loadAppsList = async () => {
-      const remoteAppsList = await getAppsList()
-      setStaticAppsList(remoteAppsList)
+      setIsLoading(true)
+      let result
+      try {
+        result = await getAppsList()
+      } catch (err) {
+        if (showError) {
+          dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_MSG))
+        }
+      }
+      setStaticAppsList(result && result?.length ? result : staticAppsList)
+      setIsLoading(false)
     }
 
     if (!staticAppsList.length) {
       loadAppsList()
     }
-  }, [staticAppsList])
+  }, [dispatch, showError, staticAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -91,6 +106,7 @@ const useAppList = (): UseAppListReturnType => {
     appList,
     staticAppsList,
     removeApp,
+    isLoading,
   }
 }
 
