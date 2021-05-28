@@ -34,3 +34,4 @@ export const SPENDING_LIMIT_MODULE_ADDRESS =
 export const KNOWN_MODULES = {
   [SPENDING_LIMIT_MODULE_ADDRESS]: 'Spending limit',
 }
+export const NETWORKSNAMES = ['Ethereum', 'xDai', 'Polygon', 'BSC', 'Arbitrium', 'EWC', 'Rinkeby', 'Volta']
