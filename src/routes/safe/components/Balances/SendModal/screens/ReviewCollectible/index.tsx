@@ -35,6 +35,7 @@ const useStyles = makeStyles(styles)
 
 export type CollectibleTx = {
   recipientAddress: string
+  recipientName?: string
   assetAddress: string
   assetName: string
   nftTokenId: string
@@ -177,6 +178,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.recipientAddress}
+                  name={tx.recipientName}
                   showAvatar
                   showCopyBtn
                   explorerUrl={getExplorerInfo(tx.recipientAddress)}
