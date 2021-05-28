@@ -59,7 +59,7 @@ const styles = () => ({
     borderRadius: sm,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
-    minWidth: '180px',
+    minWidth: '200px',
     paddingTop: md,
     paddingBottom: md,
   },
