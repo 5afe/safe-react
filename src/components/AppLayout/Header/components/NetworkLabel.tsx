@@ -24,10 +24,7 @@ const useStyles = makeStyles({
     lineHeight: 'normal',
     margin: '0',
     padding: `${xs} ${sm}`,
-
-    /* [`@media (min-width: ${screenSm}px)`]: {
-      marginLeft: '8px',
-    }, */
+    width: 'fit-content',
   },
 })
 
