@@ -5,9 +5,11 @@ import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import { Divider } from '@gnosis.pm/safe-react-components'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
+import NetworkLabel from './NetworkLabel'
 
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
@@ -51,6 +53,15 @@ const styles = () => ({
   },
   popper: {
     zIndex: 2000,
+  },
+  network: {
+    backgroundColor: 'white',
+    borderRadius: sm,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+    marginTop: '11px',
+    minWidth: '180px',
+    paddingTop: md,
+    paddingBottom: md,
   },
 })
 
@@ -107,8 +118,14 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
               <Grow {...TransitionProps}>
                 <>
                   <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
-                    <List className={classes.root} component="div">
-                      Networks list
+                    <List className={classes.network} component="div">
+                      <NetworkLabel />
+                      <Divider />
+                      <NetworkLabel />
+                      <Divider />
+                      <NetworkLabel />
+                      <Divider />
+                      <NetworkLabel />
                     </List>
                   </ClickAwayListener>
                 </>

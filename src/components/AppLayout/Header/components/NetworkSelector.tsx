@@ -16,18 +16,18 @@ const styles = () => ({
     height: '100%',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '284px' /* should be 184px */,
+      flexBasis: '180px',
       marginRight: '20px',
     },
   },
-  provider: {
+  networkList: {
     alignItems: 'center',
     cursor: 'pointer',
     display: 'flex',
     flex: '1 1 auto',
     padding: sm,
+    justifyContent: 'space-between',
     [`@media (min-width: ${screenSm}px)`]: {
-      paddingLeft: sm,
       paddingRight: sm,
     },
   },
@@ -52,7 +52,7 @@ class NetworkSelector extends React.Component<any> {
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
-          <Col className={classes.provider} end="sm" middle="xs" onClick={toggle}>
+          <Col className={classes.networkList} end="sm" middle="xs" onClick={toggle}>
             <NetworkLabel />
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
