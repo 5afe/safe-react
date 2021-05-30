@@ -4,6 +4,7 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -73,9 +74,7 @@ export const mustBeHexData = (data: string): ValidatorReturnType => {
 export const mustBeAddressHash = memoize(
   (address: string): ValidatorReturnType => {
     const errorMessage = 'Must be a valid address'
-    const startsWith0x = address?.startsWith('0x')
-    const isAddress = getWeb3().utils.isAddress(address)
-    return startsWith0x && isAddress ? undefined : errorMessage
+    return isValidAddress(address) ? undefined : errorMessage
   },
 )
 

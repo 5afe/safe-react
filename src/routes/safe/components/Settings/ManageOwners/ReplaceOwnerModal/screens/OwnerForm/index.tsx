@@ -26,6 +26,7 @@ import { Modal } from 'src/components/Modal'
 import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { getExplorerInfo, getNetworkId } from 'src/config'
@@ -59,18 +60,11 @@ type NewOwnerProps = {
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values: NewOwnerProps) => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
   initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({
-  onClose,
-  onSubmit,
-  ownerAddress,
-  ownerName,
-  initialValues,
-}: OwnerFormProps): ReactElement => {
+export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerFormProps): ReactElement => {
   const classes = useStyles()
 
   const handleSubmit = (values: NewOwnerProps) => {
@@ -99,8 +93,8 @@ export const OwnerForm = ({
         formMutators={formMutators}
         onSubmit={handleSubmit}
         initialValues={{
-          ownerName: initialValues?.newOwnerName,
-          ownerAddress: initialValues?.newOwnerAddress,
+          ownerName: initialValues?.name,
+          ownerAddress: initialValues?.address,
         }}
       >
         {(...args) => {
@@ -132,11 +126,11 @@ export const OwnerForm = ({
                 <Row className={classes.owner}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>

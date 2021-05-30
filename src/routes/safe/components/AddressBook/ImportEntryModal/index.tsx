@@ -6,6 +6,7 @@ import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -68,8 +69,8 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
     }
 
     const formatedList = slicedData.map((entry) => {
-      const address = entry.data[0].toLowerCase()
-      return { address: getWeb3().utils.toChecksumAddress(address), name: entry.data[1] }
+      const address = entry.data[0]
+      return { address: checksumAddress(address), name: entry.data[1] }
     })
     setEntryList(formatedList)
     setImportError('')
