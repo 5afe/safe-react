@@ -22,7 +22,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
 import { ScanQRModal } from 'src/components/ScanQRModal'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
@@ -56,7 +56,7 @@ const { nativeCoin } = getNetworkInfo()
 
 const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
   const classes = useStyles()
-  const { ethBalance } = useSelector(safeSelector) || {}
+  const ethBalance = useSelector(currentSafeEthBalance)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name: string } | null>({
     address: contractAddress || initialValues.contractAddress,

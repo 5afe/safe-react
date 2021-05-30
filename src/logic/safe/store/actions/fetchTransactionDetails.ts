@@ -5,7 +5,7 @@ import { getTxDetailsUrl } from 'src/config'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
 import { ExpandedTxDetails, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionDetailsPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
 
@@ -24,9 +24,9 @@ export const fetchTransactionDetails = ({
     attributeName: 'id',
     txLocation,
   })
-  const safeAddress = safeParamAddressFromStateSelector(getState())
+  const safeAddress = safeAddressFromUrl(getState())
 
-  if (txDetails) {
+  if (txDetails || !safeAddress) {
     return
   }
 

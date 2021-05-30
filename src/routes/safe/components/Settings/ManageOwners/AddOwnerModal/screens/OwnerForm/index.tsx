@@ -27,8 +27,8 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { OwnerValues } from '../..'
 import { Modal } from 'src/components/Modal'
@@ -65,8 +65,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
     onSubmit(values)
   }
   const addressBookMap = useSelector(addressBookMapSelector)
-  const owners = useSelector(safeOwnersSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const { address: safeAddress = '', owners = [] } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
@@ -122,7 +121,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
                     />
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
-                        if (web3ReadOnly.utils.isAddress(address)) {
+                        if (isValidAddress(address)) {
                           const { name: ownerName } = addressBookMap[chainId][address]
                           if (ownerName) {
                             mutators.setOwnerName(ownerName)

@@ -3,7 +3,8 @@ import { TxParameters, useTransactionParameters } from 'src/routes/safe/containe
 import { EditTxParametersForm } from 'src/routes/safe/components/Transactions/helpers/EditTxParametersForm'
 import { ParametersStatus } from './utils'
 import { useSelector } from 'react-redux'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
+
+import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 
 type Props = {
   children: (txParameters: TxParameters, toggleStatus: (txParameters?: TxParameters) => void) => any
@@ -30,7 +31,7 @@ export const EditableTxParameters = ({
 }: Props): React.ReactElement => {
   const [isEditMode, toggleEditMode] = useState(false)
   const [useManualValues, setUseManualValues] = useState(false)
-  const threshold = useSelector(safeThresholdSelector) || 1
+  const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
   const txParameters = useTransactionParameters({
     parameterStatus: parametersStatus || defaultParameterStatus,
