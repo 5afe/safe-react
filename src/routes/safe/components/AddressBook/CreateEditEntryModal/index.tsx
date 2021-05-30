@@ -9,7 +9,13 @@ import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required, uniqueAddress } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  minMaxLength,
+  required,
+  uniqueAddress,
+  validAddressBookName,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
@@ -94,7 +100,7 @@ export const CreateEditEntryModal = ({
                         testId={CREATE_ENTRY_INPUT_NAME_ID}
                         text="Name"
                         type="text"
-                        validate={composeValidators(required, minMaxLength(1, 50))}
+                        validate={composeValidators(required, minMaxLength(1, 50), validAddressBookName)}
                       />
                     </Col>
                   </Row>
