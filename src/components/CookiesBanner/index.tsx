@@ -3,6 +3,7 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
@@ -97,7 +98,7 @@ interface CookiesBannerFormProps {
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useRef(useDispatch())
-
+  const history = useHistory()
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
@@ -105,6 +106,13 @@ const CookiesBanner = (): ReactElement => {
   const [localIntercom, setLocalIntercom] = useState(false)
 
   const showBanner = useSelector(cookieBannerOpen)
+  const safeAppView = history.location.search.substr(0, 7) === '?appUrl'
+
+  useEffect(() => {
+    if (safeAppView) {
+      closeIntercom()
+    }
+  }, [safeAppView])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -171,7 +179,7 @@ const CookiesBanner = (): ReactElement => {
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
-  if (showIntercom) {
+  if (showIntercom && !safeAppView) {
     loadIntercom()
   }
 
