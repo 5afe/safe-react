@@ -186,7 +186,7 @@ export const ReviewRemoveOwnerModal = ({
                 <Hairline />
                 {owners?.map(
                   (safeOwner) =>
-                    sameAddress(safeOwner.address, owner.address) && (
+                    !sameAddress(safeOwner.address, owner.address) && (
                       <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
