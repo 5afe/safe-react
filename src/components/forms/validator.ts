@@ -139,4 +139,4 @@ export const noErrorsOn = (name: string, errors: Record<string, unknown>): boole
 export const validAddressBookName = (name: string): string | undefined =>
   isValidAddressBookName(name)
     ? undefined
-    : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.toString().replace(',', ', ')}`
+    : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
