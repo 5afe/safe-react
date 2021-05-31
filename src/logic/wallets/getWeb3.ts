@@ -9,6 +9,7 @@ import { getRpcServiceUrl } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 
+// This providers have direct relation with name assigned in bnc-onboard configuration
 export const WALLET_PROVIDER = {
   SAFE: 'SAFE',
   METAMASK: 'METAMASK',
@@ -19,6 +20,7 @@ export const WALLET_PROVIDER = {
   SQUARELINK: 'SQUARELINK',
   WALLETCONNECT: 'WALLETCONNECT',
   OPERA: 'OPERA',
+  // This is the provider for WALLET_LINK configuration on bnc-onboard
   COINBASE_WALLET: 'COINBASE WALLET',
   AUTHEREUM: 'AUTHEREUM',
   LEDGER: 'LEDGER',
