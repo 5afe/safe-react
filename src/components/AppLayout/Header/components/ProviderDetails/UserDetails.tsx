@@ -156,7 +156,7 @@ export const UserDetails = ({
         <Spacer />
         <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(provider)}
+          {provider && upperFirst(provider)}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
@@ -175,7 +175,7 @@ export const UserDetails = ({
         <Row className={classes.dashboard}>
           <Button color="primary" fullWidth onClick={openDashboard} size="medium" variant="contained">
             <Paragraph className={classes.dashboardText} color="white" noMargin size="md">
-              {upperFirst(provider)} Wallet
+              {provider && upperFirst(provider)} Wallet
             </Paragraph>
           </Button>
         </Row>

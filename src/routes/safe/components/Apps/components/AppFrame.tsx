@@ -12,7 +12,7 @@ import {
   safeNameSelector,
 } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
+import { getNetworkId, getNetworkName } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
@@ -161,10 +161,6 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
   useEffect(() => {
-    communicator?.on('getEnvInfo', () => ({
-      txServiceUrl: getTxServiceUrl(),
-    }))
-
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
       network: NETWORK_NAME,
