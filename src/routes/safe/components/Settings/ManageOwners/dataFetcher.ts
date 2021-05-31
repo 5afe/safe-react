@@ -17,6 +17,7 @@ export const generateColumns = (): List<TableColumn> => {
   const nameColumn: TableColumn = {
     id: OWNERS_TABLE_NAME_ID,
     order: false,
+    formatTypeSort: (value: string) => value.toLowerCase(),
     disablePadding: false,
     label: 'Name',
     width: 150,
