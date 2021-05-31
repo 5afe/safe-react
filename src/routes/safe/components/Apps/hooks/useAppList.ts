@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } from '../utils'
-import { AppData } from '../api/fetchSafeAppsList'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { AppData, fetchSafeAppsList } from '../api/config-service'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 import { getNetworkId } from 'src/config'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -11,13 +11,13 @@ import { useDispatch } from 'react-redux'
 type UseAppListReturnType = {
   appList: SafeApp[]
   removeApp: (appUrl: string) => void
-  staticAppsList: AppData[]
+  apiAppsList: AppData[]
   isLoading: boolean
 }
 
-const useAppList = (showError: boolean): UseAppListReturnType => {
+const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
-  const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
+  const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -26,20 +26,18 @@ const useAppList = (showError: boolean): UseAppListReturnType => {
       setIsLoading(true)
       let result
       try {
-        result = await getAppsList()
+        result = await fetchSafeAppsList()
       } catch (err) {
-        if (showError) {
-          dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
-        }
+        dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
       }
-      setStaticAppsList(result && result?.length ? result : staticAppsList)
+      setApiAppsList(result && result?.length ? result : apiAppsList)
       setIsLoading(false)
     }
 
-    if (!staticAppsList.length) {
+    if (!apiAppsList.length) {
       loadAppsList()
     }
-  }, [dispatch, showError, staticAppsList])
+  }, [dispatch, apiAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -64,10 +62,10 @@ const useAppList = (showError: boolean): UseAppListReturnType => {
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
       const customApps = persistedAppList.filter(
-        (persistedApp) => !staticAppsList.some((staticApp) => staticApp.url === persistedApp.url),
+        (persistedApp) => !apiAppsList.some((app) => app.url === persistedApp.url),
       )
 
-      const apps: SafeApp[] = [...staticAppsList, ...customApps]
+      const apps: SafeApp[] = [...apiAppsList, ...customApps]
         // if the app does not expose supported networks, include them. (backward compatible)
         .filter((app) => (!app.networks ? true : app.networks.includes(getNetworkId())))
         .map((app) => ({
@@ -90,7 +88,7 @@ const useAppList = (showError: boolean): UseAppListReturnType => {
     }
 
     loadApps()
-  }, [staticAppsList])
+  }, [apiAppsList])
 
   const removeApp = useCallback((appUrl: string): void => {
     setAppList((list) => {
@@ -104,7 +102,7 @@ const useAppList = (showError: boolean): UseAppListReturnType => {
 
   return {
     appList,
-    staticAppsList,
+    apiAppsList,
     removeApp,
     isLoading,
   }
