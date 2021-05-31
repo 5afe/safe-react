@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { GetBalanceParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -161,6 +161,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const communicator = useAppCommunicator(iframeRef, safeApp)
 
   useEffect(() => {
+    communicator?.on('getTxBySafeTxHash', async (msg) => {
+      const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
+
+      console.log({ safeTxHash })
+    })
+
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
       network: NETWORK_NAME,
