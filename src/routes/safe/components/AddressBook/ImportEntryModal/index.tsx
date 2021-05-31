@@ -69,7 +69,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
 
     const formatedList = slicedData.map((entry) => {
       const address = entry.data[0].toLowerCase()
-      return { address: getWeb3().utils.toChecksumAddress(address), name: entry.data[1] }
+      return { address: getWeb3().utils.toChecksumAddress(address), name: entry.data[1], chainId: entry.data[2] }
     })
     setEntryList(formatedList)
     setImportError('')
@@ -91,13 +91,16 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
   const validateCsvData = (data) => {
     for (let index = 0; index < data.length; index++) {
       const entry = data[index]
-      if (!entry.data[0] || !entry.data[1]) {
+      if (!entry.data[0] || !entry.data[1] || !entry.data[2]) {
         return `Invalid amount of columns on row ${index + 2}`
       }
       // Verify address properties
       const address = entry.data[0].toLowerCase()
       if (!getWeb3().utils.isAddress(address)) {
         return `Invalid address on row ${index + 2}`
+      }
+      if (isNaN(entry.data[2])) {
+        return `Invalid chain id on row ${index + 2}`
       }
       return
     }
