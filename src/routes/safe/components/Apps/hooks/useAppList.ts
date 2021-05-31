@@ -29,7 +29,7 @@ const useAppList = (showError: boolean): UseAppListReturnType => {
         result = await getAppsList()
       } catch (err) {
         if (showError) {
-          dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_MSG))
+          dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
         }
       }
       setStaticAppsList(result && result?.length ? result : staticAppsList)

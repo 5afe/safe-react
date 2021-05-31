@@ -31,7 +31,7 @@ const NOTIFICATION_IDS = {
   TX_CONFIRMATION_EXECUTED_MSG: 'TX_CONFIRMATION_EXECUTED_MSG',
   TX_CONFIRMATION_FAILED_MSG: 'TX_CONFIRMATION_FAILED_MSG',
   TX_FETCH_SIGNATURES_ERROR_MSG: 'TX_FETCH_SIGNATURES_ERROR_MSG',
-  SAFE_APPS_FETCH_MSG: 'SAFE_APPS_FETCH_MSG',
+  SAFE_APPS_FETCH_ERROR_MSG: 'SAFE_APPS_FETCH_ERROR_MSG',
   SAFE_NAME_CHANGED_MSG: 'SAFE_NAME_CHANGED_MSG',
   OWNER_NAME_CHANGE_EXECUTED_MSG: 'OWNER_NAME_CHANGE_EXECUTED_MSG',
   SIGN_SETTINGS_CHANGE_MSG: 'SIGN_SETTINGS_CHANGE_MSG',
@@ -112,7 +112,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Couldn’t fetch all signatures for this transaction. Please reload page and try again',
     options: { variant: ERROR, persist: true },
   },
-  SAFE_APPS_FETCH_MSG: {
+  SAFE_APPS_FETCH_ERROR_MSG: {
     message: 'Error fetching the Safe Apps, please refresh the page',
     options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
   },
