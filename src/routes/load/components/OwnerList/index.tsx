@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required, validAddressBookName } from 'src/components/forms/validator'
+import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -100,7 +100,7 @@ const OwnerListComponent = (props) => {
                     placeholder="Owner Name*"
                     text="Owner Name"
                     type="text"
-                    validate={composeValidators(required, minMaxLength(1, 50), validAddressBookName)}
+                    validate={composeValidators(required, minMaxLength(1, 50))}
                     testId={`load-safe-owner-name-${index}`}
                   />
                 </Col>

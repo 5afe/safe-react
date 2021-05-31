@@ -24,7 +24,6 @@ import {
   required,
   minMaxLength,
   ADDRESS_REPEATED_ERROR,
-  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
@@ -202,7 +201,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
                   placeholder="Owner Name*"
                   text="Owner Name"
                   type="text"
-                  validate={composeValidators(required, minMaxLength(1, 50), validAddressBookName)}
+                  validate={composeValidators(required, minMaxLength(1, 50))}
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
