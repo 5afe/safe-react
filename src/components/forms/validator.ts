@@ -136,5 +136,14 @@ export const differentFrom = (diffValue: number | string) => (value: string): Va
 
 export const noErrorsOn = (name: string, errors: Record<string, unknown>): boolean => errors[name] === undefined
 
-export const validAddressBookName = (name: string): string | undefined =>
-  isValidAddressBookName(name) ? undefined : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
+export const validAddressBookName = (name: string): string | undefined => {
+  const lengthError = minMaxLength(1, 50)(name)
+
+  if (lengthError === undefined) {
+    return isValidAddressBookName(name)
+      ? undefined
+      : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
+  }
+
+  return lengthError
+}
