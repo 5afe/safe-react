@@ -29,6 +29,7 @@ import { getAppInfoFromUrl } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -164,7 +165,9 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getTxBySafeTxHash', async (msg) => {
       const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
 
-      console.log({ safeTxHash })
+      const tx = await fetchSafeTransaction(safeTxHash)
+
+      return tx
     })
 
     communicator?.on('getSafeInfo', () => ({
