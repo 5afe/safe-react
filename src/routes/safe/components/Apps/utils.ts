@@ -274,16 +274,13 @@ export const getAppInfoFromUrl = memoize(
       }
       return res
     } catch (error) {
-      logError(
-        Errors._900,
-        error.message,
-        {
-          extra: {
-            appUrl,
+      logError(Errors._900, error.message, {
+        contexts: {
+          safeApp: {
+            url: appUrl,
           },
         },
-        false,
-      )
+      })
       return res
     }
   },
