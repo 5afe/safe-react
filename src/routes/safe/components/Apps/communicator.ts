@@ -71,8 +71,8 @@ class AppCommunicator {
         this.send(err.message, msg.data.id, true)
         logError(Errors._901, err.message, {
           contexts: {
-            app: this.app,
-            req: msg.data,
+            safeApp: this.app,
+            request: msg.data,
           },
         })
       }
