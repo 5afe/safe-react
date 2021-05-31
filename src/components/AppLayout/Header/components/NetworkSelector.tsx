@@ -16,7 +16,7 @@ const styles = () => ({
     height: '100%',
 
     [`@media (min-width: ${screenSm}px)`]: {
-      flexBasis: '200px',
+      flexBasis: '180px',
       marginRight: '20px',
     },
   },
@@ -25,7 +25,7 @@ const styles = () => ({
     cursor: 'pointer',
     display: 'flex',
     flex: '1 1 auto',
-    padding: sm,
+    /* padding: sm, */
     justifyContent: 'space-between',
     [`@media (min-width: ${screenSm}px)`]: {
       paddingRight: sm,
