@@ -43,19 +43,17 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
       const newState = [...state]
       const addressBookEntries = action.payload
 
-      addressBookEntries
-        // exclude those entries with invalid name
-        .forEach((addressBookEntry) => {
-          const entryIndex = getEntryIndex(newState, addressBookEntry)
+      addressBookEntries.forEach((addressBookEntry) => {
+        const entryIndex = getEntryIndex(newState, addressBookEntry)
 
-          if (entryIndex >= 0) {
-            // update
-            newState[entryIndex] = addressBookEntry
-          } else {
-            // add
-            newState.push(addressBookEntry)
-          }
-        })
+        if (entryIndex >= 0) {
+          // update
+          newState[entryIndex] = addressBookEntry
+        } else {
+          // add
+          newState.push(addressBookEntry)
+        }
+      })
 
       return newState
     },
