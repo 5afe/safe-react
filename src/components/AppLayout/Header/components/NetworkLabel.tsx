@@ -5,7 +5,6 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
-/* import { NETWORKSNAMES } from 'src/utils/constants' */
 
 const networkInfo = getNetworkInfo()
 
@@ -29,13 +28,13 @@ const useStyles = makeStyles({
   },
 })
 
-const NetworkLabel = (): React.ReactElement => {
+const NetworkLabel = ({ networkName }): React.ReactElement => {
   const classes = useStyles()
 
   return (
     <Col className={classes.container} middle="xs" start="xs">
       <Paragraph className={classes.text} size="xs">
-        {networkInfo.label}
+        {networkName}
       </Paragraph>
     </Col>
   )
