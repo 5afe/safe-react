@@ -148,7 +148,7 @@ const AddressBookTable = (): ReactElement => {
   }
 
   const importEntryModalHandler = (addressList: AddressBookEntry[]) => {
-    addressBookImport(addressList)
+    dispatch(addressBookImport(addressList))
     setImportEntryModalOpen(false)
   }
 
