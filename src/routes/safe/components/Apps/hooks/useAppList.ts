@@ -24,13 +24,12 @@ const useAppList = (): UseAppListReturnType => {
   useEffect(() => {
     const loadAppsList = async () => {
       setIsLoading(true)
-      let result
       try {
-        result = await fetchSafeAppsList()
+        const result = await fetchSafeAppsList()
+        setApiAppsList(result && result?.apps.length ? result.apps : apiAppsList)
       } catch (err) {
         dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
       }
-      setApiAppsList(result && result?.length ? result : apiAppsList)
       setIsLoading(false)
     }
 
