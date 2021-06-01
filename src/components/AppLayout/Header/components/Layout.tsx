@@ -21,6 +21,21 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { NETWORK_NAMES } from 'src/utils/constants'
 import { getNetworkInfo } from 'src/config'
+import styled from 'styled-components'
+
+const StyledDivider = styled(Divider)`
+  margin: 0;
+`
+const StyledLink = styled.a`
+  margin: 0;
+  text-decoration: none;
+  display: block;
+  padding: 12px 0;
+
+  :hover {
+    background-color: ${({ theme }) => theme.colors.background};
+  }
+`
 
 const styles = () => ({
   root: {
@@ -61,9 +76,8 @@ const styles = () => ({
     borderRadius: sm,
     boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
     marginTop: '11px',
-    minWidth: '200px',
-    paddingTop: md,
-    paddingBottom: md,
+    minWidth: '180px',
+    padding: '0',
   },
 })
 
@@ -72,6 +86,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networkInfo = getNetworkInfo()
   console.log(networkInfo)
+
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -124,8 +139,10 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                     <List className={classes.network} component="div">
                       {NETWORK_NAMES.map((network) => (
                         <React.Fragment key={network.name}>
-                          <NetworkLabel networkName={network.name} />
-                          <Divider />
+                          <StyledLink href="#">
+                            <NetworkLabel networkName={network.name} />
+                          </StyledLink>
+                          <StyledDivider />
                         </React.Fragment>
                       ))}
                     </List>
