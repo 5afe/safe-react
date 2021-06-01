@@ -4,7 +4,6 @@ import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
 import { getEntryIndex, isValidAddressBookName } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
-import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
@@ -17,18 +16,14 @@ const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookS
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
     .forEach((addressBookEntry) => {
-      const { address, ...rest } = addressBookEntry
-
-      // always checksum the address before storing it
-      const newAddressBookEntry = { address: checksumAddress(address), ...rest }
-      const entryIndex = getEntryIndex(newState, newAddressBookEntry)
+      const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       if (entryIndex >= 0) {
         // update
-        newState[entryIndex] = newAddressBookEntry
+        newState[entryIndex] = addressBookEntry
       } else {
         // add
-        newState.push(newAddressBookEntry)
+        newState.push(addressBookEntry)
       }
     })
 
