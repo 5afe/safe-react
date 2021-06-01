@@ -90,9 +90,9 @@ export const CreateEditEntryModal = ({
                       <Field
                         component={TextField}
                         name="name"
-                        placeholder="Name"
+                        placeholder="Name*"
                         testId={CREATE_ENTRY_INPUT_NAME_ID}
-                        text="Name"
+                        text="Name*"
                         type="text"
                         validate={composeValidators(required, validAddressBookName)}
                       />
