@@ -15,10 +15,7 @@ type FetchSafeTxGasEstimationProps = {
   operation: number
 }
 
-export const fetchSafeTxGasEstimation = async ({
-  safeAddress,
-  ...body
-}: FetchSafeTxGasEstimationProps): Promise<string> => {
+export const fetchSafeTxGasEstimation = ({ safeAddress, ...body }: FetchSafeTxGasEstimationProps): Promise<string> => {
   const url = `${getSafeServiceBaseUrl(checksumAddress(safeAddress))}/multisig-transactions/estimations/`
 
   return axios.post(url, body).then(({ data }) => data.safeTxGas)
