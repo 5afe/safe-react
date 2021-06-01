@@ -31,7 +31,7 @@ const StyledLink = styled.a`
   text-decoration: none;
   display: flex;
   justify-content: space-between;
-  padding: 12px 16px 12px 0;
+  padding: 14px 16px 14px 0;
 
   :hover {
     background-color: ${({ theme }) => theme.colors.background};
