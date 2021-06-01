@@ -102,8 +102,8 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
       if (isNaN(entry.data[2])) {
         return `Invalid chain id on row ${index + 2}`
       }
-      return
     }
+    return
   }
 
   const handleOnError = (error) => {
