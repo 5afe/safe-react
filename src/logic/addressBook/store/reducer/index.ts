@@ -2,7 +2,7 @@ import { Action, handleActions } from 'redux-actions'
 
 import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { ADDRESS_BOOK_ACTIONS } from 'src/logic/addressBook/store/actions'
-import { getEntryIndex, isValidAddressBookName } from 'src/logic/addressBook/utils'
+import { getEntryIndex } from 'src/logic/addressBook/utils'
 import { AppReduxState } from 'src/store'
 
 export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
@@ -14,11 +14,6 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       const newState = [...state]
       const addressBookEntry = action.payload
-
-      if (!isValidAddressBookName(addressBookEntry.name)) {
-        // prevent adding an invalid name
-        return newState
-      }
 
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
@@ -48,20 +43,17 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
       const newState = [...state]
       const addressBookEntries = action.payload
 
-      addressBookEntries
-        // exclude those entries with invalid name
-        .filter(({ name }) => isValidAddressBookName(name))
-        .forEach((addressBookEntry) => {
-          const entryIndex = getEntryIndex(newState, addressBookEntry)
+      addressBookEntries.forEach((addressBookEntry) => {
+        const entryIndex = getEntryIndex(newState, addressBookEntry)
 
-          if (entryIndex >= 0) {
-            // update
-            newState[entryIndex] = addressBookEntry
-          } else {
-            // add
-            newState.push(addressBookEntry)
-          }
-        })
+        if (entryIndex >= 0) {
+          // update
+          newState[entryIndex] = addressBookEntry
+        } else {
+          // add
+          newState.push(addressBookEntry)
+        }
+      })
 
       return newState
     },

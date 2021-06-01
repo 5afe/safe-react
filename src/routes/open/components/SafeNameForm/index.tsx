@@ -5,7 +5,7 @@ import styled from 'styled-components'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import { composeValidators, required, validAddressBookName } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import { FIELD_NAME } from 'src/routes/open/components/fields'
@@ -56,7 +56,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
           placeholder="Name of the new Safe"
           text="Safe name"
           type="text"
-          validate={composeValidators(required, minMaxLength(1, 50))}
+          validate={composeValidators(required, validAddressBookName)}
           testId="create-safe-name-field"
         />
       </Block>

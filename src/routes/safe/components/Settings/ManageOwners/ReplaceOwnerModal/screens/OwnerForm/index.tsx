@@ -12,9 +12,9 @@ import TextField from 'src/components/forms/TextField'
 import {
   addressIsNotCurrentSafe,
   composeValidators,
-  minMaxLength,
   required,
   uniqueAddress,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -146,7 +146,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                       testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
                       text="Owner name*"
                       type="text"
-                      validate={composeValidators(required, minMaxLength(1, 50))}
+                      validate={composeValidators(required, validAddressBookName)}
                     />
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
