@@ -22,7 +22,7 @@ import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { SafeProps } from 'src/routes/open/container/Open'
 
@@ -39,7 +39,7 @@ export type InitialValuesForm = {
 }
 
 const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
   const ownerName = getNameFromAddressBook(addressBook, userAccount, { filterOnlyValidName: true })
 
   if (!safeProps) {

@@ -8,7 +8,6 @@ import { OnChange } from 'react-final-form-listeners'
 
 import { styles } from './style'
 
-import { getNetworkId } from 'src/config'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -26,7 +25,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { currentSafe } from 'src/logic/safe/store/selectors'
 import { isValidAddress } from 'src/utils/isValidAddress'
 
@@ -51,8 +50,6 @@ const formMutators: Record<
 
 const useStyles = makeStyles(styles)
 
-const chainId = getNetworkId()
-
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values) => void
@@ -64,7 +61,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const addressBookMap = useSelector(addressBookMapSelector)
+  const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
   const { address: safeAddress = '', owners = [] } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
@@ -122,7 +119,7 @@ export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps):
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
                         if (isValidAddress(address)) {
-                          const { name: ownerName } = addressBookMap[chainId][address]
+                          const ownerName = addressBookMap[address]?.name
                           if (ownerName) {
                             mutators.setOwnerName(ownerName)
                           }

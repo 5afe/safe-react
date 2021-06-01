@@ -27,7 +27,7 @@ import {
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -61,9 +61,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
-  const addressName = useSelector((state) =>
-    getNameFromAddressBookSelector(state, { address: tx.contractAddress as string }),
-  )
+  const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string

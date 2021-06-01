@@ -8,7 +8,7 @@ import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/compon
 import { getNetworkId, isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { filterContractAddressBookEntries, filterAddressEntries } from 'src/logic/addressBook/utils'
 import { isValidEnsName, isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromDomain } from 'src/logic/wallets/getWeb3'
@@ -172,7 +172,7 @@ const BaseAddressBookInput = ({
 }
 
 export const AddressBookInput = (props: AddressBookProps): ReactElement => {
-  const addressBookEntries = useSelector(addressBookSelector)
+  const addressBookEntries = useSelector(addressBookState)
   const [validationText, setValidationText] = useState<string>('')
 
   useEffect(() => {
@@ -196,7 +196,7 @@ export const ContractsAddressBookInput = ({
   setSelectedEntry,
   ...props
 }: AddressBookProps): ReactElement => {
-  const addressBookEntries = useSelector(addressBookSelector)
+  const addressBookEntries = useSelector(addressBookState)
   const [filteredEntries, setFilteredEntries] = useState<AddressBookEntry[]>([])
   const [validationText, setValidationText] = useState<string>('')
 

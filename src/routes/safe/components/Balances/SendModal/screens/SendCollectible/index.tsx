@@ -15,7 +15,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
@@ -70,7 +70,7 @@ const SendCollectible = ({
   const classes = useStyles()
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 

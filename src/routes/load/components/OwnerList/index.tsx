@@ -15,7 +15,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 
 import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
@@ -34,7 +34,7 @@ const calculateSafeValues = (owners, threshold, values) => {
 }
 
 const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] => {
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
 
   return formatAddressListToAddressBookNames(addressBook, ownersList)
 }

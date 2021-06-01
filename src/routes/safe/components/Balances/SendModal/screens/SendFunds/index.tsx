@@ -26,7 +26,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
@@ -98,7 +98,7 @@ const SendFunds = ({
 }: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
   const { nativeCoin } = getNetworkInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }

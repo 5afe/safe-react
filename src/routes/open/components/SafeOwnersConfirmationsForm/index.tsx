@@ -38,7 +38,7 @@ import {
 } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useSelector } from 'react-redux'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
 
 const { useState } = React
@@ -116,7 +116,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
   const classes = useStyles()
 
   const validOwners = getNumOwnersFrom(values)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
 
   const [numOwners, setNumOwners] = useState(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState(false)
