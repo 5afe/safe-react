@@ -19,7 +19,8 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { NETWORKSNAMES } from 'src/utils/constants'
+import { NETWORK_NAMES } from 'src/utils/constants'
+import { getNetworkInfo } from 'src/config'
 
 const styles = () => ({
   root: {
@@ -69,16 +70,8 @@ const styles = () => ({
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-
-  const networkList = NETWORKSNAMES.map((network) => {
-    return (
-      <>
-        <NetworkLabel networkName={network} />
-        <Divider />
-      </>
-    )
-  })
-
+  const networkInfo = getNetworkInfo()
+  console.log(networkInfo)
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -129,7 +122,12 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                 <>
                   <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
                     <List className={classes.network} component="div">
-                      {networkList}
+                      {NETWORK_NAMES.map((network) => (
+                        <React.Fragment key={network.name}>
+                          <NetworkLabel networkName={network.name} />
+                          <Divider />
+                        </React.Fragment>
+                      ))}
                     </List>
                   </ClickAwayListener>
                 </>
