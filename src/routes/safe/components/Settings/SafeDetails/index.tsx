@@ -17,8 +17,6 @@ import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -71,8 +69,7 @@ const SafeDetails = (): ReactElement => {
     setModalOpen((prevOpen) => !prevOpen)
   }
 
-  const handleSubmit = (values) => {
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+  const handleSubmit = () => {
     // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
     dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 
