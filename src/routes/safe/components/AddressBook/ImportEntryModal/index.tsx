@@ -209,7 +209,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
           )}
         </InfoContainer>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer withoutBorder>
         <Modal.Footer.Buttons
           cancelButtonProps={{ onClick: () => handleClose() }}
           confirmButtonProps={{
