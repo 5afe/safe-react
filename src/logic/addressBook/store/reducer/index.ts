@@ -10,6 +10,31 @@ export const ADDRESS_BOOK_REDUCER_ID = 'addressBook'
 
 type Payloads = AddressBookEntry | AddressBookState
 
+const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookState => {
+  const newState = [...state]
+  const addressBookEntries = action.payload
+
+  addressBookEntries
+    // exclude those entries with invalid name
+    .filter(({ name }) => isValidAddressBookName(name))
+    .forEach((addressBookEntry) => {
+      const { address, ...rest } = addressBookEntry
+
+      // always checksum the address before storing it
+      const newAddressBookEntry = { address: checksumAddress(address), ...rest }
+      const entryIndex = getEntryIndex(newState, newAddressBookEntry)
+
+      if (entryIndex >= 0) {
+        // update
+        newState[entryIndex] = newAddressBookEntry
+      } else {
+        // add
+        newState.push(newAddressBookEntry)
+      }
+    })
+
+  return newState
+}
 export default handleActions<AppReduxState['addressBook'], Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
@@ -48,35 +73,8 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
 
       return newState
     },
-    [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: (state, action: Action<AddressBookState>) => {
-      const newState = [...state]
-      const addressBookEntries = action.payload
-
-      addressBookEntries
-        // exclude those entries with invalid name
-        .filter(({ name }) => isValidAddressBookName(name))
-        .forEach((addressBookEntry) => {
-          const { address, ...rest } = addressBookEntry
-
-          // always checksum the address before storing it
-          const newAddressBookEntry = { address: checksumAddress(address), ...rest }
-          const entryIndex = getEntryIndex(newState, newAddressBookEntry)
-
-          if (entryIndex >= 0) {
-            // update
-            newState[entryIndex] = newAddressBookEntry
-          } else {
-            // add
-            newState.push(newAddressBookEntry)
-          }
-        })
-
-      return newState
-    },
-    [ADDRESS_BOOK_ACTIONS.IMPORT](...args) {
-      // same functionality, but `IMPORT` will trigger notifications when called
-      return this[ADDRESS_BOOK_ACTIONS.SAFE_LOAD](...args)
-    },
+    [ADDRESS_BOOK_ACTIONS.SAFE_LOAD]: batchLoadEntries,
+    [ADDRESS_BOOK_ACTIONS.IMPORT]: batchLoadEntries,
   },
   [],
 )
