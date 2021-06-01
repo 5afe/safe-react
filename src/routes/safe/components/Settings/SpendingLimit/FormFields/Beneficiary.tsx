@@ -6,8 +6,7 @@ import styled from 'styled-components'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { getExplorerInfo } from 'src/config'
-import { addressBookState } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
 
@@ -40,13 +39,11 @@ const Beneficiary = (): ReactElement => {
     }
   }, [mutators, pristine, selectedEntry])
 
-  const addressBook = useSelector(addressBookState)
+  const addressBook = useSelector(currentNetworkAddressBook)
 
   const handleScan = (value, closeQrModal) => {
     const scannedAddress = value.startsWith('ethereum:') ? value.replace('ethereum:', '') : value
-    const scannedName = addressBook
-      ? getNameFromAddressBook(addressBook, scannedAddress, { filterOnlyValidName: true }) ?? ''
-      : ''
+    const scannedName = addressBook[scannedAddress]?.name ?? ''
 
     mutators?.setBeneficiary?.(scannedAddress)
 

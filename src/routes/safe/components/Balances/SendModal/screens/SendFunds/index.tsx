@@ -26,8 +26,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { addressBookState } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -98,7 +97,7 @@ const SendFunds = ({
 }: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(addressBookState)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const { nativeCoin } = getNetworkInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
@@ -212,7 +211,7 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
+            const scannedName = addressBook[scannedAddress]?.name ?? ''
             const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
             if (!addressErrorMessage) {
               mutators.setRecipient(scannedAddress)

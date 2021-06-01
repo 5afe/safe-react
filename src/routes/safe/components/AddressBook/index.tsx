@@ -19,7 +19,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
-import { addressBookFromQueryParams, addressBookState } from 'src/logic/addressBook/store/selectors'
+import { addressBookFromQueryParams, currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
@@ -73,7 +73,7 @@ const AddressBookTable = (): ReactElement => {
   const dispatch = useDispatch()
   const safesList = useSelector(safesAsList)
   const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
-  const addressBook = useSelector(addressBookState)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)

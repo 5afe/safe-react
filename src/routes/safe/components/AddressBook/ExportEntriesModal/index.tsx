@@ -10,7 +10,6 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { addressBookState } from 'src/logic/addressBook/store/selectors'
-import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 
 import { lg, md, background } from 'src/theme/variables'
 
@@ -57,7 +56,7 @@ const StyledCSVLink = styled(CSVDownloader)`
 
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
   const dispatch = useDispatch()
-  const addressBook: AddressBookState = useSelector(addressBookState)
+  const addressBook = useSelector(addressBookState)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | undefined>('')
   const [csvData, setCsvData] = useState<string>('')

@@ -15,8 +15,7 @@ import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
-import { addressBookState } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -70,7 +69,7 @@ const SendCollectible = ({
   const classes = useStyles()
   const nftAssets = useSelector(nftAssetsSelector)
   const nftTokens = useSelector(nftTokensSelector)
-  const addressBook = useSelector(addressBookState)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -138,7 +137,7 @@ const SendCollectible = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
+            const scannedName = addressBook[scannedAddress]?.name ?? ''
             mutators.setRecipient(scannedAddress)
             setSelectedEntry({
               name: scannedName ?? '',

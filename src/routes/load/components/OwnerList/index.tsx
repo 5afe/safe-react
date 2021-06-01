@@ -14,10 +14,9 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookState } from 'src/logic/addressBook/store/selectors'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
-import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
@@ -33,12 +32,6 @@ const calculateSafeValues = (owners, threshold, values) => {
   return initialValues
 }
 
-const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] => {
-  const addressBook = useSelector(addressBookState)
-
-  return formatAddressListToAddressBookNames(addressBook, ownersList)
-}
-
 const useStyles = makeStyles(styles)
 
 interface OwnerListComponentProps {
@@ -49,8 +42,19 @@ interface OwnerListComponentProps {
 const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentProps): ReactElement => {
   const [owners, setOwners] = useState<string[]>([])
   const classes = useStyles()
+  const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
+  const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
 
-  const ownersWithNames = useAddressBookForOwnersNames(owners)
+  useEffect(() => {
+    setOwnersWithName(
+      owners.map((address) =>
+        makeAddressBookEntry({
+          address,
+          name: addressBookMap[address]?.name ?? '',
+        }),
+      ),
+    )
+  }, [addressBookMap, owners, ownersWithName])
 
   useEffect(() => {
     let isCurrent = true
@@ -91,7 +95,7 @@ const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentPr
         </Row>
         <Hairline />
         <Block margin="md" padding="md">
-          {ownersWithNames.map(({ address, name }, index) => {
+          {ownersWithName.map(({ address, name }, index) => {
             return (
               <Row className={classes.owner} key={address} data-testid="owner-row">
                 <Col className={classes.ownerName} xs={4}>

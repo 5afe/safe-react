@@ -4,6 +4,8 @@ import { getNetworkId } from 'src/config'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 const networkId = getNetworkId()
 
@@ -53,12 +55,18 @@ export const addressBookEntryName = createSelector(
       chainId,
     }),
   ],
-  (addressBook, { address, chainId }) => addressBook?.[chainId]?.[address]?.name ?? ADDRESS_BOOK_DEFAULT_NAME,
+  (addressBook, { address, chainId }) => {
+    if (isValidAddress(address)) {
+      return addressBook?.[chainId]?.[checksumAddress(address)]?.name ?? ADDRESS_BOOK_DEFAULT_NAME
+    }
+
+    return ADDRESS_BOOK_DEFAULT_NAME
+  },
 )
 
-/********************/
-/* Network specific */
-/********************/
+/*********************/
+/* Connected Network */
+/*********************/
 
 export const currentNetworkAddressBook = createSelector(
   [addressBookState],
