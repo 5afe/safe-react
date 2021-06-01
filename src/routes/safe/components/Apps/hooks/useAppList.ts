@@ -1,7 +1,7 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
-import { AppData, fetchSafeAppsList } from '../api/config-service'
+import { AppData, fetchSafeAppsList } from 'src/logic/configService'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 import { getNetworkId } from 'src/config'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -26,7 +26,7 @@ const useAppList = (): UseAppListReturnType => {
       setIsLoading(true)
       try {
         const result = await fetchSafeAppsList()
-        setApiAppsList(result && result?.apps.length ? result.apps : apiAppsList)
+        setApiAppsList(result && result?.length ? result : apiAppsList)
       } catch (err) {
         dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
       }
