@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { CheckOwner } from './screens/CheckOwner'
 import { ReviewRemoveOwnerModal } from './screens/Review'
@@ -13,9 +14,7 @@ import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selector
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-type OwnerValues = {
-  ownerAddress: string
-  ownerName: string
+type OwnerValues = OwnerData & {
   threshold: string
 }
 
@@ -52,18 +51,12 @@ export const sendRemoveOwner = async (
 type RemoveOwnerProps = {
   isOpen: boolean
   onClose: () => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
 }
 
-export const RemoveOwnerModal = ({
-  isOpen,
-  onClose,
-  ownerAddress,
-  ownerName,
-}: RemoveOwnerProps): React.ReactElement => {
+export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): React.ReactElement => {
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState<OwnerValues>({ ownerAddress, ownerName, threshold: '' })
+  const [values, setValues] = useState<OwnerValues>({ ...owner, threshold: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
@@ -94,7 +87,7 @@ export const RemoveOwnerModal = ({
 
   const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(values, safeAddress, ownerAddress, ownerName, dispatch, txParameters)
+    sendRemoveOwner(values, safeAddress, owner.address, owner.name, dispatch, txParameters)
   }
 
   return (
@@ -106,9 +99,7 @@ export const RemoveOwnerModal = ({
       title="Remove owner from Safe"
     >
       <>
-        {activeScreen === 'checkOwner' && (
-          <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
-        )}
+        {activeScreen === 'checkOwner' && <CheckOwner onClose={onClose} onSubmit={ownerSubmitted} owner={owner} />}
         {activeScreen === 'selectThreshold' && (
           <ThresholdForm
             onClickBack={onClickBack}
@@ -122,8 +113,7 @@ export const RemoveOwnerModal = ({
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onRemoveOwner}
-            ownerAddress={ownerAddress}
-            ownerName={ownerName}
+            owner={owner}
             threshold={Number(values.threshold)}
           />
         )}

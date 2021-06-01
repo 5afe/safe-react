@@ -7,7 +7,9 @@ export const OWNERS_TABLE_NAME_ID = 'name'
 export const OWNERS_TABLE_ADDRESS_ID = 'address'
 export const OWNERS_TABLE_ACTIONS_ID = 'actions'
 
-export const getOwnerData = (owners: AddressBookState): { address: string; name: string }[] => {
+export type OwnerData = { address: string; name: string }
+
+export const getOwnerData = (owners: AddressBookState): OwnerData[] => {
   return owners.map((owner) => ({
     [OWNERS_TABLE_NAME_ID]: owner.name,
     [OWNERS_TABLE_ADDRESS_ID]: owner.address,

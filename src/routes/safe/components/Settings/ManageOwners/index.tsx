@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, ReactElement } from 'react'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
@@ -13,7 +13,7 @@ import { RemoveOwnerModal } from './RemoveOwnerModal'
 import { ReplaceOwnerModal } from './ReplaceOwnerModal'
 import RenameOwnerIcon from './assets/icons/rename-owner.svg'
 import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
-import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData } from './dataFetcher'
+import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData, OwnerData } from './dataFetcher'
 import { useStyles } from './style'
 
 import { getExplorerInfo } from 'src/config'
@@ -41,12 +41,11 @@ type Props = {
   owners: AddressBookState
 }
 
-const ManageOwners = ({ granted, owners }: Props): React.ReactElement => {
+const ManageOwners = ({ granted, owners }: Props): ReactElement => {
   const { trackEvent } = useAnalytics()
   const classes = useStyles()
 
-  const [selectedOwnerAddress, setSelectedOwnerAddress] = useState('')
-  const [selectedOwnerName, setSelectedOwnerName] = useState('')
+  const [selectedOwner, setSelectedOwner] = useState<OwnerData | undefined>()
   const [modalsStatus, setModalStatus] = useState({
     showAddOwner: false,
     showRemoveOwner: false,
@@ -54,13 +53,14 @@ const ManageOwners = ({ granted, owners }: Props): React.ReactElement => {
     showEditOwner: false,
   })
 
-  const onShow = (action, row?: any) => () => {
+  const onShow = (action, row?: OwnerData) => () => {
     setModalStatus((prevState) => ({
       ...prevState,
       [`show${action}`]: !prevState[`show${action}`],
     }))
-    setSelectedOwnerAddress(row && row.address)
-    setSelectedOwnerName(row && row.name)
+    if (row) {
+      setSelectedOwner(row)
+    }
   }
 
   const onHide = (action) => () => {
@@ -68,8 +68,7 @@ const ManageOwners = ({ granted, owners }: Props): React.ReactElement => {
       ...prevState,
       [`show${action}`]: !Boolean(prevState[`show${action}`]),
     }))
-    setSelectedOwnerAddress('')
-    setSelectedOwnerName('')
+    setSelectedOwner(undefined)
   }
 
   useEffect(() => {
@@ -180,24 +179,21 @@ const ManageOwners = ({ granted, owners }: Props): React.ReactElement => {
         </>
       )}
       <AddOwnerModal isOpen={modalsStatus.showAddOwner} onClose={onHide('AddOwner')} />
-      <RemoveOwnerModal
-        isOpen={modalsStatus.showRemoveOwner}
-        onClose={onHide('RemoveOwner')}
-        ownerAddress={selectedOwnerAddress}
-        ownerName={selectedOwnerName}
-      />
-      <ReplaceOwnerModal
-        isOpen={modalsStatus.showReplaceOwner}
-        onClose={onHide('ReplaceOwner')}
-        ownerAddress={selectedOwnerAddress}
-        ownerName={selectedOwnerName}
-      />
-      <EditOwnerModal
-        isOpen={modalsStatus.showEditOwner}
-        onClose={onHide('EditOwner')}
-        ownerAddress={selectedOwnerAddress}
-        selectedOwnerName={selectedOwnerName}
-      />
+      {selectedOwner && (
+        <>
+          <RemoveOwnerModal
+            isOpen={modalsStatus.showRemoveOwner}
+            onClose={onHide('RemoveOwner')}
+            owner={selectedOwner}
+          />
+          <ReplaceOwnerModal
+            isOpen={modalsStatus.showReplaceOwner}
+            onClose={onHide('ReplaceOwner')}
+            owner={selectedOwner}
+          />
+          <EditOwnerModal isOpen={modalsStatus.showEditOwner} onClose={onHide('EditOwner')} owner={selectedOwner} />
+        </>
+      )}
     </>
   )
 }
