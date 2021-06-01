@@ -19,6 +19,7 @@ import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { Modal } from 'src/components/Modal'
@@ -35,8 +36,7 @@ type ReviewRemoveOwnerProps = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (txParameters: TxParameters) => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
   threshold?: number
 }
 
@@ -44,8 +44,7 @@ export const ReviewRemoveOwnerModal = ({
   onClickBack,
   onClose,
   onSubmit,
-  ownerAddress,
-  ownerName,
+  owner,
   threshold = 1,
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
@@ -91,9 +90,9 @@ export const ReviewRemoveOwnerModal = ({
         //  the data lookup can be removed from here
         const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
+        const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, owner.address, threshold).encodeABI()
 
         if (isCurrent) {
           setData(txData)
@@ -107,7 +106,7 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, ownerAddress, threshold])
+  }, [safeAddress, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -186,17 +185,17 @@ export const ReviewRemoveOwnerModal = ({
                 </Row>
                 <Hairline />
                 {owners?.map(
-                  (owner) =>
-                    owner.address !== ownerAddress && (
-                      <React.Fragment key={owner.address}>
+                  (safeOwner) =>
+                    !sameAddress(safeOwner.address, owner.address) && (
+                      <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
-                              hash={owner.address}
-                              name={owner.name}
+                              hash={safeOwner.address}
+                              name={safeOwner.name}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(owner.address)}
+                              explorerUrl={getExplorerInfo(safeOwner.address)}
                             />
                           </Col>
                         </Row>
@@ -213,11 +212,11 @@ export const ReviewRemoveOwnerModal = ({
                 <Row className={classes.selectedOwner}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>

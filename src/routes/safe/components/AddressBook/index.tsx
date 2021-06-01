@@ -126,7 +126,7 @@ const AddressBookTable = (): ReactElement => {
     // close the modal
     setEditCreateEntryModalOpen(false)
     // update the store
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(entry)))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address) })))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
@@ -135,7 +135,7 @@ const AddressBookTable = (): ReactElement => {
     // close the modal
     setEditCreateEntryModalOpen(false)
     // update the store
-    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(entry)))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address) })))
   }
 
   const deleteEntryModalHandler = () => {

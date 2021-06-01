@@ -24,6 +24,8 @@ import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionPara
 import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 
@@ -35,11 +37,10 @@ type ReplaceOwnerProps = {
   onClose: () => void
   onClickBack: () => void
   onSubmit: (txParameters: TxParameters) => void
-  ownerAddress: string
-  ownerName: string
-  values: {
-    newOwnerAddress: string
-    newOwnerName: string
+  owner: OwnerData
+  newOwner: {
+    address: string
+    name: string
   }
 }
 
@@ -47,9 +48,8 @@ export const ReviewReplaceOwnerModal = ({
   onClickBack,
   onClose,
   onSubmit,
-  ownerAddress,
-  ownerName,
-  values,
+  owner,
+  newOwner,
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
@@ -85,9 +85,9 @@ export const ReviewReplaceOwnerModal = ({
     const calculateReplaceOwnerData = async () => {
       const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+      const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.newOwnerAddress).encodeABI()
+      const txData = gnosisSafe.methods.swapOwner(prevAddress, owner.address, newOwner.address).encodeABI()
       if (isCurrent) {
         setData(txData)
       }
@@ -97,7 +97,7 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [ownerAddress, safeAddress, values.newOwnerAddress])
+  }, [owner.address, safeAddress, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -174,17 +174,17 @@ export const ReviewReplaceOwnerModal = ({
                 </Row>
                 <Hairline />
                 {owners?.map(
-                  (owner) =>
-                    owner.address !== ownerAddress && (
-                      <React.Fragment key={owner.address}>
+                  (safeOwner) =>
+                    !sameAddress(safeOwner.address, owner.address) && (
+                      <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
-                              hash={owner.address}
-                              name={owner.name}
+                              hash={safeOwner.address}
+                              name={safeOwner.name}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(owner.address)}
+                              explorerUrl={getExplorerInfo(safeOwner.address)}
                             />
                           </Col>
                         </Row>
@@ -201,11 +201,11 @@ export const ReviewReplaceOwnerModal = ({
                 <Row className={classes.selectedOwnerRemoved}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>
@@ -218,11 +218,11 @@ export const ReviewReplaceOwnerModal = ({
                 <Row className={classes.selectedOwnerAdded}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={values.newOwnerAddress}
-                      name={values.newOwnerName}
+                      hash={newOwner.address}
+                      name={newOwner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(values.newOwnerAddress)}
+                      explorerUrl={getExplorerInfo(newOwner.address)}
                     />
                   </Col>
                 </Row>

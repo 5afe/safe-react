@@ -57,6 +57,7 @@ export type SendCollectibleTxInfo = {
   assetName: string
   nftTokenId: string
   recipientAddress?: string
+  recipientName?: string
 }
 
 const SendCollectible = ({
@@ -106,7 +107,7 @@ const SendCollectible = ({
     if (!values.recipientAddress) {
       values.recipientAddress = selectedEntry?.address
     }
-
+    values.recipientName = selectedEntry?.name
     values.assetName = nftAssets[values.assetAddress].name
 
     onNext(values)

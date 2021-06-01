@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import { composeValidators, required, validAddressBookName } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
@@ -16,6 +16,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { getExplorerInfo } from 'src/config'
@@ -27,18 +28,17 @@ export const SAVE_OWNER_CHANGES_BTN_TEST_ID = 'save-owner-changes-btn'
 type OwnProps = {
   isOpen: boolean
   onClose: () => void
-  ownerAddress: string
-  selectedOwnerName: string
+  owner: OwnerData
 }
 
-export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerName }: OwnProps): React.ReactElement => {
+export const EditOwnerModal = ({ isOpen, onClose, owner }: OwnProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
 
   const handleSubmit = ({ ownerName }: { ownerName: string }): void => {
     // Update the value only if the ownerName really changed
-    if (ownerName !== selectedOwnerName) {
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: ownerAddress, name: ownerName })))
+    if (ownerName !== owner.name) {
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: owner.address, name: ownerName })))
       dispatch(enqueueSnackbar(NOTIFICATIONS.OWNER_NAME_CHANGE_EXECUTED_MSG))
     }
     onClose()
@@ -70,22 +70,22 @@ export const EditOwnerModal = ({ isOpen, onClose, ownerAddress, selectedOwnerNam
                 <Row margin="md">
                   <Field
                     component={TextField}
-                    initialValue={selectedOwnerName}
+                    initialValue={owner.name}
                     name="ownerName"
                     placeholder="Owner name*"
                     testId={RENAME_OWNER_INPUT_TEST_ID}
                     text="Owner name*"
                     type="text"
-                    validate={composeValidators(required, minMaxLength(1, 50))}
+                    validate={composeValidators(required, validAddressBookName)}
                   />
                 </Row>
                 <Row>
                   <Block justify="center">
                     <EthHashInfo
-                      hash={ownerAddress}
+                      hash={owner.address}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Block>
                 </Row>

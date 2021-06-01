@@ -15,6 +15,7 @@ import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { isValidAddress } from 'src/utils/isValidAddress'
 import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
@@ -59,7 +60,7 @@ const Load = (): ReactElement => {
   const onLoadSafeSubmit = async (values: LoadFormValues) => {
     let safeAddress = values[FIELD_LOAD_ADDRESS]
 
-    if (!safeAddress) {
+    if (!isValidAddress(safeAddress)) {
       console.error('failed to add Safe address', JSON.stringify(values))
       return
     }

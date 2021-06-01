@@ -4,6 +4,8 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { isValidAddress } from 'src/utils/isValidAddress'
+import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -73,9 +75,7 @@ export const mustBeHexData = (data: string): ValidatorReturnType => {
 export const mustBeAddressHash = memoize(
   (address: string): ValidatorReturnType => {
     const errorMessage = 'Must be a valid address'
-    const startsWith0x = address?.startsWith('0x')
-    const isAddress = getWeb3().utils.isAddress(address)
-    return startsWith0x && isAddress ? undefined : errorMessage
+    return isValidAddress(address) ? undefined : errorMessage
   },
 )
 
@@ -135,3 +135,15 @@ export const differentFrom = (diffValue: number | string) => (value: string): Va
 }
 
 export const noErrorsOn = (name: string, errors: Record<string, unknown>): boolean => errors[name] === undefined
+
+export const validAddressBookName = (name: string): string | undefined => {
+  const lengthError = minMaxLength(1, 50)(name)
+
+  if (lengthError === undefined) {
+    return isValidAddressBookName(name)
+      ? undefined
+      : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
+  }
+
+  return lengthError
+}

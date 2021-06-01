@@ -13,7 +13,6 @@ type Payloads = AddressBookEntry | AddressBookState
 const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
   const addressBookEntries = action.payload
-
   addressBookEntries
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
@@ -39,15 +38,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       const newState = [...state]
-      const { address, ...rest } = action.payload
-
-      if (!isValidAddressBookName(rest.name)) {
-        // prevent adding an invalid name
-        return newState
-      }
-
-      // always checksum the address before storing it
-      const addressBookEntry = { address: checksumAddress(address), ...rest }
+      const addressBookEntry = action.payload
 
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 

@@ -164,7 +164,7 @@ const Open = (): ReactElement => {
     setShowProgress(true)
   }
 
-  const onSafeCreated = async (safeAddress): Promise<void> => {
+  const onSafeCreated = async (safeAddress: string): Promise<void> => {
     const pendingCreation = await loadFromStorage<LoadedSafeType>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
     let name = ''

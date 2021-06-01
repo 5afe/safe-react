@@ -15,7 +15,7 @@ import {
   noErrorsOn,
   required,
   composeValidators,
-  minMaxLength,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -95,7 +95,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
             placeholder="Name of the Safe*"
             text="Safe name"
             type="text"
-            validate={composeValidators(required, minMaxLength(1, 50))}
+            validate={composeValidators(required, validAddressBookName)}
             testId="load-safe-name-field"
           />
         </Col>

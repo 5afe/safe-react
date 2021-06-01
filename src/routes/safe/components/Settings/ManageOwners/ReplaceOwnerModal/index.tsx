@@ -15,14 +15,16 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { isValidAddress } from 'src/utils/isValidAddress'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 export type OwnerValues = {
-  newOwnerAddress: string
-  newOwnerName: string
+  address: string
+  name: string
 }
 
 export const sendReplaceOwner = async (
-  values: OwnerValues,
+  newOwner: OwnerValues,
   safeAddress: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
@@ -32,7 +34,7 @@ export const sendReplaceOwner = async (
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.newOwnerAddress).encodeABI()
+  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, newOwner.address).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
@@ -49,45 +51,26 @@ export const sendReplaceOwner = async (
 
   if (txHash) {
     // update the AB
-    dispatch(
-      addressBookAddOrUpdate(
-        makeAddressBookEntry({
-          address: values.newOwnerAddress,
-          name: values.newOwnerName,
-        }),
-      ),
-    )
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
   }
 }
 
 type ReplaceOwnerProps = {
   isOpen: boolean
   onClose: () => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
 }
 
-export const ReplaceOwnerModal = ({
-  isOpen,
-  onClose,
-  ownerAddress,
-  ownerName,
-}: ReplaceOwnerProps): React.ReactElement => {
+export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps): React.ReactElement => {
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState({
-    newOwnerAddress: '',
-    newOwnerName: '',
-  })
+  const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
 
   useEffect(
     () => () => {
       setActiveScreen('checkOwner')
-      setValues({
-        newOwnerAddress: '',
-        newOwnerName: '',
-      })
+      setNewOwner({ address: '', name: '' })
     },
     [isOpen],
   )
@@ -96,22 +79,19 @@ export const ReplaceOwnerModal = ({
 
   const ownerSubmitted = (newValues) => {
     const { ownerAddress, ownerName } = newValues
-    const checksumAddr = checksumAddress(ownerAddress)
-    setValues({
-      newOwnerAddress: checksumAddr,
-      newOwnerName: ownerName,
-    })
-    setActiveScreen('reviewReplaceOwner')
+
+    if (isValidAddress(ownerAddress)) {
+      const checksumAddr = checksumAddress(ownerAddress)
+      setNewOwner({ address: checksumAddr, name: ownerName })
+      setActiveScreen('reviewReplaceOwner')
+    }
   }
 
   const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters)
-
-      dispatch(
-        addressBookAddOrUpdate(makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName })),
-      )
+      await sendReplaceOwner(newOwner, safeAddress, owner.address, dispatch, txParameters)
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
@@ -127,22 +107,15 @@ export const ReplaceOwnerModal = ({
     >
       <>
         {activeScreen === 'checkOwner' && (
-          <OwnerForm
-            onClose={onClose}
-            onSubmit={ownerSubmitted}
-            initialValues={values}
-            ownerAddress={ownerAddress}
-            ownerName={ownerName}
-          />
+          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} initialValues={newOwner} owner={owner} />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
           <ReviewReplaceOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onReplaceOwner}
-            ownerAddress={ownerAddress}
-            ownerName={ownerName}
-            values={values}
+            owner={owner}
+            newOwner={newOwner}
           />
         )}
       </>
