@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React, { ReactElement, useState } from 'react'
 
 import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { isValidAddress } from 'src/utils/isValidAddress'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 
@@ -37,7 +37,13 @@ const IMPORT_SUPPORTED_FORMATS = [
   'text/csv',
 ]
 
-const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
+type ImportEntriesModalProps = {
+  importEntryModalHandler: (addressList: AddressBookEntry[]) => void
+  isOpen: boolean
+  onClose: () => void
+}
+
+const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: ImportEntriesModalProps): ReactElement => {
   const [csvLoaded, setCsvLoaded] = useState(false)
   const [importError, setImportError] = useState('')
   const [entryList, setEntryList] = useState<AddressBookEntry[]>([])
@@ -63,8 +69,7 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
     }
 
     const formatedList = slicedData.map((entry) => {
-      const address = entry.data[0]
-      return { address: checksumAddress(address), name: entry.data[1] }
+      return { address: checksumAddress(entry.data[0]), name: entry.data[1], chainId: parseInt(entry.data[2]) }
     })
     setEntryList(formatedList)
     setImportError('')
@@ -86,16 +91,19 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
   const validateCsvData = (data) => {
     for (let index = 0; index < data.length; index++) {
       const entry = data[index]
-      if (!entry.data[0] || !entry.data[1]) {
-        return `Invalid amount of columns on row ${index + 2}`
+      if (!entry.data[0] || !entry.data[1] || !entry.data[2]) {
+        return `Invalid amount of columns on row ${index + 1}`
       }
       // Verify address properties
       const address = entry.data[0].toLowerCase()
-      if (!getWeb3().utils.isAddress(address)) {
-        return `Invalid address on row ${index + 2}`
+      if (!isValidAddress(address)) {
+        return `Invalid address on row ${index + 1}`
       }
-      return
+      if (isNaN(entry.data[2])) {
+        return `Invalid chain id on row ${index + 1}`
+      }
     }
+    return
   }
 
   const handleOnError = (error) => {
@@ -208,4 +216,4 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
   )
 }
 
-export default ImportEntryModal
+export default ImportEntriesModal

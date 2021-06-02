@@ -17,7 +17,7 @@ import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookAddOrUpdate, addressBookRemove } from 'src/logic/addressBook/store/actions'
+import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
@@ -34,7 +34,7 @@ import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/saf
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import ImportEntryModal from './ImportEntryModal'
+import ImportEntriesModal from './ImportEntriesModal'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -148,9 +148,7 @@ const AddressBookTable = (): ReactElement => {
   }
 
   const importEntryModalHandler = (addressList: AddressBookEntry[]) => {
-    addressList.forEach((entry) => {
-      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(entry)))
-    })
+    dispatch(addressBookImport(addressList))
     setImportEntryModalOpen(false)
   }
 
@@ -307,7 +305,7 @@ const AddressBookTable = (): ReactElement => {
         onClose={() => setDeleteEntryModalOpen(false)}
       />
       <ExportEntriesModal isOpen={exportEntriesModalOpen} onClose={() => setExportEntriesModalOpen(false)} />
-      <ImportEntryModal
+      <ImportEntriesModal
         importEntryModalHandler={importEntryModalHandler}
         isOpen={importEntryModalOpen}
         onClose={() => setImportEntryModalOpen(false)}
