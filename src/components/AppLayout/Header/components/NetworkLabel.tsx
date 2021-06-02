@@ -24,7 +24,8 @@ const useStyles = makeStyles({
     lineHeight: 'normal',
     margin: '0',
     padding: `${xs} ${sm}`,
-    width: 'fit-content',
+    minWidth: '70px',
+    textAlign: 'center',
   },
 })
 

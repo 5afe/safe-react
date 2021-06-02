@@ -5,7 +5,7 @@ import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import { Divider } from '@gnosis.pm/safe-react-components'
+import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
@@ -29,8 +29,9 @@ const StyledDivider = styled(Divider)`
 const StyledLink = styled.a`
   margin: 0;
   text-decoration: none;
-  display: block;
-  padding: 12px 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 14px 16px 14px 0;
 
   :hover {
     background-color: ${({ theme }) => theme.colors.background};
@@ -141,6 +142,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                         <React.Fragment key={network.name}>
                           <StyledLink href="#">
                             <NetworkLabel networkName={network.name} />
+                            <Icon type="check" size="md" color="primary" />
                           </StyledLink>
                           <StyledDivider />
                         </React.Fragment>
