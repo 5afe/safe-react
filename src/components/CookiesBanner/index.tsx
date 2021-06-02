@@ -3,13 +3,13 @@ import FormControlLabel from '@material-ui/core/FormControlLabel'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useHistory } from 'react-router-dom'
 import Button from 'src/components/layout/Button'
 import Link from 'src/components/layout/Link'
 import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
+import { useGetSafeAppUrl } from 'src/logic/hooks/useGetSafeAppUrl'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
@@ -98,7 +98,7 @@ interface CookiesBannerFormProps {
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useRef(useDispatch())
-  const history = useHistory()
+  const { url: appUrl } = useGetSafeAppUrl()
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
@@ -106,13 +106,12 @@ const CookiesBanner = (): ReactElement => {
   const [localIntercom, setLocalIntercom] = useState(false)
 
   const showBanner = useSelector(cookieBannerOpen)
-  const safeAppView = history.location.search.substr(0, 7) === '?appUrl'
 
   useEffect(() => {
-    if (safeAppView) {
-      closeIntercom()
+    if (appUrl) {
+      setTimeout(closeIntercom, 50)
     }
-  }, [safeAppView])
+  }, [appUrl])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -179,7 +178,7 @@ const CookiesBanner = (): ReactElement => {
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
-  if (showIntercom && !safeAppView) {
+  if (showIntercom && !appUrl) {
     loadIntercom()
   }
 
