@@ -8,8 +8,6 @@ import styled from 'styled-components'
 
 import { styles } from './style'
 import { padOwnerIndex } from 'src/routes/open/utils/padOwnerIndex'
-import QRIcon from 'src/assets/icons/qrcode.svg'
-import trash from 'src/assets/icons/trash.svg'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
 import AddressInput from 'src/components/forms/AddressInput'
@@ -29,7 +27,6 @@ import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import {
@@ -49,6 +46,17 @@ export const ADD_OWNER_BUTTON = '+ Add another owner'
 
 const StyledAddressInput = styled(AddressInput)`
   width: 460px;
+`
+const UnStyledButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline-color: ${({ theme }) => theme.colors.icon};
+  display: flex;
+  align-items: center;
 `
 
 /**
@@ -234,17 +242,20 @@ const SafeOwnersForm = (props): React.ReactElement => {
                 />
               </Col>
               <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                <Img
-                  alt="Scan QR"
-                  height={20}
+                <UnStyledButton
                   onClick={() => {
                     openQrModal(addressName)
                   }}
-                  src={QRIcon}
-                />
+                >
+                  <Icon size="sm" type="qrCode" color="icon" tooltip="Scan QR" />
+                </UnStyledButton>
               </Col>
               <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                {index > 0 && <Img alt="Delete" height={20} onClick={onRemoveRow(index)} src={trash} />}
+                {index > 0 && (
+                  <UnStyledButton onClick={onRemoveRow(index)}>
+                    <Icon size="sm" type="delete" color="icon" tooltip="Delete" />
+                  </UnStyledButton>
+                )}
               </Col>
             </Row>
           )
