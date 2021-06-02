@@ -5,7 +5,7 @@ type AppUrlReturnType = {
   url: string | null
 }
 
-export const useGetSafeAppUrl = (): AppUrlReturnType => {
+export const useSafeAppUrl = (): AppUrlReturnType => {
   const [url, setUrl] = useState<string | null>(null)
   const { search } = useLocation()
 
@@ -14,7 +14,7 @@ export const useGetSafeAppUrl = (): AppUrlReturnType => {
       const query = new URLSearchParams(search)
       setUrl(query.get('appUrl'))
     }
-  }, [search])
+  }, [search, url])
 
   return {
     url,

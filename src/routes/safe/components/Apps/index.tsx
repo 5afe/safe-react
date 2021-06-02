@@ -1,11 +1,11 @@
 import React from 'react'
-import { useGetSafeAppUrl } from 'src/logic/hooks/useGetSafeAppUrl'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 
 import AppFrame from './components/AppFrame'
 import AppsList from './components/AppsList'
 
 const Apps = (): React.ReactElement => {
-  const { url } = useGetSafeAppUrl()
+  const { url } = useSafeAppUrl()
 
   if (url) {
     return <AppFrame appUrl={url} />

@@ -9,7 +9,7 @@ import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
-import { useGetSafeAppUrl } from 'src/logic/hooks/useGetSafeAppUrl'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
@@ -98,7 +98,7 @@ interface CookiesBannerFormProps {
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useRef(useDispatch())
-  const { url: appUrl } = useGetSafeAppUrl()
+  const { url: appUrl } = useSafeAppUrl()
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
