@@ -1,18 +1,15 @@
 import React, { useState, useEffect, ReactElement } from 'react'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo, Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import cn from 'classnames'
-
-import RemoveOwnerIcon from '../assets/icons/bin.svg'
+import styled from 'styled-components'
 
 import { AddOwnerModal } from './AddOwnerModal'
 import { EditOwnerModal } from './EditOwnerModal'
 import { RemoveOwnerModal } from './RemoveOwnerModal'
 import { ReplaceOwnerModal } from './ReplaceOwnerModal'
-import RenameOwnerIcon from './assets/icons/rename-owner.svg'
-import ReplaceOwnerIcon from './assets/icons/replace-owner.svg'
 import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData, OwnerData } from './dataFetcher'
 import { useStyles } from './style'
 
@@ -24,11 +21,22 @@ import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Heading from 'src/components/layout/Heading'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+
+const UnStyledButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
+  padding: 0;
+  font: inherit;
+  cursor: pointer;
+  outline-color: ${({ theme }) => theme.colors.icon};
+  display: flex;
+  align-items: center;
+`
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -125,30 +133,18 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <Img
-                        alt="Edit owner"
-                        className={classes.editOwnerIcon}
-                        onClick={onShow('EditOwner', row)}
-                        src={RenameOwnerIcon}
-                        testId={RENAME_OWNER_BTN_TEST_ID}
-                      />
+                      <UnStyledButton onClick={onShow('EditOwner', row)}>
+                        <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
+                      </UnStyledButton>
                       {granted && (
                         <>
-                          <Img
-                            alt="Replace owner"
-                            className={classes.replaceOwnerIcon}
-                            onClick={onShow('ReplaceOwner', row)}
-                            src={ReplaceOwnerIcon}
-                            testId={REPLACE_OWNER_BTN_TEST_ID}
-                          />
+                          <UnStyledButton onClick={onShow('ReplaceOwner', row)}>
+                            <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
+                          </UnStyledButton>
                           {ownerData.length > 1 && (
-                            <Img
-                              alt="Remove owner"
-                              className={classes.removeOwnerIcon}
-                              onClick={onShow('RemoveOwner', row)}
-                              src={RemoveOwnerIcon}
-                              testId={REMOVE_OWNER_BTN_TEST_ID}
-                            />
+                            <UnStyledButton onClick={onShow('RemoveOwner', row)}>
+                              <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
+                            </UnStyledButton>
                           )}
                         </>
                       )}

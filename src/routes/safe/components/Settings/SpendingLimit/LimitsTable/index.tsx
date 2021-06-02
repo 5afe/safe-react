@@ -1,4 +1,4 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import React, { ReactElement, useState } from 'react'
@@ -22,13 +22,16 @@ import {
 } from './dataFetcher'
 import { SpentVsAmount } from './SpentVsAmount'
 
-const TableActionButton = styled(Button)`
-  background-color: transparent;
+const UnStyledButton = styled.button`
+  background: none;
+  color: inherit;
+  border: none;
   padding: 0;
-
-  &:hover {
-    background-color: transparent;
-  }
+  font: inherit;
+  cursor: pointer;
+  outline-color: ${({ theme }) => theme.colors.icon};
+  display: flex;
+  align-items: center;
 `
 
 interface SpendingLimitTableProps {
@@ -82,16 +85,9 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
                     {granted && (
-                      <TableActionButton
-                        size="md"
-                        iconType="delete"
-                        color="error"
-                        variant="outlined"
-                        onClick={() => setSelectedRow(row)}
-                        data-testid="remove-action"
-                      >
-                        {null}
-                      </TableActionButton>
+                      <UnStyledButton onClick={() => setSelectedRow(row)}>
+                        <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
+                      </UnStyledButton>
                     )}
                   </Row>
                 </TableCell>
