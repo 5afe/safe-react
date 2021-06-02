@@ -34,7 +34,7 @@ import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/saf
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import ImportEntryModal from './ImportEntryModal'
+import ImportEntriesModal from './ImportEntriesModal'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -305,7 +305,7 @@ const AddressBookTable = (): ReactElement => {
         onClose={() => setDeleteEntryModalOpen(false)}
       />
       <ExportEntriesModal isOpen={exportEntriesModalOpen} onClose={() => setExportEntriesModalOpen(false)} />
-      <ImportEntryModal
+      <ImportEntriesModal
         importEntryModalHandler={importEntryModalHandler}
         isOpen={importEntryModalOpen}
         onClose={() => setImportEntryModalOpen(false)}

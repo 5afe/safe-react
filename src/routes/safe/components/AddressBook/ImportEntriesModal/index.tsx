@@ -43,7 +43,13 @@ const IMPORT_SUPPORTED_FORMATS = [
   'text/csv',
 ]
 
-const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }): ReactElement => {
+type ImportEntriesModalProps = {
+  importEntryModalHandler: (addressList: AddressBookEntry[]) => void
+  isOpen: boolean
+  onClose: () => void
+}
+
+const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: ImportEntriesModalProps): ReactElement => {
   const [csvLoaded, setCsvLoaded] = useState(false)
   const [importError, setImportError] = useState('')
   const [entryList, setEntryList] = useState<AddressBookEntry[]>([])
@@ -226,4 +232,4 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }): ReactEl
   )
 }
 
-export default ImportEntryModal
+export default ImportEntriesModal
