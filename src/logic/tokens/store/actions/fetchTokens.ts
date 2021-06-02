@@ -61,7 +61,7 @@ export const fetchTokens = () => async (
     const resp = await fetchErc20AndErc721AssetsList()
     tokenList = resp.data.results
   } catch (e) {
-    logError(Errors._600, e.message, false)
+    logError(Errors._600, e.message, undefined, false)
     return
   }
 

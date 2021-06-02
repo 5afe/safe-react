@@ -12,7 +12,7 @@ import { useRouteMatch, Link } from 'react-router-dom'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 
 import { useAppList } from '../hooks/useAppList'
-import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types.d'
+import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
 import { AppData } from '../api/fetchSafeAppsList'
 
