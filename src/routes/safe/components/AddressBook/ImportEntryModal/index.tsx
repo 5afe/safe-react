@@ -1,12 +1,13 @@
 import React, { useState } from 'react'
 
 import styled from 'styled-components'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
+import { Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -25,13 +26,6 @@ const InfoContainer = styled.div`
   padding: 24px;
   text-align: center;
   margin-top: 16px;
-`
-const StyledIcon = styled(Icon)`
-  svg {
-    position: relative;
-    top: 4px;
-    left: 4px;
-  }
 `
 
 const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
@@ -187,18 +181,8 @@ const ImportEntryModal = ({ importEntryModalHandler, isOpen, onClose }) => {
           )}
           {!csvLoaded && importError === '' && (
             <Text color="text" as="p" size="xl">
-              Only CSV files are allowed in the format [Address, Name] separated by comma. <br />
-              <Link
-                href="https://help.gnosis-safe.io/en/"
-                target="_blank"
-                rel="noreferrer"
-                title="Learn more about importing / exporting an address book."
-              >
-                <Text size="xl" as="span" color="primary">
-                  Learn more about importing / exporting an address book.
-                </Text>
-                <StyledIcon size="sm" type="externalLink" color="primary" />
-              </Link>
+              Only CSV files exported from Gnosis Safe are allowed. <br />
+              <HelpInfo />
             </Text>
           )}
           {csvLoaded && importError === '' && (
