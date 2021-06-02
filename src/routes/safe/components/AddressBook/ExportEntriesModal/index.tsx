@@ -2,7 +2,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { format } from 'date-fns'
 import { useSelector, useDispatch } from 'react-redux'
 import { CSVDownloader, jsonToCSV } from 'react-papaparse'
-import { Button, Icon, Link, Loader, Text } from '@gnosis.pm/safe-react-components'
+import { Button, Loader, Text } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/notifications'
@@ -17,6 +17,7 @@ import { lg, md, background } from 'src/theme/variables'
 import { Modal } from 'src/components/Modal'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
+import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 
 import SuccessSvg from './assets/success.svg'
 import ErrorSvg from './assets/error.svg'
@@ -60,14 +61,6 @@ const StyledCSVLink = styled(CSVDownloader)`
   flex: 1;
   justify-content: center;
   align-items: center;
-`
-
-const StyledIcon = styled(Icon)`
-  svg {
-    position: relative;
-    top: 4px;
-    left: 4px;
-  }
 `
 
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
@@ -132,17 +125,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
                 You&apos;re about to export a CSV file with{' '}
                 <Text size="xl" strong as="span">
                   {addressBook.length} address book entries. <br />
-                  <Link
-                    href="https://help.gnosis-safe.io/en/"
-                    target="_blank"
-                    rel="noreferrer"
-                    title="Learn more about importing / exporting an address book."
-                  >
-                    <Text size="xl" as="span" color="primary">
-                      Learn more about importing / exporting an address book.
-                    </Text>
-                    <StyledIcon size="sm" type="externalLink" color="primary" />
-                  </Link>
+                  <HelpInfo />
                 </Text>
                 .
               </Text>
