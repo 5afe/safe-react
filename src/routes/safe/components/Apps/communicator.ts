@@ -69,9 +69,12 @@ class AppCommunicator {
         }
       } catch (err) {
         this.send(err.message, msg.data.id, true)
-        // TODO: Allow passing method/message as an extra context
-        // Tweak CodedException class to accept it as a second argument
-        logError(Errors._901, `${msg.data.method} ${err.message}`)
+        logError(Errors._901, err.message, {
+          contexts: {
+            safeApp: this.app,
+            request: msg.data,
+          },
+        })
       }
     }
   }
