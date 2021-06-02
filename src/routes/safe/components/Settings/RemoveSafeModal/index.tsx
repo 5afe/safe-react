@@ -11,7 +11,6 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
 import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
@@ -41,8 +40,7 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
   const onRemoveSafeHandler = async () => {
     // ToDo: review if this is necessary or we should directly use the `removeSafe` action.
     await dispatch(removeLocalSafe(safeAddress))
-    // remove safe from the address book
-    safeAddressBookEntry && dispatch(addressBookRemove(safeAddressBookEntry))
+
     if (sameAddress(safeAddress, defaultSafe)) {
       await saveDefaultSafe('')
     }
