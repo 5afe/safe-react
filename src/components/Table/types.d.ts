@@ -7,6 +7,6 @@ export interface TableColumn {
   order: boolean
   static?: boolean
   style?: any
-  formatTypeSort?: (value: any) => any
+  formatTypeSort?: (value: string | number) => string | number
   width?: number
 }
