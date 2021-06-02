@@ -1,5 +1,4 @@
 import memoize from 'lodash.memoize'
-
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
@@ -67,6 +66,16 @@ const configuration = (): NetworkSpecificConfiguration => {
 }
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
+
+export const getNetworks = (): { id: number; label: string; backgroundColor: string; safeUrl: string }[] => {
+  const { local, ...usefulNetworks } = networks
+  return Object.values(usefulNetworks).map((networkObj) => ({
+    id: networkObj.network.id,
+    label: networkObj.network.label,
+    backgroundColor: networkObj.network.backgroundColor,
+    safeUrl: networkObj.environment[getCurrentEnvironment()].safeUrl,
+  }))
+}
 
 export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 

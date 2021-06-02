@@ -35,13 +35,3 @@ export const SPENDING_LIMIT_MODULE_ADDRESS =
 export const KNOWN_MODULES = {
   [SPENDING_LIMIT_MODULE_ADDRESS]: 'Spending limit',
 }
-export const NETWORK_NAMES = [
-  { name: 'Ethereum', url: 'https://gnosis-safe.io/app' },
-  { name: 'xDai', url: 'https://xdai.gnosis-safe.io/app' },
-  { name: 'Polygon', url: 'https://polygon.gnosis-safe.io/app' },
-  { name: 'BSC', url: 'https://bsc.gnosis-safe.io/app' },
-  { name: 'Arbitrium', url: 'https://arbitrum.gnosis-safe.io/app' },
-  { name: 'EWC', url: 'https://ewc.gnosis-safe.io/app' },
-  { name: 'Rinkeby', url: 'https://rinkeby.gnosis-safe.io/app' },
-  { name: 'Volta', url: 'https://volta.gnosis-safe.io/app' },
-]

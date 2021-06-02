@@ -19,8 +19,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { NETWORK_NAMES } from 'src/utils/constants'
-import { getNetworkInfo } from 'src/config'
+import { getNetworkName, getNetworks } from 'src/config'
 import styled from 'styled-components'
 
 const StyledDivider = styled(Divider)`
@@ -85,8 +84,9 @@ const styles = () => ({
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networkInfo = getNetworkInfo()
-  console.log(networkInfo)
+  const networkName = getNetworkName() // Network name to be use for comparision
+  const networks = getNetworks()
+  console.log(networkName)
 
   return (
     <Row className={classes.summary}>
@@ -138,10 +138,10 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                 <>
                   <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
                     <List className={classes.network} component="div">
-                      {NETWORK_NAMES.map((network) => (
-                        <React.Fragment key={network.name}>
-                          <StyledLink href="#">
-                            <NetworkLabel networkName={network.name} />
+                      {networks.map((network) => (
+                        <React.Fragment key={network.id}>
+                          <StyledLink href={network.safeUrl}>
+                            <NetworkLabel networkName={network.label} />
                             <Icon type="check" size="md" color="primary" />
                           </StyledLink>
                           <StyledDivider />
