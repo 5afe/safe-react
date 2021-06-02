@@ -7,6 +7,7 @@ import { getNetworkId } from 'src/config'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { useDispatch } from 'react-redux'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -27,7 +28,8 @@ const useAppList = (): UseAppListReturnType => {
       try {
         const result = await fetchSafeAppsList()
         setApiAppsList(result && result?.length ? result : apiAppsList)
-      } catch (err) {
+      } catch (e) {
+        logError(Errors._902, e.message, undefined, false)
         dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
       }
       setIsLoading(false)

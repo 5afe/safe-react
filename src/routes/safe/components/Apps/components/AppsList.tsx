@@ -14,7 +14,7 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
-import { AppData } from 'src/logic/configService/index'
+import { AppData } from 'src/logic/configService/'
 
 const Wrapper = styled.div`
   height: 100%;
