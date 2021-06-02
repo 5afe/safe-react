@@ -69,7 +69,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
     }
 
     const formatedList = slicedData.map((entry) => {
-      return { address: checksumAddress(entry.data[0]), name: entry.data[1], chainId: entry.data[2] }
+      return { address: checksumAddress(entry.data[0]), name: entry.data[1], chainId: parseInt(entry.data[2]) }
     })
     setEntryList(formatedList)
     setImportError('')
