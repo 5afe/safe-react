@@ -150,7 +150,7 @@ class GnoTable extends React.Component<any, any> {
     const columnSort = columns.find((column) => column.id === orderByParam)
     let sortedData = stableSort(
       data,
-      getSorting(orderParam, orderByParam, orderProp, columnSort['formatTypeSort']),
+      getSorting(orderParam, orderByParam, orderProp, columnSort?.formatTypeSort),
       fixedParam,
     )
 
