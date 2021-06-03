@@ -100,8 +100,12 @@ export const mustBeEthereumContractAddress = memoize(
   },
 )
 
-export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType =>
-  value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
+export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
+  const testValue = value || ''
+  return testValue.length >= +minLen && testValue.length <= +maxLen
+    ? undefined
+    : `Should be ${minLen} to ${maxLen} symbols`
+}
 
 export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
   const decimals = value.split('.')[1] || '0'

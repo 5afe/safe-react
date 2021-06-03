@@ -24,6 +24,7 @@ import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/com
 import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/components/ExportEntriesModal'
 import { DeleteEntryModal } from 'src/routes/safe/components/AddressBook/components/DeleteEntryModal'
 import {
+  AB_NAME_ID,
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
   SEND_ENTRY_BUTTON,
@@ -199,6 +200,7 @@ const AddressBookTable = (): ReactElement => {
             columns={columns}
             data={addressBook}
             defaultFixed
+            defaultOrderBy={AB_NAME_ID}
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"

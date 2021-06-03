@@ -1,5 +1,5 @@
 import { isAppManifestValid } from '../utils'
-import { SafeApp } from '../types.d'
+import { SafeApp } from '../types'
 
 describe('SafeApp manifest', () => {
   it('It should return true given a manifest with mandatory values supplied', async () => {

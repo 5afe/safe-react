@@ -70,7 +70,7 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
       selectedCurrency: currencySelected ?? selectedCurrency,
     })
   } catch (e) {
-    logError(Errors._601, e.message, false)
+    logError(Errors._601, e.message, undefined, false)
     return
   }
 

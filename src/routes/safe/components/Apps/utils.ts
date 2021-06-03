@@ -1,16 +1,17 @@
 import axios from 'axios'
 import memoize from 'lodash.memoize'
 
-import { SafeApp, SAFE_APP_FETCH_STATUS } from './types.d'
+import { SafeApp, SAFE_APP_FETCH_STATUS } from './types'
 
 import { getContentFromENS } from 'src/logic/wallets/getWeb3'
 import appsIconSvg from 'src/assets/icons/apps.svg'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 import { AppData, fetchSafeAppsList } from './api/fetchSafeAppsList'
 
 export const APPS_STORAGE_KEY = 'APPS_STORAGE_KEY'
 
-const removeLastTrailingSlash = (url) => {
+const removeLastTrailingSlash = (url: string): string => {
   if (url.substr(-1) === '/') {
     return url.substr(0, url.length - 1)
   }
@@ -273,7 +274,13 @@ export const getAppInfoFromUrl = memoize(
       }
       return res
     } catch (error) {
-      console.error(`It was not possible to fetch app from ${res.url}: ${error.message}`)
+      logError(Errors._900, error.message, {
+        contexts: {
+          safeApp: {
+            url: appUrl,
+          },
+        },
+      })
       return res
     }
   },
