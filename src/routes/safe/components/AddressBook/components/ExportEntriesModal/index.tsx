@@ -17,7 +17,7 @@ import { lg, md, background } from 'src/theme/variables'
 import { Modal } from 'src/components/Modal'
 import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
-import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
+import HelpInfo from 'src/routes/safe/components/AddressBook/components/HelpInfo'
 
 import SuccessSvg from './assets/success.svg'
 import ErrorSvg from './assets/error.svg'

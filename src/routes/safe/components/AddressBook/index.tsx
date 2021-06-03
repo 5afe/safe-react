@@ -20,9 +20,9 @@ import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/mo
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
-import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
-import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
-import { DeleteEntryModal } from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
+import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/components/CreateEditEntryModal'
+import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/components/ExportEntriesModal'
+import { DeleteEntryModal } from 'src/routes/safe/components/AddressBook/components/DeleteEntryModal'
 import {
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
@@ -34,7 +34,7 @@ import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/saf
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import ImportEntriesModal from './ImportEntriesModal'
+import ImportEntriesModal from './components/ImportEntriesModal'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
