@@ -73,6 +73,7 @@ export const getNetworks = (): { id: number; label: string; backgroundColor: str
     id: networkObj.network.id,
     label: networkObj.network.label,
     backgroundColor: networkObj.network.backgroundColor,
+    textColor: networkObj.network.textColor,
     safeUrl: networkObj.environment[getCurrentEnvironment()].safeUrl,
   }))
 }

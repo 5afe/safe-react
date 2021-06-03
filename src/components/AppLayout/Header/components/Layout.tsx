@@ -5,6 +5,7 @@ import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
+import styled from 'styled-components'
 import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 
 import Provider from './Provider'
@@ -20,7 +21,7 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworkName, getNetworks } from 'src/config'
-import styled from 'styled-components'
+import { sameString } from 'src/utils/strings'
 
 const StyledDivider = styled(Divider)`
   margin: 0;
@@ -84,10 +85,8 @@ const styles = () => ({
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networkName = getNetworkName() // Network name to be use for comparision
+  const networkName = getNetworkName().toLowerCase()
   const networks = getNetworks()
-  console.log(networkName)
-
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -124,6 +123,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       />
       <NetworkSelector
         open={openNetworks}
+        selected={networkName}
         toggle={toggleNetworks}
         render={(networkRef) => (
           <Popper
@@ -141,8 +141,10 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
                       {networks.map((network) => (
                         <React.Fragment key={network.id}>
                           <StyledLink href={network.safeUrl}>
-                            <NetworkLabel networkName={network.label} />
-                            <Icon type="check" size="md" color="primary" />
+                            <NetworkLabel networkInfo={network} networkName={network.label} />
+                            {sameString(networkName, network.label.toLowerCase()) && (
+                              <Icon type="check" size="md" color="primary" />
+                            )}
                           </StyledLink>
                           <StyledDivider />
                         </React.Fragment>

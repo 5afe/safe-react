@@ -46,14 +46,13 @@ class NetworkSelector extends React.Component<any> {
   }
 
   render() {
-    const { render, classes, open, toggle } = this.props
+    const { render, classes, open, toggle, selected } = this.props
 
     return (
       <>
         <div className={classes.root} ref={this.myRef}>
           <Col className={classes.networkList} end="sm" middle="xs" onClick={toggle}>
-            {/* ToDo read the networkname from the current wallet */}
-            <NetworkLabel networkName="Ethereum" />
+            <NetworkLabel networkName={selected} />
             <IconButton className={classes.expand} disableRipple>
               {open ? <ExpandLess /> : <ExpandMore />}
             </IconButton>
