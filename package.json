@@ -170,7 +170,7 @@
     "@openzeppelin/contracts": "3.1.0",
     "@sentry/react": "^6.3.5",
     "@sentry/tracing": "^6.3.5",
-    "@truffle/contract": "^4.3.0",
+    "@truffle/contract": "^4.3.18",
     "@unstoppabledomains/resolution": "^1.17.0",
     "async-sema": "^3.1.0",
     "axios": "0.21.1",
