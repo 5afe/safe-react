@@ -19,6 +19,9 @@ type UseAppListReturnType = {
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
+  const [persistedAppList, setPersistedAppList] = useState<
+    (StoredSafeApp & { disabled?: boolean; networks?: number[] })[]
+  >([])
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -57,12 +60,12 @@ const useAppList = (): UseAppListReturnType => {
 
     const loadApps = async () => {
       // recover apps from storage (third-party apps added by the user)
-      const persistedAppList =
-        (await loadFromStorage<(StoredSafeApp & { networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
-
+      const storageAppList =
+        (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
+      setPersistedAppList(storageAppList)
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
-      const customApps = persistedAppList.filter(
+      const customApps = storageAppList.filter(
         (persistedApp) => !apiAppsList.some((app) => app.url === persistedApp.url),
       )
 
@@ -91,15 +94,18 @@ const useAppList = (): UseAppListReturnType => {
     loadApps()
   }, [apiAppsList])
 
-  const removeApp = useCallback((appUrl: string): void => {
-    setAppList((list) => {
-      const newList = list.filter(({ url }) => url !== appUrl)
-      const persistedAppList = newList.map(({ url, disabled }) => ({ url, disabled }))
-      saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+  const removeApp = useCallback(
+    (appUrl: string): void => {
+      setAppList((list) => {
+        const newList = list.filter(({ url }) => url !== appUrl)
+        const newPersistedList = persistedAppList.filter(({ url }) => url !== appUrl)
+        saveToStorage(APPS_STORAGE_KEY, newPersistedList)
 
-      return newList
-    })
-  }, [])
+        return newList
+      })
+    },
+    [persistedAppList],
+  )
 
   return {
     appList,
