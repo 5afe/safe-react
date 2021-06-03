@@ -2,7 +2,7 @@ import React, { ReactElement, useMemo } from 'react'
 import { useFormState } from 'react-final-form'
 
 import { Modal } from 'src/components/Modal'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { isAppManifestValid } from 'src/routes/safe/components/Apps/utils'
 
 interface Props {

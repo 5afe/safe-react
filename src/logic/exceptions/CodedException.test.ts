@@ -26,6 +26,33 @@ describe('CodedException', () => {
     expect(err.code).toBe(100)
   })
 
+  it('creates an error with an extra message and a context', () => {
+    const context = {
+      tags: {
+        error_category: 'Safe Apps',
+      },
+      contexts: {
+        safeApp: {
+          name: 'Zorbed.Finance',
+          url: 'https://zorbed.finance',
+        },
+        message: {
+          method: 'getSafeBalance',
+          params: {
+            address: '0x000000',
+          },
+        },
+      },
+    }
+
+    const err = new CodedException(Errors._901, 'getSafeBalance: Server responded with 429 Too Many Requests', context)
+    expect(err.message).toBe(
+      '901: Error processing Safe Apps SDK request (getSafeBalance: Server responded with 429 Too Many Requests)',
+    )
+    expect(err.code).toBe(901)
+    expect(err.context).toEqual(context)
+  })
+
   describe('Logging', () => {
     beforeAll(() => {
       jest.mock('console')
@@ -70,7 +97,7 @@ describe('CodedException', () => {
 
     it("doesn't track when isTracked is false", () => {
       ;(constants as any).IS_PRODUCTION = true
-      logError(Errors._100, '', false)
+      logError(Errors._100, '', undefined, false)
       expect(Sentry.captureException).not.toHaveBeenCalled()
     })
 

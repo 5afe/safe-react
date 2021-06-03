@@ -49,8 +49,23 @@ const GenericValue = ({ method, type, value }: RenderValueProps): React.ReactEle
 }
 
 const Value = ({ type, ...props }: RenderValueProps): React.ReactElement => {
-  const explorerUrl = getExplorerInfo(props.value as string)
+  if (isArrayParameter(type) && isAddress(type)) {
+    return (
+      <div>
+        [
+        <NestedWrapper>
+          {(props.value as string[]).map((address) => {
+            const explorerUrl = getExplorerInfo(address)
+            return <EthHashInfo key={address} textSize="xl" hash={address} showCopyBtn explorerUrl={explorerUrl} />
+          })}
+        </NestedWrapper>
+        ]
+      </div>
+    )
+  }
+
   if (isAddress(type)) {
+    const explorerUrl = getExplorerInfo(props.value as string)
     return (
       <EthHashInfo textSize="xl" hash={props.value as string} showCopyBtn explorerUrl={explorerUrl} shortenHash={4} />
     )
