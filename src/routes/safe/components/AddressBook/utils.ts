@@ -1,13 +1,15 @@
 import { isValidAddress } from 'src/utils/isValidAddress'
 
-const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
-const FILE_SIZE_TOO_BIG = 'The size of the file is over 1 MB'
-const FILE_BYTES_LIMIT = 1000000
-const IMPORT_SUPPORTED_FORMATS = [
+export const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
+export const FILE_SIZE_TOO_BIG_ERROR = 'The size of the file is over 1 MB'
+export const FILE_BYTES_LIMIT = 1000000
+export const IMPORT_SUPPORTED_FORMATS = [
+  'text/csv',
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'text/csv',
 ]
+
+export type CsvDataType = { data: string[] }[]
 
 export const validateFile = (file: File): string | undefined => {
   if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
@@ -15,16 +17,22 @@ export const validateFile = (file: File): string | undefined => {
   }
 
   if (file.size >= FILE_BYTES_LIMIT) {
-    return FILE_SIZE_TOO_BIG
+    return FILE_SIZE_TOO_BIG_ERROR
   }
 
   return
 }
 
-export const validateCsvData = (data: { data: string[] }[]): string | undefined => {
+export const validateCsvData = (data: CsvDataType): string | undefined => {
   for (let index = 0; index < data.length; index++) {
     const entry = data[index]
-    if (!entry.data[0] || !entry.data[1] || !entry.data[2]) {
+    if (entry.data.length !== 3) {
+      return `Invalid amount of columns on row ${index + 1}`
+    }
+    if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string' || typeof entry.data[2] !== 'string') {
+      return `Invalid amount of columns on row ${index + 1}`
+    }
+    if (!entry.data[0].trim() || !entry.data[1].trim() || !entry.data[2].trim()) {
       return `Invalid amount of columns on row ${index + 1}`
     }
     // Verify address properties
