@@ -242,21 +242,17 @@ const SafeOwnersForm = (props): React.ReactElement => {
                 />
               </Col>
               <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                <UnStyledButton
-                  onClick={() => {
-                    openQrModal(addressName)
-                  }}
-                >
+                <UnStyledButton type="button" onClick={() => openQrModal(addressName)}>
                   <Icon size="sm" type="qrCode" color="icon" tooltip="Scan QR" />
                 </UnStyledButton>
               </Col>
-              <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                {index > 0 && (
-                  <UnStyledButton onClick={onRemoveRow(index)}>
+              {index > 0 && (
+                <Col center="xs" className={classes.remove} middle="xs" xs={1}>
+                  <UnStyledButton onClick={onRemoveRow(index)} type="button">
                     <Icon size="sm" type="delete" color="icon" tooltip="Delete" />
                   </UnStyledButton>
-                )}
-              </Col>
+                </Col>
+              )}
             </Row>
           )
         })}
