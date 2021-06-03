@@ -1,9 +1,8 @@
 import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 import Layout from 'src/routes/load/components/Layout'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
 
@@ -16,7 +15,7 @@ import { history } from 'src/store'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
-import { networkSelector, providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
+import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 
 export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordProps) => void): Promise<void> => {
@@ -51,7 +50,6 @@ export type LoadFormValues = ReviewSafeCreationValues | LoadForm
 const Load = (): ReactElement => {
   const dispatch = useDispatch()
   const provider = useSelector(providerNameSelector)
-  const network = useSelector(networkSelector)
   const userAddress = useSelector(userAccountSelector)
 
   const addSafeHandler = async (safe: SafeRecordProps) => {
@@ -68,12 +66,17 @@ const Load = (): ReactElement => {
     const ownersNames = getNamesFrom(values)
     const ownersAddresses = getAccountsFrom(values)
 
-    const owners = ownersAddresses.map((address, index) =>
-      makeAddressBookEntry({
-        address,
-        name: ownersNames[index],
-      }),
-    )
+    const owners = ownersAddresses.reduce((acc, address, index) => {
+      if (ownersNames[index]) {
+        // Do not add owners to addressbook if names are empty
+        const newAddressBookEntry = makeAddressBookEntry({
+          address,
+          name: ownersNames[index],
+        })
+        acc.push(newAddressBookEntry)
+      }
+      return acc
+    }, [] as AddressBookEntry[])
     const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
@@ -90,12 +93,7 @@ const Load = (): ReactElement => {
 
   return (
     <Page>
-      <Layout
-        onLoadSafeSubmit={onLoadSafeSubmit}
-        network={ETHEREUM_NETWORK[network]}
-        userAddress={userAddress}
-        provider={provider}
-      />
+      <Layout onLoadSafeSubmit={onLoadSafeSubmit} userAddress={userAddress} provider={provider} />
     </Page>
   )
 }

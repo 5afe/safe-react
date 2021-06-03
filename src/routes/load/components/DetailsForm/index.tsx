@@ -1,7 +1,7 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
-import * as React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { FormApi } from 'final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
@@ -68,7 +68,7 @@ interface DetailsFormProps {
   form: FormApi
 }
 
-const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => {
+const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
@@ -145,13 +145,11 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
 }
 
 const DetailsPage = () =>
-  function LoadSafeDetails(controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement {
+  function LoadSafeDetails(controls: ReactNode, { errors, form }: StepperPageFormProps): ReactElement {
     return (
-      <>
-        <OpenPaper controls={controls}>
-          <DetailsForm errors={errors} form={form} />
-        </OpenPaper>
-      </>
+      <OpenPaper controls={controls}>
+        <DetailsForm errors={errors} form={form} />
+      </OpenPaper>
     )
   }
 
