@@ -92,14 +92,13 @@ const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentPr
         <Hairline />
         <Block margin="md" padding="md">
           {ownersWithNames.map(({ address, name }, index) => {
-            const ownerName = name || ''
             return (
               <Row className={classes.owner} key={address} data-testid="owner-row">
                 <Col className={classes.ownerName} xs={4}>
                   <Field
                     className={classes.name}
                     component={TextField}
-                    initialValue={ownerName}
+                    initialValue={name}
                     name={getOwnerNameBy(index)}
                     placeholder="Owner Name"
                     text="Owner Name"
