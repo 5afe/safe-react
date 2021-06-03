@@ -177,12 +177,12 @@ const Open = (): ReactElement => {
       ownersAddresses = getAccountsFrom(pendingCreation)
     }
 
-    const safeProps = await buildSafe(safeAddress)
-    await dispatch(addOrUpdateSafe(safeProps))
-
     const owners = ownersAddresses.map((address, index) => makeAddressBookEntry({ address, name: ownersNames[index] }))
     const safe = makeAddressBookEntry({ address: safeAddress, name })
     await dispatch(addressBookSafeLoad([...owners, safe]))
+
+    const safeProps = await buildSafe(safeAddress)
+    await dispatch(addOrUpdateSafe(safeProps))
 
     trackEvent({
       category: 'User',
