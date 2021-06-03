@@ -1,7 +1,7 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { GetBalanceParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -29,6 +29,7 @@ import { getAppInfoFromUrl } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -164,6 +165,14 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getEnvInfo', () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
+
+    communicator?.on('getTxBySafeTxHash', async (msg) => {
+      const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
+
+      const tx = await fetchSafeTransaction(safeTxHash)
+
+      return tx
+    })
 
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
