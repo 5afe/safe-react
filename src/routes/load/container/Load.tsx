@@ -2,7 +2,7 @@ import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Layout from 'src/routes/load/components/Layout'
-import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
 
@@ -66,12 +66,17 @@ const Load = (): ReactElement => {
     const ownersNames = getNamesFrom(values)
     const ownersAddresses = getAccountsFrom(values)
 
-    const owners = ownersAddresses.map((address, index) =>
-      makeAddressBookEntry({
-        address,
-        name: ownersNames[index],
-      }),
-    )
+    const owners = ownersAddresses.reduce((acc, address, index) => {
+      if (ownersNames[index]) {
+        // Do not add owners to addressbook if names are empty
+        const newAddressBookEntry = makeAddressBookEntry({
+          address,
+          name: ownersNames[index],
+        })
+        acc.push(newAddressBookEntry)
+      }
+      return acc
+    }, [] as AddressBookEntry[])
     const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
