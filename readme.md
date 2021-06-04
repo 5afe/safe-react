@@ -24,6 +24,18 @@ These instructions will get you a copy of the project up and running on your loc
 We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go with yarn in the README.
 Please install yarn globally if you haven't already.
 
+### Environment variables
+The app grabs environment variables from the `.env` file. Copy our template to your own local file:
+```
+cp .env.example .env
+```
+
+To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
+```
+REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+Once done, you'll need to restart the app if it's already running.
+
 ### Installing and running
 
 Install dependencies for the project:
@@ -40,18 +52,6 @@ If you prefer using the Mainnet ones:
 ```
 yarn start-mainnet
 ```
-
-### Environment variables
-The app grabs environment variables from the `.env` file. Copy our template to your own local file:
-```
-cp .env.example .env
-```
-
-To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
-```
-REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
-Once done, you'll need to restart the app.
 
 ### Building
 For Rinkeby:
