@@ -142,14 +142,17 @@ class GnoTable extends React.Component<any, any> {
     const orderParam = order || defaultOrder
     const displayRows = rowsPerPage || defaultRowsPerPage
     const fixedParam = typeof fixed !== 'undefined' ? fixed : !!defaultFixed
-
     const paginationClasses = {
       selectRoot: classes.selectRoot,
       root: !noBorder && classes.paginationRoot,
       input: classes.white,
     }
-
-    let sortedData = stableSort(data, getSorting(orderParam, orderByParam, orderProp), fixedParam)
+    const columnSort = columns.find((column) => column.id === orderByParam)
+    let sortedData = stableSort(
+      data,
+      getSorting(orderParam, orderByParam, orderProp, columnSort?.formatTypeSort),
+      fixedParam,
+    )
 
     if (!disablePagination) {
       sortedData = sortedData.slice(page * displayRows, page * displayRows + displayRows)
