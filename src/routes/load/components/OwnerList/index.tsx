@@ -1,12 +1,13 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { useEffect, useState } from 'react'
-
+import React, { ReactElement, ReactNode, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
+import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import { minMaxLength } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -21,8 +22,7 @@ import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
-import { getExplorerInfo } from 'src/config'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -41,10 +41,14 @@ const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] 
 
 const useStyles = makeStyles(styles)
 
-const OwnerListComponent = (props) => {
+interface OwnerListComponentProps {
+  values: LoadFormValues
+  updateInitialProps: (initialValues) => void
+}
+
+const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentProps): ReactElement => {
   const [owners, setOwners] = useState<string[]>([])
   const classes = useStyles()
-  const { updateInitialProps, values } = props
 
   const ownersWithNames = useAddressBookForOwnersNames(owners)
 
@@ -88,19 +92,18 @@ const OwnerListComponent = (props) => {
         <Hairline />
         <Block margin="md" padding="md">
           {ownersWithNames.map(({ address, name }, index) => {
-            const ownerName = name || `Owner #${index + 1}`
             return (
               <Row className={classes.owner} key={address} data-testid="owner-row">
                 <Col className={classes.ownerName} xs={4}>
                   <Field
                     className={classes.name}
                     component={TextField}
-                    initialValue={ownerName}
+                    initialValue={name}
                     name={getOwnerNameBy(index)}
-                    placeholder="Owner Name*"
+                    placeholder="Owner Name"
                     text="Owner Name"
                     type="text"
-                    validate={composeValidators(required, minMaxLength(1, 50))}
+                    validate={minMaxLength(0, 50)}
                     testId={`load-safe-owner-name-${index}`}
                   />
                 </Col>
@@ -118,14 +121,12 @@ const OwnerListComponent = (props) => {
   )
 }
 
-const OwnerList = ({ updateInitialProps }, network) =>
-  function LoadSafeOwnerList(controls, { values }): React.ReactElement {
+const OwnerList = ({ updateInitialProps }) =>
+  function LoadSafeOwnerList(controls: ReactNode, { values }: { values: LoadFormValues }): ReactElement {
     return (
-      <>
-        <OpenPaper controls={controls} padding={false}>
-          <OwnerListComponent network={network} updateInitialProps={updateInitialProps} values={values} />
-        </OpenPaper>
-      </>
+      <OpenPaper controls={controls} padding={false}>
+        <OwnerListComponent updateInitialProps={updateInitialProps} values={values} />
+      </OpenPaper>
     )
   }
 

@@ -17,7 +17,7 @@ import { getNetworkName, getTxServiceUrl } from 'src/config/'
 import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T

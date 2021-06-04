@@ -10,6 +10,8 @@ enum ErrorCodes {
   _200 = '200: Failed migrating to the address book v2',
   _600 = '600: Error fetching token list',
   _601 = '601: Error fetching balances',
+  _900 = '900: Error loading Safe App',
+  _901 = '901: Error processing Safe Apps SDK request',
 }
 
 export default ErrorCodes

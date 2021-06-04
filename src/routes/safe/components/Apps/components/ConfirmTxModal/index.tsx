@@ -2,7 +2,7 @@ import React, { ReactElement, useState } from 'react'
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
 
 import Modal from 'src/components/Modal'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import { TransactionParams } from 'src/routes/safe/components/Apps/components/AppFrame'
 import { mustBeEthereumAddress } from 'src/components/forms/validator'
 import { SafeAppLoadError } from './SafeAppLoadError'

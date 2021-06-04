@@ -2,7 +2,7 @@ import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-compo
 import React, { useState, ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
