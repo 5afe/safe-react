@@ -14,7 +14,6 @@ const ImportContainer = styled.div`
   justify-content: center;
   margin: 24px;
   align-items: center;
-  /* width: 200px;*/
   min-height: 100px;
   display: flex;
 `
@@ -141,7 +140,6 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
               },
               dropAreaActive: {
                 borderColor: '#008C73',
-                /* borderColor: '${({ theme }) => theme.colors.primary}', */
               },
               dropFile: {
                 width: 200,
