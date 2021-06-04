@@ -7,7 +7,7 @@ import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
-import { validateCsvData, validateFile } from '../utils'
+import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
 
 const ImportContainer = styled.div`
   flex-direction: column;

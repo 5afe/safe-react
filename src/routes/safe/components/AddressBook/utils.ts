@@ -26,21 +26,22 @@ export const validateFile = (file: File): string | undefined => {
 export const validateCsvData = (data: CsvDataType): string | undefined => {
   for (let index = 0; index < data.length; index++) {
     const entry = data[index]
+    const [address, name, chainId] = entry.data
     if (entry.data.length !== 3) {
       return `Invalid amount of columns on row ${index + 1}`
     }
-    if (typeof entry.data[0] !== 'string' || typeof entry.data[1] !== 'string' || typeof entry.data[2] !== 'string') {
+    if (typeof address !== 'string' || typeof name !== 'string' || typeof chainId !== 'string') {
       return `Invalid amount of columns on row ${index + 1}`
     }
-    if (!entry.data[0].trim() || !entry.data[1].trim() || !entry.data[2].trim()) {
+    if (!address.trim() || !name.trim() || !chainId.trim()) {
       return `Invalid amount of columns on row ${index + 1}`
     }
     // Verify address properties
-    const address = entry.data[0].toLowerCase()
-    if (!isValidAddress(address)) {
+    const lowerCaseAddress = address.toLowerCase()
+    if (!isValidAddress(lowerCaseAddress)) {
       return `Invalid address on row ${index + 1}`
     }
-    if (isNaN(parseInt(entry.data[2]))) {
+    if (isNaN(parseInt(chainId))) {
       return `Invalid chain id on row ${index + 1}`
     }
   }
