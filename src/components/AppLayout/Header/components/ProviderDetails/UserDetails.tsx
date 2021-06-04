@@ -17,12 +17,6 @@ import { background, connected as connectedBg, lg, md, sm, warning, xs } from 's
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-
-import { createStyles } from '@material-ui/core'
-import styled from 'styled-components'
-import { upperFirst } from 'src/utils/css'
-
-import { CircleDot } from '../CircleDot'
 import WalletIcon from '../../assets/wallet.svg'
 
 const styles = createStyles({
