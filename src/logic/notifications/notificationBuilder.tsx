@@ -142,6 +142,17 @@ const addressBookEditEntry = {
   afterExecutionError: null,
 }
 
+const addressBookImportEntries = {
+  beforeExecution: null,
+  afterRejection: null,
+  waitingConfirmation: null,
+  afterExecution: {
+    noMoreConfirmationsNeeded: NOTIFICATIONS.ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS,
+    moreConfirmationsNeeded: null,
+  },
+  afterExecutionError: null,
+}
+
 const addressBookDeleteEntry = {
   beforeExecution: null,
   afterRejection: null,
@@ -210,6 +221,10 @@ export const getNotificationsFromTxType: any = (txType, origin) => {
     }
     case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_EDIT_ENTRY: {
       notificationsQueue = addressBookEditEntry
+      break
+    }
+    case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_IMPORT_ENTRIES: {
+      notificationsQueue = addressBookImportEntries
       break
     }
     case TX_NOTIFICATION_TYPES.ADDRESS_BOOK_DELETE_ENTRY: {
