@@ -85,7 +85,7 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
                     {granted && (
-                      <UnStyledButton onClick={() => setSelectedRow(row)}>
+                      <UnStyledButton onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
                         <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
                       </UnStyledButton>
                     )}

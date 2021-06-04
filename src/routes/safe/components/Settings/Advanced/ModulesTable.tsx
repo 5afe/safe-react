@@ -96,9 +96,12 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                         )}
                       </TableCell>
                       <TableCell component="td">
-                        <Row align="end" className={classes.actions} data-testid={REMOVE_MODULE_BTN_TEST_ID}>
+                        <Row align="end" className={classes.actions}>
                           {granted && (
-                            <UnStyledButton onClick={() => triggerRemoveSelectedModule(rowElement)}>
+                            <UnStyledButton
+                              onClick={() => triggerRemoveSelectedModule(rowElement)}
+                              data-testid={REMOVE_MODULE_BTN_TEST_ID}
+                            >
                               <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
                             </UnStyledButton>
                           )}

@@ -133,16 +133,16 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <UnStyledButton onClick={onShow('EditOwner', row)}>
+                      <UnStyledButton onClick={onShow('EditOwner', row)} data-testid={RENAME_OWNER_BTN_TEST_ID}>
                         <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
                       </UnStyledButton>
                       {granted && (
                         <>
-                          <UnStyledButton onClick={onShow('ReplaceOwner', row)}>
+                          <UnStyledButton onClick={onShow('ReplaceOwner', row)} data-testid={REPLACE_OWNER_BTN_TEST_ID}>
                             <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
                           </UnStyledButton>
                           {ownerData.length > 1 && (
-                            <UnStyledButton onClick={onShow('RemoveOwner', row)}>
+                            <UnStyledButton onClick={onShow('RemoveOwner', row)} data-testid={REMOVE_OWNER_BTN_TEST_ID}>
                               <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
                             </UnStyledButton>
                           )}
