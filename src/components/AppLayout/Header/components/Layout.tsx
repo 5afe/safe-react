@@ -5,12 +5,9 @@ import Popper from '@material-ui/core/Popper'
 import { withStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { Link } from 'react-router-dom'
-import styled from 'styled-components'
-import { Divider, Icon } from '@gnosis.pm/safe-react-components'
 
 import Provider from './Provider'
 import NetworkSelector from './NetworkSelector'
-import NetworkLabel from './NetworkLabel'
 
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
@@ -21,22 +18,6 @@ import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
 import { getNetworkName, getNetworks } from 'src/config'
-import { sameString } from 'src/utils/strings'
-
-const StyledDivider = styled(Divider)`
-  margin: 0;
-`
-const StyledLink = styled.a`
-  margin: 0;
-  text-decoration: none;
-  display: flex;
-  justify-content: space-between;
-  padding: 14px 16px 14px 0;
-
-  :hover {
-    background-color: ${({ theme }) => theme.colors.background};
-  }
-`
 
 const styles = () => ({
   root: {
@@ -123,39 +104,10 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
       />
       <NetworkSelector
         open={openNetworks}
+        networks={networks}
         selected={networkName}
         toggle={toggleNetworks}
-        render={(networkRef) => (
-          <Popper
-            anchorEl={networkRef.current}
-            className={classes.popper}
-            open={openNetworks}
-            placement="bottom"
-            popperOptions={{ positionFixed: true }}
-          >
-            {({ TransitionProps }) => (
-              <Grow {...TransitionProps}>
-                <>
-                  <ClickAwayListener mouseEvent="onClick" onClickAway={clickAwayNetworks} touchEvent={false}>
-                    <List className={classes.network} component="div">
-                      {networks.map((network) => (
-                        <React.Fragment key={network.id}>
-                          <StyledLink href={network.safeUrl}>
-                            <NetworkLabel networkInfo={network} networkName={network.label} />
-                            {sameString(networkName, network.label.toLowerCase()) && (
-                              <Icon type="check" size="md" color="primary" />
-                            )}
-                          </StyledLink>
-                          <StyledDivider />
-                        </React.Fragment>
-                      ))}
-                    </List>
-                  </ClickAwayListener>
-                </>
-              </Grow>
-            )}
-          </Popper>
-        )}
+        clickAway={clickAwayNetworks}
       />
     </Row>
   )

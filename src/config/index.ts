@@ -67,7 +67,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-export const getNetworks = (): { id: number; label: string; backgroundColor: string; safeUrl: string }[] => {
+export const getNetworks = (): Partial<NetworkSettings> & { safeUrl: string }[] => {
   const { local, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,

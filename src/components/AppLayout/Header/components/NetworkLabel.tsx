@@ -32,7 +32,7 @@ const NetworkLabel = ({
   networkName,
   networkInfo,
 }: {
-  networkName: string
+  networkName?: string
   networkInfo?: Partial<NetworkSettings>
 }): React.ReactElement => {
   const selectedNetwork = networkInfo || currentNetworkInfo
