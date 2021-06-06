@@ -7,6 +7,7 @@ import * as React from 'react'
 import styled from 'styled-components'
 
 import { styles } from './style'
+import ButtonHelper from 'src/components/ButtonHelper'
 import { padOwnerIndex } from 'src/routes/open/utils/padOwnerIndex'
 import { ScanQRModal } from 'src/components/ScanQRModal'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
@@ -46,17 +47,6 @@ export const ADD_OWNER_BUTTON = '+ Add another owner'
 
 const StyledAddressInput = styled(AddressInput)`
   width: 460px;
-`
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
 `
 
 /**
@@ -242,15 +232,15 @@ const SafeOwnersForm = (props): React.ReactElement => {
                 />
               </Col>
               <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                <UnStyledButton type="button" onClick={() => openQrModal(addressName)}>
+                <ButtonHelper onClick={() => openQrModal(addressName)}>
                   <Icon size="sm" type="qrCode" color="icon" tooltip="Scan QR" />
-                </UnStyledButton>
+                </ButtonHelper>
               </Col>
               {index > 0 && (
                 <Col center="xs" className={classes.remove} middle="xs" xs={1}>
-                  <UnStyledButton onClick={onRemoveRow(index)} type="button">
+                  <ButtonHelper onClick={onRemoveRow(index)}>
                     <Icon size="sm" type="delete" color="icon" tooltip="Delete" />
-                  </UnStyledButton>
+                  </ButtonHelper>
                 </Col>
               )}
             </Row>

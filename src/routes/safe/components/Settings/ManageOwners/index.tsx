@@ -4,7 +4,6 @@ import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import cn from 'classnames'
-import styled from 'styled-components'
 
 import { AddOwnerModal } from './AddOwnerModal'
 import { EditOwnerModal } from './EditOwnerModal'
@@ -14,6 +13,7 @@ import { OWNERS_TABLE_ADDRESS_ID, generateColumns, getOwnerData, OwnerData } fro
 import { useStyles } from './style'
 
 import { getExplorerInfo } from 'src/config'
+import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
@@ -25,18 +25,6 @@ import Paragraph from 'src/components/layout/Paragraph/index'
 import Row from 'src/components/layout/Row'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
-`
 
 export const RENAME_OWNER_BTN_TEST_ID = 'rename-owner-btn'
 export const REMOVE_OWNER_BTN_TEST_ID = 'remove-owner-btn'
@@ -133,18 +121,18 @@ const ManageOwners = ({ granted, owners }: Props): ReactElement => {
                   ))}
                   <TableCell component="td">
                     <Row align="end" className={classes.actions}>
-                      <UnStyledButton onClick={onShow('EditOwner', row)} data-testid={RENAME_OWNER_BTN_TEST_ID}>
+                      <ButtonHelper onClick={onShow('EditOwner', row)} data-testid={RENAME_OWNER_BTN_TEST_ID}>
                         <Icon size="sm" type="edit" color="icon" tooltip="Edit owner" />
-                      </UnStyledButton>
+                      </ButtonHelper>
                       {granted && (
                         <>
-                          <UnStyledButton onClick={onShow('ReplaceOwner', row)} data-testid={REPLACE_OWNER_BTN_TEST_ID}>
+                          <ButtonHelper onClick={onShow('ReplaceOwner', row)} data-testid={REPLACE_OWNER_BTN_TEST_ID}>
                             <Icon size="sm" type="replaceOwner" color="icon" tooltip="Replace owner" />
-                          </UnStyledButton>
+                          </ButtonHelper>
                           {ownerData.length > 1 && (
-                            <UnStyledButton onClick={onShow('RemoveOwner', row)} data-testid={REMOVE_OWNER_BTN_TEST_ID}>
+                            <ButtonHelper onClick={onShow('RemoveOwner', row)} data-testid={REMOVE_OWNER_BTN_TEST_ID}>
                               <Icon size="sm" type="delete" color="error" tooltip="Remove owner" />
-                            </UnStyledButton>
+                            </ButtonHelper>
                           )}
                         </>
                       )}

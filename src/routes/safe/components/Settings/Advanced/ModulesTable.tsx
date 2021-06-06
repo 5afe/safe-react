@@ -1,6 +1,5 @@
 import { Icon, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
-import styled from 'styled-components'
 import cn from 'classnames'
 import React from 'react'
 import { useSelector } from 'react-redux'
@@ -9,6 +8,7 @@ import { generateColumns, ModuleAddressColumn, MODULES_TABLE_ADDRESS_ID } from '
 import { RemoveModuleModal } from './RemoveModuleModal'
 import { useStyles } from './style'
 
+import ButtonHelper from 'src/components/ButtonHelper'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import Table from 'src/components/Table'
@@ -16,18 +16,6 @@ import { TableCell, TableRow } from 'src/components/layout/Table'
 import Block from 'src/components/layout/Block'
 import Row from 'src/components/layout/Row'
 import { getExplorerInfo } from 'src/config'
-
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
-`
 
 const REMOVE_MODULE_BTN_TEST_ID = 'remove-module-btn'
 const MODULES_ROW_TEST_ID = 'owners-row'
@@ -98,12 +86,12 @@ export const ModulesTable = ({ moduleData }: ModulesTableProps): React.ReactElem
                       <TableCell component="td">
                         <Row align="end" className={classes.actions}>
                           {granted && (
-                            <UnStyledButton
+                            <ButtonHelper
                               onClick={() => triggerRemoveSelectedModule(rowElement)}
                               data-testid={REMOVE_MODULE_BTN_TEST_ID}
                             >
                               <Icon size="sm" type="delete" color="error" tooltip="Remove module" />
-                            </UnStyledButton>
+                            </ButtonHelper>
                           )}
                         </Row>
                       </TableCell>

@@ -3,8 +3,8 @@ import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import React, { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
 
+import ButtonHelper from 'src/components/ButtonHelper'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
@@ -21,18 +21,6 @@ import {
   SpendingLimitTable,
 } from './dataFetcher'
 import { SpentVsAmount } from './SpentVsAmount'
-
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
-`
 
 interface SpendingLimitTableProps {
   data?: SpendingLimitTable[]
@@ -85,9 +73,9 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
                     {granted && (
-                      <UnStyledButton onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
+                      <ButtonHelper onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
                         <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
-                      </UnStyledButton>
+                      </ButtonHelper>
                     )}
                   </Row>
                 </TableCell>
