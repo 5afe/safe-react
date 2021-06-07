@@ -11,6 +11,7 @@ import {
   ExplorerButton,
 } from '@gnosis.pm/safe-react-components'
 
+import ButtonHelper from 'src/components/ButtonHelper'
 import FlexSpacer from 'src/components/FlexSpacer'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { NetworkSettings } from 'src/config/networks/network.d'
@@ -84,17 +85,6 @@ const StyledLabel = styled.div`
 const StyledText = styled(Text)`
   margin: 8px 0 16px 0;
 `
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.separator};
-  display: flex;
-  align-items: center;
-`
 
 type Props = {
   address: string | undefined
@@ -121,9 +111,9 @@ const SafeHeader = ({
         <IdenticonContainer>
           <FlexSpacer />
           <FixedIcon type="notConnected" />
-          <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <Icon size="md" type="circleDropdown" />
-          </UnStyledButton>
+          </ButtonHelper>
         </IdenticonContainer>
       </Container>
     )
@@ -143,18 +133,18 @@ const SafeHeader = ({
         <IdenticonContainer>
           <FlexSpacer />
           <Identicon address={address} size="lg" />
-          <UnStyledButton onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
+          <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
             <Icon size="md" type="circleDropdown" />
-          </UnStyledButton>
+          </ButtonHelper>
         </IdenticonContainer>
 
         {/* SafeInfo */}
         <Text size="xl">{safeName}</Text>
         <StyledEthHashInfo hash={address} shortenHash={4} textSize="sm" />
         <IconContainer>
-          <UnStyledButton onClick={onReceiveClick}>
+          <ButtonHelper onClick={onReceiveClick}>
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
-          </UnStyledButton>
+          </ButtonHelper>
           <CopyToClipboardBtn textToCopy={address} />
           <ExplorerButton explorerUrl={explorerUrl} />
         </IconContainer>

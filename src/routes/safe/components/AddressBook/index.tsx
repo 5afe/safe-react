@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { styles } from './style'
 
 import { getExplorerInfo, getNetworkId } from 'src/config'
+import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
@@ -49,17 +50,7 @@ const StyledButton = styled(Button)`
     margin: 0 6px 0 0;
   }
 `
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
-`
+
 const useStyles = makeStyles(styles)
 
 interface AddressBookSelectedEntry extends AddressBookEntry {
@@ -238,7 +229,7 @@ const AddressBookTable = (): ReactElement => {
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
-                        <UnStyledButton
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({
                               entry: row,
@@ -253,8 +244,8 @@ const AddressBookTable = (): ReactElement => {
                             tooltip="Edit entry"
                             className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
                           />
-                        </UnStyledButton>
-                        <UnStyledButton
+                        </ButtonHelper>
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({ entry: row })
                             setDeleteEntryModalOpen(true)
@@ -267,7 +258,7 @@ const AddressBookTable = (): ReactElement => {
                             tooltip="Delete entry"
                             className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
                           />
-                        </UnStyledButton>
+                        </ButtonHelper>
                         {granted ? (
                           <StyledButton
                             color="primary"
