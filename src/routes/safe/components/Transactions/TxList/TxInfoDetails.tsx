@@ -1,9 +1,7 @@
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { Erc721Transfer, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
@@ -35,9 +33,6 @@ export const TxInfoDetails = ({
   name,
   avatarUrl,
 }: TxInfoDetailsProps): ReactElement => {
-  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, address))
-  const knownAddress = recipientName !== 'UNKNOWN'
-
   const { txLocation } = useContext<TxLocationProps>(TxLocationContext)
   const canRepeatTransaction =
     // is transfer type by context
@@ -89,7 +84,6 @@ export const TxInfoDetails = ({
         <AddressInfo address={address} name={name} avatarUrl={avatarUrl} />
         <EllipsisTransactionDetails
           address={address}
-          knownAddress={knownAddress}
           sendModalOpenHandler={canRepeatTransaction ? sendModalOpenHandler : undefined}
         />
       </SingleRow>

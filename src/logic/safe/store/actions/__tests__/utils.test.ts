@@ -1,5 +1,4 @@
 import axios from 'axios'
-import { List } from 'immutable'
 
 import { FEATURES } from 'src/config/networks/network.d'
 import {
@@ -9,8 +8,7 @@ import {
   getNewTxNonce,
   shouldExecuteTransaction,
 } from 'src/logic/safe/store/actions/utils'
-import { makeOwner } from 'src/logic/safe/store/models/owner'
-import { SafeOwner, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions'
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 import {
@@ -223,96 +221,49 @@ describe('buildSafeOwners', () => {
     expect(buildSafeOwners()).toBeUndefined()
   })
   it('should return `localSafeOwners` if no `remoteSafeOwners` were provided', () => {
-    const expectedOwners = List(
-      [
-        { address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875' },
-        { address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F' },
-        { address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47' },
-        { address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2' },
-        { address: '0x5e47249883F6a1d639b84e8228547fB289e222b6' },
-      ].map(makeOwner),
-    )
+    const expectedOwners = [
+      '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+      '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+      '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+      '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+      '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+    ]
     expect(buildSafeOwners(remoteSafeInfoWithModules.owners)).toStrictEqual(expectedOwners)
   })
   it('should discard those owners that are not present in `remoteSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.map(makeOwner))
+    const localOwners: SafeRecordProps['owners'] = localSafesInfo[SAFE_ADDRESS].owners
     const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
-    const expectedOwners = List(
-      [
-        {
-          name: 'UNKNOWN',
-          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-        },
-        {
-          name: 'Owner B',
-          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-        },
-        {
-          name: 'Owner A',
-          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-        },
-      ].map(makeOwner),
-    )
+    const expectedOwners = [
+      '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+      '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+      '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+      '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+    ]
 
     expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })
   it('should add those owners that are not present in `localSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
+    const localOwners: SafeRecordProps['owners'] = localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4)
     const remoteOwners = remoteSafeInfoWithModules.owners
-    const expectedOwners = List(
-      [
-        {
-          name: 'UNKNOWN',
-          address: '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-        },
-        {
-          name: 'Owner B',
-          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-        },
-      ].map(makeOwner),
-    )
+    const expectedOwners = [
+      '0xcCdd7e3af1c24c08D8B65A328351e7e23923d875',
+      '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+      '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+      '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+      '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+    ]
 
     expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })
   it('should preserve those owners that are present in `remoteSafeOwners` with data present in `localSafeOwners`', () => {
-    const localOwners: List<SafeOwner> = List(localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4).map(makeOwner))
+    const localOwners: SafeRecordProps['owners'] = localSafesInfo[SAFE_ADDRESS].owners.slice(0, 4)
     const [, ...remoteOwners] = remoteSafeInfoWithModules.owners
-    const expectedOwners = List(
-      [
-        {
-          name: 'UNKNOWN',
-          address: '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
-        },
-        {
-          name: 'Owner B',
-          address: '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
-        },
-        {
-          name: 'UNKNOWN',
-          address: '0x5e47249883F6a1d639b84e8228547fB289e222b6',
-        },
-      ].map(makeOwner),
-    )
+    const expectedOwners = [
+      '0x04Aa5eC2065224aDB15aCE6fb1aAb988Ae55631F',
+      '0x52Da808E9a83FEB147a2d0ca7d2f5bBBd3035C47',
+      '0x4dcD12D11dE7382F9c26D59Db1aCE1A4737e58A2',
+      '0x5e47249883F6a1d639b84e8228547fB289e222b6',
+    ]
 
     expect(buildSafeOwners(remoteOwners, localOwners)).toStrictEqual(expectedOwners)
   })

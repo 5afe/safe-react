@@ -1,7 +1,7 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
@@ -16,7 +16,6 @@ import {
   CreateSafeValues,
   getAccountsFrom,
   getNamesFrom,
-  getOwnersFrom,
   getSafeCreationSaltFrom,
   getSafeNameFrom,
   getThresholdFrom,
@@ -25,8 +24,9 @@ import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
@@ -78,18 +78,6 @@ const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams)
   }
 }
 
-export const getSafeProps = async (
-  safeAddress: string,
-  safeName: string,
-  ownersNames: string[],
-  ownerAddresses: string[],
-): Promise<SafeRecordProps> => {
-  const safeProps = await buildSafe(safeAddress, safeName)
-  safeProps.owners = getOwnersFrom(ownersNames, ownerAddresses)
-
-  return safeProps
-}
-
 export const createSafe = (values: CreateSafeValues, userAccount: string): PromiEvent<TransactionReceipt> => {
   const confirmations = getThresholdFrom(values)
   const ownerAddresses = getAccountsFrom(values)
@@ -118,7 +106,7 @@ export const createSafe = (values: CreateSafeValues, userAccount: string): Promi
   return promiEvent
 }
 
-const Open = (): React.ReactElement => {
+const Open = (): ReactElement => {
   const [loading, setLoading] = useState(false)
   const [showProgress, setShowProgress] = useState(false)
   const [creationTxPromise, setCreationTxPromise] = useState<PromiEvent<TransactionReceipt>>()
@@ -176,14 +164,24 @@ const Open = (): React.ReactElement => {
     setShowProgress(true)
   }
 
-  const onSafeCreated = async (safeAddress): Promise<void> => {
+  const onSafeCreated = async (safeAddress: string): Promise<void> => {
     const pendingCreation = await loadFromStorage<LoadedSafeType>(SAFE_PENDING_CREATION_STORAGE_KEY)
 
-    const name = pendingCreation ? getSafeNameFrom(pendingCreation) : ''
-    const ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
-    const ownerAddresses = pendingCreation ? getAccountsFrom(pendingCreation) : []
-    const safeProps = await getSafeProps(safeAddress, name, ownersNames, ownerAddresses)
+    let name = ''
+    let ownersNames: string[] = []
+    let ownersAddresses: string[] = []
 
+    if (pendingCreation) {
+      name = getSafeNameFrom(pendingCreation)
+      ownersNames = getNamesFrom(pendingCreation as CreateSafeValues)
+      ownersAddresses = getAccountsFrom(pendingCreation)
+    }
+
+    const owners = ownersAddresses.map((address, index) => makeAddressBookEntry({ address, name: ownersNames[index] }))
+    const safe = makeAddressBookEntry({ address: safeAddress, name })
+    await dispatch(addressBookSafeLoad([...owners, safe]))
+
+    const safeProps = await buildSafe(safeAddress)
     await dispatch(addOrUpdateSafe(safeProps))
 
     trackEvent({

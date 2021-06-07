@@ -7,6 +7,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -18,11 +19,10 @@ export const REMOVE_OWNER_MODAL_NEXT_BTN_TEST_ID = 'remove-owner-next-btn'
 interface CheckOwnerProps {
   onClose: () => void
   onSubmit: () => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
 }
 
-export const CheckOwner = ({ onClose, onSubmit, ownerAddress, ownerName }: CheckOwnerProps): ReactElement => {
+export const CheckOwner = ({ onClose, onSubmit, owner }: CheckOwnerProps): ReactElement => {
   const classes = useStyles()
 
   return (
@@ -44,11 +44,11 @@ export const CheckOwner = ({ onClose, onSubmit, ownerAddress, ownerName }: Check
         <Row>
           <Col align="center" xs={12}>
             <EthHashInfo
-              hash={ownerAddress}
-              name={ownerName}
+              hash={owner.address}
+              name={owner.name}
               showCopyBtn
               showAvatar
-              explorerUrl={getExplorerInfo(ownerAddress)}
+              explorerUrl={getExplorerInfo(owner.address)}
             />
           </Col>
         </Row>

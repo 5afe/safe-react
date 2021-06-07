@@ -2,10 +2,9 @@ import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { List } from 'immutable'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -13,34 +12,35 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import {
-  safeNameSelector,
-  safeOwnersSelector,
+  safeOwnersWithAddressBookDataSelector,
   safeParamAddressFromStateSelector,
   safeThresholdSelector,
 } from 'src/logic/safe/store/selectors'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
 
+const chainId = getNetworkId()
+
 type ReplaceOwnerProps = {
   onClose: () => void
   onClickBack: () => void
   onSubmit: (txParameters: TxParameters) => void
-  ownerAddress: string
-  ownerName: string
-  values: {
-    newOwnerAddress: string
-    newOwnerName: string
+  owner: OwnerData
+  newOwner: {
+    address: string
+    name: string
   }
 }
 
@@ -48,18 +48,15 @@ export const ReviewReplaceOwnerModal = ({
   onClickBack,
   onClose,
   onSubmit,
-  ownerAddress,
-  ownerName,
-  values,
+  owner,
+  newOwner,
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const safeName = useSafeName(safeAddress)
+  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
   const threshold = useSelector(safeThresholdSelector) || 1
-  const addressBook = useSelector(addressBookSelector)
-  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -88,9 +85,9 @@ export const ReviewReplaceOwnerModal = ({
     const calculateReplaceOwnerData = async () => {
       const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const index = safeOwners.findIndex((owner) => owner.toLowerCase() === ownerAddress.toLowerCase())
+      const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-      const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddress, values.newOwnerAddress).encodeABI()
+      const txData = gnosisSafe.methods.swapOwner(prevAddress, owner.address, newOwner.address).encodeABI()
       if (isCurrent) {
         setData(txData)
       }
@@ -100,7 +97,7 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [ownerAddress, safeAddress, values.newOwnerAddress])
+  }, [owner.address, safeAddress, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -164,7 +161,7 @@ export const ReviewReplaceOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners?.size || 0} owner(s)`}
+                      {`${threshold} out of ${owners?.length || 0} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -172,22 +169,22 @@ export const ReviewReplaceOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners?.size || 0} Safe owner(s)`}
+                    {`${owners?.length || 0} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
-                {ownersWithAddressBookName?.map(
-                  (owner) =>
-                    owner.address !== ownerAddress && (
-                      <React.Fragment key={owner.address}>
+                {owners?.map(
+                  (safeOwner) =>
+                    !sameAddress(safeOwner.address, owner.address) && (
+                      <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
-                              hash={owner.address}
-                              name={owner.name}
+                              hash={safeOwner.address}
+                              name={safeOwner.name}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(owner.address)}
+                              explorerUrl={getExplorerInfo(safeOwner.address)}
                             />
                           </Col>
                         </Row>
@@ -204,11 +201,11 @@ export const ReviewReplaceOwnerModal = ({
                 <Row className={classes.selectedOwnerRemoved}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>
@@ -221,11 +218,11 @@ export const ReviewReplaceOwnerModal = ({
                 <Row className={classes.selectedOwnerAdded}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={values.newOwnerAddress}
-                      name={values.newOwnerName}
+                      hash={newOwner.address}
+                      name={newOwner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(values.newOwnerAddress)}
+                      explorerUrl={getExplorerInfo(newOwner.address)}
                     />
                   </Col>
                 </Row>

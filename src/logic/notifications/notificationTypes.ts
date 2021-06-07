@@ -52,7 +52,10 @@ const NOTIFICATION_IDS = {
   WRONG_NETWORK_MSG: 'WRONG_NETWORK_MSG',
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS: 'ADDRESS_BOOK_NEW_ENTRY_SUCCESS',
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS: 'ADDRESS_BOOK_EDIT_ENTRY_SUCCESS',
+  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS: 'ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS',
   ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: 'ADDRESS_BOOK_DELETE_ENTRY_SUCCESS',
+  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: 'ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS',
+  ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: 'ADDRESS_BOOK_EXPORT_ENTRIES_ERROR',
   SAFE_NEW_VERSION_AVAILABLE: 'SAFE_NEW_VERSION_AVAILABLE',
 }
 
@@ -207,9 +210,21 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Entry saved successfully',
     options: { variant: SUCCESS, persist: false, preventDuplicate: false },
   },
+  ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS: {
+    message: 'Entries imported successfully',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
   ADDRESS_BOOK_DELETE_ENTRY_SUCCESS: {
     message: 'Entry deleted successfully',
     options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EXPORT_ENTRIES_SUCCESS: {
+    message: 'Address book exported',
+    options: { variant: SUCCESS, persist: false, preventDuplicate: false },
+  },
+  ADDRESS_BOOK_EXPORT_ENTRIES_ERROR: {
+    message: 'An error occurred while generating the address book CSV.',
+    options: { variant: ERROR, persist: false, preventDuplicate: false },
   },
 
   // Safe Version

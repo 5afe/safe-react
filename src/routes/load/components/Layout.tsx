@@ -1,6 +1,6 @@
 import IconButton from '@material-ui/core/IconButton'
 import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import * as React from 'react'
+import React, { ReactElement } from 'react'
 
 import Stepper, { StepperPage } from 'src/components/Stepper'
 import Block from 'src/components/layout/Block'
@@ -34,13 +34,12 @@ const formMutators = {
 }
 
 interface LayoutProps {
-  network: string
   provider?: string
   userAddress: string
   onLoadSafeSubmit: (values: LoadFormValues) => void
 }
 
-const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProps): React.ReactElement => (
+const Layout = ({ onLoadSafeSubmit, provider, userAddress }: LayoutProps): ReactElement => (
   <>
     {provider ? (
       <Block>
@@ -58,8 +57,8 @@ const Layout = ({ network, onLoadSafeSubmit, provider, userAddress }: LayoutProp
           testId="load-safe-form"
         >
           <StepperPage validate={safeFieldsValidation} component={DetailsForm} />
-          <StepperPage network={network} component={OwnerList} />
-          <StepperPage network={network} userAddress={userAddress} component={ReviewInformation} />
+          <StepperPage component={OwnerList} />
+          <StepperPage userAddress={userAddress} component={ReviewInformation} />
         </Stepper>
       </Block>
     ) : (

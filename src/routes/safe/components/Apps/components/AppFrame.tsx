@@ -6,11 +6,8 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 
-import {
-  safeEthBalanceSelector,
-  safeParamAddressFromStateSelector,
-  safeNameSelector,
-} from 'src/logic/safe/store/selectors'
+import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -89,7 +86,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ethBalance = useSelector(safeEthBalanceSelector)
-  const safeName = useSelector(safeNameSelector)
+  const safeName = useSafeName(safeAddress)
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()

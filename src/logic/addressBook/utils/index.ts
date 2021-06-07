@@ -1,11 +1,9 @@
-import { List } from 'immutable'
 import { mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { AddressBookEntry, AddressBookState, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { AddressBookEntry, AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-
-const ADDRESS_BOOK_STORAGE_KEY = 'ADDRESS_BOOK_STORAGE_KEY'
+import { AppReduxState } from 'src/store'
+import { Overwrite } from 'src/types/helpers'
 
 export type OldAddressBookEntry = {
   address: string
@@ -17,44 +15,7 @@ export type OldAddressBookType = {
   [safeAddress: string]: [OldAddressBookEntry]
 }
 
-const ADDRESSBOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
-
-export const migrateOldAddressBook = (oldAddressBook: OldAddressBookType): AddressBookState => {
-  const values: AddressBookState = []
-  const adbkValues = Object.values(oldAddressBook)
-
-  for (const safeIterator of adbkValues) {
-    for (const safeAddressBook of safeIterator) {
-      if (!values.find((entry) => sameAddress(entry.address, safeAddressBook.address))) {
-        values.push(makeAddressBookEntry({ address: safeAddressBook.address, name: safeAddressBook.name }))
-      }
-    }
-  }
-
-  return values
-}
-
-export const getAddressBookFromStorage = async (): Promise<AddressBookState | null> => {
-  const result: OldAddressBookType | string | undefined = await loadFromStorage(ADDRESS_BOOK_STORAGE_KEY)
-
-  if (!result) {
-    return null
-  }
-
-  if (typeof result === 'string') {
-    return JSON.parse(result)
-  }
-
-  return migrateOldAddressBook(result as OldAddressBookType)
-}
-
-export const saveAddressBook = async (addressBook: AddressBookState): Promise<void> => {
-  try {
-    await saveToStorage(ADDRESS_BOOK_STORAGE_KEY, JSON.stringify(addressBook))
-  } catch (err) {
-    console.error('Error storing addressBook in localstorage', err)
-  }
-}
+export const ADDRESS_BOOK_INVALID_NAMES = ['UNKNOWN', 'OWNER #', 'MY WALLET']
 
 type GetNameFromAddressBookOptions = {
   filterOnlyValidName: boolean
@@ -73,30 +34,15 @@ export const getNameFromAddressBook = (
 }
 
 export const isValidAddressBookName = (addressBookName: string): boolean => {
-  const hasInvalidName = ADDRESSBOOK_INVALID_NAMES.find((invalidName) =>
-    addressBookName.toUpperCase().includes(invalidName),
+  const hasInvalidName = ADDRESS_BOOK_INVALID_NAMES.find((invalidName) =>
+    addressBookName?.toUpperCase().includes(invalidName),
   )
   return !hasInvalidName
 }
 
+// TODO: is this really required?
 export const getValidAddressBookName = (addressBookName: string): string | null => {
   return isValidAddressBookName(addressBookName) ? addressBookName : null
-}
-
-export const getOwnersWithNameFromAddressBook = (
-  addressBook: AddressBookState,
-  ownerList: List<SafeOwner>,
-): List<SafeOwner> => {
-  if (!ownerList) {
-    return List([])
-  }
-  return ownerList.map((owner) => {
-    const ownerName = getNameFromAddressBook(addressBook, owner.address)
-    return {
-      address: owner.address,
-      name: ownerName || owner.name,
-    }
-  })
 }
 
 export const formatAddressListToAddressBookNames = (
@@ -111,12 +57,13 @@ export const formatAddressListToAddressBookNames = (
     return {
       address: address,
       name: ownerName || '',
+      chainId: ETHEREUM_NETWORK.UNKNOWN,
     }
   })
 }
 
 /**
- * If the safe is not loaded, the owner wasn't not deleted
+ * If the safe is not loaded, the owner wasn't deleted
  * If the safe is already loaded and the owner has a valid name, will return true if the address is not already on the addressBook
  * @param name
  * @param address
@@ -172,3 +119,11 @@ export const filterAddressEntries = (
 
     return foundName || foundAddress
   })
+
+export const getEntryIndex = (
+  state: AppReduxState['addressBook'],
+  addressBookEntry: Overwrite<AddressBookEntry, { name?: string }>,
+): number =>
+  state.findIndex(
+    ({ address, chainId }) => chainId === addressBookEntry.chainId && sameAddress(address, addressBookEntry.address),
+  )

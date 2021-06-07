@@ -40,7 +40,7 @@ export const isUserAnOwner = (safe: SafeRecord, userAccount: string): boolean =>
     return false
   }
 
-  return owners.find((owner) => sameAddress(owner.address, userAccount)) !== undefined
+  return owners.find((address) => sameAddress(address, userAccount)) !== undefined
 }
 
 export const isUserAnOwnerOfAnySafe = (safes: List<SafeRecord> | SafeRecord[], userAccount: string): boolean =>
