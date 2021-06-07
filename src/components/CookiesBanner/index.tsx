@@ -14,6 +14,7 @@ import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
 import AlertRedIcon from './assets/alert-red.svg'
 import IntercomIcon from './assets/intercom.png'
+import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 
 const isDesktop = process.env.REACT_APP_BUILD_FOR_DESKTOP
 
@@ -97,14 +98,23 @@ interface CookiesBannerFormProps {
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useRef(useDispatch())
+  const intercomLoaded = isIntercomLoaded()
 
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
   const [localAnalytics, setLocalAnalytics] = useState(false)
   const [localIntercom, setLocalIntercom] = useState(false)
+  const { getAppUrl } = useSafeAppUrl()
 
   const showBanner = useSelector(cookieBannerOpen)
+  const newAppUrl = getAppUrl()
+
+  useEffect(() => {
+    if (intercomLoaded && newAppUrl !== null) {
+      closeIntercom()
+    }
+  }, [newAppUrl, intercomLoaded])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -171,7 +181,7 @@ const CookiesBanner = (): ReactElement => {
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
-  if (showIntercom) {
+  if (showIntercom && newAppUrl === null) {
     loadIntercom()
   }
 
