@@ -30,7 +30,7 @@ import { sameString } from 'src/utils/strings'
 
 import { styles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export interface CreatedTx {
@@ -66,7 +66,7 @@ const SendCustomTx = ({
 }: Props): ReactElement => {
   const classes = useStyles()
   const ethBalance = useSelector(currentSafeEthBalance)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
   const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name: string } | null>(() => {
     const defaultEntry = {
