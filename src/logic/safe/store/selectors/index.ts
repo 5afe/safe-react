@@ -2,9 +2,8 @@ import { List } from 'immutable'
 import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
 
-import { getNetworkId } from 'src/config'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -72,23 +71,20 @@ export const currentSafeTotalFiatBalance = createSelector(currentSafe, safeField
 /*************************/
 /* With AddressBook Data */
 /*************************/
-const chainId = getNetworkId()
 const baseSafeWithName = { ...baseSafe.toJS(), name: '' }
 
 export type SafeRecordWithNames = Overwrite<SafeRecordProps, { owners: AddressBookEntry[] }> & { name: string }
 
 export const safesWithNamesAsList = createSelector(
-  [safesAsList, addressBookMapSelector],
+  [safesAsList, currentNetworkAddressBookAsMap],
   (safesList, addressBookMap): SafeRecordWithNames[] => {
-    const addressBook = addressBookMap?.[chainId]
-
     return safesList
       .map((safeRecord) => {
         const safe = safeRecord.toObject()
-        const name = addressBook?.[safe.address]?.name ?? ''
+        const name = addressBookMap?.[safe.address]?.name ?? ''
 
         const owners = safe.owners.map((ownerAddress) => {
-          return addressBook?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '' })
+          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '' })
         })
 
         return { ...safe, name, owners }

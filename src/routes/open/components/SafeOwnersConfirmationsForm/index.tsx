@@ -38,8 +38,7 @@ import {
 } from 'src/routes/open/components/fields'
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useSelector } from 'react-redux'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 
 const { useState } = React
 
@@ -116,7 +115,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
   const classes = useStyles()
 
   const validOwners = getNumOwnersFrom(values)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(currentNetworkAddressBook)
 
   const [numOwners, setNumOwners] = useState(validOwners)
   const [qrModalOpen, setQrModalOpen] = useState(false)
@@ -206,9 +205,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
               <Col className={classes.ownerAddress} xs={7}>
                 <StyledAddressInput
                   fieldMutator={(newOwnerAddress) => {
-                    const newOwnerName = getNameFromAddressBook(addressBook, newOwnerAddress, {
-                      filterOnlyValidName: true,
-                    })
+                    const newOwnerName = addressBook[newOwnerAddress]?.name
                     form.mutators.setValue(addressName, newOwnerAddress)
                     if (newOwnerName) {
                       form.mutators.setValue(ownerName, newOwnerName)
