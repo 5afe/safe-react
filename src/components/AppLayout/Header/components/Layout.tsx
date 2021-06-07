@@ -68,6 +68,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networkName = getNetworkName().toLowerCase()
   const networks = getNetworks()
+  const { isDesktop } = window as any
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -102,13 +103,15 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           </Popper>
         )}
       />
-      <NetworkSelector
-        open={openNetworks}
-        networks={networks}
-        selected={networkName}
-        toggle={toggleNetworks}
-        clickAway={clickAwayNetworks}
-      />
+      {!isDesktop && (
+        <NetworkSelector
+          open={openNetworks}
+          networks={networks}
+          selected={networkName}
+          toggle={toggleNetworks}
+          clickAway={clickAwayNetworks}
+        />
+      )}
     </Row>
   )
 }

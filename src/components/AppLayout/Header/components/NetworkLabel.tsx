@@ -4,7 +4,7 @@ import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import { getNetworkInfo } from 'src/config'
 import { border, md, screenSm, sm, xs, fontColor } from 'src/theme/variables'
-import { NetworkSettings } from 'src/config/networks/network'
+import { NetworkInfo, NetworkSettings } from 'src/config/networks/network'
 
 const currentNetworkInfo = getNetworkInfo()
 
@@ -33,7 +33,7 @@ const NetworkLabel = ({
   networkInfo,
 }: {
   networkName?: string
-  networkInfo?: Partial<NetworkSettings>
+  networkInfo?: NetworkInfo
 }): React.ReactElement => {
   const selectedNetwork = networkInfo || currentNetworkInfo
 

@@ -5,6 +5,7 @@ import {
   ETHEREUM_NETWORK,
   FEATURES,
   GasPriceOracle,
+  NetworkInfo,
   NetworkSettings,
   SafeFeatures,
   Wallets,
@@ -67,7 +68,7 @@ const configuration = (): NetworkSpecificConfiguration => {
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
-export const getNetworks = (): Partial<NetworkSettings> & { safeUrl: string }[] => {
+export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks
   return Object.values(usefulNetworks).map((networkObj) => ({
     id: networkObj.network.id,

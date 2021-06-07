@@ -1,4 +1,4 @@
-import * as React from 'react'
+import React, { ReactElement, useRef, Fragment } from 'react'
 import styled from 'styled-components'
 import { makeStyles } from '@material-ui/core/styles'
 import ClickAwayListener from '@material-ui/core/ClickAwayListener'
@@ -6,7 +6,6 @@ import Grow from '@material-ui/core/Grow'
 import List from '@material-ui/core/List'
 import Popper from '@material-ui/core/Popper'
 import IconButton from '@material-ui/core/IconButton'
-import { withStyles } from '@material-ui/core/styles'
 import ExpandLess from '@material-ui/icons/ExpandLess'
 import ExpandMore from '@material-ui/icons/ExpandMore'
 import { Divider, Icon } from '@gnosis.pm/safe-react-components'
@@ -17,7 +16,7 @@ import { screenSm, sm } from 'src/theme/variables'
 
 import { sameString } from 'src/utils/strings'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
-import { NetworkSettings } from 'src/config/networks/network'
+import { NetworkInfo } from 'src/config/networks/network'
 
 const styles = {
   root: {
@@ -76,11 +75,11 @@ const StyledDivider = styled(Divider)`
 
 type NetworkSelectorProps = ReturnValue & {
   selected: string
-  networks: (Partial<NetworkSettings> & { safeUrl: string })[]
+  networks: NetworkInfo[]
 }
 
-const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: NetworkSelectorProps): React.ReactElement => {
-  const networkRef = React.useRef(null)
+const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: NetworkSelectorProps): ReactElement => {
+  const networkRef = useRef(null)
   const classes = useStyles()
   return (
     <>
@@ -106,7 +105,7 @@ const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: Networ
               <ClickAwayListener mouseEvent="onClick" onClickAway={clickAway} touchEvent={false}>
                 <List className={classes.network} component="div">
                   {networks.map((network) => (
-                    <React.Fragment key={network.id}>
+                    <Fragment key={network.id}>
                       <StyledLink href={network.safeUrl}>
                         <NetworkLabel networkInfo={network} networkName={network.label} />
                         {sameString(selected, network.label?.toLowerCase()) && (
@@ -114,7 +113,7 @@ const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: Networ
                         )}
                       </StyledLink>
                       <StyledDivider />
-                    </React.Fragment>
+                    </Fragment>
                   ))}
                 </List>
               </ClickAwayListener>
@@ -126,4 +125,4 @@ const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: Networ
   )
 }
 
-export default withStyles(styles as any)(NetworkSelector)
+export default NetworkSelector

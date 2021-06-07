@@ -101,6 +101,8 @@ type SafeEnvironments = {
   production: EnvironmentSettings
 }
 
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'nativeCoin'> & { safeUrl: string }
+
 export interface NetworkConfig {
   network: NetworkSettings
   disabledFeatures?: SafeFeatures
