@@ -3,21 +3,23 @@ import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { List } from 'immutable'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import {
+  safeOwnersWithAddressBookDataSelector,
+  safeParamAddressFromStateSelector,
+} from 'src/logic/safe/store/selectors'
+import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
 import { Modal } from 'src/components/Modal'
@@ -28,12 +30,13 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
 
+const chainId = getNetworkId()
+
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (txParameters: TxParameters) => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
   threshold?: number
 }
 
@@ -41,17 +44,15 @@ export const ReviewRemoveOwnerModal = ({
   onClickBack,
   onClose,
   onSubmit,
-  ownerAddress,
-  ownerName,
+  owner,
   threshold = 1,
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
-  const owners = useSelector(safeOwnersSelector)
-  const addressBook = useSelector(addressBookSelector)
-  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+  const safeName = useSafeName(safeAddress)
+  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
+  const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -85,11 +86,13 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
+        // FixMe: if the order returned by the service is the same as in the contracts
+        //  the data lookup can be removed from here
         const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
+        const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, owner.address, threshold).encodeABI()
 
         if (isCurrent) {
           setData(txData)
@@ -103,7 +106,7 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, ownerAddress, threshold])
+  }, [safeAddress, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -168,7 +171,7 @@ export const ReviewRemoveOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                      {`${threshold} out of ${numOptions} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -177,22 +180,22 @@ export const ReviewRemoveOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners ? owners.size - 1 : 0} Safe owner(s)`}
+                    {`${numOptions} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
-                {ownersWithAddressBookName?.map(
-                  (owner) =>
-                    owner.address !== ownerAddress && (
-                      <React.Fragment key={owner.address}>
+                {owners?.map(
+                  (safeOwner) =>
+                    !sameAddress(safeOwner.address, owner.address) && (
+                      <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
                           <Col align="center" xs={12}>
                             <EthHashInfo
-                              hash={owner.address}
-                              name={owner.name}
+                              hash={safeOwner.address}
+                              name={safeOwner.name}
                               showCopyBtn
                               showAvatar
-                              explorerUrl={getExplorerInfo(owner.address)}
+                              explorerUrl={getExplorerInfo(safeOwner.address)}
                             />
                           </Col>
                         </Row>
@@ -209,11 +212,11 @@ export const ReviewRemoveOwnerModal = ({
                 <Row className={classes.selectedOwner}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>

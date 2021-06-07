@@ -1,7 +1,9 @@
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
+import { Mutator } from 'final-form'
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
+import { OnChange } from 'react-final-form-listeners'
 
 import AddressInput from 'src/components/forms/AddressInput'
 import Field from 'src/components/forms/Field'
@@ -10,9 +12,9 @@ import TextField from 'src/components/forms/TextField'
 import {
   addressIsNotCurrentSafe,
   composeValidators,
-  minMaxLength,
   required,
   uniqueAddress,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -21,10 +23,13 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
-import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
 import { useStyles } from './style'
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -33,11 +38,19 @@ export const REPLACE_OWNER_NEXT_BTN_TEST_ID = 'replace-owner-next-btn'
 
 import { OwnerValues } from '../..'
 
-const formMutators = {
+const formMutators: Record<
+  string,
+  Mutator<{ setOwnerAddress: { address: string }; setOwnerName: { name: string } }>
+> = {
   setOwnerAddress: (args, state, utils) => {
     utils.changeValue(state, 'ownerAddress', () => args[0])
   },
+  setOwnerName: (args, state, utils) => {
+    utils.changeValue(state, 'ownerName', () => args[0])
+  },
 }
+
+const chainId = getNetworkId()
 
 type NewOwnerProps = {
   ownerAddress: string
@@ -47,26 +60,21 @@ type NewOwnerProps = {
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values: NewOwnerProps) => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
   initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({
-  onClose,
-  onSubmit,
-  ownerAddress,
-  ownerName,
-  initialValues,
-}: OwnerFormProps): ReactElement => {
+export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerFormProps): ReactElement => {
   const classes = useStyles()
 
   const handleSubmit = (values: NewOwnerProps) => {
     onSubmit(values)
   }
-  const owners = useSelector(safeOwnersAddressesListSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const addressBookMap = useSelector(addressBookMapSelector)
+  const owners = useSelector(safeOwnersSelector)
   const ownerDoesntExist = uniqueAddress(owners)
+
+  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
   return (
@@ -85,8 +93,8 @@ export const OwnerForm = ({
         formMutators={formMutators}
         onSubmit={handleSubmit}
         initialValues={{
-          ownerName: initialValues?.newOwnerName,
-          ownerAddress: initialValues?.newOwnerAddress,
+          ownerName: initialValues?.name,
+          ownerAddress: initialValues?.address,
         }}
       >
         {(...args) => {
@@ -118,11 +126,11 @@ export const OwnerForm = ({
                 <Row className={classes.owner}>
                   <Col align="center" xs={12}>
                     <EthHashInfo
-                      hash={ownerAddress}
-                      name={ownerName}
+                      hash={owner.address}
+                      name={owner.name}
                       showCopyBtn
                       showAvatar
-                      explorerUrl={getExplorerInfo(ownerAddress)}
+                      explorerUrl={getExplorerInfo(owner.address)}
                     />
                   </Col>
                 </Row>
@@ -138,8 +146,18 @@ export const OwnerForm = ({
                       testId={REPLACE_OWNER_NAME_INPUT_TEST_ID}
                       text="Owner name*"
                       type="text"
-                      validate={composeValidators(required, minMaxLength(1, 50))}
+                      validate={composeValidators(required, validAddressBookName)}
                     />
+                    <OnChange name="ownerAddress">
+                      {async (address: string) => {
+                        if (web3ReadOnly.utils.isAddress(address)) {
+                          const ownerName = addressBookMap?.[chainId]?.[address]?.name
+                          if (ownerName) {
+                            mutators.setOwnerName(ownerName)
+                          }
+                        }
+                      }}
+                    </OnChange>
                   </Col>
                 </Row>
                 <Row margin="md">

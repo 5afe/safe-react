@@ -1,21 +1,52 @@
 import { List } from 'immutable'
 import { matchPath, RouteComponentProps } from 'react-router-dom'
 import { createSelector } from 'reselect'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
+import { getNetworkId } from 'src/config'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { AppReduxState } from 'src/store'
 
 import { checksumAddress } from 'src/utils/checksumAddress'
-import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookMapSelector, addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
 export const safesMapSelector = (state: AppReduxState): SafesMap => safesStateSelector(state).get('safes')
 
 export const safesListSelector = createSelector(safesMapSelector, (safes): List<SafeRecord> => safes.toList())
+
+const chainId = getNetworkId()
+
+type SafeRecordWithName = SafeRecordProps & { name: string }
+
+export const safesListWithAddressBookNameSelector = createSelector(
+  [safesListSelector, addressBookMapSelector],
+  (safesList, addressBookMap): List<SafeRecordWithName> => {
+    const addressBook = addressBookMap?.[chainId]
+
+    return safesList
+      .filter((safeRecord) => !safeRecord.loadedViaUrl)
+      .map((safeRecord) => {
+        const safe = safeRecord.toObject()
+        const name = addressBook?.[safe.address]?.name ?? ''
+        return { ...safe, name }
+      })
+  },
+)
+
+export const safeNameSelector = createSelector(
+  [safesListWithAddressBookNameSelector, (_, safeName: string) => safeName],
+  (safes, safeAddress): string => {
+    return safes.find((safe) => sameAddress(safe.address, safeAddress))?.name ?? ''
+  },
+)
 
 export const safesCountSelector = createSelector(safesMapSelector, (safes) => safes.size)
 
@@ -83,8 +114,6 @@ export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => 
   safe: SafeRecord,
 ): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
 
-export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
-
 export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
 
 export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))
@@ -103,19 +132,24 @@ export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFiel
 
 export const safeSpendingLimitsSelector = createSelector(safeSelector, safeFieldSelector('spendingLimits'))
 
-export const safeLoadedViaUrlSelector = createSelector(safeSelector, safeFieldSelector('loadedViaUrl'))
-
-export const safeOwnersAddressesListSelector = createSelector(
-  safeOwnersSelector,
-  (owners): List<string> => {
-    if (!owners) {
-      return List([])
-    }
-
-    return owners?.map(({ address }) => address)
-  },
-)
-
 export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
   return currentSafe?.totalFiatBalance
 })
+
+export const safeOwnersWithAddressBookDataSelector = createSelector(
+  [safeOwnersSelector, addressBookSelector, (_, chainId: ETHEREUM_NETWORK) => chainId],
+  (owners, addressBook, chainId): AppReduxState['addressBook'] | undefined =>
+    owners?.map((ownerAddress) => {
+      const ownerInAddressBook = addressBook.find(
+        (addressBookEntry) =>
+          sameAddress(ownerAddress, addressBookEntry.address) && chainId === addressBookEntry.chainId,
+      )
+
+      if (ownerInAddressBook) {
+        return ownerInAddressBook
+      }
+
+      // if there's no owner's data in the AB, we create an in-memory AB-like structure
+      return makeAddressBookEntry({ address: ownerAddress, name: '' })
+    }),
+)

@@ -1,5 +1,11 @@
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { checkAddressChecksum, toChecksumAddress } from 'web3-utils'
 
-export const checksumAddress = (address: string): string => {
-  return getWeb3().utils.toChecksumAddress(address)
+export const checksumAddress = (address: string): string => toChecksumAddress(address)
+
+export const isChecksumAddress = (address?: string): boolean => {
+  if (address) {
+    return checkAddressChecksum(address)
+  }
+
+  return false
 }

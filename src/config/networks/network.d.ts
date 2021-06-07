@@ -34,6 +34,7 @@ type Token = {
 }
 
 export enum ETHEREUM_NETWORK {
+  UNKNOWN = 0,
   MAINNET = 1,
   MORDEN = 2,
   ROPSTEN = 3,
@@ -42,9 +43,8 @@ export enum ETHEREUM_NETWORK {
   KOVAN = 42,
   XDAI = 100,
   ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
   LOCAL = 4447,
+  VOLTA = 73799,
 }
 
 export type NetworkSettings = {

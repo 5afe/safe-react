@@ -7,6 +7,9 @@ import { push } from 'connected-react-router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
+import { sameString } from 'src/utils/strings'
+import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
+import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { xs } from 'src/theme/variables'
@@ -35,13 +38,11 @@ const useStyles = makeStyles(
 
 type EllipsisTransactionDetailsProps = {
   address: string
-  knownAddress?: boolean
   sendModalOpenHandler?: () => void
 }
 
 export const EllipsisTransactionDetails = ({
   address,
-  knownAddress,
   sendModalOpenHandler,
 }: EllipsisTransactionDetailsProps): React.ReactElement => {
   const classes = useStyles()
@@ -50,6 +51,10 @@ export const EllipsisTransactionDetails = ({
   const dispatch = useDispatch()
   const currentSafeAddress = useSelector(safeParamAddressFromStateSelector)
   const isOwnerConnected = useSelector(grantedSelector)
+
+  const recipientName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
+  // We have to check that the name returned is not UNKNOWN
+  const isStoredInAddressBook = !sameString(recipientName, ADDRESS_BOOK_DEFAULT_NAME)
 
   const handleClick = (event) => setAnchorEl(event.currentTarget)
 
@@ -73,7 +78,7 @@ export const EllipsisTransactionDetails = ({
                 <Divider key="divider" />,
               ]
             : null}
-          {knownAddress ? (
+          {isStoredInAddressBook ? (
             <MenuItem onClick={addOrEditEntryHandler}>Edit Address book Entry</MenuItem>
           ) : (
             <MenuItem onClick={addOrEditEntryHandler}>Add to address book</MenuItem>

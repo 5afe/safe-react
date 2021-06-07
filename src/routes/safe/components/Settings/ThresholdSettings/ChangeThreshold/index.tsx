@@ -3,7 +3,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import Close from '@material-ui/icons/Close'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
-import { List } from 'immutable'
 
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
@@ -16,7 +15,6 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { SafeOwner } from 'src/logic/safe/store/models/safe'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -32,14 +30,14 @@ const THRESHOLD_FIELD_NAME = 'threshold'
 
 type ChangeThresholdModalProps = {
   onClose: () => void
-  owners?: List<SafeOwner>
+  ownersCount?: number
   safeAddress: string
   threshold?: number
 }
 
 export const ChangeThresholdModal = ({
   onClose,
-  owners,
+  ownersCount = 0,
   safeAddress,
   threshold = 1,
 }: ChangeThresholdModalProps): ReactElement => {
@@ -164,7 +162,7 @@ export const ChangeThresholdModal = ({
                         render={(props) => (
                           <>
                             <SelectField {...props} disableError>
-                              {[...Array(Number(owners?.size))].map((x, index) => (
+                              {[...Array(Number(ownersCount))].map((x, index) => (
                                 <MenuItem key={index} value={`${index + 1}`}>
                                   {index + 1}
                                 </MenuItem>
@@ -177,7 +175,7 @@ export const ChangeThresholdModal = ({
                     </Col>
                     <Col xs={10}>
                       <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                        {`out of ${owners?.size} owner(s)`}
+                        {`out of ${ownersCount} owner(s)`}
                       </Paragraph>
                     </Col>
                   </Row>

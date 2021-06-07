@@ -42,6 +42,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
   const classes = useStyles()
   const threshold = useSelector(safeThresholdSelector) as number
   const owners = useSelector(safeOwnersSelector)
+  const numOptions = owners ? owners.length + 1 : 0
 
   const handleSubmit = (values: SubmitProps) => {
     onSubmit(values)
@@ -79,7 +80,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
                     render={(props) => (
                       <>
                         <SelectField {...props} disableError>
-                          {[...Array(Number(owners ? owners.size + 1 : 0))].map((x, index) => (
+                          {[...Array(Number(numOptions))].map((x, index) => (
                             <MenuItem key={index} value={`${index + 1}`}>
                               {index + 1}
                             </MenuItem>
@@ -92,17 +93,12 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
                         )}
                       </>
                     )}
-                    validate={composeValidators(
-                      required,
-                      mustBeInteger,
-                      minValue(1),
-                      maxValue(owners ? owners.size + 1 : 0),
-                    )}
+                    validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(numOptions))}
                   />
                 </Col>
                 <Col xs={10}>
                   <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                    out of {owners ? owners.size + 1 : 0} owner(s)
+                    out of {numOptions} owner(s)
                   </Paragraph>
                 </Col>
               </Row>
