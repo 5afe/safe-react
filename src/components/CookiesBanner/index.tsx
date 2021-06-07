@@ -9,7 +9,6 @@ import { COOKIES_KEY } from 'src/logic/cookies/model/cookie'
 import { openCookieBanner } from 'src/logic/cookies/store/actions/openCookieBanner'
 import { cookieBannerOpen } from 'src/logic/cookies/store/selectors'
 import { loadFromCookie, saveCookie } from 'src/logic/cookies/utils'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
 import { mainFontFamily, md, primary, screenSm } from 'src/theme/variables'
 import { loadGoogleAnalytics, removeCookies } from 'src/utils/googleAnalytics'
 import { closeIntercom, isIntercomLoaded, loadIntercom } from 'src/utils/intercom'
@@ -98,7 +97,7 @@ interface CookiesBannerFormProps {
 const CookiesBanner = (): ReactElement => {
   const classes = useStyles()
   const dispatch = useRef(useDispatch())
-  const { url: appUrl } = useSafeAppUrl()
+
   const [showAnalytics, setShowAnalytics] = useState(false)
   const [showIntercom, setShowIntercom] = useState(false)
   const [localNecessary, setLocalNecessary] = useState(true)
@@ -106,12 +105,6 @@ const CookiesBanner = (): ReactElement => {
   const [localIntercom, setLocalIntercom] = useState(false)
 
   const showBanner = useSelector(cookieBannerOpen)
-
-  useEffect(() => {
-    if (appUrl) {
-      setTimeout(closeIntercom, 50)
-    }
-  }, [appUrl])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -178,7 +171,7 @@ const CookiesBanner = (): ReactElement => {
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
-  if (showIntercom && !appUrl) {
+  if (showIntercom) {
     loadIntercom()
   }
 
