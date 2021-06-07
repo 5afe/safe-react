@@ -16,7 +16,7 @@ import { getDisableModuleTxData } from 'src/logic/safe/utils/modules'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
 import { ModulePair } from 'src/logic/safe/store/models/safe'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
 import { useStyles } from './style'
@@ -35,7 +35,7 @@ interface RemoveModuleModalProps {
 export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleModalProps): React.ReactElement => {
   const classes = useStyles()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)

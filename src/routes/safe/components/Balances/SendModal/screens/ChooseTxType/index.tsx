@@ -11,7 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -38,7 +38,7 @@ const ChooseTxType = ({
   setActiveScreen,
 }: ChooseTxTypeProps): React.ReactElement => {
   const classes = useStyles()
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)

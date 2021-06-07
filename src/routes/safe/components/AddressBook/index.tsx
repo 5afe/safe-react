@@ -18,7 +18,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookQueryParamsSelector, addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
@@ -31,11 +31,12 @@ import {
   generateColumns,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
+import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -79,7 +80,7 @@ const AddressBookTable = (): ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
-  const safesList = useSelector(safesListSelector)
+  const safesList = useSelector(safesAsList)
   const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
   const addressBook = useSelector(addressBookSelector)
   const granted = useSelector(grantedSelector)
@@ -102,8 +103,8 @@ const AddressBookTable = (): ReactElement => {
   }, [entryAddressToEditOrCreateNew])
 
   useEffect(() => {
-    if (entryAddressToEditOrCreateNew) {
-      const address = checksumAddress(entryAddressToEditOrCreateNew)
+    if (isValidAddress(entryAddressToEditOrCreateNew)) {
+      const address = checksumAddress(entryAddressToEditOrCreateNew as string)
       const oldEntryIndex = addressBook.findIndex((entry) => sameAddress(entry.address, address))
 
       if (oldEntryIndex >= 0) {

@@ -16,7 +16,6 @@ import ThresholdSettings from './ThresholdSettings'
 import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
-import { getNetworkId } from 'src/config'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
@@ -25,16 +24,10 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import {
-  safeNeedsUpdateSelector,
-  safeOwnersWithAddressBookDataSelector,
-  safeSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
-
-const chainId = getNetworkId()
 
 const INITIAL_STATE = {
   showRemoveSafe: false,
@@ -46,10 +39,8 @@ const useStyles = makeStyles(styles)
 const Settings: React.FC = () => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
-  const needsUpdate = useSelector(safeNeedsUpdateSelector)
+  const { owners, needsUpdate, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
-  const safe = useSelector(safeSelector)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
@@ -72,7 +63,7 @@ const Settings: React.FC = () => {
   ) : (
     <>
       <Row className={classes.message}>
-        {!safe?.loadedViaUrl && (
+        {!loadedViaUrl && (
           <>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
               <Span className={classes.links}>Remove Safe</Span>

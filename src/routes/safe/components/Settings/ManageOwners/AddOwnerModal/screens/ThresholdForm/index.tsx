@@ -16,7 +16,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { Modal } from 'src/components/Modal'
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
@@ -40,8 +40,7 @@ type Props = {
 
 export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector) as number
-  const owners = useSelector(safeOwnersSelector)
+  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
   const numOptions = owners ? owners.length + 1 : 0
 
   const handleSubmit = (values: SubmitProps) => {

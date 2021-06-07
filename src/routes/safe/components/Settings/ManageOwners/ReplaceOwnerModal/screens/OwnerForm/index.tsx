@@ -23,10 +23,10 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { useStyles } from './style'
 import { getExplorerInfo, getNetworkId } from 'src/config'
@@ -71,10 +71,8 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
     onSubmit(values)
   }
   const addressBookMap = useSelector(addressBookMapSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const { address: safeAddress = '', owners } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
-
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
   return (
@@ -150,7 +148,7 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                     />
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
-                        if (web3ReadOnly.utils.isAddress(address)) {
+                        if (isValidAddress(address)) {
                           const ownerName = addressBookMap?.[chainId]?.[address]?.name
                           if (ownerName) {
                             mutators.setOwnerName(ownerName)

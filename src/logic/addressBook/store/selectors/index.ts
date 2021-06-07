@@ -54,3 +54,12 @@ export const getNameFromAddressBookSelector = createSelector(
   ],
   (addressBook, entry) => addressBook?.[entry.chainId]?.[entry.address]?.name ?? ADDRESS_BOOK_DEFAULT_NAME,
 )
+
+export const addressBookQueryParamsSelector = (state: AppReduxState): string | undefined => {
+  const { location } = state.router
+
+  if (location?.query) {
+    const { entryAddress } = location.query
+    return entryAddress
+  }
+}

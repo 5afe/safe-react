@@ -38,7 +38,7 @@ import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
 import { sameString } from 'src/utils/strings'
 
 import { styles } from './style'
@@ -143,7 +143,7 @@ const SendFunds = ({
     onReview({ ...submitValues, tokenSpendingLimit })
   }
 
-  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const spendingLimits = useSelector(currentSafeSpendingLimits)
   const currentUser = useSelector(userAccountSelector)
 
   const sendFundsValidation = (values) => {

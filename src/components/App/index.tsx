@@ -20,11 +20,10 @@ import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { safeTotalFiatBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
@@ -67,10 +66,10 @@ const App: React.FC = ({ children }) => {
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSafeName(safeAddress)
+  const { address: safeAddress, name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(
+    currentSafeWithNames,
+  )
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
-  const currentSafeBalance = useSelector(safeTotalFiatBalanceSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
