@@ -89,20 +89,7 @@ The GitHub Action will create a new subdomain and post the link as a comment in 
 When pushing to the `master` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
 
 ### Production
-Deployment to production is done manually. See below for the release procedure.
-
-## Releasing to production
-
-We prepare at least one release every sprint. Sprints are two weeks long.
-
-* A separate code-freeze branch named `release/X.Y.Z` is created
-* The QA team do regression testing on this branch
-* If issues are found, bugfixes are merged into this branch
-* Once the QA is done, we push the branch to `master`
-* A version tag must be created and pushed (e.g. `v3.7.0`)
-* Devops are notified to deploy the tag to prod
-* A ["release"](https://github.com/gnosis/safe-react/releases) is created on GitHub
-* Master is back-merged into the main `development` branch
+Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
 
 ## Configuring the app for running on different networks
 
