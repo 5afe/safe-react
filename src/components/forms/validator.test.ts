@@ -14,6 +14,7 @@ import {
   addressIsNotCurrentSafe,
   OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR,
   mustBeHexData,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 
 describe('Forms > Validators', () => {
@@ -247,6 +248,28 @@ describe('Forms > Validators', () => {
 
     it('Returns an error message for equal values', async () => {
       expect(differentFrom('a')('a')).toEqual(getDifferentFromErrMsg('a'))
+    })
+  })
+
+  describe('validAddressBookName validator', () => {
+    it('Returns error for an empty string', () => {
+      expect(validAddressBookName('')).toBe('Should be 1 to 50 symbols')
+    })
+    it('Returns error for a name longer than 50 chars', () => {
+      expect(validAddressBookName('abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabc')).toBe(
+        'Should be 1 to 50 symbols',
+      )
+    })
+    it('Returns error for a blacklisted name', () => {
+      const blacklistedErrorMessage = 'Name should not include: UNKNOWN, OWNER #, MY WALLET'
+
+      expect(validAddressBookName('unknown')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('unknown a')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('owner #1')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('My Wallet')).toBe(blacklistedErrorMessage)
+    })
+    it('Returns undefined for a non-blacklisted name', () => {
+      expect(validAddressBookName('A valid name')).toBeUndefined()
     })
   })
 })

@@ -1617,12 +1617,10 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-0.4.2.tgz#ae87b2164931c006cb0efdede3d82ff210df1648"
   integrity sha512-BwA2dyCebPMdi4JhhTkp6EjkhEM6vAIviKdhqHiHnSmL+sDfxtP1jdOuE8ME2/4+5TiLSS8k8qscYjLSlf1LLw==
 
-"@gnosis.pm/safe-apps-sdk@3.0.0-alpha.5":
-  version "3.0.0-alpha.5"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.0.0-alpha.5.tgz#f939e3a5719f51686151b76cb40af2ca4d410d30"
-  integrity sha512-yVvnJCl3B9Xk68vh+03rej4REx7cTfiR55b9TjqPaBtZLtY+c57UHCslUmkK+0MRMF4SyKaV5S9BOqI/iX9a3Q==
-  dependencies:
-    semver "7.1.1"
+"@gnosis.pm/safe-apps-sdk@3.1.0-alpha.0":
+  version "3.1.0-alpha.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-apps-sdk/-/safe-apps-sdk-3.1.0-alpha.0.tgz#6cc8cbf824ce15d0386598dd8bebe14076c73a17"
+  integrity sha512-d4rWyQc50lruQPYblGl7PVept5kARyjxhmQaroefy+DeQFDlpieRBymciW4ON3DqHZ40klltQlUo6HqS+Gdidg==
 
 "@gnosis.pm/safe-contracts@1.1.1-dev.2":
   version "1.1.1-dev.2"
@@ -1636,9 +1634,9 @@
     solc "0.5.14"
     truffle "^5.1.21"
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#4864ebb":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#0e4fcd6":
   version "0.6.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#4864ebb57f1c0b39963c7a5a5acc4a8bf90448ea"
+  resolved "https://github.com/gnosis/safe-react-components.git#0e4fcd619e15bb0b854195430edcac64feacc8e2"
   dependencies:
     classnames "^2.2.6"
     react-media "^1.10.0"
@@ -3547,6 +3545,13 @@
   version "4.1.2"
   resolved "https://registry.yarnpkg.com/@types/npmlog/-/npmlog-4.1.2.tgz#d070fe6a6b78755d1092a3dc492d34c3d8f871c4"
   integrity sha512-4QQmOF5KlwfxJ5IGXFIudkeLCdMABz03RcUXu+LCb24zmln8QW6aDjuGl4d4XPVLf2j+FnjelHTP7dvceAFbhA==
+
+"@types/papaparse@^5.0.4":
+  version "5.2.5"
+  resolved "https://registry.yarnpkg.com/@types/papaparse/-/papaparse-5.2.5.tgz#9d3cd9d932eb0dccda9e3f73f39996c4da3fa628"
+  integrity sha512-TlqGskBad6skAgx2ifQmkO/FwiwObuWltBvX2bDceQhXh9IyZ7jYCK7qwhjB67kxw+0LJDXXM4jN3lcGqm1g5w==
+  dependencies:
+    "@types/node" "*"
 
 "@types/parse-json@^4.0.0":
   version "4.0.0"
@@ -7929,9 +7934,9 @@ dns-equal@^1.0.0:
   integrity sha1-s55/HabrCnW6nBcySzR1PEfgZU0=
 
 dns-packet@^1.3.1:
-  version "1.3.1"
-  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-1.3.1.tgz#12aa426981075be500b910eedcd0b47dd7deda5a"
-  integrity sha512-0UxfQkMhYAUaZI+xrNZOz/as5KgDU0M/fQ9b6SpkyLbk3GEswDi6PADJVaYJradtRVsRIlF1zLyOodbcTCDzUg==
+  version "1.3.4"
+  resolved "https://registry.yarnpkg.com/dns-packet/-/dns-packet-1.3.4.tgz#e3455065824a2507ba886c55a89963bb107dec6f"
+  integrity sha512-BQ6F4vycLXBvdrJZ6S3gZewt6rcrks9KBgM9vrhW+knGRqc8uEdT7fuCwloc7nny5xNoMJ17HGH0R/6fpo8ECA==
   dependencies:
     ip "^1.1.0"
     safe-buffer "^5.0.1"
@@ -13647,6 +13652,11 @@ merge2@^1.2.3, merge2@^1.3.0:
   resolved "https://registry.yarnpkg.com/merge2/-/merge2-1.4.1.tgz#4368892f885e907455a6fd7dc55c0c9d404990ae"
   integrity sha512-8q7VEgMJW4J8tcfVPy8g09NcQwZdbwFEqhe/WZkoIzjn/3TGDwtOCYtXGxA3O8tPzpczCCDgv+P2P5y00ZJOOg==
 
+merge@2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/merge/-/merge-2.1.0.tgz#91fff62458ba2eca378dd395fa85f1690bf87f60"
+  integrity sha512-TcuhVDV+e6X457MQAm7xIb19rWhZuEDEho7RrwxMpQ/3GhD5sDlnP188gjQQuweXHy9igdke5oUtVOXX1X8Sxg==
+
 merkle-patricia-tree@^2.1.2, merkle-patricia-tree@^2.3.2:
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/merkle-patricia-tree/-/merkle-patricia-tree-2.3.2.tgz#982ca1b5a0fde00eed2f6aeed1f9152860b8208a"
@@ -14856,6 +14866,11 @@ pako@^1.0.4, pako@~1.0.5:
   version "1.0.11"
   resolved "https://registry.yarnpkg.com/pako/-/pako-1.0.11.tgz#6c9599d340d54dfd3946380252a35705a6b992bf"
   integrity sha512-4hLB8Py4zZce5s4yd9XzopqwVv/yGNhV1Bl8NTmCq1763HeK2+EwVTv+leGeL13Dnh2wfbqowVPXCIO0z4taYw==
+
+papaparse@^5.2.0:
+  version "5.3.0"
+  resolved "https://registry.yarnpkg.com/papaparse/-/papaparse-5.3.0.tgz#ab1702feb96e79ab4309652f36db9536563ad05a"
+  integrity sha512-Lb7jN/4bTpiuGPrYy4tkKoUS8sTki8zacB5ke1p5zolhcSE4TlWgrlsxjrDTbG/dFVh07ck7X36hUf/b5V68pg==
 
 parallel-transform@^1.1.0:
   version "1.2.0"
@@ -16792,6 +16807,14 @@ react-modal@^3.12.1:
     react-lifecycles-compat "^3.0.0"
     warning "^4.0.3"
 
+react-papaparse@^3.14.0:
+  version "3.14.0"
+  resolved "https://registry.yarnpkg.com/react-papaparse/-/react-papaparse-3.14.0.tgz#4b4e9981656d8e72889ae312d2781ca001b40c78"
+  integrity sha512-EfVJdyy9J4Ee4gS2qB9g5kPWLxlAnsguG6cpC+SHpVS2iVPoDqeUi9OTu8YwgFCoj5x+FF1o1S/lF/j5bfEmRA==
+  dependencies:
+    "@types/papaparse" "^5.0.4"
+    papaparse "^5.2.0"
+
 react-popper-tooltip@^2.8.3:
   version "2.11.1"
   resolved "https://registry.yarnpkg.com/react-popper-tooltip/-/react-popper-tooltip-2.11.1.tgz#3c4bdfd8bc10d1c2b9a162e859bab8958f5b2644"
@@ -17189,6 +17212,13 @@ redux-devtools-instrument@^1.9.4:
   dependencies:
     lodash "^4.17.19"
     symbol-observable "^1.2.0"
+
+redux-localstorage-simple@^2.4.0:
+  version "2.4.0"
+  resolved "https://registry.yarnpkg.com/redux-localstorage-simple/-/redux-localstorage-simple-2.4.0.tgz#2e016331a7e870e96c65ab3f79e5273a03faccc4"
+  integrity sha512-Zj28elJtO4fqXXC+gikonbKhFUkiwlalScYRn3EGUU44Pika1995AqUgzjIcsSPlBhIDV2WudFqa/YI9+3aE9Q==
+  dependencies:
+    merge "2.1.0"
 
 redux-mock-store@^1.5.4:
   version "1.5.4"
@@ -17987,11 +18017,6 @@ semver@7.0.0:
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/semver/-/semver-7.0.0.tgz#5f3ca35761e47e05b206c6daff2cf814f0316b8e"
   integrity sha512-+GB6zVA9LWh6zovYQLALHwv5rb2PHGlJi3lfiqIHxR0uuwCgefcOJc59v9fv1w8GbStwxuuqqAjI9NMAOOgq1A==
-
-semver@7.1.1:
-  version "7.1.1"
-  resolved "https://registry.yarnpkg.com/semver/-/semver-7.1.1.tgz#29104598a197d6cbe4733eeecbe968f7b43a9667"
-  integrity sha512-WfuG+fl6eh3eZ2qAf6goB7nhiCd7NPXhmyFxigB/TOkQyeLP8w8GsVehvtGNtnNmyboz4TgeK40B1Kbql/8c5A==
 
 semver@7.3.2:
   version "7.3.2"

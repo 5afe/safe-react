@@ -5,7 +5,7 @@ import React, { Dispatch, ReactElement, SetStateAction, useEffect, useState } fr
 import { useSelector } from 'react-redux'
 
 import { mustBeEthereumAddress, mustBeEthereumContractAddress } from 'src/components/forms/validator'
-import { isFeatureEnabled } from 'src/config'
+import { getNetworkId, isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
@@ -17,6 +17,8 @@ import {
   useTextFieldLabelStyle,
 } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
 import { trimSpaces } from 'src/utils/strings'
+
+const chainId = getNetworkId()
 
 export interface AddressBookProps {
   fieldMutator: (address: string) => void
@@ -65,8 +67,8 @@ const BaseAddressBookInput = ({
   const onChange: AutocompleteProps<AddressBookEntry, false, false, true>['onChange'] = (_, value, reason) => {
     switch (reason) {
       case 'select-option': {
-        const { address, name } = value as AddressBookEntry
-        updateAddressInfo({ address, name })
+        const { address, name, chainId } = value as AddressBookEntry
+        updateAddressInfo({ address, name, chainId })
         break
       }
     }
@@ -99,7 +101,14 @@ const BaseAddressBookInput = ({
             break
           }
 
-          const newEntry = typeof validatedAddress === 'string' ? { address, name: normalizedValue } : validatedAddress
+          const newEntry =
+            typeof validatedAddress === 'string'
+              ? {
+                  address,
+                  name: normalizedValue,
+                  chainId,
+                }
+              : validatedAddress
 
           updateAddressInfo(newEntry)
           break
@@ -114,7 +123,13 @@ const BaseAddressBookInput = ({
         }
 
         const newEntry =
-          typeof validatedAddress === 'string' ? { address: validatedAddress, name: '' } : validatedAddress
+          typeof validatedAddress === 'string'
+            ? {
+                address: validatedAddress,
+                name: '',
+                chainId,
+              }
+            : validatedAddress
 
         updateAddressInfo(newEntry)
 

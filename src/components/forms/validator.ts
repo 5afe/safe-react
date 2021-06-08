@@ -1,10 +1,11 @@
-import { List } from 'immutable'
 import memoize from 'lodash.memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { isValidAddress } from 'src/utils/isValidAddress'
+import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -74,9 +75,7 @@ export const mustBeHexData = (data: string): ValidatorReturnType => {
 export const mustBeAddressHash = memoize(
   (address: string): ValidatorReturnType => {
     const errorMessage = 'Must be a valid address'
-    const startsWith0x = address?.startsWith('0x')
-    const isAddress = getWeb3().utils.isAddress(address)
-    return startsWith0x && isAddress ? undefined : errorMessage
+    return isValidAddress(address) ? undefined : errorMessage
   },
 )
 
@@ -101,8 +100,12 @@ export const mustBeEthereumContractAddress = memoize(
   },
 )
 
-export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType =>
-  value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
+export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
+  const testValue = value || ''
+  return testValue.length >= +minLen && testValue.length <= +maxLen
+    ? undefined
+    : `Should be ${minLen} to ${maxLen} symbols`
+}
 
 export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
   const decimals = value.split('.')[1] || '0'
@@ -113,7 +116,7 @@ export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 
-export const uniqueAddress = (addresses: string[] | List<string> = []) => (address?: string): string | undefined => {
+export const uniqueAddress = (addresses: string[] = []) => (address?: string): string | undefined => {
   const addressExists = addresses.some((addressFromList) => sameAddress(addressFromList, address))
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }
@@ -136,3 +139,15 @@ export const differentFrom = (diffValue: number | string) => (value: string): Va
 }
 
 export const noErrorsOn = (name: string, errors: Record<string, unknown>): boolean => errors[name] === undefined
+
+export const validAddressBookName = (name: string): string | undefined => {
+  const lengthError = minMaxLength(1, 50)(name)
+
+  if (lengthError === undefined) {
+    return isValidAddressBookName(name)
+      ? undefined
+      : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
+  }
+
+  return lengthError
+}

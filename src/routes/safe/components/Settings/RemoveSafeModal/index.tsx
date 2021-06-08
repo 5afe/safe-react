@@ -1,3 +1,4 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
@@ -5,24 +6,22 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
 
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import {
-  defaultSafeSelector,
-  safeNameSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
+import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { saveDefaultSafe } from 'src/logic/safe/utils'
 
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId } from 'src/config'
 import Col from 'src/components/layout/Col'
+
+const chainId = getNetworkId()
 
 type RemoveSafeModalProps = {
   isOpen: boolean
@@ -32,12 +31,16 @@ type RemoveSafeModalProps = {
 export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
+  const addressBookMap = useSelector(addressBookMapSelector)
+  const safeAddressBookEntry = addressBookMap[chainId]?.[safeAddress]
+  const safeName = safeAddressBookEntry?.name
   const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
 
   const onRemoveSafeHandler = async () => {
+    // ToDo: review if this is necessary or we should directly use the `removeSafe` action.
     await dispatch(removeLocalSafe(safeAddress))
+
     if (sameAddress(safeAddress, defaultSafe)) {
       await saveDefaultSafe('')
     }
