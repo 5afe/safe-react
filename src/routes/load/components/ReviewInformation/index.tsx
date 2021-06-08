@@ -104,7 +104,7 @@ const ReviewComponent = ({ userAddress, values }: Props): ReactElement => {
           </Block>
           <Hairline />
           {owners.map((address, index) => (
-            <Fragment key={`${address}_${index}`}>
+            <Fragment key={address}>
               <Row className={classes.owner} testId={'load-safe-review-owner-name-' + index}>
                 <Col align="center" xs={12}>
                   <EthHashInfo
