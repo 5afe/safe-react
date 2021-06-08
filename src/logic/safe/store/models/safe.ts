@@ -53,7 +53,7 @@ const makeSafe = Record<SafeRecordProps>({
   currentVersion: '',
   needsUpdate: false,
   featuresEnabled: [],
-  loadedViaUrl: true,
+  loadedViaUrl: false,
 })
 
 export type SafeRecord = RecordOf<SafeRecordProps>
