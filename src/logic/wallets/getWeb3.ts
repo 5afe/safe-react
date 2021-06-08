@@ -19,6 +19,7 @@ export const WALLET_PROVIDER = {
   FORTMATIC: 'FORTMATIC',
   SQUARELINK: 'SQUARELINK',
   WALLETCONNECT: 'WALLETCONNECT',
+  TRUST: 'TRUST',
   OPERA: 'OPERA',
   // This is the provider for WALLET_LINK configuration on bnc-onboard
   COINBASE_WALLET: 'COINBASE WALLET',
