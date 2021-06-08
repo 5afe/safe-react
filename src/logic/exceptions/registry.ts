@@ -7,6 +7,7 @@
 enum ErrorCodes {
   ___0 = '0: No such error code',
   _100 = '100: Invalid input in the address field',
+  _101 = '101: Failed to resolve the address',
   _200 = '200: Failed migrating to the address book v2',
   _600 = '600: Error fetching token list',
   _601 = '601: Error fetching balances',
