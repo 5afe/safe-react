@@ -45,6 +45,7 @@ const migrateSafeNames = ({ states, namespace, namespaceSeparator }: StorageConf
   Object.values(parsedStoredSafes).forEach((item) => {
     item.owners = item.owners.map((owner: any) => owner.address)
     delete item.name
+    item.loadedViaUrl = false
   })
   const migratedSafes = parsedStoredSafes as StoredSafes
 
