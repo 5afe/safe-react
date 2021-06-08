@@ -68,7 +68,7 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
   const networkName = getNetworkName().toLowerCase()
   const networks = getNetworks()
-  const { isDesktop }: { isDesktop: boolean } = (window as unknown) as Partial<Window> & { isDesktop: boolean }
+  const { isDesktop } = window as Window
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">

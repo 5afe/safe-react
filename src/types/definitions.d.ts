@@ -6,6 +6,7 @@ type Theme = typeof theme
 export {}
 declare global {
   interface Window {
+    isDesktop: boolean | undefined
     ethereum?: {
       autoRefreshOnNetworkChange: boolean
       isMetaMask: boolean
