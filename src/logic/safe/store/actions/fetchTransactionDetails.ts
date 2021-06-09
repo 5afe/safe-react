@@ -1,13 +1,12 @@
-import axios, { AxiosResponse } from 'axios'
 import { createAction } from 'redux-actions'
 
-import { getTxDetailsUrl } from 'src/config'
 import { Dispatch } from 'src/logic/safe/store/actions/types'
-import { ExpandedTxDetails, Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction, TxLocation } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionDetailsPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getTransactionDetails } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { AppReduxState } from 'src/store'
+import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 
 export const UPDATE_TRANSACTION_DETAILS = 'UPDATE_TRANSACTION_DETAILS'
 const updateTransactionDetails = createAction<TransactionDetailsPayload>(UPDATE_TRANSACTION_DETAILS)
@@ -24,15 +23,14 @@ export const fetchTransactionDetails = ({
     attributeName: 'id',
     txLocation,
   })
-  const safeAddress = safeParamAddressFromStateSelector(getState())
+  const safeAddress = safeAddressFromUrl(getState())
 
-  if (txDetails) {
+  if (txDetails || !safeAddress) {
     return
   }
 
   try {
-    const url = getTxDetailsUrl(transactionId)
-    const { data: transactionDetails } = await axios.get<ExpandedTxDetails, AxiosResponse<ExpandedTxDetails>>(url)
+    const transactionDetails = await fetchSafeTransaction(transactionId)
 
     dispatch(updateTransactionDetails({ transactionId, txLocation, safeAddress, value: transactionDetails }))
   } catch (error) {

@@ -3,12 +3,12 @@ import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getExplorerInfo } from 'src/config'
-import { getNameFromAddressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { sameString } from 'src/utils/strings'
 
 export const OwnerRow = ({ address }: { address: string }): ReactElement => {
-  const ownerName = useSelector((state) => getNameFromAddressBookSelector(state, { address }))
+  const ownerName = useSelector((state) => addressBookEntryName(state, { address }))
 
   return (
     <EthHashInfo

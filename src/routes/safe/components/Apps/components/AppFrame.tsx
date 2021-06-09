@@ -1,13 +1,12 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { GetBalanceParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 
-import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -18,7 +17,7 @@ import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { ConfirmTxModal } from '../components/ConfirmTxModal'
+import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
@@ -26,6 +25,7 @@ import { getAppInfoFromUrl } from '../utils'
 import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -83,9 +83,7 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const ethBalance = useSelector(safeEthBalanceSelector)
-  const safeName = useSafeName(safeAddress)
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
@@ -161,6 +159,14 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getEnvInfo', () => ({
       txServiceUrl: getTxServiceUrl(),
     }))
+
+    communicator?.on('getTxBySafeTxHash', async (msg) => {
+      const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
+
+      const tx = await fetchSafeTransaction(safeTxHash)
+
+      return tx
+    })
 
     communicator?.on('getSafeInfo', () => ({
       safeAddress,

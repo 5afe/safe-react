@@ -16,7 +16,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { processTransaction } from 'src/logic/safe/store/actions/processTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -66,7 +66,7 @@ const getModalTitleAndDescription = (thresholdReached, isCancelTx) => {
 
 const useTxInfo = (transaction: Props['transaction']) => {
   const t = useRef(transaction)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
 
   const confirmations = useMemo(
     () =>
@@ -213,7 +213,7 @@ export const ApproveTxModal = ({
   const dispatch = useDispatch()
   const userAddress = useSelector(userAccountSelector)
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
   const thresholdReached = !!(transaction.executionInfo && isThresholdReached(transaction.executionInfo))
   const _threshold = transaction.executionInfo?.confirmationsRequired ?? 0

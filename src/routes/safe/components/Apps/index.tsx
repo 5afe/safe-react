@@ -1,14 +1,20 @@
 import React from 'react'
-import { useSafeAppUrl } from 'src/logic/hooks/useSafeAppUrl'
+
+import { useLocation } from 'react-router-dom'
 
 import AppFrame from './components/AppFrame'
 import AppsList from './components/AppsList'
 
-const Apps = (): React.ReactElement => {
-  const { url } = useSafeAppUrl()
+const useQuery = () => {
+  return new URLSearchParams(useLocation().search)
+}
 
-  if (url) {
-    return <AppFrame appUrl={url} />
+const Apps = (): React.ReactElement => {
+  const query = useQuery()
+  const appUrl = query.get('appUrl')
+
+  if (appUrl) {
+    return <AppFrame appUrl={appUrl} />
   } else {
     return <AppsList />
   }

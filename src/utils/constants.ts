@@ -24,8 +24,6 @@ export const COLLECTIBLES_SOURCE = process.env.REACT_APP_COLLECTIBLES_SOURCE || 
 export const TIMEOUT = process.env.NODE_ENV === 'test' ? 1500 : 5000
 export const ETHERSCAN_API_KEY = process.env.REACT_APP_ETHERSCAN_API_KEY
 export const ETHGASSTATION_API_KEY = process.env.REACT_APP_ETHGASSTATION_API_KEY
-export const EXCHANGE_RATE_URL = 'https://api.exchangeratesapi.io/latest'
-export const EXCHANGE_RATE_URL_FALLBACK = 'https://api.coinbase.com/v2/exchange-rates'
 export const SAFE_APPS_LIST_URL =
   process.env.REACT_APP_SAFE_APPS_LIST_URL ||
   'https://raw.githubusercontent.com/gnosis/safe-apps-list/main/public/gnosis-default.applist.json'

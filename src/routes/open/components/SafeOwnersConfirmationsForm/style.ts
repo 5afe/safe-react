@@ -66,7 +66,7 @@ export const styles = createStyles({
   },
   remove: {
     height: '56px',
-    maxWidth: '50px',
+    maxWidth: '32px',
     '&:hover': {
       cursor: 'pointer',
     },
