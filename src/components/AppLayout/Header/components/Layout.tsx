@@ -17,7 +17,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
-import { getNetworkName, getNetworks } from 'src/config'
+import { getNetworks } from 'src/config'
 
 const styles = () => ({
   root: {
@@ -66,7 +66,6 @@ const styles = () => ({
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
   const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
-  const networkName = getNetworkName().toLowerCase()
   const networks = getNetworks()
   const { isDesktop } = window
   return (
@@ -107,7 +106,6 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
         <NetworkSelector
           open={openNetworks}
           networks={networks}
-          selected={networkName}
           toggle={toggleNetworks}
           clickAway={clickAwayNetworks}
         />

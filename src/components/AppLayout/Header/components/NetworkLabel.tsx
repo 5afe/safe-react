@@ -28,19 +28,13 @@ const StyledParagraph = styled(Paragraph)<{ network: Partial<NetworkSettings> }>
   text-align: center;
 `
 
-const NetworkLabel = ({
-  networkName,
-  networkInfo,
-}: {
-  networkName?: string
-  networkInfo?: NetworkInfo
-}): React.ReactElement => {
+const NetworkLabel = ({ networkInfo }: { networkInfo?: NetworkInfo }): React.ReactElement => {
   const selectedNetwork = networkInfo || currentNetworkInfo
 
   return (
     <StyledCol middle="xs" start="xs">
       <StyledParagraph network={selectedNetwork} size="xs">
-        {networkName}
+        {selectedNetwork.label}
       </StyledParagraph>
     </StyledCol>
   )

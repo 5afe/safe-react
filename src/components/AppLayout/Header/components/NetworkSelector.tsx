@@ -15,6 +15,7 @@ import Col from 'src/components/layout/Col'
 import { screenSm, sm } from 'src/theme/variables'
 
 import { sameString } from 'src/utils/strings'
+import { getNetworkName } from 'src/config'
 import { ReturnValue } from 'src/logic/hooks/useStateHandler'
 import { NetworkInfo } from 'src/config/networks/network'
 
@@ -74,18 +75,18 @@ const StyledDivider = styled(Divider)`
 `
 
 type NetworkSelectorProps = ReturnValue & {
-  selected: string
   networks: NetworkInfo[]
 }
 
-const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: NetworkSelectorProps): ReactElement => {
+const NetworkSelector = ({ open, toggle, networks, clickAway }: NetworkSelectorProps): ReactElement => {
   const networkRef = useRef(null)
   const classes = useStyles()
+  const networkName = getNetworkName().toLowerCase()
   return (
     <>
       <div className={classes.root} ref={networkRef}>
         <Col className={classes.networkList} end="sm" middle="xs" onClick={toggle}>
-          <NetworkLabel networkName={selected} />
+          <NetworkLabel />
           <IconButton className={classes.expand} disableRipple>
             {open ? <ExpandLess /> : <ExpandMore />}
           </IconButton>
@@ -107,8 +108,8 @@ const NetworkSelector = ({ open, toggle, selected, networks, clickAway }: Networ
                   {networks.map((network) => (
                     <Fragment key={network.id}>
                       <StyledLink href={network.safeUrl}>
-                        <NetworkLabel networkInfo={network} networkName={network.label} />
-                        {sameString(selected, network.label?.toLowerCase()) && (
+                        <NetworkLabel networkInfo={network} />
+                        {sameString(networkName, network.label?.toLowerCase()) && (
                           <Icon type="check" size="md" color="primary" />
                         )}
                       </StyledLink>
