@@ -17,7 +17,9 @@ enum ErrorCodes {
   _605 = '605: Error fetching safe info',
   _606 = '605: Error fetching safe version',
   _607 = '607: Error fetching available currencies',
-  _701 = '701: Failed to get local safe info',
+  _700 = '700: Failed to load a localStorage item',
+  _701 = '701: Failed to save a localStorage item',
+  _702 = '702: Failed to remove a localStorage item',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
 }
