@@ -3,7 +3,7 @@ import { saveSafes, StoredSafes } from 'src/logic/safe/utils'
 import { removeFromStorage } from 'src/utils/storage'
 import { getNetworkName } from 'src/config'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { Errors, trackError } from 'src/logic/exceptions/CodedException'
 import { getEntryIndex, isValidAddressBookName } from '.'
 
 interface StorageConfig {
@@ -126,7 +126,7 @@ const migrate = (storageConfig: StorageConfig): void => {
     migrateAddressBook(storageConfig)
     migrateSafeNames(storageConfig)
   } catch (e) {
-    logError(Errors._200, e.message)
+    trackError(Errors._200, e.message)
   }
 }
 

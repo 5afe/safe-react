@@ -1,4 +1,4 @@
-import { Errors, logError, CodedException } from './CodedException'
+import { Errors, logError, trackError, CodedException } from './CodedException'
 import * as constants from 'src/utils/constants'
 import * as Sentry from '@sentry/react'
 
@@ -58,8 +58,11 @@ describe('CodedException', () => {
       jest.mock('console')
       console.error = jest.fn()
     })
-    afterEach(() => {
+    afterAll(() => {
       jest.unmock('console')
+    })
+
+    afterEach(() => {
       ;(constants as any).IS_PRODUCTION = false
     })
 
@@ -85,26 +88,30 @@ describe('CodedException', () => {
   })
 
   describe('Tracking', () => {
+    beforeAll(() => {
+      jest.mock('console')
+      console.error = jest.fn()
+    })
+    afterAll(() => {
+      jest.unmock('console')
+    })
+
     afterEach(() => {
       ;(constants as any).IS_PRODUCTION = false
     })
 
     it('tracks using Sentry on production', () => {
       ;(constants as any).IS_PRODUCTION = true
-      logError(Errors._100)
+      const err = trackError(Errors._100)
       expect(Sentry.captureException).toHaveBeenCalled()
-    })
-
-    it("doesn't track when isTracked is false", () => {
-      ;(constants as any).IS_PRODUCTION = true
-      logError(Errors._100, '', undefined, false)
-      expect(Sentry.captureException).not.toHaveBeenCalled()
+      expect(console.error).toHaveBeenCalledWith(err.message)
     })
 
     it('does not track using Sentry in non-production envs', () => {
       ;(constants as any).IS_PRODUCTION = false
-      logError(Errors._100)
+      const err = trackError(Errors._100)
       expect(Sentry.captureException).not.toHaveBeenCalled()
+      expect(console.error).toHaveBeenCalledWith(err)
     })
   })
 })

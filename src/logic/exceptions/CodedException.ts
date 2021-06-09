@@ -25,27 +25,41 @@ export class CodedException extends Error {
     this.context = context
   }
 
-  /**
-   * Log the error in the console and send to Sentry
-   */
-  public log(isTracked = true): void {
+  public log(): void {
+    // Filter out the logError fn from the stack trace
+    if (this.stack) {
+      const newStack = this.stack
+        .split('\n')
+        .filter((line) => !line.includes(logError.name))
+        .join('\n')
+      try {
+        this.stack = newStack
+      } catch (e) {}
+    }
+
     // Log only the message on prod, and the full error on dev
     console.error(IS_PRODUCTION ? this.message : this)
+  }
 
-    if (IS_PRODUCTION && isTracked) {
+  public track(): void {
+    if (IS_PRODUCTION) {
       Sentry.captureException(this, this.context)
     }
   }
 }
 
-export function logError(
-  content: ErrorCodes,
-  extraMessage?: string,
-  context?: CaptureContext,
-  isTracked?: boolean,
-): CodedException {
-  const error = new CodedException(content, extraMessage, context)
-  error.log(isTracked)
+type ErrorHandler = (content: ErrorCodes, extraMessage?: string, context?: CaptureContext) => CodedException
+
+export const logError: ErrorHandler = function logError(...args) {
+  const error = new CodedException(...args)
+  error.log()
+  return error
+}
+
+export const trackError: ErrorHandler = function trackError(...args) {
+  const error = new CodedException(...args)
+  error.log()
+  error.track()
   return error
 }
 
