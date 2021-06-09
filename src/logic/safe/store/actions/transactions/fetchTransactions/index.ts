@@ -7,6 +7,7 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { loadHistoryTransactions, loadQueuedTransactions } from './loadGatewayTransactions'
 import { AppReduxState } from 'src/store'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export default (safeAddress: string) => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
@@ -23,13 +24,13 @@ export default (safeAddress: string) => async (
       dispatch(addHistoryTransactions({ safeAddress, values }))
     }
   } else {
-    console.error('Failed to load history transactions', history.reason)
+    logError(Errors._602, history.reason)
   }
 
   if (queued.status === 'fulfilled') {
     const values = queued.value
     dispatch(addQueuedTransactions({ safeAddress, values }))
   } else {
-    console.error('Failed to load queued transactions', queued.reason)
+    logError(Errors._603, queued.reason)
   }
 }

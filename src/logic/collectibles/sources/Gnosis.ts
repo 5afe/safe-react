@@ -5,6 +5,7 @@ import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
 import { TokenType } from 'src/logic/safe/store/models/types/gateway.d'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 type FetchResult = {
   erc721Assets: TokenResult[]
@@ -35,7 +36,7 @@ class Gnosis {
       collectibles.erc721Assets = this._getAssetsFromTokens(tokens.data)
       collectibles.erc721Tokens = tokens.data || []
     } catch (error) {
-      console.error('no erc721 tokens for the current safe', error)
+      logError(Errors._604, error.message)
     }
 
     return collectibles

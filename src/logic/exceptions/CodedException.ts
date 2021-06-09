@@ -20,7 +20,7 @@ export class CodedException extends Error {
     }
 
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
-    this.message = `${content}${extraInfo}`
+    this.message = `Code ${content}${extraInfo}`
     this.code = code
     this.context = context
   }

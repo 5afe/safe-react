@@ -4,10 +4,10 @@ import { Action } from 'redux-actions'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
-import { allSettled } from 'src/logic/safe/utils/allSettled'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -23,10 +23,16 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
   // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
   const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
-  const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
-    getSafeInfo(safeAddress),
-    getLocalSafe(safeAddress),
-  )
+  const [remote, localSafeInfo] = await Promise.all([
+    getSafeInfo(safeAddress).catch((err) => {
+      logError(Errors._605, err.message)
+      return null
+    }),
+    getLocalSafe(safeAddress).catch((err) => {
+      logError(Errors._701, err.message)
+      return null
+    }),
+  ])
 
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
@@ -46,20 +52,35 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  */
 export const fetchSafe = (safeAddress: string) => async (
   dispatch: Dispatch,
-): Promise<Action<Partial<SafeRecordProps>>> => {
-  const address = checksumAddress(safeAddress)
+): Promise<Action<Partial<SafeRecordProps>> | void> => {
+  let address = ''
+  try {
+    address = checksumAddress(safeAddress)
+  } catch (err) {
+    logError(Errors._605, err.message)
+    return
+  }
 
-  const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
+  let safeInfo = {}
+  let remoteSafeInfo: SafeInfo | null = null
+
+  // if there's no remote info, we keep what's in memory
+  try {
+    remoteSafeInfo = await getSafeInfo(address)
+  } catch (err) {
+    logError(Errors._605, err.message)
+  }
 
   // remote (client-gateway)
-  const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
+  if (remoteSafeInfo) {
+    try {
+      safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
+    } catch (err) {
+      logError(Errors._605, err.message)
+    }
+  }
 
-  // update owner's information
-  const owners = remoteSafeInfo
-    ? // if we have remote info, we use it
-      buildSafeOwners(remoteSafeInfo.owners)
-    : // if there's no remote info, we keep what's in memory
-      undefined
+  const owners = buildSafeOwners(remoteSafeInfo?.owners)
 
   return dispatch(updateSafe({ address, ...safeInfo, owners }))
 }
