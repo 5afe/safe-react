@@ -11,7 +11,7 @@ import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
+import { encodeMultiSendCall, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
@@ -155,7 +155,7 @@ export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): Multi
 
   return {
     to: multiSendTx.to,
-    value: Number(multiSendTx.valueInWei),
+    value: multiSendTx.valueInWei,
     data: multiSendTx.txData as string,
   }
 }
@@ -165,7 +165,7 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
 
   return {
     to: SPENDING_LIMIT_MODULE_ADDRESS,
-    value: 0,
+    value: '0',
     data: spendingLimitContract.methods.addDelegate(beneficiary).encodeABI(),
   }
 }
@@ -175,7 +175,7 @@ export const getResetSpendingLimitTx = (beneficiary: string, token: string): Mul
 
   return {
     to: SPENDING_LIMIT_MODULE_ADDRESS,
-    value: 0,
+    value: '0',
     data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
   }
 }
@@ -216,7 +216,7 @@ export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiS
 
   return {
     to: tx.to,
-    value: Number(tx.valueInWei),
+    value: tx.valueInWei,
     data: tx.txData as string,
   }
 }
@@ -232,7 +232,7 @@ export const spendingLimitMultiSendTx = ({
   safeAddress,
   to: MULTI_SEND_ADDRESS,
   valueInWei: ZERO_VALUE,
-  txData: getEncodedMultiSendCallData(transactions, getWeb3()),
+  txData: encodeMultiSendCall(transactions),
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
   operation: DELEGATE_CALL,
 })

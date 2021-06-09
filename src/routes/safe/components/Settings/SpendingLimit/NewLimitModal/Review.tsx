@@ -17,7 +17,7 @@ import {
   spendingLimitMultiSendTx,
   SpendingLimitRow,
 } from 'src/logic/safe/utils/spendingLimits'
-import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
+import { MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'

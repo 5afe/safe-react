@@ -4,6 +4,7 @@ import {
   getSafeSingletonDeployment,
   getProxyFactoryDeployment,
   getFallbackHandlerDeployment,
+  getMultiSendDeployment,
 } from '@gnosis.pm/safe-deployments'
 import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import Web3 from 'web3'
@@ -16,6 +17,7 @@ import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
 import { FallbackManager } from 'src/types/contracts/FallbackManager.d'
+import { MultiSend } from 'src/types/contracts/MultiSend.d'
 import { AllowanceModule } from 'src/types/contracts/AllowanceModule.d'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
@@ -28,6 +30,7 @@ export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe
 let fallbackHandler: FallbackManager
+let multiSend: MultiSend
 
 /**
  * Creates a Contract instance of the GnosisSafe contract
@@ -88,6 +91,23 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
   ) as unknown) as FallbackManager
 }
 
+/**
+ * Creates a Contract instance of the MultiSend contract
+ * @param {Web3} web3
+ * @param {ETHEREUM_NETWORK} networkId
+ */
+const getMultiSendContract = (web3: Web3, networkId: ETHEREUM_NETWORK): MultiSend => {
+  const multiSendDeployment = getMultiSendDeployment({
+    version: LATEST_SAFE_VERSION,
+    network: networkId.toString(),
+  })
+  // TODO: this may not be the most scalable approach,
+  //  but up until v1.2.0 the address is the same for all the networks.
+  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
+  const contractAddress = multiSendDeployment?.networkAddresses[networkId] ?? multiSendDeployment?.defaultAddress
+  return (new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown) as MultiSend
+}
+
 export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
   const res = await getSafeInfo(proxyAddress)
   const masterCopyAddress = (res as SafeInfo)?.implementation.value
@@ -110,6 +130,9 @@ export const instantiateSafeContracts = async () => {
 
   // Create Fallback Handler
   fallbackHandler = getFallbackHandlerContract(web3, networkId)
+
+  // Create MultiSend contract
+  multiSend = getMultiSendContract(web3, networkId)
 }
 
 export const getSafeMasterContract = async () => {
@@ -123,6 +146,10 @@ export const getSafeMasterContractAddress = () => {
 
 export const getFallbackHandlerContractAddress = () => {
   return fallbackHandler.options.address
+}
+
+export const getMultisendContractAddress = () => {
+  return multiSend.options.address
 }
 
 export const getSafeDeploymentTransaction = (

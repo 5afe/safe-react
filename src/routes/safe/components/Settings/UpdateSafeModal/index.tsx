@@ -53,11 +53,8 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const calculateUpgradeSafeModal = async () => {
-      const encodeMultiSendCallData = await getUpgradeSafeTransactionHash(safeAddress)
-      setMultiSendCallData(encodeMultiSendCallData)
-    }
-    calculateUpgradeSafeModal()
+    const encodeMultiSendCallData = getUpgradeSafeTransactionHash(safeAddress)
+    setMultiSendCallData(encodeMultiSendCallData)
   }, [safeAddress])
 
   const handleSubmit = (txParameters: TxParameters) => {
