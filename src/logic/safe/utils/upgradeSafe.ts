@@ -1,10 +1,10 @@
 import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 import {
-  DEFAULT_FALLBACK_HANDLER_ADDRESS,
   MULTI_SEND_ADDRESS,
-  SAFE_MASTER_COPY_ADDRESS,
   getGnosisSafeInstanceAt,
+  getSafeMasterContractAddress,
+  getFallbackHandlerContractAddress,
 } from 'src/logic/contracts/safeContracts'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { MultiSend } from 'src/types/contracts/MultiSend.d'
@@ -48,9 +48,11 @@ export const getEncodedMultiSendCallData = (txs: MultiSendTx[], web3: Web3): str
 }
 
 export const getUpgradeSafeTransactionHash = async (safeAddress: string): Promise<string> => {
+  const safeMasterContractAddress = getSafeMasterContractAddress()
+  const fallbackHandlerAddress = getFallbackHandlerContractAddress()
   const safeInstance = getGnosisSafeInstanceAt(safeAddress)
-  const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(DEFAULT_FALLBACK_HANDLER_ADDRESS).encodeABI()
-  const updateSafeTxData = safeInstance.methods.changeMasterCopy(SAFE_MASTER_COPY_ADDRESS).encodeABI()
+  const updateSafeTxData = safeInstance.methods.changeMasterCopy(safeMasterContractAddress).encodeABI()
+  const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(fallbackHandlerAddress).encodeABI()
   const txs = [
     {
       to: safeAddress,
