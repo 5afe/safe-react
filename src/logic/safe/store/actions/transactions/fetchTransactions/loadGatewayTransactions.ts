@@ -44,7 +44,7 @@ export const loadHistoryTransactions = async (safeAddress: string): Promise<Hist
 
   const {
     data: { results, ...pointers },
-  } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(historyTransactionsUrl)
+  } = await axios.get<HistoryGatewayResponse>(historyTransactionsUrl)
 
   if (!historyPointers[safeAddress]) {
     historyPointers[safeAddress] = pointers
@@ -92,7 +92,7 @@ export const loadQueuedTransactions = async (safeAddress: string): Promise<Queue
   const queuedTransactionsUrl = getQueuedTransactionsUrl(safeAddress)
   const {
     data: { results, ...pointers },
-  } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(queuedTransactionsUrl)
+  } = await axios.get<QueuedGatewayResponse>(queuedTransactionsUrl)
 
   if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
     queuedPointers[safeAddress] = pointers

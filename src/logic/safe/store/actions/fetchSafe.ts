@@ -28,10 +28,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
       logError(Errors._605, err.message)
       return null
     }),
-    getLocalSafe(safeAddress).catch((err) => {
-      logError(Errors._701, err.message)
-      return null
-    }),
+    getLocalSafe(safeAddress),
   ])
 
   // remote (client-gateway)
@@ -40,7 +37,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
   // update owner's information
   const owners = buildSafeOwners(remote?.owners, localSafeInfo?.owners)
 
-  return { ...localSafeInfo, ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
+  return { ...(localSafeInfo || {}), ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
 
 /**
