@@ -54,7 +54,7 @@ const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentPr
         }),
       ),
     )
-  }, [addressBookMap, owners, ownersWithName])
+  }, [addressBookMap, owners])
 
   useEffect(() => {
     let isCurrent = true
