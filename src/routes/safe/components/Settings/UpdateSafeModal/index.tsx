@@ -17,7 +17,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -62,7 +62,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
     dispatch(
       createTransaction({
         safeAddress,
-        to: MULTI_SEND_ADDRESS,
+        to: getMultisendContractAddress(),
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,

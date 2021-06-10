@@ -25,7 +25,6 @@ import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import SpendingLimitModule from './artifacts/AllowanceModule.json'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
-export const MULTI_SEND_ADDRESS = '0x8d29be29923b68abfdd21e541b9374737b49cdad'
 
 let proxyFactoryMaster: GnosisSafeProxyFactory
 let safeMaster: GnosisSafe

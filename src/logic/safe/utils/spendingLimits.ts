@@ -6,7 +6,7 @@ import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/trans
 import { enableModuleTx } from 'src/logic/safe/utils/modules'
 import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
-import { getSpendingLimitContract, MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getSpendingLimitContract, getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -230,7 +230,7 @@ export const spendingLimitMultiSendTx = ({
   safeAddress,
 }: SpendingLimitMultiSendTx): CreateTransactionArgs => ({
   safeAddress,
-  to: MULTI_SEND_ADDRESS,
+  to: getMultisendContractAddress(),
   valueInWei: ZERO_VALUE,
   txData: encodeMultiSendCall(transactions),
   notifiedTransaction: TX_NOTIFICATION_TYPES.NEW_SPENDING_LIMIT_TX,
