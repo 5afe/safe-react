@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
@@ -49,6 +49,9 @@ export interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
+
+const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
+
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 export const createTransaction = (
@@ -165,13 +168,15 @@ export const createTransaction = (
         return receipt.transactionHash
       })
   } catch (err) {
-    const errorMsg = err.message
-      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
-      : notificationsQueue.afterExecutionError.message
+    const notification = err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
+      ? NOTIFICATIONS.TX_PENDING_MSG
+      : {
+          ...notificationsQueue.afterExecutionError,
+          message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+        }
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-
-    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
+    dispatch(enqueueSnackbar({ key: err.code, ...notification }))
 
     if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
       const executeDataUsedSignatures = safeInstance.methods
