@@ -60,12 +60,12 @@ const CardTitle = styled.div`
 
 interface FullParagraphProps {
   inversecolors: string
-  stepIndex: number
+  $stepIndex: number
 }
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${({ stepIndex }) => (stepIndex === 0 ? connected : background)};
-  color: ${({ theme, stepIndex }) => (stepIndex === 0 ? theme.colors.white : fontColor)};
+  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
+  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
@@ -336,7 +336,7 @@ export const SafeDeployment = ({
               inversecolors={confirmationStep.toString()}
               noMargin
               size="md"
-              stepIndex={stepIndex}
+              $stepIndex={stepIndex}
             >
               {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
             </FullParagraph>
