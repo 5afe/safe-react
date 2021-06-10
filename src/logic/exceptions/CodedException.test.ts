@@ -18,12 +18,14 @@ describe('CodedException', () => {
     const err = new CodedException(Errors._100)
     expect(err.message).toBe('Code 100: Invalid input in the address field')
     expect(err.code).toBe(100)
+    expect(err.content).toBe(Errors._100)
   })
 
   it('creates an error with an extra message', () => {
     const err = new CodedException(Errors._100, '0x123')
     expect(err.message).toBe('Code 100: Invalid input in the address field (0x123)')
     expect(err.code).toBe(100)
+    expect(err.content).toBe(Errors._100)
   })
 
   it('creates an error with an extra message and a context', () => {

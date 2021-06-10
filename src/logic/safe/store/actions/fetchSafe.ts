@@ -25,7 +25,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
 
   const [remote, local] = await Promise.all([
     getSafeInfo(safeAddress).catch((err) => {
-      logError(Errors._605, err.message)
+      err.log()
       return null
     }),
     getLocalSafe(safeAddress),
@@ -56,7 +56,7 @@ export const fetchSafe = (safeAddress: string) => async (
   try {
     address = checksumAddress(safeAddress)
   } catch (err) {
-    logError(Errors._605, err.message)
+    logError(Errors._102, safeAddress)
     return
   }
 
@@ -67,16 +67,12 @@ export const fetchSafe = (safeAddress: string) => async (
   try {
     remoteSafeInfo = await getSafeInfo(address)
   } catch (err) {
-    logError(Errors._605, err.message)
+    err.log()
   }
 
   // remote (client-gateway)
   if (remoteSafeInfo) {
-    try {
-      safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
-    } catch (err) {
-      logError(Errors._605, err.message)
-    }
+    safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
   }
 
   const owners = buildSafeOwners(remoteSafeInfo?.owners)

@@ -7,30 +7,26 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { loadHistoryTransactions, loadQueuedTransactions } from './loadGatewayTransactions'
 import { AppReduxState } from 'src/store'
-import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export default (safeAddress: string) => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
 ): Promise<void> => {
-  const [history, queued] = await Promise.allSettled([
-    loadHistoryTransactions(safeAddress),
-    loadQueuedTransactions(safeAddress),
-  ])
-
-  if (history.status === 'fulfilled') {
-    const values = history.value
-
-    if (values.length) {
-      dispatch(addHistoryTransactions({ safeAddress, values }))
+  const loadTxs = async (
+    loadFn: typeof loadHistoryTransactions | typeof loadQueuedTransactions,
+    actionFn: typeof addHistoryTransactions | typeof addQueuedTransactions,
+  ) => {
+    try {
+      const values = (await loadFn(safeAddress)) as any[]
+      if (values.length) {
+        dispatch(actionFn({ safeAddress, values }))
+      }
+    } catch (e) {
+      e.log()
     }
-  } else {
-    logError(Errors._602, history.reason)
   }
 
-  if (queued.status === 'fulfilled') {
-    const values = queued.value
-    dispatch(addQueuedTransactions({ safeAddress, values }))
-  } else {
-    logError(Errors._603, queued.reason)
-  }
+  await Promise.all([
+    loadTxs(loadHistoryTransactions, addHistoryTransactions),
+    loadTxs(loadQueuedTransactions, addQueuedTransactions),
+  ])
 }
