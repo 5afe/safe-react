@@ -76,7 +76,12 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
 
   if (safeInfoModules.length) {
     safeInfo.modules = buildModulesLinkedList(safeInfoModules)
-    safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+    try {
+      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+    } catch (e) {
+      e.log()
+      safeInfo.spendingLimits = null
+    }
   }
 
   safeInfo.nonce = remoteSafeInfo.nonce

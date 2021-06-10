@@ -5,6 +5,8 @@ import { loadPagedQueuedTransactions } from 'src/logic/safe/store/actions/transa
 import { addQueuedTransactions } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { QueueTransactionsInfo, useQueueTransactions } from './useQueueTransactions'
+import { Errors } from 'src/logic/exceptions/CodedException'
+import { Await } from 'src/types/helpers'
 
 type PagedQueuedTransactions = {
   count: number
@@ -21,7 +23,15 @@ export const usePagedQueuedTransactions = (): PagedQueuedTransactions => {
   const [hasMore, setHasMore] = useState(true)
 
   const nextPage = async () => {
-    const results = await loadPagedQueuedTransactions(safeAddress)
+    let results: Await<ReturnType<typeof loadPagedQueuedTransactions>>
+    try {
+      results = await loadPagedQueuedTransactions(safeAddress)
+    } catch (e) {
+      // No next page
+      if (e.content !== Errors._608) {
+        e.log()
+      }
+    }
 
     if (!results) {
       setHasMore(false)

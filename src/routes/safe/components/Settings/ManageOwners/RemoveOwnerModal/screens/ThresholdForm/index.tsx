@@ -40,7 +40,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }:
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const defaultThreshold = threshold > 1 ? threshold - 1 : threshold
+  const defaultThreshold = threshold > 1 && threshold === ownersCount ? threshold - 1 : threshold
 
   return (
     <>
