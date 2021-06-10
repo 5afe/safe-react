@@ -88,6 +88,7 @@ export type EnvironmentSettings = GasPrice & {
   // TODO: Shall we keep a reference to the relay?
   relayApiUrl?: string
   safeAppsUrl: string
+  safeUrl: string
   rpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
@@ -99,6 +100,8 @@ type SafeEnvironments = {
   staging?: EnvironmentSettings
   production: EnvironmentSettings
 }
+
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'nativeCoin'> & { safeUrl: string }
 
 export interface NetworkConfig {
   network: NetworkSettings
