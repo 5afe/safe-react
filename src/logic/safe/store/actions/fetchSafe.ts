@@ -23,7 +23,7 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
   // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
   const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
-  const [remote, localSafeInfo] = await Promise.all([
+  const [remote, local] = await Promise.all([
     getSafeInfo(safeAddress).catch((err) => {
       logError(Errors._605, err.message)
       return null
@@ -33,11 +33,13 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
 
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
+  // local
+  const localSafeInfo = local || ({} as Partial<SafeRecordProps>)
 
   // update owner's information
-  const owners = buildSafeOwners(remote?.owners, localSafeInfo?.owners)
+  const owners = buildSafeOwners(remote?.owners, localSafeInfo.owners)
 
-  return { ...(localSafeInfo || {}), ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
+  return { ...localSafeInfo, ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
 
 /**
