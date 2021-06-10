@@ -1,5 +1,6 @@
 import { getMockedSafeInstance, getMockedTxServiceModel } from 'src/test/utils/safeHelper'
 
+import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
 import {
   generateSafeTxHash,
   isMultiSendTransaction,
@@ -76,13 +77,14 @@ describe('isUpgradeTransaction', () => {
 })
 
 describe('generateSafeTxHash', () => {
-  it('It should return a safe transaction hash', () => {
+  it('It should return a safe transaction hash', async () => {
     // given
     const safeAddress = '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf'
     const userAddress = 'address1'
     const userAddress2 = 'address2'
     const userAddress3 = 'address3'
     const safeInstance = getMockedSafeInstance({})
+    const safeVersion = await getCurrentSafeVersion(safeInstance)
     const txArgs = {
       baseGas: 100,
       data: '',
@@ -100,7 +102,7 @@ describe('generateSafeTxHash', () => {
     }
 
     // when
-    const result = generateSafeTxHash(safeAddress, txArgs)
+    const result = generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
     // then
     expect(result).toBe('0x21e6ebc992f959dd0a2a6ce6034c414043c598b7f446c274efb3527c30dec254')

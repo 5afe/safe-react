@@ -1,10 +1,12 @@
+import { TypedDataUtils } from 'eth-sig-util'
+
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { Transaction, TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import {
   BatchProcessTxsProps,
   TxServiceModel,
 } from 'src/logic/safe/store/actions/transactions/fetchTransactions/loadOutgoingTransactions'
-import { TypedDataUtils } from 'eth-sig-util'
+import { getEip712MessageTypes, generateTypedDataFrom } from 'src/logic/safe/transactions/offchainSigner/EIP712Signer'
 
 export const isEmptyData = (data?: string | null): boolean => {
   return !data || data === EMPTY_DATA
@@ -31,44 +33,10 @@ export type BuildTx = BatchProcessTxsProps & {
 
 export type TxToMock = TxArgs & Partial<TxServiceModel>
 
-export function generateSafeTxHash(safeAddress: string, txArgs: TxArgs): string {
-  const messageTypes = {
-    EIP712Domain: [{ type: 'address', name: 'verifyingContract' }],
-    SafeTx: [
-      { type: 'address', name: 'to' },
-      { type: 'uint256', name: 'value' },
-      { type: 'bytes', name: 'data' },
-      { type: 'uint8', name: 'operation' },
-      { type: 'uint256', name: 'safeTxGas' },
-      { type: 'uint256', name: 'baseGas' },
-      { type: 'uint256', name: 'gasPrice' },
-      { type: 'address', name: 'gasToken' },
-      { type: 'address', name: 'refundReceiver' },
-      { type: 'uint256', name: 'nonce' },
-    ],
-  }
+export function generateSafeTxHash(safeAddress: string, safeVersion: string, txArgs: TxArgs): string {
+  const typedData = generateTypedDataFrom({ safeAddress, safeVersion, ...txArgs })
 
-  const primaryType: 'SafeTx' = 'SafeTx' as const
-
-  const typedData = {
-    types: messageTypes,
-    domain: {
-      verifyingContract: safeAddress,
-    },
-    primaryType,
-    message: {
-      to: txArgs.to,
-      value: txArgs.valueInWei,
-      data: txArgs.data,
-      operation: txArgs.operation,
-      safeTxGas: txArgs.safeTxGas,
-      baseGas: txArgs.baseGas,
-      gasPrice: txArgs.gasPrice,
-      gasToken: txArgs.gasToken,
-      refundReceiver: txArgs.refundReceiver,
-      nonce: txArgs.nonce,
-    },
-  }
+  const messageTypes = getEip712MessageTypes(safeVersion)
 
   return `0x${TypedDataUtils.sign<typeof messageTypes>(typedData).toString('hex')}`
 }

@@ -114,7 +114,7 @@ export const createTransaction = (
     sender: from,
     sigs,
   }
-  const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
+  const safeTxHash = generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
   try {
     if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
