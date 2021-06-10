@@ -7,6 +7,7 @@ import * as React from 'react'
 import { Link } from 'react-router-dom'
 
 import Provider from './Provider'
+import NetworkSelector from './NetworkSelector'
 
 import Spacer from 'src/components/Spacer'
 import Col from 'src/components/layout/Col'
@@ -16,6 +17,7 @@ import { headerHeight, md, screenSm, sm } from 'src/theme/variables'
 import { useStateHandler } from 'src/logic/hooks/useStateHandler'
 
 import SafeLogo from '../assets/gnosis-safe-multisig-logo.svg'
+import { getNetworks } from 'src/config'
 
 const styles = () => ({
   root: {
@@ -51,11 +53,21 @@ const styles = () => ({
   popper: {
     zIndex: 2000,
   },
+  network: {
+    backgroundColor: 'white',
+    borderRadius: sm,
+    boxShadow: '0 0 10px 0 rgba(33, 48, 77, 0.1)',
+    marginTop: '11px',
+    minWidth: '180px',
+    padding: '0',
+  },
 })
 
 const Layout = ({ classes, providerDetails, providerInfo }) => {
   const { clickAway, open, toggle } = useStateHandler()
-
+  const { clickAway: clickAwayNetworks, open: openNetworks, toggle: toggleNetworks } = useStateHandler()
+  const networks = getNetworks()
+  const { isDesktop } = window
   return (
     <Row className={classes.summary}>
       <Col className={classes.logo} middle="xs" start="xs">
@@ -90,6 +102,14 @@ const Layout = ({ classes, providerDetails, providerInfo }) => {
           </Popper>
         )}
       />
+      {!isDesktop && (
+        <NetworkSelector
+          open={openNetworks}
+          networks={networks}
+          toggle={toggleNetworks}
+          clickAway={clickAwayNetworks}
+        />
+      )}
     </Row>
   )
 }

@@ -16,7 +16,6 @@ const styles = () => ({
 
     [`@media (min-width: ${screenSm}px)`]: {
       flexBasis: '284px',
-      marginRight: '20px',
     },
   },
   provider: {

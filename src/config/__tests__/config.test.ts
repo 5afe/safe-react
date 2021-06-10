@@ -109,21 +109,20 @@ describe('Config Services', () => {
     // When
     const txServiceUrl = getTxServiceUrl()
     const safeAppsUrl = getGnosisSafeAppsUrl()
-
     // Then
     expect(TX_SERVICE_URL).toBe(txServiceUrl)
     expect(SAFE_APPS_URL).toBe(safeAppsUrl)
   })
 
-  it(`should default to 'xdai.production' network config if no environment is found`, () => {
+  it(`should default to 'xdai.dev' network config if no environment is found`, () => {
     // Given
     jest.mock('src/utils/constants', () => ({
       NODE_ENV: '',
       NETWORK: 'XDAI',
     }))
     const { getTxServiceUrl, getGnosisSafeAppsUrl } = require('src/config')
-    const TX_SERVICE_URL = xdai.environment.production.txServiceUrl
-    const SAFE_APPS_URL = xdai.environment.production.safeAppsUrl
+    const TX_SERVICE_URL = xdai.environment.dev?.txServiceUrl
+    const SAFE_APPS_URL = xdai.environment.dev?.safeAppsUrl
 
     // When
     const txServiceUrl = getTxServiceUrl()

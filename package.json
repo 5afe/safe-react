@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.7.0",
+  "version": "3.7.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -170,9 +170,8 @@
     "@openzeppelin/contracts": "3.1.0",
     "@sentry/react": "^6.3.5",
     "@sentry/tracing": "^6.3.5",
-    "@truffle/contract": "^4.3.0",
+    "@truffle/contract": "^4.3.18",
     "@unstoppabledomains/resolution": "^1.17.0",
-    "async-sema": "^3.1.0",
     "axios": "0.21.1",
     "bignumber.js": "9.0.1",
     "bnc-onboard": "~1.25.0",

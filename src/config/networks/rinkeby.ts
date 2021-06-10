@@ -5,6 +5,7 @@ import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
+  safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
     url: `https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}`,

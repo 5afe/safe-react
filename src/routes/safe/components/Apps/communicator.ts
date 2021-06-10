@@ -9,7 +9,7 @@ import {
   METHODS,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { trackError, Errors } from 'src/logic/exceptions/CodedException'
 import { SafeApp } from './types'
 
 type MessageHandler = (
@@ -72,7 +72,7 @@ class AppCommunicator {
         }
       } catch (err) {
         this.send(err.message, msg.data.id, true)
-        logError(Errors._901, err.message, {
+        trackError(Errors._901, err.message, {
           contexts: {
             safeApp: this.app,
             request: msg.data,

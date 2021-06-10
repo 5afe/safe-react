@@ -17,6 +17,7 @@ import {
   useTextFieldLabelStyle,
 } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput/style'
 import { trimSpaces } from 'src/utils/strings'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const chainId = getNetworkId()
 
@@ -92,7 +93,12 @@ const BaseAddressBookInput = ({
           isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) &&
           (isValidEnsName(normalizedValue) || isValidCryptoDomainName(normalizedValue))
         ) {
-          const address = await getAddressFromDomain(normalizedValue)
+          let address = ''
+          try {
+            address = await getAddressFromDomain(normalizedValue)
+          } catch (err) {
+            logError(Errors._101, err.message)
+          }
 
           const validatedAddress = validateAddress(address)
 

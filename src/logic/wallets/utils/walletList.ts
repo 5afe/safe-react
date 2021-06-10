@@ -64,7 +64,7 @@ const wallets: Wallet[] = [
 ]
 
 export const getSupportedWallets = (): WalletInitOptions[] => {
-  const { isDesktop } = window as any
+  const { isDesktop } = window
   /* eslint-disable no-unused-vars */
   if (isDesktop) {
     return wallets.filter((wallet) => wallet.desktop).map(({ desktop, ...rest }) => rest)

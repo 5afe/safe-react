@@ -1,10 +1,10 @@
+import * as React from 'react'
+import styled from 'styled-components'
+import classNames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
 import Dot from '@material-ui/icons/FiberManualRecord'
-import classNames from 'classnames'
-import * as React from 'react'
 import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
-import styled from 'styled-components'
 
 import Spacer from 'src/components/Spacer'
 import Block from 'src/components/layout/Block'
@@ -17,9 +17,6 @@ import { background, connected as connectedBg, lg, md, sm, warning, xs } from 's
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
-import { upperFirst } from 'src/utils/css'
-
-import { CircleDot } from '../CircleDot'
 import WalletIcon from '../../assets/wallet.svg'
 
 const styles = createStyles({
@@ -109,7 +106,6 @@ const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,
-  network,
   onDisconnect,
   openDashboard,
   provider,
@@ -158,17 +154,6 @@ export const UserDetails = ({
         <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
           {provider}
-        </Paragraph>
-      </Row>
-      <Hairline margin="xs" />
-      <Row className={classes.details}>
-        <Paragraph align="right" className={classes.labels} noMargin>
-          Network
-        </Paragraph>
-        <Spacer />
-        <CircleDot className={classes.logo} />
-        <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {upperFirst(ETHEREUM_NETWORK[network])}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
