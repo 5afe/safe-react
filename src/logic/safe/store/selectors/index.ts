@@ -12,7 +12,7 @@ import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookMapSelector, addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
-import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 

@@ -9,7 +9,7 @@ import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import DefaultBadge from './DefaultBadge'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
+import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { getNetworkInfo } from 'src/config'
 
