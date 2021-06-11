@@ -109,12 +109,13 @@ const CookiesBanner = (): ReactElement => {
 
   const showBanner = useSelector(cookieBannerOpen)
   const newAppUrl = getAppUrl()
+  const isSafeAppView = newAppUrl !== null
 
   useEffect(() => {
-    if (intercomLoaded && newAppUrl !== null) {
+    if (intercomLoaded && isSafeAppView) {
       closeIntercom()
     }
-  }, [newAppUrl, intercomLoaded])
+  }, [isSafeAppView, intercomLoaded])
 
   useEffect(() => {
     async function fetchCookiesFromStorage() {
@@ -181,7 +182,7 @@ const CookiesBanner = (): ReactElement => {
     dispatch.current(openCookieBanner({ cookieBannerOpen: false }))
   }
 
-  if (showIntercom && newAppUrl === null) {
+  if (showIntercom && !isSafeAppView) {
     loadIntercom()
   }
 
@@ -265,7 +266,7 @@ const CookiesBanner = (): ReactElement => {
 
   return (
     <>
-      {!isDesktop && !showIntercom && (
+      {!isDesktop && !showIntercom && !isSafeAppView && (
         <img
           className={classes.intercomImage}
           src={IntercomIcon}
