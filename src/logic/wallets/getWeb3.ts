@@ -98,3 +98,8 @@ export const getContentFromENS = (name: string): Promise<ContentHash> => web3.et
 export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
+
+export const isTxPendingError = (err: Error): boolean => {
+  const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
+  return err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
+}

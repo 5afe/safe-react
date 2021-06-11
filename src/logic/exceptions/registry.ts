@@ -23,6 +23,7 @@ enum ErrorCodes {
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
+  _800 = '800: Safe creation tx failed',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
 }
