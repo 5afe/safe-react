@@ -1,11 +1,7 @@
 import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
-import {
-  getFallbackHandlerContractAddress,
-  getSafeMasterContract,
-  getSafeMasterContractAddress,
-} from 'src/logic/contracts/safeContracts'
+import { getFallbackHandlerContractAddress, getSafeMasterContractAddress } from 'src/logic/contracts/safeContracts'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'

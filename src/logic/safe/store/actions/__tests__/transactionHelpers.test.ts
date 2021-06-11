@@ -102,7 +102,7 @@ describe('generateSafeTxHash', () => {
     }
 
     // when
-    const result = generateSafeTxHash(safeAddress, safeVersion, txArgs)
+    const result = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
     // then
     expect(result).toBe('0x21e6ebc992f959dd0a2a6ce6034c414043c598b7f446c274efb3527c30dec254')

@@ -1,12 +1,14 @@
+import semverSatisfies from 'semver/functions/satisfies'
 import { AbiItem } from 'web3-utils'
+
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import {
   getSafeSingletonDeployment,
+  getSafeL2SingletonDeployment,
   getProxyFactoryDeployment,
   getFallbackHandlerDeployment,
   getMultiSendDeployment,
 } from '@gnosis.pm/safe-deployments'
-import ProxyFactorySol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafeProxyFactory.json'
 import Web3 from 'web3'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
@@ -37,13 +39,14 @@ let multiSend: MultiSend
  * @param {ETHEREUM_NETWORK} networkId
  */
 export const getGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
-  const safeSingletonDeployment = getSafeSingletonDeployment({
+  // If version is 1.3.0 we can use instance compatible with L2 for all networks
+  const useL2ContractVersion = semverSatisfies(LATEST_SAFE_VERSION, '>=1.3.0')
+  const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
+  const safeSingletonDeployment = getDeployment({
     version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
   })
-  // TODO: this may not be the most scalable approach,
-  //  but up until v1.2.0 the address is the same for all the networks.
-  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
+
   const contractAddress =
     safeSingletonDeployment?.networkAddresses[networkId] ?? safeSingletonDeployment?.defaultAddress
   return (new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], contractAddress) as unknown) as GnosisSafe
@@ -59,9 +62,7 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
     version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
   })
-  // TODO: this may not be the most scalable approach,
-  //  but up until v1.2.0 the address is the same for all the networks.
-  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
+
   const contractAddress = proxyFactoryDeployment?.networkAddresses[networkId] ?? proxyFactoryDeployment?.defaultAddress
   return (new web3.eth.Contract(
     proxyFactoryDeployment?.abi as AbiItem[],
@@ -79,9 +80,7 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
     version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
   })
-  // TODO: this may not be the most scalable approach,
-  //  but up until v1.2.0 the address is the same for all the networks.
-  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
+
   const contractAddress =
     fallbackHandlerDeployment?.networkAddresses[networkId] ?? fallbackHandlerDeployment?.defaultAddress
   return (new web3.eth.Contract(
@@ -97,12 +96,9 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
  */
 const getMultiSendContract = (web3: Web3, networkId: ETHEREUM_NETWORK): MultiSend => {
   const multiSendDeployment = getMultiSendDeployment({
-    version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
   })
-  // TODO: this may not be the most scalable approach,
-  //  but up until v1.2.0 the address is the same for all the networks.
-  //  So, if we can't find the network in the Contract artifact, we fallback to MAINNET.
+
   const contractAddress = multiSendDeployment?.networkAddresses[networkId] ?? multiSendDeployment?.defaultAddress
   return (new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown) as MultiSend
 }

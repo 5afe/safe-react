@@ -33,8 +33,8 @@ export type BuildTx = BatchProcessTxsProps & {
 
 export type TxToMock = TxArgs & Partial<TxServiceModel>
 
-export function generateSafeTxHash(safeAddress: string, safeVersion: string, txArgs: TxArgs): string {
-  const typedData = generateTypedDataFrom({ safeAddress, safeVersion, ...txArgs })
+export const generateSafeTxHash = async (safeAddress: string, safeVersion: string, txArgs: TxArgs): Promise<string> => {
+  const typedData = await generateTypedDataFrom({ safeAddress, safeVersion, ...txArgs })
 
   const messageTypes = getEip712MessageTypes(safeVersion)
 
