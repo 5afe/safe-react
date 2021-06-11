@@ -11,6 +11,7 @@ import authereumIcon from './icon-authereum.png'
 import torusIcon from './icon-torus.svg'
 import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
+import squarelinkIcon from './icon-squarelink.png'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
@@ -72,6 +73,10 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
   },
   [WALLET_PROVIDER.COINBASE_WALLET]: {
     src: coinbaseIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.SQUARELINK]: {
+    src: squarelinkIcon,
     height: 25,
   },
 }
