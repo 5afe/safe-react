@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
   checkIfOffChainSignatureIsPossible,
   generateSignaturesFromTxConfirmations,
@@ -30,6 +30,7 @@ import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -184,11 +185,15 @@ export const processTransaction = ({
         return receipt.transactionHash
       })
   } catch (err) {
-    const errorMsg = err.message
-      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
-      : notificationsQueue.afterExecutionError.message
+    const notification = isTxPendingError(err)
+      ? NOTIFICATIONS.TX_PENDING_MSG
+      : {
+          ...notificationsQueue.afterExecutionError,
+          message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+        }
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+    dispatch(enqueueSnackbar({ key: err.code, ...notification }))
 
     dispatch(
       updateTransactionStatus({
@@ -198,7 +203,6 @@ export const processTransaction = ({
         id: tx.id,
       }),
     )
-    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
 
     if (txHash) {
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
