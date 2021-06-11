@@ -1,6 +1,7 @@
 import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
@@ -11,16 +12,17 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { useSelector } from 'react-redux'
 
 import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
 import { TransactionReceipt } from 'web3-core'
-import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 const Wrapper = styled.div`
   display: grid;
@@ -122,6 +124,7 @@ export const SafeDeployment = ({
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
   const provider = useSelector(providerNameSelector)
+  const dispatch = useDispatch()
 
   const confirmationStep = isConfirmationStep(stepIndex)
 
@@ -130,12 +133,19 @@ export const SafeDeployment = ({
     onSuccess(createdSafeAddress)
   }
 
-  const onError = (error: CodedException) => {
+  const showSnackbarError = (err: Error) => {
+    if (isTxPendingError(err)) {
+      dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+    }
+  }
+
+  const onError = (error: Error) => {
     setIntervalStarted(false)
     setWaitingSafeDeployed(false)
     setContinueButtonDisabled(false)
     setError(true)
-    error.log()
+    logError(Errors._800, error.message)
+    showSnackbarError(error)
   }
 
   // discard click event value
@@ -244,7 +254,7 @@ export const SafeDeployment = ({
             setIntervalStarted(false)
           }
         } catch (error) {
-          onError(new CodedException(Errors._800, error.message))
+          onError(error)
         }
       }
     }, 3000)

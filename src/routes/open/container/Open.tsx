@@ -29,7 +29,6 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
-import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -84,20 +83,16 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
   const safeCreationSalt = getSafeCreationSaltFrom(values)
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
-  try {
-    const receipt = await deploymentTx
-      .send({
-        from: userAccount,
-        gas: values?.gasLimit,
-      })
-      .once('transactionHash', (txHash) => {
-        saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
-      })
+  const receipt = await deploymentTx
+    .send({
+      from: userAccount,
+      gas: values?.gasLimit,
+    })
+    .once('transactionHash', (txHash) => {
+      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
+    })
 
-    return receipt
-  } catch (err) {
-    throw new CodedException(Errors._800, err.message)
-  }
+  return receipt
 }
 
 const Open = (): ReactElement => {
