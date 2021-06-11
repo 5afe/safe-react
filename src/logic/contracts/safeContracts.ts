@@ -1,6 +1,4 @@
 import semverSatisfies from 'semver/functions/satisfies'
-import { AbiItem } from 'web3-utils'
-
 import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import {
   getSafeSingletonDeployment,
@@ -10,6 +8,7 @@ import {
   getMultiSendDeployment,
 } from '@gnosis.pm/safe-deployments'
 import Web3 from 'web3'
+import { AbiItem } from 'web3-utils'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
@@ -20,11 +19,7 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
 import { FallbackManager } from 'src/types/contracts/FallbackManager.d'
 import { MultiSend } from 'src/types/contracts/MultiSend.d'
-import { AllowanceModule } from 'src/types/contracts/AllowanceModule.d'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
-
-import SpendingLimitModule from './artifacts/AllowanceModule.json'
 
 export const SENTINEL_ADDRESS = '0x0000000000000000000000000000000000000001'
 
@@ -185,16 +180,4 @@ export const estimateGasForDeployingSafe = async (
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
   return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
-}
-
-/**
- * Creates a Contract instance of the SpendingLimitModule contract
- */
-export const getSpendingLimitContract = () => {
-  const web3 = getWeb3()
-
-  return (new web3.eth.Contract(
-    SpendingLimitModule.abi as AbiItem[],
-    SPENDING_LIMIT_MODULE_ADDRESS,
-  ) as unknown) as AllowanceModule
 }
