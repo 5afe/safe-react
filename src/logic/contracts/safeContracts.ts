@@ -173,21 +173,8 @@ export const estimateGasForDeployingSafe = async (
   userAccount: string,
   safeCreationSalt: number,
 ) => {
-  const gnosisSafeData = safeMaster.methods
-    .setup(
-      safeAccounts,
-      numConfirmations,
-      ZERO_ADDRESS,
-      EMPTY_DATA,
-      fallbackHandler.options.address,
-      ZERO_ADDRESS,
-      0,
-      ZERO_ADDRESS,
-    )
-    .encodeABI()
-  const proxyFactoryData = proxyFactoryMaster.methods
-    .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
-    .encodeABI()
+  const proxyFactoryData = getSafeDeploymentTransaction(safeAccounts, numConfirmations, safeCreationSalt).encodeABI()
+
   return calculateGasOf({
     data: proxyFactoryData,
     from: userAccount,
