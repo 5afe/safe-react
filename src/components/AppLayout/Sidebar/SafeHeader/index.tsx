@@ -145,8 +145,12 @@ const SafeHeader = ({
           <ButtonHelper onClick={onReceiveClick}>
             <Icon size="sm" type="qrCode" tooltip="Show QR" />
           </ButtonHelper>
-          <CopyToClipboardBtn textToCopy={address} />
-          <ExplorerButton explorerUrl={explorerUrl} />
+          <ButtonHelper>
+            <CopyToClipboardBtn textToCopy={address} />
+          </ButtonHelper>
+          <ButtonHelper>
+            <ExplorerButton explorerUrl={explorerUrl} />
+          </ButtonHelper>
         </IconContainer>
 
         {granted ? null : (

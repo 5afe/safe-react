@@ -11,6 +11,10 @@ const UnStyledButton = styled.button`
   outline-color: ${({ theme }) => theme.colors.icon};
   display: flex;
   align-items: center;
+
+  span:hover {
+    filter: brightness(50%);
+  }
 `
 type Props = {
   onClick?: () => void
