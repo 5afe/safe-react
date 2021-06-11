@@ -31,6 +31,7 @@ import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -49,8 +50,6 @@ export interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
-
-const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
@@ -168,7 +167,7 @@ export const createTransaction = (
         return receipt.transactionHash
       })
   } catch (err) {
-    const notification = err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
+    const notification = isTxPendingError(err)
       ? NOTIFICATIONS.TX_PENDING_MSG
       : {
           ...notificationsQueue.afterExecutionError,
