@@ -1,5 +1,5 @@
 import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -133,20 +133,26 @@ export const SafeDeployment = ({
     onSuccess(createdSafeAddress)
   }
 
-  const showSnackbarError = (err: Error) => {
-    if (isTxPendingError(err)) {
-      dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
-    }
-  }
+  const showSnackbarError = useCallback(
+    (err: Error) => {
+      if (isTxPendingError(err)) {
+        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+      }
+    },
+    [dispatch],
+  )
 
-  const onError = (error: Error) => {
-    setIntervalStarted(false)
-    setWaitingSafeDeployed(false)
-    setContinueButtonDisabled(false)
-    setError(true)
-    logError(Errors._800, error.message)
-    showSnackbarError(error)
-  }
+  const onError = useCallback(
+    (error: Error) => {
+      setIntervalStarted(false)
+      setWaitingSafeDeployed(false)
+      setContinueButtonDisabled(false)
+      setError(true)
+      logError(Errors._800, error.message)
+      showSnackbarError(error)
+    },
+    [setIntervalStarted, setWaitingSafeDeployed, setContinueButtonDisabled, setError, showSnackbarError],
+  )
 
   // discard click event value
   const onRetryTx = () => {
@@ -197,7 +203,7 @@ export const SafeDeployment = ({
     }
 
     handlePromise()
-  }, [submittedPromise])
+  }, [submittedPromise, onError])
 
   // recovering safe creation from txHash
   useEffect(() => {
@@ -262,7 +268,7 @@ export const SafeDeployment = ({
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error, onError])
 
   useEffect(() => {
     let interval
