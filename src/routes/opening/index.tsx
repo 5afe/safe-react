@@ -19,7 +19,8 @@ import { useSelector } from 'react-redux'
 import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
-import { PromiEvent, TransactionReceipt } from 'web3-core'
+import { TransactionReceipt } from 'web3-core'
+import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
 
 const Wrapper = styled.div`
   display: grid;
@@ -98,7 +99,7 @@ const BackButton = styled(Button)`
 
 type Props = {
   creationTxHash?: string
-  submittedPromise?: PromiEvent<TransactionReceipt>
+  submittedPromise?: Promise<TransactionReceipt>
   onRetry: () => void
   onSuccess: (createdSafeAddress: string) => void
   onCancel: () => void
@@ -129,12 +130,12 @@ export const SafeDeployment = ({
     onSuccess(createdSafeAddress)
   }
 
-  const onError = (error) => {
+  const onError = (error: CodedException) => {
     setIntervalStarted(false)
     setWaitingSafeDeployed(false)
     setContinueButtonDisabled(false)
     setError(true)
-    console.error(error)
+    error.log()
   }
 
   // discard click event value
@@ -173,14 +174,19 @@ export const SafeDeployment = ({
       return
     }
 
-    setStepIndex(0)
-    submittedPromise
-      .once('transactionHash', (txHash) => {
-        setSafeCreationTxHash(txHash)
+    const handlePromise = async () => {
+      setStepIndex(0)
+      try {
+        const receipt = await submittedPromise
+        setSafeCreationTxHash(receipt.transactionHash)
         setStepIndex(1)
         setIntervalStarted(true)
-      })
-      .on('error', onError)
+      } catch (err) {
+        onError(err)
+      }
+    }
+
+    handlePromise()
   }, [submittedPromise])
 
   // recovering safe creation from txHash
@@ -238,7 +244,7 @@ export const SafeDeployment = ({
             setIntervalStarted(false)
           }
         } catch (error) {
-          onError(error)
+          onError(new CodedException(Errors._800, error.message))
         }
       }
     }, 3000)
