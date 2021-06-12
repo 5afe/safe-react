@@ -36,7 +36,7 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
-    import('currency-flags/dist/currency-flags.min.css' as any)
+    import('currency-flags/dist/currency-flags.min.css' as string)
   }
 
   const handleClose = () => {
