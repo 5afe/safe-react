@@ -15,18 +15,7 @@ import squarelinkIcon from './icon-squarelink.png'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
-type WalletProviderNames = typeof WALLET_PROVIDER[keyof typeof WALLET_PROVIDER]
-
-interface IconValue {
-  src: string
-  height: number
-}
-
-type WalletObjectsProps<Tvalue> = {
-  [key in WalletProviderNames]: Tvalue
-}
-
-const WALLET_ICONS: WalletObjectsProps<IconValue> = {
+const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } } = {
   [WALLET_PROVIDER.METAMASK]: {
     src: metamaskIcon,
     height: 25,
