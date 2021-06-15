@@ -12,6 +12,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
 import {
+  safeCurrentVersionSelector,
   safeOwnersWithAddressBookDataSelector,
   safeParamAddressFromStateSelector,
 } from 'src/logic/safe/store/selectors'
@@ -50,6 +51,7 @@ export const ReviewRemoveOwnerModal = ({
   const classes = useStyles()
   const [data, setData] = useState('')
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeVersion = useSelector(safeCurrentVersionSelector) as string
   const safeName = useSafeName(safeAddress)
   const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
   const numOptions = owners ? owners.length - 1 : 0
@@ -88,7 +90,7 @@ export const ReviewRemoveOwnerModal = ({
       try {
         // FixMe: if the order returned by the service is the same as in the contracts
         //  the data lookup can be removed from here
-        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]

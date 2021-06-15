@@ -61,7 +61,7 @@ const SafeDetails = (): ReactElement => {
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const safeName = useSafeName(safeAddress)
   const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
-  const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
+  const safeCurrentVersion = useSelector(safeCurrentVersionSelector) as string
   const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = useState(false)
@@ -185,7 +185,7 @@ const SafeDetails = (): ReactElement => {
             </Col>
           </Row>
           <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
-            <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} />
+            <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} safeCurrentVersion={safeCurrentVersion} />
           </Modal>
         </>
       )}

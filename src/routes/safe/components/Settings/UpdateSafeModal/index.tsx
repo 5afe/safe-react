@@ -29,9 +29,10 @@ const useStyles = makeStyles(styles)
 type Props = {
   onClose: () => void
   safeAddress: string
+  safeCurrentVersion: string
 }
 
-export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactElement => {
+export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
@@ -53,9 +54,9 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const encodeMultiSendCallData = getUpgradeSafeTransactionHash(safeAddress)
+    const encodeMultiSendCallData = getUpgradeSafeTransactionHash(safeAddress, safeCurrentVersion)
     setMultiSendCallData(encodeMultiSendCallData)
-  }, [safeAddress])
+  }, [safeAddress, safeCurrentVersion])
 
   const handleSubmit = (txParameters: TxParameters) => {
     // Call the update safe method

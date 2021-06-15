@@ -36,6 +36,7 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const classes = useStyles()
 
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeVersion = useSelector(safeParamAddressFromStateSelector)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
@@ -65,9 +66,9 @@ export const RemoveModuleModal = ({ onClose, selectedModulePair }: RemoveModuleM
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const txData = getDisableModuleTxData(selectedModulePair, safeAddress)
+    const txData = getDisableModuleTxData(selectedModulePair, safeAddress, safeVersion)
     setTxData(txData)
-  }, [selectedModulePair, safeAddress])
+  }, [selectedModulePair, safeAddress, safeVersion])
 
   const removeSelectedModule = async (txParameters: TxParameters): Promise<void> => {
     try {

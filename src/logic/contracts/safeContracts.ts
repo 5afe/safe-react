@@ -177,7 +177,14 @@ export const estimateGasForDeployingSafe = async (
   }).then((value) => value * 2)
 }
 
-export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
+export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {
+    // If version is 1.3.0 we can use instance compatible with L2 for all networks
+    const useL2ContractVersion = semverSatisfies(safeVersion, '>=1.3.0')
+    const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
+    const safeSingletonDeployment = getDeployment({
+      version: safeVersion,
+    })
+
   const web3 = getWeb3()
-  return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+  return (new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
 }

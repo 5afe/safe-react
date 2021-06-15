@@ -125,7 +125,7 @@ export const useEstimateTransactionGas = ({
   const { nativeCoin } = getNetworkInfo()
   const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const threshold = useSelector(safeThresholdSelector)
-  const safeVersion = useSelector(safeCurrentVersionSelector)
+  const safeVersion = useSelector(safeCurrentVersionSelector) as string
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
   useEffect(() => {
@@ -162,6 +162,7 @@ export const useEstimateTransactionGas = ({
         if (isExecution || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
+            safeVersion,
             txRecipient,
             txData,
             txAmount: txAmount || '0',
@@ -185,6 +186,7 @@ export const useEstimateTransactionGas = ({
         if (isExecution) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,
+            safeVersion,
             txRecipient,
             txData,
             txAmount: txAmount || '0',

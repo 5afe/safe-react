@@ -3,7 +3,7 @@ import semverSatisfies from 'semver/functions/satisfies'
 import semverValid from 'semver/functions/valid'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 
-import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contracts/safeContracts'
+import { getSafeMasterContract } from 'src/logic/contracts/safeContracts'
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -59,16 +59,15 @@ interface SafeVersionInfo {
 }
 
 export const checkIfSafeNeedsUpdate = async (
-  gnosisSafeInstance: GnosisSafe,
+  safeVersion: string,
   lastSafeVersion: string,
 ): Promise<SafeVersionInfo> => {
-  if (!gnosisSafeInstance || !lastSafeVersion) {
+  if (!safeVersion || !lastSafeVersion) {
     throw new Error('checkIfSafeNeedsUpdate: No Safe Instance or version provided')
   }
-  const safeMasterVersion = await getCurrentSafeVersion(gnosisSafeInstance)
-  const current = semverValid(safeMasterVersion) as string
+  const current = semverValid(safeVersion) as string
   const latest = semverValid(lastSafeVersion) as string
-  const needUpdate = safeNeedsUpdate(safeMasterVersion, lastSafeVersion)
+  const needUpdate = safeNeedsUpdate(safeVersion, lastSafeVersion)
 
   return { current, latest, needUpdate }
 }
@@ -86,11 +85,10 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
+export const getSafeVersionInfo = async (safeVersion: string): Promise<SafeVersionInfo> => {
   try {
-    const safeMaster = getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()
-    return checkIfSafeNeedsUpdate(safeMaster, lastSafeVersion)
+    return checkIfSafeNeedsUpdate(safeVersion, lastSafeVersion)
   } catch (err) {
     console.error(err)
     throw err

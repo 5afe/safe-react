@@ -151,8 +151,8 @@ export const getDeleteAllowanceTxData = ({ beneficiary, tokenAddress }: DeleteAl
   return spendingLimitContract.methods.deleteAllowance(beneficiary, tokenAddress).encodeABI()
 }
 
-export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): MultiSendTx => {
-  const multiSendTx = enableModuleTx({ moduleAddress: SPENDING_LIMIT_MODULE_ADDRESS, safeAddress })
+export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string, safeVersion: string): MultiSendTx => {
+  const multiSendTx = enableModuleTx({ moduleAddress: SPENDING_LIMIT_MODULE_ADDRESS, safeAddress, safeVersion })
 
   return {
     to: multiSendTx.to,
