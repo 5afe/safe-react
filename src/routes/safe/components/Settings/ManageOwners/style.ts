@@ -26,6 +26,7 @@ export const useStyles = makeStyles(
       justifyContent: 'flex-end',
       visibility: 'hidden',
       minWidth: '100px',
+      gap: '16px',
     },
     noBorderBottom: {
       '& > td': {

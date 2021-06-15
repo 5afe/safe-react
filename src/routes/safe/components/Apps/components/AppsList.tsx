@@ -5,7 +5,7 @@ import { IconText, Loader, Menu, Text, Icon } from '@gnosis.pm/safe-react-compon
 import IconButton from '@material-ui/core/IconButton'
 
 import { Modal } from 'src/components/Modal'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
 import AddAppIcon from 'src/routes/safe/components/Apps/assets/addApp.svg'
 import { useRouteMatch, Link } from 'react-router-dom'
@@ -85,7 +85,7 @@ const isCustomApp = (appUrl: string, staticAppsList: AppData[]) => !staticAppsLi
 
 const AppsList = (): React.ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const { appList, removeApp, staticAppsList } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)

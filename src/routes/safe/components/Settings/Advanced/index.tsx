@@ -8,7 +8,7 @@ import { useStyles } from './style'
 import { ModulesTable } from './ModulesTable'
 
 import Block from 'src/components/layout/Block'
-import { safeModulesSelector, safeNonceSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 const InfoText = styled(Text)`
@@ -27,8 +27,7 @@ const NoModuleLegend = (): React.ReactElement => (
 
 export const Advanced = (): React.ReactElement => {
   const classes = useStyles()
-  const nonce = useSelector(safeNonceSelector)
-  const modules = useSelector(safeModulesSelector)
+  const { nonce, modules } = useSelector(currentSafe) ?? {}
   const moduleData = modules ? getModuleData(modules) ?? null : null
   const { trackEvent } = useAnalytics()
 

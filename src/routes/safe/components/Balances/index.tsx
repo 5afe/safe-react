@@ -13,8 +13,7 @@ import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
-import { safeFeaturesEnabledSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
@@ -46,9 +45,7 @@ const Balances = (): ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
-  const address = useSelector(safeParamAddressFromStateSelector)
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
-  const safeName = useSafeName(address)
+  const { address, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
   useFetchTokens(address)
 
