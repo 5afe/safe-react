@@ -8,7 +8,7 @@ import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
@@ -53,7 +53,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   let setCallResults
 
   React.useMemo(() => {

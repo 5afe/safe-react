@@ -24,7 +24,7 @@ import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
@@ -152,8 +152,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const dispatch = useDispatch()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const { address: safeAddress = '', spendingLimits } = useSelector(currentSafe) ?? {}
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',

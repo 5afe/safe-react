@@ -5,16 +5,15 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { isValidAddress } from 'src/utils/isValidAddress'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
+import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
 
 const ImportContainer = styled.div`
   flex-direction: column;
   justify-content: center;
   margin: 24px;
   align-items: center;
-  /* width: 200px;*/
   min-height: 100px;
   display: flex;
 `
@@ -27,15 +26,6 @@ const InfoContainer = styled.div`
   text-align: center;
   margin-top: 16px;
 `
-
-const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
-const FILE_SIZE_TOO_BIG = 'The size of the file is over 1 MB'
-const FILE_BYTES_LIMIT = 1000000
-const IMPORT_SUPPORTED_FORMATS = [
-  'application/vnd.ms-excel',
-  'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
-  'text/csv',
-]
 
 type ImportEntriesModalProps = {
   importEntryModalHandler: (addressList: AddressBookEntry[]) => void
@@ -76,36 +66,6 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
     setCsvLoaded(true)
   }
 
-  const validateFile = (file) => {
-    if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
-      return WRONG_FILE_EXTENSION_ERROR
-    }
-
-    if (file.size >= FILE_BYTES_LIMIT) {
-      return FILE_SIZE_TOO_BIG
-    }
-
-    return
-  }
-
-  const validateCsvData = (data) => {
-    for (let index = 0; index < data.length; index++) {
-      const entry = data[index]
-      if (!entry.data[0] || !entry.data[1] || !entry.data[2]) {
-        return `Invalid amount of columns on row ${index + 1}`
-      }
-      // Verify address properties
-      const address = entry.data[0].toLowerCase()
-      if (!isValidAddress(address)) {
-        return `Invalid address on row ${index + 1}`
-      }
-      if (isNaN(entry.data[2])) {
-        return `Invalid chain id on row ${index + 1}`
-      }
-    }
-    return
-  }
-
   const handleOnError = (error) => {
     setImportError(error.message)
   }
@@ -141,7 +101,6 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
               },
               dropAreaActive: {
                 borderColor: '#008C73',
-                /* borderColor: '${({ theme }) => theme.colors.primary}', */
               },
               dropFile: {
                 width: 200,
@@ -201,7 +160,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
           )}
         </InfoContainer>
       </Modal.Body>
-      <Modal.Footer>
+      <Modal.Footer withoutBorder>
         <Modal.Footer.Buttons
           cancelButtonProps={{ onClick: () => handleClose() }}
           confirmButtonProps={{

@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import React, { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import InputAdornment from '@material-ui/core/InputAdornment'
@@ -22,14 +23,15 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
 import { ScanQRModal } from 'src/components/ScanQRModal'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { ContractsAddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { sameString } from 'src/utils/strings'
 
 import { styles } from './style'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export interface CreatedTx {
   contractAddress: string
@@ -54,13 +56,36 @@ const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contractAddress, switchMethod, isABI }) => {
+const SendCustomTx = ({
+  initialValues,
+  onClose,
+  onNext,
+  contractAddress,
+  switchMethod,
+  isABI,
+}: Props): ReactElement => {
   const classes = useStyles()
-  const { ethBalance } = useSelector(safeSelector) || {}
+  const ethBalance = useSelector(currentSafeEthBalance)
+  const addressBook = useSelector(addressBookState)
   const [qrModalOpen, setQrModalOpen] = useState<boolean>(false)
-  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name: string } | null>({
-    address: contractAddress || initialValues.contractAddress,
-    name: '',
+  const [selectedEntry, setSelectedEntry] = useState<{ address?: string; name: string } | null>(() => {
+    const defaultEntry = {
+      // `initialValue` has precedence over `contractAddress`
+      address: initialValues?.contractAddress ?? contractAddress,
+      name: '',
+    }
+
+    // if there's nothing to lookup for, we return the default entry
+    if (!defaultEntry.address) {
+      return defaultEntry
+    }
+
+    const addressBookEntry = addressBook.find(({ address }) => sameAddress(address, defaultEntry.address))
+    if (addressBookEntry) {
+      return addressBookEntry
+    }
+
+    return defaultEntry
   })
   const [isValidAddress, setIsValidAddress] = useState<boolean>(true)
 
@@ -71,7 +96,14 @@ const SendCustomTx: React.FC<Props> = ({ initialValues, onClose, onNext, contrac
 
   const handleSubmit = (values: any, submit = true) => {
     if (values.data || values.value) {
-      onNext(values, submit)
+      const submitValues = { ...values }
+
+      if (!values.contractAddress) {
+        submitValues.contractAddress = selectedEntry?.address
+      }
+      submitValues.contractName = selectedEntry?.name
+
+      onNext(submitValues, submit)
     }
   }
 

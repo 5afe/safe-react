@@ -7,7 +7,7 @@ import Img from 'src/components/layout/Img'
 import InfoIcon from 'src/assets/icons/info_red.svg'
 import React from 'react'
 import { useSelector } from 'react-redux'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 
 const styles = createStyles({
   executionWarningRow: {
@@ -31,7 +31,7 @@ export const TransactionFailText = ({
   isExecution,
 }: TransactionFailTextProps): React.ReactElement | null => {
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector)
+  const threshold = useSelector(currentSafeThreshold)
 
   if (txEstimationExecutionStatus !== EstimationStatus.FAILURE) {
     return null

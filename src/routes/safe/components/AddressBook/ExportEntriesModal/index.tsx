@@ -9,8 +9,7 @@ import { enhanceSnackbarForAction, getNotificationsFromTxType } from 'src/logic/
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import { addressBookState } from 'src/logic/addressBook/store/selectors'
 
 import { lg, md, background } from 'src/theme/variables'
 
@@ -31,14 +30,6 @@ type ExportEntriesModalProps = {
 const ImageContainer = styled(Row)`
   padding: ${md} ${lg};
   justify-content: center;
-`
-const StyledButton = styled(Button)`
-  &.MuiButtonBase-root.MuiButton-root {
-    padding: 0;
-    .MuiButton-label {
-      height: 100%;
-    }
-  }
 `
 
 const InfoContainer = styled(Row)`
@@ -65,7 +56,7 @@ const StyledCSVLink = styled(CSVDownloader)`
 
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
   const dispatch = useDispatch()
-  const addressBook: AddressBookState = useSelector(addressBookSelector)
+  const addressBook = useSelector(addressBookState)
   const [loading, setLoading] = useState<boolean>(true)
   const [error, setError] = useState<string | undefined>('')
   const [csvData, setCsvData] = useState<string>('')
@@ -138,26 +129,19 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
         </InfoContainer>
       </Modal.Body>
       <Modal.Footer withoutBorder>
-        <Row>
-          <Button size="md" variant="outlined" onClick={onClose}>
-            Cancel
-          </Button>
-          <StyledButton
-            color="primary"
-            size="md"
-            disabled={loading}
-            onClick={error ? () => setDoRetry(true) : handleClose}
-          >
-            {!error ? (
-              <StyledCSVLink data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
-                {loading && <StyledLoader color="secondaryLight" size="xs" />}
-                Download
-              </StyledCSVLink>
-            ) : (
-              'Retry'
-            )}
-          </StyledButton>
-        </Row>
+        <Button size="md" variant="outlined" onClick={onClose}>
+          Cancel
+        </Button>
+        <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
+          {!error ? (
+            <StyledCSVLink data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
+              {loading && <StyledLoader color="secondaryLight" size="xs" />}
+              Download
+            </StyledCSVLink>
+          ) : (
+            'Retry'
+          )}
+        </Button>
       </Modal.Footer>
     </Modal>
   )
