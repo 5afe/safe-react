@@ -23,13 +23,13 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import { Modal } from 'src/components/Modal'
-import { safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 import { useStyles } from './style'
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 export const REPLACE_OWNER_NAME_INPUT_TEST_ID = 'replace-owner-name-input'
@@ -50,8 +50,6 @@ const formMutators: Record<
   },
 }
 
-const chainId = getNetworkId()
-
 type NewOwnerProps = {
   ownerAddress: string
   ownerName: string
@@ -70,11 +68,9 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
   const handleSubmit = (values: NewOwnerProps) => {
     onSubmit(values)
   }
-  const addressBookMap = useSelector(addressBookMapSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
+  const { address: safeAddress = '', owners } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
-
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
   return (
@@ -150,8 +146,8 @@ export const OwnerForm = ({ onClose, onSubmit, owner, initialValues }: OwnerForm
                     />
                     <OnChange name="ownerAddress">
                       {async (address: string) => {
-                        if (web3ReadOnly.utils.isAddress(address)) {
-                          const ownerName = addressBookMap?.[chainId]?.[address]?.name
+                        if (isValidAddress(address)) {
+                          const ownerName = addressBookMap[address]?.name
                           if (ownerName) {
                             mutators.setOwnerName(ownerName)
                           }

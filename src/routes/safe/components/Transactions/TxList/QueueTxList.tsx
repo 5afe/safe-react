@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 
 import { Transaction, TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { sameString } from 'src/utils/strings'
-import { safeNonceSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 
 import {
   DisclaimerContainer,
@@ -82,7 +82,7 @@ type QueueTxListProps = {
 
 export const QueueTxList = ({ transactions }: QueueTxListProps): ReactElement => {
   const { txLocation } = useContext(TxLocationContext)
-  const nonce = useSelector(safeNonceSelector)
+  const nonce = useSelector(currentSafeNonce)
   const title =
     txLocation === 'queued.next'
       ? 'NEXT TRANSACTION'

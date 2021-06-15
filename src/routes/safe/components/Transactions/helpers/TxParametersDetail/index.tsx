@@ -5,7 +5,7 @@ import { Text, ButtonLink, Accordion, AccordionSummary, AccordionDetails } from 
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus, areEthereumParamsVisible, areSafeParamsEnabled, ethereumTxParametersTitle } from '../utils'
 import { useSelector } from 'react-redux'
-import { safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeThreshold } from 'src/logic/safe/store/selectors'
 
 const TxParameterWrapper = styled.div`
   display: flex;
@@ -49,7 +49,7 @@ export const TxParametersDetail = ({
   isTransactionExecution,
   isOffChainSignature,
 }: Props): ReactElement | null => {
-  const threshold = useSelector(safeThresholdSelector) || 1
+  const threshold = useSelector(currentSafeThreshold) || 1
   const defaultParameterStatus = isOffChainSignature && threshold > 1 ? 'ETH_HIDDEN' : 'ENABLED'
 
   if (!isTransactionExecution && !isTransactionCreation && isOffChainSignature) {

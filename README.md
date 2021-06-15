@@ -64,7 +64,6 @@ For Mainnet:
 yarn build-mainnet
 ```
 
-
 ## Running the tests
 
 To run the tests:
@@ -100,6 +99,8 @@ Deployment to production is done manually. Please see the [release procedure](do
 * [React](https://reactjs.org/) - A JS library for building user interfaces
 * [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
+
+![app diagram](https://user-images.githubusercontent.com/381895/121764528-e5e2e900-cb44-11eb-8643-483d41040349.png)
 
 ## Contributing
 
