@@ -11,6 +11,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import { styles } from './style'
 
 import { getExplorerInfo, getNetworkId } from 'src/config'
+import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
@@ -18,7 +19,7 @@ import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookFromQueryParams, currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
 import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
@@ -31,11 +32,12 @@ import {
   generateColumns,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
+import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import ImportEntriesModal from './ImportEntriesModal'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -48,17 +50,7 @@ const StyledButton = styled(Button)`
     margin: 0 6px 0 0;
   }
 `
-const UnStyledButton = styled.button`
-  background: none;
-  color: inherit;
-  border: none;
-  padding: 0;
-  font: inherit;
-  cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
-  display: flex;
-  align-items: center;
-`
+
 const useStyles = makeStyles(styles)
 
 interface AddressBookSelectedEntry extends AddressBookEntry {
@@ -79,9 +71,9 @@ const AddressBookTable = (): ReactElement => {
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
-  const safesList = useSelector(safesListSelector)
-  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-  const addressBook = useSelector(addressBookSelector)
+  const safesList = useSelector(safesAsList)
+  const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
@@ -102,8 +94,8 @@ const AddressBookTable = (): ReactElement => {
   }, [entryAddressToEditOrCreateNew])
 
   useEffect(() => {
-    if (entryAddressToEditOrCreateNew) {
-      const address = checksumAddress(entryAddressToEditOrCreateNew)
+    if (isValidAddress(entryAddressToEditOrCreateNew)) {
+      const address = checksumAddress(entryAddressToEditOrCreateNew as string)
       const oldEntryIndex = addressBook.findIndex((entry) => sameAddress(entry.address, address))
 
       if (oldEntryIndex >= 0) {
@@ -237,7 +229,7 @@ const AddressBookTable = (): ReactElement => {
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
-                        <UnStyledButton
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({
                               entry: row,
@@ -252,8 +244,8 @@ const AddressBookTable = (): ReactElement => {
                             tooltip="Edit entry"
                             className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
                           />
-                        </UnStyledButton>
-                        <UnStyledButton
+                        </ButtonHelper>
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({ entry: row })
                             setDeleteEntryModalOpen(true)
@@ -266,7 +258,7 @@ const AddressBookTable = (): ReactElement => {
                             tooltip="Delete entry"
                             className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
                           />
-                        </UnStyledButton>
+                        </ButtonHelper>
                         {granted ? (
                           <StyledButton
                             color="primary"

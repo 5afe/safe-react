@@ -4,7 +4,7 @@ import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled from 'styled-components'
 
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import { safeNameSelector, safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Bold from 'src/components/layout/Bold'
 import { border, xs } from 'src/theme/variables'
@@ -25,8 +25,7 @@ const StyledBlock = styled(Block)`
 `
 
 const SafeInfo = (): React.ReactElement => {
-  const { address: safeAddress = '', ethBalance } = useSelector(safeSelector) || {}
-  const safeName = useSelector((state) => safeNameSelector(state, safeAddress))
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
 
   return (
     <>

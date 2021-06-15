@@ -10,22 +10,21 @@ import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
-export const WALLET_PROVIDER = {
-  SAFE: 'SAFE',
-  METAMASK: 'METAMASK',
-  REMOTE: 'REMOTE',
-  TORUS: 'TORUS',
-  PORTIS: 'PORTIS',
-  FORTMATIC: 'FORTMATIC',
-  SQUARELINK: 'SQUARELINK',
-  WALLETCONNECT: 'WALLETCONNECT',
-  OPERA: 'OPERA',
+export enum WALLET_PROVIDER {
+  METAMASK = 'METAMASK',
+  TORUS = 'TORUS',
+  PORTIS = 'PORTIS',
+  FORTMATIC = 'FORTMATIC',
+  SQUARELINK = 'SQUARELINK',
+  WALLETCONNECT = 'WALLETCONNECT',
+  TRUST = 'TRUST',
+  OPERA = 'OPERA',
   // This is the provider for WALLET_LINK configuration on bnc-onboard
-  COINBASE_WALLET: 'COINBASE WALLET',
-  AUTHEREUM: 'AUTHEREUM',
-  LEDGER: 'LEDGER',
-  TREZOR: 'TREZOR',
-  LATTICE: 'LATTICE',
+  COINBASE_WALLET = 'COINBASE WALLET',
+  AUTHEREUM = 'AUTHEREUM',
+  LEDGER = 'LEDGER',
+  TREZOR = 'TREZOR',
+  LATTICE = 'LATTICE',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
@@ -97,4 +96,9 @@ export const getContentFromENS = (name: string): Promise<ContentHash> => web3.et
 
 export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
+}
+
+export const isTxPendingError = (err: Error): boolean => {
+  const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
+  return err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
 }

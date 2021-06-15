@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
@@ -15,7 +15,7 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getEthAsToken } from 'src/logic/tokens/utils/tokenHelpers'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -30,26 +30,27 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { styles } from './style'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
-export type CustomTx = {
-  contractAddress?: string
-  data?: string
-  value?: string
+export type ReviewCustomTxProps = {
+  contractAddress: string
+  contractName?: string
+  data: string
+  value: string
 }
 
 type Props = {
   onClose: () => void
   onPrev: () => void
-  tx: CustomTx
+  tx: ReviewCustomTxProps
 }
 
 const useStyles = makeStyles(styles)
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
+const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
 
   const {
     gasLimit,
@@ -125,6 +126,7 @@ const ReviewCustomTx = ({ onClose, onPrev, tx }: Props): React.ReactElement => {
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.contractAddress as string}
+                  name={tx.contractName ?? ''}
                   showAvatar
                   showCopyBtn
                   explorerUrl={getExplorerInfo(tx.contractAddress as string)}

@@ -16,6 +16,7 @@ import { encodeMultiSendCall, MultiSendTx } from 'src/logic/safe/transactions/mu
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
+import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
@@ -130,7 +131,7 @@ export const getSpendingLimits = async (
       return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
     }
   } catch (error) {
-    console.error('Failed to retrieve SpendingLimits module information', error.message)
+    throw new CodedException(Errors._609, error.message)
   }
 
   return null

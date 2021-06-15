@@ -6,7 +6,7 @@ import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeCurrentVersionSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -66,8 +66,8 @@ export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps)
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeVersion = useSelector(safeCurrentVersionSelector) as string
+  const safeAddress = useSelector(safeAddressFromUrl)
+  const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   useEffect(
     () => () => {

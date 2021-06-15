@@ -10,11 +10,7 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import {
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
@@ -25,9 +21,7 @@ const useStyles = makeStyles(styles)
 const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
-  const threshold = useSelector(safeThresholdSelector) || 1
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const { address: safeAddress = '', owners, threshold = 1 } = useSelector(currentSafe) ?? {}
   const granted = useSelector(grantedSelector)
 
   const toggleModal = () => {

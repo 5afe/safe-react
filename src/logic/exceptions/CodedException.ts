@@ -5,23 +5,28 @@ import { IS_PRODUCTION } from 'src/utils/constants'
 
 export class CodedException extends Error {
   public readonly code: number
+  public readonly content: string
   // the context allows to enrich events, for the list of allowed context keys/data, please check the type or go to
   // https://docs.sentry.io/platforms/javascript/enriching-events/context/
   // The context is not searchable, that means its goal is just to provide additional data for the error
   public readonly context?: CaptureContext
 
-  constructor(content: ErrorCodes, extraMessage?: string, context?: CaptureContext) {
-    super()
-
+  private getCode(content: ErrorCodes): number {
     const codePrefix = content.split(':')[0]
     const code = Number(codePrefix)
     if (isNaN(code)) {
-      throw new CodedException(ErrorCodes.___0, codePrefix, context)
+      throw new CodedException(ErrorCodes.___0, codePrefix)
     }
+    return code
+  }
+
+  constructor(content: ErrorCodes, extraMessage?: string, context?: CaptureContext) {
+    super()
 
     const extraInfo = extraMessage ? ` (${extraMessage})` : ''
-    this.message = `${content}${extraInfo}`
-    this.code = code
+    this.message = `Code ${content}${extraInfo}`
+    this.code = this.getCode(content)
+    this.content = content
     this.context = context
   }
 

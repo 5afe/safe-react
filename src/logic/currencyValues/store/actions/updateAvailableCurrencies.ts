@@ -4,6 +4,7 @@ import { AppReduxState } from 'src/store'
 import { AvailableCurrenciesPayload } from 'src/logic/currencyValues/store/reducer/currencyValues'
 import { setAvailableCurrencies } from 'src/logic/currencyValues/store/actions/setAvailableCurrencies'
 import { fetchAvailableCurrencies } from 'src/logic/currencyValues/api/fetchAvailableCurrencies'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export const updateAvailableCurrencies = () => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, Action<AvailableCurrenciesPayload>>,
@@ -12,7 +13,7 @@ export const updateAvailableCurrencies = () => async (
     const availableCurrencies = await fetchAvailableCurrencies()
     dispatch(setAvailableCurrencies({ availableCurrencies }))
   } catch (err) {
-    console.error('Error fetching available currencies', err)
+    logError(Errors._607, err.message)
   }
   return Promise.resolve()
 }

@@ -2,7 +2,7 @@ import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
-import { safeNonceSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/TxList/hooks/useActionButtonsHandlers'
 
@@ -20,7 +20,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
     isPending,
     disabledActions,
   } = useActionButtonsHandlers(transaction)
-  const nonce = useSelector(safeNonceSelector)
+  const nonce = useSelector(currentSafeNonce)
 
   const onExecuteOrConfirm = (event) => {
     handleOnMouseLeave()

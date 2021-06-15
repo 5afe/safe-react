@@ -7,7 +7,7 @@ import {
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
-import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 
 let nonce: number | undefined
 

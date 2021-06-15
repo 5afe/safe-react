@@ -16,7 +16,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
@@ -91,7 +91,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, nativeCoin.address), [txToken])
@@ -224,7 +224,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 Recipient
               </Paragraph>
             </Row>
-            <Row align="center" margin="md">
+            <Row align="center" margin="md" data-testid="recipient-review-step">
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.recipientAddress}
