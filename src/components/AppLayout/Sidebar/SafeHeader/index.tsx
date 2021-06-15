@@ -41,7 +41,7 @@ const IdenticonContainer = styled.div`
 const IconContainer = styled.div`
   width: 100px;
   display: flex;
-  padding: 8px 0;
+  padding: 4px 0;
   justify-content: space-evenly;
 `
 const StyledButton = styled(Button)`
@@ -74,7 +74,7 @@ const StyledEthHashInfo = styled(EthHashInfo)`
 
 const StyledLabel = styled.div`
   background-color: ${({ theme }) => theme.colors.icon};
-  margin: 8px 0 0 0 !important;
+  margin: 4px 0 0 0 !important;
   padding: 4px 8px;
   border-radius: 4px;
   letter-spacing: 1px;
