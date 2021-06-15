@@ -17,7 +17,7 @@ export type SafeInfo = {
   threshold: number
   implementation: AddressInfo
   owners: AddressValue[]
-  modules: AddressValue[]
+  modules: AddressValue[] | null
   fallbackHandler: AddressInfo
   version: string
 }

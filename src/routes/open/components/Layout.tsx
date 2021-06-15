@@ -17,14 +17,15 @@ import {
   getOwnerAddressBy,
   getOwnerNameBy,
 } from 'src/routes/open/components/fields'
-import { WelcomeLayout } from 'src/routes/welcome/components/index'
+import { WelcomeLayout } from 'src/routes/welcome/components'
 import { history } from 'src/store'
 import { secondary, sm } from 'src/theme/variables'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { useSelector } from 'react-redux'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 import { SafeProps } from 'src/routes/open/container/Open'
+import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
+import { sameString } from 'src/utils/strings'
 
 const { useEffect } = React
 
@@ -39,12 +40,11 @@ export type InitialValuesForm = {
 }
 
 const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
-  const addressBook = useSelector(addressBookSelector)
-  const ownerName = getNameFromAddressBook(addressBook, userAccount, { filterOnlyValidName: true })
+  const ownerName = useSelector((state) => addressBookEntryName(state, { address: userAccount }))
 
   if (!safeProps) {
     return {
-      [getOwnerNameBy(0)]: ownerName || 'My Wallet',
+      [getOwnerNameBy(0)]: sameString(ownerName, ADDRESS_BOOK_DEFAULT_NAME) ? 'My Wallet' : ownerName,
       [getOwnerAddressBy(0)]: userAccount,
       [FIELD_CONFIRMATIONS]: '1',
       [FIELD_CREATION_PROXY_SALT]: Date.now(),

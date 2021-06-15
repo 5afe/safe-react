@@ -11,7 +11,7 @@ import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -56,7 +56,7 @@ export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) 
   getState: () => AppReduxState,
 ): Promise<void> => {
   const state = getState()
-  const safe = safeSelector(state)
+  const safe = currentSafe(state)
 
   if (!safe) {
     return

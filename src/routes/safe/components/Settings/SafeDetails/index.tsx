@@ -27,12 +27,9 @@ import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeM
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import {
-  latestMasterContractVersionSelector,
-  safeCurrentVersionSelector,
-  safeNeedsUpdateSelector,
-  safeParamAddressFromStateSelector,
+  currentSafeWithNames,
+  latestMasterContractVersion as latestMasterContractVersionSelector,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
@@ -57,11 +54,13 @@ const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const {
+    address: safeAddress,
+    name: safeName,
+    needsUpdate: safeNeedsUpdate,
+    currentVersion: safeCurrentVersion,
+  } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSafeName(safeAddress)
-  const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
-  const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
   const { trackEvent } = useAnalytics()
 
   const [isModalOpen, setModalOpen] = useState(false)

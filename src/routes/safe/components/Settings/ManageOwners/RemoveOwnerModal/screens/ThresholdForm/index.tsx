@@ -16,7 +16,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { Modal } from 'src/components/Modal'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
 export const REMOVE_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'remove-owner-threshold-next-btn'
@@ -34,9 +34,8 @@ type Props = {
 
 export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
-  const owners = useSelector(safeOwnersSelector)
+  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
   const ownersCount = owners?.length ?? 0
-  const threshold = useSelector(safeThresholdSelector) as number
   const handleSubmit = (values) => {
     onSubmit(values)
   }

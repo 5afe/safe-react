@@ -5,7 +5,7 @@ import React, { Suspense, useEffect, useState } from 'react'
 import Modal from 'src/components/Modal'
 import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { CollectibleTx } from './screens/ReviewCollectible'
-import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
+import { ReviewCustomTxProps } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
@@ -185,7 +185,11 @@ const SendModal = ({
         )}
 
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => handleOnPrev('contractInteraction')} tx={tx as CustomTx} />
+          <ReviewCustomTx
+            onClose={onClose}
+            onPrev={() => handleOnPrev('contractInteraction')}
+            tx={tx as ReviewCustomTxProps}
+          />
         )}
 
         {activeScreen === 'sendCollectible' && (
