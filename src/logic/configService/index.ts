@@ -8,6 +8,7 @@ export type AppData = {
   disabled?: boolean
   description?: string
   networks: number[]
+  custom?: boolean
 }
 
 enum Endpoints {
