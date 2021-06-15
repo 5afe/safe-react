@@ -7,7 +7,7 @@ import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/sele
 import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
+import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Overwrite } from 'src/types/helpers'

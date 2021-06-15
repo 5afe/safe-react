@@ -9,7 +9,6 @@ import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/mode
 import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { ADD_OR_UPDATE_SAFE } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
 export const SAFE_REDUCER_ID = 'safes'
@@ -96,13 +95,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
     },
     [REMOVE_SAFE]: (state, action: Action<string>) => {
       const safeAddress = action.payload
-
-      const currentDefaultSafe = state.get('defaultSafe')
-
-      let newState = state.deleteIn(['safes', safeAddress])
-      if (sameAddress(safeAddress, currentDefaultSafe)) {
-        newState = newState.set('defaultSafe', DEFAULT_SAFE_INITIAL_STATE)
-      }
+      const newState = state.deleteIn(['safes', safeAddress])
 
       return newState
     },

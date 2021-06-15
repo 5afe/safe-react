@@ -5,7 +5,7 @@ import { Icon } from '@gnosis.pm/safe-react-components'
 import * as React from 'react'
 import styled from 'styled-components'
 
-import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
+import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
