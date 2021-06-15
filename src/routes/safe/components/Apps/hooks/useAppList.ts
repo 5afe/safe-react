@@ -19,9 +19,9 @@ type UseAppListReturnType = {
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
-  const [persistedAppList, setPersistedAppList] = useState<
-    (StoredSafeApp & { disabled?: boolean; networks?: number[] })[]
-  >([])
+  const [customAppList, setCustomAppList] = useState<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(
+    [],
+  )
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(false)
 
@@ -62,7 +62,7 @@ const useAppList = (): UseAppListReturnType => {
       // recover apps from storage (third-party apps added by the user)
       const storageAppList =
         (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
-      setPersistedAppList(storageAppList)
+      setCustomAppList(storageAppList)
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
       const customApps = storageAppList.filter(
@@ -98,13 +98,13 @@ const useAppList = (): UseAppListReturnType => {
     (appUrl: string): void => {
       setAppList((list) => {
         const newList = list.filter(({ url }) => url !== appUrl)
-        const newPersistedList = persistedAppList.filter(({ url }) => url !== appUrl)
+        const newPersistedList = customAppList.filter(({ url }) => url !== appUrl)
         saveToStorage(APPS_STORAGE_KEY, newPersistedList)
 
         return newList
       })
     },
-    [persistedAppList],
+    [customAppList],
   )
 
   return {
