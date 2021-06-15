@@ -13,7 +13,7 @@ import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeCurrentVersionSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -44,7 +44,7 @@ export const ChangeThresholdModal = ({
 }: ChangeThresholdModalProps): ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeVersion = useSelector(safeCurrentVersionSelector) as string
+  const safeVersion = useSelector(currentSafeCurrentVersion) as string
   const [data, setData] = useState('')
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
