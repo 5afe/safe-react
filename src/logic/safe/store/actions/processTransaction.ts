@@ -203,16 +203,17 @@ export const processTransaction = ({
       }),
     )
 
-    let errMsg = err.message
+    logError(Errors._804, err.message)
+
     if (txHash) {
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
       try {
-        const resp = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-        errMsg = resp || errMsg
-      } catch (e) {}
+        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
+        logError(Errors._803, errMsg)
+      } catch (e) {
+        logError(Errors._803, e.message)
+      }
     }
-
-    logError(Errors._804, errMsg)
   }
 
   return txHash
