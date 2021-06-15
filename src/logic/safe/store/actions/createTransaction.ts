@@ -14,7 +14,7 @@ import {
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { safeCurrentVersionSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -80,7 +80,7 @@ export const createTransaction = (
   if (!ready) return
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-  const safeVersion = safeCurrentVersionSelector(state) as string
+  const safeVersion = currentSafeCurrentVersion(state) as string
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   const lastTx = await getLastTx(safeAddress)
   const nextNonce = await getNewTxNonce(lastTx, safeInstance)

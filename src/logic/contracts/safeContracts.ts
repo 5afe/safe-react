@@ -1,5 +1,4 @@
 import semverSatisfies from 'semver/functions/satisfies'
-import GnosisSafeSol from '@gnosis.pm/safe-contracts/build/contracts/GnosisSafe.json'
 import {
   getSafeSingletonDeployment,
   getSafeL2SingletonDeployment,
