@@ -32,9 +32,16 @@ const IdenticonContainer = styled.div`
   margin: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   div:first-of-type {
     width: 32px;
+  }
+`
+const StyledIcon = styled(Icon)`
+  svg {
+    height: 26px;
+    width: 26px;
   }
 `
 
@@ -134,7 +141,7 @@ const SafeHeader = ({
           <FlexSpacer />
           <Identicon address={address} size="lg" />
           <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
-            <Icon size="md" type="circleDropdown" />
+            <StyledIcon size="md" type="circleDropdown" />
           </ButtonHelper>
         </IdenticonContainer>
 
