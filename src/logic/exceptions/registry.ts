@@ -24,6 +24,8 @@ enum ErrorCodes {
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
   _800 = '800: Safe creation tx failed',
+  _801 = '801: Failed to send a tx with a spending limit',
+  _802 = '802: Error submitting a transaction, safeAddress not found',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
 }
