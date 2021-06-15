@@ -1,6 +1,7 @@
 import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useCallback } from 'react'
 import styled from 'styled-components'
+import { useDispatch, useSelector } from 'react-redux'
 
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
@@ -11,15 +12,17 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import { instantiateSafeContracts } from 'src/logic/contracts/safeContracts'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getWeb3, isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { background, connected, fontColor } from 'src/theme/variables'
 import { providerNameSelector } from 'src/logic/wallets/store/selectors'
-import { useSelector } from 'react-redux'
 
 import SuccessSvg from './assets/safe-created.svg'
 import VaultErrorSvg from './assets/vault-error.svg'
 import VaultLoading from './assets/creation-process.gif'
-import { PromiEvent, TransactionReceipt } from 'web3-core'
+import { TransactionReceipt } from 'web3-core'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 
 const Wrapper = styled.div`
   display: grid;
@@ -60,12 +63,12 @@ const CardTitle = styled.div`
 
 interface FullParagraphProps {
   inversecolors: string
-  stepIndex: number
+  $stepIndex: number
 }
 
 const FullParagraph = styled(Paragraph)<FullParagraphProps>`
-  background-color: ${({ stepIndex }) => (stepIndex === 0 ? connected : background)};
-  color: ${({ theme, stepIndex }) => (stepIndex === 0 ? theme.colors.white : fontColor)};
+  background-color: ${({ $stepIndex }) => ($stepIndex === 0 ? connected : background)};
+  color: ${({ theme, $stepIndex }) => ($stepIndex === 0 ? theme.colors.white : fontColor)};
   padding: 28px;
   font-size: 20px;
   margin-bottom: 16px;
@@ -98,7 +101,7 @@ const BackButton = styled(Button)`
 
 type Props = {
   creationTxHash?: string
-  submittedPromise?: PromiEvent<TransactionReceipt>
+  submittedPromise?: Promise<TransactionReceipt>
   onRetry: () => void
   onSuccess: (createdSafeAddress: string) => void
   onCancel: () => void
@@ -121,6 +124,7 @@ export const SafeDeployment = ({
   const [waitingSafeDeployed, setWaitingSafeDeployed] = useState(false)
   const [continueButtonDisabled, setContinueButtonDisabled] = useState(false)
   const provider = useSelector(providerNameSelector)
+  const dispatch = useDispatch()
 
   const confirmationStep = isConfirmationStep(stepIndex)
 
@@ -129,13 +133,26 @@ export const SafeDeployment = ({
     onSuccess(createdSafeAddress)
   }
 
-  const onError = (error) => {
-    setIntervalStarted(false)
-    setWaitingSafeDeployed(false)
-    setContinueButtonDisabled(false)
-    setError(true)
-    console.error(error)
-  }
+  const showSnackbarError = useCallback(
+    (err: Error) => {
+      if (isTxPendingError(err)) {
+        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+      }
+    },
+    [dispatch],
+  )
+
+  const onError = useCallback(
+    (error: Error) => {
+      setIntervalStarted(false)
+      setWaitingSafeDeployed(false)
+      setContinueButtonDisabled(false)
+      setError(true)
+      logError(Errors._800, error.message)
+      showSnackbarError(error)
+    },
+    [setIntervalStarted, setWaitingSafeDeployed, setContinueButtonDisabled, setError, showSnackbarError],
+  )
 
   // discard click event value
   const onRetryTx = () => {
@@ -173,15 +190,20 @@ export const SafeDeployment = ({
       return
     }
 
-    setStepIndex(0)
-    submittedPromise
-      .once('transactionHash', (txHash) => {
-        setSafeCreationTxHash(txHash)
+    const handlePromise = async () => {
+      setStepIndex(0)
+      try {
+        const receipt = await submittedPromise
+        setSafeCreationTxHash(receipt.transactionHash)
         setStepIndex(1)
         setIntervalStarted(true)
-      })
-      .on('error', onError)
-  }, [submittedPromise])
+      } catch (err) {
+        onError(err)
+      }
+    }
+
+    handlePromise()
+  }, [submittedPromise, onError])
 
   // recovering safe creation from txHash
   useEffect(() => {
@@ -246,7 +268,7 @@ export const SafeDeployment = ({
     return () => {
       clearInterval(interval)
     }
-  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error])
+  }, [creationTxHash, submittedPromise, intervalStarted, stepIndex, error, onError])
 
   useEffect(() => {
     let interval
@@ -336,7 +358,7 @@ export const SafeDeployment = ({
               inversecolors={confirmationStep.toString()}
               noMargin
               size="md"
-              stepIndex={stepIndex}
+              $stepIndex={stepIndex}
             >
               {error ? 'You can Cancel or Retry the Safe creation process.' : steps[stepIndex].instruction}
             </FullParagraph>

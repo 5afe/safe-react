@@ -17,9 +17,7 @@ export default (safeAddress: string) => async (
   ) => {
     try {
       const values = (await loadFn(safeAddress)) as any[]
-      if (values.length) {
-        dispatch(actionFn({ safeAddress, values }))
-      }
+      dispatch(actionFn({ safeAddress, values }))
     } catch (e) {
       e.log()
     }
