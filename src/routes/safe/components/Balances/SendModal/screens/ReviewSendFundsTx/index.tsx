@@ -224,7 +224,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 Recipient
               </Paragraph>
             </Row>
-            <Row align="center" margin="md">
+            <Row align="center" margin="md" data-testid="recipient-review-step">
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.recipientAddress}
