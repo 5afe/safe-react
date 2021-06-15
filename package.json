@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.6.5",
+  "version": "3.7.1",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -158,10 +158,10 @@
     ]
   },
   "dependencies": {
-    "@gnosis.pm/safe-apps-sdk": "3.0.0-alpha.5",
+    "@gnosis.pm/safe-apps-sdk": "3.1.0-alpha.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
-    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#4864ebb",
+    "@gnosis.pm/safe-react-components": "https://github.com/gnosis/safe-react-components.git#0e4fcd6",
     "@gnosis.pm/util-contracts": "2.0.6",
     "@ledgerhq/hw-transport-node-hid-singleton": "5.51.1",
     "@material-ui/core": "^4.11.0",
@@ -170,9 +170,8 @@
     "@openzeppelin/contracts": "3.1.0",
     "@sentry/react": "^6.3.5",
     "@sentry/tracing": "^6.3.5",
-    "@truffle/contract": "^4.3.0",
+    "@truffle/contract": "^4.3.18",
     "@unstoppabledomains/resolution": "^1.17.0",
-    "async-sema": "^3.1.0",
     "axios": "0.21.1",
     "bignumber.js": "9.0.1",
     "bnc-onboard": "~1.25.0",
@@ -214,6 +213,7 @@
     "react-ga": "3.3.0",
     "react-hot-loader": "4.13.0",
     "react-intersection-observer": "^8.31.0",
+    "react-papaparse": "^3.14.0",
     "react-qr-reader": "^2.2.1",
     "react-redux": "7.2.3",
     "react-router-dom": "5.2.0",
@@ -221,6 +221,7 @@
     "react-window": "^1.8.6",
     "redux": "4.0.5",
     "redux-actions": "^2.6.5",
+    "redux-localstorage-simple": "^2.4.0",
     "redux-thunk": "^2.3.0",
     "reselect": "^4.0.0",
     "semver": "^7.3.2",

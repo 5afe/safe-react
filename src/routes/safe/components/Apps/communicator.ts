@@ -9,16 +9,19 @@ import {
   METHODS,
   RequestId,
 } from '@gnosis.pm/safe-apps-sdk'
-import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { trackError, Errors } from 'src/logic/exceptions/CodedException'
 import { SafeApp } from './types'
 
 type MessageHandler = (
   msg: SDKMessageEvent,
 ) => void | MethodToResponse[Methods] | ErrorResponse | Promise<MethodToResponse[Methods] | ErrorResponse | void>
 
+type LegacyMethods = 'getEnvInfo'
+type SDKMethods = Methods | LegacyMethods
+
 class AppCommunicator {
   private iframeRef: MutableRefObject<HTMLIFrameElement | null>
-  private handlers = new Map<Methods, MessageHandler>()
+  private handlers = new Map<SDKMethods, MessageHandler>()
   private app: SafeApp
 
   constructor(iframeRef: MutableRefObject<HTMLIFrameElement | null>, app: SafeApp) {
@@ -28,7 +31,7 @@ class AppCommunicator {
     window.addEventListener('message', this.handleIncomingMessage)
   }
 
-  on = (method: Methods, handler: MessageHandler): void => {
+  on = (method: SDKMethods, handler: MessageHandler): void => {
     this.handlers.set(method, handler)
   }
 
@@ -69,9 +72,12 @@ class AppCommunicator {
         }
       } catch (err) {
         this.send(err.message, msg.data.id, true)
-        // TODO: Allow passing method/message as an extra context
-        // Tweak CodedException class to accept it as a second argument
-        logError(Errors._901, `${msg.data.method} ${err.message}`)
+        trackError(Errors._901, err.message, {
+          contexts: {
+            safeApp: this.app,
+            request: msg.data,
+          },
+        })
       }
     }
   }

@@ -5,6 +5,7 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
   relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
+  safeUrl: 'http://localhost:3000/app',
   safeAppsUrl: 'http://localhost:3002',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',

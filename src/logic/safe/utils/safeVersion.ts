@@ -7,6 +7,7 @@ import { getGnosisSafeInstanceAt, getSafeMasterContract } from 'src/logic/contra
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 type FeatureConfigByVersion = {
   name: FEATURES
@@ -74,9 +75,9 @@ export const checkIfSafeNeedsUpdate = async (
 }
 
 export const getCurrentMasterContractLastVersion = async (): Promise<string> => {
-  const safeMaster = await getSafeMasterContract()
   let safeMasterVersion
   try {
+    const safeMaster = await getSafeMasterContract()
     safeMasterVersion = await safeMaster.methods.VERSION().call()
   } catch (err) {
     // Default in case that it's not possible to obtain the version from the contract, returns a hardcoded value or an
@@ -86,13 +87,12 @@ export const getCurrentMasterContractLastVersion = async (): Promise<string> => 
   return safeMasterVersion
 }
 
-export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo> => {
+export const getSafeVersionInfo = async (safeAddress: string): Promise<SafeVersionInfo | undefined> => {
   try {
     const safeMaster = getGnosisSafeInstanceAt(safeAddress)
     const lastSafeVersion = await getCurrentMasterContractLastVersion()
     return checkIfSafeNeedsUpdate(safeMaster, lastSafeVersion)
   } catch (err) {
-    console.error(err)
-    throw err
+    logError(Errors._606, err.message)
   }
 }

@@ -1,16 +1,13 @@
-import { List } from 'immutable'
 import { Dispatch } from 'redux'
+import { Action } from 'redux-actions'
 
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getLocalSafe } from 'src/logic/safe/utils'
-import { allSettled } from 'src/logic/safe/utils/allSettled'
 import { getSafeInfo, SafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { AppReduxState } from 'src/store'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { buildSafeOwners, extractRemoteSafeInfo } from './utils'
-import { Action } from 'redux-actions'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 /**
  * Builds a Safe Record that will be added to the app's store
@@ -19,26 +16,28 @@ import { Action } from 'redux-actions'
  * @note It's being used by "Load Existing Safe" and "Create New Safe" flows
  *
  * @param {string} safeAddress
- * @param {string} safeName
  * @returns Promise<SafeRecordProps>
  */
-export const buildSafe = async (safeAddress: string, safeName: string): Promise<SafeRecordProps> => {
+export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> => {
   const address = checksumAddress(safeAddress)
-  const safeInfo: Partial<SafeRecordProps> = {
-    address,
-    name: safeName,
-  }
+  // setting `loadedViaUrl` to false, as `buildSafe` is called on safe Load or Open flows
+  const safeInfo: Partial<SafeRecordProps> = { address, loadedViaUrl: false }
 
-  const [remote, localSafeInfo] = await allSettled<[SafeInfo | null, SafeRecordProps | undefined | null]>(
-    getSafeInfo(safeAddress),
+  const [remote, local] = await Promise.all([
+    getSafeInfo(safeAddress).catch((err) => {
+      err.log()
+      return null
+    }),
     getLocalSafe(safeAddress),
-  )
+  ])
 
   // remote (client-gateway)
   const remoteSafeInfo = remote ? await extractRemoteSafeInfo(remote) : {}
+  // local
+  const localSafeInfo = local || ({} as Partial<SafeRecordProps>)
 
   // update owner's information
-  const owners = buildSafeOwners(remote?.owners, localSafeInfo?.owners)
+  const owners = buildSafeOwners(remote?.owners, localSafeInfo.owners)
 
   return { ...localSafeInfo, ...safeInfo, ...remoteSafeInfo, owners } as SafeRecordProps
 }
@@ -52,24 +51,31 @@ export const buildSafe = async (safeAddress: string, safeName: string): Promise<
  */
 export const fetchSafe = (safeAddress: string) => async (
   dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<Action<Partial<SafeRecordProps>>> => {
-  const address = checksumAddress(safeAddress)
+): Promise<Action<Partial<SafeRecordProps>> | void> => {
+  let address = ''
+  try {
+    address = checksumAddress(safeAddress)
+  } catch (err) {
+    logError(Errors._102, safeAddress)
+    return
+  }
 
-  const [remoteSafeInfo] = await allSettled<[SafeInfo | null]>(getSafeInfo(address))
+  let safeInfo = {}
+  let remoteSafeInfo: SafeInfo | null = null
+
+  // if there's no remote info, we keep what's in memory
+  try {
+    remoteSafeInfo = await getSafeInfo(address)
+  } catch (err) {
+    err.log()
+  }
 
   // remote (client-gateway)
-  const safeInfo = remoteSafeInfo ? await extractRemoteSafeInfo(remoteSafeInfo) : {}
+  if (remoteSafeInfo) {
+    safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
+  }
 
-  // TODO: REVIEW: having the owner's names duplicated with what's in the address book seems a bit odd
-  const state = getState()
-  const addressBook = addressBookSelector(state)
-  // update owner's information
-  const owners = remoteSafeInfo
-    ? // if we have remote info, we can enrich it with local address book information
-      buildSafeOwners(remoteSafeInfo.owners, List(addressBook))
-    : // if there's no remote info, we keep what's in memory
-      undefined
+  const owners = buildSafeOwners(remoteSafeInfo?.owners)
 
   return dispatch(updateSafe({ address, ...safeInfo, owners }))
 }

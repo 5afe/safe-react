@@ -65,7 +65,7 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
     src: operaIcon,
     height: 25,
   },
-  [WALLET_PROVIDER.WALLETLINK]: {
+  [WALLET_PROVIDER.COINBASE_WALLET]: {
     src: coinbaseIcon,
     height: 25,
   },

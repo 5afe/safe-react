@@ -21,13 +21,20 @@ These instructions will get you a copy of the project up and running on your loc
 
 ### Prerequisites
 
-What you need to install globally:
+We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go with yarn in the README.
+Please install yarn globally if you haven't already.
 
+### Environment variables
+The app grabs environment variables from the `.env` file. Copy our template to your own local file:
 ```
-yarn global add truffle ganache-cli
+cp .env.example .env
 ```
 
-We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go with yarn in the README
+To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
+```
+REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+```
+Once done, you'll need to restart the app if it's already running.
 
 ### Installing and running
 
@@ -46,18 +53,6 @@ If you prefer using the Mainnet ones:
 yarn start-mainnet
 ```
 
-### Environment variables
-The app grabs environment variables from the `.env` file. Copy our template to your own local file:
-```
-cp .env.example .env
-```
-
-To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
-```
-REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
-```
-Once done, you'll need to restart the app.
-
 ### Building
 For Rinkeby:
 ```
@@ -69,34 +64,9 @@ For Mainnet:
 yarn build-mainnet
 ```
 
-
 ## Running the tests
 
-1. Run `transaction-history-service`
-```
-git clone https://github.com/gnosis/safe-transaction-service.git
-cd safe-transaction-service
-git checkout develop
-docker-compose build
-# it comes enabled by default in docker-compose
-sudo service postgresql stop
-docker-compose up -d
-```
-Check that the service is running at https://localhost:8000
-
-2. Migrate Safe Contracts:
-```
-git clone https://github.com/gnosis/safe-contracts.git
-cd safe-contracts
-yarn
-npx truffle migrate
-```
-3. Migrate Token Contracts for the tests:
-Inside `safe-react` directory
-```
-npx truffle migrate
-```
-4. Run the tests:
+To run the tests:
 ```
 yarn test
 ```
@@ -105,28 +75,20 @@ yarn test
 
 ESLint will be run automatically before you commit. To run it manually:
 
-
 ```
 yarn lint:fix
 ```
 
 ## Deployment
 
+### Dev & staging
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `master` branch, the code will be uploaded to the production bucket but not deployed automatically.
-This is done manually by the devops team for extra safety.
+When pushing to the `master` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
 
-## Releasing to production
-
-We prepare a new release every sprint. Sprints are two weeks long.
-
-* A separate code-freeze branch named `release/X.Y.Z` is created
-* The QA team do regression testing on this branch
-* If issues are found, bugfixes are merged into this branch
-* Once the QA is done, we push the branch to `master` (which is deployed to production)
-* Master is afterwards backmerged into the main `development` branch.
+### Production
+Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
 
 ## Configuring the app for running on different networks
 
@@ -134,11 +96,11 @@ We prepare a new release every sprint. Sprints are two weeks long.
 
 ## Built With
 
-* [Truffle React Box](https://github.com/truffle-box/react-box) - The web framework used
-* [Ganache](https://github.com/trufflesuite/ganache-cli) - Fast Ethereum RPC client
 * [React](https://reactjs.org/) - A JS library for building user interfaces
 * [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
+
+![app diagram](https://user-images.githubusercontent.com/381895/121764528-e5e2e900-cb44-11eb-8643-483d41040349.png)
 
 ## Contributing
 

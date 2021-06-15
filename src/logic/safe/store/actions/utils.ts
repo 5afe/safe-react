@@ -8,10 +8,7 @@ import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { makeOwner } from 'src/logic/safe/store/models/owner'
 import { checksumAddress } from 'src/utils/checksumAddress'
-import { List } from 'immutable'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
@@ -79,7 +76,12 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
 
   if (safeInfoModules.length) {
     safeInfo.modules = buildModulesLinkedList(safeInfoModules)
-    safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+    try {
+      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+    } catch (e) {
+      e.log()
+      safeInfo.spendingLimits = null
+    }
   }
 
   safeInfo.nonce = remoteSafeInfo.nonce
@@ -105,13 +107,9 @@ export const buildSafeOwners = (
   localSafeOwners?: SafeRecordProps['owners'],
 ): SafeRecordProps['owners'] | undefined => {
   if (remoteSafeOwners) {
-    const remoteOwners = remoteSafeOwners.map(({ value }) => {
-      const localOwner = localSafeOwners?.find(({ address }) => sameAddress(address, value))
-      const name = localOwner?.name
-      return makeOwner({ name, address: checksumAddress(value) })
-    })
-
-    return List(remoteOwners)
+    // ToDo: review if checksums addresses is necessary,
+    //  as they must be provided already in the checksum form from the services
+    return remoteSafeOwners.map(({ value }) => checksumAddress(value))
   }
 
   // nothing to do without remote owners, so we return the stored list

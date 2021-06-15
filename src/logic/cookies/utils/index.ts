@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie'
 
 import { getNetworkName } from 'src/config'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const PREFIX = `v1_${getNetworkName()}`
 
@@ -14,7 +15,7 @@ export const loadFromCookie = async (key: string, withoutPrefix = false): Promis
 
     return JSON.parse(stringifiedValue)
   } catch (err) {
-    console.error(`Failed to load ${key} from cookies:`, err)
+    logError(Errors._700, `cookie ${key} – ${err.message}`)
     return undefined
   }
 }
@@ -25,7 +26,7 @@ export const saveCookie = async (key: string, value: Record<string, any>, expira
     const expiration = expirationDays ? { expires: expirationDays } : undefined
     await Cookies.set(`${PREFIX}__${key}`, stringifiedValue, expiration)
   } catch (err) {
-    console.error(`Failed to save ${key} in cookies:`, err)
+    logError(Errors._701, `cookie ${key} – ${err.message}`)
   }
 }
 

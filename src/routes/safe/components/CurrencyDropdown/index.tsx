@@ -6,7 +6,6 @@ import MenuItem from '@material-ui/core/MenuItem'
 import { MuiThemeProvider } from '@material-ui/core/styles'
 import SearchIcon from '@material-ui/icons/Search'
 import classNames from 'classnames'
-import 'currency-flags/dist/currency-flags.min.css'
 import React, { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -37,6 +36,7 @@ export const CurrencyDropdown = (): React.ReactElement | null => {
 
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget)
+    import('currency-flags/dist/currency-flags.min.css' as string)
   }
 
   const handleClose = () => {

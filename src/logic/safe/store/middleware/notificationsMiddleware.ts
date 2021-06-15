@@ -123,7 +123,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
           break
         }
         const isUserOwner = grantedSelector(state)
-        const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)
+        const version = await getSafeVersionInfo(currentSafeAddress)
 
         const notificationKey = `${currentSafeAddress}`
         const onNotificationClicked = () => {
@@ -131,7 +131,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
           dispatch(push(`/safes/${currentSafeAddress}/settings`))
         }
 
-        if (needUpdate && isUserOwner) {
+        if (version?.needUpdate && isUserOwner) {
           dispatch(
             enqueueSnackbar(
               enhanceSnackbarForAction(

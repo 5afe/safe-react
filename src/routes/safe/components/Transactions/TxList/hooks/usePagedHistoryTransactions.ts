@@ -6,6 +6,8 @@ import { addHistoryTransactions } from 'src/logic/safe/store/actions/transaction
 import { TransactionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
 import { useHistoryTransactions } from 'src/routes/safe/components/Transactions/TxList/hooks/useHistoryTransactions'
+import { Errors } from 'src/logic/exceptions/CodedException'
+import { Await } from 'src/types/helpers'
 
 type PagedTransactions = {
   count: number
@@ -25,7 +27,16 @@ export const usePagedHistoryTransactions = (): PagedTransactions => {
 
   const next = useCallback(async () => {
     setIsLoading(true)
-    const results = await loadPagedHistoryTransactions(safeAddress.current)
+
+    let results: Await<ReturnType<typeof loadPagedHistoryTransactions>>
+    try {
+      results = await loadPagedHistoryTransactions(safeAddress.current)
+    } catch (e) {
+      // No next page
+      if (e.content !== Errors._608) {
+        e.log()
+      }
+    }
 
     if (!results) {
       setHasMore(false)
