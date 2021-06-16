@@ -39,6 +39,7 @@ import {
 import { getAccountsFrom } from 'src/routes/open/utils/safeDataExtractor'
 import { useSelector } from 'react-redux'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 const { useState } = React
 
@@ -205,7 +206,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
               <Col className={classes.ownerAddress} xs={7}>
                 <StyledAddressInput
                   fieldMutator={(newOwnerAddress) => {
-                    const newOwnerName = addressBook[newOwnerAddress]?.name
+                    const newOwnerName = addressBook.find((entry) => sameAddress(entry.address, newOwnerAddress))?.name
                     form.mutators.setValue(addressName, newOwnerAddress)
                     if (newOwnerName) {
                       form.mutators.setValue(ownerName, newOwnerName)
