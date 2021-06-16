@@ -32,16 +32,23 @@ const IdenticonContainer = styled.div`
   margin: 8px;
   display: flex;
   justify-content: space-between;
+  align-items: center;
 
   div:first-of-type {
     width: 32px;
+  }
+`
+const StyledIcon = styled(Icon)`
+  svg {
+    height: 26px;
+    width: 26px;
   }
 `
 
 const IconContainer = styled.div`
   width: 100px;
   display: flex;
-  padding: 8px 0;
+  padding: 4px 0;
   justify-content: space-evenly;
 `
 const StyledButton = styled(Button)`
@@ -74,7 +81,7 @@ const StyledEthHashInfo = styled(EthHashInfo)`
 
 const StyledLabel = styled.div`
   background-color: ${({ theme }) => theme.colors.icon};
-  margin: 8px 0 0 0 !important;
+  margin: 4px 0 0 0 !important;
   padding: 4px 8px;
   border-radius: 4px;
   letter-spacing: 1px;
@@ -134,7 +141,7 @@ const SafeHeader = ({
           <FlexSpacer />
           <Identicon address={address} size="lg" />
           <ButtonHelper onClick={onToggleSafeList} data-testid={TOGGLE_SIDEBAR_BTN_TESTID}>
-            <Icon size="md" type="circleDropdown" />
+            <StyledIcon size="md" type="circleDropdown" />
           </ButtonHelper>
         </IdenticonContainer>
 
