@@ -209,9 +209,9 @@ export const processTransaction = ({
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
       try {
         const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-        logError(Errors._803, errMsg)
+        logError(Errors._804, errMsg)
       } catch (e) {
-        logError(Errors._803, e.message)
+        logError(Errors._804, e.message)
       }
     }
   }
