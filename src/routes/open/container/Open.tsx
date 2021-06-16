@@ -1,7 +1,7 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
-import React, { useEffect, useState, ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { PromiEvent, TransactionReceipt } from 'web3-core'
@@ -30,6 +30,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
+import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -92,6 +93,9 @@ export const createSafe = (values: CreateSafeValues, userAccount: string): Promi
   promiEvent
     .once('transactionHash', (txHash) => {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
+      txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
+        console.log({ txReceipt })
+      })
     })
     .then(async (receipt) => {
       await checkReceiptStatus(receipt.transactionHash)
@@ -181,9 +185,6 @@ const Open = (): ReactElement => {
     const safe = makeAddressBookEntry({ address: safeAddress, name })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
-    const safeProps = await buildSafe(safeAddress)
-    await dispatch(addOrUpdateSafe(safeProps))
-
     trackEvent({
       category: 'User',
       action: 'Created a safe',
@@ -199,6 +200,9 @@ const Open = (): ReactElement => {
         return true
       },
     })
+
+    const safeProps = await buildSafe(safeAddress)
+    await dispatch(addOrUpdateSafe(safeProps))
 
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
