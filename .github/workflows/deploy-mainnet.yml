@@ -6,8 +6,6 @@ on:
   pull_request:
     branches:
       - main
-      - 'release/**'
-      - 'mainnet/**'
   push:
     branches:
       - main
