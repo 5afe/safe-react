@@ -27,19 +27,23 @@ let safeMaster: GnosisSafe
 let fallbackHandler: FallbackManager
 let multiSend: MultiSend
 
+const getSafeContractDeployment = (networkId?: ETHEREUM_NETWORK) => {
+  // If version is 1.3.0 we can use instance compatible with L2 for all networks
+  const useL2ContractVersion = semverSatisfies(LATEST_SAFE_VERSION, '>=1.3.0')
+  const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
+  return getDeployment({
+    version: LATEST_SAFE_VERSION,
+    network: networkId?.toString(),
+  })
+}
+
 /**
  * Creates a Contract instance of the GnosisSafe contract
  * @param {Web3} web3
  * @param {ETHEREUM_NETWORK} networkId
  */
 export const getGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) => {
-  // If version is 1.3.0 we can use instance compatible with L2 for all networks
-  const useL2ContractVersion = semverSatisfies(LATEST_SAFE_VERSION, '>=1.3.0')
-  const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
-  const safeSingletonDeployment = getDeployment({
-    version: LATEST_SAFE_VERSION,
-    network: networkId.toString(),
-  })
+  const safeSingletonDeployment = getSafeContractDeployment(networkId)
 
   const contractAddress =
     safeSingletonDeployment?.networkAddresses[networkId] ?? safeSingletonDeployment?.defaultAddress
@@ -181,12 +185,7 @@ export const estimateGasForDeployingSafe = async (
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string, safeVersion: string): GnosisSafe => {
-    // If version is 1.3.0 we can use instance compatible with L2 for all networks
-    const useL2ContractVersion = semverSatisfies(safeVersion, '>=1.3.0')
-    const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
-    const safeSingletonDeployment = getDeployment({
-      version: safeVersion,
-    })
+  const safeSingletonDeployment = getSafeContractDeployment()
 
   const web3 = getWeb3()
   return (new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe

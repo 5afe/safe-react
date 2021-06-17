@@ -144,10 +144,10 @@ export const ReviewConfirm = ({
     onClose()
   }
 
-  const confirmTransactions = async (txParameters: TxParameters) => {
+  const confirmTransactions = (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
 
-    await dispatch(
+    dispatch(
       createTransaction(
         {
           safeAddress,
