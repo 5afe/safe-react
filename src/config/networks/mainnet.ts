@@ -8,7 +8,7 @@ const baseConfig: EnvironmentSettings = {
   safeUrl: 'https://gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
-    url: 'https://ethgasstation.info/json/ethgasAPI.json',
+    url: 'https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}',
     gasParameter: 'average',
   },
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
