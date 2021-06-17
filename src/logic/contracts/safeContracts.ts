@@ -53,11 +53,15 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
 }
 
 export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
-  const res = await getSafeInfo(proxyAddress)
-  const masterCopyAddress = (res as SafeInfo)?.masterCopy
-  if (!masterCopyAddress) {
-    console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
-    return
+  let masterCopyAddress: string | undefined
+  try {
+    const res = await getSafeInfo(proxyAddress)
+    masterCopyAddress = (res as SafeInfo)?.implementation.value
+    if (!masterCopyAddress) {
+      console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
+    }
+  } catch (e) {
+    e.log()
   }
   return masterCopyAddress
 }

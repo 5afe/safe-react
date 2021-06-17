@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { replaceSafeOwner } from 'src/logic/safe/store/actions/replaceSafeOwner'
-import { safeParamAddressFromStateSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -16,25 +15,26 @@ import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { OwnerForm } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/OwnerForm'
 import { ReviewReplaceOwnerModal } from 'src/routes/safe/components/Settings/ManageOwners/ReplaceOwnerModal/screens/Review'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { isValidAddress } from 'src/utils/isValidAddress'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
-type OwnerValues = {
-  newOwnerAddress: string
-  newOwnerName: string
+export type OwnerValues = {
+  address: string
+  name: string
 }
 
 export const sendReplaceOwner = async (
-  values: OwnerValues,
+  newOwner: OwnerValues,
   safeAddress: string,
   ownerAddressToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
-  threshold?: number,
 ): Promise<void> => {
   const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, ownerAddressToRemove))
   const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, values.newOwnerAddress).encodeABI()
+  const txData = gnosisSafe.methods.swapOwner(prevAddress, ownerAddressToRemove, newOwner.address).encodeABI()
 
   const txHash = await dispatch(
     createTransaction({
@@ -49,47 +49,28 @@ export const sendReplaceOwner = async (
     }),
   )
 
-  if (txHash && threshold === 1) {
-    dispatch(
-      replaceSafeOwner({
-        safeAddress,
-        oldOwnerAddress: ownerAddressToRemove,
-        ownerAddress: values.newOwnerAddress,
-        ownerName: values.newOwnerName,
-      }),
-    )
+  if (txHash) {
+    // update the AB
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
   }
 }
 
 type ReplaceOwnerProps = {
   isOpen: boolean
   onClose: () => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
 }
 
-export const ReplaceOwnerModal = ({
-  isOpen,
-  onClose,
-  ownerAddress,
-  ownerName,
-}: ReplaceOwnerProps): React.ReactElement => {
+export const ReplaceOwnerModal = ({ isOpen, onClose, owner }: ReplaceOwnerProps): React.ReactElement => {
   const [activeScreen, setActiveScreen] = useState('checkOwner')
-  const [values, setValues] = useState({
-    newOwnerAddress: '',
-    newOwnerName: '',
-  })
+  const [newOwner, setNewOwner] = useState({ address: '', name: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector) || 1
+  const safeAddress = useSelector(safeAddressFromUrl)
 
   useEffect(
     () => () => {
       setActiveScreen('checkOwner')
-      setValues({
-        newOwnerAddress: '',
-        newOwnerName: '',
-      })
+      setNewOwner({ address: '', name: '' })
     },
     [isOpen],
   )
@@ -98,24 +79,19 @@ export const ReplaceOwnerModal = ({
 
   const ownerSubmitted = (newValues) => {
     const { ownerAddress, ownerName } = newValues
-    const checksumAddr = checksumAddress(ownerAddress)
-    setValues({
-      newOwnerAddress: checksumAddr,
-      newOwnerName: ownerName,
-    })
-    setActiveScreen('reviewReplaceOwner')
+
+    if (isValidAddress(ownerAddress)) {
+      const checksumAddr = checksumAddress(ownerAddress)
+      setNewOwner({ address: checksumAddr, name: ownerName })
+      setActiveScreen('reviewReplaceOwner')
+    }
   }
 
   const onReplaceOwner = async (txParameters: TxParameters) => {
     onClose()
     try {
-      await sendReplaceOwner(values, safeAddress, ownerAddress, dispatch, txParameters, threshold)
-
-      dispatch(
-        addOrUpdateAddressBookEntry(
-          makeAddressBookEntry({ address: values.newOwnerAddress, name: values.newOwnerName }),
-        ),
-      )
+      await sendReplaceOwner(newOwner, safeAddress, owner.address, dispatch, txParameters)
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry(newOwner)))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
@@ -131,16 +107,15 @@ export const ReplaceOwnerModal = ({
     >
       <>
         {activeScreen === 'checkOwner' && (
-          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} ownerAddress={ownerAddress} ownerName={ownerName} />
+          <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} initialValues={newOwner} owner={owner} />
         )}
         {activeScreen === 'reviewReplaceOwner' && (
           <ReviewReplaceOwnerModal
             onClickBack={onClickBack}
             onClose={onClose}
             onSubmit={onReplaceOwner}
-            ownerAddress={ownerAddress}
-            ownerName={ownerName}
-            values={values}
+            owner={owner}
+            newOwner={newOwner}
           />
         )}
       </>

@@ -47,13 +47,11 @@ const Create = ({ initialValues, onCancel, onReview }: NewSpendingLimitProps): R
   return (
     <>
       <Modal.Header onClose={onCancel}>
-        <Modal.Header.Title size="xs" withoutMargin>
-          <>
-            New Spending Limit
-            <Text size="lg" color="secondaryLight" as="span">
-              1 of 2
-            </Text>
-          </>
+        <Modal.Header.Title>
+          New spending limit
+          <Text size="lg" color="secondaryLight" as="span">
+            1 of 2
+          </Text>
         </Modal.Header.Title>
       </Modal.Header>
 

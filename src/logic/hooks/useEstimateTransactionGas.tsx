@@ -11,11 +11,7 @@ import {
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
-import {
-  safeCurrentVersionSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { CALL } from 'src/logic/safe/transactions'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -123,9 +119,7 @@ export const useEstimateTransactionGas = ({
     isOffChainSignature: false,
   })
   const { nativeCoin } = getNetworkInfo()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const threshold = useSelector(safeThresholdSelector)
-  const safeVersion = useSelector(safeCurrentVersionSelector)
+  const { address: safeAddress = '', threshold = 1, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const { account: from, smartContractWallet, name: providerName } = useSelector(providerSelector)
 
   useEffect(() => {
@@ -157,7 +151,6 @@ export const useEstimateTransactionGas = ({
             txRecipient,
             txAmount: txAmount || '0',
             operation: operation || CALL,
-            safeTxGas,
           })
         }
         if (isExecution || approvalAndExecution) {
@@ -183,7 +176,6 @@ export const useEstimateTransactionGas = ({
         const gasCostFormatted = formatAmount(gasCost)
         const gasLimit = manualGasLimit || ethGasLimitEstimation.toString()
 
-        txEstimationExecutionStatus = EstimationStatus.SUCCESS
         if (isExecution) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,

@@ -2,12 +2,11 @@ import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import Modal from 'src/components/Modal'
-import { addOrUpdateAddressBookEntry } from 'src/logic/addressBook/store/actions/addOrUpdateAddressBookEntry'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { addSafeOwner } from 'src/logic/safe/store/actions/addSafeOwner'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
@@ -46,7 +45,7 @@ export const sendAddOwner = async (
   )
 
   if (txHash) {
-    dispatch(addSafeOwner({ safeAddress, ownerName: values.ownerName, ownerAddress: values.ownerAddress }))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: values.ownerAddress, name: values.ownerName })))
   }
 }
 
@@ -59,7 +58,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
   const [activeScreen, setActiveScreen] = useState('selectOwner')
   const [values, setValues] = useState<OwnerValues>({ ownerName: '', ownerAddress: '', threshold: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
 
   useEffect(
     () => () => {
@@ -99,9 +98,7 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
 
     try {
       await sendAddOwner(values, safeAddress, txParameters, dispatch)
-      dispatch(
-        addOrUpdateAddressBookEntry(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })),
-      )
+      dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ name: values.ownerName, address: values.ownerAddress })))
     } catch (error) {
       console.error('Error while removing an owner', error)
     }
@@ -116,9 +113,16 @@ export const AddOwnerModal = ({ isOpen, onClose }: Props): React.ReactElement =>
       title="Add owner to Safe"
     >
       <>
-        {activeScreen === 'selectOwner' && <OwnerForm onClose={onClose} onSubmit={ownerSubmitted} />}
+        {activeScreen === 'selectOwner' && (
+          <OwnerForm initialValues={values} onClose={onClose} onSubmit={ownerSubmitted} />
+        )}
         {activeScreen === 'selectThreshold' && (
-          <ThresholdForm onClickBack={onClickBack} onClose={onClose} onSubmit={thresholdSubmitted} />
+          <ThresholdForm
+            onClickBack={onClickBack}
+            initialValues={{ threshold: values.threshold }}
+            onClose={onClose}
+            onSubmit={thresholdSubmitted}
+          />
         )}
         {activeScreen === 'reviewAddOwner' && (
           <ReviewAddOwner onClickBack={onClickBack} onClose={onClose} onSubmit={onAddOwner} values={values} />

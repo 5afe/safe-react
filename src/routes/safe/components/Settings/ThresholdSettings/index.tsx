@@ -10,11 +10,7 @@ import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import {
-  safeOwnersSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { ChangeThresholdModal } from './ChangeThreshold'
@@ -25,9 +21,7 @@ const useStyles = makeStyles(styles)
 const ThresholdSettings = (): React.ReactElement => {
   const classes = useStyles()
   const [isModalOpen, setModalOpen] = useState(false)
-  const threshold = useSelector(safeThresholdSelector) || 1
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const { address: safeAddress = '', owners, threshold = 1 } = useSelector(currentSafe) ?? {}
   const granted = useSelector(grantedSelector)
 
   const toggleModal = () => {
@@ -46,9 +40,9 @@ const ThresholdSettings = (): React.ReactElement => {
         <Heading tag="h2">Required confirmations</Heading>
         <Paragraph>Any transaction requires the confirmation of:</Paragraph>
         <Paragraph className={classes.ownersText} size="lg">
-          <Bold>{threshold}</Bold> out of <Bold>{owners?.size || 0}</Bold> owners
+          <Bold>{threshold}</Bold> out of <Bold>{owners?.length || 0}</Bold> owners
         </Paragraph>
-        {owners && owners.size > 1 && granted && (
+        {owners && owners.length > 1 && granted && (
           <Row className={classes.buttonRow}>
             <Button
               className={classes.modifyBtn}
@@ -68,7 +62,12 @@ const ThresholdSettings = (): React.ReactElement => {
         open={isModalOpen}
         title="Change Required Confirmations"
       >
-        <ChangeThresholdModal onClose={toggleModal} owners={owners} safeAddress={safeAddress} threshold={threshold} />
+        <ChangeThresholdModal
+          onClose={toggleModal}
+          ownersCount={owners?.length}
+          safeAddress={safeAddress}
+          threshold={threshold}
+        />
       </Modal>
     </>
   )

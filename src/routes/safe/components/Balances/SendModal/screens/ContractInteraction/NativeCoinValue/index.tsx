@@ -13,7 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { isPayable } from 'src/logic/contractInteraction/sources/ABIService'
 import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeEthBalance } from 'src/logic/safe/store/selectors'
 import { getNetworkInfo } from 'src/config'
 
 const useStyles = makeStyles(styles)
@@ -26,7 +26,7 @@ const { nativeCoin } = getNetworkInfo()
 
 export const NativeCoinValue = ({ onSetMax }: NativeCoinValueProps): React.ReactElement | null => {
   const classes = useStyles()
-  const { ethBalance } = useSelector(safeSelector) || {}
+  const ethBalance = useSelector(currentSafeEthBalance)
 
   const {
     input: { value: method },

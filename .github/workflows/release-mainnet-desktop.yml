@@ -1,7 +1,7 @@
 name: Build/Release Mainnet desktop app
 
 # this will help you specify where to run
-on: 
+on:
   workflow_dispatch
 
 env:

@@ -1,15 +1,16 @@
-import React from 'react'
-import styled from 'styled-components'
 import { ButtonLink, EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import { makeStyles } from '@material-ui/core/styles'
+import React, { ReactElement } from 'react'
+import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
+
+import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import DefaultBadge from './DefaultBadge'
-import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { DefaultSafe } from 'src/routes/safe/store/reducer/types/safe'
+import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
 import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
-import { makeStyles } from '@material-ui/core/styles'
 import { getNetworkInfo } from 'src/config'
-import { useDispatch } from 'react-redux'
 
 const StyledButtonLink = styled(ButtonLink)`
   visibility: hidden;
@@ -45,15 +46,14 @@ const useStyles = makeStyles({
 })
 
 type Props = {
-  safe: SafeRecordProps
-  defaultSafe: DefaultSafe
+  safe: SafeRecordWithNames
+  defaultSafeAddress: DefaultSafe
 }
 
 const { nativeCoin } = getNetworkInfo()
 
-export const AddressWrapper = (props: Props): React.ReactElement => {
+export const AddressWrapper = ({ safe, defaultSafeAddress }: Props): ReactElement => {
   const classes = useStyles()
-  const { safe, defaultSafe } = props
   const dispatch = useDispatch()
 
   const setDefaultSafeAction = (safeAddress: string) => {
@@ -66,7 +66,7 @@ export const AddressWrapper = (props: Props): React.ReactElement => {
 
       <div className={classes.addressDetails}>
         <Text size="xl">{`${formatAmount(safe.ethBalance)} ${nativeCoin.name}`}</Text>
-        {sameAddress(defaultSafe, safe.address) ? (
+        {sameAddress(defaultSafeAddress, safe.address) ? (
           <DefaultBadge />
         ) : (
           <StyledButtonLink

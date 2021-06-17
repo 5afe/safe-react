@@ -4,12 +4,13 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { getDeleteAllowanceTxData } from 'src/logic/safe/utils/spendingLimits'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -18,7 +19,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
-import { RESET_TIME_OPTIONS } from './FormFields/ResetTime'
+import { getResetTimeOptions } from './FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from './InfoDisplay'
 import { SpendingLimitTable } from './LimitsTable/dataFetcher'
 import { useStyles } from './style'
@@ -34,7 +35,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
 
   const tokenInfo = useTokenInfo(spendingLimit.spent.tokenAddress)
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const [txData, setTxData] = useState('')
   const dispatch = useDispatch()
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
@@ -68,7 +69,9 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     manualGasLimit,
   })
 
-  const removeSelectedSpendingLimit = async (txParameters: TxParameters): Promise<void> => {
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
+  const removeSelectedSpendingLimit = (txParameters: TxParameters) => {
     try {
       dispatch(
         createTransaction({
@@ -91,7 +94,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
   }
 
   const resetTimeLabel =
-    RESET_TIME_OPTIONS.find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin / 24 / 60)?.label ?? ''
+    getResetTimeOptions().find(({ value }) => +value === +spendingLimit.resetTime.resetTimeMin)?.label ?? ''
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -112,12 +115,17 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
     }
   }
 
+  let confirmButtonText = 'Remove'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Removing'
+  }
+
   return (
     <Modal
       handleClose={onClose}
       open={open}
-      title="Remove Spending Limit"
-      description="Remove the selected Spending Limit"
+      title="Remove spending limit"
+      description="Remove the selected spending limit"
     >
       <EditableTxParameters
         isOffChainSignature={isOffChainSignature}
@@ -132,7 +140,7 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
             <>
               <Modal.Header onClose={onClose}>
                 <Modal.Header.Title size="xs" withoutMargin>
-                  Remove Spending Limit
+                  Remove spending limit
                 </Modal.Header.Title>
               </Modal.Header>
 
@@ -172,14 +180,14 @@ export const RemoveLimitModal = ({ onClose, spendingLimit, open }: RemoveSpendin
                 />
               </Row>
 
-              <Modal.Footer>
+              <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
                 <Modal.Footer.Buttons
                   cancelButtonProps={{ onClick: onClose }}
                   confirmButtonProps={{
                     color: 'error',
                     onClick: () => removeSelectedSpendingLimit(txParameters),
-                    disabled: txEstimationExecutionStatus === EstimationStatus.LOADING,
-                    text: 'Remove',
+                    status: buttonStatus,
+                    text: confirmButtonText,
                   }}
                 />
               </Modal.Footer>

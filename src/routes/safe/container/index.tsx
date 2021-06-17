@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -24,7 +24,7 @@ const TxList = React.lazy(() => import('src/routes/safe/components/Transactions/
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const [modal, setModal] = useState({
     isOpen: false,
     title: null,

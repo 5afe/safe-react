@@ -10,17 +10,23 @@ import { getExplorerInfo } from 'src/config'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, maxValue, minValue, mustBeFloat, required } from 'src/components/forms/validator'
+import {
+  composeValidators,
+  maxValue,
+  minValue,
+  minMaxDecimalsLength,
+  mustBeFloat,
+  mustBeEthereumAddress,
+  required,
+} from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
-import { getNameFromAddressBook } from 'src/logic/addressBook/utils'
+import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -31,16 +37,16 @@ import { SpendingLimitRow } from 'src/routes/safe/components/Balances/SendModal/
 import TokenSelectField from 'src/routes/safe/components/Balances/SendModal/screens/SendFunds/TokenSelectField'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
-import { sm } from 'src/theme/variables'
+import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
 import { sameString } from 'src/utils/strings'
-
-import ArrowDown from '../assets/arrow-down.svg'
 
 import { styles } from './style'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { spendingLimitAllowedBalance, getSpendingLimitByTokenAddress } from 'src/logic/safe/utils/spendingLimits'
 import { getBalanceAndDecimalsFromToken } from 'src/logic/tokens/utils/tokenHelpers'
+import { getNetworkInfo } from 'src/config'
+import Divider from 'src/components/Divider'
+import { Modal } from 'src/components/Modal'
 
 const formMutators = {
   setMax: (args, state, utils) => {
@@ -62,6 +68,7 @@ const useStyles = makeStyles(styles)
 export type SendFundsTx = {
   amount?: string
   recipientAddress?: string
+  name?: string
   token?: string
   txType?: string
   tokenSpendingLimit?: SpendingLimit
@@ -90,7 +97,8 @@ const SendFunds = ({
 }: SendFundsProps): ReactElement => {
   const classes = useStyles()
   const tokens = useSelector(extendedSafeTokensSelector)
-  const addressBook = useSelector(addressBookSelector)
+  const addressBook = useSelector(currentNetworkAddressBook)
+  const { nativeCoin } = getNetworkInfo()
   const [selectedEntry, setSelectedEntry] = useState<{ address: string; name: string } | null>(() => {
     const defaultEntry = { address: recipientAddress || '', name: '' }
 
@@ -115,6 +123,7 @@ const SendFunds = ({
   })
   const [pristine, setPristine] = useState(true)
   const [isValidAddress, setIsValidAddress] = useState(false)
+  const [addressErrorMsg, setAddressErrorMsg] = useState('')
 
   useEffect(() => {
     if (selectedEntry === null && pristine) {
@@ -124,29 +133,31 @@ const SendFunds = ({
 
   let tokenSpendingLimit
   const handleSubmit = (values) => {
-    const submitValues = values
+    const submitValues = { ...values }
     // If the input wasn't modified, there was no mutation of the recipientAddress
     if (!values.recipientAddress) {
       submitValues.recipientAddress = selectedEntry?.address
     }
+    submitValues.recipientName = selectedEntry?.name
     onReview({ ...submitValues, tokenSpendingLimit })
   }
 
-  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const spendingLimits = useSelector(currentSafeSpendingLimits)
   const currentUser = useSelector(userAccountSelector)
 
   const sendFundsValidation = (values) => {
     const { amount, token: tokenAddress, txType } = values ?? {}
-
     if (!amount || !tokenAddress) {
       return
     }
 
     const isSpendingLimit = tokenSpendingLimit && txType === 'spendingLimit'
-
+    const tokenDecimals =
+      Number(getBalanceAndDecimalsFromToken({ tokenAddress, tokens })?.decimals) || nativeCoin.decimals
     const amountValidation = composeValidators(
       required,
       mustBeFloat,
+      minMaxDecimalsLength(1, tokenDecimals),
       minValue(0, false),
       maxValue(
         isSpendingLimit
@@ -200,12 +211,16 @@ const SendFunds = ({
             if (scannedAddress.startsWith('ethereum:')) {
               scannedAddress = scannedAddress.replace('ethereum:', '')
             }
-            const scannedName = addressBook ? getNameFromAddressBook(addressBook, scannedAddress) : ''
-            mutators.setRecipient(scannedAddress)
-            setSelectedEntry({
-              name: scannedName || '',
-              address: scannedAddress,
-            })
+            const scannedName = addressBook[scannedAddress]?.name ?? ''
+            const addressErrorMessage = mustBeEthereumAddress(scannedAddress)
+            if (!addressErrorMessage) {
+              mutators.setRecipient(scannedAddress)
+              setSelectedEntry({
+                name: scannedName || '',
+                address: scannedAddress,
+              })
+            } else setAddressErrorMsg(addressErrorMessage)
+
             closeQrModal()
           }
 
@@ -234,14 +249,7 @@ const SendFunds = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <Row margin="md">
-                  <Col xs={1}>
-                    <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-                  </Col>
-                  <Col center="xs" layout="column" xs={11}>
-                    <Hairline />
-                  </Col>
-                </Row>
+                <Divider withArrow />
                 {selectedEntry && selectedEntry.address ? (
                   <div
                     onKeyDown={(e) => {
@@ -277,6 +285,7 @@ const SendFunds = ({
                       <AddressBookInput
                         fieldMutator={mutators.setRecipient}
                         pristine={pristine}
+                        errorMsg={addressErrorMsg}
                         setIsValidAddress={setIsValidAddress}
                         setSelectedEntry={setSelectedEntry}
                       />
@@ -328,23 +337,16 @@ const SendFunds = ({
                   </Col>
                 </Row>
               </Block>
-              <Hairline />
-              <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose} color="secondary">
-                  Cancel
-                </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="review-tx-btn"
-                  disabled={!formState.valid || shouldDisableSubmitButton}
-                  minWidth={140}
-                  type="submit"
-                  variant="contained"
-                >
-                  Review
-                </Button>
-              </Row>
+              <Modal.Footer>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose }}
+                  confirmButtonProps={{
+                    disabled: !formState.valid || shouldDisableSubmitButton,
+                    testId: 'review-tx-btn',
+                    text: 'Review',
+                  }}
+                />
+              </Modal.Footer>
             </>
           )
         }}

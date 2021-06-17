@@ -3,7 +3,7 @@ import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
   checkIfOffChainSignatureIsPossible,
   generateSignaturesFromTxConfirmations,
@@ -17,7 +17,7 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
-import fetchSafe from 'src/logic/safe/store/actions/fetchSafe'
+import { fetchSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import fetchTransactions from 'src/logic/safe/store/actions/transactions/fetchTransactions'
 import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/safe/store/actions/utils'
 import { AppReduxState } from 'src/store'
@@ -30,6 +30,8 @@ import { PayableTx } from 'src/types/contracts/types'
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -162,7 +164,7 @@ export const processTransaction = ({
           console.error(e)
         }
       })
-      .on('error', (error) => {
+      .on('error', () => {
         dispatch(
           updateTransactionStatus({
             txStatus: 'PENDING_FAILED',
@@ -171,8 +173,6 @@ export const processTransaction = ({
             id: tx.id,
           }),
         )
-
-        console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
         dispatch(fetchTransactions(safeAddress))
@@ -184,11 +184,15 @@ export const processTransaction = ({
         return receipt.transactionHash
       })
   } catch (err) {
-    const errorMsg = err.message
-      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
-      : notificationsQueue.afterExecutionError.message
+    const notification = isTxPendingError(err)
+      ? NOTIFICATIONS.TX_PENDING_MSG
+      : {
+          ...notificationsQueue.afterExecutionError,
+          message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+        }
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+    dispatch(enqueueSnackbar({ key: err.code, ...notification }))
 
     dispatch(
       updateTransactionStatus({
@@ -198,12 +202,17 @@ export const processTransaction = ({
         id: tx.id,
       }),
     )
-    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
+
+    logError(Errors._804, err.message)
 
     if (txHash) {
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-      console.error(`Error executing the TX: ${errMsg}`)
+      try {
+        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
+        logError(Errors._804, errMsg)
+      } catch (e) {
+        logError(Errors._804, e.message)
+      }
     }
   }
 

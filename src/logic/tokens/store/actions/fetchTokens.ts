@@ -1,20 +1,19 @@
 import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
 import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
-import ERC20Detailed from '@openzeppelin/contracts/build/contracts/ERC20Detailed.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
 import contract from '@truffle/contract/index.js'
-import { AbiItem } from 'web3-utils'
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
-import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
-import { makeToken, Token } from 'src/logic/tokens/store/model/token'
+import { makeToken } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { AppReduxState, store } from 'src/store'
+import { AppReduxState } from 'src/store'
 import { ensureOnce } from 'src/utils/singleton'
 import { ThunkDispatch } from 'redux-thunk'
 import { AnyAction } from 'redux'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { TokenResult } from '../../api/fetchErc20AndErc721AssetsList'
 
 const createStandardTokenContract = async () => {
   const web3 = getWeb3()
@@ -51,64 +50,28 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-const getTokenValues = (tokenAddress) =>
-  generateBatchRequests<[undefined, string | undefined, string | undefined, string | undefined]>({
-    abi: ERC20Detailed.abi as AbiItem[],
-    address: tokenAddress,
-    methods: ['decimals', 'name', 'symbol'],
-  })
-
-export const getTokenInfos = async (tokenAddress: string): Promise<Token | undefined> => {
-  const { tokens } = store.getState()
-  const localToken = tokens.get(tokenAddress)
-
-  // If the token is inside the store we return the store token
-  if (localToken) {
-    return localToken
-  }
-
-  // Otherwise we fetch it, save it to the store and return it
-  const [, tokenDecimals, tokenName, tokenSymbol] = await getTokenValues(tokenAddress)
-
-  if (tokenDecimals === null) {
-    return undefined
-  }
-
-  const token = makeToken({
-    address: tokenAddress,
-    name: tokenName ? tokenName : tokenSymbol,
-    symbol: tokenSymbol,
-    decimals: Number(tokenDecimals),
-    logoUri: '',
-  })
-
-  const newTokens = tokens.set(tokenAddress, token)
-  store.dispatch(addTokens(newTokens))
-
-  return token
-}
-
 export const fetchTokens = () => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
   getState: () => AppReduxState,
 ): Promise<void> => {
+  const currentSavedTokens = tokensSelector(getState())
+
+  let tokenList: TokenResult[]
   try {
-    const currentSavedTokens = tokensSelector(getState())
-
-    const {
-      data: { results: tokenList },
-    } = await fetchErc20AndErc721AssetsList()
-
-    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
-
-    if (currentSavedTokens?.size === erc20Tokens.length) {
-      return
-    }
-
-    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
-
-    dispatch(addTokens(tokens))
-  } catch (err) {
-    console.error('Error fetching token list', err)
+    const resp = await fetchErc20AndErc721AssetsList()
+    tokenList = resp.data.results
+  } catch (e) {
+    logError(Errors._600, e.message)
+    return
   }
+
+  const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+  if (currentSavedTokens?.size === erc20Tokens.length) {
+    return
+  }
+
+  const tokens = List(erc20Tokens.map((token) => makeToken(token)))
+
+  dispatch(addTokens(tokens))
 }

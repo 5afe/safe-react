@@ -1,10 +1,11 @@
-import { List } from 'immutable'
 import memoize from 'lodash.memoize'
 
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { isFeatureEnabled } from 'src/config'
 import { FEATURES } from 'src/config/networks/network.d'
+import { isValidAddress } from 'src/utils/isValidAddress'
+import { ADDRESS_BOOK_INVALID_NAMES, isValidAddressBookName } from 'src/logic/addressBook/utils'
 
 type ValidatorReturnType = string | undefined
 export type GenericValidatorType = (...args: unknown[]) => ValidatorReturnType
@@ -63,16 +64,29 @@ export const maxValue = (max: number | string) => (value: string): ValidatorRetu
 
 export const ok = (): undefined => undefined
 
+export const mustBeHexData = (data: string): ValidatorReturnType => {
+  const isData = getWeb3().utils.isHexStrict(data)
+
+  if (!isData) {
+    return 'Has to be a valid strict hex data (it must start with 0x)'
+  }
+}
+
+export const mustBeAddressHash = memoize(
+  (address: string): ValidatorReturnType => {
+    const errorMessage = 'Must be a valid address'
+    return isValidAddress(address) ? undefined : errorMessage
+  },
+)
+
 export const mustBeEthereumAddress = memoize(
   (address: string): ValidatorReturnType => {
-    const startsWith0x = address?.startsWith('0x')
-    const isAddress = getWeb3().utils.isAddress(address)
-
-    const errorMessage = `Input must be a valid Ethereum address${
-      isFeatureEnabled(FEATURES.DOMAIN_LOOKUP) ? ', ENS or Unstoppable domain' : ''
-    }`
-
-    return startsWith0x && isAddress ? undefined : errorMessage
+    const errorMessage = 'Must be a valid address, ENS or Unstoppable domain'
+    const result = mustBeAddressHash(address)
+    if (result !== undefined && isFeatureEnabled(FEATURES.DOMAIN_LOOKUP)) {
+      return errorMessage
+    }
+    return result
   },
 )
 
@@ -86,13 +100,23 @@ export const mustBeEthereumContractAddress = memoize(
   },
 )
 
-export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType =>
-  value.length >= +minLen && value.length <= +maxLen ? undefined : `Should be ${minLen} to ${maxLen} symbols`
+export const minMaxLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
+  const testValue = value || ''
+  return testValue.length >= +minLen && testValue.length <= +maxLen
+    ? undefined
+    : `Should be ${minLen} to ${maxLen} symbols`
+}
+
+export const minMaxDecimalsLength = (minLen: number, maxLen: number) => (value: string): ValidatorReturnType => {
+  const decimals = value.split('.')[1] || '0'
+  const minMaxLengthErrMsg = minMaxLength(minLen, maxLen)(decimals)
+  return minMaxLengthErrMsg ? `Should be ${minLen} to ${maxLen} decimals` : undefined
+}
 
 export const ADDRESS_REPEATED_ERROR = 'Address already introduced'
 export const OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR = 'Cannot use Safe itself as owner.'
 
-export const uniqueAddress = (addresses: string[] | List<string> = []) => (address?: string): string | undefined => {
+export const uniqueAddress = (addresses: string[] = []) => (address?: string): string | undefined => {
   const addressExists = addresses.some((addressFromList) => sameAddress(addressFromList, address))
   return addressExists ? ADDRESS_REPEATED_ERROR : undefined
 }
@@ -115,3 +139,15 @@ export const differentFrom = (diffValue: number | string) => (value: string): Va
 }
 
 export const noErrorsOn = (name: string, errors: Record<string, unknown>): boolean => errors[name] === undefined
+
+export const validAddressBookName = (name: string): string | undefined => {
+  const lengthError = minMaxLength(1, 50)(name)
+
+  if (lengthError === undefined) {
+    return isValidAddressBookName(name)
+      ? undefined
+      : `Name should not include: ${ADDRESS_BOOK_INVALID_NAMES.join(', ')}`
+  }
+
+  return lengthError
+}

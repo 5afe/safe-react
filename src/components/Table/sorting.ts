@@ -4,13 +4,19 @@ export const FIXED = 'fixed'
 
 export const buildOrderFieldFrom = (attr: string): string => `${attr}Order`
 
-const desc = (a: string, b: string, orderBy: string, orderProp: boolean): number => {
+const desc = (
+  a: string,
+  b: string,
+  orderBy: string,
+  orderProp: boolean,
+  format: (value: string | number) => string | number,
+): number => {
   const order = orderProp ? buildOrderFieldFrom(orderBy) : orderBy
 
-  if (b[order] < a[order]) {
+  if (format(b[order]) < format(a[order])) {
     return -1
   }
-  if (b[order] > a[order]) {
+  if (format(b[order]) > format(a[order])) {
     return 1
   }
 
@@ -42,5 +48,8 @@ export const getSorting = (
   order: 'desc' | 'asc',
   orderBy: string,
   orderProp: boolean,
+  format: (value: string | number) => string | number = (value) => value,
 ): ((a: string, b: string) => number) =>
-  order === 'desc' ? (a, b) => desc(a, b, orderBy, orderProp) : (a, b) => -desc(a, b, orderBy, orderProp)
+  order === 'desc'
+    ? (a, b) => desc(a, b, orderBy, orderProp, format)
+    : (a, b) => -desc(a, b, orderBy, orderProp, format)

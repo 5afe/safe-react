@@ -12,14 +12,11 @@ import {
 } from '@gnosis.pm/safe-apps-sdk-v1'
 import { useDispatch, useSelector } from 'react-redux'
 import { useEffect, useCallback, MutableRefObject } from 'react'
+
 import { getNetworkName, getTxServiceUrl } from 'src/config/'
-import {
-  safeEthBalanceSelector,
-  safeNameSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TransactionParams } from '../components/AppFrame'
-import { SafeApp } from 'src/routes/safe/components/Apps/types.d'
+import { SafeApp } from 'src/routes/safe/components/Apps/types'
 
 type InterfaceMessageProps<T extends InterfaceMessageIds> = {
   messageId: T
@@ -39,9 +36,7 @@ const useIframeMessageHandler = (
   iframeRef: MutableRefObject<HTMLIFrameElement | null>,
 ): ReturnType => {
   const { enqueueSnackbar, closeSnackbar } = useSnackbar()
-  const safeName = useSelector(safeNameSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const ethBalance = useSelector(safeEthBalanceSelector)
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
 
   const sendMessageToIframe = useCallback(
@@ -66,7 +61,6 @@ const useIframeMessageHandler = (
       requestId: RequestId,
     ): void => {
       if (!messageId) {
-        console.error('ThirdPartyApp: A message was received without message id.')
         return
       }
 

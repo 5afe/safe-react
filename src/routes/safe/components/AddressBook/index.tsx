@@ -1,46 +1,43 @@
+import { Button, EthHashInfo, FixedIcon, Text, ButtonLink, Icon } from '@gnosis.pm/safe-react-components'
 import TableCell from '@material-ui/core/TableCell'
 import TableContainer from '@material-ui/core/TableContainer'
 import TableRow from '@material-ui/core/TableRow'
 import { makeStyles } from '@material-ui/core/styles'
 import cn from 'classnames'
+import styled from 'styled-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { styles } from './style'
 
+import { getExplorerInfo, getNetworkId } from 'src/config'
+import ButtonHelper from 'src/components/ButtonHelper'
 import Table from 'src/components/Table'
 import { cellWidth } from 'src/components/Table/TableHead'
 import Block from 'src/components/layout/Block'
-import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Img from 'src/components/layout/Img'
 import Row from 'src/components/layout/Row'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addAddressBookEntry } from 'src/logic/addressBook/store/actions/addAddressBookEntry'
-import { removeAddressBookEntry } from 'src/logic/addressBook/store/actions/removeAddressBookEntry'
-import { updateAddressBookEntry } from 'src/logic/addressBook/store/actions/updateAddressBookEntry'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookAddOrUpdate, addressBookImport, addressBookRemove } from 'src/logic/addressBook/store/actions'
+import { addressBookFromQueryParams, currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { isUserAnOwnerOfAnySafe, sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CreateEditEntryModal } from 'src/routes/safe/components/AddressBook/CreateEditEntryModal'
-import DeleteEntryModal from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
+import { ExportEntriesModal } from 'src/routes/safe/components/AddressBook/ExportEntriesModal'
+import { DeleteEntryModal } from 'src/routes/safe/components/AddressBook/DeleteEntryModal'
 import {
+  AB_NAME_ID,
   AB_ADDRESS_ID,
   ADDRESS_BOOK_ROW_ID,
-  EDIT_ENTRY_BUTTON,
-  REMOVE_ENTRY_BUTTON,
   SEND_ENTRY_BUTTON,
   generateColumns,
 } from 'src/routes/safe/components/AddressBook/columns'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
-import { OwnerAddressTableCell } from 'src/routes/safe/components/Settings/ManageOwners/OwnerAddressTableCell'
-import RenameOwnerIcon from 'src/routes/safe/components/Settings/ManageOwners/assets/icons/rename-owner.svg'
-import RemoveOwnerIcon from 'src/routes/safe/components/Settings/assets/icons/bin.svg'
-import { addressBookQueryParamsSelector, safesListSelector } from 'src/logic/safe/store/selectors'
+import { safesAsList } from 'src/logic/safe/store/selectors'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { FixedIcon, Text, Button } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import ImportEntriesModal from './ImportEntriesModal'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 const StyledButton = styled(Button)`
   &&.MuiButton-root {
@@ -48,10 +45,12 @@ const StyledButton = styled(Button)`
     padding: 0 12px;
     min-width: auto;
   }
+
   svg {
     margin: 0 6px 0 0;
   }
 `
+
 const useStyles = makeStyles(styles)
 
 interface AddressBookSelectedEntry extends AddressBookEntry {
@@ -64,20 +63,23 @@ export type Entry = {
   isOwnerAddress?: boolean
 }
 
-const initialEntryState: Entry = { entry: { address: '', name: '', isNew: true } }
+const chainId = getNetworkId()
+const initialEntryState: Entry = { entry: { address: '', name: '', chainId, isNew: true } }
 
 const AddressBookTable = (): ReactElement => {
   const classes = useStyles()
   const columns = generateColumns()
   const autoColumns = columns.filter(({ custom }) => !custom)
   const dispatch = useDispatch()
-  const safesList = useSelector(safesListSelector)
-  const entryAddressToEditOrCreateNew = useSelector(addressBookQueryParamsSelector)
-  const addressBook = useSelector(addressBookSelector)
+  const safesList = useSelector(safesAsList)
+  const entryAddressToEditOrCreateNew = useSelector(addressBookFromQueryParams)
+  const addressBook = useSelector(currentNetworkAddressBook)
   const granted = useSelector(grantedSelector)
   const [selectedEntry, setSelectedEntry] = useState<Entry>(initialEntryState)
   const [editCreateEntryModalOpen, setEditCreateEntryModalOpen] = useState(false)
+  const [importEntryModalOpen, setImportEntryModalOpen] = useState(false)
   const [deleteEntryModalOpen, setDeleteEntryModalOpen] = useState(false)
+  const [exportEntriesModalOpen, setExportEntriesModalOpen] = useState(false)
   const [sendFundsModalOpen, setSendFundsModalOpen] = useState(false)
   const { trackEvent } = useAnalytics()
 
@@ -92,8 +94,8 @@ const AddressBookTable = (): ReactElement => {
   }, [entryAddressToEditOrCreateNew])
 
   useEffect(() => {
-    if (entryAddressToEditOrCreateNew) {
-      const address = checksumAddress(entryAddressToEditOrCreateNew)
+    if (isValidAddress(entryAddressToEditOrCreateNew)) {
+      const address = checksumAddress(entryAddressToEditOrCreateNew as string)
       const oldEntryIndex = addressBook.findIndex((entry) => sameAddress(entry.address, address))
 
       if (oldEntryIndex >= 0) {
@@ -105,6 +107,7 @@ const AddressBookTable = (): ReactElement => {
           entry: {
             name: '',
             address,
+            chainId,
             isNew: true,
           },
         })
@@ -113,29 +116,33 @@ const AddressBookTable = (): ReactElement => {
   }, [addressBook, entryAddressToEditOrCreateNew])
 
   const newEntryModalHandler = (entry: AddressBookEntry) => {
+    // close the modal
     setEditCreateEntryModalOpen(false)
-    const checksumEntries = {
-      ...entry,
-      address: checksumAddress(entry.address),
-    }
-    dispatch(addAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+    // update the store
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address) })))
   }
 
   const editEntryModalHandler = (entry: AddressBookEntry) => {
+    // reset the form
     setSelectedEntry(initialEntryState)
+    // close the modal
     setEditCreateEntryModalOpen(false)
-    const checksumEntries = {
-      ...entry,
-      address: checksumAddress(entry.address),
-    }
-    dispatch(updateAddressBookEntry(makeAddressBookEntry(checksumEntries)))
+    // update the store
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ ...entry, address: checksumAddress(entry.address) })))
   }
 
   const deleteEntryModalHandler = () => {
-    const entryAddress = selectedEntry?.entry ? checksumAddress(selectedEntry.entry.address) : ''
+    // reset the form
     setSelectedEntry(initialEntryState)
+    // close the modal
     setDeleteEntryModalOpen(false)
-    dispatch(removeAddressBookEntry(entryAddress))
+    // update the store
+    selectedEntry?.entry && dispatch(addressBookRemove(selectedEntry.entry))
+  }
+
+  const importEntryModalHandler = (addressList: AddressBookEntry[]) => {
+    dispatch(addressBookImport(addressList))
+    setImportEntryModalOpen(false)
   }
 
   return (
@@ -145,12 +152,37 @@ const AddressBookTable = (): ReactElement => {
           <ButtonLink
             onClick={() => {
               setSelectedEntry(initialEntryState)
+              setExportEntriesModalOpen(true)
+            }}
+            color="primary"
+            iconType="exportImg"
+            iconSize="sm"
+            textSize="xl"
+          >
+            Export
+          </ButtonLink>
+          <ButtonLink
+            onClick={() => {
+              setImportEntryModalOpen(true)
+            }}
+            color="primary"
+            iconType="importImg"
+            iconSize="sm"
+            textSize="xl"
+          >
+            Import
+          </ButtonLink>
+          <ButtonLink
+            onClick={() => {
+              setSelectedEntry(initialEntryState)
               setEditCreateEntryModalOpen(true)
             }}
-            size="lg"
-            testId="manage-tokens-btn"
+            color="primary"
+            iconType="add"
+            iconSize="sm"
+            textSize="xl"
           >
-            + Create entry
+            Create entry
           </ButtonLink>
         </Col>
       </Row>
@@ -160,6 +192,7 @@ const AddressBookTable = (): ReactElement => {
             columns={columns}
             data={addressBook}
             defaultFixed
+            defaultOrderBy={AB_NAME_ID}
             defaultRowsPerPage={25}
             disableLoadingOnEmptyTable
             label="Owners"
@@ -180,7 +213,14 @@ const AddressBookTable = (): ReactElement => {
                       return (
                         <TableCell align={column.align} component="td" key={column.id} style={cellWidth(column.width)}>
                           {column.id === AB_ADDRESS_ID ? (
-                            <OwnerAddressTableCell address={row[column.id]} showLinks />
+                            <Block justify="left">
+                              <EthHashInfo
+                                hash={row[column.id]}
+                                showCopyBtn
+                                showAvatar
+                                explorerUrl={getExplorerInfo(row[column.id])}
+                              />
+                            </Block>
                           ) : (
                             row[column.id]
                           )}
@@ -189,9 +229,7 @@ const AddressBookTable = (): ReactElement => {
                     })}
                     <TableCell component="td">
                       <Row align="end" className={classes.actions}>
-                        <Img
-                          alt="Edit entry"
-                          className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({
                               entry: row,
@@ -199,19 +237,28 @@ const AddressBookTable = (): ReactElement => {
                             })
                             setEditCreateEntryModalOpen(true)
                           }}
-                          src={RenameOwnerIcon}
-                          testId={EDIT_ENTRY_BUTTON}
-                        />
-                        <Img
-                          alt="Remove entry"
-                          className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
+                        >
+                          <Icon
+                            size="sm"
+                            type="edit"
+                            tooltip="Edit entry"
+                            className={granted ? classes.editEntryButton : classes.editEntryButtonNonOwner}
+                          />
+                        </ButtonHelper>
+                        <ButtonHelper
                           onClick={() => {
                             setSelectedEntry({ entry: row })
                             setDeleteEntryModalOpen(true)
                           }}
-                          src={RemoveOwnerIcon}
-                          testId={REMOVE_ENTRY_BUTTON}
-                        />
+                        >
+                          <Icon
+                            size="sm"
+                            type="delete"
+                            color="error"
+                            tooltip="Delete entry"
+                            className={granted ? classes.removeEntryButton : classes.removeEntryButtonNonOwner}
+                          />
+                        </ButtonHelper>
                         {granted ? (
                           <StyledButton
                             color="primary"
@@ -250,6 +297,12 @@ const AddressBookTable = (): ReactElement => {
         entryToDelete={selectedEntry}
         isOpen={deleteEntryModalOpen}
         onClose={() => setDeleteEntryModalOpen(false)}
+      />
+      <ExportEntriesModal isOpen={exportEntriesModalOpen} onClose={() => setExportEntriesModalOpen(false)} />
+      <ImportEntriesModal
+        importEntryModalHandler={importEntryModalHandler}
+        isOpen={importEntryModalOpen}
+        onClose={() => setImportEntryModalOpen(false)}
       />
       <SendModal
         activeScreenType="chooseTxType"

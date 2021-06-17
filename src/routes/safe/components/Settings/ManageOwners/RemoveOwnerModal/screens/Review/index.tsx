@@ -1,44 +1,36 @@
 import IconButton from '@material-ui/core/IconButton'
-import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import classNames from 'classnames'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
-import { List } from 'immutable'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { getOwnersWithNameFromAddressBook } from 'src/logic/addressBook/utils'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/dataFetcher'
 
-import { styles } from './style'
+import { useStyles } from './style'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
-
-const useStyles = makeStyles(styles)
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (txParameters: TxParameters) => void
-  ownerAddress: string
-  ownerName: string
+  owner: OwnerData
   threshold?: number
 }
 
@@ -46,17 +38,13 @@ export const ReviewRemoveOwnerModal = ({
   onClickBack,
   onClose,
   onSubmit,
-  ownerAddress,
-  ownerName,
+  owner,
   threshold = 1,
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector)
-  const owners = useSelector(safeOwnersSelector)
-  const addressBook = useSelector(addressBookSelector)
-  const ownersWithAddressBookName = owners ? getOwnersWithNameFromAddressBook(addressBook, owners) : List([])
+  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
+  const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -78,6 +66,8 @@ export const ReviewRemoveOwnerModal = ({
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -88,11 +78,13 @@ export const ReviewRemoveOwnerModal = ({
 
     const calculateRemoveOwnerData = async () => {
       try {
+        // FixMe: if the order returned by the service is the same as in the contracts
+        //  the data lookup can be removed from here
         const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
-        const index = safeOwners.findIndex((owner) => sameAddress(owner, ownerAddress))
+        const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
-        const txData = gnosisSafe.methods.removeOwner(prevAddress, ownerAddress, threshold).encodeABI()
+        const txData = gnosisSafe.methods.removeOwner(prevAddress, owner.address, threshold).encodeABI()
 
         if (isCurrent) {
           setData(txData)
@@ -106,7 +98,7 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, ownerAddress, threshold])
+  }, [safeAddress, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -171,7 +163,7 @@ export const ReviewRemoveOwnerModal = ({
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${threshold} out of ${owners ? owners.size - 1 : 0} owner(s)`}
+                      {`${threshold} out of ${numOptions} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -180,31 +172,23 @@ export const ReviewRemoveOwnerModal = ({
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${owners ? owners.size - 1 : 0} Safe owner(s)`}
+                    {`${numOptions} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
-                {ownersWithAddressBookName?.map(
-                  (owner) =>
-                    owner.address !== ownerAddress && (
-                      <React.Fragment key={owner.address}>
+                {owners?.map(
+                  (safeOwner) =>
+                    !sameAddress(safeOwner.address, owner.address) && (
+                      <React.Fragment key={safeOwner.address}>
                         <Row className={classes.owner}>
-                          <Col align="center" xs={1}>
-                            <Identicon address={owner.address} diameter={32} />
-                          </Col>
-                          <Col xs={11}>
-                            <Block className={classNames(classes.name, classes.userName)}>
-                              <Paragraph noMargin size="lg" weight="bolder">
-                                {owner.name}
-                              </Paragraph>
-                              <Block className={classes.user} justify="center">
-                                <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                                  {owner.address}
-                                </Paragraph>
-                                <CopyBtn content={owner.address} />
-                                <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
-                              </Block>
-                            </Block>
+                          <Col align="center" xs={12}>
+                            <EthHashInfo
+                              hash={safeOwner.address}
+                              name={safeOwner.name}
+                              showCopyBtn
+                              showAvatar
+                              explorerUrl={getExplorerInfo(safeOwner.address)}
+                            />
                           </Col>
                         </Row>
                         <Hairline />
@@ -218,22 +202,14 @@ export const ReviewRemoveOwnerModal = ({
                 </Row>
                 <Hairline />
                 <Row className={classes.selectedOwner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={ownerAddress} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(ownerAddress)} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      hash={owner.address}
+                      name={owner.name}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(owner.address)}
+                    />
                   </Col>
                 </Row>
                 <Hairline />
@@ -263,23 +239,18 @@ export const ReviewRemoveOwnerModal = ({
               />
             </Block>
           )}
-          <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-              Back
-            </Button>
-            <Button
-              color="primary"
-              minHeight={42}
-              minWidth={140}
-              onClick={() => onSubmit(txParameters)}
-              testId={REMOVE_OWNER_REVIEW_BTN_TEST_ID}
-              type="submit"
-              variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => onSubmit(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                type: 'submit',
+                testId: REMOVE_OWNER_REVIEW_BTN_TEST_ID,
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

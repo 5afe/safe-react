@@ -1,20 +1,14 @@
-import { makeStyles } from '@material-ui/core/styles'
 import React from 'react'
 import { useField, useFormState } from 'react-final-form'
 
-import Button from 'src/components/layout/Button'
-import Row from 'src/components/layout/Row'
-import { styles } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/style'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { isReadMethod } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
-
-const useStyles = makeStyles(styles)
 
 export interface ButtonProps {
   onClose: () => void
 }
 
-const Buttons = ({ onClose }: ButtonProps) => {
-  const classes = useStyles()
+const Buttons = ({ onClose }: ButtonProps): React.ReactElement => {
   const {
     input: { value: method },
   } = useField('selectedMethod', { subscription: { value: true } })
@@ -29,22 +23,17 @@ const Buttons = ({ onClose }: ButtonProps) => {
   })
 
   return (
-    <Row align="center" className={classes.buttonRow}>
-      <Button minWidth={140} onClick={onClose} color="secondary">
-        Cancel
-      </Button>
-      <Button
-        className={classes.submitButton}
-        color="primary"
-        data-testid={`${isReadMethod(method) ? 'call' : 'review'}-tx-btn`}
-        disabled={submitting || validating || ((!valid || !!submitError) && !modifiedSinceLastSubmit) || !method}
-        minWidth={140}
-        type="submit"
-        variant="contained"
-      >
-        {isReadMethod(method) ? 'Call' : 'Review'}
-      </Button>
-    </Row>
+    <Modal.Footer>
+      <Modal.Footer.Buttons
+        cancelButtonProps={{ onClick: onClose }}
+        confirmButtonProps={{
+          disabled: submitting || validating || ((!valid || !!submitError) && !modifiedSinceLastSubmit) || !method,
+          status: submitting || validating ? ButtonStatus.LOADING : ButtonStatus.READY,
+          testId: `${isReadMethod(method) ? 'call' : 'review'}-tx-btn`,
+          text: isReadMethod(method) ? 'Call' : 'Review',
+        }}
+      />
+    </Modal.Footer>
   )
 }
 

@@ -10,31 +10,22 @@ const getMockedOldSafe = ({
   owners,
   featuresEnabled,
   currentVersion,
-  latestIncomingTxBlock,
   ethBalance,
   threshold,
-  name,
   nonce,
   modules,
   spendingLimits,
 }: Partial<SafeRecordProps>): SafeRecordProps => {
-  const owner1 = {
-    name: 'MockedOwner1',
-    address: '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d',
-  }
-  const owner2 = {
-    name: 'MockedOwner2',
-    address: '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3',
-  }
+  const owner1 = '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d'
+  const owner2 = '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3'
   const mockedActiveTokenAddress1 = '0x36591cd3DA96b21Ac9ca54cFaf80fe45107294F1'
   const mockedActiveTokenAddress2 = '0x92aF97cbF10742dD2527ffaBA70e34C03CFFC2c1'
 
   return {
-    name: name || 'MockedSafe',
     address: address || '0xAE173F30ec9A293d37c44BA68d3fCD35F989Ce9F',
     threshold: threshold || 2,
     ethBalance: ethBalance || '10',
-    owners: owners || List([owner1, owner2]),
+    owners: owners || [owner1, owner2],
     modules: modules || [],
     spendingLimits: spendingLimits || [],
     balances: balances || [
@@ -42,12 +33,12 @@ const getMockedOldSafe = ({
       { tokenAddress: mockedActiveTokenAddress2, tokenBalance: '10' },
     ],
     nonce: nonce || 2,
-    latestIncomingTxBlock: latestIncomingTxBlock || 1,
     recurringUser: recurringUser || false,
     currentVersion: currentVersion || 'v1.1.1',
     needsUpdate: needsUpdate || false,
     featuresEnabled: featuresEnabled || [],
-    totalFiatBalance: 110,
+    totalFiatBalance: '110',
+    loadedViaUrl: false,
   }
 }
 
@@ -69,21 +60,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ address: oldAddress })
     const newSafeProps: Partial<SafeRecordProps> = {
       address: newAddress,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old safe and a new name for the safe, should return true`, () => {
-    // given
-    const oldName = 'oldName'
-    const newName = 'newName'
-    const oldSafe = getMockedOldSafe({ name: oldName })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      name: newName,
     }
 
     // When
@@ -124,18 +100,10 @@ describe('shouldSafeStoreBeUpdated', () => {
   })
   it(`Given an old owners list and a new owners list for the safe, should return true`, () => {
     // given
-    const owner1 = {
-      name: 'MockedOwner1',
-      address: '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d',
-    }
-    const owner2 = {
-      name: 'MockedOwner2',
-      address: '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3',
-    }
-    const oldSafe = getMockedOldSafe({ owners: List([owner1, owner2]) })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      owners: List([owner1]),
-    }
+    const owner1 = '0x3bE3c2dE077FBC409ae50AFFA66a94a9aE669A8d'
+    const owner2 = '0xA2366b0c2607de70777d87aCdD1D22F0708fA6a3'
+    const oldSafe = getMockedOldSafe({ owners: [owner1, owner2] })
+    const newSafeProps: Partial<SafeRecordProps> = { owners: [owner1] }
 
     // When
     const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
@@ -148,9 +116,7 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldModulesList = []
     const newModulesList = null
     const oldSafe = getMockedOldSafe({ modules: oldModulesList })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      modules: newModulesList,
-    }
+    const newSafeProps: Partial<SafeRecordProps> = { modules: newModulesList }
 
     // When
     const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
@@ -163,9 +129,7 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSpendingLimitsList = []
     const newSpendingLimitsList = null
     const oldSafe = getMockedOldSafe({ spendingLimits: oldSpendingLimitsList })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      modules: newSpendingLimitsList,
-    }
+    const newSafeProps: Partial<SafeRecordProps> = { modules: newSpendingLimitsList }
 
     // When
     const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
@@ -200,21 +164,6 @@ describe('shouldSafeStoreBeUpdated', () => {
     const oldSafe = getMockedOldSafe({ nonce: oldNonce })
     const newSafeProps: Partial<SafeRecordProps> = {
       nonce: newNonce,
-    }
-
-    // When
-    const expectedResult = shouldSafeStoreBeUpdated(newSafeProps, oldSafe)
-
-    // Then
-    expect(expectedResult).toEqual(true)
-  })
-  it(`Given an old newLatestIncomingTxBlock and a new newLatestIncomingTxBlock for the safe, should return true`, () => {
-    // given
-    const oldLatestIncomingTxBlock = 1
-    const newLatestIncomingTxBlock = 2
-    const oldSafe = getMockedOldSafe({ latestIncomingTxBlock: oldLatestIncomingTxBlock })
-    const newSafeProps: Partial<SafeRecordProps> = {
-      latestIncomingTxBlock: newLatestIncomingTxBlock,
     }
 
     // When

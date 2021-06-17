@@ -3,11 +3,10 @@ import { useDispatch, useSelector } from 'react-redux'
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
+import Divider from 'src/components/Divider'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -15,19 +14,18 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { nftTokensSelector } from 'src/logic/collectibles/store/selectors'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { setImageToPlaceholder } from 'src/routes/safe/components/Balances/utils'
-import { sm } from 'src/theme/variables'
 import { textShortener } from 'src/utils/strings'
 import { generateERC721TransferTxData } from 'src/logic/collectibles/utils'
 
-import ArrowDown from '../assets/arrow-down.svg'
-
 import { styles } from './style'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -37,6 +35,7 @@ const useStyles = makeStyles(styles)
 
 export type CollectibleTx = {
   recipientAddress: string
+  recipientName?: string
   assetAddress: string
   assetName: string
   nftTokenId: string
@@ -52,7 +51,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
   const classes = useStyles()
   const shortener = textShortener()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const nftTokens = useSelector(nftTokensSelector)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -80,6 +79,8 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     let isCurrent = true
 
@@ -100,7 +101,7 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
     }
   }, [safeAddress, tx])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     try {
       if (safeAddress) {
         dispatch(
@@ -167,31 +168,21 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
           <Hairline />
           <Block className={classes.container}>
             <SafeInfo />
-            <Row margin="md">
-              <Col xs={1}>
-                <img alt="Arrow Down" src={ArrowDown} style={{ marginLeft: sm }} />
-              </Col>
-              <Col center="xs" layout="column" xs={11}>
-                <Hairline />
-              </Col>
-            </Row>
+            <Divider withArrow />
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
                 Recipient
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <Col xs={1}>
-                <Identicon address={tx.recipientAddress} diameter={32} />
-              </Col>
-              <Col layout="column" xs={11}>
-                <Block justify="left">
-                  <Paragraph className={classes.address} noMargin weight="bolder">
-                    {tx.recipientAddress}
-                  </Paragraph>
-                  <CopyBtn content={tx.recipientAddress} />
-                  <ExplorerButton explorerUrl={getExplorerInfo(tx.recipientAddress)} />
-                </Block>
+              <Col xs={12}>
+                <EthHashInfo
+                  hash={tx.recipientAddress}
+                  name={tx.recipientName}
+                  showAvatar
+                  showCopyBtn
+                  explorerUrl={getExplorerInfo(tx.recipientAddress)}
+                />
               </Col>
             </Row>
             <Row margin="xs">
@@ -226,23 +217,18 @@ const ReviewCollectible = ({ onClose, onPrev, tx }: Props): React.ReactElement =
               txEstimationExecutionStatus={txEstimationExecutionStatus}
             />
           </div>
-          <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              disabled={!data || txEstimationExecutionStatus === EstimationStatus.LOADING}
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              type="submit"
-              variant="contained"
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                type: 'submit',
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: 'submit-tx-btn',
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

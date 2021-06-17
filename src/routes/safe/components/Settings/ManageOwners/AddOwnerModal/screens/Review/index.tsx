@@ -1,25 +1,23 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
-import classNames from 'classnames'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import { getExplorerInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { safeNameSelector, safeOwnersSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 
 import { OwnerValues } from '../..'
@@ -37,12 +35,10 @@ type ReviewAddOwnerProps = {
   values: OwnerValues
 }
 
-export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): React.ReactElement => {
+export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
-  const safeName = useSelector(safeNameSelector)
-  const owners = useSelector(safeOwnersSelector)
+  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -63,6 +59,8 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     manualGasPrice,
     manualGasLimit,
   })
+
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
     let isCurrent = true
@@ -148,7 +146,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                       Any transaction requires the confirmation of:
                     </Paragraph>
                     <Paragraph className={classes.name} color="primary" noMargin size="lg" weight="bolder">
-                      {`${values.threshold} out of ${(owners?.size || 0) + 1} owner(s)`}
+                      {`${values.threshold} out of ${(owners?.length || 0) + 1} owner(s)`}
                     </Paragraph>
                   </Block>
                 </Block>
@@ -156,29 +154,21 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
               <Col className={classes.owners} layout="column" xs={8}>
                 <Row className={classes.ownersTitle}>
                   <Paragraph color="primary" noMargin size="lg">
-                    {`${(owners?.size || 0) + 1} Safe owner(s)`}
+                    {`${(owners?.length || 0) + 1} Safe owner(s)`}
                   </Paragraph>
                 </Row>
                 <Hairline />
                 {owners?.map((owner) => (
                   <React.Fragment key={owner.address}>
                     <Row className={classes.owner}>
-                      <Col align="center" xs={1}>
-                        <Identicon address={owner.address} diameter={32} />
-                      </Col>
-                      <Col xs={11}>
-                        <Block className={classNames(classes.name, classes.userName)}>
-                          <Paragraph noMargin size="lg" weight="bolder">
-                            {owner.name}
-                          </Paragraph>
-                          <Block className={classes.user} justify="center">
-                            <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                              {owner.address}
-                            </Paragraph>
-                            <CopyBtn content={owner.address} />
-                            <ExplorerButton explorerUrl={getExplorerInfo(owner.address)} />
-                          </Block>
-                        </Block>
+                      <Col align="center" xs={12}>
+                        <EthHashInfo
+                          hash={owner.address}
+                          name={owner.name}
+                          showCopyBtn
+                          showAvatar
+                          explorerUrl={getExplorerInfo(owner.address)}
+                        />
                       </Col>
                     </Row>
                     <Hairline />
@@ -191,22 +181,14 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                 </Row>
                 <Hairline />
                 <Row className={classes.selectedOwner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={values.ownerAddress} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" weight="bolder">
-                        {values.ownerName}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph className={classes.address} color="disabled" noMargin size="md">
-                          {values.ownerAddress}
-                        </Paragraph>
-                        <CopyBtn content={values.ownerAddress} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(values.ownerAddress)} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      hash={values.ownerAddress}
+                      name={values.ownerName}
+                      showCopyBtn
+                      showAvatar
+                      explorerUrl={getExplorerInfo(values.ownerAddress)}
+                    />
                   </Col>
                 </Row>
                 <Hairline />
@@ -236,20 +218,15 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
           </Block>
           <Hairline />
           <Row align="center" className={classes.buttonRow}>
-            <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-              Back
-            </Button>
-            <Button
-              color="primary"
-              minHeight={42}
-              minWidth={140}
-              onClick={() => onSubmit(txParameters)}
-              testId={ADD_OWNER_SUBMIT_BTN_TEST_ID}
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-              variant="contained"
-            >
-              Submit
-            </Button>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => onSubmit(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: ADD_OWNER_SUBMIT_BTN_TEST_ID,
+              }}
+            />
           </Row>
         </>
       )}

@@ -8,17 +8,20 @@ import styled from 'styled-components'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { minValue } from 'src/components/forms/validator'
+import { Modal } from 'src/components/Modal'
 
 import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
 
 const StyledDivider = styled(Divider)`
-  margin: 16px 0;
+  margin: 0px;
+`
+const StyledDividerFooter = styled(Divider)`
+  margin: 16px -24px;
 `
 
 const SafeOptions = styled.div`
@@ -46,16 +49,12 @@ const StyledLink = styled(Link)`
     margin-right: 5px;
   }
 `
-const StyledIconButton = styled(IconButton)`
-  margin: 10px 0 0 0;
-`
 const StyledText = styled(Text)`
   margin: 0 0 4px 0;
 `
 const StyledTextMt = styled(Text)`
   margin: 16px 0 4px 0;
 `
-
 const useStyles = makeStyles(styles)
 
 interface Props {
@@ -111,9 +110,9 @@ export const EditTxParametersForm = ({
         <Title size="sm" withoutMargin>
           Advanced options
         </Title>
-        <StyledIconButton disableRipple onClick={onCloseFormHandler}>
+        <IconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
-        </StyledIconButton>
+        </IconButton>
       </Row>
 
       <StyledDivider />
@@ -207,25 +206,18 @@ export const EditTxParametersForm = ({
                 </>
               )}
 
-              <StyledDivider />
+              <StyledDividerFooter />
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onCloseFormHandler}>
-                  Back
-                </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="submit-tx-btn"
-                  /* disabled={!data} */
-                  minWidth={140}
-                  /* onClick={submitTx} */
-                  type="submit"
-                  variant="contained"
-                >
-                  Confirm
-                </Button>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onCloseFormHandler, text: 'Back' }}
+                  confirmButtonProps={{
+                    type: 'submit',
+                    text: 'Confirm',
+                    testId: 'submit-tx-btn',
+                  }}
+                />
               </Row>
             </>
           )}

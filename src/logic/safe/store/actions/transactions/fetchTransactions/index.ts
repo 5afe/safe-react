@@ -11,25 +11,20 @@ import { AppReduxState } from 'src/store'
 export default (safeAddress: string) => async (
   dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
 ): Promise<void> => {
-  const [history, queued] = await Promise.allSettled([
-    loadHistoryTransactions(safeAddress),
-    loadQueuedTransactions(safeAddress),
-  ])
-
-  if (history.status === 'fulfilled') {
-    const values = history.value
-
-    if (values.length) {
-      dispatch(addHistoryTransactions({ safeAddress, values }))
+  const loadTxs = async (
+    loadFn: typeof loadHistoryTransactions | typeof loadQueuedTransactions,
+    actionFn: typeof addHistoryTransactions | typeof addQueuedTransactions,
+  ) => {
+    try {
+      const values = (await loadFn(safeAddress)) as any[]
+      dispatch(actionFn({ safeAddress, values }))
+    } catch (e) {
+      e.log()
     }
-  } else {
-    console.error('Failed to load history transactions', history.reason)
   }
 
-  if (queued.status === 'fulfilled') {
-    const values = queued.value
-    dispatch(addQueuedTransactions({ safeAddress, values }))
-  } else {
-    console.error('Failed to load queued transactions', queued.reason)
-  }
+  await Promise.all([
+    loadTxs(loadHistoryTransactions, addHistoryTransactions),
+    loadTxs(loadQueuedTransactions, addQueuedTransactions),
+  ])
 }

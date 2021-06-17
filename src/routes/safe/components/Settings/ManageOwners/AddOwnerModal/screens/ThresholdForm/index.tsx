@@ -12,12 +12,12 @@ import GnoForm from 'src/components/forms/GnoForm'
 import SelectField from 'src/components/forms/SelectField'
 import { composeValidators, maxValue, minValue, mustBeInteger, required } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersSelector, safeThresholdSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { Modal } from 'src/components/Modal'
 
 export const ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID = 'add-owner-threshold-next-btn'
 
@@ -27,16 +27,21 @@ type SubmitProps = {
   threshold: number
 }
 
+type ThresholdValues = {
+  threshold: string
+}
+
 type Props = {
   onClickBack: () => void
   onClose: () => void
   onSubmit: (values: SubmitProps) => void
+  initialValues: ThresholdValues
 }
 
-export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactElement => {
+export const ThresholdForm = ({ onClickBack, onClose, onSubmit, initialValues }: Props): ReactElement => {
   const classes = useStyles()
-  const threshold = useSelector(safeThresholdSelector) as number
-  const owners = useSelector(safeOwnersSelector)
+  const { owners, threshold = 1 } = useSelector(currentSafe) ?? {}
+  const numOptions = owners ? owners.length + 1 : 0
 
   const handleSubmit = (values: SubmitProps) => {
     onSubmit(values)
@@ -54,7 +59,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm initialValues={{ threshold: threshold.toString() }} onSubmit={handleSubmit}>
+      <GnoForm initialValues={{ threshold: initialValues.threshold || threshold.toString() }} onSubmit={handleSubmit}>
         {() => (
           <>
             <Block className={classes.formContainer}>
@@ -74,7 +79,7 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
                     render={(props) => (
                       <>
                         <SelectField {...props} disableError>
-                          {[...Array(Number(owners ? owners.size + 1 : 0))].map((x, index) => (
+                          {[...Array(Number(numOptions))].map((x, index) => (
                             <MenuItem key={index} value={`${index + 1}`}>
                               {index + 1}
                             </MenuItem>
@@ -87,36 +92,26 @@ export const ThresholdForm = ({ onClickBack, onClose, onSubmit }: Props): ReactE
                         )}
                       </>
                     )}
-                    validate={composeValidators(
-                      required,
-                      mustBeInteger,
-                      minValue(1),
-                      maxValue(owners ? owners.size + 1 : 0),
-                    )}
+                    validate={composeValidators(required, mustBeInteger, minValue(1), maxValue(numOptions))}
                   />
                 </Col>
                 <Col xs={10}>
                   <Paragraph className={classes.ownersText} color="primary" noMargin size="lg">
-                    out of {owners ? owners.size + 1 : 0} owner(s)
+                    out of {numOptions} owner(s)
                   </Paragraph>
                 </Col>
               </Row>
             </Block>
             <Hairline />
             <Row align="center" className={classes.buttonRow}>
-              <Button minHeight={42} minWidth={140} onClick={onClickBack}>
-                Back
-              </Button>
-              <Button
-                color="primary"
-                minHeight={42}
-                minWidth={140}
-                testId={ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID}
-                type="submit"
-                variant="contained"
-              >
-                Review
-              </Button>
+              <Modal.Footer.Buttons
+                cancelButtonProps={{ onClick: onClickBack, text: 'Back' }}
+                confirmButtonProps={{
+                  type: 'submit',
+                  text: 'Review',
+                  testId: ADD_OWNER_THRESHOLD_NEXT_BTN_TEST_ID,
+                }}
+              />
             </Row>
           </>
         )}

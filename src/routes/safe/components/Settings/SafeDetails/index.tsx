@@ -1,6 +1,8 @@
+import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import React, { useEffect, useState } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -8,29 +10,26 @@ import Modal from 'src/components/Modal'
 import Field from 'src/components/forms/Field'
 import GnoForm from 'src/components/forms/GnoForm'
 import TextField from 'src/components/forms/TextField'
-import { composeValidators, minMaxLength, required } from 'src/components/forms/validator'
+import { composeValidators, required, validAddressBookName } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Heading from 'src/components/layout/Heading'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
+import { makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { addressBookAddOrUpdate } from 'src/logic/addressBook/store/actions'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getNotificationsFromTxType, enhanceSnackbarForAction } from 'src/logic/notifications'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { UpdateSafeModal } from 'src/routes/safe/components/Settings/UpdateSafeModal'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
-import { Icon, Link, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 import {
-  latestMasterContractVersionSelector,
-  safeCurrentVersionSelector,
-  safeNameSelector,
-  safeNeedsUpdateSelector,
-  safeParamAddressFromStateSelector,
+  currentSafeWithNames,
+  latestMasterContractVersion as latestMasterContractVersionSelector,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
@@ -51,18 +50,20 @@ const StyledIcon = styled(Icon)`
   left: 6px;
 `
 
-const SafeDetails = (): React.ReactElement => {
+const SafeDetails = (): ReactElement => {
   const classes = useStyles()
   const isUserOwner = useSelector(grantedSelector)
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
+  const {
+    address: safeAddress,
+    name: safeName,
+    needsUpdate: safeNeedsUpdate,
+    currentVersion: safeCurrentVersion,
+  } = useSelector(currentSafeWithNames)
   const dispatch = useDispatch()
-  const safeName = useSelector(safeNameSelector)
-  const safeNeedsUpdate = useSelector(safeNeedsUpdateSelector)
-  const safeCurrentVersion = useSelector(safeCurrentVersionSelector)
   const { trackEvent } = useAnalytics()
 
-  const [isModalOpen, setModalOpen] = React.useState(false)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const [isModalOpen, setModalOpen] = useState(false)
   const [safeInfo, setSafeInfo] = useState<MasterCopy | undefined>()
 
   const toggleModal = () => {
@@ -70,7 +71,9 @@ const SafeDetails = (): React.ReactElement => {
   }
 
   const handleSubmit = (values) => {
-    dispatch(updateSafe({ address: safeAddress, name: values.safeName }))
+    dispatch(addressBookAddOrUpdate(makeAddressBookEntry({ address: safeAddress, name: values.safeName })))
+    // setting `loadedViaUrl` to `false` as setting a safe's name is considered to intentionally add the safe
+    dispatch(updateSafe({ address: safeAddress, loadedViaUrl: false }))
 
     const notification = getNotificationsFromTxType(TX_NOTIFICATION_TYPES.SAFE_NAME_CHANGE_TX)
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(notification.afterExecution.noMoreConfirmationsNeeded)))
@@ -162,7 +165,7 @@ const SafeDetails = (): React.ReactElement => {
                 testId={SAFE_NAME_INPUT_TEST_ID}
                 text="Safe name*"
                 type="text"
-                validate={composeValidators(required, minMaxLength(1, 50))}
+                validate={composeValidators(required, validAddressBookName)}
               />
             </Block>
           </Block>

@@ -1,81 +1,44 @@
 import { List } from 'immutable'
-import { matchPath, RouteComponentProps } from 'react-router-dom'
+import { matchPath } from 'react-router-dom'
 import { createSelector } from 'reselect'
-import { SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS } from 'src/routes/routes'
 
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import makeSafe, { SafeRecord, SafeRecordProps } from 'src/logic/safe/store/models/safe'
 import { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
+import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SafesMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AppReduxState } from 'src/store'
-
 import { checksumAddress } from 'src/utils/checksumAddress'
-import makeSafe, { SafeRecord, SafeRecordProps } from '../models/safe'
-import { SafesMap } from 'src/routes/safe/store/reducer/types/safe'
-import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
+import { Overwrite } from 'src/types/helpers'
 
-const safesStateSelector = (state: AppReduxState) => state[SAFE_REDUCER_ID]
+const safesState = (state: AppReduxState) => state[SAFE_REDUCER_ID]
 
-export const safesMapSelector = (state: AppReduxState): SafesMap => safesStateSelector(state).get('safes')
+export const safesAsMap = (state: AppReduxState): SafesMap => safesState(state).get('safes')
 
-export const safesListSelector = createSelector(safesMapSelector, (safes): List<SafeRecord> => safes.toList())
+export const safesAsList = createSelector(safesAsMap, (safes): List<SafeRecord> => safes.toList())
 
-export const safesCountSelector = createSelector(safesMapSelector, (safes) => safes.size)
+export const defaultSafe = createSelector(safesState, (safeState) => safeState.get('defaultSafe'))
 
-export const defaultSafeSelector = createSelector(safesStateSelector, (safeState) => safeState.get('defaultSafe'))
-
-export const latestMasterContractVersionSelector = createSelector(safesStateSelector, (safeState) =>
+export const latestMasterContractVersion = createSelector(safesState, (safeState) =>
   safeState.get('latestMasterContractVersion'),
 )
 
-export const safeParamAddressFromStateSelector = (state: AppReduxState): string => {
+export const safeAddressFromUrl = (state: AppReduxState): string => {
   const match = matchPath<{ safeAddress: string }>(state.router.location.pathname, {
     path: `${SAFELIST_ADDRESS}/:safeAddress`,
   })
 
   if (match) {
-    return checksumAddress(match.params.safeAddress)
+    return checksumAddress(match.params.safeAddress).toString()
   }
 
   return ''
 }
 
-export const safeParamAddressSelector = (
-  state: AppReduxState,
-  props: RouteComponentProps<{ [SAFE_PARAM_ADDRESS]?: string }>,
-): string => {
-  const urlAdd = props.match.params[SAFE_PARAM_ADDRESS]
-  return urlAdd ? checksumAddress(urlAdd) : ''
-}
-
-export const addressBookQueryParamsSelector = (state: AppReduxState): string | undefined => {
-  const { location } = state.router
-
-  if (location?.query) {
-    const { entryAddress } = location.query
-    return entryAddress
-  }
-}
-
-export const safeSelector = createSelector(
-  safesMapSelector,
-  safeParamAddressFromStateSelector,
-  (safes: SafesMap, address: string): SafeRecord | undefined => {
-    if (!address) {
-      return undefined
-    }
-    const checksumed = checksumAddress(address)
-    return safes.get(checksumed)
-  },
-)
-
-export const safeBalancesSelector = createSelector(
-  safeSelector,
-  (safe): Array<BalanceRecord> => {
-    if (!safe) {
-      return []
-    }
-
-    return safe.balances
-  },
-)
+export const currentSafe = createSelector([safesAsMap, safeAddressFromUrl], (safes: SafesMap, address: string):
+  | SafeRecord
+  | undefined => safes.get(address))
 
 const baseSafe = makeSafe()
 
@@ -83,39 +46,63 @@ export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => 
   safe: SafeRecord,
 ): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
 
-export const safeNameSelector = createSelector(safeSelector, safeFieldSelector('name'))
+export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelector('ethBalance'))
 
-export const safeEthBalanceSelector = createSelector(safeSelector, safeFieldSelector('ethBalance'))
+export const currentSafeBalances = createSelector(currentSafe, safeFieldSelector('balances'))
 
-export const safeNeedsUpdateSelector = createSelector(safeSelector, safeFieldSelector('needsUpdate'))
+export const currentSafeNeedsUpdate = createSelector(currentSafe, safeFieldSelector('needsUpdate'))
 
-export const safeCurrentVersionSelector = createSelector(safeSelector, safeFieldSelector('currentVersion'))
+export const currentSafeCurrentVersion = createSelector(currentSafe, safeFieldSelector('currentVersion'))
 
-export const safeThresholdSelector = createSelector(safeSelector, safeFieldSelector('threshold'))
+export const currentSafeThreshold = createSelector(currentSafe, safeFieldSelector('threshold'))
 
-export const safeNonceSelector = createSelector(safeSelector, safeFieldSelector('nonce'))
+export const currentSafeNonce = createSelector(currentSafe, safeFieldSelector('nonce'))
 
-export const safeOwnersSelector = createSelector(safeSelector, safeFieldSelector('owners'))
+export const currentSafeOwners = createSelector(currentSafe, safeFieldSelector('owners'))
 
-export const safeModulesSelector = createSelector(safeSelector, safeFieldSelector('modules'))
+export const currentSafeModules = createSelector(currentSafe, safeFieldSelector('modules'))
 
-export const safeFeaturesEnabledSelector = createSelector(safeSelector, safeFieldSelector('featuresEnabled'))
+export const currentSafeFeaturesEnabled = createSelector(currentSafe, safeFieldSelector('featuresEnabled'))
 
-export const safeSpendingLimitsSelector = createSelector(safeSelector, safeFieldSelector('spendingLimits'))
+export const currentSafeSpendingLimits = createSelector(currentSafe, safeFieldSelector('spendingLimits'))
 
-export const safeLoadedViaUrlSelector = createSelector(safeSelector, safeFieldSelector('loadedViaUrl'))
+export const currentSafeTotalFiatBalance = createSelector(currentSafe, safeFieldSelector('totalFiatBalance'))
 
-export const safeOwnersAddressesListSelector = createSelector(
-  safeOwnersSelector,
-  (owners): List<string> => {
-    if (!owners) {
-      return List([])
-    }
+/*************************/
+/* With AddressBook Data */
+/*************************/
+const baseSafeWithName = { ...baseSafe.toJS(), name: '' }
 
-    return owners?.map(({ address }) => address)
+export type SafeRecordWithNames = Overwrite<SafeRecordProps, { owners: AddressBookEntry[] }> & { name: string }
+
+export const safesWithNamesAsList = createSelector(
+  [safesAsList, currentNetworkAddressBookAsMap],
+  (safesList, addressBookMap): SafeRecordWithNames[] => {
+    return safesList
+      .map((safeRecord) => {
+        const safe = safeRecord.toObject()
+        const name = addressBookMap?.[safe.address]?.name ?? ''
+
+        const owners = safe.owners.map((ownerAddress) => {
+          return addressBookMap?.[ownerAddress] ?? makeAddressBookEntry({ address: ownerAddress, name: '' })
+        })
+
+        return { ...safe, name, owners }
+      })
+      .toJS()
   },
 )
 
-export const safeTotalFiatBalanceSelector = createSelector(safeSelector, (currentSafe) => {
-  return currentSafe?.totalFiatBalance
+export const safesWithNamesAsMap = createSelector([safesWithNamesAsList], (safesList): {
+  [address: string]: SafeRecordWithNames
+} => {
+  return safesList.reduce((acc, safe) => {
+    acc[safe.address] = safe
+    return acc
+  }, {})
 })
+
+export const currentSafeWithNames = createSelector(
+  [safesWithNamesAsMap, currentSafe],
+  (safesMap, safe): SafeRecordWithNames => (safe ? safesMap[safe.address] : baseSafeWithName),
+)

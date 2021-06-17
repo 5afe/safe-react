@@ -1,3 +1,4 @@
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import { useDispatch, useSelector } from 'react-redux'
@@ -5,7 +6,6 @@ import { useDispatch, useSelector } from 'react-redux'
 import { getNetworkInfo, getExplorerInfo } from 'src/config'
 import { toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
@@ -21,15 +21,17 @@ import { createTransaction } from 'src/logic/safe/store/actions/createTransactio
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import {
   generateFormFieldKey,
   getValueFromTxInputs,
 } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import { useEstimateTransactionGas, EstimationStatus } from 'src/logic/hooks/useEstimateTransactionGas'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 const useStyles = makeStyles(styles)
 
@@ -55,10 +57,11 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
   const explorerUrl = getExplorerInfo(tx.contractAddress as string)
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
+  const addressName = useSelector((state) => addressBookEntryName(state, { address: tx.contractAddress as string }))
 
   const [txInfo, setTxInfo] = useState<{
     txRecipient: string
@@ -84,6 +87,8 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     setTxInfo({
       txRecipient: tx.contractAddress as string,
@@ -92,7 +97,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
     })
   }, [tx.contractAddress, tx.value, tx.data, safeAddress])
 
-  const submitTx = async (txParameters: TxParameters) => {
+  const submitTx = (txParameters: TxParameters) => {
     if (safeAddress && txInfo) {
       dispatch(
         createTransaction({
@@ -151,7 +156,13 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
               </Paragraph>
             </Row>
             <Row align="center" margin="md">
-              <EthHashInfo hash={tx.contractAddress as string} showAvatar showCopyBtn explorerUrl={explorerUrl} />
+              <EthHashInfo
+                hash={tx.contractAddress as string}
+                name={addressName}
+                showAvatar
+                showCopyBtn
+                explorerUrl={explorerUrl}
+              />
             </Row>
             <Row margin="xs">
               <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
@@ -232,22 +243,17 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             />
           </div>
 
-          <Row align="center" className={classes.buttonRow}>
-            <Button minWidth={140} onClick={onPrev} color="secondary">
-              Back
-            </Button>
-            <Button
-              className={classes.submitButton}
-              color="primary"
-              data-testid="submit-tx-btn"
-              minWidth={140}
-              onClick={() => submitTx(txParameters)}
-              variant="contained"
-              disabled={txEstimationExecutionStatus === EstimationStatus.LOADING}
-            >
-              Submit
-            </Button>
-          </Row>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{ onClick: onPrev, text: 'Back' }}
+              confirmButtonProps={{
+                onClick: () => submitTx(txParameters),
+                status: buttonStatus,
+                text: txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : undefined,
+                testId: 'submit-tx-btn',
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

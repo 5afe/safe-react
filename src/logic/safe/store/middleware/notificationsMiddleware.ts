@@ -15,7 +15,7 @@ import {
 } from 'src/logic/safe/store/actions/transactions/gatewayTransactions'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
-import { safeParamAddressFromStateSelector, safesMapSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl, safesAsMap } from 'src/logic/safe/store/selectors'
 
 import { isTransactionSummary, TransactionGatewayResult } from 'src/logic/safe/store/models/types/gateway.d'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
@@ -78,9 +78,9 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
     switch (action.type) {
       case ADD_HISTORY_TRANSACTIONS: {
         const userAddress: string = userAccountSelector(state)
-        const safes = safesMapSelector(state)
+        const safesMap = safesAsMap(state)
 
-        const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safes)
+        const executedTxNotification = aboutToExecuteTx.getNotification(action.payload, userAddress, safesMap)
         // if we have a notification, dispatch it depending on transaction's status
         executedTxNotification && dispatch(enqueueSnackbar(executedTxNotification))
 
@@ -96,8 +96,8 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
 
         const awaitingTxsSubmissionDateList = awaitingTransactions.map((tx) => tx.timestamp)
 
-        const safes = safesMapSelector(state)
-        const currentSafe = safes.get(safeAddress)
+        const safesMap = safesAsMap(state)
+        const currentSafe = safesMap.get(safeAddress)
 
         if (!currentSafe || !isUserAnOwner(currentSafe, userAddress) || awaitingTransactions.length === 0) {
           break
@@ -118,12 +118,12 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       case ADD_OR_UPDATE_SAFE: {
         const state = store.getState()
         const { safe } = action.payload
-        const currentSafeAddress = safeParamAddressFromStateSelector(state) || safe.address
+        const currentSafeAddress = safeAddressFromUrl(state) || safe.address
         if (!currentSafeAddress) {
           break
         }
         const isUserOwner = grantedSelector(state)
-        const { needUpdate } = await getSafeVersionInfo(currentSafeAddress)
+        const version = await getSafeVersionInfo(currentSafeAddress)
 
         const notificationKey = `${currentSafeAddress}`
         const onNotificationClicked = () => {
@@ -131,7 +131,7 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
           dispatch(push(`/safes/${currentSafeAddress}/settings`))
         }
 
-        if (needUpdate && isUserOwner) {
+        if (version?.needUpdate && isUserOwner) {
           dispatch(
             enqueueSnackbar(
               enhanceSnackbarForAction(

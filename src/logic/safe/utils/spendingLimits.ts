@@ -15,6 +15,7 @@ import { getEncodedMultiSendCallData, MultiSendTx } from './upgradeSafe'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
+import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 
@@ -122,10 +123,14 @@ export const getSpendingLimits = async (
 ): Promise<SpendingLimit[] | null> => {
   const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
 
-  if (isSpendingLimitEnabled) {
-    const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
-    const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
-    return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+  try {
+    if (isSpendingLimitEnabled) {
+      const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()
+      const tokensByDelegate = await requestTokensByDelegate(safeAddress, delegates.results)
+      return requestAllowancesByDelegatesAndTokens(safeAddress, tokensByDelegate)
+    }
+  } catch (error) {
+    throw new CodedException(Errors._609, error.message)
   }
 
   return null
@@ -153,7 +158,6 @@ export const enableSpendingLimitModuleMultiSendTx = (safeAddress: string): Multi
     to: multiSendTx.to,
     value: Number(multiSendTx.valueInWei),
     data: multiSendTx.txData as string,
-    operation: DELEGATE_CALL,
   }
 }
 
@@ -164,7 +168,16 @@ export const addSpendingLimitBeneficiaryMultiSendTx = (beneficiary: string): Mul
     to: SPENDING_LIMIT_MODULE_ADDRESS,
     value: 0,
     data: spendingLimitContract.methods.addDelegate(beneficiary).encodeABI(),
-    operation: DELEGATE_CALL,
+  }
+}
+
+export const getResetSpendingLimitTx = (beneficiary: string, token: string): MultiSendTx => {
+  const spendingLimitContract = getSpendingLimitContract()
+
+  return {
+    to: SPENDING_LIMIT_MODULE_ADDRESS,
+    value: 0,
+    data: spendingLimitContract.methods.resetAllowance(beneficiary, token).encodeABI(),
   }
 }
 
@@ -206,7 +219,6 @@ export const setSpendingLimitMultiSendTx = (args: SpendingLimitTxParams): MultiS
     to: tx.to,
     value: Number(tx.valueInWei),
     data: tx.txData as string,
-    operation: DELEGATE_CALL,
   }
 }
 

@@ -1,14 +1,24 @@
-import axios, { AxiosError, AxiosResponse } from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import { buildSafeInformationUrl } from './buildSafeInformationUrl'
+import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
+
+type AddressValue = {
+  value: string
+}
+
+type AddressInfo = AddressValue & {
+  name?: string
+  logoUrl?: string
+}
 
 export type SafeInfo = {
-  address: string
+  address: AddressValue
   nonce: number
   threshold: number
-  owners: string[]
-  masterCopy: string
-  modules: string[]
-  fallbackHandler: string
+  implementation: AddressInfo
+  owners: AddressValue[]
+  modules: AddressValue[] | null
+  fallbackHandler: AddressInfo
   version: string
 }
 
@@ -18,15 +28,12 @@ export type SafeInfoError = {
   arguments: string[]
 }
 
-export const getSafeInfo = (safeAddress: string): Promise<void | SafeInfo> => {
+export const getSafeInfo = async (safeAddress: string): Promise<SafeInfo> => {
   const safeInfoUrl = buildSafeInformationUrl(safeAddress)
-  return axios
-    .get<SafeInfo, AxiosResponse<SafeInfo>>(safeInfoUrl)
-    .then((response) => response.data)
-    .catch((error: AxiosError<SafeInfoError>) => {
-      console.error(
-        'Failed to retrieve safe Information',
-        error.response?.statusText ?? error.response?.data.message ?? error,
-      )
-    })
+  try {
+    const response = await axios.get<SafeInfo, AxiosResponse<SafeInfo>>(safeInfoUrl)
+    return response.data
+  } catch (e) {
+    throw new CodedException(Errors._605, e.message)
+  }
 }

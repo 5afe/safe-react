@@ -9,7 +9,7 @@ if [ -n "$VERSION_TAG" ] && [ -n "$PROD_DEPLOYMENT_HOOK_TOKEN" ] && [ -n "$PROD_
 then
   curl --silent --output /dev/null --write-out "%{http_code}" -X POST \
      -F token="$PROD_DEPLOYMENT_HOOK_TOKEN" \
-     -F ref=master \
+     -F ref=main \
      -F "variables[TRIGGER_RELEASE_COMMIT_TAG]=$VERSION_TAG" \
       $PROD_DEPLOYMENT_HOOK_URL
 else

@@ -6,15 +6,23 @@ import styled from 'styled-components'
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
 
-export const isSetAllowance = (method?: string) => sameString(method, SET_ALLOWANCE)
-export const isDeleteAllowance = (method?: string) => sameString(method, DELETE_ALLOWANCE)
-export const isSpendingLimitMethod = (method?: string) => isSetAllowance(method) || isDeleteAllowance(method)
+export const isSetAllowance = (method?: string): boolean => {
+  return sameString(method, SET_ALLOWANCE)
+}
+
+export const isDeleteAllowance = (method?: string): boolean => {
+  return sameString(method, DELETE_ALLOWANCE)
+}
+
+export const isSpendingLimitMethod = (method?: string): boolean => {
+  return isSetAllowance(method) || isDeleteAllowance(method)
+}
 
 const SpendingLimitRow = styled.div`
   margin-bottom: 16px;
@@ -27,7 +35,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
   )
 
   const resetTimeLabel = React.useMemo(
-    () => RESET_TIME_OPTIONS.find(({ value }) => +value === +resetTimeMin / 24 / 60)?.label ?? '',
+    () => getResetTimeOptions().find(({ value }) => +value === +resetTimeMin)?.label ?? '',
     [resetTimeMin],
   )
 
@@ -37,11 +45,11 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     <>
       <SpendingLimitRow>
         <Text size="xl" strong>
-          Modify Spending Limit:
+          Modify spending limit:
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} cut={0} />
+        <AddressInfo title="Beneficiary" address={beneficiary} />
       </SpendingLimitRow>
       <SpendingLimitRow>
         {tokenInfo && <TokenInfo amount={fromTokenUnit(amount, tokenInfo.decimals)} title="Amount" token={tokenInfo} />}
@@ -63,11 +71,11 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     <>
       <SpendingLimitRow>
         <Text size="xl" strong>
-          Delete Spending Limit:
+          Delete spending limit:
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} cut={0} />
+        <AddressInfo title="Beneficiary" address={beneficiary} />
       </SpendingLimitRow>
       <SpendingLimitRow>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</SpendingLimitRow>
     </>

@@ -1,7 +1,7 @@
 import InputAdornment from '@material-ui/core/InputAdornment'
 import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
-import * as React from 'react'
+import React, { ReactElement, ReactNode } from 'react'
 import { FormApi } from 'final-form'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
@@ -15,7 +15,7 @@ import {
   noErrorsOn,
   required,
   composeValidators,
-  minMaxLength,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -54,8 +54,8 @@ export const safeFieldsValidation = async (values): Promise<Record<string, strin
     return errors
   }
 
-  // if getSafeInfo does not provide data, it's not a valid safe.
-  const safeInfo = await getSafeInfo(address)
+  // If getSafeInfo does not provide data, it's not a valid safe.
+  const safeInfo = await getSafeInfo(address).catch(() => null)
   if (!safeInfo) {
     errors[FIELD_LOAD_ADDRESS] = SAFE_ADDRESS_NOT_VALID
   }
@@ -68,7 +68,7 @@ interface DetailsFormProps {
   form: FormApi
 }
 
-const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => {
+const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
@@ -92,10 +92,10 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
           <Field
             component={TextField}
             name={FIELD_LOAD_NAME}
-            placeholder="Name of the Safe"
+            placeholder="Name of the Safe*"
             text="Safe name"
             type="text"
-            validate={composeValidators(required, minMaxLength(1, 50))}
+            validate={composeValidators(required, validAddressBookName)}
             testId="load-safe-name-field"
           />
         </Col>
@@ -145,13 +145,11 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): React.ReactElement => 
 }
 
 const DetailsPage = () =>
-  function LoadSafeDetails(controls: React.ReactNode, { errors, form }: StepperPageFormProps): React.ReactElement {
+  function LoadSafeDetails(controls: ReactNode, { errors, form }: StepperPageFormProps): ReactElement {
     return (
-      <>
-        <OpenPaper controls={controls}>
-          <DetailsForm errors={errors} form={form} />
-        </OpenPaper>
-      </>
+      <OpenPaper controls={controls}>
+        <DetailsForm errors={errors} form={form} />
+      </OpenPaper>
     )
   }
 

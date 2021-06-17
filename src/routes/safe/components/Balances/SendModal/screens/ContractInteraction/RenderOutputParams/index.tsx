@@ -27,7 +27,7 @@ export const RenderOutputParams = (): ReactElement | null => {
   }: any = useField('callResults', { subscription: { value: true } })
   const multipleResults = !!method && method.outputs.length > 1
 
-  if (!results) {
+  if (results == null || results === '') {
     return null
   }
 
@@ -38,7 +38,7 @@ export const RenderOutputParams = (): ReactElement | null => {
           Call result:
         </Paragraph>
       </Row>
-      {method.outputs.map(({ name, type }, index) => {
+      {method.outputs?.map(({ name, type }, index) => {
         const placeholder = name ? `${name} (${type})` : type
         const key = `methodCallResult-${method.name}_${index}_${type}`
         const value = multipleResults ? results[index] : results
@@ -51,7 +51,7 @@ export const RenderOutputParams = (): ReactElement | null => {
                 multiline
                 disabled
                 rowsMax={3}
-                input={{ name: key, value, placeholder, type: 'text' }}
+                input={{ name: key, value: value.toString(), placeholder, type: 'text' }}
                 meta={{ valid: true }}
                 testId={key}
                 text={placeholder}

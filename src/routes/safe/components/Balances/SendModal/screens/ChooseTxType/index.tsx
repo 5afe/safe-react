@@ -11,7 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
 import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
@@ -38,7 +38,7 @@ const ChooseTxType = ({
   setActiveScreen,
 }: ChooseTxTypeProps): React.ReactElement => {
   const classes = useStyles()
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
@@ -91,7 +91,7 @@ const ChooseTxType = ({
             className={classes.firstButton}
             color="primary"
             minHeight={52}
-            minWidth={260}
+            minWidth={240}
             onClick={() => setActiveScreen('sendFunds')}
             variant="contained"
             testId="modal-send-funds-btn"
@@ -104,7 +104,7 @@ const ChooseTxType = ({
               className={classes.firstButton}
               color="primary"
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('sendCollectible')}
               variant="contained"
               testId="modal-send-collectible-btn"
@@ -122,7 +122,7 @@ const ChooseTxType = ({
               color="primary"
               disabled={disableContractInteraction}
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('contractInteraction')}
               variant="outlined"
               testId="modal-contract-interaction-btn"

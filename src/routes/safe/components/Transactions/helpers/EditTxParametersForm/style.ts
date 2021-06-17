@@ -6,7 +6,7 @@ export const styles = createStyles({
     padding: `${md} ${lg}`,
     justifyContent: 'space-between',
     boxSizing: 'border-box',
-    maxHeight: '75px',
+    height: '74px',
   },
   annotation: {
     letterSpacing: '-1px',
@@ -31,15 +31,9 @@ export const styles = createStyles({
     marginRight: sm,
   },
   buttonRow: {
-    height: '84px',
+    height: '52px',
     justifyContent: 'center',
-    '& > button': {
-      fontFamily: 'Averta',
-      fontSize: md,
-    },
-  },
-  submitButton: {
-    boxShadow: '1px 2px 10px 0 rgba(212, 212, 211, 0.59)',
-    marginLeft: '15px',
+    alignItems: 'center',
+    gap: '16px',
   },
 })

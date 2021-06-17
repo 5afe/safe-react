@@ -22,8 +22,10 @@ export const styles = createStyles({
   },
   actions: {
     justifyContent: 'flex-end',
+    alignItems: 'center',
     visibility: 'hidden',
     minWidth: '100px',
+    gap: md,
   },
   noBorderBottom: {
     '& > td': {
@@ -37,26 +39,17 @@ export const styles = createStyles({
   },
   editEntryButton: {
     cursor: 'pointer',
-    marginBottom: '16px',
   },
   editEntryButtonNonOwner: {
     cursor: 'pointer',
   },
   removeEntryButton: {
-    marginLeft: lg,
-    marginRight: lg,
-    marginBottom: '16px',
     cursor: 'pointer',
   },
   removeEntryButtonDisabled: {
-    marginLeft: lg,
-    marginRight: lg,
-    marginBottom: '16px',
     cursor: 'default',
   },
   removeEntryButtonNonOwner: {
-    marginLeft: lg,
-    marginRight: lg,
     cursor: 'pointer',
   },
   message: {

@@ -1,8 +1,10 @@
 import IconButton from '@material-ui/core/IconButton'
 import { makeStyles } from '@material-ui/core/styles'
 import Close from '@material-ui/icons/Close'
+import { Mutator } from 'final-form'
 import React from 'react'
 import { useSelector } from 'react-redux'
+import { OnChange } from 'react-final-form-listeners'
 
 import { styles } from './style'
 
@@ -14,25 +16,35 @@ import TextField from 'src/components/forms/TextField'
 import {
   addressIsNotCurrentSafe,
   composeValidators,
-  minMaxLength,
   required,
   uniqueAddress,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeOwnersAddressesListSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import { isValidAddress } from 'src/utils/isValidAddress'
+
+import { OwnerValues } from '../..'
+import { Modal } from 'src/components/Modal'
 
 export const ADD_OWNER_NAME_INPUT_TEST_ID = 'add-owner-name-input'
 export const ADD_OWNER_ADDRESS_INPUT_TEST_ID = 'add-owner-address-testid'
 export const ADD_OWNER_NEXT_BTN_TEST_ID = 'add-owner-next-btn'
 
-const formMutators = {
+const formMutators: Record<
+  string,
+  Mutator<{ setOwnerAddress: { address: string }; setOwnerName: { name: string } }>
+> = {
   setOwnerAddress: (args, state, utils) => {
     utils.changeValue(state, 'ownerAddress', () => args[0])
+  },
+  setOwnerName: (args, state, utils) => {
+    utils.changeValue(state, 'ownerName', () => args[0])
   },
 }
 
@@ -41,15 +53,16 @@ const useStyles = makeStyles(styles)
 type OwnerFormProps = {
   onClose: () => void
   onSubmit: (values) => void
+  initialValues?: OwnerValues
 }
 
-export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactElement => {
+export const OwnerForm = ({ onClose, onSubmit, initialValues }: OwnerFormProps): React.ReactElement => {
   const classes = useStyles()
   const handleSubmit = (values) => {
     onSubmit(values)
   }
-  const owners = useSelector(safeOwnersAddressesListSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
+  const { address: safeAddress = '', owners = [] } = useSelector(currentSafe) ?? {}
   const ownerDoesntExist = uniqueAddress(owners)
   const ownerAddressIsNotSafeAddress = addressIsNotCurrentSafe(safeAddress)
 
@@ -65,7 +78,14 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
         </IconButton>
       </Row>
       <Hairline />
-      <GnoForm formMutators={formMutators} onSubmit={handleSubmit}>
+      <GnoForm
+        formMutators={formMutators}
+        initialValues={{
+          ownerName: initialValues?.ownerName,
+          ownerAddress: initialValues?.ownerAddress,
+        }}
+        onSubmit={handleSubmit}
+      >
         {(...args) => {
           const mutators = args[3]
 
@@ -94,8 +114,18 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
                       testId={ADD_OWNER_NAME_INPUT_TEST_ID}
                       text="Owner name*"
                       type="text"
-                      validate={composeValidators(required, minMaxLength(1, 50))}
+                      validate={composeValidators(required, validAddressBookName)}
                     />
+                    <OnChange name="ownerAddress">
+                      {async (address: string) => {
+                        if (isValidAddress(address)) {
+                          const ownerName = addressBookMap[address]?.name
+                          if (ownerName) {
+                            mutators.setOwnerName(ownerName)
+                          }
+                        }
+                      }}
+                    </OnChange>
                   </Col>
                 </Row>
                 <Row margin="md">
@@ -116,18 +146,14 @@ export const OwnerForm = ({ onClose, onSubmit }: OwnerFormProps): React.ReactEle
               </Block>
               <Hairline />
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onClose}>
-                  Cancel
-                </Button>
-                <Button
-                  color="primary"
-                  minWidth={140}
-                  testId={ADD_OWNER_NEXT_BTN_TEST_ID}
-                  type="submit"
-                  variant="contained"
-                >
-                  Next
-                </Button>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onClose, text: 'Cancel' }}
+                  confirmButtonProps={{
+                    type: 'submit',
+                    text: 'Next',
+                    testId: ADD_OWNER_NEXT_BTN_TEST_ID,
+                  }}
+                />
               </Row>
             </>
           )

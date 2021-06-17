@@ -2,10 +2,11 @@ import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
+import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -28,8 +29,9 @@ import notificationsMiddleware from 'src/logic/safe/store/middleware/notificatio
 import { safeStorageMiddleware } from 'src/logic/safe/store/middleware/safeStorage'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
-import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
+import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
+import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {
   CURRENCY_VALUES_KEY,
   CurrencyValuesState,
@@ -38,11 +40,14 @@ import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/
 
 export const history = createHashHistory()
 
-// eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const localStorageConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'SAFE', namespaceSeparator: '__' }
+
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
+    save(localStorageConfig),
     routerMiddleware(history),
     notificationsMiddleware,
     safeStorageMiddleware,
@@ -82,7 +87,10 @@ export type AppReduxState = CombinedState<{
   router: RouterState
 }>
 
-export const store: any = createStore(reducers, finalCreateStore)
+// Address Book v2 migration
+migrateAddressBook(localStorageConfig)
+
+export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)

@@ -4,13 +4,14 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { Modal } from 'src/components/Modal'
+import { ButtonStatus, Modal } from 'src/components/Modal'
 import { createTransaction, CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { SafeRecordProps, SpendingLimit } from 'src/logic/safe/store/models/safe'
 import {
   addSpendingLimitBeneficiaryMultiSendTx,
   currentMinutes,
   enableSpendingLimitModuleMultiSendTx,
+  getResetSpendingLimitTx,
   setSpendingLimitMultiSendTx,
   setSpendingLimitTx,
   spendingLimitMultiSendTx,
@@ -20,10 +21,10 @@ import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { RESET_TIME_OPTIONS } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
+import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
 import { useStyles } from 'src/routes/safe/components/Settings/SpendingLimit/style'
-import { safeParamAddressFromStateSelector, safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 
@@ -31,6 +32,7 @@ import { ActionCallback, CREATE } from '.'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
+import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -80,7 +82,8 @@ const calculateSpendingLimitsTxData = (
     resetBaseMin: number
   }
 } => {
-  const isSpendingLimitEnabled = spendingLimits !== null
+  // enabled if it's an array with at least one element
+  const isSpendingLimitEnabled = !!spendingLimits?.length
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
@@ -98,13 +101,17 @@ const calculateSpendingLimitsTxData = (
     transactions.push(addSpendingLimitBeneficiaryMultiSendTx(values.beneficiary))
   }
 
+  if (existentSpendingLimit && existentSpendingLimit.spent !== '0') {
+    transactions.push(getResetSpendingLimitTx(existentSpendingLimit.delegate, txToken.address))
+  }
+
   // prepare the setAllowance tx
   const startTime = currentMinutes() - 30
   const spendingLimitArgs = {
     beneficiary: values.beneficiary,
     token: values.token,
     spendingLimitInWei: toTokenUnit(values.amount, txToken.decimals),
-    resetTimeMin: values.withResetTime ? +values.resetTime * 60 * 24 : 0,
+    resetTimeMin: values.withResetTime ? +values.resetTime : 0,
     resetBaseMin: values.withResetTime ? startTime : 0,
   }
 
@@ -145,8 +152,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const dispatch = useDispatch()
 
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const spendingLimits = useSelector(safeSpendingLimitsSelector)
+  const { address: safeAddress = '', spendingLimits } = useSelector(currentSafe) ?? {}
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',
@@ -175,6 +181,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     manualGasLimit,
   })
 
+  const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
+
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
@@ -194,6 +202,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       ethGasPriceInGWei: ethGasPriceInGWei || gasPriceFormatted,
       ethGasLimit: ethGasLimit || gasLimit,
     }
+
     if (safeAddress) {
       const { spendingLimitTxData } = calculateSpendingLimitsTxData(
         safeAddress,
@@ -209,13 +218,13 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   }
 
   const resetTimeLabel = useMemo(
-    () => (values.withResetTime ? RESET_TIME_OPTIONS.find(({ value }) => value === values.resetTime)?.label : ''),
+    () => (values.withResetTime ? getResetTimeOptions().find(({ value }) => value === values.resetTime)?.label : ''),
     [values.resetTime, values.withResetTime],
   )
 
   const previousResetTime = (existentSpendingLimit: SpendingLimit) =>
-    RESET_TIME_OPTIONS.find(({ value }) => value === (+existentSpendingLimit.resetTimeMin / 60 / 24).toString())
-      ?.label ?? 'One-time spending limit'
+    getResetTimeOptions().find(({ value }) => value === (+existentSpendingLimit.resetTimeMin).toString())?.label ??
+    'One-time spending limit'
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -236,6 +245,11 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     }
   }
 
+  let confirmButtonText = 'Submit'
+  if (ButtonStatus.LOADING === buttonStatus) {
+    confirmButtonText = txEstimationExecutionStatus === EstimationStatus.LOADING ? 'Estimating' : 'Submitting'
+  }
+
   return (
     <EditableTxParameters
       isOffChainSignature={isOffChainSignature}
@@ -248,8 +262,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       {(txParameters, toggleEditMode) => (
         <>
           <Modal.Header onClose={onClose}>
-            <Modal.Header.Title size="xs" withoutMargin>
-              New Spending Limit
+            <Modal.Header.Title>
+              New spending limit
               <Text size="lg" color="secondaryLight" as="span">
                 2 of 2
               </Text>
@@ -309,7 +323,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
             />
           </div>
 
-          <Modal.Footer>
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
             <Modal.Footer.Buttons
               cancelButtonProps={{
                 onClick: () => onBack({ values: {}, txToken: makeToken(), step: CREATE }),
@@ -317,8 +331,9 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
               }}
               confirmButtonProps={{
                 onClick: () => handleSubmit(txParameters),
-                disabled:
-                  existentSpendingLimit === undefined || txEstimationExecutionStatus === EstimationStatus.LOADING,
+                disabled: existentSpendingLimit === undefined,
+                status: buttonStatus,
+                text: confirmButtonText,
               }}
             />
           </Modal.Footer>

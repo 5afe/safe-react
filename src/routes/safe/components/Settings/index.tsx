@@ -1,4 +1,4 @@
-import { IconText, Loader } from '@gnosis.pm/safe-react-components'
+import { IconText, Loader, Icon } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
@@ -13,20 +13,17 @@ import ManageOwners from './ManageOwners'
 import { RemoveSafeModal } from './RemoveSafeModal'
 import SafeDetails from './SafeDetails'
 import ThresholdSettings from './ThresholdSettings'
-import RemoveSafeIcon from './assets/icons/bin.svg'
 import { styles } from './style'
 
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
-import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { safeNeedsUpdateSelector, safeOwnersSelector } from 'src/logic/safe/store/selectors'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -40,10 +37,8 @@ const useStyles = makeStyles(styles)
 const Settings: React.FC = () => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const owners = useSelector(safeOwnersSelector)
-  const needsUpdate = useSelector(safeNeedsUpdateSelector)
+  const { owners, needsUpdate, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
-  const addressBook = useSelector(addressBookSelector)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
@@ -66,11 +61,15 @@ const Settings: React.FC = () => {
   ) : (
     <>
       <Row className={classes.message}>
-        <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
-          <Span className={classes.links}>Remove Safe</Span>
-          <Img alt="Trash Icon" className={classes.removeSafeIcon} src={RemoveSafeIcon} />
-        </ButtonLink>
-        <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
+        {!loadedViaUrl && (
+          <>
+            <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
+              <Span className={classes.links}>Remove Safe</Span>
+              <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
+            </ButtonLink>
+            <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
+          </>
+        )}
       </Row>
       <Block className={classes.root}>
         <Col className={classes.menuWrapper} layout="column">
@@ -106,7 +105,7 @@ const Settings: React.FC = () => {
                 color={menuOptionIndex === 2 ? 'primary' : 'secondary'}
               />
               <Paragraph className={classes.counter} size="xs">
-                {owners.size}
+                {owners.length}
               </Paragraph>
             </Row>
             <Hairline className={classes.hairline} />
@@ -125,7 +124,7 @@ const Settings: React.FC = () => {
                 iconSize="sm"
                 textSize="xl"
                 iconType="fuelIndicator"
-                text="Spending Limit"
+                text="Spending limit"
                 color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
               />
             </Row>
@@ -145,7 +144,7 @@ const Settings: React.FC = () => {
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
             {menuOptionIndex === 1 && <SafeDetails />}
-            {menuOptionIndex === 2 && <ManageOwners addressBook={addressBook} granted={granted} owners={owners} />}
+            {menuOptionIndex === 2 && <ManageOwners granted={granted} owners={owners} />}
             {menuOptionIndex === 3 && <ThresholdSettings />}
             {menuOptionIndex === 4 && <SpendingLimitSettings />}
             {menuOptionIndex === 5 && <Advanced />}
