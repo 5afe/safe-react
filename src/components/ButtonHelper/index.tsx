@@ -23,11 +23,12 @@ const UnStyledButton = styled.button`
 type Props = {
   onClick?: () => void
   children: ReactElement
+  dataTestId?: string
 }
 
-const ButtonHelper = ({ onClick = () => undefined, children }: Props): React.ReactElement => {
+const ButtonHelper = ({ onClick = () => undefined, children, dataTestId }: Props): React.ReactElement => {
   return (
-    <UnStyledButton onClick={onClick} type={'button'}>
+    <UnStyledButton onClick={onClick} type={'button'} data-testid={dataTestId}>
       {children}
     </UnStyledButton>
   )
