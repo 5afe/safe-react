@@ -31,7 +31,7 @@ const useAppList = (): UseAppListReturnType => {
         const result = await fetchSafeAppsList()
         setApiAppsList(result && result?.length ? result : apiAppsList)
       } catch (e) {
-        logError(Errors._902, e.message, undefined)
+        logError(Errors._902, e.message)
         dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
       } finally {
         setIsLoading(false)
