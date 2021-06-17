@@ -37,6 +37,7 @@ import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const useStyles = makeStyles(styles)
 
@@ -124,50 +125,52 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
-  const submitTx = (txParameters: TxParameters) => {
+  const submitTx = async (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
 
     if (!safeAddress) {
       setButtonStatus(ButtonStatus.READY)
-      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+      logError(Errors._802)
       return
     }
 
     if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
-      spendingLimit.methods
-        .executeAllowanceTransfer(
-          safeAddress,
-          spendingLimitTokenAddress,
-          tx.recipientAddress,
-          toTokenUnit(tx.amount, txToken.decimals),
-          ZERO_ADDRESS,
-          0,
-          tx.tokenSpendingLimit.delegate,
-          EMPTY_DATA,
-        )
-        .send({ from: tx.tokenSpendingLimit.delegate })
-        .on('transactionHash', () => onClose())
-        .catch((error) => {
-          setButtonStatus(ButtonStatus.READY)
-          console.error(error)
-        })
-    } else {
-      dispatch(
-        createTransaction({
-          safeAddress: safeAddress,
-          to: txRecipient as string,
-          valueInWei: txValue,
-          txData: data,
-          txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
-          ethParameters: txParameters,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        }),
-      )
-      onClose()
+      try {
+        await spendingLimit.methods
+          .executeAllowanceTransfer(
+            safeAddress,
+            spendingLimitTokenAddress,
+            tx.recipientAddress,
+            toTokenUnit(tx.amount, txToken.decimals),
+            ZERO_ADDRESS,
+            0,
+            tx.tokenSpendingLimit.delegate,
+            EMPTY_DATA,
+          )
+          .send({ from: tx.tokenSpendingLimit.delegate })
+          .on('transactionHash', () => onClose())
+      } catch (err) {
+        setButtonStatus(ButtonStatus.READY)
+        logError(Errors._801, err.message)
+      }
+      return
     }
+
+    dispatch(
+      createTransaction({
+        safeAddress: safeAddress,
+        to: txRecipient as string,
+        valueInWei: txValue,
+        txData: data,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        ethParameters: txParameters,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+      }),
+    )
+    onClose()
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {

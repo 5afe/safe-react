@@ -31,6 +31,7 @@ import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTran
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 interface ProcessTransactionArgs {
   approveAndExecute: boolean
@@ -163,7 +164,7 @@ export const processTransaction = ({
           console.error(e)
         }
       })
-      .on('error', (error) => {
+      .on('error', () => {
         dispatch(
           updateTransactionStatus({
             txStatus: 'PENDING_FAILED',
@@ -172,8 +173,6 @@ export const processTransaction = ({
             id: tx.id,
           }),
         )
-
-        console.error('Processing transaction error: ', error)
       })
       .then(async (receipt) => {
         dispatch(fetchTransactions(safeAddress))
@@ -204,10 +203,16 @@ export const processTransaction = ({
       }),
     )
 
+    logError(Errors._804, err.message)
+
     if (txHash) {
       const executeData = safeInstance.methods.approveHash(txHash).encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
-      console.error(`Error executing the TX: ${errMsg}`)
+      try {
+        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeData, from)
+        logError(Errors._804, errMsg)
+      } catch (e) {
+        logError(Errors._804, e.message)
+      }
     }
   }
 

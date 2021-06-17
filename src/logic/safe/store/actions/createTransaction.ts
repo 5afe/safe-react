@@ -32,6 +32,7 @@ import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -156,9 +157,7 @@ export const createTransaction = (
 
         dispatch(fetchTransactions(safeAddress))
       })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-
+      .on('error', () => {
         onError?.()
       })
       .then(async (receipt) => {
@@ -177,12 +176,18 @@ export const createTransaction = (
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
     dispatch(enqueueSnackbar({ key: err.code, ...notification }))
 
+    logError(Errors._803, err.message)
+
     if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
       const executeDataUsedSignatures = safeInstance.methods
         .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
         .encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-      console.error(`Error creating the TX - an attempt to get the error message: ${errMsg}`)
+      try {
+        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+        logError(Errors._803, errMsg)
+      } catch (e) {
+        logError(Errors._803, e.message)
+      }
     }
   }
 
