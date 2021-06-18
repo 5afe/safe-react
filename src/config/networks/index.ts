@@ -4,6 +4,7 @@ import rinkeby from './rinkeby'
 import xdai from './xdai'
 import energy_web_chain from './energy_web_chain'
 import volta from './volta'
+import polygon from './polygon'
 
 export default {
   local,
@@ -12,4 +13,5 @@ export default {
   xdai,
   energy_web_chain,
   volta,
+  polygon,
 }
