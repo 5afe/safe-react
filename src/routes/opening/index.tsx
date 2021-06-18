@@ -283,6 +283,11 @@ export const SafeDeployment = ({
         if (receipt.events) {
           safeAddress = receipt.events.ProxyCreation.returnValues.proxy
         } else {
+          if (!receipt.logs.length) {
+            console.info('Receipt', receipt)
+            throw new Error('No logs in the receipt')
+          }
+
           // get the address for the just created safe
           const events = web3.eth.abi.decodeLog(
             [
