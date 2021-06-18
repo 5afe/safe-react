@@ -34,6 +34,8 @@ const getSafeContractDeployment = (networkId?: ETHEREUM_NETWORK) => {
   return getDeployment({
     version: LATEST_SAFE_VERSION,
     network: networkId?.toString(),
+  }) || getDeployment({
+    version: LATEST_SAFE_VERSION,
   })
 }
 
@@ -59,6 +61,8 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
   const proxyFactoryDeployment = getProxyFactoryDeployment({
     version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
+  }) || getProxyFactoryDeployment({
+    version: LATEST_SAFE_VERSION,
   })
 
   const contractAddress = proxyFactoryDeployment?.networkAddresses[networkId] ?? proxyFactoryDeployment?.defaultAddress
@@ -77,6 +81,8 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
   const fallbackHandlerDeployment = getFallbackHandlerDeployment({
     version: LATEST_SAFE_VERSION,
     network: networkId.toString(),
+  }) || getFallbackHandlerDeployment({
+    version: LATEST_SAFE_VERSION,
   })
 
   const contractAddress =
@@ -95,7 +101,7 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
 const getMultiSendContract = (web3: Web3, networkId: ETHEREUM_NETWORK): MultiSend => {
   const multiSendDeployment = getMultiSendDeployment({
     network: networkId.toString(),
-  })
+  }) || getMultiSendDeployment()
 
   const contractAddress = multiSendDeployment?.networkAddresses[networkId] ?? multiSendDeployment?.defaultAddress
   return (new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown) as MultiSend
