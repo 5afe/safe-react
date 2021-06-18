@@ -184,7 +184,7 @@ const SafeDetails = (): ReactElement => {
             </Col>
           </Row>
           <Modal description="Update Safe" handleClose={toggleModal} open={isModalOpen} title="Update Safe">
-            <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} />
+            <UpdateSafeModal onClose={toggleModal} safeAddress={safeAddress} safeCurrentVersion={safeCurrentVersion} />
           </Modal>
         </>
       )}

@@ -38,7 +38,9 @@ type ReviewAddOwnerProps = {
 export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, name: safeName, owners, currentVersion: safeVersion } = useSelector(
+    currentSafeWithNames,
+  )
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -67,7 +69,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
     const calculateAddOwnerData = () => {
       try {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
         if (isCurrent) {
@@ -82,7 +84,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, values.ownerAddress, values.threshold])
+  }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)

@@ -42,6 +42,7 @@ export const estimateSafeTxGas = async ({
 type TransactionEstimationProps = {
   txData: string
   safeAddress: string
+  safeVersion: string
   txRecipient: string
   txConfirmations?: List<Confirmation>
   txAmount: string
@@ -59,6 +60,7 @@ type TransactionEstimationProps = {
 export const estimateTransactionGasLimit = async ({
   txData,
   safeAddress,
+  safeVersion,
   txRecipient,
   txConfirmations,
   txAmount,
@@ -79,6 +81,7 @@ export const estimateTransactionGasLimit = async ({
   if (isExecution) {
     return estimateGasForTransactionExecution({
       safeAddress,
+      safeVersion,
       txRecipient,
       txConfirmations,
       txAmount,
@@ -95,6 +98,7 @@ export const estimateTransactionGasLimit = async ({
 
   return estimateGasForTransactionApproval({
     safeAddress,
+    safeVersion,
     operation,
     txData,
     txAmount,
@@ -107,6 +111,7 @@ export const estimateTransactionGasLimit = async ({
 type TransactionExecutionEstimationProps = {
   txData: string
   safeAddress: string
+  safeVersion: string
   txRecipient: string
   txConfirmations?: List<Confirmation>
   txAmount: string
@@ -122,6 +127,7 @@ type TransactionExecutionEstimationProps = {
 
 const estimateGasForTransactionExecution = async ({
   safeAddress,
+  safeVersion,
   txRecipient,
   txConfirmations,
   txAmount,
@@ -134,7 +140,7 @@ const estimateGasForTransactionExecution = async ({
   safeTxGas,
   approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<number> => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
   const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
 
@@ -151,6 +157,7 @@ const estimateGasForTransactionExecution = async ({
 
 export const checkTransactionExecution = async ({
   safeAddress,
+  safeVersion,
   txRecipient,
   txConfirmations,
   txAmount,
@@ -164,7 +171,7 @@ export const checkTransactionExecution = async ({
   safeTxGas,
   approvalAndExecution,
 }: TransactionExecutionEstimationProps): Promise<boolean> => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   // If it's approvalAndExecution we have to add a preapproved signature else we have all signatures
   const sigs = generateSignaturesFromTxConfirmations(txConfirmations, approvalAndExecution ? from : undefined)
 
@@ -179,6 +186,7 @@ export const checkTransactionExecution = async ({
 
 type TransactionApprovalEstimationProps = {
   safeAddress: string
+  safeVersion: string
   txRecipient: string
   txAmount: string
   txData: string
@@ -189,6 +197,7 @@ type TransactionApprovalEstimationProps = {
 
 export const estimateGasForTransactionApproval = async ({
   safeAddress,
+  safeVersion,
   txRecipient,
   txAmount,
   txData,
@@ -200,7 +209,7 @@ export const estimateGasForTransactionApproval = async ({
     return 0
   }
 
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   const nonce = await safeInstance.methods.nonce().call()
   const txHash = await safeInstance.methods

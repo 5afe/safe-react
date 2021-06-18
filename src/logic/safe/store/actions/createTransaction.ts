@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router'
+import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
@@ -13,7 +14,7 @@ import {
 } from 'src/logic/safe/transactions'
 import { estimateSafeTxGas } from 'src/logic/safe/transactions/gas'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
@@ -25,7 +26,6 @@ import { getLastTx, getNewTxNonce, shouldExecuteTransaction } from 'src/logic/sa
 import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { AnyAction } from 'redux'
 import { PayableTx } from 'src/types/contracts/types.d'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
@@ -81,13 +81,13 @@ export const createTransaction = (
   if (!ready) return
 
   const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeVersion = currentSafeCurrentVersion(state) as string
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   const lastTx = await getLastTx(safeAddress)
   const nextNonce = await getNewTxNonce(lastTx, safeInstance)
   const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
   const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-  const safeVersion = await getCurrentSafeVersion(safeInstance)
   let safeTxGas = safeTxGasArg || 0
   try {
     if (safeTxGasArg === undefined) {
@@ -117,9 +117,10 @@ export const createTransaction = (
     sender: from,
     sigs,
   }
-  const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
 
   try {
+    const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
+
     if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
       const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 

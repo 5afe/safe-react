@@ -17,7 +17,7 @@ import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
@@ -29,9 +29,10 @@ const useStyles = makeStyles(styles)
 type Props = {
   onClose: () => void
   safeAddress: string
+  safeCurrentVersion: string
 }
 
-export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactElement => {
+export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Props): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
   const [multiSendCallData, setMultiSendCallData] = useState(EMPTY_DATA)
@@ -53,19 +54,16 @@ export const UpdateSafeModal = ({ onClose, safeAddress }: Props): React.ReactEle
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
   useEffect(() => {
-    const calculateUpgradeSafeModal = async () => {
-      const encodeMultiSendCallData = await getUpgradeSafeTransactionHash(safeAddress)
-      setMultiSendCallData(encodeMultiSendCallData)
-    }
-    calculateUpgradeSafeModal()
-  }, [safeAddress])
+    const encodeMultiSendCallData = getUpgradeSafeTransactionHash(safeAddress, safeCurrentVersion)
+    setMultiSendCallData(encodeMultiSendCallData)
+  }, [safeAddress, safeCurrentVersion])
 
   const handleSubmit = (txParameters: TxParameters) => {
     // Call the update safe method
     dispatch(
       createTransaction({
         safeAddress,
-        to: MULTI_SEND_ADDRESS,
+        to: getMultisendContractAddress(),
         valueInWei: '0',
         txData: multiSendCallData,
         txNonce: txParameters.safeNonce,

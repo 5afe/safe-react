@@ -1,5 +1,4 @@
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
-import { List } from 'immutable'
 import { shouldSafeStoreBeUpdated } from 'src/logic/safe/utils/shouldSafeStoreBeUpdated'
 
 const getMockedOldSafe = ({
