@@ -7,7 +7,7 @@ const baseConfig: EnvironmentSettings = {
   safeUrl: 'https://arbitrum.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps-arbitrum.staging.gnosisdev.com',
   gasPrice: 1e9,
-  rpcServiceUrl: 'https://rinkeby.arbitrum.io/rpc',
+  rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
   networkExplorerUrl: 'https://rinkeby-explorer.arbitrum.io/#/',
   networkExplorerApiUrl: 'https://rinkeby-explorer.arbitrum.io/api',
