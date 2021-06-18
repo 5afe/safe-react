@@ -14,6 +14,8 @@ export const COOKIES_LIST = [
   { name: '_gid', path: '/' },
 ]
 
+console.info('GA id', getGoogleAnalyticsTrackingID())
+
 let analyticsLoaded = false
 export const loadGoogleAnalytics = (): void => {
   if (analyticsLoaded) {

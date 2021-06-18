@@ -9,8 +9,8 @@ const baseConfig: EnvironmentSettings = {
   gasPrice: 1e9,
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
-  networkExplorerUrl: 'https://rinkeby-explorer.arbitrum.io/#/',
-  networkExplorerApiUrl: 'https://rinkeby-explorer.arbitrum.io/api',
+  networkExplorerUrl: 'https://explorer.arbitrum.io/#/',
+  networkExplorerApiUrl: 'https://explorer.arbitrum.io/api', // TODO: check with Arbitrum
 }
 
 const arbitrum: NetworkConfig = {
