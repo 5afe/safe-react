@@ -31,12 +31,15 @@ const getSafeContractDeployment = (networkId?: ETHEREUM_NETWORK) => {
   // If version is 1.3.0 we can use instance compatible with L2 for all networks
   const useL2ContractVersion = semverSatisfies(LATEST_SAFE_VERSION, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
-  return getDeployment({
-    version: LATEST_SAFE_VERSION,
-    network: networkId?.toString(),
-  }) || getDeployment({
-    version: LATEST_SAFE_VERSION,
-  })
+  return (
+    getDeployment({
+      version: LATEST_SAFE_VERSION,
+      network: networkId?.toString(),
+    }) ||
+    getDeployment({
+      version: LATEST_SAFE_VERSION,
+    })
+  )
 }
 
 /**
@@ -58,12 +61,14 @@ export const getGnosisSafeContract = (web3: Web3, networkId: ETHEREUM_NETWORK) =
  * @param {ETHEREUM_NETWORK} networkId
  */
 const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafeProxyFactory => {
-  const proxyFactoryDeployment = getProxyFactoryDeployment({
-    version: LATEST_SAFE_VERSION,
-    network: networkId.toString(),
-  }) || getProxyFactoryDeployment({
-    version: LATEST_SAFE_VERSION,
-  })
+  const proxyFactoryDeployment =
+    getProxyFactoryDeployment({
+      version: LATEST_SAFE_VERSION,
+      network: networkId.toString(),
+    }) ||
+    getProxyFactoryDeployment({
+      version: LATEST_SAFE_VERSION,
+    })
 
   const contractAddress = proxyFactoryDeployment?.networkAddresses[networkId] ?? proxyFactoryDeployment?.defaultAddress
   return (new web3.eth.Contract(
@@ -78,12 +83,14 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
  * @param {ETHEREUM_NETWORK} networkId
  */
 const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): FallbackManager => {
-  const fallbackHandlerDeployment = getFallbackHandlerDeployment({
-    version: LATEST_SAFE_VERSION,
-    network: networkId.toString(),
-  }) || getFallbackHandlerDeployment({
-    version: LATEST_SAFE_VERSION,
-  })
+  const fallbackHandlerDeployment =
+    getFallbackHandlerDeployment({
+      version: LATEST_SAFE_VERSION,
+      network: networkId.toString(),
+    }) ||
+    getFallbackHandlerDeployment({
+      version: LATEST_SAFE_VERSION,
+    })
 
   const contractAddress =
     fallbackHandlerDeployment?.networkAddresses[networkId] ?? fallbackHandlerDeployment?.defaultAddress
@@ -99,9 +106,10 @@ const getFallbackHandlerContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Fa
  * @param {ETHEREUM_NETWORK} networkId
  */
 const getMultiSendContract = (web3: Web3, networkId: ETHEREUM_NETWORK): MultiSend => {
-  const multiSendDeployment = getMultiSendDeployment({
-    network: networkId.toString(),
-  }) || getMultiSendDeployment()
+  const multiSendDeployment =
+    getMultiSendDeployment({
+      network: networkId.toString(),
+    }) || getMultiSendDeployment()
 
   const contractAddress = multiSendDeployment?.networkAddresses[networkId] ?? multiSendDeployment?.defaultAddress
   return (new web3.eth.Contract(multiSendDeployment?.abi as AbiItem[], contractAddress) as unknown) as MultiSend
