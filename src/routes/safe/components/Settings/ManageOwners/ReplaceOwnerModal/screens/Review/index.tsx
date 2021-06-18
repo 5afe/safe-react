@@ -46,7 +46,9 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners, threshold = 1 } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, name: safeName, owners, threshold = 1, currentVersion: safeVersion } = useSelector(
+    currentSafeWithNames,
+  )
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -73,7 +75,7 @@ export const ReviewReplaceOwnerModal = ({
   useEffect(() => {
     let isCurrent = true
     const calculateReplaceOwnerData = async () => {
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -87,7 +89,7 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [owner.address, safeAddress, newOwner.address])
+  }, [owner.address, safeAddress, safeVersion, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)

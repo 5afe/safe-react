@@ -1,7 +1,3 @@
-import { List } from 'immutable'
-
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
-import { SafeRecord } from 'src/logic/safe/store/models/safe'
 import { DataDecoded } from 'src/logic/safe/store/models/types/transactions.d'
 
 export type ConfirmationServiceModel = {
@@ -42,14 +38,4 @@ export type TxServiceModel = {
   to: string
   transactionHash?: string | null
   value: string
-}
-
-export type OutgoingTxs = {
-  cancellationTxs: Record<number, TxServiceModel>
-  outgoingTxs: TxServiceModel[] | List<Transaction>
-}
-
-export type BatchProcessTxsProps = OutgoingTxs & {
-  currentUser?: string
-  safe: SafeRecord
 }

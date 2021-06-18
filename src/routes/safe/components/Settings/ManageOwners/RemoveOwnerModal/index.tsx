@@ -10,7 +10,7 @@ import Modal from 'src/components/Modal'
 import { SENTINEL_ADDRESS, getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { Dispatch } from 'src/logic/safe/store/actions/types.d'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 
@@ -21,12 +21,12 @@ type OwnerValues = OwnerData & {
 export const sendRemoveOwner = async (
   values: OwnerValues,
   safeAddress: string,
+  safeVersion: string,
   ownerAddressToRemove: string,
-  ownerNameToRemove: string,
   dispatch: Dispatch,
   txParameters: TxParameters,
 ): Promise<void> => {
-  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+  const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
   const safeOwners = await gnosisSafe.methods.getOwners().call()
   const index = safeOwners.findIndex(
     (ownerAddress) => ownerAddress.toLowerCase() === ownerAddressToRemove.toLowerCase(),
@@ -58,7 +58,7 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
   const [activeScreen, setActiveScreen] = useState('checkOwner')
   const [values, setValues] = useState<OwnerValues>({ ...owner, threshold: '' })
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeAddressFromUrl)
+  const { address: safeAddress = '', currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
 
   useEffect(
     () => () => {
@@ -87,7 +87,7 @@ export const RemoveOwnerModal = ({ isOpen, onClose, owner }: RemoveOwnerProps): 
 
   const onRemoveOwner = (txParameters: TxParameters) => {
     onClose()
-    sendRemoveOwner(values, safeAddress, owner.address, owner.name, dispatch, txParameters)
+    sendRemoveOwner(values, safeAddress, safeVersion, owner.address, dispatch, txParameters)
   }
 
   return (
