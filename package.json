@@ -174,7 +174,7 @@
     "@unstoppabledomains/resolution": "^1.17.0",
     "axios": "0.21.1",
     "bignumber.js": "9.0.1",
-    "bnc-onboard": "~1.25.0",
+    "bnc-onboard": "~1.28.0",
     "classnames": "^2.2.6",
     "connected-react-router": "6.8.0",
     "currency-flags": "2.1.2",
