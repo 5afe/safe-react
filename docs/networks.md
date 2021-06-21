@@ -200,6 +200,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: '',
     gasParameter: '',
+    gweiFactor: '',
   },
   rpcServiceUrl: '',
   networkExplorerName: '',

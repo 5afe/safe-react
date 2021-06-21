@@ -69,6 +69,9 @@ export type GasPriceOracle = {
   // Different gas api providers can use a different name to reflect different gas levels based on tx speed
   // For example in ethGasStation for ETHEREUM_MAINNET = safeLow | average | fast
   gasParameter: string
+  // Some providers may not use the most common standard, gwei to return the gas price value
+  // This is the case of Ethgasstation that returns price as gwei x 10.
+  gweiFactor: string
 }
 
 type GasPrice =
