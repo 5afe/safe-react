@@ -40,6 +40,7 @@ export enum ETHEREUM_NETWORK {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  BSC = 56,
   XDAI = 100,
   ENERGY_WEB_CHAIN = 246,
   VOLTA = 73799,
@@ -173,6 +174,7 @@ export enum ETHEREUM_NETWORK {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  BSC = 56,
   XDAI = 100,
   ENERGY_WEB_CHAIN = 246,
   VOLTA = 73799,
@@ -254,6 +256,7 @@ export enum ETHEREUM_NETWORK {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  BSC = 56,
   XDAI = 100, -> ADDED XDAI
   ENERGY_WEB_CHAIN = 246,
   VOLTA = 73799,
