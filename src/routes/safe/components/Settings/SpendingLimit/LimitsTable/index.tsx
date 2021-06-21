@@ -37,7 +37,7 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
 
   return (
     <>
-      <TableContainer style={{ minHeight: '420px' }}>
+      <TableContainer style={{ minHeight: '440px' }}>
         <Table
           columns={columns}
           data={data}

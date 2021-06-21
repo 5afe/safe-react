@@ -326,7 +326,7 @@ export const SafeDeployment = ({
     return () => {
       clearInterval(interval)
     }
-  }, [safeCreationTxHash, waitingSafeDeployed])
+  }, [safeCreationTxHash, waitingSafeDeployed, onError])
 
   if (loading || stepIndex === undefined) {
     return <Loader size="sm" />

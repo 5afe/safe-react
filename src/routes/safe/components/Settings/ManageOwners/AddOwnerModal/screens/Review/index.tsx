@@ -182,7 +182,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwner}>
+                <Row className={classes.selectedOwner} data-testid="add-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={values.ownerAddress}
