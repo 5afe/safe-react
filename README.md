@@ -85,7 +85,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `master` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
 
 ### Production
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.

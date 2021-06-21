@@ -54,7 +54,6 @@ export const useStyles = makeStyles(
     },
     buttonRow: {
       padding: lg,
-      position: 'absolute',
       left: 0,
       bottom: 0,
       boxSizing: 'border-box',
