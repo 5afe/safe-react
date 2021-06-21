@@ -10,9 +10,9 @@ const baseConfig: EnvironmentSettings = {
     url: 'https://bscgas.info/gas',
     gasParameter: 'standard',
   },
-  rpcServiceUrl: 'https://bsc-dataseed.binance.org/',
+  rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
-  networkExplorerUrl: 'https://www.bscscan.com/',
+  networkExplorerUrl: 'https://www.bscscan.com',
   networkExplorerApiUrl: 'https://www.bscscan.com/api',
 }
 
@@ -30,7 +30,7 @@ const mainnet: NetworkConfig = {
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.RINKEBY,
+    id: ETHEREUM_NETWORK.BINANCE,
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
     label: 'Binance',
