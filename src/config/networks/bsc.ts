@@ -30,10 +30,10 @@ const mainnet: NetworkConfig = {
     },
   },
   network: {
-    id: ETHEREUM_NETWORK.BINANCE,
+    id: ETHEREUM_NETWORK.BSC,
     backgroundColor: '#d0980b',
     textColor: '#ffffff',
-    label: 'Binance',
+    label: 'BSC',
     isTestNet: false,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
