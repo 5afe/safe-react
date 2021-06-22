@@ -17,7 +17,7 @@ const generateTypedDataFrom = async ({
   safeTxGas,
   to,
   valueInWei,
-}) => {
+}): Promise<string> => {
   const typedData = {
     types: {
       EIP712Domain: [
