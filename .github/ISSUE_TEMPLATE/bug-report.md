@@ -10,7 +10,7 @@ BEFORE SUBMITTING: Please search to make sure this issue has not been opened alr
 ## Description
 
 ## Environment
- - Browser: Chrome
+ - Browser:
  - Wallet: MetaMask
  - Safe:
  - Environment:
