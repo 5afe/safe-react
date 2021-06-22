@@ -1,0 +1,13 @@
+diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
+index 8187e17..8728fbd 100644
+--- a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
++++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
+@@ -19,7 +19,7 @@ function assert (cond, msg) {
+ }
+ 
+ function isUint8Array (name, value, length) {
+-  assert(value instanceof Uint8Array, `Expected ${name} to be an Uint8Array`)
++  assert(value instanceof Uint8Array || value.constructor.name === 'Buffer', `Expected ${name} to be an Uint8Array`)
+ 
+   if (length !== undefined) {
+     if (Array.isArray(length)) {
