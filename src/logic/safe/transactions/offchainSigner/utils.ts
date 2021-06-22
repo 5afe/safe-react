@@ -2,7 +2,6 @@ import { sameString } from 'src/utils/strings'
 import { bufferToHex, ecrecover, pubToAddress } from 'ethereumjs-util'
 
 export const isTxHashSignedWithPrefix = (txHash: string, signature: string, ownerAddress: string): boolean => {
-  console.log({ txHash, signature, ownerAddress })
   let hasPrefix
   try {
     const rsvSig = {
@@ -12,7 +11,6 @@ export const isTxHashSignedWithPrefix = (txHash: string, signature: string, owne
     }
     const recoveredData = ecrecover(Buffer.from(txHash.slice(2), 'hex'), rsvSig.v, rsvSig.r, rsvSig.s)
     const recoveredAddress = bufferToHex(pubToAddress(recoveredData))
-    console.log({ recoveredAddress })
     hasPrefix = !sameString(recoveredAddress, ownerAddress)
   } catch (e) {
     console.log(e)
@@ -47,7 +45,7 @@ export const adjustV: AdjustVOverload = (
     switch (sigV) {
       case 0:
       case 1:
-        sigV += 31
+        sigV += 27
         break
       case 27:
       case 28:
