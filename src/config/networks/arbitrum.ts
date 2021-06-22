@@ -6,7 +6,7 @@ const baseConfig: EnvironmentSettings = {
   txServiceUrl: 'https://safe-transaction.arbitrum.gnosis.io/api/v1',
   safeUrl: 'https://arbitrum.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps-arbitrum.staging.gnosisdev.com',
-  gasPrice: 1e9,
+  gasPrice: 0.3e9, // TODO: Arbitrum supports the eth_gasPrice RPC method, use that instead
   rpcServiceUrl: 'https://arb1.arbitrum.io/rpc',
   networkExplorerName: 'Arbitrum explorer',
   networkExplorerUrl: 'https://explorer.arbitrum.io',
