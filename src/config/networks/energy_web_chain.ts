@@ -11,6 +11,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
+    gweiFactor: '1e9'
   },
   gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
