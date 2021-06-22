@@ -1,6 +1,7 @@
 import { AbstractProvider } from 'web3-core'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
+import { adjustV } from './utils'
 
 const EIP712_NOT_SUPPORTED_ERROR_MSG = "EIP712 is not supported by user's wallet"
 
@@ -93,7 +94,9 @@ export const getEIP712Signer = (version?: string) => async (txArgs) => {
         return
       }
 
-      resolve(signature.result.replace(EMPTY_DATA, ''))
+      const sig = adjustV('eth_signTypedData', signature.result)
+
+      resolve(sig.replace(EMPTY_DATA, ''))
     })
   })
 }
