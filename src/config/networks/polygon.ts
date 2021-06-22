@@ -9,6 +9,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://gasstation-mainnet.matic.network',
     gasParameter: 'standard',
+    gweiFactor: '1e9',
   },
   rpcServiceUrl: 'https://rpc-mainnet.matic.network',
   networkExplorerName: 'MainNet Matic Explorer',
