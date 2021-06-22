@@ -17,5 +17,5 @@ enum Endpoints {
 
 export const fetchSafeAppsList = async (): Promise<AppData[]> => {
   const networkId = getNetworkId()
-  return axios.get(`${CONFIG_SERVICE_URL}${Endpoints['SAFE_APPS']}?network_id=${networkId}`).then(({ data }) => data)
+  return axios.get(`${CONFIG_SERVICE_URL}${Endpoints['SAFE_APPS']}?chainId=${networkId}`).then(({ data }) => data)
 }
