@@ -10,6 +10,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: `https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}`,
     gasParameter: 'average',
+    gweiFactor: '1e8'
   },
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   networkExplorerName: 'Etherscan',

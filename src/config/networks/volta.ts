@@ -9,6 +9,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
+    gweiFactor: '1e9'
   },
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
