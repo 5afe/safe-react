@@ -32,7 +32,7 @@ export const ethSigner = async ({ safeTxHash, sender }: EthSignerArgs): Promise<
           return
         }
 
-        const sig = adjustV('eth_sign', signature.result)
+        const sig = adjustV('eth_sign', signature.result, safeTxHash, sender)
 
         resolve(sig.replace(EMPTY_DATA, ''))
       },

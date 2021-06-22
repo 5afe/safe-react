@@ -187,6 +187,7 @@
     "eth-sig-util": "^2.5.3",
     "ethereum-blockies-base64": "^1.0.2",
     "ethereumjs-abi": "0.6.8",
+    "ethereumjs-util": "^7.0.10",
     "exponential-backoff": "^3.1.0",
     "express": "^4.17.1",
     "final-form": "^4.20.2",
