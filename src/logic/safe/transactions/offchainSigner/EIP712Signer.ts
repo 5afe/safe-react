@@ -17,7 +17,7 @@ const generateTypedDataFrom = async ({
   safeTxGas,
   to,
   valueInWei,
-}): Promise<string> => {
+}) => {
   const typedData = {
     types: {
       EIP712Domain: [
@@ -60,7 +60,7 @@ const generateTypedDataFrom = async ({
   return typedData
 }
 
-export const getEIP712Signer = (version?: string) => async (txArgs) => {
+export const getEIP712Signer = (version?: string) => async (txArgs): Promise<string> => {
   const web3 = getWeb3()
   const typedData = await generateTypedDataFrom(txArgs)
 
