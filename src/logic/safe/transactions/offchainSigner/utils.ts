@@ -2,7 +2,7 @@ type SigningMethod = 'eth_sign' | 'eth_signTypedData'
 
 export const adjustV = (signingMethod: SigningMethod, signature: string): string => {
   let sigV = parseInt(signature.slice(-2), 16)
-  console.log({ sigV })
+
   if (signingMethod === 'eth_sign') {
     // Usually returned V is 27 or 28 (valid ethereum value)
     // Metamask with ledger returns v = 01, this is not valid for ethereum
