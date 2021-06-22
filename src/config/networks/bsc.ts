@@ -14,7 +14,7 @@ const baseConfig: EnvironmentSettings = {
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
   networkExplorerUrl: 'https://www.bscscan.com',
-  networkExplorerApiUrl: 'https://www.bscscan.com/api',
+  networkExplorerApiUrl: 'https://api.bscscan.com/api',
 }
 
 const mainnet: NetworkConfig = {
