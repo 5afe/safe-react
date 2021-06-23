@@ -59,7 +59,7 @@ const mainnet: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
   ],
-  disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SAFE_APPS],
 }
 
 export default mainnet
