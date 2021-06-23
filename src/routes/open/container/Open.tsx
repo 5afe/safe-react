@@ -83,8 +83,8 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
   const ownerAddresses = getAccountsFrom(values)
   const safeCreationSalt = getSafeCreationSaltFrom(values)
   const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-
-  const receipt = await deploymentTx
+  let receiptResult
+  deploymentTx
     .send({
       from: userAccount,
       gas: values?.gasLimit,
@@ -92,11 +92,23 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
     .once('transactionHash', (txHash) => {
       saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
       txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
-        console.log({ txReceipt })
+        receiptResult = txReceipt
       })
     })
+    .then((txReceipt) => {
+      receiptResult = txReceipt
+    })
 
-  return receipt
+  const waitForTxReceipt = (resolve) => {
+    setTimeout(() => {
+      if (receiptResult) {
+        resolve(receiptResult)
+      } else {
+        waitForTxReceipt(resolve)
+      }
+    }, 500)
+  }
+  return new Promise((resolve) => waitForTxReceipt(resolve))
 }
 
 const Open = (): ReactElement => {

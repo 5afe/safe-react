@@ -42,19 +42,15 @@ export const txMonitor = async (
 
       if (transaction !== null) {
         // transaction found
-        console.info({ transaction })
         return txMonitor({ sender, hash, data, nonce: transaction.nonce, gasPrice: transaction.gasPrice }, cb, options)
       } else {
         return txMonitor({ sender, hash, data }, cb, options)
       }
     }
 
-    web3ReadOnly.eth.getTransactionReceipt(hash).then((receipt) => {
-      console.info({ receipt })
-    })
+    web3ReadOnly.eth.getTransactionReceipt(hash)
 
     const latestBlock = await web3ReadOnly.eth.getBlock('latest', true)
-    console.info({ latestBlock })
 
     const replacementTransaction = latestBlock.transactions.find((transaction) => {
       // TODO: use gasPrice, timestamp or another better way to differentiate
@@ -63,12 +59,9 @@ export const txMonitor = async (
         transaction.nonce === nonce &&
         !sameString(transaction.hash, hash) &&
         // if `data` differs, then it's a replacement tx, not a speedup
-        sameString(transaction.input, data) &&
-        // finally we make sure that we keep the latest tx or the one with the greatest `gasPrice`
-        web3ReadOnly.utils.toBN(transaction.gasPrice).gt(web3ReadOnly.utils.toBN(gasPrice as string))
+        sameString(transaction.input, data)
       )
     })
-    console.info({ replacementTransaction })
 
     if (replacementTransaction) {
       const transactionReceipt = await web3ReadOnly.eth.getTransactionReceipt(replacementTransaction.hash)
@@ -86,8 +79,6 @@ export const txMonitor = async (
           options,
         )
       }
-
-      console.info({ transactionReceipt })
       cb(transactionReceipt)
       return
     }
