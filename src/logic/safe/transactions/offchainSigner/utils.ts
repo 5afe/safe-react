@@ -13,7 +13,6 @@ export const isTxHashSignedWithPrefix = (txHash: string, signature: string, owne
     const recoveredAddress = bufferToHex(pubToAddress(recoveredData))
     hasPrefix = !sameString(recoveredAddress, ownerAddress)
   } catch (e) {
-    console.log(e)
     hasPrefix = true
   }
   return hasPrefix
@@ -41,35 +40,20 @@ export const adjustV: AdjustVOverload = (
       Some wallets do that, some wallets don't, V > 30 is used by contracts to differentiate between prefixed and non-prefixed messages
       https://github.com/gnosis/safe-contracts/blob/main/contracts/GnosisSafe.sol#L292
     */
-    const signatureHasPrefix = isTxHashSignedWithPrefix(safeTxHash as string, signature, sender as string)
-    switch (sigV) {
-      case 0:
-      case 1:
-        sigV += 27
-        break
-      case 27:
-      case 28:
-        if (signatureHasPrefix) {
-          sigV += 4
-        }
-        break
-      default:
-        throw new Error('Invalid signature')
+    if (sigV < 27) {
+      sigV += 27
+    }
+    const adjusted = signature.slice(0, -2) + sigV.toString(16)
+    const signatureHasPrefix = isTxHashSignedWithPrefix(safeTxHash as string, adjusted, sender as string)
+    if (signatureHasPrefix) {
+      sigV += 4
     }
   }
 
   if (signingMethod === 'eth_signTypedData') {
     // Metamask with ledger returns V=0/1 here too, we need to adjust it to be ethereum's valid value (27 or 28)
-    switch (sigV) {
-      case 0:
-      case 1:
-        sigV += 27
-        break
-      case 27:
-      case 28:
-        break
-      default:
-        throw new Error('Invalid signature')
+    if (sigV < 27) {
+      sigV += 27
     }
   }
 
