@@ -1,7 +1,7 @@
-diff --git a/node_modules/secp256k1/lib/index.js b/node_modules/secp256k1/lib/index.js
+diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
 index 8187e17..2c80518 100644
---- a/node_modules/secp256k1/lib/index.js
-+++ b/node_modules/secp256k1/lib/index.js
+--- a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
++++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
 @@ -14,12 +14,17 @@ const errors = {
    ECDH: 'Scalar was invalid (zero or overflow)'
  }
