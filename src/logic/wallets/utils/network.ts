@@ -31,9 +31,6 @@ const requestSwitch = async (wallet: Wallet, chainId: number): Promise<void> => 
  */
 const requestAdd = async (wallet: Wallet, chainId: number): Promise<void> => {
   const cfg = getConfig()
-  if (!cfg) {
-    throw new Error('No matching chain config')
-  }
 
   await wallet.provider.request({
     method: 'wallet_addEthereumChain',
@@ -60,14 +57,14 @@ export const switchNetwork = async (wallet: Wallet, chainId: number): Promise<vo
   try {
     await requestSwitch(wallet, chainId)
   } catch (e) {
-    if (e.code === WALLET_ERRORS.UNRECOGNIZED_CHAIN) {
-      try {
-        await requestAdd(wallet, chainId)
-      } catch (e) {
-        throw new CodedException(Errors._301, e.message)
-      }
-    } else {
+    if (e.code !== WALLET_ERRORS.UNRECOGNIZED_CHAIN) {
       throw new CodedException(Errors._300, e.message)
+    }
+
+    try {
+      await requestAdd(wallet, chainId)
+    } catch (e) {
+      throw new CodedException(Errors._301, e.message)
     }
   }
 }
