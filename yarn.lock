@@ -5886,10 +5886,10 @@ bnb-javascript-sdk-nobroadcast@^2.16.14:
     uuid "^3.3.2"
     websocket-stream "^5.5.0"
 
-bnc-onboard@~1.28.0:
-  version "1.28.0"
-  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.28.0.tgz#cc462f15697d2e9c76cd341f024d7a87b9cebd81"
-  integrity sha512-GkA+6FQ3s/Ug1sOKyOFGWynuIoAR9vbRS/nBfd4zFAGx9GFQ6iSQExzt+RFm3OAIRWlz7WG2VSMSlqz6sp/qmg==
+bnc-onboard@~1.29.0:
+  version "1.29.0"
+  resolved "https://registry.yarnpkg.com/bnc-onboard/-/bnc-onboard-1.29.0.tgz#acf25e7239a31014e6b8c2716df39df60963c948"
+  integrity sha512-2Dy3fSB64pd/Pj+z9Pav35+PT4g3IGIfxdGWqUmWbEPukRTEvpovyakmdHT+AYqfzwQrPIGNAyKWfeMcsPP9sA==
   dependencies:
     "@cvbb/eth-keyring" "^1.1.0"
     "@gnosis.pm/safe-apps-provider" "^0.5.0"
@@ -5914,7 +5914,6 @@ bnc-onboard@~1.28.0:
     ethereumjs-util "^7.0.3"
     fortmatic "^2.2.1"
     hdkey "^2.0.1"
-    prettier-plugin-svelte "^2.2.0"
     regenerator-runtime "^0.13.7"
     trezor-connect "^8.1.9"
     walletlink "^2.1.0"
@@ -16492,11 +16491,6 @@ prettier-linter-helpers@^1.0.0:
   integrity sha512-GbK2cP9nraSSUF9N2XwUwqfzlAFlMNYYl+ShE/V+H8a9uNl/oUqB1w2EL54Jh0OlyRSd8RfWYJ3coVS4TROP2w==
   dependencies:
     fast-diff "^1.1.2"
-
-prettier-plugin-svelte@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/prettier-plugin-svelte/-/prettier-plugin-svelte-2.2.0.tgz#4bd94992fa5b76413a8a5556f90b128c4fdaf7a6"
-  integrity sha512-Xdmqgr71tAuMqqzNCK52/v94g/Yv7V7lz+nmbO9NEA+9ol15VV3uUHOfydMNOo3SWvFaVlBcp947ebEaMWqVfQ==
 
 prettier@^2.1.2:
   version "2.2.1"
