@@ -5,9 +5,10 @@ import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.mainnet.staging.gnosisdev.com/api/v1',
+  safeUrl: 'https://gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps.dev.gnosisdev.com',
   gasPriceOracle: {
-    url: 'https://ethgasstation.info/json/ethgasAPI.json',
+    url: 'https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}',
     gasParameter: 'average',
   },
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',

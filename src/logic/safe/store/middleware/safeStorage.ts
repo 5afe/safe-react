@@ -28,8 +28,8 @@ export const safeStorageMiddleware = (store: Store) => (
 
     switch (action.type) {
       case SET_DEFAULT_SAFE: {
-        if (action.payload) {
-          saveDefaultSafe(action.payload as string)
+        if (typeof action.payload === 'string') {
+          saveDefaultSafe(action.payload)
         }
         break
       }

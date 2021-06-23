@@ -1,11 +1,11 @@
 import memoize from 'lodash.memoize'
-
 import networks from 'src/config/networks'
 import {
   EnvironmentSettings,
   ETHEREUM_NETWORK,
   FEATURES,
   GasPriceOracle,
+  NetworkInfo,
   NetworkSettings,
   SafeFeatures,
   Wallets,
@@ -67,6 +67,17 @@ const configuration = (): NetworkSpecificConfiguration => {
 }
 
 const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
+
+export const getNetworks = (): NetworkInfo[] => {
+  const { local, ...usefulNetworks } = networks
+  return Object.values(usefulNetworks).map((networkObj) => ({
+    id: networkObj.network.id,
+    label: networkObj.network.label,
+    backgroundColor: networkObj.network.backgroundColor,
+    textColor: networkObj.network.textColor,
+    safeUrl: networkObj.environment[getCurrentEnvironment()].safeUrl,
+  }))
+}
 
 export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 

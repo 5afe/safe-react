@@ -20,7 +20,7 @@ import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
@@ -69,11 +69,14 @@ const App: React.FC = ({ children }) => {
   const { address: safeAddress, name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(
     currentSafeWithNames,
   )
+  const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-  const safeLoaded = useLoadSafe(safeAddress)
+  // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
+  // Temp information will be built from `addressFromUrl`
+  const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
   useSafeScheduledUpdates(safeLoaded, safeAddress)
 
   const sendFunds = safeActionsState.sendFunds

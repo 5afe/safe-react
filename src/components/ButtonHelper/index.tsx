@@ -8,18 +8,27 @@ const UnStyledButton = styled.button`
   padding: 0;
   font: inherit;
   cursor: pointer;
-  outline-color: ${({ theme }) => theme.colors.icon};
+  border-radius: 50%;
+  transition: background-color 0.2s ease-in-out;
+  outline-color: transparent;
+  height: 24px;
+  width: 24px;
   display: flex;
+  justify-content: center;
   align-items: center;
+  :hover {
+    background-color: ${({ theme }) => theme.colors.separator};
+  }
 `
 type Props = {
   onClick?: () => void
   children: ReactElement
+  dataTestId?: string
 }
 
-const ButtonHelper = ({ onClick = () => undefined, children }: Props): React.ReactElement => {
+const ButtonHelper = ({ onClick = () => undefined, children, dataTestId }: Props): React.ReactElement => {
   return (
-    <UnStyledButton onClick={onClick} type={'button'}>
+    <UnStyledButton onClick={onClick} type={'button'} data-testid={dataTestId}>
       {children}
     </UnStyledButton>
   )

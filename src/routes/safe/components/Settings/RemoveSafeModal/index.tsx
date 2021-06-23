@@ -13,9 +13,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { currentSafeWithNames, defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
-import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
+import removeSafe from 'src/logic/safe/store/actions/removeSafe'
+import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { saveDefaultSafe } from 'src/logic/safe/utils'
 
 import { getExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
@@ -32,11 +32,10 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
   const dispatch = useDispatch()
 
   const onRemoveSafeHandler = async () => {
-    // ToDo: review if this is necessary or we should directly use the `removeSafe` action.
-    await dispatch(removeLocalSafe(safeAddress))
+    dispatch(removeSafe(safeAddress))
 
     if (sameAddress(safeAddress, defaultSafe)) {
-      await saveDefaultSafe('')
+      dispatch(setDefaultSafe(''))
     }
 
     onClose()

@@ -3,7 +3,7 @@ import { ThunkAction } from 'redux-thunk'
 
 import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { getNotificationsFromTxType } from 'src/logic/notifications'
+import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
   CALL,
   getApprovalTransaction,
@@ -31,6 +31,8 @@ import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { isTxPendingError } from 'src/logic/wallets/getWeb3'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 export interface CreateTransactionArgs {
   navigateToTransactionsTab?: boolean
@@ -49,6 +51,7 @@ export interface CreateTransactionArgs {
 type CreateTransactionAction = ThunkAction<Promise<void | string>, AppReduxState, DispatchReturn, AnyAction>
 type ConfirmEventHandler = (safeTxHash: string) => void
 type ErrorEventHandler = () => void
+
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
 export const createTransaction = (
@@ -154,9 +157,7 @@ export const createTransaction = (
 
         dispatch(fetchTransactions(safeAddress))
       })
-      .on('error', (error) => {
-        console.error('Tx error: ', error)
-
+      .on('error', () => {
         onError?.()
       })
       .then(async (receipt) => {
@@ -165,20 +166,28 @@ export const createTransaction = (
         return receipt.transactionHash
       })
   } catch (err) {
-    const errorMsg = err.message
-      ? `${notificationsQueue.afterExecutionError.message} - ${err.message}`
-      : notificationsQueue.afterExecutionError.message
+    const notification = isTxPendingError(err)
+      ? NOTIFICATIONS.TX_PENDING_MSG
+      : {
+          ...notificationsQueue.afterExecutionError,
+          message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+        }
 
     dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+    dispatch(enqueueSnackbar({ key: err.code, ...notification }))
 
-    dispatch(enqueueSnackbar({ key: err.code, message: errorMsg, options: { persist: true, variant: 'error' } }))
+    logError(Errors._803, err.message)
 
     if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
       const executeDataUsedSignatures = safeInstance.methods
         .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
         .encodeABI()
-      const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-      console.error(`Error creating the TX - an attempt to get the error message: ${errMsg}`)
+      try {
+        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+        logError(Errors._803, errMsg)
+      } catch (e) {
+        logError(Errors._803, e.message)
+      }
     }
   }
 

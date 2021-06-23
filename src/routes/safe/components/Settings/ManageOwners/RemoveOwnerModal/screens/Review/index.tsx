@@ -201,7 +201,7 @@ export const ReviewRemoveOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwner}>
+                <Row className={classes.selectedOwner} data-testid="remove-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={owner.address}

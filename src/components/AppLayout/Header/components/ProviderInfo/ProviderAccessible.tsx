@@ -2,7 +2,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
-import NetworkLabel from '../NetworkLabel'
 import Col from 'src/components/layout/Col'
 import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
@@ -104,9 +103,6 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
             {cutAddress}
           </Paragraph> */}
         </div>
-      </Col>
-      <Col className={classes.networkLabel} layout="column" start="sm">
-        <NetworkLabel />
       </Col>
     </>
   )
