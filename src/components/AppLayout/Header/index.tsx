@@ -26,7 +26,6 @@ const HeaderComponent = (): React.ReactElement => {
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
-  const desiredNetwork = getNetworkId()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
@@ -35,9 +34,11 @@ const HeaderComponent = (): React.ReactElement => {
         const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
 
         if (hasSelectedWallet) {
+          const { wallet } = onboard.getState()
+          const desiredNetwork = getNetworkId()
+
           // Try to switch the chain
           if (network !== desiredNetwork) {
-            const { wallet } = onboard.getState()
             try {
               await switchNetwork(wallet, desiredNetwork)
             } catch (e) {

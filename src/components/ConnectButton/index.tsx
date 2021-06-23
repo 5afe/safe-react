@@ -2,12 +2,13 @@ import Onboard from 'bnc-onboard'
 import React, { ReactElement } from 'react'
 
 import Button from 'src/components/layout/Button'
-import { getNetworkId, getNetworkName } from 'src/config'
+import { getNetworkName, getNetworkId } from 'src/config'
 import { getWeb3, setWeb3 } from 'src/logic/wallets/getWeb3'
 import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
+import { switchNetwork } from 'src/logic/wallets/utils/network'
 
 const networkId = getNetworkId()
 const networkName = getNetworkName().toLowerCase()
@@ -65,16 +66,23 @@ export const onboardUser = async (): Promise<boolean> => {
   return walletSelected && onboard.walletCheck()
 }
 
-export const onConnectButtonClick = async () => {
+export const onConnectButtonClick = async (): Promise<void> => {
   const walletSelected = await onboard.walletSelect()
 
   // perform wallet checks only if user selected a wallet
   if (walletSelected) {
-    await onboard.walletCheck()
+    const { wallet } = onboard.getState()
+    const desiredNetwork = getNetworkId()
+    try {
+      await switchNetwork(wallet, desiredNetwork)
+    } catch (e) {
+      e.log()
+      await onboard.walletCheck()
+    }
   }
 }
 
-const ConnectButton = (props): ReactElement => (
+const ConnectButton = (props: { 'data-testid': string }): ReactElement => (
   <Button color="primary" minWidth={240} onClick={onConnectButtonClick} variant="contained" {...props}>
     Connect
   </Button>
