@@ -6,6 +6,7 @@ import ReactDOM from 'react-dom'
 const useStyles = makeStyles({
   root: {
     zIndex: 1300,
+    top: '54px',
   },
 })
 

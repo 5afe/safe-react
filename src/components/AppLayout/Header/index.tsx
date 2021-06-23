@@ -14,7 +14,8 @@ import {
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
 import { removeProvider } from 'src/logic/wallets/store/actions'
-
+import { switchNetwork } from 'src/logic/wallets/utils/network'
+import { getNetworkId } from 'src/config'
 import { onboard } from 'src/components/ConnectButton'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
 
@@ -25,14 +26,25 @@ const HeaderComponent = (): React.ReactElement => {
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
+  const desiredNetwork = getNetworkId()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = await loadLastUsedProvider()
       if (lastUsedProvider) {
         const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
+
         if (hasSelectedWallet) {
-          await onboard.walletCheck()
+          // Try to switch the chain
+          if (network !== desiredNetwork) {
+            const { wallet } = onboard.getState()
+            try {
+              await switchNetwork(wallet, desiredNetwork)
+            } catch (e) {
+              e.log()
+              await onboard.walletCheck()
+            }
+          }
         }
       }
     }

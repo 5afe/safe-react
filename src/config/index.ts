@@ -17,6 +17,11 @@ export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
+export const getNetworkLabel = (id: number): string => {
+  const networkCfg = Object.values(networks).find((cfg) => cfg.network.id === id)
+  return networkCfg ? networkCfg.network.label : ''
+}
+
 export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
 
 const getCurrentEnvironment = (): string => {
@@ -66,7 +71,7 @@ const configuration = (): NetworkSpecificConfiguration => {
   }
 }
 
-const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
+export const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
 export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks
