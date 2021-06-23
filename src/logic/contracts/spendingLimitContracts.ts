@@ -1,6 +1,6 @@
 import { AbiItem } from 'web3-utils'
 
-import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { AllowanceModule } from 'src/types/contracts/AllowanceModule.d'
 

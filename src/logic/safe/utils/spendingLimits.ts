@@ -10,7 +10,7 @@ import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { SpendingLimit } from 'src/logic/safe/store/models/safe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { encodeMultiSendCall, MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
@@ -143,11 +143,7 @@ type DeleteAllowanceParams = {
 }
 
 export const getDeleteAllowanceTxData = ({ beneficiary, tokenAddress }: DeleteAllowanceParams): string => {
-  const web3 = getWeb3()
-  const spendingLimitContract = new web3.eth.Contract(
-    SpendingLimitModule.abi as AbiItem[],
-    SPENDING_LIMIT_MODULE_ADDRESS,
-  )
+  const spendingLimitContract = getSpendingLimitContract()
 
   return spendingLimitContract.methods.deleteAllowance(beneficiary, tokenAddress).encodeABI()
 }
