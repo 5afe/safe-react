@@ -29,6 +29,7 @@ export const adjustV: AdjustVOverload = (
   safeTxHash?: string,
   sender?: string,
 ): string => {
+  const MIN_VALID_V_VALUE = 27
   let sigV = parseInt(signature.slice(-2), 16)
 
   if (signingMethod === 'eth_sign') {
@@ -40,8 +41,8 @@ export const adjustV: AdjustVOverload = (
       Some wallets do that, some wallets don't, V > 30 is used by contracts to differentiate between prefixed and non-prefixed messages
       https://github.com/gnosis/safe-contracts/blob/main/contracts/GnosisSafe.sol#L292
     */
-    if (sigV < 27) {
-      sigV += 27
+    if (sigV < MIN_VALID_V_VALUE) {
+      sigV += MIN_VALID_V_VALUE
     }
     const adjusted = signature.slice(0, -2) + sigV.toString(16)
     const signatureHasPrefix = isTxHashSignedWithPrefix(safeTxHash as string, adjusted, sender as string)
@@ -52,8 +53,8 @@ export const adjustV: AdjustVOverload = (
 
   if (signingMethod === 'eth_signTypedData') {
     // Metamask with ledger returns V=0/1 here too, we need to adjust it to be ethereum's valid value (27 or 28)
-    if (sigV < 27) {
-      sigV += 27
+    if (sigV < MIN_VALID_V_VALUE) {
+      sigV += MIN_VALID_V_VALUE
     }
   }
 
