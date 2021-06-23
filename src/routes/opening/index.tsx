@@ -1,7 +1,7 @@
 import { Loader, Stepper } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState, useCallback } from 'react'
-import styled from 'styled-components'
 import { useDispatch, useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { ErrorFooter } from 'src/routes/opening/components/Footer'
 import { isConfirmationStep, steps } from './steps'
@@ -23,6 +23,7 @@ import { TransactionReceipt } from 'web3-core'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { getNewSafeAddressFromLogs } from 'src/routes/opening/utils/getSafeAddressFromLogs'
 
 const Wrapper = styled.div`
   display: grid;
@@ -283,18 +284,8 @@ export const SafeDeployment = ({
         if (receipt.events) {
           safeAddress = receipt.events.ProxyCreation.returnValues.proxy
         } else {
-          // get the address for the just created safe
-          const events = web3.eth.abi.decodeLog(
-            [
-              {
-                type: 'address',
-                name: 'ProxyCreation',
-              },
-            ],
-            receipt.logs[0].data,
-            receipt.logs[0].topics,
-          )
-          safeAddress = events[0]
+          // If the node doesn't return the events we try to fetch it from logs
+          safeAddress = getNewSafeAddressFromLogs(receipt.logs)
         }
 
         setCreatedSafeAddress(safeAddress)
