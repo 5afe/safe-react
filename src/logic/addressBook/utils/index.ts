@@ -52,9 +52,9 @@ export const filterAddressEntries = (
   { inputValue }: { inputValue: string },
 ): AddressBookEntry[] =>
   addressBookEntries.filter(({ address, name }) => {
-    const inputLowerCase = inputValue.toLowerCase()
-    const foundName = name.toLowerCase().includes(inputLowerCase)
-    const foundAddress = address?.toLowerCase().includes(inputLowerCase)
+    const inputLowerCase = (inputValue || '').toLowerCase()
+    const foundName = (name || '').toLowerCase().includes(inputLowerCase)
+    const foundAddress = (address || '').toLowerCase().includes(inputLowerCase)
 
     return foundName || foundAddress
   })
