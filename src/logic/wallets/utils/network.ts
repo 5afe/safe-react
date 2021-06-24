@@ -62,16 +62,18 @@ export const switchNetwork = async (wallet: Wallet, chainId: number): Promise<vo
       return
     }
 
-    if (e.code !== WALLET_ERRORS.UNRECOGNIZED_CHAIN) {
-      throw new CodedException(Errors._300, e.message)
-    }
-  }
+    if (e.code == WALLET_ERRORS.UNRECOGNIZED_CHAIN) {
+      try {
+        await requestAdd(wallet, chainId)
+      } catch (e) {
+        if (e.code === WALLET_ERRORS.USER_REJECTED) {
+          return
+        }
 
-  try {
-    await requestAdd(wallet, chainId)
-  } catch (e) {
-    if (e.code !== WALLET_ERRORS.USER_REJECTED) {
-      throw new CodedException(Errors._301, e.message)
+        throw new CodedException(Errors._301, e.message)
+      }
+    } else {
+      throw new CodedException(Errors._300, e.message)
     }
   }
 }

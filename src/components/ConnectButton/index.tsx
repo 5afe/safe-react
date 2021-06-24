@@ -8,7 +8,7 @@ import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
-import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
+import { shouldSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
 
 const networkId = getNetworkId()
 const networkName = getNetworkName().toLowerCase()
@@ -59,7 +59,13 @@ export const onboard = Onboard({
 
 const checkWallet = async (): Promise<boolean> => {
   if (shouldSwitchNetwork()) {
-    return false
+    try {
+      await switchNetwork(onboard.getState().wallet, getNetworkId())
+      return true
+    } catch (e) {
+      e.log()
+      return false
+    }
   }
   return await onboard.walletCheck()
 }
