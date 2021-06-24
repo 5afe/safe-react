@@ -99,7 +99,7 @@ type Props = {
   connected: boolean
   network: ETHEREUM_NETWORK
   onDisconnect: () => void
-  onNetworkChange: () => any
+  onNetworkChange: () => unknown
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
