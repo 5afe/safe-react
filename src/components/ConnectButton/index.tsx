@@ -8,7 +8,7 @@ import { fetchProvider, removeProvider } from 'src/logic/wallets/store/actions'
 import transactionDataCheck from 'src/logic/wallets/transactionDataCheck'
 import { getSupportedWallets } from 'src/logic/wallets/utils/walletList'
 import { store } from 'src/store'
-import { switchNetwork } from 'src/logic/wallets/utils/network'
+import { shouldSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 const networkId = getNetworkId()
 const networkName = getNetworkName().toLowerCase()
@@ -57,13 +57,20 @@ export const onboard = Onboard({
   ],
 })
 
+const checkWallet = async (): Promise<boolean> => {
+  if (shouldSwitchNetwork()) {
+    return false
+  }
+  return await onboard.walletCheck()
+}
+
 export const onboardUser = async (): Promise<boolean> => {
   // before calling walletSelect you want to check if web3 has been instantiated
   // which indicates that a wallet has already been selected
   // and web3 has been instantiated with that provider
   const web3 = getWeb3()
   const walletSelected = web3 ? true : await onboard.walletSelect()
-  return walletSelected && onboard.walletCheck()
+  return walletSelected && checkWallet()
 }
 
 export const onConnectButtonClick = async (): Promise<void> => {
@@ -71,14 +78,7 @@ export const onConnectButtonClick = async (): Promise<void> => {
 
   // perform wallet checks only if user selected a wallet
   if (walletSelected) {
-    const { wallet } = onboard.getState()
-    const desiredNetwork = getNetworkId()
-    try {
-      await switchNetwork(wallet, desiredNetwork)
-    } catch (e) {
-      e.log()
-      await onboard.walletCheck()
-    }
+    await checkWallet()
   }
 }
 

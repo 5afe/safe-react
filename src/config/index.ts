@@ -5,6 +5,7 @@ import {
   ETHEREUM_NETWORK,
   FEATURES,
   GasPriceOracle,
+  NetworkConfig,
   NetworkInfo,
   NetworkSettings,
   SafeFeatures,
@@ -17,9 +18,13 @@ export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
+export const getNetworkConfigById = (id: number): NetworkConfig | undefined => {
+  return Object.values(networks).find((cfg) => cfg.network.id === id)
+}
+
 export const getNetworkLabel = (id: number): string => {
-  const networkCfg = Object.values(networks).find((cfg) => cfg.network.id === id)
-  return networkCfg ? networkCfg.network.label : ''
+  const cfg = getNetworkConfigById(id)
+  return cfg ? cfg.network.label : ''
 }
 
 export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())

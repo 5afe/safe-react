@@ -1,11 +1,12 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
-import { getConfig } from 'src/config'
+import { onboard } from 'src/components/ConnectButton'
+import { getConfig, getNetworkId } from 'src/config'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 import { numberToHex } from 'web3-utils'
 
 const WALLET_ERRORS = {
   UNRECOGNIZED_CHAIN: 4902,
-  // USER_REJECTED: 4001,
+  USER_REJECTED: 4001,
   // ADDING_EXISTING_CHAIN: -32603,
 }
 
@@ -57,14 +58,26 @@ export const switchNetwork = async (wallet: Wallet, chainId: number): Promise<vo
   try {
     await requestSwitch(wallet, chainId)
   } catch (e) {
+    if (e.code === WALLET_ERRORS.USER_REJECTED) {
+      return
+    }
+
     if (e.code !== WALLET_ERRORS.UNRECOGNIZED_CHAIN) {
       throw new CodedException(Errors._300, e.message)
     }
+  }
 
-    try {
-      await requestAdd(wallet, chainId)
-    } catch (e) {
+  try {
+    await requestAdd(wallet, chainId)
+  } catch (e) {
+    if (e.code !== WALLET_ERRORS.USER_REJECTED) {
       throw new CodedException(Errors._301, e.message)
     }
   }
+}
+
+export const shouldSwitchNetwork = (wallet = onboard.getState()?.wallet): boolean => {
+  const desiredNetwork = String(getNetworkId())
+  const currentNetwork = wallet?.provider?.networkVersion
+  return currentNetwork ? desiredNetwork !== currentNetwork : false
 }

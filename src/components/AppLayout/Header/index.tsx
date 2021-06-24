@@ -31,22 +31,7 @@ const HeaderComponent = (): React.ReactElement => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = await loadLastUsedProvider()
       if (lastUsedProvider) {
-        const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
-
-        if (hasSelectedWallet) {
-          const { wallet } = onboard.getState()
-          const desiredNetwork = getNetworkId()
-
-          // Try to switch the chain
-          if (network !== desiredNetwork) {
-            try {
-              await switchNetwork(wallet, desiredNetwork)
-            } catch (e) {
-              e.log()
-              await onboard.walletCheck()
-            }
-          }
-        }
+        await onboard.walletSelect(lastUsedProvider)
       }
     }
 
@@ -60,6 +45,18 @@ const HeaderComponent = (): React.ReactElement => {
 
   const onDisconnect = () => {
     dispatch(removeProvider())
+  }
+
+  const onNetworkChange = async () => {
+    const { wallet } = onboard.getState()
+    const desiredNetwork = getNetworkId()
+    try {
+      await switchNetwork(wallet, desiredNetwork)
+    } catch (e) {
+      e.log()
+      // Fallback to the onboard popup if switching isn't supported
+      await onboard.walletCheck()
+    }
   }
 
   const getProviderInfoBased = () => {
@@ -80,6 +77,7 @@ const HeaderComponent = (): React.ReactElement => {
         connected={available}
         network={network}
         onDisconnect={onDisconnect}
+        onNetworkChange={onNetworkChange}
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
