@@ -58,6 +58,8 @@ export const onboard = Onboard({
 })
 
 const checkWallet = async (): Promise<boolean> => {
+  const ready = onboard.walletCheck()
+
   if (shouldSwitchNetwork()) {
     try {
       await switchNetwork(onboard.getState().wallet, getNetworkId())
@@ -67,7 +69,8 @@ const checkWallet = async (): Promise<boolean> => {
       return false
     }
   }
-  return await onboard.walletCheck()
+
+  return await ready
 }
 
 export const onboardUser = async (): Promise<boolean> => {
