@@ -31,7 +31,7 @@ const arbitrum: NetworkConfig = {
     backgroundColor: '#2A3245',
     textColor: '#ffffff',
     label: 'Arbitrum',
-    isTestNet: true,
+    isTestNet: false,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Ether',
