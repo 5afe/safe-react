@@ -1,6 +1,6 @@
 import { OptionsObject } from 'notistack'
 
-import { getNetworkName } from 'src/config'
+import { getNetworkLabel, getNetworkId } from 'src/config'
 
 export const SUCCESS = 'success'
 export const ERROR = 'error'
@@ -202,7 +202,7 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
   },
   WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${getNetworkName()}`,
+    message: `Wrong network, please use ${getNetworkLabel(getNetworkId())}`,
     options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 

@@ -175,7 +175,7 @@ export const UserDetails = ({
         <Row className={classes.buttonRow}>
           <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
             <Paragraph noMargin size="lg">
-              Change to {getNetworkLabel(desiredNetwork)}
+              Switch to {getNetworkLabel(desiredNetwork)}
             </Paragraph>
           </Button>
         </Row>
