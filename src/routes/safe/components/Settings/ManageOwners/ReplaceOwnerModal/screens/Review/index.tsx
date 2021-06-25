@@ -46,9 +46,13 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const { address: safeAddress, name: safeName, owners, threshold = 1, currentVersion: safeVersion } = useSelector(
-    currentSafeWithNames,
-  )
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    threshold = 1,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
