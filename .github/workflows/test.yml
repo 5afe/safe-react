@@ -14,24 +14,23 @@ jobs:
         uses: styfle/cancel-workflow-action@0.8.0
         with:
           access_token: ${{ github.token }}
-      - uses: actions/checkout@v2
+
+      - name: Checkout
+        uses: actions/checkout@v2
+
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
           node-version: 14
 
-      - uses: actions/cache@v2
+      - name: Yarn cache
+        uses: actions/cache@v2
         with:
           path: '**/node_modules'
           key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
 
-      - run: |
-          sudo apt-get update
-          sudo apt-get -y install python3-pip python3-dev libusb-1.0-0-dev libudev-dev
-          pip install awscli --upgrade --user
-          # Due to some dependencies yarn may randomly throw an error about invalid cache
-          # This approach is taken from https://github.com/yarnpkg/yarn/issues/7212#issuecomment-506155894 to fix the issue
-          # Another approach is to install with flag --network-concurrency 1, but this will make the installation pretty slow (default value is 8)
+      - name: Yarn install
+        run: |
           mkdir .yarncache
           yarn install --cache-folder ./.yarncache --frozen-lockfile
           rm -rf .yarncache

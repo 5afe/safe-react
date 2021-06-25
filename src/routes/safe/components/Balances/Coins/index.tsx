@@ -85,10 +85,10 @@ const Coins = (props: Props): React.ReactElement => {
     trackEvent({ category: SAFE_NAVIGATION_EVENT, action: 'Coins' })
   }, [trackEvent])
 
-  const filteredData: List<BalanceData> = useMemo(() => getBalanceData(safeTokens, selectedCurrency), [
-    safeTokens,
-    selectedCurrency,
-  ])
+  const filteredData: List<BalanceData> = useMemo(
+    () => getBalanceData(safeTokens, selectedCurrency),
+    [safeTokens, selectedCurrency],
+  )
 
   return (
     <TableContainer>

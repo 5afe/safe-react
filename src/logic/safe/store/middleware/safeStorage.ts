@@ -13,30 +13,28 @@ type SafeProps = {
   safe: SafeRecord
 }
 
-export const safeStorageMiddleware = (store: Store) => (
-  next: (arg0: { type: string; payload: string | SafeProps | { address: string; name: string } }) => any,
-) => async (action: {
-  type: string
-  payload: string | SafeProps | { name: string; address: string }
-}): Promise<any> => {
-  const handledAction = next(action)
+export const safeStorageMiddleware =
+  (store: Store) =>
+  (next: (arg0: { type: string; payload: string | SafeProps | { address: string; name: string } }) => any) =>
+  async (action: { type: string; payload: string | SafeProps | { name: string; address: string } }): Promise<any> => {
+    const handledAction = next(action)
 
-  if (watchedActions.includes(action.type)) {
-    const state = store.getState()
-    const safesMap = safesAsMap(state)
-    await saveSafes(safesMap.filter((safe) => !safe.loadedViaUrl).toJSON())
+    if (watchedActions.includes(action.type)) {
+      const state = store.getState()
+      const safesMap = safesAsMap(state)
+      await saveSafes(safesMap.filter((safe) => !safe.loadedViaUrl).toJSON())
 
-    switch (action.type) {
-      case SET_DEFAULT_SAFE: {
-        if (typeof action.payload === 'string') {
-          saveDefaultSafe(action.payload)
+      switch (action.type) {
+        case SET_DEFAULT_SAFE: {
+          if (typeof action.payload === 'string') {
+            saveDefaultSafe(action.payload)
+          }
+          break
         }
-        break
+        default:
+          break
       }
-      default:
-        break
     }
-  }
 
-  return handledAction
-}
+    return handledAction
+  }
