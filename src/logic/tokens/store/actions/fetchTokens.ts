@@ -50,28 +50,30 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-export const fetchTokens = () => async (
-  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
-  getState: () => AppReduxState,
-): Promise<void> => {
-  const currentSavedTokens = tokensSelector(getState())
+export const fetchTokens =
+  () =>
+  async (
+    dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+    getState: () => AppReduxState,
+  ): Promise<void> => {
+    const currentSavedTokens = tokensSelector(getState())
 
-  let tokenList: TokenResult[]
-  try {
-    const resp = await fetchErc20AndErc721AssetsList()
-    tokenList = resp.data.results
-  } catch (e) {
-    logError(Errors._600, e.message)
-    return
+    let tokenList: TokenResult[]
+    try {
+      const resp = await fetchErc20AndErc721AssetsList()
+      tokenList = resp.data.results
+    } catch (e) {
+      logError(Errors._600, e.message)
+      return
+    }
+
+    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+    if (currentSavedTokens?.size === erc20Tokens.length) {
+      return
+    }
+
+    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
+
+    dispatch(addTokens(tokens))
   }
-
-  const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
-
-  if (currentSavedTokens?.size === erc20Tokens.length) {
-    return
-  }
-
-  const tokens = List(erc20Tokens.map((token) => makeToken(token)))
-
-  dispatch(addTokens(tokens))
-}

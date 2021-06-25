@@ -27,23 +27,20 @@ type AddressBookMapByChain = {
   [chainId: number]: AddressBookMap
 }
 
-export const addressBookAsMap = createSelector(
-  [addressBookState],
-  (addressBook): AddressBookMapByChain => {
-    const addressBookMap = {}
+export const addressBookAsMap = createSelector([addressBookState], (addressBook): AddressBookMapByChain => {
+  const addressBookMap = {}
 
-    addressBook.forEach((entry) => {
-      const { address, chainId } = entry
-      if (!addressBookMap[chainId]) {
-        addressBookMap[chainId] = { [address]: entry }
-      } else {
-        addressBookMap[chainId][address] = entry
-      }
-    })
+  addressBook.forEach((entry) => {
+    const { address, chainId } = entry
+    if (!addressBookMap[chainId]) {
+      addressBookMap[chainId] = { [address]: entry }
+    } else {
+      addressBookMap[chainId][address] = entry
+    }
+  })
 
-    return addressBookMap
-  },
-)
+  return addressBookMap
+})
 
 type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
 

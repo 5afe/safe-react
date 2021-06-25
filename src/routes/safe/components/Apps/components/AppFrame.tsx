@@ -88,9 +88,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const { consentReceived, onConsentReceipt } = useLegalConsent()
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
-    INITIAL_CONFIRM_TX_MODAL_STATE,
-  )
+  const [confirmTransactionModal, setConfirmTransactionModal] =
+    useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
 
@@ -123,9 +122,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }),
     [setConfirmTransactionModal],
   )
-  const closeConfirmationModal = useCallback(() => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE), [
-    setConfirmTransactionModal,
-  ])
+  const closeConfirmationModal = useCallback(
+    () => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE),
+    [setConfirmTransactionModal],
+  )
 
   const { sendMessageToIframe } = useIframeMessageHandler(
     safeApp,

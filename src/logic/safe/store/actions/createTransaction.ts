@@ -54,142 +54,144 @@ type ErrorEventHandler = () => void
 
 export const METAMASK_REJECT_CONFIRM_TX_ERROR_CODE = 4001
 
-export const createTransaction = (
-  {
-    safeAddress,
-    to,
-    valueInWei,
-    txData = EMPTY_DATA,
-    notifiedTransaction,
-    txNonce,
-    operation = CALL,
-    navigateToTransactionsTab = true,
-    origin = null,
-    safeTxGas: safeTxGasArg,
-    ethParameters,
-  }: CreateTransactionArgs,
-  onUserConfirm?: ConfirmEventHandler,
-  onError?: ErrorEventHandler,
-): CreateTransactionAction => async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
-  const state = getState()
+export const createTransaction =
+  (
+    {
+      safeAddress,
+      to,
+      valueInWei,
+      txData = EMPTY_DATA,
+      notifiedTransaction,
+      txNonce,
+      operation = CALL,
+      navigateToTransactionsTab = true,
+      origin = null,
+      safeTxGas: safeTxGasArg,
+      ethParameters,
+    }: CreateTransactionArgs,
+    onUserConfirm?: ConfirmEventHandler,
+    onError?: ErrorEventHandler,
+  ): CreateTransactionAction =>
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<DispatchReturn> => {
+    const state = getState()
 
-  if (navigateToTransactionsTab) {
-    dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
-  }
-
-  const ready = await onboardUser()
-  if (!ready) return
-
-  const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
-  const lastTx = await getLastTx(safeAddress)
-  const nextNonce = await getNewTxNonce(lastTx, safeInstance)
-  const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
-
-  const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
-  const safeVersion = await getCurrentSafeVersion(safeInstance)
-  let safeTxGas = safeTxGasArg || 0
-  try {
-    if (safeTxGasArg === undefined) {
-      safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
+    if (navigateToTransactionsTab) {
+      dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
     }
-  } catch (error) {
-    safeTxGas = safeTxGasArg || 0
-  }
 
-  const sigs = getPreValidatedSignatures(from)
-  const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
-  const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
+    const ready = await onboardUser()
+    if (!ready) return
 
-  let txHash
-  const txArgs: TxArgs = {
-    safeInstance,
-    to,
-    valueInWei,
-    data: txData,
-    operation,
-    nonce: Number.parseInt(nonce),
-    safeTxGas,
-    baseGas: 0,
-    gasPrice: '0',
-    gasToken: ZERO_ADDRESS,
-    refundReceiver: ZERO_ADDRESS,
-    sender: from,
-    sigs,
-  }
-  const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
+    const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+    const lastTx = await getLastTx(safeAddress)
+    const nextNonce = await getNewTxNonce(lastTx, safeInstance)
+    const nonce = txNonce !== undefined ? txNonce.toString() : nextNonce
 
-  try {
-    if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
-      const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
-
-      if (signature) {
-        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-        dispatch(fetchTransactions(safeAddress))
-
-        await saveTxToHistory({ ...txArgs, signature, origin })
-        onUserConfirm?.(safeTxHash)
-        return
+    const isExecution = await shouldExecuteTransaction(safeInstance, nonce, lastTx)
+    const safeVersion = await getCurrentSafeVersion(safeInstance)
+    let safeTxGas = safeTxGasArg || 0
+    try {
+      if (safeTxGasArg === undefined) {
+        safeTxGas = await estimateSafeTxGas({ safeAddress, txData, txRecipient: to, txAmount: valueInWei, operation })
       }
+    } catch (error) {
+      safeTxGas = safeTxGasArg || 0
     }
 
-    const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
-    const sendParams: PayableTx = {
-      from,
-      value: 0,
-      gas: ethParameters?.ethGasLimit,
-      gasPrice: ethParameters?.ethGasPriceInGWei,
-      nonce: ethParameters?.ethNonce,
+    const sigs = getPreValidatedSignatures(from)
+    const notificationsQueue = getNotificationsFromTxType(notifiedTransaction, origin)
+    const beforeExecutionKey = dispatch(enqueueSnackbar(notificationsQueue.beforeExecution))
+
+    let txHash
+    const txArgs: TxArgs = {
+      safeInstance,
+      to,
+      valueInWei,
+      data: txData,
+      operation,
+      nonce: Number.parseInt(nonce),
+      safeTxGas,
+      baseGas: 0,
+      gasPrice: '0',
+      gasToken: ZERO_ADDRESS,
+      refundReceiver: ZERO_ADDRESS,
+      sender: from,
+      sigs,
     }
+    const safeTxHash = generateSafeTxHash(safeAddress, txArgs)
 
-    await tx
-      .send(sendParams)
-      .once('transactionHash', async (hash) => {
-        onUserConfirm?.(safeTxHash)
+    try {
+      if (checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)) {
+        const signature = await tryOffChainSigning(safeTxHash, { ...txArgs, safeAddress }, hardwareWallet, safeVersion)
 
-        txHash = hash
-        dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+        if (signature) {
+          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+          dispatch(fetchTransactions(safeAddress))
 
-        await saveTxToHistory({ ...txArgs, txHash, origin })
-
-        // store the pending transaction's nonce
-        isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
-
-        dispatch(fetchTransactions(safeAddress))
-      })
-      .on('error', () => {
-        onError?.()
-      })
-      .then(async (receipt) => {
-        dispatch(fetchTransactions(safeAddress))
-
-        return receipt.transactionHash
-      })
-  } catch (err) {
-    const notification = isTxPendingError(err)
-      ? NOTIFICATIONS.TX_PENDING_MSG
-      : {
-          ...notificationsQueue.afterExecutionError,
-          message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+          await saveTxToHistory({ ...txArgs, signature, origin })
+          onUserConfirm?.(safeTxHash)
+          return
         }
+      }
 
-    dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-    dispatch(enqueueSnackbar({ key: err.code, ...notification }))
+      const tx = isExecution ? getExecutionTransaction(txArgs) : getApprovalTransaction(safeInstance, safeTxHash)
+      const sendParams: PayableTx = {
+        from,
+        value: 0,
+        gas: ethParameters?.ethGasLimit,
+        gasPrice: ethParameters?.ethGasPriceInGWei,
+        nonce: ethParameters?.ethNonce,
+      }
 
-    logError(Errors._803, err.message)
+      await tx
+        .send(sendParams)
+        .once('transactionHash', async (hash) => {
+          onUserConfirm?.(safeTxHash)
 
-    if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
-      const executeDataUsedSignatures = safeInstance.methods
-        .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-        .encodeABI()
-      try {
-        const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-        logError(Errors._803, errMsg)
-      } catch (e) {
-        logError(Errors._803, e.message)
+          txHash = hash
+          dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+
+          await saveTxToHistory({ ...txArgs, txHash, origin })
+
+          // store the pending transaction's nonce
+          isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
+
+          dispatch(fetchTransactions(safeAddress))
+        })
+        .on('error', () => {
+          onError?.()
+        })
+        .then(async (receipt) => {
+          dispatch(fetchTransactions(safeAddress))
+
+          return receipt.transactionHash
+        })
+    } catch (err) {
+      const notification = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationsQueue.afterExecutionError,
+            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+          }
+
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
+
+      logError(Errors._803, err.message)
+
+      if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+        const executeDataUsedSignatures = safeInstance.methods
+          .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+          .encodeABI()
+        try {
+          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+          logError(Errors._803, errMsg)
+        } catch (e) {
+          logError(Errors._803, e.message)
+        }
       }
     }
-  }
 
-  return txHash
-}
+    return txHash
+  }

@@ -86,14 +86,14 @@ export const ReviewConfirm = ({
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
 
-  const txRecipient: string | undefined = useMemo(() => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to), [
-    txs,
-    isMultiSend,
-  ])
-  const txData: string | undefined = useMemo(() => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data), [
-    txs,
-    isMultiSend,
-  ])
+  const txRecipient: string | undefined = useMemo(
+    () => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to),
+    [txs, isMultiSend],
+  )
+  const txData: string | undefined = useMemo(
+    () => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data),
+    [txs, isMultiSend],
+  )
   const txValue: string | undefined = useMemo(
     () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
