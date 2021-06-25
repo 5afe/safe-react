@@ -1,49 +1,26 @@
 ---
 name: Bug report
-about: Create a report to fix a bug
+about: Create an issue to fix a bug
 ---
 
 <!--
 BEFORE SUBMITTING: Please search to make sure this issue has not been opened already
 -->
 
-### Title/Description
-<!--
-A clear and concise description of what the bug is.
--->
+## Description
 
-### Environment
+## Environment
  - Browser:
+ - Wallet: MetaMask
  - Safe:
- - Wallet:
- - App Version:
  - Environment:
-    <!--
-    delete those who doesn't apply and complete the PR# if required
-    -->
-   - dev (rinkeby)
-   - staging (rinkeby)
-   - production (mainnet)
-   - PR #
+   - production (rinkeby)
 
-### Steps to reproduce
-<!--
-1. Go to '...'
-2. Click on '....'
-3. Scroll down to '....'
--->
+## Steps to reproduce
+ 1. Go to
 
-### Expected result
-<!--
-A clear description of what you expected to happen.
--->
+## Expected result
 
-### Obtained result
-<!--
-A clear description of what you expected to happen.
--->
+## Obtained result
 
-### Screenshots
-<!--
-If applicable, add screenshots to help explain your problem.
--->
+## Screenshots
