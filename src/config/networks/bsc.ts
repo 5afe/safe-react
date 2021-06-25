@@ -9,7 +9,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://bscgas.info/gas',
     gasParameter: 'standard',
-    gweiFactor: '1e9'
+    gweiFactor: '1e9',
   },
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
