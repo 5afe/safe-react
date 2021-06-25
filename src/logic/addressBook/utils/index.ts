@@ -30,11 +30,9 @@ export const isValidAddressBookName = (addressBookName: string): boolean => {
  */
 export const filterContractAddressBookEntries = async (addressBook: AddressBookState): Promise<AddressBookEntry[]> => {
   const abFlags = await Promise.all(
-    addressBook.map(
-      async ({ address }: AddressBookEntry): Promise<boolean> => {
-        return (await mustBeEthereumContractAddress(address)) === undefined
-      },
-    ),
+    addressBook.map(async ({ address }: AddressBookEntry): Promise<boolean> => {
+      return (await mustBeEthereumContractAddress(address)) === undefined
+    }),
   )
 
   return addressBook.filter((_, index) => abFlags[index])
@@ -52,9 +50,9 @@ export const filterAddressEntries = (
   { inputValue }: { inputValue: string },
 ): AddressBookEntry[] =>
   addressBookEntries.filter(({ address, name }) => {
-    const inputLowerCase = inputValue.toLowerCase()
-    const foundName = name.toLowerCase().includes(inputLowerCase)
-    const foundAddress = address?.toLowerCase().includes(inputLowerCase)
+    const inputLowerCase = (inputValue || '').toLowerCase()
+    const foundName = (name || '').toLowerCase().includes(inputLowerCase)
+    const foundAddress = (address || '').toLowerCase().includes(inputLowerCase)
 
     return foundName || foundAddress
   })

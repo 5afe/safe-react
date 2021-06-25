@@ -14,7 +14,6 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useAppList } from '../hooks/useAppList'
 import { SAFE_APP_FETCH_STATUS, SafeApp } from '../types'
 import AddAppForm from './AddAppForm'
-import { AppData } from '../api/fetchSafeAppsList'
 
 const Wrapper = styled.div`
   height: 100%;
@@ -81,27 +80,26 @@ const AppContainer = styled.div`
 `
 
 const isAppLoading = (app: SafeApp) => SAFE_APP_FETCH_STATUS.LOADING === app.fetchStatus
-const isCustomApp = (appUrl: string, staticAppsList: AppData[]) => !staticAppsList.some(({ url }) => url === appUrl)
+const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
+  return appsList.some(({ url, custom }) => url === appUrl && custom)
+}
 
 const AppsList = (): React.ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const safeAddress = useSelector(safeAddressFromUrl)
-  const { appList, removeApp, staticAppsList } = useAppList()
+  const { appList, removeApp, isLoading } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)
   const [appToRemove, setAppToRemove] = useState<SafeApp | null>(null)
-
   const openAddAppModal = () => setIsAddAppModalOpen(true)
 
   const closeAddAppModal = () => setIsAddAppModalOpen(false)
-
-  if (!appList.length || !safeAddress) {
+  if (isLoading || !safeAddress) {
     return (
       <LoadingContainer>
         <Loader size="md" />
       </LoadingContainer>
     )
   }
-
   return (
     <Wrapper>
       <Menu>
@@ -120,7 +118,7 @@ const AppsList = (): React.ReactElement => {
                 <StyledLink key={a.url} to={`${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(a.url)}`}>
                   <AppCard isLoading={isAppLoading(a)} iconUrl={a.iconUrl} name={a.name} description={a.description} />
                 </StyledLink>
-                {isCustomApp(a.url, staticAppsList) && (
+                {isCustomApp(a.url, appList) && (
                   <IconBtn
                     title="Remove"
                     onClick={(e) => {

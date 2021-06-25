@@ -1,30 +1,47 @@
 import { useState, useEffect, useCallback } from 'react'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { APPS_STORAGE_KEY, getAppInfoFromUrl, getAppsList, getEmptySafeApp } from '../utils'
-import { AppData } from '../api/fetchSafeAppsList'
+import { APPS_STORAGE_KEY, getAppInfoFromUrl, getEmptySafeApp } from '../utils'
+import { AppData, fetchSafeAppsList } from 'src/logic/configService'
 import { SafeApp, StoredSafeApp, SAFE_APP_FETCH_STATUS } from '../types'
 import { getNetworkId } from 'src/config'
+import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
+import { NOTIFICATIONS } from 'src/logic/notifications'
+import { useDispatch } from 'react-redux'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
   removeApp: (appUrl: string) => void
-  staticAppsList: AppData[]
+  isLoading: boolean
 }
 
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
-  const [staticAppsList, setStaticAppsList] = useState<AppData[]>([])
+  const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
+  const [customAppList, setCustomAppList] = useState<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(
+    [],
+  )
+  const dispatch = useDispatch()
+  const [isLoading, setIsLoading] = useState(true)
 
   useEffect(() => {
     const loadAppsList = async () => {
-      const remoteAppsList = await getAppsList()
-      setStaticAppsList(remoteAppsList)
+      setIsLoading(true)
+      try {
+        const result = await fetchSafeAppsList()
+        setApiAppsList(result && result?.length ? result : apiAppsList)
+      } catch (e) {
+        logError(Errors._902, e.message)
+        dispatch(enqueueSnackbar(NOTIFICATIONS.SAFE_APPS_FETCH_ERROR_MSG))
+      } finally {
+        setIsLoading(false)
+      }
     }
 
-    if (!staticAppsList.length) {
+    if (!apiAppsList.length) {
       loadAppsList()
     }
-  }, [staticAppsList])
+  }, [dispatch, apiAppsList])
 
   // Load apps list
   // for each URL we return a mocked safe-app with a loading status
@@ -43,30 +60,39 @@ const useAppList = (): UseAppListReturnType => {
 
     const loadApps = async () => {
       // recover apps from storage (third-party apps added by the user)
-      const persistedAppList =
-        (await loadFromStorage<(StoredSafeApp & { networks?: number[] })[]>(APPS_STORAGE_KEY)) || []
-
+      let storageAppList =
+        (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: number[]; custom?: boolean })[]>(
+          APPS_STORAGE_KEY,
+        )) || []
+      storageAppList = storageAppList.map((app) => {
+        app.custom = true
+        return app
+      })
+      setCustomAppList(storageAppList)
       // backward compatibility. In a previous implementation a safe app could be disabled, that state was
       // persisted in the storage.
-      const customApps = persistedAppList.filter(
-        (persistedApp) => !staticAppsList.some((staticApp) => staticApp.url === persistedApp.url),
+      const customApps = storageAppList.filter(
+        (persistedApp) => !apiAppsList.some((app) => app.url === persistedApp.url),
       )
-
-      const apps: SafeApp[] = [...staticAppsList, ...customApps]
+      const apps: SafeApp[] = [...apiAppsList, ...customApps]
         // if the app does not expose supported networks, include them. (backward compatible)
         .filter((app) => (!app.networks ? true : app.networks.includes(getNetworkId())))
         .map((app) => ({
           ...getEmptySafeApp(),
           ...app,
           url: app.url.trim(),
+          custom: app.custom,
         }))
-
       setAppList(apps)
 
       apps.forEach((app) => {
         if (!app.name || app.name === 'unknown') {
           // We are using legacy mode, we have to fetch info from manifest
-          getAppInfoFromUrl(app.url).then(fetchAppCallback)
+          getAppInfoFromUrl(app.url).then((appFromUrl) => {
+            const formatedApp = appFromUrl
+            formatedApp.custom = app.custom
+            fetchAppCallback(formatedApp)
+          })
         } else {
           // We already have manifest information so we directly add the app
           fetchAppCallback(app)
@@ -75,22 +101,25 @@ const useAppList = (): UseAppListReturnType => {
     }
 
     loadApps()
-  }, [staticAppsList])
+  }, [apiAppsList])
 
-  const removeApp = useCallback((appUrl: string): void => {
-    setAppList((list) => {
-      const newList = list.filter(({ url }) => url !== appUrl)
-      const persistedAppList = newList.map(({ url, disabled }) => ({ url, disabled }))
-      saveToStorage(APPS_STORAGE_KEY, persistedAppList)
+  const removeApp = useCallback(
+    (appUrl: string): void => {
+      setAppList((list) => {
+        const newList = list.filter(({ url }) => url !== appUrl)
+        const newPersistedList = customAppList.filter(({ url }) => url !== appUrl)
+        saveToStorage(APPS_STORAGE_KEY, newPersistedList)
 
-      return newList
-    })
-  }, [])
+        return newList
+      })
+    },
+    [customAppList],
+  )
 
   return {
     appList,
-    staticAppsList,
     removeApp,
+    isLoading,
   }
 }
 

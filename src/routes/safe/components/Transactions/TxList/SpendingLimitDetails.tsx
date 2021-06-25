@@ -62,9 +62,10 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
 }
 
 export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): React.ReactElement => {
-  const [beneficiary, tokenAddress] = React.useMemo(() => data.parameters?.map(({ value }) => value) ?? [], [
-    data.parameters,
-  ])
+  const [beneficiary, tokenAddress] = React.useMemo(
+    () => data.parameters?.map(({ value }) => value) ?? [],
+    [data.parameters],
+  )
   const tokenInfo = useTokenInfo(tokenAddress)
 
   return (

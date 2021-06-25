@@ -13,31 +13,33 @@ export const ENQUEUE_SNACKBAR = 'ENQUEUE_SNACKBAR'
 
 const addSnackbar = createAction(ENQUEUE_SNACKBAR)
 
-const enqueueSnackbar = (
-  notification: Notification,
-  key?: string | number,
-  onClick?: () => void,
-): ThunkAction<string | number, AppReduxState, undefined, AnyAction> => (dispatch: Dispatch) => {
-  key = notification.key || new Date().getTime() + Math.random()
+const enqueueSnackbar =
+  (
+    notification: Notification,
+    key?: string | number,
+    onClick?: () => void,
+  ): ThunkAction<string | number, AppReduxState, undefined, AnyAction> =>
+  (dispatch: Dispatch) => {
+    key = notification.key || new Date().getTime() + Math.random()
 
-  const newNotification = {
-    ...notification,
-    key,
-    options: {
-      ...notification.options,
-      onClick,
-      // eslint-disable-next-line react/display-name
-      action: (actionKey) => (
-        <IconButton onClick={() => dispatch(closeSnackbarAction({ key: actionKey }))}>
-          <IconClose />
-        </IconButton>
-      ),
-    },
+    const newNotification = {
+      ...notification,
+      key,
+      options: {
+        ...notification.options,
+        onClick,
+        // eslint-disable-next-line react/display-name
+        action: (actionKey) => (
+          <IconButton onClick={() => dispatch(closeSnackbarAction({ key: actionKey }))}>
+            <IconClose />
+          </IconButton>
+        ),
+      },
+    }
+
+    dispatch(addSnackbar(newNotification))
+
+    return key
   }
-
-  dispatch(addSnackbar(newNotification))
-
-  return key
-}
 
 export default enqueueSnackbar
