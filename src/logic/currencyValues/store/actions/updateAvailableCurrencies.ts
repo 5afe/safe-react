@@ -6,14 +6,14 @@ import { setAvailableCurrencies } from 'src/logic/currencyValues/store/actions/s
 import { fetchAvailableCurrencies } from 'src/logic/currencyValues/api/fetchAvailableCurrencies'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
-export const updateAvailableCurrencies = () => async (
-  dispatch: ThunkDispatch<AppReduxState, undefined, Action<AvailableCurrenciesPayload>>,
-): Promise<void> => {
-  try {
-    const availableCurrencies = await fetchAvailableCurrencies()
-    dispatch(setAvailableCurrencies({ availableCurrencies }))
-  } catch (err) {
-    logError(Errors._607, err.message)
+export const updateAvailableCurrencies =
+  () =>
+  async (dispatch: ThunkDispatch<AppReduxState, undefined, Action<AvailableCurrenciesPayload>>): Promise<void> => {
+    try {
+      const availableCurrencies = await fetchAvailableCurrencies()
+      dispatch(setAvailableCurrencies({ availableCurrencies }))
+    } catch (err) {
+      logError(Errors._607, err.message)
+    }
+    return Promise.resolve()
   }
-  return Promise.resolve()
-}
