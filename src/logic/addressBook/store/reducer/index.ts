@@ -11,7 +11,7 @@ type Payloads = AddressBookEntry | AddressBookState
 
 const batchLoadEntries = (state, action: Action<AddressBookState>): AddressBookState => {
   const newState = [...state]
-  const addressBookEntries = action.payload
+  const addressBookEntries = action.payload.map((entry) => ({ ...entry, name: entry.name.trim() }))
   addressBookEntries
     // exclude those entries with invalid name
     .filter(({ name }) => isValidAddressBookName(name))
@@ -33,8 +33,7 @@ export default handleActions<AppReduxState['addressBook'], Payloads>(
   {
     [ADDRESS_BOOK_ACTIONS.ADD_OR_UPDATE]: (state, action: Action<AddressBookEntry>) => {
       const newState = [...state]
-      const addressBookEntry = action.payload
-
+      const addressBookEntry = { ...action.payload, name: action.payload.name.trim() }
       const entryIndex = getEntryIndex(newState, addressBookEntry)
 
       // update

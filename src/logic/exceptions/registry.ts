@@ -30,6 +30,7 @@ enum ErrorCodes {
   _804 = '804: Error processing a transaction',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
+  _902 = '902: Error loading Safe Apps list',
 }
 
 export default ErrorCodes
