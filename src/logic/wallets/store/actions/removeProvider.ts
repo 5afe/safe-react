@@ -8,9 +8,10 @@ export const REMOVE_PROVIDER = 'REMOVE_PROVIDER'
 
 const removeProvider = createAction(REMOVE_PROVIDER)
 
-export default () => (dispatch: Dispatch): void => {
-  onboard.walletReset()
-  resetWeb3()
+export default () =>
+  (dispatch: Dispatch): void => {
+    onboard.walletReset()
+    resetWeb3()
 
-  dispatch(removeProvider())
-}
+    dispatch(removeProvider())
+  }

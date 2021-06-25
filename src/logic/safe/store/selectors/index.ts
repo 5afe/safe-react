@@ -36,15 +36,17 @@ export const safeAddressFromUrl = (state: AppReduxState): string => {
   return ''
 }
 
-export const currentSafe = createSelector([safesAsMap, safeAddressFromUrl], (safes: SafesMap, address: string):
-  | SafeRecord
-  | undefined => safes.get(address))
+export const currentSafe = createSelector(
+  [safesAsMap, safeAddressFromUrl],
+  (safes: SafesMap, address: string): SafeRecord | undefined => safes.get(address),
+)
 
 const baseSafe = makeSafe()
 
-export const safeFieldSelector = <K extends keyof SafeRecordProps>(field: K) => (
-  safe: SafeRecord,
-): SafeRecordProps[K] | undefined => (safe ? safe.get(field, baseSafe.get(field)) : undefined)
+export const safeFieldSelector =
+  <K extends keyof SafeRecordProps>(field: K) =>
+  (safe: SafeRecord): SafeRecordProps[K] | undefined =>
+    safe ? safe.get(field, baseSafe.get(field)) : undefined
 
 export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelector('ethBalance'))
 
@@ -93,14 +95,19 @@ export const safesWithNamesAsList = createSelector(
   },
 )
 
-export const safesWithNamesAsMap = createSelector([safesWithNamesAsList], (safesList): {
-  [address: string]: SafeRecordWithNames
-} => {
-  return safesList.reduce((acc, safe) => {
-    acc[safe.address] = safe
-    return acc
-  }, {})
-})
+export const safesWithNamesAsMap = createSelector(
+  [safesWithNamesAsList],
+  (
+    safesList,
+  ): {
+    [address: string]: SafeRecordWithNames
+  } => {
+    return safesList.reduce((acc, safe) => {
+      acc[safe.address] = safe
+      return acc
+    }, {})
+  },
+)
 
 export const currentSafeWithNames = createSelector(
   [safesWithNamesAsMap, currentSafe],
