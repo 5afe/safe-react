@@ -27,7 +27,7 @@ export const getEncodedMultiSendCallData = (txs: MultiSendTx[], web3: Web3): str
       outputs: [],
     },
   ]
-  const multiSend = (new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS) as unknown) as MultiSend
+  const multiSend = new web3.eth.Contract(multiSendAbi, MULTI_SEND_ADDRESS) as unknown as MultiSend
   const encodedMultiSendCallData = multiSend.methods
     .multiSend(
       `0x${txs
