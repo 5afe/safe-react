@@ -22,6 +22,7 @@ export type Notification = {
 enum NOTIFICATION_IDS {
   UNLOCK_WALLET_MSG,
   CONNECT_WALLET_ERROR_MSG,
+  CREATE_SAFE_FAILED_MSG,
   SIGN_TX_MSG,
   TX_REJECTED_MSG,
   TX_EXECUTED_MSG,
@@ -69,6 +70,11 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   CONNECT_WALLET_ERROR_MSG: {
     message: 'Error connecting to your wallet',
     options: { variant: ERROR, persist: true },
+  },
+  // Safe creation
+  CREATE_SAFE_FAILED_MSG: {
+    message: 'Safe creation failed',
+    options: { variant: ERROR, persist: false, autoHideDuration: longDuration },
   },
   // Regular/Custom Transactions
   SIGN_TX_MSG: {

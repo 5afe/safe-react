@@ -79,36 +79,44 @@ const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams)
 }
 
 export const createSafe = async (values: CreateSafeValues, userAccount: string): Promise<TransactionReceipt> => {
-  const confirmations = getThresholdFrom(values)
-  const ownerAddresses = getAccountsFrom(values)
-  const safeCreationSalt = getSafeCreationSaltFrom(values)
-  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-  let receiptResult
-  deploymentTx
-    .send({
-      from: userAccount,
-      gas: values?.gasLimit,
-    })
-    .once('transactionHash', (txHash) => {
-      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
-      txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
+  return new Promise((resolve, reject) => {
+    const confirmations = getThresholdFrom(values)
+    const ownerAddresses = getAccountsFrom(values)
+    const safeCreationSalt = getSafeCreationSaltFrom(values)
+    const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+    let receiptResult
+    const waitForTxReceipt = (resolve, reject, tries = 0) => {
+      setTimeout(() => {
+        if (receiptResult) {
+          resolve(receiptResult)
+        } else {
+          if (tries > 1200) {
+            reject(new Error('Transaction was not mined within 10 minutes'))
+          } else {
+            waitForTxReceipt(resolve, reject, tries + 1)
+          }
+        }
+      }, 500)
+    }
+    deploymentTx
+      .send({
+        from: userAccount,
+        gas: values?.gasLimit,
+      })
+      .once('transactionHash', (txHash) => {
+        saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
+        waitForTxReceipt(resolve, reject)
+        txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
+          receiptResult = txReceipt
+        })
+      })
+      .then((txReceipt) => {
         receiptResult = txReceipt
       })
-    })
-    .then((txReceipt) => {
-      receiptResult = txReceipt
-    })
-
-  const waitForTxReceipt = (resolve) => {
-    setTimeout(() => {
-      if (receiptResult) {
-        resolve(receiptResult)
-      } else {
-        waitForTxReceipt(resolve)
-      }
-    }, 500)
-  }
-  return new Promise((resolve) => waitForTxReceipt(resolve))
+      .catch((error) => {
+        reject(error)
+      })
+  })
 }
 
 const Open = (): ReactElement => {
