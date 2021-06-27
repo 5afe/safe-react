@@ -99,7 +99,7 @@ type Props = {
   connected: boolean
   network: ETHEREUM_NETWORK
   onDisconnect: () => void
-  onNetworkChange: () => unknown
+  onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
@@ -171,7 +171,7 @@ export const UserDetails = ({
           </Button>
         </Row>
       )}
-      {network !== desiredNetwork && (
+      {network !== desiredNetwork && onNetworkChange && (
         <Row className={classes.buttonRow}>
           <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
             <Paragraph noMargin size="lg">
