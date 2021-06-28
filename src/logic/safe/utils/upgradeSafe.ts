@@ -9,6 +9,17 @@ import {
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 
+const getFallbackHandlerTxData = (safeAddress: string): string => {
+  const hasSetFallbackHandler = semverSatisfies(LATEST_SAFE_VERSION, '>=1.1.0')
+
+  const fallbackHandlerAddress = getFallbackHandlerContractAddress()
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, LATEST_SAFE_VERSION)
+
+  return hasSetFallbackHandler
+    ? safeInstance.methods.setFallbackHandler(fallbackHandlerAddress).encodeABI()
+    : EMPTY_DATA
+}
+
 export const getUpgradeSafeTransactionHash = (safeAddress: string, safeCurrentVersion: string): string => {
   const safeMasterContractAddress = getSafeMasterContractAddress()
   const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeCurrentVersion)
@@ -28,15 +39,4 @@ export const getUpgradeSafeTransactionHash = (safeAddress: string, safeCurrentVe
   ]
 
   return encodeMultiSendCall(txs)
-}
-
-const getFallbackHandlerTxData = (safeAddress: string): string => {
-  const hasSetFallbackHandler = semverSatisfies(LATEST_SAFE_VERSION, '>=1.1.0')
-
-  const fallbackHandlerAddress = getFallbackHandlerContractAddress()
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress, LATEST_SAFE_VERSION)
-
-  return hasSetFallbackHandler
-    ? safeInstance.methods.setFallbackHandler(fallbackHandlerAddress).encodeABI()
-    : EMPTY_DATA
 }
