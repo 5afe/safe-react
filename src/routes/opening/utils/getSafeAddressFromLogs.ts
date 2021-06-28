@@ -17,7 +17,7 @@ export const getNewSafeAddressFromLogs = (logs: Log[]): string => {
   const proxyCreationEvent = abiDecoder.decodeLogs(logs).find(({ name }) => name === 'ProxyCreation')
 
   // We extract the proxy creation information from the event parameters
-  const proxyInformation = proxyCreationEvent.events.find(({ name }) => name === 'proxy')
+  const proxyInformation = proxyCreationEvent?.events?.find(({ name }) => name === 'proxy')
 
-  return checksumAddress(proxyInformation.value || '')
+  return checksumAddress(proxyInformation?.value || '')
 }
