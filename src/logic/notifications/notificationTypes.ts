@@ -1,7 +1,5 @@
 import { OptionsObject } from 'notistack'
 
-import { getNetworkName } from 'src/config'
-
 export const SUCCESS = 'success'
 export const ERROR = 'error'
 export const WARNING = 'warning'
@@ -51,7 +49,6 @@ enum NOTIFICATION_IDS {
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
   REMOVE_SPENDING_LIMIT_FAILED_MSG,
-  WRONG_NETWORK_MSG,
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
   ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS,
@@ -204,10 +201,6 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   TESTNET_VERSION_MSG: {
     message: "Testnet Version: Don't send production assets to this Safe",
     options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
-  },
-  WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${getNetworkName()}`,
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 
   // Address book

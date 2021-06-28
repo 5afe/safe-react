@@ -14,7 +14,8 @@ import {
   userAccountSelector,
 } from 'src/logic/wallets/store/selectors'
 import { removeProvider } from 'src/logic/wallets/store/actions'
-
+import { canSwitchNetwork, switchNetwork } from 'src/logic/wallets/utils/network'
+import { getNetworkId } from 'src/config'
 import { onboard } from 'src/components/ConnectButton'
 import { loadLastUsedProvider } from 'src/logic/wallets/store/middlewares/providerWatcher'
 
@@ -25,15 +26,13 @@ const HeaderComponent = (): React.ReactElement => {
   const loaded = useSelector(loadedSelector)
   const available = useSelector(availableSelector)
   const dispatch = useDispatch()
+  const showSwitchButton = canSwitchNetwork()
 
   useEffect(() => {
     const tryToConnectToLastUsedProvider = async () => {
       const lastUsedProvider = await loadLastUsedProvider()
       if (lastUsedProvider) {
-        const hasSelectedWallet = await onboard.walletSelect(lastUsedProvider)
-        if (hasSelectedWallet) {
-          await onboard.walletCheck()
-        }
+        await onboard.walletSelect(lastUsedProvider)
       }
     }
 
@@ -47,6 +46,18 @@ const HeaderComponent = (): React.ReactElement => {
 
   const onDisconnect = () => {
     dispatch(removeProvider())
+  }
+
+  const onNetworkChange = async () => {
+    const { wallet } = onboard.getState()
+    const desiredNetwork = getNetworkId()
+    try {
+      await switchNetwork(wallet, desiredNetwork)
+    } catch (e) {
+      e.log()
+      // Fallback to the onboard popup if switching isn't supported
+      await onboard.walletCheck()
+    }
   }
 
   const getProviderInfoBased = () => {
@@ -67,6 +78,7 @@ const HeaderComponent = (): React.ReactElement => {
         connected={available}
         network={network}
         onDisconnect={onDisconnect}
+        onNetworkChange={showSwitchButton ? onNetworkChange : undefined}
         openDashboard={openDashboard()}
         provider={provider}
         userAddress={userAddress}
