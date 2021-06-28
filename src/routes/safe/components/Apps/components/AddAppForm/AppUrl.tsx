@@ -5,7 +5,12 @@ import { useField, useFormState } from 'react-final-form'
 import styled from 'styled-components'
 
 import { SafeApp } from 'src/routes/safe/components/Apps/types'
-import { getAppInfoFromUrl, getIpfsLinkFromEns, uniqueApp } from 'src/routes/safe/components/Apps/utils'
+import {
+  getAppInfoFromUrl,
+  getIpfsLinkFromEns,
+  isAppManifestValid,
+  uniqueApp,
+} from 'src/routes/safe/components/Apps/utils'
 import { composeValidators, required } from 'src/components/forms/validator'
 import Field from 'src/components/forms/Field'
 import { isValidURL } from 'src/utils/url'
@@ -13,6 +18,10 @@ import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 import { useDebounce } from 'src/logic/hooks/useDebounce'
 
 const validateUrl = (url: string): string | undefined => (isValidURL(url) ? undefined : 'Invalid URL')
+const validateManifest = async (url: string): Promise<string | undefined> => {
+  const appInfo = await getAppInfoFromUrl(url)
+  return isAppManifestValid(appInfo) ? undefined : 'Error loading the app, please check the URL'
+}
 
 export const appUrlResolver = createDecorator({
   field: 'appUrl',
@@ -71,7 +80,9 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   const { visited } = useFormState({ subscription: { visited: true } })
 
   // trick to prevent having the field validated by default. Not sure why this happens in this form
-  const validate = !visited?.appUrl ? undefined : composeValidators(required, validateUrl, uniqueApp(appList))
+  const validate = !visited?.appUrl
+    ? undefined
+    : composeValidators(required, validateUrl, validateManifest, uniqueApp(appList))
 
   return (
     <StyledAppUrlField
