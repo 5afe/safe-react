@@ -18,7 +18,7 @@ import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -75,7 +75,7 @@ const useTxData = (
 
       let txData = EMPTY_DATA
       if (!isSendingNativeToken) {
-        const StandardToken = await getHumanFriendlyToken()
+        const StandardToken = await getERC20TokenContract()
         const tokenInstance = await StandardToken.at(txToken.address as string)
         const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
         txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
