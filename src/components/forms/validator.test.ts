@@ -6,10 +6,15 @@ import {
   mustBeUrl,
   minValue,
   mustBeEthereumAddress,
+  mustBeAddressHash,
   minMaxLength,
   uniqueAddress,
   differentFrom,
   ADDRESS_REPEATED_ERROR,
+  addressIsNotCurrentSafe,
+  OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR,
+  mustBeHexData,
+  validAddressBookName,
 } from 'src/components/forms/validator'
 
 describe('Forms > Validators', () => {
@@ -127,8 +132,51 @@ describe('Forms > Validators', () => {
     })
   })
 
+  describe('mustBeHexData validator', () => {
+    const MUST_BE_HEX_DATA_ERROR_MSG = 'Has to be a valid strict hex data (it must start with 0x)'
+
+    it('should return undefined for `0x`', function () {
+      expect(mustBeHexData('0x')).toBeUndefined()
+    })
+
+    it('should return undefined for an address', function () {
+      expect(mustBeHexData('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
+    })
+
+    it('should return undefined for a valid hex string', function () {
+      expect(
+        mustBeHexData(
+          '0x095ea7b30000000000000000000000007a250d5630b4cf539739df2c5dacb4c659f2488d0000000000000000000000000000000000000000000000000000000000000000',
+        ),
+      ).toBeUndefined()
+    })
+
+    it('should return an error message for an empty string', function () {
+      expect(mustBeHexData('')).toEqual(MUST_BE_HEX_DATA_ERROR_MSG)
+    })
+
+    it('should return the error message for a non-strict hex string', function () {
+      expect(mustBeHexData('0')).toEqual(MUST_BE_HEX_DATA_ERROR_MSG)
+    })
+  })
+  describe('mustBeAddressHash validator', () => {
+    const MUST_BE_ETH_ADDRESS_ERR_MSG = 'Must be a valid address'
+
+    it('Returns undefined for a valid ethereum address', async () => {
+      expect(await mustBeAddressHash('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
+    })
+
+    it('Returns an error message for an address with an invalid checksum', async () => {
+      expect(await mustBeAddressHash('0xde0b295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
+    })
+
+    it('Returns an error message for non-address and non-domain string', async () => {
+      expect(await mustBeAddressHash('notanaddress')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
+    })
+  })
+
   describe('mustBeEthereumAddress validator', () => {
-    const MUST_BE_ETH_ADDRESS_ERR_MSG = 'Input must be a valid Ethereum address, ENS or Unstoppable domain'
+    const MUST_BE_ETH_ADDRESS_OR_DOMAIN_ERR_MSG = 'Must be a valid address, ENS or Unstoppable domain'
 
     it('Returns undefined for a valid ethereum address', async () => {
       expect(await mustBeEthereumAddress('0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toBeUndefined()
@@ -136,12 +184,8 @@ describe('Forms > Validators', () => {
 
     it('Returns an error message for an address with an invalid checksum', async () => {
       expect(await mustBeEthereumAddress('0xde0b295669a9FD93d5F28D9Ec85E40f4cb697BAe')).toEqual(
-        MUST_BE_ETH_ADDRESS_ERR_MSG,
+        MUST_BE_ETH_ADDRESS_OR_DOMAIN_ERR_MSG,
       )
-    })
-
-    it('Returns an error message for non-address string', async () => {
-      expect(await mustBeEthereumAddress('notanaddress')).toEqual(MUST_BE_ETH_ADDRESS_ERR_MSG)
     })
   })
 
@@ -179,6 +223,22 @@ describe('Forms > Validators', () => {
     })
   })
 
+  describe('addressIsNotSafe validator', () => {
+    it('Returns undefined if the given `address` it not the given `safeAddress`', async () => {
+      const address = '0xde0B295669a9FD93d5F28D9Ec85E40f4cb697BAe'
+      const safeAddress = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
+
+      expect(addressIsNotCurrentSafe(safeAddress)(address)).toBeUndefined()
+    })
+
+    it('Returns an error message if the given `address` is the same as the `safeAddress`', async () => {
+      const address = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
+      const safeAddress = '0x2D6F2B448b0F711Eb81f2929566504117d67E44F'
+
+      expect(addressIsNotCurrentSafe(safeAddress)(address)).toEqual(OWNER_ADDRESS_IS_SAFE_ADDRESS_ERROR)
+    })
+  })
+
   describe('differentFrom validator', () => {
     const getDifferentFromErrMsg = (diffValue: string): string => `Value should be different than ${diffValue}`
 
@@ -188,6 +248,28 @@ describe('Forms > Validators', () => {
 
     it('Returns an error message for equal values', async () => {
       expect(differentFrom('a')('a')).toEqual(getDifferentFromErrMsg('a'))
+    })
+  })
+
+  describe('validAddressBookName validator', () => {
+    it('Returns error for an empty string', () => {
+      expect(validAddressBookName('')).toBe('Should be 1 to 50 symbols')
+    })
+    it('Returns error for a name longer than 50 chars', () => {
+      expect(validAddressBookName('abcdefabcdefabcdefabcdefabcdefabcdefabcdefabcdefabc')).toBe(
+        'Should be 1 to 50 symbols',
+      )
+    })
+    it('Returns error for a blacklisted name', () => {
+      const blacklistedErrorMessage = 'Name should not include: UNKNOWN, OWNER #, MY WALLET'
+
+      expect(validAddressBookName('unknown')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('unknown a')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('owner #1')).toBe(blacklistedErrorMessage)
+      expect(validAddressBookName('My Wallet')).toBe(blacklistedErrorMessage)
+    })
+    it('Returns undefined for a non-blacklisted name', () => {
+      expect(validAddressBookName('A valid name')).toBeUndefined()
     })
   })
 })

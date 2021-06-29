@@ -5,7 +5,7 @@ import Web3 from 'web3'
 
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { calculateGasOf, calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { GnosisSafeProxyFactory } from 'src/types/contracts/GnosisSafeProxyFactory.d'
@@ -52,23 +52,16 @@ const getProxyFactoryContract = (web3: Web3, networkId: ETHEREUM_NETWORK): Gnosi
   return (new web3.eth.Contract(ProxyFactorySol.abi as AbiItem[], contractAddress) as unknown) as GnosisSafeProxyFactory
 }
 
-/**
- * Creates a Contract instance of the GnosisSafeProxyFactory contract
- */
-export const getSpendingLimitContract = () => {
-  const web3 = getWeb3()
-  return (new web3.eth.Contract(
-    SpendingLimitModule.abi as AbiItem[],
-    SPENDING_LIMIT_MODULE_ADDRESS,
-  ) as unknown) as AllowanceModule
-}
-
 export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string): Promise<string | undefined> => {
-  const res = await getSafeInfo(proxyAddress)
-  const masterCopyAddress = (res as SafeInfo)?.masterCopy
-  if (!masterCopyAddress) {
-    console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
-    return
+  let masterCopyAddress: string | undefined
+  try {
+    const res = await getSafeInfo(proxyAddress)
+    masterCopyAddress = (res as SafeInfo)?.implementation.value
+    if (!masterCopyAddress) {
+      console.error(`There was not possible to get masterCopy address from proxy ${proxyAddress}.`)
+    }
+  } catch (e) {
+    e.log()
   }
   return masterCopyAddress
 }
@@ -99,7 +92,7 @@ export const getSafeDeploymentTransaction = (
       safeAccounts,
       numConfirmations,
       ZERO_ADDRESS,
-      '0x',
+      EMPTY_DATA,
       DEFAULT_FALLBACK_HANDLER_ADDRESS,
       ZERO_ADDRESS,
       0,
@@ -115,12 +108,12 @@ export const estimateGasForDeployingSafe = async (
   userAccount: string,
   safeCreationSalt: number,
 ) => {
-  const gnosisSafeData = await safeMaster.methods
+  const gnosisSafeData = safeMaster.methods
     .setup(
       safeAccounts,
       numConfirmations,
       ZERO_ADDRESS,
-      '0x',
+      EMPTY_DATA,
       DEFAULT_FALLBACK_HANDLER_ADDRESS,
       ZERO_ADDRESS,
       0,
@@ -130,17 +123,26 @@ export const estimateGasForDeployingSafe = async (
   const proxyFactoryData = proxyFactoryMaster.methods
     .createProxyWithNonce(safeMaster.options.address, gnosisSafeData, safeCreationSalt)
     .encodeABI()
-  const gas = await calculateGasOf({
+  return calculateGasOf({
     data: proxyFactoryData,
     from: userAccount,
     to: proxyFactoryMaster.options.address,
-  })
-  const gasPrice = await calculateGasPrice()
-
-  return gas * parseInt(gasPrice, 10)
+  }).then((value) => value * 2)
 }
 
 export const getGnosisSafeInstanceAt = (safeAddress: string): GnosisSafe => {
   const web3 = getWeb3()
   return (new web3.eth.Contract(GnosisSafeSol.abi as AbiItem[], safeAddress) as unknown) as GnosisSafe
+}
+
+/**
+ * Creates a Contract instance of the SpendingLimitModule contract
+ */
+export const getSpendingLimitContract = () => {
+  const web3 = getWeb3()
+
+  return (new web3.eth.Contract(
+    SpendingLimitModule.abi as AbiItem[],
+    SPENDING_LIMIT_MODULE_ADDRESS,
+  ) as unknown) as AllowanceModule
 }

@@ -1,97 +1,94 @@
-import { backOff } from 'exponential-backoff'
-import { List, Map } from 'immutable'
-import { batch } from 'react-redux'
+import { List } from 'immutable'
 import { Dispatch } from 'redux'
 
 import {
-  fetchTokenCurrenciesBalances,
   BalanceEndpoint,
-} from 'src/logic/currencyValues/api/fetchTokenCurrenciesBalances'
-import { setCurrencyBalances } from 'src/logic/currencyValues/store/actions/setCurrencyBalances'
-import { CurrencyRateValueRecord, makeBalanceCurrency } from 'src/logic/currencyValues/store/model/currencyValues'
-import addTokens from 'src/logic/tokens/store/actions/saveTokens'
+  fetchTokenCurrenciesBalances,
+  TokenBalance,
+} from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
-import { TokenState } from 'src/logic/tokens/store/reducer/tokens'
-import updateSafe from 'src/logic/safe/store/actions/updateSafe'
+import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeActiveTokensSelector, safeBlacklistedTokensSelector, safeSelector } from 'src/logic/safe/store/selectors'
-import { tokensSelector } from 'src/logic/tokens/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
+import BigNumber from 'bignumber.js'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
+import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
+
+export type BalanceRecord = {
+  tokenAddress?: string
+  tokenBalance: string
+  fiatBalance?: string
+}
 
 interface ExtractedData {
-  balances: Map<string, string>
-  currencyList: List<CurrencyRateValueRecord>
+  balances: Array<BalanceRecord>
   ethBalance: string
   tokens: List<Token>
 }
 
-const extractDataFromResult = (currentTokens: TokenState) => (
+const extractDataFromResult = (
   acc: ExtractedData,
-  { balance, fiatBalance, fiatCode, token, tokenAddress }: BalanceEndpoint,
+  { balance, fiatBalance, tokenInfo }: TokenBalance,
 ): ExtractedData => {
-  if (tokenAddress === null) {
-    acc.ethBalance = humanReadableValue(balance, 18)
+  const { address, decimals } = tokenInfo
+
+  acc.balances.push({
+    tokenAddress: address,
+    fiatBalance,
+    tokenBalance: humanReadableValue(balance, Number(decimals)),
+  })
+
+  // Extract network token balance from backend balances
+  if (sameAddress(address, ZERO_ADDRESS)) {
+    acc.ethBalance = humanReadableValue(balance, Number(decimals))
   } else {
-    acc.balances = acc.balances.merge({ [tokenAddress]: humanReadableValue(balance, Number(token?.decimals)) })
-
-    if (currentTokens && !currentTokens.get(tokenAddress)) {
-      acc.tokens = acc.tokens.push(makeToken({ address: tokenAddress, ...token }))
-    }
+    acc.tokens = acc.tokens.push(makeToken({ ...tokenInfo }))
   }
-
-  acc.currencyList = acc.currencyList.push(
-    makeBalanceCurrency({
-      currencyName: fiatCode,
-      tokenAddress,
-      balanceInBaseCurrency: fiatBalance,
-      balanceInSelectedCurrency: fiatBalance,
-    }),
-  )
 
   return acc
 }
 
-const fetchSafeTokens = (safeAddress: string) => async (
-  dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<void> => {
-  try {
+export const fetchSafeTokens =
+  (safeAddress: string, currencySelected?: string) =>
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
     const state = getState()
-    const safe = safeSelector(state)
-    const currentTokens = tokensSelector(state)
+    const safe = currentSafe(state)
 
     if (!safe) {
       return
     }
+    const selectedCurrency = currentCurrencySelector(state)
 
-    const tokenCurrenciesBalances = await backOff(() => fetchTokenCurrenciesBalances(safeAddress))
-    const alreadyActiveTokens = safeActiveTokensSelector(state)
-    const blacklistedTokens = safeBlacklistedTokensSelector(state)
+    let tokenCurrenciesBalances: BalanceEndpoint
+    try {
+      tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+        safeAddress,
+        selectedCurrency: currencySelected ?? selectedCurrency,
+      })
+    } catch (e) {
+      logError(Errors._601, e.message)
+      return
+    }
 
-    const { balances, currencyList, ethBalance, tokens } = tokenCurrenciesBalances.reduce<ExtractedData>(
-      extractDataFromResult(currentTokens),
+    const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
+      extractDataFromResult,
       {
-        balances: Map(),
-        currencyList: List(),
+        balances: [],
         ethBalance: '0',
         tokens: List(),
       },
     )
 
-    // need to persist those already active tokens, despite its balances
-    const activeTokens = alreadyActiveTokens.union(
-      // active tokens by balance, excluding those already blacklisted and the `null` address
-      balances.keySeq().toSet().subtract(blacklistedTokens),
+    dispatch(
+      updateSafe({
+        address: safeAddress,
+        balances,
+        ethBalance,
+        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+      }),
     )
-
-    batch(() => {
-      dispatch(updateSafe({ address: safeAddress, activeTokens, balances, ethBalance }))
-      dispatch(setCurrencyBalances(safeAddress, currencyList))
-      dispatch(addTokens(tokens))
-    })
-  } catch (err) {
-    console.error('Error fetching active token list', err)
+    dispatch(addTokens(tokens))
   }
-}
-
-export default fetchSafeTokens

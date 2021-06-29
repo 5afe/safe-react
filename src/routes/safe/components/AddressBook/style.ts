@@ -1,4 +1,4 @@
-import { lg, marginButtonImg, md, sm } from 'src/theme/variables'
+import { lg, md, sm } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -14,7 +14,7 @@ export const styles = createStyles({
   },
   hide: {
     '&:hover': {
-      backgroundColor: '#fff3e2',
+      backgroundColor: '#f7f5f5',
     },
     '&:hover $actions': {
       visibility: 'initial',
@@ -22,8 +22,10 @@ export const styles = createStyles({
   },
   actions: {
     justifyContent: 'flex-end',
+    alignItems: 'center',
     visibility: 'hidden',
     minWidth: '100px',
+    gap: md,
   },
   noBorderBottom: {
     '& > td': {
@@ -37,26 +39,17 @@ export const styles = createStyles({
   },
   editEntryButton: {
     cursor: 'pointer',
-    marginBottom: marginButtonImg,
   },
   editEntryButtonNonOwner: {
     cursor: 'pointer',
   },
   removeEntryButton: {
-    marginLeft: lg,
-    marginRight: lg,
-    marginBottom: marginButtonImg,
     cursor: 'pointer',
   },
   removeEntryButtonDisabled: {
-    marginLeft: lg,
-    marginRight: lg,
-    marginBottom: marginButtonImg,
     cursor: 'default',
   },
   removeEntryButtonNonOwner: {
-    marginLeft: lg,
-    marginRight: lg,
     cursor: 'pointer',
   },
   message: {
@@ -64,14 +57,6 @@ export const styles = createStyles({
     maxHeight: '54px',
     boxSizing: 'border-box',
     justifyContent: 'flex-end',
-  },
-  send: {
-    width: '75px',
-    minWidth: '75px',
-    borderRadius: '4px',
-    '& > span': {
-      fontSize: '14px',
-    },
   },
   leftIcon: {
     marginRight: sm,

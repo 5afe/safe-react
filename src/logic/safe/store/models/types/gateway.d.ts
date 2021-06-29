@@ -133,10 +133,10 @@ type BaseCustom = {
   dataSize: string
   value: string
   isCancellation: boolean
-  toInfo: AddressInfo
+  toInfo?: AddressInfo
 }
 
-type Custom = BaseCustom & {
+export type Custom = BaseCustom & {
   methodName: string | null
 }
 
@@ -205,7 +205,7 @@ type MultiSigConfirmations = {
   signature: string | null
 }
 
-type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
+export type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
 
 type TokenInfo = {
   tokenType: TokenType
@@ -236,7 +236,7 @@ type MultiSigExecutionDetails = {
 type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails
 
 type ExpandedTxDetails = {
-  executedAt: number
+  executedAt: number | null
   txStatus: TransactionStatus
   txInfo: TransactionInfo
   txData: TransactionData | null

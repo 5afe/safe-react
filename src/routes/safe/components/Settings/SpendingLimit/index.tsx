@@ -6,7 +6,7 @@ import styled from 'styled-components'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { safeSpendingLimitsSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeSpendingLimits } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
 import { LimitsTable } from './LimitsTable'
@@ -22,7 +22,7 @@ const InfoText = styled(Text)`
 export const SpendingLimitSettings = (): ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
-  const allowances = useSelector(safeSpendingLimitsSelector)
+  const allowances = useSelector(currentSafeSpendingLimits)
   const spendingLimitData = getSpendingLimitData(allowances)
 
   const [showNewSpendingLimitModal, setShowNewSpendingLimitModal] = useState(false)
@@ -37,7 +37,7 @@ export const SpendingLimitSettings = (): ReactElement => {
     <>
       <Block className={classes.container} grow="grow">
         <Title size="xs" withoutMargin>
-          Spending Limit
+          Spending limit
         </Title>
         <InfoText size="lg">
           You can set rules for specific beneficiaries to access funds from this Safe without having to collect all

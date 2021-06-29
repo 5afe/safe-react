@@ -3,8 +3,6 @@ import { NFTAsset, NFTAssets, NFTToken, NFTTokens } from 'src/logic/collectibles
 
 import { AppReduxState } from 'src/store'
 import { NFT_ASSETS_REDUCER_ID, NFT_TOKENS_REDUCER_ID } from 'src/logic/collectibles/store/reducer/collectibles'
-import { safeActiveAssetsSelector } from 'src/logic/safe/store/selectors'
-
 export const nftAssets = (state: AppReduxState): NFTAssets => state[NFT_ASSETS_REDUCER_ID]
 export const nftTokens = (state: AppReduxState): NFTTokens => state[NFT_TOKENS_REDUCER_ID]
 
@@ -12,39 +10,26 @@ export const nftAssetsSelector = createSelector(nftAssets, (assets) => assets)
 
 export const nftTokensSelector = createSelector(nftTokens, (tokens) => tokens)
 
-export const nftAssetsListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
+const nftAssetsToListSelector = createSelector(nftAssets, (assets): NFTAsset[] => {
   return assets ? Object.values(assets) : []
 })
 
-export const nftAssetsListAddressesSelector = createSelector(nftAssetsListSelector, (assets): string[] => {
-  return Array.from(new Set(assets.map((nftAsset) => nftAsset.address)))
-})
-
-export const availableNftAssetsAddresses = createSelector(nftTokensSelector, (userNftTokens): string[] => {
-  return Array.from(new Set(userNftTokens.map((nftToken) => nftToken.assetAddress)))
+const nftAssetsAddressFromNftTokensSelector = createSelector(nftTokensSelector, (userNftTokens): string[] => {
+  const addresses = userNftTokens.map((nftToken) => nftToken.assetAddress)
+  const uniqueAddresses = new Set(addresses)
+  return Array.from(uniqueAddresses)
 })
 
 export const orderedNFTAssets = createSelector(nftTokensSelector, (userNftTokens): NFTToken[] =>
   userNftTokens.sort((a, b) => a.name.localeCompare(b.name)),
 )
 
-export const activeNftAssetsListSelector = createSelector(
-  nftAssetsListSelector,
-  safeActiveAssetsSelector,
-  availableNftAssetsAddresses,
-  (assets, activeAssetsList, availableNftAssetsAddresses): NFTAsset[] => {
-    return assets
-      .filter(({ address }) => activeAssetsList.has(address))
-      .filter(({ address }) => availableNftAssetsAddresses.includes(address))
-  },
-)
-
-export const safeActiveSelectorMap = createSelector(
-  activeNftAssetsListSelector,
-  (activeAssets): NFTAssets => {
-    return activeAssets.reduce((acc, asset) => {
-      acc[asset.address] = asset
-      return acc
-    }, {})
+export const nftAssetsFromNftTokensSelector = createSelector(
+  nftAssetsToListSelector,
+  nftAssetsAddressFromNftTokensSelector,
+  (nftAssets, nftAssetsFromNftTokens): NFTAsset[] => {
+    return nftAssets
+      .sort((a, b) => a.name.localeCompare(b.name))
+      .filter(({ address }) => nftAssetsFromNftTokens.includes(address))
   },
 )

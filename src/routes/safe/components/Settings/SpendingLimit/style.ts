@@ -21,7 +21,7 @@ export const useStyles = makeStyles(
     },
     hide: {
       '&:hover': {
-        backgroundColor: '#fff3e2',
+        backgroundColor: '#f7f5f5',
       },
       '&:hover $actions': {
         visibility: 'initial',
@@ -54,7 +54,6 @@ export const useStyles = makeStyles(
     },
     buttonRow: {
       padding: lg,
-      position: 'absolute',
       left: 0,
       bottom: 0,
       boxSizing: 'border-box',
@@ -119,10 +118,6 @@ export const useStyles = makeStyles(
       '&:hover': {
         cursor: 'pointer',
       },
-    },
-    modal: {
-      height: 'auto',
-      maxWidth: 'calc(100% - 30px)',
     },
     amountInput: {
       width: '100% !important',

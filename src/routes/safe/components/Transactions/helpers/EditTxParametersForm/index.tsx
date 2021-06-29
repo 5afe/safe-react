@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import { makeStyles } from '@material-ui/core/styles'
@@ -8,18 +8,20 @@ import styled from 'styled-components'
 import Field from 'src/components/forms/Field'
 import TextField from 'src/components/forms/TextField'
 import Block from 'src/components/layout/Block'
-import Button from 'src/components/layout/Button'
 import Row from 'src/components/layout/Row'
 import { styles } from './style'
 import GnoForm from 'src/components/forms/GnoForm'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-import { composeValidators, minValue } from 'src/components/forms/validator'
+import { minValue } from 'src/components/forms/validator'
+import { Modal } from 'src/components/Modal'
 
-import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsEnabled } from '../utils'
-import { getNetworkInfo } from 'src/config'
+import { ParametersStatus, areSafeParamsEnabled, areEthereumParamsVisible, ethereumTxParametersTitle } from '../utils'
 
 const StyledDivider = styled(Divider)`
   margin: 0px;
+`
+const StyledDividerFooter = styled(Divider)`
+  margin: 16px -24px;
 `
 
 const SafeOptions = styled.div`
@@ -39,7 +41,7 @@ const EthereumOptions = styled.div`
   }
 `
 const StyledLink = styled(Link)`
-  margin: 16px 0;
+  margin: 16px 0 0 0;
   display: inline-flex;
   align-items: center;
 
@@ -47,24 +49,19 @@ const StyledLink = styled(Link)`
     margin-right: 5px;
   }
 `
-const StyledIconButton = styled(IconButton)`
-  margin: 10px 0 0 0;
-`
 const StyledText = styled(Text)`
   margin: 0 0 4px 0;
 `
 const StyledTextMt = styled(Text)`
   margin: 16px 0 4px 0;
 `
-
 const useStyles = makeStyles(styles)
-
-const { label } = getNetworkInfo()
 
 interface Props {
   txParameters: TxParameters
   onClose: (txParameters?: TxParameters) => void
   parametersStatus: ParametersStatus
+  isExecution: boolean
 }
 
 const formValidation = (values) => {
@@ -78,15 +75,7 @@ const formValidation = (values) => {
 
   const safeNonceValidation = minValue(0, true)(safeNonce)
 
-  const safeTxGasValidation = composeValidators(minValue(0, true), (value: string) => {
-    if (!value) {
-      return
-    }
-
-    if (Number(value) > Number(ethGasLimit)) {
-      return `Bigger than ${label} gas limit.`
-    }
-  })(safeTxGas)
+  const safeTxGasValidation = minValue(0, true)(safeTxGas)
 
   return {
     ethGasLimit: ethGasLimitValidation,
@@ -101,7 +90,8 @@ export const EditTxParametersForm = ({
   onClose,
   txParameters,
   parametersStatus = 'ENABLED',
-}: Props): React.ReactElement => {
+  isExecution,
+}: Props): ReactElement => {
   const classes = useStyles()
   const { safeNonce, safeTxGas, ethNonce, ethGasLimit, ethGasPrice } = txParameters
 
@@ -120,9 +110,9 @@ export const EditTxParametersForm = ({
         <Title size="sm" withoutMargin>
           Advanced options
         </Title>
-        <StyledIconButton disableRipple onClick={onCloseFormHandler}>
+        <IconButton disableRipple onClick={onCloseFormHandler}>
           <Close className={classes.closeIcon} />
-        </StyledIconButton>
+        </IconButton>
       </Row>
 
       <StyledDivider />
@@ -142,7 +132,7 @@ export const EditTxParametersForm = ({
           {() => (
             <>
               <StyledText size="xl" strong>
-                Safe transactions parameters
+                Safe transaction
               </StyledText>
 
               <SafeOptions>
@@ -168,69 +158,66 @@ export const EditTxParametersForm = ({
                 />
               </SafeOptions>
 
-              <StyledTextMt size="xl" strong>
-                Ethereum transactions parameters
-              </StyledTextMt>
+              {areEthereumParamsVisible(parametersStatus) && (
+                <>
+                  <StyledTextMt size="xl" strong>
+                    {ethereumTxParametersTitle(isExecution)}
+                  </StyledTextMt>
 
-              <EthereumOptions>
-                <Field
-                  name="ethNonce"
-                  defaultValue={ethNonce}
-                  placeholder="Ethereum nonce"
-                  text="Ethereum nonce"
-                  type="number"
-                  component={TextField}
-                  disabled={!areEthereumParamsEnabled(parametersStatus)}
-                />
-                <Field
-                  name="ethGasLimit"
-                  defaultValue={ethGasLimit}
-                  placeholder="Ethereum gas limit"
-                  text="Ethereum gas limit"
-                  type="number"
-                  component={TextField}
-                  disabled={parametersStatus === 'CANCEL_TRANSACTION'}
-                />
-                <Field
-                  name="ethGasPrice"
-                  defaultValue={ethGasPrice}
-                  type="number"
-                  placeholder="Ethereum gas price (GWEI)"
-                  text="Ethereum gas price (GWEI)"
-                  component={TextField}
-                  disabled={!areEthereumParamsEnabled(parametersStatus)}
-                />
-              </EthereumOptions>
+                  <EthereumOptions>
+                    <Field
+                      name="ethNonce"
+                      defaultValue={ethNonce}
+                      placeholder="Nonce"
+                      text="Nonce"
+                      type="number"
+                      component={TextField}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
+                    />
+                    <Field
+                      name="ethGasLimit"
+                      defaultValue={ethGasLimit}
+                      placeholder="Gas limit"
+                      text="Gas limit"
+                      type="number"
+                      component={TextField}
+                      disabled={parametersStatus === 'CANCEL_TRANSACTION'}
+                    />
+                    <Field
+                      name="ethGasPrice"
+                      defaultValue={ethGasPrice}
+                      type="number"
+                      placeholder="Gas price (GWEI)"
+                      text="Gas price (GWEI)"
+                      component={TextField}
+                      disabled={!areEthereumParamsVisible(parametersStatus)}
+                    />
+                  </EthereumOptions>
 
-              <StyledLink
-                href="https://help.gnosis-safe.io/en/articles/4738445-configure-advanced-transaction-parameters-manually"
-                target="_blank"
-              >
-                <Text size="xl" color="primary">
-                  How can I configure the gas price manually?
-                </Text>
-                <Icon size="sm" type="externalLink" color="primary" />
-              </StyledLink>
+                  <StyledLink
+                    href="https://help.gnosis-safe.io/en/articles/4738445-configure-advanced-transaction-parameters-manually"
+                    target="_blank"
+                  >
+                    <Text size="xl" color="primary">
+                      How can I configure these parameters manually?
+                    </Text>
+                    <Icon size="sm" type="externalLink" color="primary" />
+                  </StyledLink>
+                </>
+              )}
 
-              <StyledDivider />
+              <StyledDividerFooter />
 
               {/* Footer */}
               <Row align="center" className={classes.buttonRow}>
-                <Button minWidth={140} onClick={onCloseFormHandler}>
-                  Back
-                </Button>
-                <Button
-                  className={classes.submitButton}
-                  color="primary"
-                  data-testid="submit-tx-btn"
-                  /* disabled={!data} */
-                  minWidth={140}
-                  /* onClick={submitTx} */
-                  type="submit"
-                  variant="contained"
-                >
-                  Confirm
-                </Button>
+                <Modal.Footer.Buttons
+                  cancelButtonProps={{ onClick: onCloseFormHandler, text: 'Back' }}
+                  confirmButtonProps={{
+                    type: 'submit',
+                    text: 'Confirm',
+                    testId: 'submit-tx-btn',
+                  }}
+                />
               </Row>
             </>
           )}

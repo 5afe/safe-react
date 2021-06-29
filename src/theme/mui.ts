@@ -279,6 +279,11 @@ const theme = createMuiTheme({
         '& > span': {
           display: 'flex',
           flexDirection: 'row',
+          alignItems: 'stretch',
+          overflowX: 'hidden',
+          overflowY: 'auto',
+          maxHeight: '160px',
+          wordBreak: 'break-word',
           '& > img': {
             display: 'block',
             marginRight: '13px',
@@ -455,7 +460,7 @@ export const DropdownListTheme = {
       },
       button: {
         '&:hover': {
-          backgroundColor: '#fff3e2',
+          backgroundColor: '#f7f5f5',
         },
       },
     },

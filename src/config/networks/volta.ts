@@ -4,6 +4,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.volta.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
+  safeUrl: 'https://volta.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps-volta.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
@@ -35,9 +36,9 @@ const mainnet: NetworkConfig = {
     label: 'Volta',
     isTestNet: true,
     nativeCoin: {
-      address: '0x000',
-      name: 'Energy web token',
-      symbol: 'EWT',
+      address: '0x0000000000000000000000000000000000000000',
+      name: 'Volta Token',
+      symbol: 'VT',
       decimals: 18,
       logoUri: EwcLogo,
     },

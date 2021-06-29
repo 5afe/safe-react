@@ -27,7 +27,7 @@ export const ScanQRWrapper = ({ handleScan }: Props): ReactElement => {
     setQrModalOpen(false)
   }
 
-  const onScanFinished = (value) => {
+  const onScanFinished = (value: string) => {
     handleScan(value, closeQrModal)
   }
 

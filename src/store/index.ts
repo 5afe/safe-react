@@ -1,11 +1,12 @@
-import { List, Map } from 'immutable'
+import { Map } from 'immutable'
 import { connectRouter, routerMiddleware, RouterState } from 'connected-react-router'
 import { createHashHistory } from 'history'
 import { applyMiddleware, combineReducers, compose, createStore, CombinedState, PreloadedState, Store } from 'redux'
+import { save, load } from 'redux-localstorage-simple'
 import thunk from 'redux-thunk'
 
-import addressBookMiddleware from 'src/logic/addressBook/store/middleware/addressBookMiddleware'
-import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer/addressBook'
+import { addressBookMiddleware } from 'src/logic/addressBook/store/middleware'
+import addressBook, { ADDRESS_BOOK_REDUCER_ID } from 'src/logic/addressBook/store/reducer'
 import {
   NFT_ASSETS_REDUCER_ID,
   NFT_TOKENS_REDUCER_ID,
@@ -13,53 +14,43 @@ import {
   nftTokensReducer,
 } from 'src/logic/collectibles/store/reducer/collectibles'
 import cookies, { COOKIES_REDUCER_ID } from 'src/logic/cookies/store/reducer/cookies'
-import currencyValuesStorageMiddleware from 'src/logic/currencyValues/store/middleware'
-import currencyValues, {
-  CURRENCY_VALUES_KEY,
-  CurrencyValuesState,
-} from 'src/logic/currencyValues/store/reducer/currencyValues'
 import currentSession, {
   CURRENT_SESSION_REDUCER_ID,
   CurrentSessionState,
 } from 'src/logic/currentSession/store/reducer/currentSession'
 import { Notification } from 'src/logic/notifications'
 import notifications, { NOTIFICATIONS_REDUCER_ID } from 'src/logic/notifications/store/reducer/notifications'
-import { Transaction } from 'src/logic/safe/store/models/types/transaction'
 import { StoreStructure } from 'src/logic/safe/store/models/types/gateway'
 import { gatewayTransactions, GATEWAY_TRANSACTIONS_ID } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import tokens, { TOKEN_REDUCER_ID, TokenState } from 'src/logic/tokens/store/reducer/tokens'
 import providerWatcher from 'src/logic/wallets/store/middlewares/providerWatcher'
 import provider, { PROVIDER_REDUCER_ID, ProviderState } from 'src/logic/wallets/store/reducer/provider'
 import notificationsMiddleware from 'src/logic/safe/store/middleware/notificationsMiddleware'
-import safeStorage from 'src/logic/safe/store/middleware/safeStorage'
-import cancellationTransactions, {
-  CANCELLATION_TRANSACTIONS_REDUCER_ID,
-  CancellationTxState,
-} from 'src/logic/safe/store/reducer/cancellationTransactions'
-import incomingTransactions, {
-  INCOMING_TRANSACTIONS_REDUCER_ID,
-} from 'src/logic/safe/store/reducer/incomingTransactions'
+import { safeStorageMiddleware } from 'src/logic/safe/store/middleware/safeStorage'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
-import transactions, { TRANSACTIONS_REDUCER_ID } from 'src/logic/safe/store/reducer/transactions'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
-import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
-import allTransactions, { TRANSACTIONS, TransactionsState } from '../logic/safe/store/reducer/allTransactions'
+import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
-import moduleTransactions, {
-  MODULE_TRANSACTIONS_REDUCER_ID,
-  ModuleTransactionsState,
-} from 'src/logic/safe/store/reducer/moduleTransactions'
+import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
+import currencyValues, {
+  CURRENCY_VALUES_KEY,
+  CurrencyValuesState,
+} from 'src/logic/currencyValues/store/reducer/currencyValues'
+import { currencyValuesStorageMiddleware } from 'src/logic/currencyValues/store/middleware/currencyValuesStorageMiddleware'
 
 export const history = createHashHistory()
 
-// eslint-disable-next-line
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
+
+const localStorageConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'SAFE', namespaceSeparator: '__' }
+
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
     thunk,
+    save(localStorageConfig),
     routerMiddleware(history),
     notificationsMiddleware,
-    safeStorage,
+    safeStorageMiddleware,
     providerWatcher,
     addressBookMiddleware,
     currencyValuesStorageMiddleware,
@@ -74,16 +65,11 @@ const reducers = combineReducers({
   [NFT_TOKENS_REDUCER_ID]: nftTokensReducer,
   [TOKEN_REDUCER_ID]: tokens,
   [GATEWAY_TRANSACTIONS_ID]: gatewayTransactions,
-  [TRANSACTIONS_REDUCER_ID]: transactions,
-  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: cancellationTransactions,
-  [INCOMING_TRANSACTIONS_REDUCER_ID]: incomingTransactions,
-  [MODULE_TRANSACTIONS_REDUCER_ID]: moduleTransactions,
   [NOTIFICATIONS_REDUCER_ID]: notifications,
   [CURRENCY_VALUES_KEY]: currencyValues,
   [COOKIES_REDUCER_ID]: cookies,
   [ADDRESS_BOOK_REDUCER_ID]: addressBook,
   [CURRENT_SESSION_REDUCER_ID]: currentSession,
-  [TRANSACTIONS]: allTransactions,
 })
 
 export type AppReduxState = CombinedState<{
@@ -93,20 +79,18 @@ export type AppReduxState = CombinedState<{
   [NFT_TOKENS_REDUCER_ID]: NFTTokens
   [TOKEN_REDUCER_ID]: TokenState
   [GATEWAY_TRANSACTIONS_ID]: Record<string, StoreStructure>
-  [TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
-  [CANCELLATION_TRANSACTIONS_REDUCER_ID]: CancellationTxState
-  [INCOMING_TRANSACTIONS_REDUCER_ID]: Map<string, List<Transaction>>
-  [MODULE_TRANSACTIONS_REDUCER_ID]: ModuleTransactionsState
   [NOTIFICATIONS_REDUCER_ID]: Map<string, Notification>
   [CURRENCY_VALUES_KEY]: CurrencyValuesState
   [COOKIES_REDUCER_ID]: Map<string, any>
   [ADDRESS_BOOK_REDUCER_ID]: AddressBookState
   [CURRENT_SESSION_REDUCER_ID]: CurrentSessionState
-  [TRANSACTIONS]: TransactionsState
   router: RouterState
 }>
 
-export const store: any = createStore(reducers, finalCreateStore)
+// Address Book v2 migration
+migrateAddressBook(localStorageConfig)
+
+export const store: any = createStore(reducers, load(localStorageConfig), finalCreateStore)
 
 export const aNewStore = (localState?: PreloadedState<unknown>): Store =>
   createStore(reducers, localState, finalCreateStore)

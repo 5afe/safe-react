@@ -286,7 +286,7 @@ const xDai: NetworkConfig = {
     label: 'xDai',
     isTestNet: false,
     nativeCoin: {
-      address: '0x000',
+      address: '0x0000000000000000000000000000000000000000',
       name: 'xDai',
       symbol: 'xDai',
       decimals: 18,
@@ -343,7 +343,7 @@ const mainnet: NetworkConfig = {
     label: 'Mainnet',
     isTestNet: false,
     nativeCoin: {
-      address: '0x000',
+      address: '0x0000000000000000000000000000000000000000',
       name: 'Ether',
       symbol: 'ETH',
       decimals: 18,

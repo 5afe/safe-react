@@ -17,6 +17,7 @@ interface Props {
   weight?: string
   onClick?: MouseEventHandler<HTMLParagraphElement>
   style?: CSSProperties
+  title?: string
 }
 
 const Paragraph = (props: Props): ReactElement => {

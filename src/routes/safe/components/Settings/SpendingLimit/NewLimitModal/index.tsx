@@ -2,10 +2,10 @@ import { List } from 'immutable'
 import React, { ReactElement, Reducer, useCallback, useReducer } from 'react'
 import { useSelector } from 'react-redux'
 
+import { Modal } from 'src/components/Modal'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { extendedSafeTokensSelector } from 'src/routes/safe/container/selector'
-import Modal from 'src/routes/safe/components/Settings/SpendingLimit/Modal'
 
 import Create from './Create'
 import { ReviewSpendingLimits } from './Review'
@@ -94,7 +94,7 @@ export const NewLimitModal = ({ close, open }: SpendingLimitModalProps): ReactEl
     <Modal
       handleClose={close}
       open={open}
-      title="New Spending Limit"
+      title="New spending limit"
       description="set rules for specific beneficiaries to access funds from this Safe without having to collect all signatures"
     >
       {step === CREATE && <Create initialValues={values} onCancel={close} onReview={handleReview} />}

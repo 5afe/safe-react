@@ -3,6 +3,12 @@ import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTra
 import axios from 'axios'
 
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
+import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
+import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
+import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
+import { checksumAddress } from 'src/utils/checksumAddress'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
@@ -54,4 +60,58 @@ export const shouldExecuteTransaction = async (
   }
 
   return false
+}
+
+/**
+ * Recovers Safe's remote information along with its modules and spendingLimits if there's any
+ * @param {SafeInfo} remoteSafeInfo
+ * @returns Promise<Partial<SafeRecordProps>>
+ */
+export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<Partial<SafeRecordProps>> => {
+  const safeInfo: Partial<SafeRecordProps> = {
+    modules: undefined,
+    spendingLimits: undefined,
+  }
+  const safeInfoModules = (remoteSafeInfo.modules || []).map(({ value }) => value)
+
+  if (safeInfoModules.length) {
+    safeInfo.modules = buildModulesLinkedList(safeInfoModules)
+    try {
+      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+    } catch (e) {
+      e.log()
+      safeInfo.spendingLimits = null
+    }
+  }
+
+  safeInfo.nonce = remoteSafeInfo.nonce
+  safeInfo.threshold = remoteSafeInfo.threshold
+  safeInfo.currentVersion = remoteSafeInfo.version
+  // FixMe: replace '1.1.1' hardcoded value in favor of data provided by services
+  //  see: https://github.com/gnosis/safe-react/issues/1383#issuecomment-815425652
+  safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, '1.1.1')
+  safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
+
+  return safeInfo
+}
+
+/**
+ * Merges remote owner's information with the locally stored data.
+ * If there's no remote data, it will go with the locally stored information.
+ * @param {SafeInfo['owners'] | undefined} remoteSafeOwners
+ * @param {SafeRecordProps['owners'] | undefined} localSafeOwners
+ * @returns SafeRecordProps['owners'] | undefined
+ */
+export const buildSafeOwners = (
+  remoteSafeOwners?: SafeInfo['owners'],
+  localSafeOwners?: SafeRecordProps['owners'],
+): SafeRecordProps['owners'] | undefined => {
+  if (remoteSafeOwners) {
+    // ToDo: review if checksums addresses is necessary,
+    //  as they must be provided already in the checksum form from the services
+    return remoteSafeOwners.map(({ value }) => checksumAddress(value))
+  }
+
+  // nothing to do without remote owners, so we return the stored list
+  return localSafeOwners
 }

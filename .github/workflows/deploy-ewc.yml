@@ -1,17 +1,20 @@
 name: Deploy to EWC network
 
-# Run on pushes to master
+# Run on pushes to main or PRs to main
 on:
   push:
     branches:
-      - master
+      - main
+  pull_request:
+    branches:
+      - main
   # Launches build when release is published
   release:
       types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
-  REACT_APP_NETWORK: 'ewc'
+  REACT_APP_NETWORK: 'energy_web_chain'
   STAGING_BUCKET_NAME: ${{ secrets.STAGING_EWC_BUCKET_NAME }}
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_EWC }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_EWC }}
@@ -33,8 +36,12 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Cancel Previous Runs
+        uses: styfle/cancel-workflow-action@0.8.0
+        with:
+          access_token: ${{ github.token }}
       - name: Remove broken apt repos [Ubuntu]
-        if: matrix.os == 'ubuntu-latest'
+        if: ${{ matrix.os }} == 'ubuntu-latest'
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
       - uses: actions/checkout@v2
@@ -62,9 +69,9 @@ jobs:
           yarn cache clean
 
       # Set production flag
-      - name: Set production flag for tag build
-        run: echo "REACT_APP_ENV='production'" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/tags/v')
+      - name: Set production flag for release PR or tagged build
+        run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
+        if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'main'
 
       - name: Build ${{ env.REACT_APP_NETWORK }} app
         run: yarn build
@@ -76,12 +83,17 @@ jobs:
           REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
           REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
 
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v1
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
+
       # Script to deploy Pull Requests
       - run: bash ./scripts/github/deploy_pull_request.sh
         if: success() && github.event.number
         env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           PR_NUMBER: ${{ github.event.number }}
           REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
           REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
@@ -93,36 +105,31 @@ jobs:
             * [Safe Multisig app ${{ env.REACT_APP_NETWORK }}](${{ env.REVIEW_FEATURE_URL }}/${{ env.REACT_APP_NETWORK }}/app/)
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           repo-token-user-login: 'github-actions[bot]'
-          allow-repeats: true
         if: success() && github.event.number
         env:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
 
-      - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
-        with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.AWS_DEFAULT_REGION }}
-
-      # Script to deploy to development environment
-      # EWC build is never created in development branch
+      # Script to deploy to the dev environment
+      # EWC build is never created on the dev branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/master'
-        run: aws s3 sync build s3://${{ secrets.STAGING_BUCKET_NAME }}/current/app --delete
+        if: github.ref == 'refs/heads/main'
+        run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
-      - run: bash ./scripts/github/deploy_release.sh
+      - name: 'Upload release build files for production'
         if: startsWith(github.ref, 'refs/tags/v')
-        env:
-          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          PR_NUMBER: ${{ github.event.number }}
-          REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
-          REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
-          VERSION_TAG: ${{ github.event.release.tag_name }}
+        run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/releases/${{ github.event.release.tag_name }} --delete
+      # - run: bash ./scripts/github/deploy_release.sh
+      #   if: startsWith(github.ref, 'refs/tags/v')
+      #   env:
+      #     AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     PR_NUMBER: ${{ github.event.number }}
+      #     REVIEW_BUCKET_NAME: ${{ secrets.AWS_REVIEW_BUCKET_NAME }}
+      #     REACT_APP_NETWORK: ${{ env.REACT_APP_NETWORK }}
+      #     VERSION_TAG: ${{ github.event.release.tag_name }}
 
       # Script to prepare production deployments
       - run: bash ./scripts/github/prepare_production_deployment.sh
@@ -134,7 +141,7 @@ jobs:
 
       # Upload Sentry source maps when sending to staging or production
       - run: yarn sentry-upload-sourcemaps
-        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+        if: success() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG}}

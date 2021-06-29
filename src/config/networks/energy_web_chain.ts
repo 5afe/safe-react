@@ -6,6 +6,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.ewc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
+  safeUrl: 'https://ewc.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps-ewc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
@@ -38,7 +39,7 @@ const mainnet: NetworkConfig = {
     label: 'EWC',
     isTestNet: false,
     nativeCoin: {
-      address: '0x000',
+      address: '0x0000000000000000000000000000000000000000',
       name: 'Energy web token',
       symbol: 'EWT',
       decimals: 18,
@@ -55,7 +56,6 @@ const mainnet: NetworkConfig = {
     WALLETS.PORTIS,
     WALLETS.TORUS,
     WALLETS.TRUST,
-    WALLETS.WALLET_CONNECT,
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,

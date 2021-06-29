@@ -11,25 +11,34 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { useStyles } from 'src/routes/safe/components/Balances/SendModal/screens/ChooseTxType/style'
-import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxsTable/TxType/assets/custom.svg'
+import ContractInteractionIcon from 'src/routes/safe/components/Transactions/TxList/assets/custom.svg'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
 import Collectible from '../assets/collectibles.svg'
 import Token from '../assets/token.svg'
 import { FEATURES } from 'src/config/networks/network.d'
+
+import { getExplorerInfo } from 'src/config'
 
 type ActiveScreen = 'sendFunds' | 'sendCollectible' | 'contractInteraction'
 
 interface ChooseTxTypeProps {
   onClose: () => void
   recipientAddress?: string
+  recipientName?: string
   setActiveScreen: React.Dispatch<React.SetStateAction<ActiveScreen>>
 }
 
-const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTypeProps): React.ReactElement => {
+const ChooseTxType = ({
+  onClose,
+  recipientAddress,
+  recipientName,
+  setActiveScreen,
+}: ChooseTxTypeProps): React.ReactElement => {
   const classes = useStyles()
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const erc721Enabled = featuresEnabled?.includes(FEATURES.ERC721)
   const contractInteractionEnabled = featuresEnabled?.includes(FEATURES.CONTRACT_INTERACTION)
   const [disableContractInteraction, setDisableContractInteraction] = React.useState(!!recipientAddress)
@@ -61,11 +70,18 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
       </Row>
       <Hairline />
       {!!recipientAddress && (
-        <Row align="center">
+        <Row align="center" margin="md">
           <Col className={classes.disclaimer} layout="column" middle="xs">
             <Paragraph className={classes.disclaimerText} noMargin>
-              Please select what you will send to {recipientAddress}
+              Please select what you will send to
             </Paragraph>
+            <EthHashInfo
+              hash={recipientAddress}
+              name={recipientName}
+              showAvatar
+              showCopyBtn
+              explorerUrl={getExplorerInfo(recipientAddress)}
+            />
           </Col>
         </Row>
       )}
@@ -75,7 +91,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
             className={classes.firstButton}
             color="primary"
             minHeight={52}
-            minWidth={260}
+            minWidth={240}
             onClick={() => setActiveScreen('sendFunds')}
             variant="contained"
             testId="modal-send-funds-btn"
@@ -88,7 +104,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
               className={classes.firstButton}
               color="primary"
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('sendCollectible')}
               variant="contained"
               testId="modal-send-collectible-btn"
@@ -106,7 +122,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
               color="primary"
               disabled={disableContractInteraction}
               minHeight={52}
-              minWidth={260}
+              minWidth={240}
               onClick={() => setActiveScreen('contractInteraction')}
               variant="outlined"
               testId="modal-contract-interaction-btn"
@@ -116,7 +132,7 @@ const ChooseTxType = ({ onClose, recipientAddress, setActiveScreen }: ChooseTxTy
                 className={classNames(classes.leftIcon, classes.iconSmall)}
                 src={ContractInteractionIcon}
               />
-              Contract Interaction
+              Contract interaction
             </Button>
           )}
         </Col>

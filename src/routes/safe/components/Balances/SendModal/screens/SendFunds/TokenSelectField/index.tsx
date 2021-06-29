@@ -28,13 +28,13 @@ const SelectedToken = ({ tokenAddress, tokens }: SelectTokenProps): ReactElement
     <MenuItem className={classes.container}>
       {token ? (
         <>
-          <ListItemIcon className={classes.tokenImage}>
-            <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
+          <ListItemIcon>
+            <Img className={classes.tokenImage} alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
             primary={token.name}
-            secondary={`${formatAmount(token.balance?.toString() ?? '0')} ${token.symbol}`}
+            secondary={`${formatAmount(token.balance?.tokenBalance.toString() ?? '0')} ${token.symbol}`}
           />
         </>
       ) : (
@@ -54,6 +54,7 @@ interface TokenSelectFieldProps {
 
 const TokenSelectField = ({ initialValue, isValid = true, tokens }: TokenSelectFieldProps): ReactElement => {
   const classes = useSelectStyles()
+  const tokenClasses = useSelectedTokenStyles()
 
   return (
     <Field
@@ -69,11 +70,16 @@ const TokenSelectField = ({ initialValue, isValid = true, tokens }: TokenSelectF
       {tokens.map((token) => (
         <MenuItem key={token.address} value={token.address}>
           <ListItemIcon>
-            <Img alt={token.name} height={28} onError={setImageToPlaceholder} src={token.logoUri} />
+            <Img
+              className={tokenClasses.tokenImage}
+              alt={token.name}
+              onError={setImageToPlaceholder}
+              src={token.logoUri}
+            />
           </ListItemIcon>
           <ListItemText
             primary={token.name}
-            secondary={`${formatAmount(token.balance?.toString() ?? '0')} ${token.symbol}`}
+            secondary={`${formatAmount(token.balance?.tokenBalance.toString() ?? '0')} ${token.symbol}`}
             data-testid={`select-token-${token.name}`}
           />
         </MenuItem>

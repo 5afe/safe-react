@@ -1,55 +1,47 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import classNames from 'classnames'
-import React, { useEffect, useState } from 'react'
-import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
+import React, { ReactElement, useEffect, useMemo } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
-import CopyBtn from 'src/components/CopyBtn'
-import Identicon from 'src/components/Identicon'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { estimateGasForDeployingSafe } from 'src/logic/contracts/safeContracts'
-import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
-import { getAccountsFrom, getNamesFrom, getSafeCreationSaltFrom } from 'src/routes/open/utils/safeDataExtractor'
+import {
+  CreateSafeValues,
+  getAccountsFrom,
+  getNamesFrom,
+  getSafeCreationSaltFrom,
+} from 'src/routes/open/utils/safeDataExtractor'
 
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
-import { ExplorerButton } from '@gnosis.pm/safe-react-components'
+import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
+import { FormApi } from 'final-form'
+import { StepperPageFormProps } from 'src/components/Stepper'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
 type ReviewComponentProps = {
-  userAccount: string
-  values: any
+  values: LoadFormValues
+  form: FormApi
 }
 
 const { nativeCoin } = getNetworkInfo()
 
-const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
+const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement => {
   const classes = useStyles()
 
-  const [gasCosts, setGasCosts] = useState('< 0.001')
   const names = getNamesFrom(values)
-  const addresses = getAccountsFrom(values)
+  const addresses = useMemo(() => getAccountsFrom(values), [values])
+
   const numOwners = getNumOwnersFrom(values)
-  const safeCreationSalt = getSafeCreationSaltFrom(values)
+  const safeCreationSalt = getSafeCreationSaltFrom(values as CreateSafeValues)
+  const { gasCostFormatted, gasLimit } = useEstimateSafeCreationGas({ addresses, numOwners, safeCreationSalt })
 
   useEffect(() => {
-    const estimateGas = async () => {
-      if (!addresses.length || !numOwners || !userAccount) {
-        return
-      }
-      const estimatedGasCosts = (
-        await estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt)
-      ).toString()
-      const gasCosts = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const formattedGasCosts = formatAmount(gasCosts)
-      setGasCosts(formattedGasCosts)
-    }
-
-    estimateGas()
-  }, [addresses, numOwners, safeCreationSalt, userAccount])
+    form.mutators.setValue('gasLimit', gasLimit)
+  }, [gasLimit, form.mutators])
 
   return (
     <>
@@ -103,27 +95,15 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
             {names.map((name, index) => (
               <React.Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={1}>
-                    <Identicon address={addresses[index]} diameter={32} />
-                  </Col>
-                  <Col xs={11}>
-                    <Block className={classNames(classes.name, classes.userName)}>
-                      <Paragraph noMargin size="lg" data-testid={`create-safe-owner-name-${index}`}>
-                        {name}
-                      </Paragraph>
-                      <Block className={classes.user} justify="center">
-                        <Paragraph
-                          color="disabled"
-                          noMargin
-                          size="md"
-                          data-testid={`create-safe-owner-address-${index}`}
-                        >
-                          {addresses[index]}
-                        </Paragraph>
-                        <CopyBtn content={addresses[index]} />
-                        <ExplorerButton explorerUrl={getExplorerInfo(addresses[index])} />
-                      </Block>
-                    </Block>
+                  <Col align="center" xs={12}>
+                    <EthHashInfo
+                      data-testid={`create-safe-owner-name-${index}`}
+                      hash={addresses[index]}
+                      name={name}
+                      showAvatar
+                      showCopyBtn
+                      explorerUrl={getExplorerInfo(addresses[index])}
+                    />
                   </Col>
                 </Row>
                 <Hairline />
@@ -133,10 +113,10 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
         </Col>
       </Row>
       <Row align="center" className={classes.info}>
-        <Paragraph color="primary" noMargin size="md">
+        <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately {gasCosts} {nativeCoin.name}. The exact amount will be determined
-          by your wallet.
+          wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The exact amount will be
+          determined by your wallet.
         </Paragraph>
       </Row>
     </>
@@ -144,7 +124,7 @@ const ReviewComponent = ({ userAccount, values }: ReviewComponentProps) => {
 }
 
 export const Review = () =>
-  function ReviewPage(controls, props): React.ReactElement {
+  function ReviewPage(controls: React.ReactNode, props: StepperPageFormProps): React.ReactElement {
     return (
       <>
         <OpenPaper controls={controls} padding={false}>

@@ -1,7 +1,7 @@
 import { createAction } from 'redux-actions'
 
+import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
+
 export const UPDATE_SAFE = 'UPDATE_SAFE'
 
-const updateSafe = createAction(UPDATE_SAFE)
-
-export default updateSafe
+export const updateSafe = createAction<Partial<SafeRecordProps>>(UPDATE_SAFE)

@@ -1,10 +1,10 @@
-import { Button, Text } from '@gnosis.pm/safe-react-components'
+import { Text, Icon } from '@gnosis.pm/safe-react-components'
 import TableContainer from '@material-ui/core/TableContainer'
 import cn from 'classnames'
 import React, { ReactElement, useState } from 'react'
 import { useSelector } from 'react-redux'
-import styled from 'styled-components'
 
+import ButtonHelper from 'src/components/ButtonHelper'
 import Row from 'src/components/layout/Row'
 import { TableCell, TableRow } from 'src/components/layout/Table'
 import Table from 'src/components/Table'
@@ -22,15 +22,6 @@ import {
 } from './dataFetcher'
 import { SpentVsAmount } from './SpentVsAmount'
 
-const TableActionButton = styled(Button)`
-  background-color: transparent;
-  padding: 0;
-
-  &:hover {
-    background-color: transparent;
-  }
-`
-
 interface SpendingLimitTableProps {
   data?: SpendingLimitTable[]
 }
@@ -46,14 +37,14 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
 
   return (
     <>
-      <TableContainer style={{ minHeight: '420px' }}>
+      <TableContainer style={{ minHeight: '440px' }}>
         <Table
           columns={columns}
           data={data}
           defaultFixed
           defaultOrderBy={SPENDING_LIMIT_TABLE_BENEFICIARY_ID}
           defaultRowsPerPage={5}
-          label="Spending Limits"
+          label="Spending limits"
           noBorder
           size={data?.length}
         >
@@ -82,16 +73,9 @@ export const LimitsTable = ({ data }: SpendingLimitTableProps): ReactElement => 
                 <TableCell component="td">
                   <Row align="end" className={classes.actions}>
                     {granted && (
-                      <TableActionButton
-                        size="md"
-                        iconType="delete"
-                        color="error"
-                        variant="outlined"
-                        onClick={() => setSelectedRow(row)}
-                        data-testid="remove-action"
-                      >
-                        {null}
-                      </TableActionButton>
+                      <ButtonHelper onClick={() => setSelectedRow(row)} data-testid="remove-limit-btn">
+                        <Icon size="sm" type="delete" color="error" tooltip="Remove limit" />
+                      </ButtonHelper>
                     )}
                   </Row>
                 </TableCell>

@@ -3,16 +3,16 @@ import React from 'react'
 import { useSelector } from 'react-redux'
 import Switch from '@material-ui/core/Switch'
 import { styles } from './style'
+import Divider from 'src/components/Divider'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import Paragraph from 'src/components/layout/Paragraph'
 import Buttons from './Buttons'
 import ContractABI from './ContractABI'
 import { EthAddressInput } from './EthAddressInput'
-import FormDivisor from './FormDivisor'
 import FormErrorMessage from './FormErrorMessage'
 import { Header } from './Header'
 import { MethodsDropdown } from './MethodsDropdown'
@@ -53,7 +53,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
   isABI,
 }) => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   let setCallResults
 
   React.useMemo(() => {
@@ -93,7 +93,7 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
 
   return (
     <>
-      <Header onClose={onClose} subTitle="1 of 2" title="Contract Interaction" />
+      <Header onClose={onClose} subTitle="1 of 2" title="Contract interaction" />
       <Hairline />
       <GnoForm
         decorators={[ensResolver]}
@@ -108,11 +108,11 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
             <>
               <Block className={classes.formContainer}>
                 <SafeInfo />
-                <FormDivisor />
+                <Divider withArrow />
                 <EthAddressInput
                   name="contractAddress"
                   onScannedValue={mutators.setContractAddress}
-                  text="Contract Address*"
+                  text="Contract address*"
                 />
                 <ContractABI />
                 <MethodsDropdown onChange={mutators.setSelectedMethod} />
@@ -120,12 +120,11 @@ const ContractInteraction: React.FC<ContractInteractionProps> = ({
                 <RenderInputParams />
                 <RenderOutputParams />
                 <FormErrorMessage />
-                <Paragraph color="disabled" noMargin size="md" style={{ letterSpacing: '-0.5px' }}>
-                  Use custom data (hex encoded)
+                <Paragraph color="disabled" noMargin size="lg" style={{ letterSpacing: '-0.5px' }}>
                   <Switch checked={!isABI} onChange={() => saveForm(rest.values)} />
+                  Use custom data (hex encoded)
                 </Paragraph>
               </Block>
-              <Hairline />
               <Buttons onClose={onClose} />
             </>
           )

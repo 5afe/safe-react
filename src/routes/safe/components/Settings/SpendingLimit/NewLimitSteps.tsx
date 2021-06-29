@@ -38,7 +38,7 @@ export const NewLimitSteps = (): ReactElement => (
       </Text>
 
       <Text size="lg" color="placeHolder" center>
-        Choose an account that will benefit from this allowance.
+        Define beneficiary that will be able to use the allowance.
       </Text>
 
       <Text size="lg" color="placeHolder" center>

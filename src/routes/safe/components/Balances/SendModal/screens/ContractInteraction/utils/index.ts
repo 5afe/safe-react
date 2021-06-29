@@ -82,13 +82,13 @@ export const getParsedJSONOrArrayFromString = (parameter: string): (string | num
 
 export const handleSubmitError = (error: SubmissionErrors, values: Record<string, string>): Record<string, string> => {
   for (const key in values) {
-    if (values.hasOwnProperty(key) && values[key] === error.value) {
+    if (values.hasOwnProperty(key) && error !== undefined && values[key] === error.value) {
       return { [key]: error.reason }
     }
   }
 
   // .call() failed and we're logging a generic error
-  return { [FORM_ERROR]: error.message }
+  return { [FORM_ERROR]: error ? error.message : undefined }
 }
 
 export const generateFormFieldKey = (type: string, signatureHash: string, index: number): string => {
@@ -96,11 +96,13 @@ export const generateFormFieldKey = (type: string, signatureHash: string, index:
   return `methodInput-${signatureHash}_${index}_${keyType}`
 }
 
-const extractMethodArgs = (signatureHash: string, values: Record<string, string>) => ({ type }, index) => {
-  const key = generateFormFieldKey(type, signatureHash, index)
+const extractMethodArgs =
+  (signatureHash: string, values: Record<string, string>) =>
+  ({ type }, index) => {
+    const key = generateFormFieldKey(type, signatureHash, index)
 
-  return getParsedJSONOrArrayFromString(values[key]) || values[key]
-}
+    return getParsedJSONOrArrayFromString(values[key]) || values[key]
+  }
 
 export const createTxObject = (
   method: AbiItemExtended,

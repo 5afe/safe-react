@@ -3,6 +3,7 @@ import metamaskIcon from './icon-metamask.png'
 import walletConnectIcon from './icon-wallet-connect.svg'
 import trezorIcon from './icon-trezor.svg'
 import ledgerIcon from './icon-ledger.svg'
+import trustIcon from './icon-trust.svg'
 import latticeIcon from './icon-lattice.svg'
 import fortmaticIcon from './icon-fortmatic.svg'
 import portisIcon from './icon-portis.svg'
@@ -10,21 +11,11 @@ import authereumIcon from './icon-authereum.png'
 import torusIcon from './icon-torus.svg'
 import coinbaseIcon from './icon-coinbase.svg'
 import operaIcon from './icon-opera.png'
+import squarelinkIcon from './icon-squarelink.png'
 
 import { WALLET_PROVIDER } from 'src/logic/wallets/getWeb3'
 
-type WalletProviderNames = typeof WALLET_PROVIDER[keyof typeof WALLET_PROVIDER]
-
-interface IconValue {
-  src: string
-  height: number
-}
-
-type WalletObjectsProps<Tvalue> = {
-  [key in WalletProviderNames]: Tvalue
-}
-
-const WALLET_ICONS: WalletObjectsProps<IconValue> = {
+const WALLET_ICONS: { [key in WALLET_PROVIDER]: { src: string; height: number } } = {
   [WALLET_PROVIDER.METAMASK]: {
     src: metamaskIcon,
     height: 25,
@@ -39,6 +30,10 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
   },
   [WALLET_PROVIDER.LEDGER]: {
     src: ledgerIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.TRUST]: {
+    src: trustIcon,
     height: 25,
   },
   [WALLET_PROVIDER.LATTICE]: {
@@ -65,8 +60,12 @@ const WALLET_ICONS: WalletObjectsProps<IconValue> = {
     src: operaIcon,
     height: 25,
   },
-  [WALLET_PROVIDER.WALLETLINK]: {
+  [WALLET_PROVIDER.COINBASE_WALLET]: {
     src: coinbaseIcon,
+    height: 25,
+  },
+  [WALLET_PROVIDER.SQUARELINK]: {
+    src: squarelinkIcon,
     height: 25,
   },
 }

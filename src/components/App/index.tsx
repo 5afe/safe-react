@@ -20,13 +20,13 @@ import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { networkSelector } from 'src/logic/wallets/store/selectors'
 import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
-import { safeNameSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import Modal from 'src/components/Modal'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { useLoadSafe } from 'src/logic/safe/hooks/useLoadSafe'
 import { useSafeScheduledUpdates } from 'src/logic/safe/hooks/useSafeScheduledUpdates'
 import useSafeActions from 'src/logic/safe/hooks/useSafeActions'
-import { currentCurrencySelector, safeFiatBalancesTotalSelector } from 'src/logic/currencyValues/store/selectors'
 import { formatAmountInUsFormat } from 'src/logic/tokens/utils/formatAmount'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
@@ -45,12 +45,6 @@ const notificationStyles = {
   },
   info: {
     background: '#fff',
-  },
-  receiveModal: {
-    height: 'auto',
-    maxWidth: 'calc(100% - 30px)',
-    minHeight: '544px',
-    overflow: 'hidden',
   },
 }
 
@@ -72,19 +66,23 @@ const App: React.FC = ({ children }) => {
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSelector(safeNameSelector) ?? ''
+  const {
+    address: safeAddress,
+    name: safeName,
+    totalFiatBalance: currentSafeBalance,
+  } = useSelector(currentSafeWithNames)
+  const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
-  const currentSafeBalance = useSelector(safeFiatBalancesTotalSelector)
   const currentCurrency = useSelector(currentCurrencySelector)
   const granted = useSelector(grantedSelector)
   const sidebarItems = useSidebarItems()
-
-  const safeLoaded = useLoadSafe(safeAddress)
+  // if safe is loaded via URL, `safeAddress` won't be available until store is populated with temp information
+  // Temp information will be built from `addressFromUrl`
+  const safeLoaded = useLoadSafe(safeAddress || addressFromUrl)
   useSafeScheduledUpdates(safeLoaded, safeAddress)
 
   const sendFunds = safeActionsState.sendFunds
-  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance) : ''
+  const formattedTotalBalance = currentSafeBalance ? formatAmountInUsFormat(currentSafeBalance.toString()) : ''
   const balance =
     !!formattedTotalBalance && !!currentCurrency ? `${formattedTotalBalance} ${currentCurrency}` : undefined
 
@@ -145,7 +143,7 @@ const App: React.FC = ({ children }) => {
               description="Receive Tokens Form"
               handleClose={onReceiveHide}
               open={safeActionsState.showReceive}
-              paperClassName={classes.receiveModal}
+              paperClassName="receive-modal"
               title="Receive Tokens"
             >
               <ReceiveModal onClose={onReceiveHide} safeAddress={safeAddress} safeName={safeName} />

@@ -1,12 +1,11 @@
-import CircularProgress from '@material-ui/core/CircularProgress'
+import { Loader } from '@gnosis.pm/safe-react-components'
 import { makeStyles } from '@material-ui/core/styles'
-import cn from 'classnames'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
 import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { CollectibleTx } from './screens/ReviewCollectible'
-import { CustomTx } from './screens/ContractInteraction/ReviewCustomTx'
+import { ReviewCustomTxProps } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
 import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
@@ -32,12 +31,6 @@ const SendCustomTx = React.lazy(() => import('./screens/ContractInteraction/Send
 const ReviewCustomTx = React.lazy(() => import('./screens/ContractInteraction/ReviewCustomTx'))
 
 const useStyles = makeStyles({
-  scalableModalWindow: {
-    height: 'auto',
-  },
-  scalableStaticModalWindow: {
-    height: 'auto',
-  },
   loaderStyle: {
     height: '500px',
     width: '100%',
@@ -63,6 +56,7 @@ type Props = {
   isOpen: boolean
   onClose: () => void
   recipientAddress?: string
+  recipientName?: string
   selectedToken?: string | NFTToken | Erc721Transfer
   tokenAmount?: string
 }
@@ -72,6 +66,7 @@ const SendModal = ({
   isOpen,
   onClose,
   recipientAddress,
+  recipientName,
   selectedToken,
   tokenAmount,
 }: Props): React.ReactElement => {
@@ -80,13 +75,14 @@ const SendModal = ({
   const [tx, setTx] = useState<unknown>({})
   const [isABI, setIsABI] = useState(true)
 
+  const [recipient, setRecipient] = useState<string | undefined>(recipientAddress)
+
   useEffect(() => {
     setActiveScreen(activeScreenType || 'chooseTxType')
     setIsABI(true)
     setTx({})
-  }, [activeScreenType, isOpen])
-
-  const scalableModalSize = activeScreen === 'chooseTxType'
+    setRecipient(recipientAddress)
+  }, [activeScreenType, isOpen, recipientAddress])
 
   const handleTxCreation = (txInfo: SendCollectibleTxInfo) => {
     setActiveScreen('sendFundsReviewTx')
@@ -112,44 +108,61 @@ const SendModal = ({
     setIsABI(!isABI)
   }
 
+  const handleOnPrev = (screen: TxType) => {
+    setRecipient((tx as ReviewTxProp).recipientAddress)
+    setActiveScreen(screen)
+  }
+
   return (
     <Modal
       description="Send Tokens Form"
       handleClose={onClose}
       open={isOpen}
-      paperClassName={cn(scalableModalSize ? classes.scalableStaticModalWindow : classes.scalableModalWindow)}
+      paperClassName="smaller-modal-window"
       title="Send Tokens"
     >
       <Suspense
         fallback={
           <div className={classes.loaderStyle}>
-            <CircularProgress size={40} />
+            <Loader size="md" />
           </div>
         }
       >
         {activeScreen === 'chooseTxType' && (
-          <ChooseTxType onClose={onClose} recipientAddress={recipientAddress} setActiveScreen={setActiveScreen} />
+          <ChooseTxType
+            onClose={onClose}
+            recipientName={recipientName}
+            recipientAddress={recipient}
+            setActiveScreen={setActiveScreen}
+          />
         )}
 
         {activeScreen === 'sendFunds' && (
           <SendFunds
+            initialValues={tx as ReviewTxProp}
             onClose={onClose}
             onReview={handleTxCreation}
-            recipientAddress={recipientAddress}
+            recipientAddress={recipient}
             selectedToken={selectedToken as string}
             amount={tokenAmount}
           />
         )}
 
         {activeScreen === 'sendFundsReviewTx' && (
-          <ReviewSendFundsTx onClose={onClose} onPrev={() => setActiveScreen('sendFunds')} tx={tx as ReviewTxProp} />
+          <ReviewSendFundsTx
+            onClose={onClose}
+            onPrev={() => {
+              handleOnPrev('sendFunds')
+            }}
+            tx={tx as ReviewTxProp}
+          />
         )}
 
         {activeScreen === 'contractInteraction' && isABI && (
           <ContractInteraction
             isABI={isABI}
             switchMethod={handleSwitchMethod}
-            contractAddress={recipientAddress}
+            contractAddress={recipient}
             initialValues={tx as ContractInteractionTx}
             onClose={onClose}
             onNext={handleContractInteractionCreation}
@@ -157,7 +170,7 @@ const SendModal = ({
         )}
 
         {activeScreen === 'contractInteractionReview' && isABI && tx && (
-          <ContractInteractionReview onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx} />
+          <ContractInteractionReview onClose={onClose} onPrev={() => handleOnPrev('contractInteraction')} tx={tx} />
         )}
 
         {activeScreen === 'contractInteraction' && !isABI && (
@@ -167,12 +180,16 @@ const SendModal = ({
             switchMethod={handleSwitchMethod}
             onClose={onClose}
             onNext={handleCustomTxCreation}
-            contractAddress={recipientAddress}
+            contractAddress={recipient}
           />
         )}
 
         {activeScreen === 'reviewCustomTx' && (
-          <ReviewCustomTx onClose={onClose} onPrev={() => setActiveScreen('contractInteraction')} tx={tx as CustomTx} />
+          <ReviewCustomTx
+            onClose={onClose}
+            onPrev={() => handleOnPrev('contractInteraction')}
+            tx={tx as ReviewCustomTxProps}
+          />
         )}
 
         {activeScreen === 'sendCollectible' && (
@@ -180,7 +197,7 @@ const SendModal = ({
             initialValues={tx}
             onClose={onClose}
             onNext={handleSendCollectible}
-            recipientAddress={recipientAddress}
+            recipientAddress={recipient}
             selectedToken={selectedToken as NFTToken | undefined}
           />
         )}
@@ -188,7 +205,7 @@ const SendModal = ({
         {activeScreen === 'reviewCollectible' && (
           <ReviewCollectible
             onClose={onClose}
-            onPrev={() => setActiveScreen('sendCollectible')}
+            onPrev={() => handleOnPrev('sendCollectible')}
             tx={tx as CollectibleTx}
           />
         )}

@@ -1,5 +1,5 @@
 import { createStyles } from '@material-ui/core/styles'
-import { boldFont, border, lg, sm, connected } from 'src/theme/variables'
+import { boldFont, border, lg, sm } from 'src/theme/variables'
 
 export const styles = createStyles({
   formContainer: {
@@ -20,15 +20,5 @@ export const styles = createStyles({
     padding: lg,
     position: 'absolute',
     width: '100%',
-  },
-  versionNumber: {
-    height: '21px',
-  },
-  link: {
-    color: `${connected}`,
-    textDecoration: 'none',
-    '&:hover': {
-      textDecoration: 'underline',
-    },
   },
 })

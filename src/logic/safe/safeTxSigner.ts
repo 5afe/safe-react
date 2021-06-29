@@ -2,7 +2,7 @@ import { List } from 'immutable'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import semverSatisfies from 'semver/functions/satisfies'
-import { SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES } from './transactions/offchainSigner'
+import { SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES } from './transactions/offchainSigner'
 
 // Here we're checking that safe contract version is greater or equal 1.1.1, but
 // theoretically EIP712 should also work for 1.0.0 contracts
@@ -17,7 +17,7 @@ export const checkIfOffChainSignatureIsPossible = (
   !isExecution &&
   !isSmartContractWallet &&
   !!safeVersion &&
-  semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFFCHAIN_SIGNATURES)
+  semverSatisfies(safeVersion, SAFE_VERSION_FOR_OFF_CHAIN_SIGNATURES)
 
 // https://docs.gnosis.io/safe/docs/contracts_signatures/#pre-validated-signatures
 export const getPreValidatedSignatures = (from: string, initialString: string = EMPTY_DATA): string => {

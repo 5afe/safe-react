@@ -34,6 +34,7 @@ type Token = {
 }
 
 export enum ETHEREUM_NETWORK {
+  UNKNOWN = 0,
   MAINNET = 1,
   MORDEN = 2,
   ROPSTEN = 3,
@@ -42,9 +43,8 @@ export enum ETHEREUM_NETWORK {
   KOVAN = 42,
   XDAI = 100,
   ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
   LOCAL = 4447,
+  VOLTA = 73799,
 }
 
 export type NetworkSettings = {
@@ -88,6 +88,7 @@ export type EnvironmentSettings = GasPrice & {
   // TODO: Shall we keep a reference to the relay?
   relayApiUrl?: string
   safeAppsUrl: string
+  safeUrl: string
   rpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
@@ -99,6 +100,8 @@ type SafeEnvironments = {
   staging?: EnvironmentSettings
   production: EnvironmentSettings
 }
+
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'nativeCoin'> & { safeUrl: string }
 
 export interface NetworkConfig {
   network: NetworkSettings

@@ -9,21 +9,22 @@ import { getRpcServiceUrl } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
 
-export const WALLET_PROVIDER = {
-  SAFE: 'SAFE',
-  METAMASK: 'METAMASK',
-  REMOTE: 'REMOTE',
-  TORUS: 'TORUS',
-  PORTIS: 'PORTIS',
-  FORTMATIC: 'FORTMATIC',
-  SQUARELINK: 'SQUARELINK',
-  WALLETCONNECT: 'WALLETCONNECT',
-  OPERA: 'OPERA',
-  WALLETLINK: 'WALLETLINK',
-  AUTHEREUM: 'AUTHEREUM',
-  LEDGER: 'LEDGER',
-  TREZOR: 'TREZOR',
-  LATTICE: 'LATTICE',
+// This providers have direct relation with name assigned in bnc-onboard configuration
+export enum WALLET_PROVIDER {
+  METAMASK = 'METAMASK',
+  TORUS = 'TORUS',
+  PORTIS = 'PORTIS',
+  FORTMATIC = 'FORTMATIC',
+  SQUARELINK = 'SQUARELINK',
+  WALLETCONNECT = 'WALLETCONNECT',
+  TRUST = 'TRUST',
+  OPERA = 'OPERA',
+  // This is the provider for WALLET_LINK configuration on bnc-onboard
+  COINBASE_WALLET = 'COINBASE WALLET',
+  AUTHEREUM = 'AUTHEREUM',
+  LEDGER = 'LEDGER',
+  TREZOR = 'TREZOR',
+  LATTICE = 'LATTICE',
 }
 
 // With some wallets from web3connect you have to use their provider instance only for signing
@@ -62,7 +63,7 @@ const isHardwareWallet = (walletName: string) =>
 const isSmartContractWallet = async (web3Provider: Web3, account: string): Promise<boolean> => {
   const contractCode = await web3Provider.eth.getCode(account)
 
-  return contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
+  return !!contractCode && contractCode.replace(EMPTY_DATA, '').replace(/0/g, '') !== ''
 }
 
 export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet'): Promise<ProviderProps> => {
@@ -97,16 +98,7 @@ export const setWeb3 = (provider: Provider): void => {
   web3 = new Web3(provider)
 }
 
-export const getBalanceInEtherOf = async (safeAddress: string): Promise<string> => {
-  if (!web3) {
-    return '0'
-  }
-
-  const funds = await web3.eth.getBalance(safeAddress)
-
-  if (!funds) {
-    return '0'
-  }
-
-  return web3.utils.fromWei(funds, 'ether').toString()
+export const isTxPendingError = (err: Error): boolean => {
+  const WEB3_TX_NOT_MINED_ERROR = 'Transaction was not mined within'
+  return err.message.startsWith(WEB3_TX_NOT_MINED_ERROR)
 }

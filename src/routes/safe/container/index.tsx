@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
-import { safeFeaturesEnabledSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
@@ -17,14 +17,14 @@ export const ADDRESS_BOOK_TAB_BTN_TEST_ID = 'address-book-tab-btn'
 export const SAFE_VIEW_NAME_HEADING_TEST_ID = 'safe-name-heading'
 export const TRANSACTIONS_TAB_NEW_BTN_TEST_ID = 'transactions-tab-new-btn'
 
-const Apps = React.lazy(() => import('../components/Apps'))
-const Settings = React.lazy(() => import('../components/Settings'))
-const Balances = React.lazy(() => import('../components/Balances'))
-const TxsTable = React.lazy(() => import('src/routes/safe/components/Transactions/GatewayTransactions'))
+const Apps = React.lazy(() => import('src/routes/safe/components/Apps'))
+const Settings = React.lazy(() => import('src/routes/safe/components/Settings'))
+const Balances = React.lazy(() => import('src/routes/safe/components/Balances'))
+const TxList = React.lazy(() => import('src/routes/safe/components/Transactions/TxList'))
 const AddressBookTable = React.lazy(() => import('src/routes/safe/components/AddressBook'))
 
 const Container = (): React.ReactElement => {
-  const featuresEnabled = useSelector(safeFeaturesEnabledSelector)
+  const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const [modal, setModal] = useState({
     isOpen: false,
     title: null,
@@ -68,7 +68,7 @@ const Container = (): React.ReactElement => {
         <Route
           exact
           path={`${matchSafeWithAddress?.path}/transactions`}
-          render={() => wrapInSuspense(<TxsTable />, null)}
+          render={() => wrapInSuspense(<TxList />, null)}
         />
         <Route
           exact

@@ -1,6 +1,6 @@
 import { ContinueFooter, GenericFooter } from './components/Footer'
 
-export const isConfirmationStep = (stepIndex?: number) => stepIndex === 0
+export const isConfirmationStep = (stepIndex?: number): boolean => stepIndex === 0
 
 export const steps = [
   {
@@ -42,7 +42,7 @@ export const steps = [
     id: '6',
     label: 'Success',
     description: 'Your Safe was created successfully',
-    instruction: 'Click below to get started',
+    instruction: undefined,
     footerComponent: ContinueFooter,
   },
 ]

@@ -1,36 +1,12 @@
 import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
-import { getWeb3, web3ReadOnly } from 'src/logic/wallets/getWeb3'
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { getGasPrice, getGasPriceOracle } from 'src/config'
 
 export const EMPTY_DATA = '0x'
 
-export const checkReceiptStatus = async (hash) => {
-  if (!hash) {
-    return Promise.reject(new Error('No valid Tx hash to get receipt from'))
-  }
-
-  const txReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
-
-  const { status }: any = txReceipt
-  if (!status) {
-    return Promise.reject(new Error('No status found on this transaction receipt'))
-  }
-
-  const hasError = status === '0x0'
-  if (hasError) {
-    return Promise.reject(new Error('Obtained a transaction failure in the receipt'))
-  }
-
-  return Promise.resolve()
-}
-
 export const calculateGasPrice = async (): Promise<string> => {
-  if (process.env.NODE_ENV === 'test') {
-    return '20000000000'
-  }
-
   const gasPrice = getGasPrice()
   const gasPriceOracle = getGasPriceOracle()
 
@@ -61,7 +37,7 @@ export const calculateGasOf = async (txConfig: {
   try {
     const gas = await web3.eth.estimateGas(txConfig)
 
-    return gas * 2
+    return gas
   } catch (err) {
     return Promise.reject(err)
   }
