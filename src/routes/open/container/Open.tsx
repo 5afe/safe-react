@@ -84,20 +84,6 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
     const ownerAddresses = getAccountsFrom(values)
     const safeCreationSalt = getSafeCreationSaltFrom(values)
     const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
-    let receiptResult
-    const waitForTxReceipt = (resolve, reject, tries = 0) => {
-      setTimeout(() => {
-        if (receiptResult) {
-          resolve(receiptResult)
-        } else {
-          if (tries > 1200) {
-            reject(new Error('Transaction was not mined within 10 minutes'))
-          } else {
-            waitForTxReceipt(resolve, reject, tries + 1)
-          }
-        }
-      }, 500)
-    }
     deploymentTx
       .send({
         from: userAccount,
@@ -105,13 +91,12 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
       })
       .once('transactionHash', (txHash) => {
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
-        waitForTxReceipt(resolve, reject)
         txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
-          receiptResult = txReceipt
+          resolve(txReceipt)
         })
       })
       .then((txReceipt) => {
-        receiptResult = txReceipt
+        resolve(txReceipt)
       })
       .catch((error) => {
         reject(error)
