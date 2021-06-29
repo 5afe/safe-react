@@ -1864,13 +1864,6 @@
     classnames "^2.2.6"
     react-media "^1.10.0"
 
-"@gnosis.pm/util-contracts@2.0.6":
-  version "2.0.6"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/util-contracts/-/util-contracts-2.0.6.tgz#6bc5107068df6643548a9a0ff11b2eed725aa161"
-  integrity sha512-d53LDUiIUgZ9RNvHWZmTBYjETAEWe56srZF4cF12qEn6KCRJMFnB/+0uc05Tthj9fN2fNAMNNsPGNF2lI1aHCQ==
-  dependencies:
-    "@truffle/hdwallet-provider" "^1.0.27"
-
 "@hapi/address@2.x.x":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -3462,7 +3455,7 @@
   resolved "https://registry.yarnpkg.com/@truffle/error/-/error-0.0.14.tgz#59683b5407bede7bddf16d80dc5592f9c5e5fa05"
   integrity sha512-utJx+SZYoMqk8wldQG4gCVKhV8GwMJbWY7sLXFT/D8wWZTnE2peX7URFJh/cxkjTRCO328z1s2qewkhyVsu2HA==
 
-"@truffle/hdwallet-provider@^1.0.0", "@truffle/hdwallet-provider@^1.0.27":
+"@truffle/hdwallet-provider@^1.0.0":
   version "1.2.2"
   resolved "https://registry.yarnpkg.com/@truffle/hdwallet-provider/-/hdwallet-provider-1.2.2.tgz#7b42f7cb7fc1f80751c573c72ba488e59690f8ea"
   integrity sha512-gpE5M9c+G7uMR9Nn2xslY0BRdl8hvlrHxBJ451g/V3WnOI5rDQMXezz6VZMn3zvWDiQTPRknx1uUDfWvMuQwqg==
