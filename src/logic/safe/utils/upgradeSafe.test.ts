@@ -1,22 +1,31 @@
-import { getSafeSingletonDeployment, getMultiSendDeployment } from '@gnosis.pm/safe-deployments'
+import { getSafeSingletonDeployment, getMultiSendCallOnlyDeployment } from '@gnosis.pm/safe-deployments'
 import { AbiItem } from 'web3-utils'
 import Web3 from 'web3'
 
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { MultiSend } from 'src/types/contracts/MultiSend.d'
 
 const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
 const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
 
 jest.mock('src/logic/contracts/safeContracts', () => ({
-  getMultisendContractAddress: jest.fn().mockReturnValue('0x8D29bE29923b68abfDD21e541b9374737B49cdAD'),
+  getMultisendContract: jest.fn()
 }))
 
 describe('Upgrade a Safe', () => {
+  const safeContracts = require('src/logic/contracts/safeContracts')
+
   it('Calls encodeMultiSendCall with a list of MultiSendTransactionInstanceType and returns the multiSend data encoded', () => {
     const safeAddress = ZERO_ADDRESS
     const web3 = new Web3(new Web3.providers.HttpProvider(''))
+    
+    // Mock multisend contract instance
+    const multiSendCallOnlyDeployment = getMultiSendCallOnlyDeployment()
+    safeContracts.getMultisendContract.mockReturnValue((new web3.eth.Contract(multiSendCallOnlyDeployment?.abi as AbiItem[]) as unknown) as MultiSend)
+    
+    // Mock safe contract instance
     const safeSingletonDeployment = getSafeSingletonDeployment({
       version: '1.1.1',
     })

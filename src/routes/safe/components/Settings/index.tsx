@@ -24,6 +24,8 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+import { isFeatureEnabled } from 'src/config'
+import { FEATURES } from 'src/config/networks/network.d'
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -39,6 +41,7 @@ const Settings: React.FC = () => {
   const [state, setState] = useState(INITIAL_STATE)
   const { owners, needsUpdate, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
+  const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
 
   const handleChange = (menuOptionIndex) => () => {
     setState((prevState) => ({ ...prevState, menuOptionIndex }))
@@ -119,16 +122,23 @@ const Settings: React.FC = () => {
               />
             </Row>
             <Hairline className={classes.hairline} />
-            <Row className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)} onClick={handleChange(4)}>
-              <IconText
-                iconSize="sm"
-                textSize="xl"
-                iconType="fuelIndicator"
-                text="Spending limit"
-                color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
-              />
-            </Row>
-            <Hairline className={classes.hairline} />
+            {isSpendingLimitEnabled && (
+              <>
+                <Row
+                  className={cn(classes.menuOption, menuOptionIndex === 4 && classes.active)}
+                  onClick={handleChange(4)}
+                >
+                  <IconText
+                    iconSize="sm"
+                    textSize="xl"
+                    iconType="fuelIndicator"
+                    text="Spending limit"
+                    color={menuOptionIndex === 4 ? 'primary' : 'secondary'}
+                  />
+                </Row>
+                <Hairline className={classes.hairline} />
+              </>
+            )}
             <Row className={cn(classes.menuOption, menuOptionIndex === 5 && classes.active)} onClick={handleChange(5)}>
               <IconText
                 iconSize="sm"
