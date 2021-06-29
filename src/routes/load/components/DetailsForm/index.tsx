@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import CheckCircle from '@material-ui/icons/CheckCircle'
 import React, { ReactElement, ReactNode } from 'react'
 import { FormApi } from 'final-form'
+import { useParams } from 'react-router'
 
 import { ScanQRWrapper } from 'src/components/ScanQRModal/ScanQRWrapper'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
@@ -70,6 +71,7 @@ interface DetailsFormProps {
 
 const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
+  const { safeAddress } = useParams<{ safeAddress?: string }>()
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
@@ -114,6 +116,7 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
       <Block className={classes.root} margin="lg">
         <Col xs={11}>
           <AddressInput
+            defaultValue={safeAddress}
             fieldMutator={(val) => {
               form.mutators.setValue(FIELD_LOAD_ADDRESS, val)
             }}

@@ -1,30 +1,39 @@
 import React, { ReactElement } from 'react'
-import { makeStyles } from '@material-ui/core/styles'
-import { EthHashInfo } from '@gnosis.pm/safe-react-components'
+import styled from 'styled-components'
+import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+import Link from 'src/components/layout/Link'
+import { SAFELIST_ADDRESS, LOAD_ADDRESS } from 'src/routes/routes'
 
-const useStyles = makeStyles({
-  wrapper: {
-    width: '100%',
-    padding: '5px 0',
-    opacity: '0.3',
-    transition: 'opacity 200ms ease-in',
+const Wrapper = styled.div`
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  margin-right: 28px;
+  border-bottom: 1px solid #e8e7e6;
 
-    '&:hover': {
-      opacity: '1',
-    },
-  },
-})
+  & > a:last-child {
+    text-decoration: underline;
+  }
+`
 
 type Props = {
   address: string
+  onClick: () => unknown
 }
 
-export const UnsavedAddress = ({ address }: Props): ReactElement => {
-  const classes = useStyles()
-
+export const UnsavedAddress = ({ address, onClick }: Props): ReactElement => {
   return (
-    <div className={classes.wrapper}>
-      <EthHashInfo hash={address} showAvatar shortenHash={12} />
-    </div>
+    <Wrapper>
+      <Link to={`${SAFELIST_ADDRESS}/${address}/balances`} onClick={onClick}>
+        <EthHashInfo hash={address} showAvatar shortenHash={8} />
+      </Link>
+
+      <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onClick}>
+        <Text size="sm" color="primary">
+          Add Safe
+        </Text>
+      </Link>
+    </Wrapper>
   )
 }

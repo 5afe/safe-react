@@ -5,7 +5,6 @@ import { safesAsList } from 'src/logic/safe/store/selectors'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { fetchSafesByOwner } from 'src/logic/safe/api/fetchSafesByOwner'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { IS_PRODUCTION } from 'src/utils/constants'
 
 const useOwnerSafes = (): string[] => {
   const connectedWalletAddress = useSelector(userAccountSelector)
@@ -14,7 +13,7 @@ const useOwnerSafes = (): string[] => {
   const [filteredSafes, setFilteredSafes] = useState<string[]>([])
 
   useEffect(() => {
-    if (IS_PRODUCTION || !connectedWalletAddress) {
+    if (!connectedWalletAddress) {
       return
     }
 

@@ -8,6 +8,7 @@ import styled from 'styled-components'
 import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
 import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
+import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
@@ -51,38 +52,6 @@ type Props = {
   onSafeClick: () => void
 }
 
-type WrapperProps = {
-  address: string
-  onSafeClick: Props['onSafeClick']
-  currentAddress: Props['currentSafeAddress']
-  children: React.ReactNode
-}
-
-const ListItemWrapper = ({ address, currentAddress, onSafeClick, children }: WrapperProps) => {
-  const classes = useStyles()
-
-  return (
-    <>
-      <Link
-        data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
-        onClick={onSafeClick}
-        to={`${SAFELIST_ADDRESS}/${address}/balances`}
-      >
-        <ListItem classes={{ root: classes.listItemRoot }}>
-          {sameAddress(currentAddress, address) ? (
-            <StyledIcon type="check" size="md" color="primary" />
-          ) : (
-            <div className={classes.noIcon}>placeholder</div>
-          )}
-
-          {children}
-        </ListItem>
-      </Link>
-      <Hairline />
-    </>
-  )
-}
-
 export const SafeList = ({
   currentSafeAddress,
   defaultSafeAddress,
@@ -95,21 +64,37 @@ export const SafeList = ({
   return (
     <MuiList className={classes.list}>
       {safes.map((safe) => (
-        <ListItemWrapper
-          address={safe.address}
-          currentAddress={currentSafeAddress}
-          onSafeClick={onSafeClick}
-          key={safe.address}
-        >
-          <AddressWrapper safe={safe} defaultSafeAddress={defaultSafeAddress} />
-        </ListItemWrapper>
+        <React.Fragment key={safe.address}>
+          <Link
+            data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
+            onClick={onSafeClick}
+            to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
+          >
+            <ListItem classes={{ root: classes.listItemRoot }}>
+              {sameAddress(currentSafeAddress, safe.address) ? (
+                <StyledIcon type="check" size="md" color="primary" />
+              ) : (
+                <div className={classes.noIcon}>placeholder</div>
+              )}
+
+              <AddressWrapper safe={safe} defaultSafeAddress={defaultSafeAddress} />
+            </ListItem>
+          </Link>
+          <Hairline />
+        </React.Fragment>
       ))}
 
-      {otherSafes.map((address) => (
-        <ListItemWrapper address={address} currentAddress={currentSafeAddress} onSafeClick={onSafeClick} key={address}>
-          <UnsavedAddress address={address} />
-        </ListItemWrapper>
-      ))}
+      {otherSafes.length > 0 && (
+        <ListItem classes={{ root: classes.listItemRoot }}>
+          <div className={classes.noIcon}>placeholder</div>
+
+          <Collapse title="Owned Safes">
+            {otherSafes.map((address) => (
+              <UnsavedAddress address={address} key={address} onClick={onSafeClick} />
+            ))}
+          </Collapse>
+        </ListItem>
+      )}
     </MuiList>
   )
 }
