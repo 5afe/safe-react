@@ -26,7 +26,7 @@ export const UnsavedAddress = ({ address, onClick }: Props): ReactElement => {
   return (
     <Wrapper>
       <Link to={`${SAFELIST_ADDRESS}/${address}/balances`} onClick={onClick}>
-        <EthHashInfo hash={address} showAvatar shortenHash={8} />
+        <EthHashInfo hash={address} showAvatar shortenHash={4} />
       </Link>
 
       <Link to={`${LOAD_ADDRESS}/${address}`} onClick={onClick}>
