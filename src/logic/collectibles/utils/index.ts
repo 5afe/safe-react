@@ -1,6 +1,6 @@
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC721TokenContract, getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
 
@@ -55,7 +55,7 @@ export const generateERC721TransferTxData = async (
     NFTTokenContract = await getERC721TokenContract()
   } else {
     // we fallback to an ERC20 Token contract whose ABI implements the `transfer` method
-    NFTTokenContract = await getStandardTokenContract()
+    NFTTokenContract = await getERC20TokenContract()
   }
 
   const tokenInstance = await NFTTokenContract.at(tx.assetAddress)
