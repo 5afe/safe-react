@@ -82,7 +82,7 @@ const AppUrl = ({ appList }: { appList: SafeApp[] }): React.ReactElement => {
   // trick to prevent having the field validated by default. Not sure why this happens in this form
   const validate = !visited?.appUrl
     ? undefined
-    : composeValidators(required, validateUrl, validateManifest, uniqueApp(appList))
+    : composeValidators(required, validateUrl, uniqueApp(appList), validateManifest)
 
   return (
     <StyledAppUrlField
