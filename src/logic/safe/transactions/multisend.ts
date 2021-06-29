@@ -1,20 +1,7 @@
 import { Transaction } from '@gnosis.pm/safe-apps-sdk-v1'
-import { AbiItem } from 'web3-utils'
-import { MultiSend } from 'src/types/contracts/MultiSend.d'
-import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 
-const multiSendAbi: AbiItem[] = [
-  {
-    type: 'function',
-    name: 'multiSend',
-    constant: false,
-    payable: false,
-    stateMutability: 'nonpayable',
-    inputs: [{ type: 'bytes', name: 'transactions' }],
-    outputs: [],
-  },
-]
+import { getWeb3 } from 'src/logic/wallets/getWeb3'
+import { getMultisendContract } from 'src/logic/contracts/safeContracts'
 
 export interface MultiSendTx {
   to: string
@@ -24,8 +11,7 @@ export interface MultiSendTx {
 
 export const encodeMultiSendCall = (txs: Transaction[]): string => {
   const web3 = getWeb3()
-  const multisendAddress = getMultisendContractAddress()
-  const multiSend = new web3.eth.Contract(multiSendAbi, multisendAddress) as unknown as MultiSend
+  const multiSend = getMultisendContract()
 
   const joinedTxs = txs
     .map((tx) =>
