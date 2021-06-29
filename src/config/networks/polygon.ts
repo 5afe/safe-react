@@ -59,7 +59,7 @@ const polygon: NetworkConfig = {
     WALLETS.WALLET_CONNECT,
     WALLETS.PORTIS,
   ],
-  disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT],
 }
 
 export default polygon
