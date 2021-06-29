@@ -31,6 +31,11 @@ const AppInfo = styled.div`
     margin-right: 10px;
   }
 `
+
+const StyledLink = styled(Link)`
+  inline-size: fit-content;
+`
+
 const AppDocsInfo = styled.div`
   display: flex;
   margin-bottom: 24px;
@@ -96,7 +101,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <Text size="xl" as="span" color="secondary">
                 Safe Apps are third-party extensions.
               </Text>
-              <Link
+              <StyledLink
                 href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
                 target="_blank"
                 rel="noreferrer"
@@ -106,7 +111,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
                   Learn more about building Safe Apps.
                 </Text>
                 <Icon size="sm" type="externalLink" color="primary" />
-              </Link>
+              </StyledLink>
             </AppDocsInfo>
             <AppUrl appList={appList} />
             {/* Fetch app from url and return a SafeApp */}
