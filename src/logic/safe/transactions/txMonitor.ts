@@ -47,7 +47,7 @@ export const txMonitor = async (
         return txMonitor({ sender, hash, data }, cb, options)
       }
     }
-    const firstTxReceipt = web3ReadOnly.eth.getTransactionReceipt(hash)
+    const firstTxReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
     if (firstTxReceipt) {
       return
     }
