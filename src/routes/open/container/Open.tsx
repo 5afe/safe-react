@@ -90,12 +90,15 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
         gas: values?.gasLimit,
       })
       .once('transactionHash', (txHash) => {
+        console.log('First tx sent')
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
         txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
+          console.log('Speed up tx mined:', txReceipt)
           resolve(txReceipt)
         })
       })
       .then((txReceipt) => {
+        console.log('First tx mined:', txReceipt)
         resolve(txReceipt)
       })
       .catch((error) => {

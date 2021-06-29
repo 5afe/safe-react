@@ -35,6 +35,7 @@ export const txMonitor = async (
   options?: TxMonitorOptions,
 ): Promise<void> => {
   setTimeout(async () => {
+    console.log(1)
     if (nonce === undefined || gasPrice === undefined) {
       // this block is accessed only the first time, to lookup the tx nonce and gasPrice
       // find the nonce for the current tx
@@ -47,9 +48,7 @@ export const txMonitor = async (
         return txMonitor({ sender, hash, data }, cb, options)
       }
     }
-
-    web3ReadOnly.eth.getTransactionReceipt(hash)
-
+    console.log(2)
     const latestBlock = await web3ReadOnly.eth.getBlock('latest', true)
 
     const replacementTransaction = latestBlock.transactions.find((transaction) => {
@@ -62,10 +61,12 @@ export const txMonitor = async (
         sameString(transaction.input, data)
       )
     })
-
+    console.log(3)
     if (replacementTransaction) {
+      console.log(4)
       const transactionReceipt = await web3ReadOnly.eth.getTransactionReceipt(replacementTransaction.hash)
       if (transactionReceipt === null) {
+        console.log(5)
         // pending transaction
         return txMonitor(
           {
@@ -79,6 +80,7 @@ export const txMonitor = async (
           options,
         )
       }
+      console.log(6)
       cb(transactionReceipt)
       return
     }
