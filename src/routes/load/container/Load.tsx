@@ -17,6 +17,7 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
+import { useParams } from 'react-router'
 
 export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordProps) => void): Promise<void> => {
   const safeProps = await buildSafe(safeAddress)
@@ -51,6 +52,7 @@ const Load = (): ReactElement => {
   const dispatch = useDispatch()
   const provider = useSelector(providerNameSelector)
   const userAddress = useSelector(userAccountSelector)
+  const { safeAddress } = useParams<{ safeAddress?: string }>()
 
   const addSafeHandler = async (safe: SafeRecordProps) => {
     await dispatch(addOrUpdateSafe(safe))
@@ -93,7 +95,7 @@ const Load = (): ReactElement => {
 
   return (
     <Page>
-      <Layout onLoadSafeSubmit={onLoadSafeSubmit} userAddress={userAddress} provider={provider} />
+      <Layout onLoadSafeSubmit={onLoadSafeSubmit} userAddress={userAddress} provider={provider} key={safeAddress} />
     </Page>
   )
 }

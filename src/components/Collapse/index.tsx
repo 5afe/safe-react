@@ -32,6 +32,7 @@ interface CollapseProps {
   title: React.ReactElement | string
   description?: React.ReactElement | string
   collapseClassName?: string
+  defaultExpanded?: boolean
 }
 
 const Collapse: React.FC<CollapseProps> = ({
@@ -39,8 +40,9 @@ const Collapse: React.FC<CollapseProps> = ({
   description = null,
   title,
   collapseClassName,
+  defaultExpanded = false,
 }): React.ReactElement => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(defaultExpanded)
 
   const handleClick = () => {
     setOpen(!open)

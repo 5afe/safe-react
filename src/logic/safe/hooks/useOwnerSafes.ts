@@ -29,7 +29,9 @@ const useOwnerSafes = (): string[] => {
   }, [connectedWalletAddress])
 
   useMemo(() => {
-    const unsavedSafes = ownerSafes.filter((address) => !savedSafes.some((item) => sameAddress(address, item.address)))
+    const unsavedSafes = ownerSafes.filter((address) => {
+      return !savedSafes.some((item) => sameAddress(address, item.address) && !item.loadedViaUrl)
+    })
     setFilteredSafes(unsavedSafes)
   }, [ownerSafes, savedSafes])
 

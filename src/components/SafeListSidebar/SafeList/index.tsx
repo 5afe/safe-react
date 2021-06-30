@@ -60,6 +60,14 @@ export const SafeList = ({
   otherSafes,
 }: Props): React.ReactElement => {
   const classes = useStyles()
+  const ownedSafesExpanded = otherSafes.some((address) => address === currentSafeAddress)
+
+  const getLink = (address: string): React.ReactElement =>
+    sameAddress(currentSafeAddress, address) ? (
+      <StyledIcon type="check" size="md" color="primary" />
+    ) : (
+      <div className={classes.noIcon}>placeholder</div>
+    )
 
   return (
     <MuiList className={classes.list}>
@@ -71,12 +79,7 @@ export const SafeList = ({
             to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
-              {sameAddress(currentSafeAddress, safe.address) ? (
-                <StyledIcon type="check" size="md" color="primary" />
-              ) : (
-                <div className={classes.noIcon}>placeholder</div>
-              )}
-
+              {getLink(safe.address)}
               <AddressWrapper safe={safe} defaultSafeAddress={defaultSafeAddress} />
             </ListItem>
           </Link>
@@ -88,9 +91,11 @@ export const SafeList = ({
         <ListItem classes={{ root: classes.listItemRoot }}>
           <div className={classes.noIcon}>placeholder</div>
 
-          <Collapse title="Owned Safes">
+          <Collapse title={`Owned Safes (${otherSafes.length})`} defaultExpanded={ownedSafesExpanded}>
             {otherSafes.map((address) => (
-              <UnsavedAddress address={address} key={address} onClick={onSafeClick} />
+              <UnsavedAddress address={address} key={address} onClick={onSafeClick}>
+                {getLink(address)}
+              </UnsavedAddress>
             ))}
           </Collapse>
         </ListItem>
