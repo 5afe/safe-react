@@ -95,7 +95,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
             {names.map((name, index) => (
               <React.Fragment key={`name${index}`}>
                 <Row className={classes.owner}>
-                  <Col align="center" xs={12}>
+                  <Col align="center" xs={12} data-testid={`create-safe-owner-details-${index}`}>
                     <EthHashInfo
                       data-testid={`create-safe-owner-name-${index}`}
                       hash={addresses[index]}
