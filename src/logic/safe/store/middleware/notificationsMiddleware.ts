@@ -119,13 +119,13 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
         const state = store.getState()
         const { safe } = action.payload
         const currentSafeAddress = safeAddressFromUrl(state) || safe.address
-        if (!currentSafeAddress) {
+        if (!currentSafeAddress || !safe.currentVersion) {
           break
         }
         const isUserOwner = grantedSelector(state)
-        const version = await getSafeVersionInfo(currentSafeAddress)
+        const version = await getSafeVersionInfo(safe.currentVersion)
 
-        const notificationKey = `${currentSafeAddress}`
+        const notificationKey = `${currentSafeAddress}-update`
         const onNotificationClicked = () => {
           dispatch(closeSnackbarAction({ key: notificationKey }))
           dispatch(push(`/safes/${currentSafeAddress}/settings`))

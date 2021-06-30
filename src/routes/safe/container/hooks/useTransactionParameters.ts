@@ -5,7 +5,7 @@ import { getUserNonce } from 'src/logic/wallets/ethTransactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { getLastTx, getNewTxNonce } from 'src/logic/safe/store/actions/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
-import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
+import { currentSafeCurrentVersion, safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { web3ReadOnly as web3 } from 'src/logic/wallets/getWeb3'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
 import { sameString } from 'src/utils/strings'
@@ -40,6 +40,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   const isCancelTransaction = sameString(props?.parameterStatus || 'ENABLED', 'CANCEL_TRANSACTION')
   const connectedWalletAddress = useSelector(userAccountSelector)
   const safeAddress = useSelector(safeAddressFromUrl)
+  const safeVersion = useSelector(currentSafeCurrentVersion) as string
 
   // Safe Params
   const [safeNonce, setSafeNonce] = useState<string | undefined>(props?.initialSafeNonce)
@@ -81,7 +82,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
   useEffect(() => {
     const getSafeNonce = async () => {
       if (safeAddress) {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const lastTx = await getLastTx(safeAddress)
         const nonce = await getNewTxNonce(lastTx, safeInstance)
         setSafeNonce(nonce)
@@ -91,7 +92,7 @@ export const useTransactionParameters = (props?: Props): TxParameters => {
     if (safeNonce === undefined) {
       getSafeNonce()
     }
-  }, [safeAddress, safeNonce])
+  }, [safeAddress, safeVersion, safeNonce])
 
   return {
     safeNonce,

@@ -12,7 +12,7 @@ import {
 import { getApprovalTransaction, getExecutionTransaction, saveTxToHistory } from 'src/logic/safe/transactions'
 import { tryOffChainSigning } from 'src/logic/safe/transactions/offchainSigner'
 import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
-import { getCurrentSafeVersion } from 'src/logic/safe/utils/safeVersion'
+import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
@@ -74,12 +74,12 @@ export const processTransaction =
     const state = getState()
 
     const { account: from, hardwareWallet, smartContractWallet } = providerSelector(state)
-    const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+    const safeVersion = currentSafeCurrentVersion(state) as string
+    const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
     const lastTx = await getLastTx(safeAddress)
     const nonce = await getNewTxNonce(lastTx, safeInstance)
     const isExecution = approveAndExecute || (await shouldExecuteTransaction(safeInstance, nonce, lastTx))
-    const safeVersion = await getCurrentSafeVersion(safeInstance)
 
     const preApprovingOwner = approveAndExecute && !thresholdReached ? userAddress : undefined
     let sigs = generateSignaturesFromTxConfirmations(tx.confirmations, preApprovingOwner)
