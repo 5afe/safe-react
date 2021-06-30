@@ -13,7 +13,7 @@ import { composeValidators, required, uniqueAddress, validAddressBookName } from
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Row from 'src/components/layout/Row'
-import { addressBookAddressesListSelector } from 'src/logic/addressBook/store/selectors'
+import { addressBookAddresses } from 'src/logic/addressBook/store/selectors'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { Entry } from 'src/routes/safe/components/AddressBook'
 
@@ -54,7 +54,7 @@ export const CreateEditEntryModal = ({
     }
   }
 
-  const storedAddresses = useSelector(addressBookAddressesListSelector)
+  const storedAddresses = useSelector(addressBookAddresses)
   const isUniqueAddress = uniqueAddress(storedAddresses)
 
   return (

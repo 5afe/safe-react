@@ -1,7 +1,5 @@
 import { OptionsObject } from 'notistack'
 
-import { getNetworkName } from 'src/config'
-
 export const SUCCESS = 'success'
 export const ERROR = 'error'
 export const WARNING = 'warning'
@@ -32,6 +30,7 @@ enum NOTIFICATION_IDS {
   TX_CONFIRMATION_EXECUTED_MSG,
   TX_CONFIRMATION_FAILED_MSG,
   TX_FETCH_SIGNATURES_ERROR_MSG,
+  SAFE_APPS_FETCH_ERROR_MSG,
   SAFE_NAME_CHANGED_MSG,
   OWNER_NAME_CHANGE_EXECUTED_MSG,
   SIGN_SETTINGS_CHANGE_MSG,
@@ -50,7 +49,6 @@ enum NOTIFICATION_IDS {
   REMOVE_SPENDING_LIMIT_EXECUTED_MSG,
   REMOVE_SPENDING_LIMIT_EXECUTED_MORE_CONFIRMATIONS_MSG,
   REMOVE_SPENDING_LIMIT_FAILED_MSG,
-  WRONG_NETWORK_MSG,
   ADDRESS_BOOK_NEW_ENTRY_SUCCESS,
   ADDRESS_BOOK_EDIT_ENTRY_SUCCESS,
   ADDRESS_BOOK_IMPORT_ENTRIES_SUCCESS,
@@ -119,7 +117,10 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
     message: 'Couldn’t fetch all signatures for this transaction. Please reload page and try again',
     options: { variant: ERROR, persist: true },
   },
-
+  SAFE_APPS_FETCH_ERROR_MSG: {
+    message: 'Error fetching the Safe Apps, please refresh the page',
+    options: { variant: ERROR, persist: false, autoHideDuration: shortDuration },
+  },
   // Safe Name
   SAFE_NAME_CHANGED_MSG: {
     message: 'Safe name changed',
@@ -200,10 +201,6 @@ export const NOTIFICATIONS: Record<NotificationId, Notification> = {
   TESTNET_VERSION_MSG: {
     message: "Testnet Version: Don't send production assets to this Safe",
     options: { variant: WARNING, persist: false, preventDuplicate: true, autoHideDuration: longDuration },
-  },
-  WRONG_NETWORK_MSG: {
-    message: `Wrong network: Please use ${getNetworkName()}`,
-    options: { variant: WARNING, persist: true, preventDuplicate: true },
   },
 
   // Address book

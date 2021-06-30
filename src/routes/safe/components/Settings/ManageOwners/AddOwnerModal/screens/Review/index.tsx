@@ -5,7 +5,7 @@ import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
@@ -13,11 +13,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
-import {
-  safeOwnersWithAddressBookDataSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -32,8 +28,6 @@ export const ADD_OWNER_SUBMIT_BTN_TEST_ID = 'add-owner-submit-btn'
 
 const useStyles = makeStyles(styles)
 
-const chainId = getNetworkId()
-
 type ReviewAddOwnerProps = {
   onClickBack: () => void
   onClose: () => void
@@ -44,9 +38,12 @@ type ReviewAddOwnerProps = {
 export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: ReviewAddOwnerProps): ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector) as string
-  const safeName = useSafeName(safeAddress)
-  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -75,7 +72,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
 
     const calculateAddOwnerData = () => {
       try {
-        const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+        const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const txData = safeInstance.methods.addOwnerWithThreshold(values.ownerAddress, values.threshold).encodeABI()
 
         if (isCurrent) {
@@ -90,7 +87,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, values.ownerAddress, values.threshold])
+  }, [safeAddress, safeVersion, values.ownerAddress, values.threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -188,7 +185,7 @@ export const ReviewAddOwner = ({ onClickBack, onClose, onSubmit, values }: Revie
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwner}>
+                <Row className={classes.selectedOwner} data-testid="add-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={values.ownerAddress}

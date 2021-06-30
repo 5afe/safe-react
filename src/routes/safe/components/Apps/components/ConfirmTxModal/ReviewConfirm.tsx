@@ -5,7 +5,7 @@ import { useDispatch } from 'react-redux'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { MULTI_SEND_ADDRESS } from 'src/logic/contracts/safeContracts'
+import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
 import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
@@ -86,14 +86,14 @@ export const ReviewConfirm = ({
   const dispatch = useDispatch()
   const explorerUrl = getExplorerInfo(safeAddress)
 
-  const txRecipient: string | undefined = useMemo(() => (isMultiSend ? MULTI_SEND_ADDRESS : txs[0]?.to), [
-    txs,
-    isMultiSend,
-  ])
-  const txData: string | undefined = useMemo(() => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data), [
-    txs,
-    isMultiSend,
-  ])
+  const txRecipient: string | undefined = useMemo(
+    () => (isMultiSend ? getMultisendContractAddress() : txs[0]?.to),
+    [txs, isMultiSend],
+  )
+  const txData: string | undefined = useMemo(
+    () => (isMultiSend ? encodeMultiSendCall(txs) : txs[0]?.data),
+    [txs, isMultiSend],
+  )
   const txValue: string | undefined = useMemo(
     () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
@@ -144,10 +144,10 @@ export const ReviewConfirm = ({
     onClose()
   }
 
-  const confirmTransactions = async (txParameters: TxParameters) => {
+  const confirmTransactions = (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
 
-    await dispatch(
+    dispatch(
       createTransaction(
         {
           safeAddress,

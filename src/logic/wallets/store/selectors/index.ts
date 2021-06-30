@@ -16,14 +16,11 @@ export const providerNameSelector = createSelector(providerSelector, (provider: 
   return name ? name.toLowerCase() : undefined
 })
 
-export const networkSelector = createSelector(
-  providerSelector,
-  (provider: ProviderState): ETHEREUM_NETWORK => {
-    const networkId = provider.get('network')
+export const networkSelector = createSelector(providerSelector, (provider: ProviderState): ETHEREUM_NETWORK => {
+  const networkId = provider.get('network')
 
-    return networkId ?? ETHEREUM_NETWORK.UNKNOWN
-  },
-)
+  return networkId ?? ETHEREUM_NETWORK.UNKNOWN
+})
 
 export const loadedSelector = createSelector(providerSelector, (provider: ProviderState): boolean =>
   provider.get('loaded'),

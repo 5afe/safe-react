@@ -6,19 +6,17 @@ import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 
-import { safeEthBalanceSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
-import { useAppList } from '../hooks/useAppList'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
-import { ConfirmTxModal } from '../components/ConfirmTxModal'
+import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
 import { useLegalConsent } from '../hooks/useLegalConsent'
 import LegalDisclaimer from './LegalDisclaimer'
@@ -84,18 +82,14 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const ethBalance = useSelector(safeEthBalanceSelector)
-  const safeName = useSafeName(safeAddress)
+  const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
-  const { staticAppsList } = useAppList()
 
   const iframeRef = useRef<HTMLIFrameElement>(null)
-  const [confirmTransactionModal, setConfirmTransactionModal] = useState<ConfirmTransactionModalState>(
-    INITIAL_CONFIRM_TX_MODAL_STATE,
-  )
+  const [confirmTransactionModal, setConfirmTransactionModal] =
+    useState<ConfirmTransactionModalState>(INITIAL_CONFIRM_TX_MODAL_STATE)
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
 
@@ -128,9 +122,10 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }),
     [setConfirmTransactionModal],
   )
-  const closeConfirmationModal = useCallback(() => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE), [
-    setConfirmTransactionModal,
-  ])
+  const closeConfirmationModal = useCallback(
+    () => setConfirmTransactionModal(INITIAL_CONFIRM_TX_MODAL_STATE),
+    [setConfirmTransactionModal],
+  )
 
   const { sendMessageToIframe } = useIframeMessageHandler(
     safeApp,
@@ -253,10 +248,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       setSafeApp(app)
     }
-    if (staticAppsList.length) {
-      loadApp()
-    }
-  }, [appUrl, staticAppsList])
+    loadApp()
+  }, [appUrl])
 
   //track GA
   useEffect(() => {

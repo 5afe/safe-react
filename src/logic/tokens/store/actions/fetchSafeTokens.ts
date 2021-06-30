@@ -11,7 +11,7 @@ import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 import { AppReduxState } from 'src/store'
 import { humanReadableValue } from 'src/logic/tokens/utils/humanReadableValue'
-import { safeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import BigNumber from 'bignumber.js'
 import { currentCurrencySelector } from 'src/logic/currencyValues/store/selectors'
 import { ZERO_ADDRESS, sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -51,42 +51,44 @@ const extractDataFromResult = (
   return acc
 }
 
-export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) => async (
-  dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<void> => {
-  const state = getState()
-  const safe = safeSelector(state)
+export const fetchSafeTokens =
+  (safeAddress: string, currencySelected?: string) =>
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const state = getState()
+    const safe = currentSafe(state)
 
-  if (!safe) {
-    return
+    if (!safe) {
+      return
+    }
+    const selectedCurrency = currentCurrencySelector(state)
+
+    let tokenCurrenciesBalances: BalanceEndpoint
+    try {
+      tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+        safeAddress,
+        selectedCurrency: currencySelected ?? selectedCurrency,
+      })
+    } catch (e) {
+      logError(Errors._601, e.message)
+      return
+    }
+
+    const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
+      extractDataFromResult,
+      {
+        balances: [],
+        ethBalance: '0',
+        tokens: List(),
+      },
+    )
+
+    dispatch(
+      updateSafe({
+        address: safeAddress,
+        balances,
+        ethBalance,
+        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+      }),
+    )
+    dispatch(addTokens(tokens))
   }
-  const selectedCurrency = currentCurrencySelector(state)
-
-  let tokenCurrenciesBalances: BalanceEndpoint
-  try {
-    tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
-      safeAddress,
-      selectedCurrency: currencySelected ?? selectedCurrency,
-    })
-  } catch (e) {
-    logError(Errors._601, e.message)
-    return
-  }
-
-  const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(extractDataFromResult, {
-    balances: [],
-    ethBalance: '0',
-    tokens: List(),
-  })
-
-  dispatch(
-    updateSafe({
-      address: safeAddress,
-      balances,
-      ethBalance,
-      totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
-    }),
-  )
-  dispatch(addTokens(tokens))
-}

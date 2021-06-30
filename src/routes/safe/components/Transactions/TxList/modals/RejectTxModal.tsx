@@ -15,7 +15,7 @@ import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TransactionFees } from 'src/components/TransactionsFees'
@@ -32,7 +32,7 @@ type Props = {
 
 export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.ReactElement => {
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const classes = useStyles()
 
   const {

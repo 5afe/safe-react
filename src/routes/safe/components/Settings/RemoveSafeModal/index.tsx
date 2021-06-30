@@ -11,17 +11,14 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { addressBookMapSelector } from 'src/logic/addressBook/store/selectors'
-import { defaultSafeSelector, safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames, defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
-import { removeLocalSafe } from 'src/logic/safe/store/actions/removeLocalSafe'
+import removeSafe from 'src/logic/safe/store/actions/removeSafe'
+import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { saveDefaultSafe } from 'src/logic/safe/utils'
 
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
-
-const chainId = getNetworkId()
 
 type RemoveSafeModalProps = {
   isOpen: boolean
@@ -30,19 +27,15 @@ type RemoveSafeModalProps = {
 
 export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const addressBookMap = useSelector(addressBookMapSelector)
-  const safeAddressBookEntry = addressBookMap[chainId]?.[safeAddress]
-  const safeName = safeAddressBookEntry?.name
+  const { address: safeAddress, name: safeName } = useSelector(currentSafeWithNames)
   const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
 
   const onRemoveSafeHandler = async () => {
-    // ToDo: review if this is necessary or we should directly use the `removeSafe` action.
-    await dispatch(removeLocalSafe(safeAddress))
+    dispatch(removeSafe(safeAddress))
 
     if (sameAddress(safeAddress, defaultSafe)) {
-      await saveDefaultSafe('')
+      dispatch(setDefaultSafe(''))
     }
 
     onClose()

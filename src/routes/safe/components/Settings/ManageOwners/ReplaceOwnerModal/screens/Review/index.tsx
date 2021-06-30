@@ -4,20 +4,15 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import {
-  safeOwnersWithAddressBookDataSelector,
-  safeParamAddressFromStateSelector,
-  safeThresholdSelector,
-} from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -30,8 +25,6 @@ import { OwnerData } from 'src/routes/safe/components/Settings/ManageOwners/data
 import { useStyles } from './style'
 
 export const REPLACE_OWNER_SUBMIT_BTN_TEST_ID = 'replace-owner-submit-btn'
-
-const chainId = getNetworkId()
 
 type ReplaceOwnerProps = {
   onClose: () => void
@@ -53,10 +46,13 @@ export const ReviewReplaceOwnerModal = ({
 }: ReplaceOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSafeName(safeAddress)
-  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
-  const threshold = useSelector(safeThresholdSelector) || 1
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    threshold = 1,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()
@@ -83,7 +79,7 @@ export const ReviewReplaceOwnerModal = ({
   useEffect(() => {
     let isCurrent = true
     const calculateReplaceOwnerData = async () => {
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
       const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
       const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -97,7 +93,7 @@ export const ReviewReplaceOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [owner.address, safeAddress, newOwner.address])
+  }, [owner.address, safeAddress, safeVersion, newOwner.address])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)

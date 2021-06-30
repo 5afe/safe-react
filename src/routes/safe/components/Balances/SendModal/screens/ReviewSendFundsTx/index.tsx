@@ -14,11 +14,11 @@ import Hairline from 'src/components/layout/Hairline'
 import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { getSpendingLimitContract } from 'src/logic/contracts/safeContracts'
+import { getSpendingLimitContract } from 'src/logic/contracts/spendingLimitContracts'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { getHumanFriendlyToken } from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress, ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
@@ -37,6 +37,7 @@ import { styles } from './style'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const useStyles = makeStyles(styles)
 
@@ -74,7 +75,7 @@ const useTxData = (
 
       let txData = EMPTY_DATA
       if (!isSendingNativeToken) {
-        const StandardToken = await getHumanFriendlyToken()
+        const StandardToken = await getERC20TokenContract()
         const tokenInstance = await StandardToken.at(txToken.address as string)
         const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
         txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
@@ -91,7 +92,7 @@ const useTxData = (
 const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactElement => {
   const classes = useStyles()
   const dispatch = useDispatch()
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const tokens: any = useSelector(extendedSafeTokensSelector)
   const txToken = useMemo(() => tokens.find((token) => sameAddress(token.address, tx.token)), [tokens, tx.token])
   const isSendingNativeToken = useMemo(() => sameAddress(txToken?.address, nativeCoin.address), [txToken])
@@ -124,50 +125,52 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
   const [buttonStatus, setButtonStatus] = useEstimationStatus(txEstimationExecutionStatus)
   const isSpendingLimit = sameString(tx.txType, 'spendingLimit')
 
-  const submitTx = (txParameters: TxParameters) => {
+  const submitTx = async (txParameters: TxParameters) => {
     setButtonStatus(ButtonStatus.LOADING)
 
     if (!safeAddress) {
       setButtonStatus(ButtonStatus.READY)
-      console.error('There was an error trying to submit the transaction, the safeAddress was not found')
+      logError(Errors._802)
       return
     }
 
     if (isSpendingLimit && txToken && tx.tokenSpendingLimit) {
       const spendingLimitTokenAddress = isSendingNativeToken ? ZERO_ADDRESS : txToken.address
       const spendingLimit = getSpendingLimitContract()
-      spendingLimit.methods
-        .executeAllowanceTransfer(
-          safeAddress,
-          spendingLimitTokenAddress,
-          tx.recipientAddress,
-          toTokenUnit(tx.amount, txToken.decimals),
-          ZERO_ADDRESS,
-          0,
-          tx.tokenSpendingLimit.delegate,
-          EMPTY_DATA,
-        )
-        .send({ from: tx.tokenSpendingLimit.delegate })
-        .on('transactionHash', () => onClose())
-        .catch((error) => {
-          setButtonStatus(ButtonStatus.READY)
-          console.error(error)
-        })
-    } else {
-      dispatch(
-        createTransaction({
-          safeAddress: safeAddress,
-          to: txRecipient as string,
-          valueInWei: txValue,
-          txData: data,
-          txNonce: txParameters.safeNonce,
-          safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
-          ethParameters: txParameters,
-          notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
-        }),
-      )
-      onClose()
+      try {
+        await spendingLimit.methods
+          .executeAllowanceTransfer(
+            safeAddress,
+            spendingLimitTokenAddress,
+            tx.recipientAddress,
+            toTokenUnit(tx.amount, txToken.decimals),
+            ZERO_ADDRESS,
+            0,
+            tx.tokenSpendingLimit.delegate,
+            EMPTY_DATA,
+          )
+          .send({ from: tx.tokenSpendingLimit.delegate })
+          .on('transactionHash', () => onClose())
+      } catch (err) {
+        setButtonStatus(ButtonStatus.READY)
+        logError(Errors._801, err.message)
+      }
+      return
     }
+
+    dispatch(
+      createTransaction({
+        safeAddress: safeAddress,
+        to: txRecipient as string,
+        valueInWei: txValue,
+        txData: data,
+        txNonce: txParameters.safeNonce,
+        safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
+        ethParameters: txParameters,
+        notifiedTransaction: TX_NOTIFICATION_TYPES.STANDARD_TX,
+      }),
+    )
+    onClose()
   }
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
@@ -224,7 +227,7 @@ const ReviewSendFundsTx = ({ onClose, onPrev, tx }: ReviewTxProps): React.ReactE
                 Recipient
               </Paragraph>
             </Row>
-            <Row align="center" margin="md">
+            <Row align="center" margin="md" data-testid="recipient-review-step">
               <Col xs={12}>
                 <EthHashInfo
                   hash={tx.recipientAddress}

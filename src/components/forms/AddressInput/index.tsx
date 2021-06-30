@@ -63,6 +63,8 @@ const AddressInput = ({
           } catch (err) {
             logError(Errors._101, err.message)
           }
+        } else {
+          fieldMutator(address)
         }
       }}
     </OnChange>

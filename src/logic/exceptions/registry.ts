@@ -10,6 +10,8 @@ enum ErrorCodes {
   _101 = '101: Failed to resolve the address',
   _102 = '102: Error getting an address checksum',
   _200 = '200: Failed migrating to the address book v2',
+  _300 = '300: Error switching the wallet network',
+  _301 = '301: Error adding a new wallet network',
   _600 = '600: Error fetching token list',
   _601 = '601: Error fetching balances',
   _602 = '602: Error fetching history txs',
@@ -24,8 +26,13 @@ enum ErrorCodes {
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
   _800 = '800: Safe creation tx failed',
+  _801 = '801: Failed to send a tx with a spending limit',
+  _802 = '802: Error submitting a transaction, safeAddress not found',
+  _803 = '803: Error creating a transaction',
+  _804 = '804: Error processing a transaction',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
+  _902 = '902: Error loading Safe Apps list',
 }
 
 export default ErrorCodes

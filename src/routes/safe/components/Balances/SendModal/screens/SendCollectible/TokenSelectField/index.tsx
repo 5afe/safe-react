@@ -32,8 +32,8 @@ const SelectedToken = ({ assetAddress, assets }: SelectedTokenProps): React.Reac
     <MenuItem className={classes.container}>
       {asset && asset.numberOfTokens ? (
         <>
-          <ListItemIcon className={classes.tokenImage}>
-            <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+          <ListItemIcon>
+            <Img className={classes.tokenImage} alt={asset.name} onError={setImageToPlaceholder} src={asset.image} />
           </ListItemIcon>
           <ListItemText
             className={classes.tokenData}
@@ -59,6 +59,7 @@ type TokenSelectFieldProps = {
 
 const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): React.ReactElement => {
   const classes = useTokenSelectFieldStyles()
+  const tokenClasses = useSelectedTokenStyles()
   const assetsAddresses = Object.keys(assets)
 
   return (
@@ -76,8 +77,13 @@ const TokenSelectField = ({ assets, initialValue }: TokenSelectFieldProps): Reac
 
         return (
           <MenuItem key={asset.slug} value={assetAddress}>
-            <ListItemIcon className={classes.tokenImage}>
-              <Img alt={asset.name} height={28} onError={setImageToPlaceholder} src={asset.image} />
+            <ListItemIcon>
+              <Img
+                className={tokenClasses.tokenImage}
+                alt={asset.name}
+                onError={setImageToPlaceholder}
+                src={asset.image}
+              />
             </ListItemIcon>
             <ListItemText
               primary={asset.name}

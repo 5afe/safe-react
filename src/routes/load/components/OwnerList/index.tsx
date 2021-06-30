@@ -14,15 +14,15 @@ import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import OpenPaper from 'src/components/Stepper/OpenPaper'
-import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
-import { addressBookSelector } from 'src/logic/addressBook/store/selectors'
+import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
+import { currentNetworkAddressBookAsMap } from 'src/logic/addressBook/store/selectors'
 
-import { formatAddressListToAddressBookNames } from 'src/logic/addressBook/utils'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields'
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
 import { LoadFormValues } from 'src/routes/load/container/Load'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -31,12 +31,6 @@ const calculateSafeValues = (owners, threshold, values) => {
   }
   initialValues[THRESHOLD] = threshold
   return initialValues
-}
-
-const useAddressBookForOwnersNames = (ownersList: string[]): AddressBookEntry[] => {
-  const addressBook = useSelector(addressBookSelector)
-
-  return formatAddressListToAddressBookNames(addressBook, ownersList)
 }
 
 const useStyles = makeStyles(styles)
@@ -49,17 +43,30 @@ interface OwnerListComponentProps {
 const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentProps): ReactElement => {
   const [owners, setOwners] = useState<string[]>([])
   const classes = useStyles()
+  const addressBookMap = useSelector(currentNetworkAddressBookAsMap)
+  const [ownersWithName, setOwnersWithName] = useState<AddressBookEntry[]>([])
 
-  const ownersWithNames = useAddressBookForOwnersNames(owners)
+  useEffect(() => {
+    setOwnersWithName(
+      owners.map((address) =>
+        makeAddressBookEntry({
+          address,
+          name: addressBookMap[address]?.name ?? '',
+        }),
+      ),
+    )
+  }, [addressBookMap, owners])
 
   useEffect(() => {
     let isCurrent = true
 
     const fetchSafe = async () => {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+
+      const { version: safeVersion, threshold } = await getSafeInfo(safeAddress)
+      // TODO we should also fetch Owners from getSafeInfo (client-gateway)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const threshold = await gnosisSafe.methods.getThreshold().call()
 
       if (isCurrent) {
         const sortedOwners = safeOwners.slice().sort()
@@ -91,7 +98,7 @@ const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentPr
         </Row>
         <Hairline />
         <Block margin="md" padding="md">
-          {ownersWithNames.map(({ address, name }, index) => {
+          {ownersWithName.map(({ address, name }, index) => {
             return (
               <Row className={classes.owner} key={address} data-testid="owner-row">
                 <Col className={classes.ownerName} xs={4}>

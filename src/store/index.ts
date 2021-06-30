@@ -29,7 +29,7 @@ import notificationsMiddleware from 'src/logic/safe/store/middleware/notificatio
 import { safeStorageMiddleware } from 'src/logic/safe/store/middleware/safeStorage'
 import safe, { SAFE_REDUCER_ID } from 'src/logic/safe/store/reducer/safe'
 import { NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
-import { SafeReducerMap } from 'src/routes/safe/store/reducer/types/safe'
+import { SafeReducerMap } from 'src/logic/safe/store/reducer/types/safe'
 import { AddressBookState } from 'src/logic/addressBook/model/addressBook'
 import migrateAddressBook from 'src/logic/addressBook/utils/v2-migration'
 import currencyValues, {

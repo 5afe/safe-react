@@ -64,7 +64,6 @@ For Mainnet:
 yarn build-mainnet
 ```
 
-
 ## Running the tests
 
 To run the tests:
@@ -86,7 +85,7 @@ yarn lint:fix
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
-When pushing to the `master` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
+When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
 
 ### Production
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
@@ -100,6 +99,8 @@ Deployment to production is done manually. Please see the [release procedure](do
 * [React](https://reactjs.org/) - A JS library for building user interfaces
 * [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
+
+![app diagram](https://user-images.githubusercontent.com/381895/121764528-e5e2e900-cb44-11eb-8643-483d41040349.png)
 
 ## Contributing
 

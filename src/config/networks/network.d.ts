@@ -23,6 +23,7 @@ export enum FEATURES {
   SAFE_APPS = 'SAFE_APPS',
   CONTRACT_INTERACTION = 'CONTRACT_INTERACTION',
   DOMAIN_LOOKUP = 'DOMAIN_LOOKUP',
+  SPENDING_LIMIT = 'SPENDING_LIMIT',
 }
 
 type Token = {
@@ -41,10 +42,12 @@ export enum ETHEREUM_NETWORK {
   RINKEBY = 4,
   GOERLI = 5,
   KOVAN = 42,
+  BSC = 56,
   XDAI = 100,
   ENERGY_WEB_CHAIN = 246,
   LOCAL = 4447,
   VOLTA = 73799,
+  POLYGON = 137,
 }
 
 export type NetworkSettings = {
@@ -69,6 +72,9 @@ export type GasPriceOracle = {
   // Different gas api providers can use a different name to reflect different gas levels based on tx speed
   // For example in ethGasStation for ETHEREUM_MAINNET = safeLow | average | fast
   gasParameter: string
+  // Some providers may not use the most common standard, gwei to return the gas price value
+  // This is the case of Ethgasstation that returns price as gwei x 10.
+  gweiFactor: string
 }
 
 type GasPrice =

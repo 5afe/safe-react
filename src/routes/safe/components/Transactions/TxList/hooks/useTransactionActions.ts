@@ -2,7 +2,7 @@ import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { safeParamAddressFromStateSelector } from 'src/logic/safe/store/selectors'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
@@ -26,7 +26,7 @@ export type TransactionActions = {
 
 export const useTransactionActions = (transaction: Transaction): TransactionActions => {
   const currentUser = useSelector(userAccountSelector)
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
+  const safeAddress = useSelector(safeAddressFromUrl)
   const isUserAnOwner = useSelector(grantedSelector)
   const { txLocation } = useContext(TxLocationContext)
   const { confirmationsSubmitted = 0, confirmationsRequired = 0, missingSigners } = transaction.executionInfo ?? {}

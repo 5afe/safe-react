@@ -4,18 +4,14 @@ import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
 
-import { getExplorerInfo, getNetworkId } from 'src/config'
+import { getExplorerInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/safeContracts'
-import {
-  safeOwnersWithAddressBookDataSelector,
-  safeParamAddressFromStateSelector,
-} from 'src/logic/safe/store/selectors'
-import { useSafeName } from 'src/logic/addressBook/hooks/useSafeName'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
@@ -29,8 +25,6 @@ import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const REMOVE_OWNER_REVIEW_BTN_TEST_ID = 'remove-owner-review-btn'
-
-const chainId = getNetworkId()
 
 type ReviewRemoveOwnerProps = {
   onClickBack: () => void
@@ -49,9 +43,12 @@ export const ReviewRemoveOwnerModal = ({
 }: ReviewRemoveOwnerProps): React.ReactElement => {
   const classes = useStyles()
   const [data, setData] = useState('')
-  const safeAddress = useSelector(safeParamAddressFromStateSelector)
-  const safeName = useSafeName(safeAddress)
-  const owners = useSelector((state) => safeOwnersWithAddressBookDataSelector(state, chainId))
+  const {
+    address: safeAddress,
+    name: safeName,
+    owners,
+    currentVersion: safeVersion,
+  } = useSelector(currentSafeWithNames)
   const numOptions = owners ? owners.length - 1 : 0
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
@@ -88,7 +85,7 @@ export const ReviewRemoveOwnerModal = ({
       try {
         // FixMe: if the order returned by the service is the same as in the contracts
         //  the data lookup can be removed from here
-        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+        const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
         const safeOwners = await gnosisSafe.methods.getOwners().call()
         const index = safeOwners.findIndex((ownerAddress) => sameAddress(ownerAddress, owner.address))
         const prevAddress = index === 0 ? SENTINEL_ADDRESS : safeOwners[index - 1]
@@ -106,7 +103,7 @@ export const ReviewRemoveOwnerModal = ({
     return () => {
       isCurrent = false
     }
-  }, [safeAddress, owner.address, threshold])
+  }, [safeAddress, safeVersion, owner.address, threshold])
 
   const closeEditModalCallback = (txParameters: TxParameters) => {
     const oldGasPrice = Number(gasPriceFormatted)
@@ -209,7 +206,7 @@ export const ReviewRemoveOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwner}>
+                <Row className={classes.selectedOwner} data-testid="remove-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={owner.address}

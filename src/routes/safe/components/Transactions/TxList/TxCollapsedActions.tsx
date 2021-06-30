@@ -4,7 +4,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 import { useSelector } from 'react-redux'
 
-import { safeNonceSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
 
@@ -30,7 +30,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
     isPending,
     disabledActions,
   } = useActionButtonsHandlers(transaction)
-  const nonce = useSelector(safeNonceSelector)
+  const nonce = useSelector(currentSafeNonce)
 
   const getTitle = () => {
     if (transaction.txStatus === 'AWAITING_EXECUTION') {

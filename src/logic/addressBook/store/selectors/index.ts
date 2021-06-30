@@ -4,53 +4,83 @@ import { getNetworkId } from 'src/config'
 import { ADDRESS_BOOK_DEFAULT_NAME, AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { AppReduxState } from 'src/store'
 import { Overwrite } from 'src/types/helpers'
+import { checksumAddress } from 'src/utils/checksumAddress'
+import { isValidAddress } from 'src/utils/isValidAddress'
 
 const networkId = getNetworkId()
 
-export const addressBookSelector = (state: AppReduxState): AppReduxState['addressBook'] => state['addressBook']
-
-type AddressBookMap = {
-  [chainId: number]: {
-    [address: string]: AddressBookEntry
-  }
+export const addressBookFromQueryParams = (state: AppReduxState): string | undefined => {
+  return state.router.location?.query?.entryAddress
 }
 
-export const addressBookMapSelector = createSelector(
-  [addressBookSelector],
-  (addressBook): AddressBookMap => {
-    const addressBookMap = {}
+export const addressBookState = (state: AppReduxState): AppReduxState['addressBook'] => state['addressBook']
 
-    addressBook.forEach((entry) => {
-      const { address, chainId } = entry
-      if (!addressBookMap[chainId]) {
-        addressBookMap[chainId] = { [address]: entry }
-      } else {
-        addressBookMap[chainId][address] = entry
-      }
-    })
+export const addressBookAddresses = createSelector([addressBookState], (addressBook): string[] => {
+  return addressBook.map(({ address }) => address)
+})
 
-    return addressBookMap
-  },
-)
+type AddressBookMap = {
+  [address: string]: AddressBookEntry
+}
 
-export const addressBookAddressesListSelector = createSelector([addressBookSelector], (addressBook): string[] =>
-  addressBook.map(({ address }) => address),
-)
+type AddressBookMapByChain = {
+  [chainId: number]: AddressBookMap
+}
 
-type GetNameParams = Overwrite<
-  AddressBookEntry,
-  { chainId?: AddressBookEntry['chainId']; name?: AddressBookEntry['name'] }
->
+export const addressBookAsMap = createSelector([addressBookState], (addressBook): AddressBookMapByChain => {
+  const addressBookMap = {}
 
-type GetNameReturnObject = Overwrite<GetNameParams, { chainId: AddressBookEntry['chainId'] }>
+  addressBook.forEach((entry) => {
+    const { address, chainId } = entry
+    if (!addressBookMap[chainId]) {
+      addressBookMap[chainId] = { [address]: entry }
+    } else {
+      addressBookMap[chainId][address] = entry
+    }
+  })
 
-export const getNameFromAddressBookSelector = createSelector(
+  return addressBookMap
+})
+
+type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
+
+export const addressBookEntryName = createSelector(
   [
-    addressBookMapSelector,
-    (_, { address, chainId = networkId }: GetNameParams): GetNameReturnObject => ({
+    addressBookAsMap,
+    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: number } => ({
       address,
       chainId,
     }),
   ],
-  (addressBook, entry) => addressBook?.[entry.chainId]?.[entry.address]?.name ?? ADDRESS_BOOK_DEFAULT_NAME,
+  (addressBook, { address, chainId }) => {
+    if (isValidAddress(address)) {
+      return addressBook?.[chainId]?.[checksumAddress(address)]?.name ?? ADDRESS_BOOK_DEFAULT_NAME
+    }
+
+    return ADDRESS_BOOK_DEFAULT_NAME
+  },
+)
+
+/*********************/
+/* Connected Network */
+/*********************/
+
+export const currentNetworkAddressBook = createSelector(
+  [addressBookState],
+  (addressBook): AppReduxState['addressBook'] => {
+    return addressBook.filter(({ chainId }) => chainId === networkId)
+  },
+)
+
+export const currentNetworkAddressBookAsMap = createSelector(
+  [currentNetworkAddressBook],
+  (addressBook): AddressBookMap => {
+    const addressBookMap = {}
+
+    addressBook.forEach((entry) => {
+      addressBookMap[entry.address] = entry
+    })
+
+    return addressBookMap
+  },
 )

@@ -13,6 +13,7 @@ export type SafeApp = {
   description: string
   error: boolean
   fetchStatus: SAFE_APP_FETCH_STATUS
+  custom?: boolean
 }
 
 export type StoredSafeApp = {
