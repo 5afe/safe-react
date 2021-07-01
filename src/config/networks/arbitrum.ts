@@ -1,5 +1,5 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.arbitrum.gnosis.io/v1',
@@ -55,6 +55,7 @@ const arbitrum: NetworkConfig = {
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
   ],
+  disabledFeatures: [FEATURES.DOMAIN_LOOKUP, FEATURES.SPENDING_LIMIT, FEATURES.SAFE_APPS],
 }
 
 export default arbitrum
