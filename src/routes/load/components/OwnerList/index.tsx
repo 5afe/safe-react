@@ -22,6 +22,7 @@ import { FIELD_LOAD_ADDRESS, THRESHOLD } from 'src/routes/load/components/fields
 import { getOwnerAddressBy, getOwnerNameBy } from 'src/routes/open/components/fields'
 import { styles } from './styles'
 import { LoadFormValues } from 'src/routes/load/container/Load'
+import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
 
 const calculateSafeValues = (owners, threshold, values) => {
   const initialValues = { ...values }
@@ -61,9 +62,11 @@ const OwnerListComponent = ({ values, updateInitialProps }: OwnerListComponentPr
 
     const fetchSafe = async () => {
       const safeAddress = values[FIELD_LOAD_ADDRESS]
-      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress)
+
+      const { version: safeVersion, threshold } = await getSafeInfo(safeAddress)
+      // TODO we should also fetch Owners from getSafeInfo (client-gateway)
+      const gnosisSafe = getGnosisSafeInstanceAt(safeAddress, safeVersion)
       const safeOwners = await gnosisSafe.methods.getOwners().call()
-      const threshold = await gnosisSafe.methods.getThreshold().call()
 
       if (isCurrent) {
         const sortedOwners = safeOwners.slice().sort()

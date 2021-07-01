@@ -45,7 +45,7 @@ const styles = {
     width: '30px',
   },
   popper: {
-    zIndex: 2000,
+    zIndex: 1301,
   },
   network: {
     backgroundColor: 'white',

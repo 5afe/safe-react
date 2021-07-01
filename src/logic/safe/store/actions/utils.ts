@@ -2,6 +2,7 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
 import axios from 'axios'
 
+import { LATEST_SAFE_VERSION } from 'src/utils/constants'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
 import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
@@ -87,9 +88,7 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   safeInfo.nonce = remoteSafeInfo.nonce
   safeInfo.threshold = remoteSafeInfo.threshold
   safeInfo.currentVersion = remoteSafeInfo.version
-  // FixMe: replace '1.1.1' hardcoded value in favor of data provided by services
-  //  see: https://github.com/gnosis/safe-react/issues/1383#issuecomment-815425652
-  safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, '1.1.1')
+  safeInfo.needsUpdate = safeNeedsUpdate(safeInfo.currentVersion, LATEST_SAFE_VERSION)
   safeInfo.featuresEnabled = enabledFeatures(safeInfo.currentVersion)
 
   return safeInfo

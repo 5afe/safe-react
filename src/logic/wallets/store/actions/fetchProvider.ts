@@ -3,7 +3,7 @@ import { Dispatch } from 'redux'
 
 import addProvider from './addProvider'
 
-import { getNetworkId, getNetworkInfo } from 'src/config'
+import { getNetworkInfo } from 'src/config'
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { getProviderInfo, getWeb3 } from 'src/logic/wallets/getWeb3'
@@ -15,15 +15,10 @@ export const processProviderResponse = (dispatch, provider) => {
 }
 
 const handleProviderNotification = (provider, dispatch) => {
-  const { available, loaded, network } = provider
+  const { available, loaded } = provider
 
   if (!loaded) {
     dispatch(enqueueSnackbar(enhanceSnackbarForAction(NOTIFICATIONS.CONNECT_WALLET_ERROR_MSG)))
-    return
-  }
-
-  if (network !== getNetworkId()) {
-    dispatch(enqueueSnackbar(NOTIFICATIONS.WRONG_NETWORK_MSG))
     return
   }
 
@@ -47,9 +42,10 @@ const handleProviderNotification = (provider, dispatch) => {
   }
 }
 
-export default (providerName: string) => async (dispatch: Dispatch): Promise<void> => {
-  const web3 = getWeb3()
-  const providerInfo = await getProviderInfo(web3, providerName)
-  await handleProviderNotification(providerInfo, dispatch)
-  processProviderResponse(dispatch, providerInfo)
-}
+export default (providerName: string) =>
+  async (dispatch: Dispatch): Promise<void> => {
+    const web3 = getWeb3()
+    const providerInfo = await getProviderInfo(web3, providerName)
+    await handleProviderNotification(providerInfo, dispatch)
+    processProviderResponse(dispatch, providerInfo)
+  }

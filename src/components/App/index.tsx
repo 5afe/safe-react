@@ -66,9 +66,11 @@ const App: React.FC = ({ children }) => {
   const { toggleSidebar } = useContext(SafeListSidebarContext)
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const history = useHistory()
-  const { address: safeAddress, name: safeName, totalFiatBalance: currentSafeBalance } = useSelector(
-    currentSafeWithNames,
-  )
+  const {
+    address: safeAddress,
+    name: safeName,
+    totalFiatBalance: currentSafeBalance,
+  } = useSelector(currentSafeWithNames)
   const addressFromUrl = useSelector(safeAddressFromUrl)
   const { safeActionsState, onShow, onHide, showSendFunds, hideSendFunds } = useSafeActions()
   const currentCurrency = useSelector(currentCurrencySelector)

@@ -49,33 +49,33 @@ export const buildSafe = async (safeAddress: string): Promise<SafeRecordProps> =
  *
  * @param {string} safeAddress
  */
-export const fetchSafe = (safeAddress: string) => async (
-  dispatch: Dispatch,
-): Promise<Action<Partial<SafeRecordProps>> | void> => {
-  let address = ''
-  try {
-    address = checksumAddress(safeAddress)
-  } catch (err) {
-    logError(Errors._102, safeAddress)
-    return
+export const fetchSafe =
+  (safeAddress: string) =>
+  async (dispatch: Dispatch): Promise<Action<Partial<SafeRecordProps>> | void> => {
+    let address = ''
+    try {
+      address = checksumAddress(safeAddress)
+    } catch (err) {
+      logError(Errors._102, safeAddress)
+      return
+    }
+
+    let safeInfo = {}
+    let remoteSafeInfo: SafeInfo | null = null
+
+    // if there's no remote info, we keep what's in memory
+    try {
+      remoteSafeInfo = await getSafeInfo(address)
+    } catch (err) {
+      err.log()
+    }
+
+    // remote (client-gateway)
+    if (remoteSafeInfo) {
+      safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
+    }
+
+    const owners = buildSafeOwners(remoteSafeInfo?.owners)
+
+    return dispatch(updateSafe({ address, ...safeInfo, owners }))
   }
-
-  let safeInfo = {}
-  let remoteSafeInfo: SafeInfo | null = null
-
-  // if there's no remote info, we keep what's in memory
-  try {
-    remoteSafeInfo = await getSafeInfo(address)
-  } catch (err) {
-    err.log()
-  }
-
-  // remote (client-gateway)
-  if (remoteSafeInfo) {
-    safeInfo = await extractRemoteSafeInfo(remoteSafeInfo)
-  }
-
-  const owners = buildSafeOwners(remoteSafeInfo?.owners)
-
-  return dispatch(updateSafe({ address, ...safeInfo, owners }))
-}

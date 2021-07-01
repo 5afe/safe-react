@@ -51,42 +51,44 @@ const extractDataFromResult = (
   return acc
 }
 
-export const fetchSafeTokens = (safeAddress: string, currencySelected?: string) => async (
-  dispatch: Dispatch,
-  getState: () => AppReduxState,
-): Promise<void> => {
-  const state = getState()
-  const safe = currentSafe(state)
+export const fetchSafeTokens =
+  (safeAddress: string, currencySelected?: string) =>
+  async (dispatch: Dispatch, getState: () => AppReduxState): Promise<void> => {
+    const state = getState()
+    const safe = currentSafe(state)
 
-  if (!safe) {
-    return
+    if (!safe) {
+      return
+    }
+    const selectedCurrency = currentCurrencySelector(state)
+
+    let tokenCurrenciesBalances: BalanceEndpoint
+    try {
+      tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
+        safeAddress,
+        selectedCurrency: currencySelected ?? selectedCurrency,
+      })
+    } catch (e) {
+      logError(Errors._601, e.message)
+      return
+    }
+
+    const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(
+      extractDataFromResult,
+      {
+        balances: [],
+        ethBalance: '0',
+        tokens: List(),
+      },
+    )
+
+    dispatch(
+      updateSafe({
+        address: safeAddress,
+        balances,
+        ethBalance,
+        totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
+      }),
+    )
+    dispatch(addTokens(tokens))
   }
-  const selectedCurrency = currentCurrencySelector(state)
-
-  let tokenCurrenciesBalances: BalanceEndpoint
-  try {
-    tokenCurrenciesBalances = await fetchTokenCurrenciesBalances({
-      safeAddress,
-      selectedCurrency: currencySelected ?? selectedCurrency,
-    })
-  } catch (e) {
-    logError(Errors._601, e.message)
-    return
-  }
-
-  const { balances, ethBalance, tokens } = tokenCurrenciesBalances.items.reduce<ExtractedData>(extractDataFromResult, {
-    balances: [],
-    ethBalance: '0',
-    tokens: List(),
-  })
-
-  dispatch(
-    updateSafe({
-      address: safeAddress,
-      balances,
-      ethBalance,
-      totalFiatBalance: new BigNumber(tokenCurrenciesBalances.fiatTotal).toFixed(2),
-    }),
-  )
-  dispatch(addTokens(tokens))
-}

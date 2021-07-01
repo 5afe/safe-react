@@ -156,6 +156,7 @@ export const useEstimateTransactionGas = ({
         if (isExecution || approvalAndExecution) {
           ethGasLimitEstimation = await estimateTransactionGasLimit({
             safeAddress,
+            safeVersion,
             txRecipient,
             txData,
             txAmount: txAmount || '0',
@@ -179,6 +180,7 @@ export const useEstimateTransactionGas = ({
         if (isExecution) {
           transactionCallSuccess = await checkTransactionExecution({
             safeAddress,
+            safeVersion,
             txRecipient,
             txData,
             txAmount: txAmount || '0',
