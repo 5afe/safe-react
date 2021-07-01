@@ -32,8 +32,12 @@ type TxMonitorOptions = {
 export const txMonitor = async (
   { sender, hash, data, nonce, gasPrice }: TxMonitorProps,
   cb: (txReceipt: TransactionReceipt) => void,
+  tries = 0,
   options?: TxMonitorOptions,
 ): Promise<void> => {
+  if (tries > 720) {
+    return
+  }
   setTimeout(async () => {
     if (nonce === undefined || gasPrice === undefined) {
       // this block is accessed only the first time, to lookup the tx nonce and gasPrice
@@ -42,9 +46,14 @@ export const txMonitor = async (
 
       if (transaction !== null) {
         // transaction found
-        return txMonitor({ sender, hash, data, nonce: transaction.nonce, gasPrice: transaction.gasPrice }, cb, options)
+        return txMonitor(
+          { sender, hash, data, nonce: transaction.nonce, gasPrice: transaction.gasPrice },
+          cb,
+          tries + 1,
+          options,
+        )
       } else {
-        return txMonitor({ sender, hash, data }, cb, options)
+        return txMonitor({ sender, hash, data }, cb, tries + 1, options)
       }
     }
     const firstTxReceipt = await web3ReadOnly.eth.getTransactionReceipt(hash)
@@ -76,6 +85,7 @@ export const txMonitor = async (
             gasPrice: replacementTransaction.gasPrice,
           },
           cb,
+          tries + 1,
           options,
         )
       }
@@ -83,6 +93,6 @@ export const txMonitor = async (
       return
     }
 
-    return txMonitor({ sender, hash, data, nonce, gasPrice }, cb, options)
+    return txMonitor({ sender, hash, data, nonce, gasPrice }, cb, tries + 1, options)
   }, options?.delay ?? 5000)
 }
