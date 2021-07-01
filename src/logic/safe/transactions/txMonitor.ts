@@ -84,5 +84,5 @@ export const txMonitor = async (
     }
 
     return txMonitor({ sender, hash, data, nonce, gasPrice }, cb, options)
-  }, options?.delay ?? 500)
+  }, options?.delay ?? 5000)
 }

@@ -194,7 +194,6 @@ export const SafeDeployment = ({
     }
 
     const handlePromise = async () => {
-      console.log('Tx in frontend', submittedPromise)
       setStepIndex(0)
       try {
         const receipt = await submittedPromise
