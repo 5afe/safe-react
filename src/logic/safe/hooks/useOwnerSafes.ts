@@ -13,6 +13,8 @@ const useOwnerSafes = (): string[] => {
   const [filteredSafes, setFilteredSafes] = useState<string[]>([])
 
   useEffect(() => {
+    setOwnerSafes([])
+
     if (!connectedWalletAddress) {
       return
     }
