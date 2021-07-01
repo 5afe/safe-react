@@ -78,7 +78,7 @@ const Routes = (): React.ReactElement => {
       <Route component={Welcome} exact path={WELCOME_ADDRESS} />
       <Route component={Open} exact path={OPEN_ADDRESS} />
       <Route component={Safe} path={SAFE_ADDRESS} />
-      <Route component={Load} exact path={LOAD_ADDRESS} />
+      <Route component={Load} path={`${LOAD_ADDRESS}/:safeAddress?`} />
       <Redirect to="/" />
     </Switch>
   )

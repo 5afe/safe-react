@@ -5,9 +5,21 @@ import ExpandMore from '@material-ui/icons/ExpandMore'
 import React from 'react'
 import styled from 'styled-components'
 
-const Wrapper = styled.div``
+const Wrapper = styled.div`
+  width: 100%;
+`
 
-const HeaderWrapper = styled.div``
+const HeaderWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  padding: 15px 0 3px;
+  cursor: pointer;
+  user-select: none;
+
+  & > * {
+    margin-right: 5px;
+  }
+`
 
 const TitleWrapper = styled.div``
 
@@ -20,7 +32,7 @@ interface CollapseProps {
   title: React.ReactElement | string
   description?: React.ReactElement | string
   collapseClassName?: string
-  headerWrapperClassName?: string
+  defaultExpanded?: boolean
 }
 
 const Collapse: React.FC<CollapseProps> = ({
@@ -28,9 +40,9 @@ const Collapse: React.FC<CollapseProps> = ({
   description = null,
   title,
   collapseClassName,
-  headerWrapperClassName,
+  defaultExpanded = false,
 }): React.ReactElement => {
-  const [open, setOpen] = React.useState(false)
+  const [open, setOpen] = React.useState(defaultExpanded)
 
   const handleClick = () => {
     setOpen(!open)
@@ -38,7 +50,7 @@ const Collapse: React.FC<CollapseProps> = ({
 
   return (
     <Wrapper>
-      <HeaderWrapper className={headerWrapperClassName} onClick={handleClick}>
+      <HeaderWrapper onClick={handleClick}>
         <TitleWrapper>{title}</TitleWrapper>
         <Header>
           <IconButton disableRipple size="small">

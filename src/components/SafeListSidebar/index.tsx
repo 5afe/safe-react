@@ -18,6 +18,7 @@ import { WELCOME_ADDRESS } from 'src/routes/routes'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 
 import { safeAddressFromUrl, defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
+import useOwnerSafes from 'src/logic/safe/hooks/useOwnerSafes'
 
 export const SafeListSidebarContext = React.createContext({
   isOpen: false,
@@ -40,6 +41,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   const [isOpen, setIsOpen] = useState(false)
   const [filter, setFilter] = useState('')
   const safes = useSelector(sortedSafeListSelector).filter((safe) => !safe.loadedViaUrl)
+  const ownerSafes = useOwnerSafes()
   const defaultSafe = useSelector(defaultSafeSelector)
   const safeAddress = useSelector(safeAddressFromUrl)
 
@@ -75,6 +77,11 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
   }
 
   const filteredSafes = useMemo(() => filterBy(filter, safes), [safes, filter])
+  const filteredOwnerSafes = useMemo(
+    () => ownerSafes.filter((address) => new RegExp(filter, 'i').test(address)),
+    [ownerSafes, filter],
+  )
+
   useEffect(() => {
     setTimeout(() => {
       setFilter('')
@@ -123,6 +130,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
           defaultSafeAddress={defaultSafe}
           onSafeClick={toggleSidebar}
           safes={filteredSafes}
+          otherSafes={filteredOwnerSafes}
         />
       </Drawer>
       {children}
