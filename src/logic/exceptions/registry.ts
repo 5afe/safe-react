@@ -22,6 +22,7 @@ enum ErrorCodes {
   _607 = '607: Error fetching available currencies',
   _608 = '608: No next page',
   _609 = '609: Failed to retrieve SpendingLimits module information',
+  _610 = '610: Error fetching safes by owner',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
