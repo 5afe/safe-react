@@ -84,6 +84,7 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
     const ownerAddresses = getAccountsFrom(values)
     const safeCreationSalt = getSafeCreationSaltFrom(values)
     const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+
     deploymentTx
       .send({
         from: userAccount,
@@ -91,10 +92,16 @@ export const createSafe = async (values: CreateSafeValues, userAccount: string):
       })
       .once('transactionHash', (txHash) => {
         saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
-        txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() }, (txReceipt) => {
-          console.log('Speed up tx mined:', txReceipt)
-          resolve(txReceipt)
-        })
+
+        // Monitor the latest block to find a potential speed-up tx
+        txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() })
+          .then((txReceipt) => {
+            console.log('Speed up tx mined:', txReceipt)
+            resolve(txReceipt)
+          })
+          .catch((error) => {
+            reject(error)
+          })
       })
       .then((txReceipt) => {
         console.log('First tx mined:', txReceipt)
