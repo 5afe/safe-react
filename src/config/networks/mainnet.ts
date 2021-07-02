@@ -22,11 +22,11 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
-      safeUrl: 'https://safe-team.staging.gnosisdev.com/app/',
+      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team.staging.gnosisdev.com/app/',
+      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
       safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
