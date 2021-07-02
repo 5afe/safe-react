@@ -3,7 +3,7 @@ import { Transaction, TransactionReceipt } from 'web3-core'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { sameString } from 'src/utils/strings'
-import { CodedException, Errors, logError } from 'src/logic/exceptions/CodedException'
+import { CodedException, Errors } from 'src/logic/exceptions/CodedException'
 
 type TxMonitorProps = {
   sender: string
@@ -15,6 +15,7 @@ type TxMonitorProps = {
 
 type TxMonitorOptions = {
   delay?: number
+  maxRetries?: number
 }
 
 const MAX_RETRIES = 720
@@ -56,14 +57,15 @@ export const txMonitor = (
   tries = 0,
 ): Promise<TransactionReceipt> => {
   return new Promise<TransactionReceipt>((resolve, reject) => {
-    if (tries > MAX_RETRIES) {
+    const { maxRetries = MAX_RETRIES } = options || {}
+    if (tries > maxRetries) {
       reject(new CodedException(Errors._805, 'max retries reached'))
       return
     }
 
     const monitorFn = async (): Promise<unknown> => {
       // Case 1: this block is accessed for the first time, no nonce
-      if (nonce === undefined || gasPrice === undefined) {
+      if (nonce == null || gasPrice == null) {
         let params: TxMonitorProps = { sender, hash, data }
         try {
           // Find the nonce for the current tx
@@ -72,7 +74,7 @@ export const txMonitor = (
             params = { ...params, nonce: transaction.nonce, gasPrice: transaction.gasPrice }
           }
         } catch (e) {
-          logError(Errors._805, e.message)
+          // ignore error
         }
 
         return txMonitor(params, options, tries + 1)
@@ -87,7 +89,6 @@ export const txMonitor = (
           return resolve(firstTxReceipt)
         }
       } catch (e) {
-        logError(Errors._805, e.message)
         // proceed to case 3
       }
 
@@ -119,7 +120,7 @@ export const txMonitor = (
             .catch(reject)
         }
       } catch (e) {
-        logError(Errors._805, e.message)
+        // ignore error
       }
 
       // Neither the original nor a replacement transactions were found, try again
