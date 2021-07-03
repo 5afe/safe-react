@@ -21,9 +21,11 @@ const polygon: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-polygon.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-polygon.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,

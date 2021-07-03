@@ -10,7 +10,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}',
     gasParameter: 'average',
-    gweiFactor: '1e8'
+    gweiFactor: '1e8',
   },
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
@@ -22,9 +22,11 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-mainnet.staging.gnosisdev.com/app/',
       safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {

@@ -9,7 +9,7 @@ const baseConfig: EnvironmentSettings = {
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
-    gweiFactor: '1e9'
+    gweiFactor: '1e9',
   },
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
@@ -21,9 +21,11 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-volta.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-volta.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,

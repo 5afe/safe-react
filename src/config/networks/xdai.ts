@@ -17,9 +17,11 @@ const xDai: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-xdai.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-xdai.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
