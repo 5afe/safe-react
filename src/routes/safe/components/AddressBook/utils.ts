@@ -42,7 +42,8 @@ export const validateCsvData = (data: CsvDataType): string | undefined => {
     if (!isValidAddress(lowerCaseAddress)) {
       return `Invalid address on row ${index + 1}`
     }
-    if (isNaN(parseInt(chainId, 10)) || ETHEREUM_NETWORK[chainId] == null) {
+    const chainIdNum = parseInt(chainId.trim(), 10)
+    if (isNaN(chainIdNum) || ETHEREUM_NETWORK[chainIdNum] == null) {
       return `Invalid chain id on row ${index + 1}`
     }
   }
