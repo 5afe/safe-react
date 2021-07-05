@@ -1,5 +1,4 @@
-import StandardToken from '@gnosis.pm/util-contracts/build/contracts/GnosisStandardToken.json'
-import HumanFriendlyToken from '@gnosis.pm/util-contracts/build/contracts/HumanFriendlyToken.json'
+import ERC20 from '@openzeppelin/contracts/build/contracts/ERC20.json'
 import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
 import contract from '@truffle/contract/index.js'
@@ -15,19 +14,11 @@ import { AnyAction } from 'redux'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TokenResult } from '../../api/fetchErc20AndErc721AssetsList'
 
-const createStandardTokenContract = async () => {
+const createERC20TokenContract = async () => {
   const web3 = getWeb3()
-  const erc20Token = await contract(StandardToken)
+  const erc20Token = await contract(ERC20)
   erc20Token.setProvider(web3.currentProvider)
   return erc20Token
-}
-
-const createHumanFriendlyTokenContract = async () => {
-  const web3 = getWeb3()
-  const humanErc20Token = await contract(HumanFriendlyToken)
-  humanErc20Token.setProvider(web3.currentProvider)
-
-  return humanErc20Token
 }
 
 const createERC721TokenContract = async () => {
@@ -37,9 +28,7 @@ const createERC721TokenContract = async () => {
   return erc721Token
 }
 
-export const getHumanFriendlyToken = ensureOnce(createHumanFriendlyTokenContract)
-
-export const getStandardTokenContract = ensureOnce(createStandardTokenContract)
+export const getERC20TokenContract = ensureOnce(createERC20TokenContract)
 
 export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
 
@@ -50,28 +39,30 @@ export const containsMethodByHash = async (contractAddress: string, methodHash: 
   return byteCode.indexOf(methodHash.replace('0x', '')) !== -1
 }
 
-export const fetchTokens = () => async (
-  dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
-  getState: () => AppReduxState,
-): Promise<void> => {
-  const currentSavedTokens = tokensSelector(getState())
+export const fetchTokens =
+  () =>
+  async (
+    dispatch: ThunkDispatch<AppReduxState, undefined, AnyAction>,
+    getState: () => AppReduxState,
+  ): Promise<void> => {
+    const currentSavedTokens = tokensSelector(getState())
 
-  let tokenList: TokenResult[]
-  try {
-    const resp = await fetchErc20AndErc721AssetsList()
-    tokenList = resp.data.results
-  } catch (e) {
-    logError(Errors._600, e.message)
-    return
+    let tokenList: TokenResult[]
+    try {
+      const resp = await fetchErc20AndErc721AssetsList()
+      tokenList = resp.data.results
+    } catch (e) {
+      logError(Errors._600, e.message)
+      return
+    }
+
+    const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
+
+    if (currentSavedTokens?.size === erc20Tokens.length) {
+      return
+    }
+
+    const tokens = List(erc20Tokens.map((token) => makeToken(token)))
+
+    dispatch(addTokens(tokens))
   }
-
-  const erc20Tokens = tokenList.filter((token) => token.type.toLowerCase() === 'erc20')
-
-  if (currentSavedTokens?.size === erc20Tokens.length) {
-    return
-  }
-
-  const tokens = List(erc20Tokens.map((token) => makeToken(token)))
-
-  dispatch(addTokens(tokens))
-}

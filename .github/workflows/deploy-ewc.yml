@@ -1,13 +1,13 @@
 name: Deploy to EWC network
 
-# Run on pushes to master or PRs to master
+# Run on pushes to main or PRs to main
 on:
   push:
     branches:
-      - master
+      - main
   pull_request:
     branches:
-      - master
+      - main
   # Launches build when release is published
   release:
       types: [published]
@@ -71,7 +71,7 @@ jobs:
       # Set production flag
       - name: Set production flag for release PR or tagged build
         run: echo "REACT_APP_ENV=production" >> $GITHUB_ENV
-        if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'master'
+        if: startsWith(github.ref, 'refs/tags/v') || github.base_ref == 'main'
 
       - name: Build ${{ env.REACT_APP_NETWORK }} app
         run: yarn build
@@ -109,12 +109,12 @@ jobs:
         env:
           REVIEW_FEATURE_URL: https://pr${{ github.event.number }}--${{ env.REPO_NAME_ALPHANUMERIC }}.review.gnosisdev.com
 
-      # Script to deploy to development environment
-      # EWC build is never created in development branch
+      # Script to deploy to the dev environment
+      # EWC build is never created on the dev branch
 
       # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
-        if: github.ref == 'refs/heads/master'
+        if: github.ref == 'refs/heads/main'
         run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
 
       # Script to upload release files
@@ -141,7 +141,7 @@ jobs:
 
       # Upload Sentry source maps when sending to staging or production
       - run: yarn sentry-upload-sourcemaps
-        if: success() && (github.ref == 'refs/heads/master' || startsWith(github.ref, 'refs/tags/v'))
+        if: success() && (github.ref == 'refs/heads/main' || startsWith(github.ref, 'refs/tags/v'))
         env:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG}}

@@ -42,7 +42,7 @@ export const tryOffChainSigning = async (
   const signerByWallet = getSupportedSigners(isHW, safeVersion)
   for (const signingFunc of signerByWallet) {
     try {
-      signature = await signingFunc({ ...txArgs, safeTxHash })
+      signature = await signingFunc({ ...txArgs, safeTxHash, safeVersion })
 
       break
     } catch (err) {

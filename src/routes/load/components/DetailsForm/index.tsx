@@ -86,6 +86,17 @@ const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
           Your connected wallet does not have to be the owner of this Safe. In this case, the interface will provide you
           a read-only view.
         </Paragraph>
+
+        <Paragraph color="primary" size="md" className={classes.links}>
+          Don&apos;t have the address of the Safe you created?{' '}
+          <a
+            href="https://help.gnosis-safe.io/en/articles/4971293-i-don-t-remember-my-safe-address-where-can-i-find-it"
+            rel="noopener noreferrer"
+            target="_blank"
+          >
+            This article explains how to find it.
+          </a>
+        </Paragraph>
       </Block>
       <Block className={classes.root}>
         <Col xs={11}>

@@ -36,9 +36,9 @@ export const buildModulesLinkedList = (modules: string[]): Array<ModulePair> | n
   return null
 }
 
-export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string): string => {
+export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: string, safeVersion: string): string => {
   const [previousModule, module] = modulePair
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   return safeInstance.methods.disableModule(previousModule, module).encodeABI()
 }
@@ -46,9 +46,14 @@ export const getDisableModuleTxData = (modulePair: ModulePair, safeAddress: stri
 type EnableModuleParams = {
   moduleAddress: string
   safeAddress: string
+  safeVersion: string
 }
-export const enableModuleTx = ({ moduleAddress, safeAddress }: EnableModuleParams): CreateTransactionArgs => {
-  const safeInstance = getGnosisSafeInstanceAt(safeAddress)
+export const enableModuleTx = ({
+  moduleAddress,
+  safeAddress,
+  safeVersion,
+}: EnableModuleParams): CreateTransactionArgs => {
+  const safeInstance = getGnosisSafeInstanceAt(safeAddress, safeVersion)
 
   return {
     safeAddress,

@@ -17,7 +17,7 @@ import {
   spendingLimitMultiSendTx,
   SpendingLimitRow,
 } from 'src/logic/safe/utils/spendingLimits'
-import { MultiSendTx } from 'src/logic/safe/utils/upgradeSafe'
+import { MultiSendTx } from 'src/logic/safe/transactions/multisend'
 import { makeToken, Token } from 'src/logic/tokens/store/model/token'
 import { fromTokenUnit, toTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -66,6 +66,7 @@ const useExistentSpendingLimit = ({
 
 const calculateSpendingLimitsTxData = (
   safeAddress: string,
+  safeVersion: string,
   spendingLimits: SpendingLimit[] | null | undefined,
   existentSpendingLimit: SpendingLimit | null,
   txToken: Token,
@@ -88,7 +89,7 @@ const calculateSpendingLimitsTxData = (
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
   if (!isSpendingLimitEnabled && safeAddress) {
-    transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress))
+    transactions.push(enableSpendingLimitModuleMultiSendTx(safeAddress, safeVersion))
   }
 
   // does `delegate` already exist? (`getDelegates`, previously queried to build the table with allowances (??))
@@ -152,7 +153,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const dispatch = useDispatch()
 
-  const { address: safeAddress = '', spendingLimits } = useSelector(currentSafe) ?? {}
+  const { address: safeAddress = '', spendingLimits, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',
@@ -186,13 +187,14 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
+      safeVersion,
       spendingLimits,
       existentSpendingLimit,
       txToken,
       values,
     )
     setEstimateGasArgs(spendingLimitTxData)
-  }, [safeAddress, spendingLimits, existentSpendingLimit, txToken, values])
+  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values])
 
   const handleSubmit = (txParameters: TxParameters): void => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
@@ -206,6 +208,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
     if (safeAddress) {
       const { spendingLimitTxData } = calculateSpendingLimitsTxData(
         safeAddress,
+        safeVersion,
         spendingLimits,
         existentSpendingLimit,
         txToken,

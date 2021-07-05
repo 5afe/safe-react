@@ -14,12 +14,12 @@ export const calculateGasPrice = async (): Promise<string> => {
     // Fixed gas price in configuration. xDai uses this approach
     return new BigNumber(gasPrice).toString()
   } else if (gasPriceOracle) {
-    const { url, gasParameter } = gasPriceOracle
+    const { url, gasParameter, gweiFactor } = gasPriceOracle
 
     // Fetch from gas price provider
     const { data } = await axios.get(url)
 
-    return new BigNumber(data[gasParameter]).multipliedBy(1e8).toString()
+    return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
   } else {
     const errorMsg = 'gasPrice or gasPriceOracle not set in config'
     return Promise.reject(errorMsg)

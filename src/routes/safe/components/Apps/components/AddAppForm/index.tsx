@@ -2,7 +2,7 @@ import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-compo
 import React, { useState, ReactElement } from 'react'
 import styled from 'styled-components'
 
-import { SafeApp } from 'src/routes/safe/components/Apps/types'
+import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
 import GnoForm from 'src/components/forms/GnoForm'
 import Img from 'src/components/layout/Img'
 import { Modal } from 'src/components/Modal'
@@ -11,7 +11,7 @@ import AppAgreement from './AppAgreement'
 import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
-import { saveToStorage } from 'src/utils/storage'
+import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useHistory, useRouteMatch } from 'react-router-dom'
 
@@ -77,10 +77,12 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
+    const persistedAppList =
+      (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
     const newAppList = [
       { url: appInfo.url, disabled: false },
-      ...appList.map(({ url, disabled }) => ({ url, disabled })),
+      ...persistedAppList.map(({ url, disabled }) => ({ url, disabled })),
     ]
     saveToStorage(APPS_STORAGE_KEY, newAppList)
     const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appInfo.url)}`
