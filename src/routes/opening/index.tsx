@@ -138,6 +138,8 @@ export const SafeDeployment = ({
     (err: Error) => {
       if (isTxPendingError(err)) {
         dispatch(enqueueSnackbar({ ...NOTIFICATIONS.TX_PENDING_MSG }))
+      } else {
+        dispatch(enqueueSnackbar({ ...NOTIFICATIONS.CREATE_SAFE_FAILED_MSG }))
       }
     },
     [dispatch],

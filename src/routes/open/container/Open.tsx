@@ -1,7 +1,7 @@
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
-import React, { useEffect, useState, ReactElement } from 'react'
+import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useLocation } from 'react-router-dom'
 import { TransactionReceipt } from 'web3-core'
@@ -29,6 +29,7 @@ import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
 import { useAnalytics } from 'src/utils/googleAnalytics'
 import { sleep } from 'src/utils/timer'
+import { txMonitor } from 'src/logic/safe/transactions/txMonitor'
 
 const SAFE_PENDING_CREATION_STORAGE_KEY = 'SAFE_PENDING_CREATION_STORAGE_KEY'
 
@@ -78,21 +79,38 @@ const getSafePropsValuesFromQueryParams = (queryParams: SafeCreationQueryParams)
 }
 
 export const createSafe = async (values: CreateSafeValues, userAccount: string): Promise<TransactionReceipt> => {
-  const confirmations = getThresholdFrom(values)
-  const ownerAddresses = getAccountsFrom(values)
-  const safeCreationSalt = getSafeCreationSaltFrom(values)
-  const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
+  return new Promise((resolve, reject) => {
+    const confirmations = getThresholdFrom(values)
+    const ownerAddresses = getAccountsFrom(values)
+    const safeCreationSalt = getSafeCreationSaltFrom(values)
+    const deploymentTx = getSafeDeploymentTransaction(ownerAddresses, confirmations, safeCreationSalt)
 
-  const receipt = await deploymentTx
-    .send({
-      from: userAccount,
-      gas: values?.gasLimit,
-    })
-    .once('transactionHash', (txHash) => {
-      saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
-    })
+    deploymentTx
+      .send({
+        from: userAccount,
+        gas: values?.gasLimit,
+      })
+      .once('transactionHash', (txHash) => {
+        saveToStorage(SAFE_PENDING_CREATION_STORAGE_KEY, { txHash, ...values })
 
-  return receipt
+        // Monitor the latest block to find a potential speed-up tx
+        txMonitor({ sender: userAccount, hash: txHash, data: deploymentTx.encodeABI() })
+          .then((txReceipt) => {
+            console.log('Speed up tx mined:', txReceipt)
+            resolve(txReceipt)
+          })
+          .catch((error) => {
+            reject(error)
+          })
+      })
+      .then((txReceipt) => {
+        console.log('First tx mined:', txReceipt)
+        resolve(txReceipt)
+      })
+      .catch((error) => {
+        reject(error)
+      })
+  })
 }
 
 const Open = (): ReactElement => {
@@ -170,9 +188,6 @@ const Open = (): ReactElement => {
     const safe = makeAddressBookEntry({ address: safeAddress, name })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
-    const safeProps = await buildSafe(safeAddress)
-    await dispatch(addOrUpdateSafe(safeProps))
-
     trackEvent({
       category: 'User',
       action: 'Created a safe',
@@ -188,6 +203,9 @@ const Open = (): ReactElement => {
         return true
       },
     })
+
+    const safeProps = await buildSafe(safeAddress)
+    await dispatch(addOrUpdateSafe(safeProps))
 
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {

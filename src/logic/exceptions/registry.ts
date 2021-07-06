@@ -31,6 +31,7 @@ enum ErrorCodes {
   _802 = '802: Error submitting a transaction, safeAddress not found',
   _803 = '803: Error creating a transaction',
   _804 = '804: Error processing a transaction',
+  _805 = '805: TX monitor error',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',
