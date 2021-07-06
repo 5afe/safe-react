@@ -25,6 +25,7 @@ import { SafeApp } from '../types'
 import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
+import { logError, Errors } from 'src/logic/exceptions/CodedException'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -244,9 +245,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
   useEffect(() => {
     const loadApp = async () => {
-      const app = await getAppInfoFromUrl(appUrl)
-
-      setSafeApp(app)
+      try {
+        const app = await getAppInfoFromUrl(appUrl)
+        setSafeApp(app)
+      } catch (err) {
+        logError(Errors._900, `${appUrl}, ${err.message}`)
+      }
     }
     loadApp()
   }, [appUrl])

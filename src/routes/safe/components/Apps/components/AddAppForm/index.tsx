@@ -14,6 +14,7 @@ import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Ap
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useHistory, useRouteMatch } from 'react-router-dom'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const FORM_ID = 'add-apps-form'
 
@@ -69,7 +70,7 @@ const INITIAL_VALUES: AddAppFormValues = {
   agreementAccepted: false,
 }
 
-const APP_INFO = getEmptySafeApp()
+const DEFAULT_APP_INFO = getEmptySafeApp()
 
 interface AddAppProps {
   appList: SafeApp[]
@@ -77,7 +78,7 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
-  const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
+  const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const [isLoading, setIsLoading] = useState(false)
@@ -92,6 +93,11 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     saveToStorage(APPS_STORAGE_KEY, newAppList)
     const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appInfo.url)}`
     history.push(goToApp)
+  }
+
+  const onError = (error: Error) => {
+    logError(Errors._903, error.message)
+    setAppInfo(DEFAULT_APP_INFO)
   }
 
   return (
@@ -117,7 +123,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
             </AppDocsInfo>
             <AppUrl appList={appList} />
             {/* Fetch app from url and return a SafeApp */}
-            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
+            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} onError={onError} />
             <AppInfo>
               {isLoading ? (
                 <WrapperLoader>
@@ -129,7 +135,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <StyledTextFileAppName
                 label="App name"
                 readOnly
-                value={isLoading ? 'Loading...' : appInfo.name}
+                value={isLoading ? 'Loading...' : appInfo.name === DEFAULT_APP_INFO.name ? '' : appInfo.name}
                 onChange={() => {}}
               />
             </AppInfo>

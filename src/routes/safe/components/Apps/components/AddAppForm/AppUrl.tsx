@@ -18,8 +18,14 @@ import { isValidEnsName } from 'src/logic/wallets/ethAddresses'
 import { useDebounce } from 'src/logic/hooks/useDebounce'
 
 const validateUrl = (url: string): string | undefined => (isValidURL(url) ? undefined : 'Invalid URL')
+
 const validateManifest = async (url: string): Promise<string | undefined> => {
-  const appInfo = await getAppInfoFromUrl(url)
+  let appInfo: SafeApp | undefined
+  try {
+    appInfo = await getAppInfoFromUrl(url)
+  } catch (e) {
+    appInfo = undefined
+  }
   return isAppManifestValid(appInfo) ? undefined : 'Error loading the app, please check the URL'
 }
 
@@ -39,11 +45,12 @@ export const appUrlResolver = createDecorator({
 })
 
 type AppInfoUpdaterProps = {
-  onAppInfo: (appInfo: SafeApp) => void
-  onLoading: (isLoading: boolean) => void
+  onAppInfo: (appInfo: SafeApp) => unknown
+  onLoading: (isLoading: boolean) => unknown
+  onError: (error: Error) => unknown
 }
 
-export const AppInfoUpdater = ({ onAppInfo, onLoading }: AppInfoUpdaterProps): null => {
+export const AppInfoUpdater = ({ onAppInfo, onLoading, onError }: AppInfoUpdaterProps): null => {
   const {
     input: { value: appUrl },
   } = useField('appUrl', { subscription: { value: true } })
@@ -52,14 +59,16 @@ export const AppInfoUpdater = ({ onAppInfo, onLoading }: AppInfoUpdaterProps): n
 
   React.useEffect(() => {
     const updateAppInfo = async () => {
+      onLoading(true)
+
       try {
-        onLoading(true)
         const appInfo = await getAppInfoFromUrl(debouncedValue)
         onAppInfo({ ...appInfo })
-        onLoading(false)
       } catch (error) {
-        onLoading(false)
+        onError?.(error)
       }
+
+      onLoading(false)
     }
 
     if (isValidURL(debouncedValue)) {
