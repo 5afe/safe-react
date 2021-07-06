@@ -1,5 +1,5 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
@@ -79,11 +79,12 @@ interface AddAppProps {
 
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
+  const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const persistedAppList =
       (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
     const newAppList = [
@@ -93,12 +94,22 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     saveToStorage(APPS_STORAGE_KEY, newAppList)
     const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appInfo.url)}`
     history.push(goToApp)
-  }
+  }, [appInfo.url, history, matchSafeWithAddress?.url])
 
-  const onError = (error: Error) => {
-    logError(Errors._903, error.message)
-    setAppInfo(DEFAULT_APP_INFO)
-  }
+  useEffect(() => {
+    if (isLoading) {
+      setFetchError(undefined)
+    }
+  }, [isLoading])
+
+  const onError = useCallback(
+    (error: Error) => {
+      setFetchError(error.message)
+      logError(Errors._903, error.message)
+      setAppInfo(DEFAULT_APP_INFO)
+    },
+    [setAppInfo],
+  )
 
   return (
     <GnoForm decorators={[appUrlResolver]} initialValues={INITIAL_VALUES} onSubmit={handleSubmit} testId={FORM_ID}>
@@ -135,6 +146,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <StyledTextFileAppName
                 label="App name"
                 readOnly
+                meta={{ error: fetchError }}
                 value={isLoading ? 'Loading...' : appInfo.name === DEFAULT_APP_INFO.name ? '' : appInfo.name}
                 onChange={() => {}}
               />
