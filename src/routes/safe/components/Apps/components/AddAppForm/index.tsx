@@ -1,5 +1,5 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
-import React, { useState, ReactElement } from 'react'
+import React, { useState, ReactElement, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 
 import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
@@ -14,6 +14,7 @@ import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Ap
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { useHistory, useRouteMatch } from 'react-router-dom'
+import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
 const FORM_ID = 'add-apps-form'
 
@@ -31,6 +32,11 @@ const AppInfo = styled.div`
     margin-right: 10px;
   }
 `
+
+const StyledLink = styled(Link)`
+  inline-size: fit-content;
+`
+
 const AppDocsInfo = styled.div`
   display: flex;
   margin-bottom: 24px;
@@ -64,7 +70,7 @@ const INITIAL_VALUES: AddAppFormValues = {
   agreementAccepted: false,
 }
 
-const APP_INFO = getEmptySafeApp()
+const DEFAULT_APP_INFO = getEmptySafeApp()
 
 interface AddAppProps {
   appList: SafeApp[]
@@ -72,12 +78,13 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
-  const [appInfo, setAppInfo] = useState<SafeApp>(APP_INFO)
+  const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
+  const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const [isLoading, setIsLoading] = useState(false)
 
-  const handleSubmit = async () => {
+  const handleSubmit = useCallback(async () => {
     const persistedAppList =
       (await loadFromStorage<(StoredSafeApp & { disabled?: number[] })[]>(APPS_STORAGE_KEY)) || []
     const newAppList = [
@@ -87,7 +94,22 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
     saveToStorage(APPS_STORAGE_KEY, newAppList)
     const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appInfo.url)}`
     history.push(goToApp)
-  }
+  }, [appInfo.url, history, matchSafeWithAddress?.url])
+
+  useEffect(() => {
+    if (isLoading) {
+      setFetchError(undefined)
+    }
+  }, [isLoading])
+
+  const onError = useCallback(
+    (error: Error) => {
+      setFetchError(error.message)
+      logError(Errors._903, error.message)
+      setAppInfo(DEFAULT_APP_INFO)
+    },
+    [setAppInfo],
+  )
 
   return (
     <GnoForm decorators={[appUrlResolver]} initialValues={INITIAL_VALUES} onSubmit={handleSubmit} testId={FORM_ID}>
@@ -98,7 +120,7 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <Text size="xl" as="span" color="secondary">
                 Safe Apps are third-party extensions.
               </Text>
-              <Link
+              <StyledLink
                 href="https://docs.gnosis.io/safe/docs/sdks_safe_apps/"
                 target="_blank"
                 rel="noreferrer"
@@ -108,11 +130,11 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
                   Learn more about building Safe Apps.
                 </Text>
                 <Icon size="sm" type="externalLink" color="primary" />
-              </Link>
+              </StyledLink>
             </AppDocsInfo>
             <AppUrl appList={appList} />
             {/* Fetch app from url and return a SafeApp */}
-            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} />
+            <AppInfoUpdater onAppInfo={setAppInfo} onLoading={setIsLoading} onError={onError} />
             <AppInfo>
               {isLoading ? (
                 <WrapperLoader>
@@ -124,7 +146,8 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
               <StyledTextFileAppName
                 label="App name"
                 readOnly
-                value={isLoading ? 'Loading...' : appInfo.name}
+                meta={{ error: fetchError }}
+                value={isLoading ? 'Loading...' : appInfo.name === DEFAULT_APP_INFO.name ? '' : appInfo.name}
                 onChange={() => {}}
               />
             </AppInfo>
