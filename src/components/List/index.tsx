@@ -33,11 +33,23 @@ const StyledListItem = styled(ListItem)<ListItemProps>`
 
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    color: ${({ theme }) => theme.colors.text};
+    margin: 4px 0;
+  }
+
+  &.MuiListItem-button:hover {
+    border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
+    background-color: ${({ theme }) => theme.colors.background};
+    border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
+    span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+    .icon-color {
+      fill: ${({ theme }) => theme.colors.primary};
+    }
   }
 `
 
@@ -55,12 +67,12 @@ const StyledListItemText = styled(ListItemText)`
 
 const StyledListSubItemText = styled(ListItemText)`
   span {
-    text-transform: none;
-    font-weight: 400;
-    font-size: 0.85em;
-    letter-spacing: 0px;
-    color: ${({ theme }) => theme.colors.secondary};
     font-family: ${({ theme }) => theme.fonts.fontFamily};
+    font-size: 0.85em;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: ${({ theme }) => theme.colors.placeHolder};
+    text-transform: none;
   }
 `
 

@@ -1,6 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
 import { styles } from './style'
@@ -17,7 +18,6 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
-import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
 import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
