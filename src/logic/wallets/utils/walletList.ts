@@ -61,6 +61,7 @@ const wallets: Wallet[] = [
   { walletName: WALLETS.WALLET_LINK, rpcUrl, desktop: false },
   { walletName: WALLETS.OPERA, desktop: false },
   { walletName: WALLETS.OPERA_TOUCH, desktop: false },
+  { walletName: WALLETS.XDEFI, desktop: true },
 ]
 
 export const getSupportedWallets = (): WalletInitOptions[] => {

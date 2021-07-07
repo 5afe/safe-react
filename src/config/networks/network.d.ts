@@ -15,6 +15,7 @@ export enum WALLETS {
   OPERA = 'opera',
   OPERA_TOUCH = 'operaTouch',
   LATTICE = 'lattice',
+  XDEFI = 'xdefi',
 }
 
 export enum FEATURES {
