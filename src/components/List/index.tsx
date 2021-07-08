@@ -112,6 +112,8 @@ export type ListItemType = {
   subItems?: ListItemType[]
 }
 
+const isSubItemSelected = (item: ListItemType): boolean => item.subItems?.some(({ selected }) => selected) || false
+
 type Props = {
   items: ListItemType[]
 }
@@ -120,21 +122,29 @@ const List = ({ items }: Props): React.ReactElement => {
   const classes = useStyles()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
-  const onItemClick = (item: ListItemType) => {
+  const onItemClick = (item: ListItemType, isSubItem: boolean, event: MouseEvent) => {
+    const collapseStatus = { ...groupCollapseStatus }
+
+    // In the current implementation we only want to allow one expanded item at a time
+    // When we click any entry that is not a subItem we want to collapse all current expanded items
+    if (!isSubItem && !item.selected) {
+      const collapseKeys = Object.keys(collapseStatus)
+      collapseKeys.forEach((key) => (collapseStatus[key] = false))
+      setGroupCollapseStatus(collapseStatus)
+    }
+
     if (item.subItems) {
-      const cp = { ...groupCollapseStatus }
-      cp[item.label] = cp[item.label] ? false : true
-      setGroupCollapseStatus(cp)
+      // When we are viewing a subItem of this element we just toggle the expand status
+      // preventing navigation
+      isSubItemSelected(item) && event.preventDefault()
+      // When clicking we toogle item status
+      collapseStatus[item.label] = collapseStatus[item.label] ? false : true
+      setGroupCollapseStatus(collapseStatus)
     }
   }
 
-  const isSubItemSelected = (item: ListItemType): boolean => {
-    const res = item.subItems?.find((subItem) => subItem.selected)
-    return res !== undefined
-  }
-
   const getListItem = (item: ListItemType, isSubItem = true) => {
-    const onClick = () => onItemClick(item)
+    const onClick = (e) => onItemClick(item, isSubItem, e)
 
     const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
     const ListItemTextAux = isSubItem ? StyledListSubItemText : StyledListItemText
@@ -167,9 +177,9 @@ const List = ({ items }: Props): React.ReactElement => {
       return
     }
 
-    items.forEach((i) => {
-      if (isSubItemSelected(i)) {
-        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [i.label]: true } })
+    items.forEach((item) => {
+      if (isSubItemSelected(item)) {
+        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [item.label]: true } })
       }
     })
   }, [groupCollapseStatus, items])
