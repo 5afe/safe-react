@@ -59,6 +59,7 @@ const useSidebarItems = (): ListItemType[] => {
           href: `${matchSafeWithAddress?.url}/settings/policies`,
         },
         {
+          disabled: !isSpendingLimitEnabled,
           label: 'SpendingLimit',
           icon: <ListIcon type="fuelIndicator" />,
           selected:
@@ -77,18 +78,6 @@ const useSidebarItems = (): ListItemType[] => {
       ],
     }
 
-    const safeSidebar = safeAppsEnabled
-      ? [
-          {
-            label: 'Apps',
-            icon: <ListIcon type="apps" />,
-            selected: matchSafeWithAction?.params.safeAction === 'apps',
-            href: `${matchSafeWithAddress?.url}/apps`,
-          },
-          settingsItem,
-        ]
-      : [settingsItem]
-
     return [
       {
         label: 'ASSETS',
@@ -103,6 +92,7 @@ const useSidebarItems = (): ListItemType[] => {
             href: `${matchSafeWithAddress?.url}/balances`,
           },
           {
+            disabled: !isCollectiblesEnabled,
             label: 'Collectibles',
             icon: <ListIcon type="collectibles" />,
             selected:
@@ -124,9 +114,24 @@ const useSidebarItems = (): ListItemType[] => {
         selected: matchSafeWithAction?.params.safeAction === 'address-book',
         href: `${matchSafeWithAddress?.url}/address-book`,
       },
-      ...safeSidebar,
+      {
+        label: 'Apps',
+        disabled: !safeAppsEnabled,
+        icon: <ListIcon type="apps" />,
+        selected: matchSafeWithAction?.params.safeAction === 'apps',
+        href: `${matchSafeWithAddress?.url}/apps`,
+      },
+      settingsItem,
     ]
-  }, [matchSafe, matchSafeWithAction, matchSafeWithAddress, safeAppsEnabled, featuresEnabled])
+  }, [
+    isCollectiblesEnabled,
+    isSpendingLimitEnabled,
+    matchSafe,
+    matchSafeWithAction,
+    matchSafeWithAddress,
+    safeAppsEnabled,
+    featuresEnabled,
+  ])
 }
 
 export { useSidebarItems }

@@ -2,8 +2,7 @@ import { Loader, Icon } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
-import * as React from 'react'
-import { useState } from 'react'
+import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
@@ -28,7 +27,6 @@ export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
 const INITIAL_STATE = {
   showRemoveSafe: false,
-  menuOptionIndex: 1,
 }
 
 const useStyles = makeStyles(styles)
@@ -47,7 +45,7 @@ const Settings = (): React.ReactElement => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: false }))
   }
 
-  const { menuOptionIndex, showRemoveSafe } = state
+  const { showRemoveSafe } = state
 
   return !owners ? (
     <LoadingContainer>

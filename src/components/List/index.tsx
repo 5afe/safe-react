@@ -105,6 +105,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type ListItemType = {
+  disabled?: boolean
   label: string
   href: string
   icon?: React.ReactNode
@@ -186,18 +187,20 @@ const List = ({ items }: Props): React.ReactElement => {
 
   return (
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      {items.map((i) => (
-        <div key={i.label}>
-          {getListItem(i, false)}
-          {i.subItems && (
-            <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
-              <ListMui component="div" disablePadding>
-                {i.subItems.map((subItem) => getListItem(subItem))}
-              </ListMui>
-            </Collapse>
-          )}
-        </div>
-      ))}
+      {items
+        .filter(({ disabled }) => !disabled)
+        .map((i) => (
+          <div key={i.label}>
+            {getListItem(i, false)}
+            {i.subItems && (
+              <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
+                <ListMui component="div" disablePadding>
+                  {i.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
+                </ListMui>
+              </Collapse>
+            )}
+          </div>
+        ))}
     </ListMui>
   )
 }
