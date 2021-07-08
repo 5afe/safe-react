@@ -88,7 +88,9 @@ const useSidebarItems = (): ListItemType[] => {
           {
             label: 'Coins',
             icon: <ListIcon type="assets" />,
-            selected: matchSafeWithAction?.params.safeAction === 'balances',
+            selected:
+              matchSafeWithAction?.params.safeAction === 'balances' &&
+              matchSafeWithAction?.params.safeSubaction === undefined,
             href: `${matchSafeWithAddress?.url}/balances`,
           },
           {
