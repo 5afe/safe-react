@@ -60,7 +60,7 @@ const useSidebarItems = (): ListItemType[] => {
         },
         {
           disabled: !isSpendingLimitEnabled,
-          label: 'SpendingLimit',
+          label: 'Spending Limit',
           icon: <ListIcon type="fuelIndicator" />,
           selected:
             matchSafeWithAction?.params.safeAction === 'settings' &&
