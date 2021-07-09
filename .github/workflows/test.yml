@@ -23,12 +23,6 @@ jobs:
         with:
           node-version: 14
 
-      - name: Yarn cache
-        uses: actions/cache@v2
-        with:
-          path: '**/node_modules'
-          key: ${{ runner.os }}-modules-${{ hashFiles('**/yarn.lock') }}
-
       - name: Yarn install
         run: |
           mkdir .yarncache
