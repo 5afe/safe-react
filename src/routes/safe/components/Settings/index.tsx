@@ -6,12 +6,6 @@ import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch } from 'react-router-dom'
 
-import { Advanced } from './Advanced'
-import { SpendingLimitSettings } from './SpendingLimit'
-import ManageOwners from './ManageOwners'
-import { RemoveSafeModal } from './RemoveSafeModal'
-import SafeDetails from './SafeDetails'
-import ThresholdSettings from './ThresholdSettings'
 import { styles } from './style'
 
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -22,6 +16,13 @@ import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+
+const Advanced = React.lazy(() => import('./Advanced'))
+const SpendingLimitSettings = React.lazy(() => import('./SpendingLimit'))
+const ManageOwners = React.lazy(() => import('./ManageOwners'))
+const RemoveSafeModal = React.lazy(() => import('./RemoveSafeModal'))
+const SafeDetails = React.lazy(() => import('./SafeDetails'))
+const ThresholdSettings = React.lazy(() => import('./ThresholdSettings'))
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 

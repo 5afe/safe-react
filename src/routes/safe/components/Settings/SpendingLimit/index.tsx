@@ -19,7 +19,7 @@ const InfoText = styled(Text)`
   margin-top: 16px;
 `
 
-export const SpendingLimitSettings = (): ReactElement => {
+const SpendingLimit = (): ReactElement => {
   const classes = useStyles()
   const granted = useSelector(grantedSelector)
   const allowances = useSelector(currentSafeSpendingLimits)
@@ -68,3 +68,5 @@ export const SpendingLimitSettings = (): ReactElement => {
     </>
   )
 }
+
+export default SpendingLimit

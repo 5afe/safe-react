@@ -25,7 +25,7 @@ type RemoveSafeModalProps = {
   onClose: () => void
 }
 
-export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
+const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
   const { address: safeAddress, name: safeName } = useSelector(currentSafeWithNames)
   const defaultSafe = useSelector(defaultSafeSelector)
@@ -94,3 +94,5 @@ export const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): Reac
     </Modal>
   )
 }
+
+export default RemoveSafeModal
