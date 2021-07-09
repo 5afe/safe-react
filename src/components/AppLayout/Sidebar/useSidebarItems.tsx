@@ -28,51 +28,43 @@ const useSidebarItems = (): ListItemType[] => {
       return []
     }
 
+    const { safeAction, safeSubaction } = matchSafeWithAction?.params
+
     const settingsItem = {
       label: 'Settings',
       icon: <ListIcon type="settings" />,
-      selected: matchSafeWithAction?.params.safeAction === 'settings',
+      selected: safeAction === 'settings',
       href: `${matchSafeWithAddress?.url}/settings/details`,
       subItems: [
         {
           label: 'Safe Details',
           icon: <ListIcon type="info" />,
-          selected:
-            matchSafeWithAction?.params.safeAction === 'settings' &&
-            matchSafeWithAction?.params.safeSubaction === 'details',
+          selected: safeAction === 'settings' && safeSubaction === 'details',
           href: `${matchSafeWithAddress?.url}/settings/details`,
         },
         {
           label: 'Owners',
           icon: <ListIcon type="owners" />,
-          selected:
-            matchSafeWithAction?.params.safeAction === 'settings' &&
-            matchSafeWithAction?.params.safeSubaction === 'owners',
+          selected: safeAction === 'settings' && safeSubaction === 'owners',
           href: `${matchSafeWithAddress?.url}/settings/owners`,
         },
         {
           label: 'Policies',
           icon: <ListIcon type="requiredConfirmations" />,
-          selected:
-            matchSafeWithAction?.params.safeAction === 'settings' &&
-            matchSafeWithAction?.params.safeSubaction === 'policies',
+          selected: safeAction === 'settings' && safeSubaction === 'policies',
           href: `${matchSafeWithAddress?.url}/settings/policies`,
         },
         {
           disabled: !isSpendingLimitEnabled,
           label: 'Spending Limit',
           icon: <ListIcon type="fuelIndicator" />,
-          selected:
-            matchSafeWithAction?.params.safeAction === 'settings' &&
-            matchSafeWithAction?.params.safeSubaction === 'spending-limit',
+          selected: safeAction === 'settings' && safeSubaction === 'spending-limit',
           href: `${matchSafeWithAddress?.url}/settings/spending-limit`,
         },
         {
           label: 'Advanced',
           icon: <ListIcon type="settingsTool" />,
-          selected:
-            matchSafeWithAction?.params.safeAction === 'settings' &&
-            matchSafeWithAction?.params.safeSubaction === 'advanced',
+          selected: safeAction === 'settings' && safeSubaction === 'advanced',
           href: `${matchSafeWithAddress?.url}/settings/advanced`,
         },
       ],
@@ -82,24 +74,20 @@ const useSidebarItems = (): ListItemType[] => {
       {
         label: 'ASSETS',
         icon: <ListIcon type="assets" />,
-        selected: matchSafeWithAction?.params.safeAction === 'balances',
+        selected: safeAction === 'balances',
         href: `${matchSafeWithAddress?.url}/balances`,
         subItems: [
           {
             label: 'Coins',
             icon: <ListIcon type="assets" />,
-            selected:
-              matchSafeWithAction?.params.safeAction === 'balances' &&
-              matchSafeWithAction?.params.safeSubaction === undefined,
+            selected: safeAction === 'balances' && safeSubaction === undefined,
             href: `${matchSafeWithAddress?.url}/balances`,
           },
           {
             disabled: !isCollectiblesEnabled,
             label: 'Collectibles',
             icon: <ListIcon type="collectibles" />,
-            selected:
-              matchSafeWithAction?.params.safeAction === 'balances' &&
-              matchSafeWithAction?.params.safeSubaction === 'collectibles',
+            selected: safeAction === 'balances' && safeSubaction === 'collectibles',
             href: `${matchSafeWithAddress?.url}/balances/collectibles`,
           },
         ],
@@ -107,20 +95,20 @@ const useSidebarItems = (): ListItemType[] => {
       {
         label: 'TRANSACTIONS',
         icon: <ListIcon type="transactionsInactive" />,
-        selected: matchSafeWithAction?.params.safeAction === 'transactions',
+        selected: safeAction === 'transactions',
         href: `${matchSafeWithAddress?.url}/transactions`,
       },
       {
         label: 'ADDRESS BOOK',
         icon: <ListIcon type="addressBook" />,
-        selected: matchSafeWithAction?.params.safeAction === 'address-book',
+        selected: safeAction === 'address-book',
         href: `${matchSafeWithAddress?.url}/address-book`,
       },
       {
         label: 'Apps',
         disabled: !safeAppsEnabled,
         icon: <ListIcon type="apps" />,
-        selected: matchSafeWithAction?.params.safeAction === 'apps',
+        selected: safeAction === 'apps',
         href: `${matchSafeWithAddress?.url}/apps`,
       },
       settingsItem,
