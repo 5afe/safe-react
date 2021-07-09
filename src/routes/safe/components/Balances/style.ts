@@ -1,4 +1,4 @@
-import { md, screenSm, secondary, xs } from 'src/theme/variables'
+import { md, screenSm, xs } from 'src/theme/variables'
 import { createStyles } from '@material-ui/core'
 
 export const styles = createStyles({
@@ -6,37 +6,8 @@ export const styles = createStyles({
     alignItems: 'center',
     boxSizing: 'border-box',
     justifyContent: 'space-between',
+    minHeight: '56px',
     padding: `${md} 0`,
-  },
-  assetTabs: {
-    alignItems: 'center',
-    display: 'flex',
-    order: 2,
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      order: '1',
-    },
-  },
-  assetDivider: {
-    borderRightColor: `${secondary} !important`,
-    height: '18px !important',
-  },
-  assetTab: {
-    color: '#686868',
-    margin: '2px 0',
-    padding: '0 10px',
-    textDecoration: 'underline',
-
-    '&:hover': {
-      cursor: 'pointer',
-    },
-  },
-  assetTabActive: {
-    color: secondary,
-    fontWeight: 'bold',
-    margin: '2px 0',
-    padding: '0 10px',
-    textDecoration: 'none',
   },
   tokenControls: {
     alignItems: 'center',
