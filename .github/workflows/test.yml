@@ -32,7 +32,7 @@ jobs:
       - name: Yarn install
         run: |
           mkdir .yarncache
-          yarn install --cache-folder ./.yarncache --frozen-lockfile --network-concurrency 1
+          yarn install --cache-folder ./.yarncache --frozen-lockfile
           rm -rf .yarncache
           yarn cache clean
 
