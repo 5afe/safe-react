@@ -171,7 +171,7 @@ const ContractInteractionReview = ({ onClose, onPrev, tx }: Props): React.ReactE
             </Row>
             <Row align="center" margin="md">
               <Col xs={1}>
-                <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri} />
+                <Img alt="Ether" height={28} onError={setImageToPlaceholder} src={getEthAsToken('0').logoUri || ''} />
               </Col>
               <Col layout="column" xs={11}>
                 <Block justify="left">
