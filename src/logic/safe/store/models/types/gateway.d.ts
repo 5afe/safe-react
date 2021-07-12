@@ -1,3 +1,5 @@
+import { GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
+
 type TransferDirection = 'INCOMING' | 'OUTGOING'
 
 type Erc20Transfer = {
@@ -288,11 +290,9 @@ type GatewayResponse = {
   previous: string | null
 }
 
-type HistoryGatewayResult = DateLabel | TransactionGatewayResult
+type HistoryGatewayResult = GatewayDefinitions['TransactionListItem']
 
-type HistoryGatewayResponse = GatewayResponse & {
-  results: HistoryGatewayResult[]
-}
+type HistoryGatewayResponse = GatewayDefinitions['TransactionListPage']
 
 type QueuedGatewayResult = Label | ConflictHeader | TransactionGatewayResult
 
