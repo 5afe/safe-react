@@ -1,6 +1,5 @@
 import { Loader, Icon } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
-import Badge from '@material-ui/core/Badge'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
@@ -35,7 +34,7 @@ const useStyles = makeStyles(styles)
 const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const { address, owners, needsUpdate, loadedViaUrl } = useSelector(currentSafeWithNames)
+  const { address, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
 
   const onShow = (action) => () => {

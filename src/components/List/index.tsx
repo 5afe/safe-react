@@ -1,3 +1,4 @@
+import Badge from '@material-ui/core/Badge'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
@@ -76,6 +77,17 @@ const StyledListSubItemText = styled(ListItemText)`
   }
 `
 
+const TextAndBadgeWrapper = styled.div`
+  flex: 1 1 auto;
+`
+
+const StyledBadge = styled(Badge)`
+  .MuiBadge-badge {
+    top: 50%;
+    right: -1rem;
+  }
+`
+
 const useStyles = makeStyles((theme: Theme) =>
   createStyles({
     root: {
@@ -105,6 +117,7 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type ListItemType = {
+  badge?: boolean
   disabled?: boolean
   label: string
   href: string
@@ -165,7 +178,11 @@ const List = ({ items }: Props): React.ReactElement => {
       >
         {item.icon && item.icon}
 
-        <ListItemTextAux primary={item.label} />
+        <TextAndBadgeWrapper>
+          <StyledBadge badgeContent=" " color="error" invisible={!item.badge} variant="dot">
+            <ListItemTextAux primary={item.label} />
+          </StyledBadge>
+        </TextAndBadgeWrapper>
 
         {item.subItems &&
           (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}

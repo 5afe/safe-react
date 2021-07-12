@@ -7,13 +7,17 @@ import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
-import { currentSafeFeaturesEnabled } from 'src/logic/safe/store/selectors'
+import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { grantedSelector } from 'src/routes/safe/container/selector'
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
   const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
   const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
+  const { needsUpdate } = useSelector(currentSafeWithNames)
+  const granted = useSelector(grantedSelector)
+
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const matchSafeWithAction = useRouteMatch({
@@ -38,6 +42,7 @@ const useSidebarItems = (): ListItemType[] => {
       subItems: [
         {
           label: 'Safe Details',
+          badge: needsUpdate && granted,
           icon: <ListIcon type="info" />,
           selected: safeAction === 'settings' && safeSubaction === 'details',
           href: `${matchSafeWithAddress?.url}/settings/details`,
@@ -114,11 +119,13 @@ const useSidebarItems = (): ListItemType[] => {
       settingsItem,
     ]
   }, [
+    granted,
     isCollectiblesEnabled,
     isSpendingLimitEnabled,
     matchSafe,
     matchSafeWithAction,
     matchSafeWithAddress,
+    needsUpdate,
     safeAppsEnabled,
     featuresEnabled,
   ])
