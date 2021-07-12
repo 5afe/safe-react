@@ -137,14 +137,15 @@ const List = ({ items }: Props): React.ReactElement => {
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
   const onItemClick = (item: ListItemType, isSubItem: boolean, event: MouseEvent) => {
-    const collapseStatus = { ...groupCollapseStatus }
-
     // In the current implementation we only want to allow one expanded item at a time
     // When we click any entry that is not a subItem we want to collapse all current expanded items
     if (!isSubItem && !item.selected) {
-      const collapseKeys = Object.keys(collapseStatus)
-      collapseKeys.forEach((key) => (collapseStatus[key] = false))
-      setGroupCollapseStatus(collapseStatus)
+      setGroupCollapseStatus((prevStatus) => {
+        return Object.keys(prevStatus).reduce((newStatus, key) => {
+          newStatus[key] = false
+          return newStatus
+        }, {})
+      })
     }
 
     if (item.subItems) {
@@ -152,8 +153,9 @@ const List = ({ items }: Props): React.ReactElement => {
       // preventing navigation
       isSubItemSelected(item) && event.preventDefault()
       // When clicking we toogle item status
-      collapseStatus[item.label] = collapseStatus[item.label] ? false : true
-      setGroupCollapseStatus(collapseStatus)
+      setGroupCollapseStatus((prevStatus) => {
+        return (prevStatus[item.label] = prevStatus[item.label] ? false : true)
+      })
     }
   }
 
