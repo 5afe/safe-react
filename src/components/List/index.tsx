@@ -206,13 +206,13 @@ const List = ({ items }: Props): React.ReactElement => {
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
       {items
         .filter(({ disabled }) => !disabled)
-        .map((i) => (
-          <div key={i.label}>
-            {getListItem(i, false)}
-            {i.subItems && (
-              <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
+        .map((item) => (
+          <div key={item.label}>
+            {getListItem(item, false)}
+            {item.subItems && (
+              <Collapse in={groupCollapseStatus[item.label]} timeout="auto" unmountOnExit>
                 <ListMui component="div" disablePadding>
-                  {i.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
+                  {item.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
                 </ListMui>
               </Collapse>
             )}
