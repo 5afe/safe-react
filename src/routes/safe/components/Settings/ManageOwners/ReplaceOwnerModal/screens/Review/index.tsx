@@ -194,7 +194,7 @@ export const ReviewReplaceOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwnerRemoved}>
+                <Row className={classes.selectedOwnerRemoved} data-testid="remove-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={owner.address}
@@ -211,7 +211,7 @@ export const ReviewReplaceOwnerModal = ({
                   </Paragraph>
                 </Row>
                 <Hairline />
-                <Row className={classes.selectedOwnerAdded}>
+                <Row className={classes.selectedOwnerAdded} data-testid="add-owner-review">
                   <Col align="center" xs={12}>
                     <EthHashInfo
                       hash={newOwner.address}
