@@ -130,9 +130,10 @@ const isSubItemSelected = (item: ListItemType): boolean => item.subItems?.some((
 
 type Props = {
   items: ListItemType[]
+  safeAddress: string | undefined
 }
 
-const List = ({ items }: Props): React.ReactElement => {
+const List = ({ items, safeAddress }: Props): React.ReactElement => {
   const classes = useStyles()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
@@ -140,12 +141,7 @@ const List = ({ items }: Props): React.ReactElement => {
     // In the current implementation we only want to allow one expanded item at a time
     // When we click any entry that is not a subItem we want to collapse all current expanded items
     if (!isSubItem && !item.selected) {
-      setGroupCollapseStatus((prevStatus) => {
-        return Object.keys(prevStatus).reduce((newStatus, key) => {
-          newStatus[key] = false
-          return newStatus
-        }, {})
-      })
+      setGroupCollapseStatus({})
     }
 
     if (item.subItems) {
@@ -154,7 +150,7 @@ const List = ({ items }: Props): React.ReactElement => {
       isSubItemSelected(item) && event.preventDefault()
       // When clicking we toogle item status
       setGroupCollapseStatus((prevStatus) => {
-        return (prevStatus[item.label] = prevStatus[item.label] ? false : true)
+        return (prevStatus[item.href] = prevStatus[item.href] ? false : true)
       })
     }
   }
@@ -187,10 +183,15 @@ const List = ({ items }: Props): React.ReactElement => {
         </TextAndBadgeWrapper>
 
         {item.subItems &&
-          (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
+          (groupCollapseStatus[item.href] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
       </ListItemAux>
     )
   }
+
+  useEffect(() => {
+    // Reset collapse state when we change from safe
+    setGroupCollapseStatus({})
+  }, [safeAddress])
 
   useEffect(() => {
     if (Object.keys(groupCollapseStatus).length) {
@@ -199,7 +200,7 @@ const List = ({ items }: Props): React.ReactElement => {
 
     items.forEach((item) => {
       if (isSubItemSelected(item)) {
-        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [item.label]: true } })
+        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [item.href]: true } })
       }
     })
   }, [groupCollapseStatus, items])
@@ -212,7 +213,7 @@ const List = ({ items }: Props): React.ReactElement => {
           <div key={item.label}>
             {getListItem(item, false)}
             {item.subItems && (
-              <Collapse in={groupCollapseStatus[item.label]} timeout="auto" unmountOnExit>
+              <Collapse in={groupCollapseStatus[item.href]} timeout="auto" unmountOnExit>
                 <ListMui component="div" disablePadding>
                   {item.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
                 </ListMui>
