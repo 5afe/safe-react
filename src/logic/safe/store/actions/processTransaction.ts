@@ -29,7 +29,7 @@ import { PayableTx } from 'src/types/contracts/types'
 
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 

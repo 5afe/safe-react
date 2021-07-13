@@ -25,6 +25,7 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
+import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
@@ -78,16 +79,17 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         }
 
         if (isTransactionSummary(value)) {
-          const startOfDate = getLocalStartOfDate(value.transaction.timestamp)
+          const transaction = (value as any).transaction as TransactionSummary
+          const startOfDate = getLocalStartOfDate(transaction.timestamp)
 
           if (typeof history[startOfDate] === 'undefined') {
             history[startOfDate] = []
           }
 
-          const txExist = history[startOfDate].some(({ id }) => sameString(id, value.transaction.id))
+          const txExist = history[startOfDate].some(({ id }) => sameString(id, transaction.id))
 
           if (!txExist) {
-            history[startOfDate].push(value.transaction)
+            history[startOfDate].push(transaction)
             // pushing a newer transaction to the existing list messes the transactions order
             // this happens when most recent transactions are added to the existing txs in the store
             history[startOfDate] = history[startOfDate].sort((a, b) => b.timestamp - a.timestamp)
