@@ -33,7 +33,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
     } else {
       // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS, PENDING or PENDING_FAILED
       let text: string
-      const signaturePending = addressInList(transaction.executionInfo?.missingSigners)
+      const signaturePending = addressInList(transaction.executionInfo?.missingSigners ?? undefined)
 
       switch (transaction.txStatus) {
         case 'AWAITING_CONFIRMATIONS':

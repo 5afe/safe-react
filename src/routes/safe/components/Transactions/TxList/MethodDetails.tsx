@@ -2,9 +2,9 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import styled from 'styled-components'
 
-import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
+import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;
