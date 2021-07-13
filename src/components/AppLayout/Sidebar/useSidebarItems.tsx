@@ -1,21 +1,33 @@
 import React, { useMemo } from 'react'
 import { useSelector } from 'react-redux'
-import { useRouteMatch } from 'react-router-dom'
+import { generatePath, useRouteMatch } from 'react-router-dom'
 
 import { isFeatureEnabled } from 'src/config'
 import { ListItemType } from 'src/components/List'
 import ListIcon from 'src/components/List/ListIcon'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFELIST_ADDRESS, SAFE_ROUTES } from 'src/routes/routes'
 import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
+
+type isSelectedProps = {
+  route: string
+  safeAction: string
+  safeSubaction?: string
+}
+
+const isSelected = ({ route, safeAction, safeSubaction }: isSelectedProps) => {
+  const [, , , action, subAction] = route.split('/')
+
+  return safeAction === action && (safeSubaction ? safeSubaction === subAction : true)
+}
 
 const useSidebarItems = (): ListItemType[] => {
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
   const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
   const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
-  const { needsUpdate } = useSelector(currentSafeWithNames)
+  const { address, needsUpdate } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
@@ -37,40 +49,52 @@ const useSidebarItems = (): ListItemType[] => {
     const settingsItem = {
       label: 'Settings',
       icon: <ListIcon type="settings" />,
-      selected: safeAction === 'settings',
-      href: `${matchSafeWithAddress?.url}/settings/details`,
+      selected: isSelected({ route: SAFE_ROUTES.DETAILS, safeAction }),
+      href: generatePath(SAFE_ROUTES.DETAILS, {
+        address,
+      }),
       subItems: [
         {
           label: 'Safe Details',
           badge: needsUpdate && granted,
           icon: <ListIcon type="info" />,
-          selected: safeAction === 'settings' && safeSubaction === 'details',
-          href: `${matchSafeWithAddress?.url}/settings/details`,
+          selected: isSelected({ route: SAFE_ROUTES.DETAILS, safeAction, safeSubaction }),
+          href: generatePath(SAFE_ROUTES.DETAILS, {
+            address,
+          }),
         },
         {
           label: 'Owners',
           icon: <ListIcon type="owners" />,
-          selected: safeAction === 'settings' && safeSubaction === 'owners',
-          href: `${matchSafeWithAddress?.url}/settings/owners`,
+          selected: isSelected({ route: SAFE_ROUTES.OWNERS, safeAction, safeSubaction }),
+          href: generatePath(SAFE_ROUTES.OWNERS, {
+            address,
+          }),
         },
         {
           label: 'Policies',
           icon: <ListIcon type="requiredConfirmations" />,
-          selected: safeAction === 'settings' && safeSubaction === 'policies',
-          href: `${matchSafeWithAddress?.url}/settings/policies`,
+          selected: isSelected({ route: SAFE_ROUTES.POLICIES, safeAction, safeSubaction }),
+          href: generatePath(SAFE_ROUTES.POLICIES, {
+            address,
+          }),
         },
         {
           disabled: !isSpendingLimitEnabled,
           label: 'Spending Limit',
           icon: <ListIcon type="fuelIndicator" />,
-          selected: safeAction === 'settings' && safeSubaction === 'spending-limit',
-          href: `${matchSafeWithAddress?.url}/settings/spending-limit`,
+          selected: isSelected({ route: SAFE_ROUTES.SPENDING_LIMIT, safeAction, safeSubaction }),
+          href: generatePath(SAFE_ROUTES.SPENDING_LIMIT, {
+            address,
+          }),
         },
         {
           label: 'Advanced',
           icon: <ListIcon type="settingsTool" />,
-          selected: safeAction === 'settings' && safeSubaction === 'advanced',
-          href: `${matchSafeWithAddress?.url}/settings/advanced`,
+          selected: isSelected({ route: SAFE_ROUTES.ADVANCED, safeAction, safeSubaction }),
+          href: generatePath(SAFE_ROUTES.ADVANCED, {
+            address,
+          }),
         },
       ],
     }
@@ -119,6 +143,7 @@ const useSidebarItems = (): ListItemType[] => {
       settingsItem,
     ]
   }, [
+    address,
     granted,
     isCollectiblesEnabled,
     isSpendingLimitEnabled,

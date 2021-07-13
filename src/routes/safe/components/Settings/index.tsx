@@ -3,11 +3,11 @@ import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Route, Switch } from 'react-router-dom'
+import { generatePath, Route, Switch } from 'react-router-dom'
 
 import { styles } from './style'
 
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
@@ -69,27 +69,37 @@ const Settings = (): React.ReactElement => {
           <Block className={classes.container}>
             <Switch>
               <Route
-                path={`${SAFELIST_ADDRESS}/${address}/settings/details`}
+                path={generatePath(SAFE_ROUTES.DETAILS, {
+                  address,
+                })}
                 exact
                 render={() => <SafeDetails />}
               ></Route>
               <Route
-                path={`${SAFELIST_ADDRESS}/${address}/settings/owners`}
+                path={generatePath(SAFE_ROUTES.OWNERS, {
+                  address,
+                })}
                 exact
                 render={() => <ManageOwners granted={granted} owners={owners} />}
               ></Route>
               <Route
-                path={`${SAFELIST_ADDRESS}/${address}/settings/policies`}
+                path={generatePath(SAFE_ROUTES.POLICIES, {
+                  address,
+                })}
                 exact
                 render={() => <ThresholdSettings />}
               ></Route>
               <Route
-                path={`${SAFELIST_ADDRESS}/${address}/settings/spending-limit`}
+                path={generatePath(SAFE_ROUTES.SPENDING_LIMIT, {
+                  address,
+                })}
                 exact
                 render={() => <SpendingLimitSettings />}
               ></Route>
               <Route
-                path={`${SAFELIST_ADDRESS}/${address}/settings/advanced`}
+                path={generatePath(SAFE_ROUTES.ADVANCED, {
+                  address,
+                })}
                 exact
                 render={() => <Advanced />}
               ></Route>
