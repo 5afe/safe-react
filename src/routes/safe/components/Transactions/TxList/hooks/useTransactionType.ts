@@ -56,8 +56,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         if (tx.safeAppInfo) {
-          const info = tx.safeAppInfo as any // FIXME
-          setType({ icon: info.logoUrl, text: info.name })
+          setType({ icon: tx.safeAppInfo.logoUrl, text: tx.safeAppInfo.name })
           break
         }
 

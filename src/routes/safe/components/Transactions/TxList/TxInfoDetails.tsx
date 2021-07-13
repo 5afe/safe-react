@@ -3,13 +3,13 @@ import styled from 'styled-components'
 
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
-import { Erc721Transfer, Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { EllipsisTransactionDetails } from 'src/routes/safe/components/AddressBook/EllipsisTransactionDetails'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxLocationContext, TxLocationProps } from './TxLocationProvider'
 import { getTxTokenData } from './utils'
+import { Erc721Transfer, Transfer } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
 
 const SingleRow = styled.div`
   display: flex;

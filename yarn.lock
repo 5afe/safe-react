@@ -1869,9 +1869,9 @@
     classnames "^2.2.6"
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@https://github.com/gnosis/safe-react-gateway-sdk.git#74502a0":
+"@gnosis.pm/safe-react-gateway-sdk@https://github.com/gnosis/safe-react-gateway-sdk.git#0166c3a":
   version "1.0.0"
-  resolved "https://github.com/gnosis/safe-react-gateway-sdk.git#74502a01fe50779432dc74b240513f64ac2bcd2f"
+  resolved "https://github.com/gnosis/safe-react-gateway-sdk.git#0166c3a1dff63a58746fcbc863d77034cfd25ff4"
   dependencies:
     unfetch "^4.2.0"
 
