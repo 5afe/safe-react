@@ -16,7 +16,6 @@ import {
   QueuedGatewayResponse,
   StoreStructure,
   Transaction,
-  TransactionStatus,
   TxLocation,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { UPDATE_TRANSACTION_DETAILS } from 'src/logic/safe/store/actions/fetchTransactionDetails'
@@ -25,7 +24,7 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
-import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
@@ -155,9 +154,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                     storedTransaction.executionInfo?.confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
-                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
-                    value.transaction.txStatus = 'PENDING'
+                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
+                    value.transaction.txStatus = TransactionStatus.PENDING
                   }
 
                   next[txNonce][txIndex] = updateFromService
@@ -193,9 +192,9 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
                     storedTransaction.executionInfo?.confirmationsSubmitted !==
                     value.transaction.executionInfo?.confirmationsSubmitted
 
-                  if (storedTransaction.txStatus === 'PENDING' && !updateFromService) {
-                    // we're waiting for a tx resolution. Thus, we'll prioritize 'PENDING' status
-                    value.transaction.txStatus = 'PENDING'
+                  if (storedTransaction.txStatus === TransactionStatus.PENDING && !updateFromService) {
+                    // we're waiting for a tx resolution. Thus, we'll prioritize TransactionStatus.PENDING status
+                    value.transaction.txStatus = TransactionStatus.PENDING
                   }
 
                   queued[txNonce][txIndex] = updateFromService
@@ -329,7 +328,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
         case 'queued.next': {
           queued.next[nonce] = queued.next[nonce].map((txToUpdate) => {
             // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
               return txToUpdate
             }
 
@@ -348,7 +347,7 @@ export const gatewayTransactions = handleActions<AppReduxState['gatewayTransacti
           queued.queued[nonce] = queued.queued[nonce].map((txToUpdate) => {
             // TODO: review if is this `PENDING` status required under `queued.queued` list
             // prevent setting `PENDING_FAILED` status, if previous status wasn't `PENDING`
-            if (txStatus === 'PENDING_FAILED' && txToUpdate.txStatus !== 'PENDING') {
+            if (txStatus === TransactionStatus.PENDING_FAILED && txToUpdate.txStatus !== TransactionStatus.PENDING) {
               return txToUpdate
             }
 
