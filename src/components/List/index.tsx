@@ -137,7 +137,7 @@ const List = ({ items }: Props): React.ReactElement => {
   const history = useHistory()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
-  const onItemClick = (item: ListItemType, isSubItem: boolean, event: MouseEvent) => {
+  const onItemClick = (item: ListItemType, event: MouseEvent) => {
     if (item.subItems) {
       // When we are viewing a subItem of this element we just toggle the expand status
       // preventing navigation
@@ -150,7 +150,7 @@ const List = ({ items }: Props): React.ReactElement => {
   }
 
   const getListItem = (item: ListItemType, isSubItem = true) => {
-    const onClick = (e) => onItemClick(item, isSubItem, e)
+    const onClick = (e) => onItemClick(item, e)
 
     const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
     const ListItemTextAux = isSubItem ? StyledListSubItemText : StyledListItemText
