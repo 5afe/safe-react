@@ -150,7 +150,7 @@ const List = ({ items, safeAddress }: Props): React.ReactElement => {
       isSubItemSelected(item) && event.preventDefault()
       // When clicking we toogle item status
       setGroupCollapseStatus((prevStatus) => {
-        return (prevStatus[item.href] = prevStatus[item.href] ? false : true)
+        return { ...prevStatus, ...{ [item.href]: prevStatus[item.href] ? false : true } }
       })
     }
   }
