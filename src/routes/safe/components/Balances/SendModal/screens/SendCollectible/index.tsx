@@ -27,7 +27,7 @@ import { sameString } from 'src/utils/strings'
 import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
-import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { Erc721Transfer } from 'src/types/gateway/transactions'
 
 const formMutators = {
   setMax: (args, state, utils) => {

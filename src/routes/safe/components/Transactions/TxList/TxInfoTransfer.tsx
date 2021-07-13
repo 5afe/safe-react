@@ -1,4 +1,4 @@
-import { Transfer } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { Transfer } from 'src/types/gateway/transactions'
 import React, { ReactElement, useEffect, useState } from 'react'
 
 import { useAssetInfo } from './hooks/useAssetInfo'

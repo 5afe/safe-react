@@ -24,12 +24,7 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
-import {
-  SettingsChange,
-  DisableModule,
-  MultiSend,
-  Custom,
-} from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { SettingsChange, DisableModule, MultiSend, Custom } from 'src/types/gateway/transactions'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {

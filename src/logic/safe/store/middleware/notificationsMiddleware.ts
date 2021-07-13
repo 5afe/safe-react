@@ -18,11 +18,7 @@ import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeAddressFromUrl, safesAsMap } from 'src/logic/safe/store/selectors'
 
 import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
-import {
-  TransactionListItem,
-  Transaction,
-  TransactionSummary,
-} from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { TransactionListItem, Transaction, TransactionSummary } from 'src/types/gateway/transactions'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 

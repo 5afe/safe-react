@@ -1,4 +1,4 @@
-import { TransactionInfo, Transfer } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { TransactionInfo, Transfer } from 'src/types/gateway/transactions'
 import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'

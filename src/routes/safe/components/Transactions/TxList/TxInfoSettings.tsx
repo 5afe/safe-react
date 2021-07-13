@@ -1,5 +1,5 @@
 import { Text } from '@gnosis.pm/safe-react-components'
-import { SettingsChange } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { SettingsChange } from 'src/types/gateway/transactions'
 import React, { ReactElement } from 'react'
 
 import { AddressInfo } from './AddressInfo'

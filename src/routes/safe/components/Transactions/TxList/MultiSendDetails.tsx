@@ -1,5 +1,5 @@
 import { AccordionSummary, IconText } from '@gnosis.pm/safe-react-components'
-import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { DataDecoded } from 'src/types/gateway/transactions'
 import React, { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'

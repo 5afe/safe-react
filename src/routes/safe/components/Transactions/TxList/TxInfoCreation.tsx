@@ -6,7 +6,7 @@ import { formatDateTime } from 'src/utils/date'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
-import { Creation } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { Creation } from 'src/types/gateway/transactions'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
   const txInfo = transaction.txInfo as Creation

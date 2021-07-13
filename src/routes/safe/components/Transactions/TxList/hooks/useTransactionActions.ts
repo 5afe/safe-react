@@ -1,4 +1,4 @@
-import { ExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+import { ExecutionInfo } from 'src/types/gateway/transactions'
 import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 

@@ -8,7 +8,7 @@ import {
   ConflictHeader,
   Transfer,
   TransactionStatus as GWTransactionStatus,
-} from '@gnosis.pm/safe-react-gateway-sdk/dist/types/transactions'
+} from 'src/types/gateway/transactions'
 
 export enum Operation {
   CALL = 0,
