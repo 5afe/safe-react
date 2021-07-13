@@ -1,13 +1,13 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { Redirect, Route, Switch } from 'react-router-dom'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
 
 import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
@@ -17,7 +17,6 @@ import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
-import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
 import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
@@ -86,37 +85,12 @@ const Balances = (): ReactElement => {
     }))
   }
 
-  const { assetDivider, assetTab, assetTabActive, assetTabs, controls, tokenControls } = classes
+  const { controls, tokenControls } = classes
   const { erc721Enabled, sendFunds, showReceive } = state
 
   return (
     <>
       <Row align="center" className={controls}>
-        <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          <NavLink
-            to={`${SAFELIST_ADDRESS}/${address}/balances`}
-            activeClassName={assetTabActive}
-            className={assetTab}
-            data-testid={'coins-assets-btn'}
-            exact
-          >
-            Coins
-          </NavLink>
-          {erc721Enabled ? (
-            <>
-              <Divider className={assetDivider} />
-              <NavLink
-                to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
-                activeClassName={assetTabActive}
-                className={assetTab}
-                data-testid={'collectibles-assets-btn'}
-                exact
-              >
-                Collectibles
-              </NavLink>
-            </>
-          ) : null}
-        </Col>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
@@ -130,11 +104,9 @@ const Balances = (): ReactElement => {
             exact
             render={() => {
               return (
-                <>
-                  <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                    <CurrencyDropdown />
-                  </Col>
-                </>
+                <Col className={tokenControls} end="sm" xs={12}>
+                  <CurrencyDropdown />
+                </Col>
               )
             }}
           />

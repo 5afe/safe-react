@@ -82,7 +82,7 @@ const Container = (): React.ReactElement => {
         />
         <Route
           exact
-          path={`${matchSafeWithAddress?.path}/settings`}
+          path={`${matchSafeWithAddress?.path}/settings/:section`}
           render={() => wrapInSuspense(<Settings />, null)}
         />
         <Route

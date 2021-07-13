@@ -1,6 +1,7 @@
+import Badge from '@material-ui/core/Badge'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 
 import ListMui from '@material-ui/core/List'
@@ -33,11 +34,23 @@ const StyledListItem = styled(ListItem)<ListItemProps>`
 
 const StyledListSubItem = styled(ListItem)<ListItemProps>`
   &.MuiButtonBase-root.MuiListItem-root {
-    color: ${({ theme }) => theme.colors.text};
+    margin: 4px 0;
+  }
+
+  &.MuiListItem-button:hover {
+    border-radius: 8px;
   }
 
   &.MuiButtonBase-root.MuiListItem-root.Mui-selected {
+    background-color: ${({ theme }) => theme.colors.background};
+    border-radius: 8px;
     color: ${({ theme }) => theme.colors.primary};
+    span {
+      color: ${({ theme }) => theme.colors.primary};
+    }
+    .icon-color {
+      fill: ${({ theme }) => theme.colors.primary};
+    }
   }
 `
 
@@ -55,12 +68,23 @@ const StyledListItemText = styled(ListItemText)`
 
 const StyledListSubItemText = styled(ListItemText)`
   span {
-    text-transform: none;
-    font-weight: 400;
-    font-size: 0.85em;
-    letter-spacing: 0px;
-    color: ${({ theme }) => theme.colors.secondary};
     font-family: ${({ theme }) => theme.fonts.fontFamily};
+    font-size: 0.85em;
+    font-weight: 400;
+    letter-spacing: 0px;
+    color: ${({ theme }) => theme.colors.placeHolder};
+    text-transform: none;
+  }
+`
+
+const TextAndBadgeWrapper = styled.div`
+  flex: 1 1 auto;
+`
+
+const StyledBadge = styled(Badge)`
+  .MuiBadge-badge {
+    top: 50%;
+    right: -1rem;
   }
 `
 
@@ -93,6 +117,8 @@ const useStyles = makeStyles((theme: Theme) =>
 )
 
 export type ListItemType = {
+  badge?: boolean
+  disabled?: boolean
   label: string
   href: string
   icon?: React.ReactNode
@@ -100,29 +126,31 @@ export type ListItemType = {
   subItems?: ListItemType[]
 }
 
+const isSubItemSelected = (item: ListItemType): boolean => item.subItems?.some(({ selected }) => selected) || false
+
 type Props = {
   items: ListItemType[]
 }
 
 const List = ({ items }: Props): React.ReactElement => {
   const classes = useStyles()
+  const history = useHistory()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
-  const onItemClick = (item: ListItemType) => {
+  const onItemClick = (item: ListItemType, event: MouseEvent) => {
     if (item.subItems) {
-      const cp = { ...groupCollapseStatus }
-      cp[item.label] = cp[item.label] ? false : true
-      setGroupCollapseStatus(cp)
+      // When we are viewing a subItem of this element we just toggle the expand status
+      // preventing navigation
+      isSubItemSelected(item) && event.preventDefault()
+      // When clicking we toogle item status
+      setGroupCollapseStatus((prevStatus) => {
+        return { ...prevStatus, ...{ [item.href]: prevStatus[item.href] ? false : true } }
+      })
     }
   }
 
-  const isSubItemSelected = (item: ListItemType): boolean => {
-    const res = item.subItems?.find((subItem) => subItem.selected)
-    return res !== undefined
-  }
-
   const getListItem = (item: ListItemType, isSubItem = true) => {
-    const onClick = () => onItemClick(item)
+    const onClick = (e) => onItemClick(item, e)
 
     const ListItemAux = isSubItem ? StyledListSubItem : StyledListItem
     const ListItemTextAux = isSubItem ? StyledListSubItemText : StyledListItemText
@@ -142,40 +170,46 @@ const List = ({ items }: Props): React.ReactElement => {
       >
         {item.icon && item.icon}
 
-        <ListItemTextAux primary={item.label} />
+        <TextAndBadgeWrapper>
+          <StyledBadge badgeContent=" " color="error" invisible={!item.badge} variant="dot">
+            <ListItemTextAux primary={item.label} />
+          </StyledBadge>
+        </TextAndBadgeWrapper>
 
         {item.subItems &&
-          (groupCollapseStatus[item.label] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
+          (groupCollapseStatus[item.href] ? <FixedIcon type="chevronUp" /> : <FixedIcon type="chevronDown" />)}
       </ListItemAux>
     )
   }
 
   useEffect(() => {
-    if (Object.keys(groupCollapseStatus).length) {
-      return
-    }
+    // In the current implementation we only want to allow one expanded item at a time
+    // When we click any entry that is not a subItem we want to collapse all current expanded items
+    setGroupCollapseStatus({})
 
-    items.forEach((i) => {
-      if (isSubItemSelected(i)) {
-        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [i.label]: true } })
+    items.forEach((item) => {
+      if (isSubItemSelected(item)) {
+        setGroupCollapseStatus((prevStatus) => ({ ...prevStatus, ...{ [item.href]: true } }))
       }
     })
-  }, [groupCollapseStatus, items])
+  }, [items, history.action, history.location.pathname])
 
   return (
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
-      {items.map((i) => (
-        <div key={i.label}>
-          {getListItem(i, false)}
-          {i.subItems && (
-            <Collapse in={groupCollapseStatus[i.label]} timeout="auto" unmountOnExit>
-              <ListMui component="div" disablePadding>
-                {i.subItems.map((subItem) => getListItem(subItem))}
-              </ListMui>
-            </Collapse>
-          )}
-        </div>
-      ))}
+      {items
+        .filter(({ disabled }) => !disabled)
+        .map((item) => (
+          <div key={item.label}>
+            {getListItem(item, false)}
+            {item.subItems && (
+              <Collapse in={groupCollapseStatus[item.href]} timeout="auto" unmountOnExit>
+                <ListMui component="div" disablePadding>
+                  {item.subItems.filter(({ disabled }) => !disabled).map((subItem) => getListItem(subItem))}
+                </ListMui>
+              </Collapse>
+            )}
+          </div>
+        ))}
     </ListMui>
   )
 }
