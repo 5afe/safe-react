@@ -10,16 +10,23 @@ import { FEATURES } from 'src/config/networks/network.d'
 import { currentSafeFeaturesEnabled, currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 
-type isSelectedProps = {
-  route: string
-  safeAction: string
-  safeSubaction?: string
+type SafeRouteWithAction = {
+  url: string
+  params: Record<string, string>
 }
 
-const isSelected = ({ route, safeAction, safeSubaction }: isSelectedProps) => {
-  const [, , , action, subAction] = route.split('/')
+type IsSelectedProps = {
+  route: string
+  matchSafeWithAction: SafeRouteWithAction
+}
 
-  return safeAction === action && (safeSubaction ? safeSubaction === subAction : true)
+const isSelected = ({ route, matchSafeWithAction }: IsSelectedProps): boolean => {
+  const currentRoute = matchSafeWithAction.url
+  const expectedRoute = generatePath(route, {
+    address: matchSafeWithAction.params.safeAddress,
+  })
+
+  return currentRoute === expectedRoute
 }
 
 const useSidebarItems = (): ListItemType[] => {
@@ -34,23 +41,17 @@ const useSidebarItems = (): ListItemType[] => {
   const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const matchSafeWithAction = useRouteMatch({
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
-  }) as {
-    url: string
-    params: Record<string, string>
-  }
+  }) as SafeRouteWithAction
 
   return useMemo((): ListItemType[] => {
     if (!matchSafe || !matchSafeWithAddress || !featuresEnabled) {
       return []
     }
 
-    const { safeAction, safeSubaction } = matchSafeWithAction?.params
-
     const settingsItem = {
       label: 'Settings',
       icon: <ListIcon type="settings" />,
-      selected: isSelected({ route: SAFE_ROUTES.DETAILS, safeAction }),
-      href: generatePath(SAFE_ROUTES.DETAILS, {
+      href: generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
         address,
       }),
       subItems: [
@@ -58,24 +59,24 @@ const useSidebarItems = (): ListItemType[] => {
           label: 'Safe Details',
           badge: needsUpdate && granted,
           icon: <ListIcon type="info" />,
-          selected: isSelected({ route: SAFE_ROUTES.DETAILS, safeAction, safeSubaction }),
-          href: generatePath(SAFE_ROUTES.DETAILS, {
+          selected: isSelected({ route: SAFE_ROUTES.SETTINGS_DETAILS, matchSafeWithAction }),
+          href: generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
             address,
           }),
         },
         {
           label: 'Owners',
           icon: <ListIcon type="owners" />,
-          selected: isSelected({ route: SAFE_ROUTES.OWNERS, safeAction, safeSubaction }),
-          href: generatePath(SAFE_ROUTES.OWNERS, {
+          selected: isSelected({ route: SAFE_ROUTES.SETTINGS_OWNERS, matchSafeWithAction }),
+          href: generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
             address,
           }),
         },
         {
           label: 'Policies',
           icon: <ListIcon type="requiredConfirmations" />,
-          selected: isSelected({ route: SAFE_ROUTES.POLICIES, safeAction, safeSubaction }),
-          href: generatePath(SAFE_ROUTES.POLICIES, {
+          selected: isSelected({ route: SAFE_ROUTES.SETTINGS_POLICIES, matchSafeWithAction }),
+          href: generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
             address,
           }),
         },
@@ -83,16 +84,16 @@ const useSidebarItems = (): ListItemType[] => {
           disabled: !isSpendingLimitEnabled,
           label: 'Spending Limit',
           icon: <ListIcon type="fuelIndicator" />,
-          selected: isSelected({ route: SAFE_ROUTES.SPENDING_LIMIT, safeAction, safeSubaction }),
-          href: generatePath(SAFE_ROUTES.SPENDING_LIMIT, {
+          selected: isSelected({ route: SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, matchSafeWithAction }),
+          href: generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
             address,
           }),
         },
         {
           label: 'Advanced',
           icon: <ListIcon type="settingsTool" />,
-          selected: isSelected({ route: SAFE_ROUTES.ADVANCED, safeAction, safeSubaction }),
-          href: generatePath(SAFE_ROUTES.ADVANCED, {
+          selected: isSelected({ route: SAFE_ROUTES.SETTINGS_ADVANCED, matchSafeWithAction }),
+          href: generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
             address,
           }),
         },
@@ -103,42 +104,53 @@ const useSidebarItems = (): ListItemType[] => {
       {
         label: 'ASSETS',
         icon: <ListIcon type="assets" />,
-        selected: safeAction === 'balances',
-        href: `${matchSafeWithAddress?.url}/balances`,
+        href: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+          address,
+        }),
         subItems: [
           {
             label: 'Coins',
             icon: <ListIcon type="assets" />,
-            selected: safeAction === 'balances' && safeSubaction === undefined,
-            href: `${matchSafeWithAddress?.url}/balances`,
+            selected: isSelected({ route: SAFE_ROUTES.ASSETS_BALANCES, matchSafeWithAction }),
+            href: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              address,
+            }),
           },
           {
             disabled: !isCollectiblesEnabled,
             label: 'Collectibles',
             icon: <ListIcon type="collectibles" />,
-            selected: safeAction === 'balances' && safeSubaction === 'collectibles',
-            href: `${matchSafeWithAddress?.url}/balances/collectibles`,
+            selected: isSelected({ route: SAFE_ROUTES.ASSETS_COLLECTIBLES, matchSafeWithAction }),
+            href: generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+              address,
+            }),
           },
         ],
       },
       {
         label: 'TRANSACTIONS',
         icon: <ListIcon type="transactionsInactive" />,
-        selected: safeAction === 'transactions',
-        href: `${matchSafeWithAddress?.url}/transactions`,
+        selected: isSelected({ route: SAFE_ROUTES.TRANSACTIONS, matchSafeWithAction }),
+        href: generatePath(SAFE_ROUTES.TRANSACTIONS, {
+          address,
+        }),
       },
       {
         label: 'ADDRESS BOOK',
         icon: <ListIcon type="addressBook" />,
-        selected: safeAction === 'address-book',
-        href: `${matchSafeWithAddress?.url}/address-book`,
+        selected: isSelected({ route: SAFE_ROUTES.ADDRESS_BOOK, matchSafeWithAction }),
+        href: generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
+          address,
+        }),
       },
       {
         label: 'Apps',
         disabled: !safeAppsEnabled,
         icon: <ListIcon type="apps" />,
-        selected: safeAction === 'apps',
-        href: `${matchSafeWithAddress?.url}/apps`,
+        selected: isSelected({ route: SAFE_ROUTES.APPS, matchSafeWithAction }),
+        href: generatePath(SAFE_ROUTES.APPS, {
+          address,
+        }),
       },
       settingsItem,
     ]
