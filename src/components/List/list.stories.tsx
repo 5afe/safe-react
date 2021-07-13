@@ -34,4 +34,4 @@ export default {
   component: List,
 }
 
-export const SimpleList = (): React.ReactElement => <List items={items} safeAddress={''} />
+export const SimpleList = (): React.ReactElement => <List items={items} />

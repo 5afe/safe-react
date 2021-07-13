@@ -72,7 +72,7 @@ const Sidebar = ({
     {items.length ? (
       <>
         <StyledDivider />
-        <List items={items} safeAddress={safeAddress} />
+        <List items={items} />
       </>
     ) : null}
 

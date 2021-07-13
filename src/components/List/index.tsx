@@ -1,7 +1,7 @@
 import Badge from '@material-ui/core/Badge'
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 import { makeStyles, Theme, createStyles } from '@material-ui/core/styles'
 
 import ListMui from '@material-ui/core/List'
@@ -130,20 +130,14 @@ const isSubItemSelected = (item: ListItemType): boolean => item.subItems?.some((
 
 type Props = {
   items: ListItemType[]
-  safeAddress: string | undefined
 }
 
-const List = ({ items, safeAddress }: Props): React.ReactElement => {
+const List = ({ items }: Props): React.ReactElement => {
   const classes = useStyles()
+  const history = useHistory()
   const [groupCollapseStatus, setGroupCollapseStatus] = useState({})
 
   const onItemClick = (item: ListItemType, isSubItem: boolean, event: MouseEvent) => {
-    // In the current implementation we only want to allow one expanded item at a time
-    // When we click any entry that is not a subItem we want to collapse all current expanded items
-    if (!isSubItem && !item.selected) {
-      setGroupCollapseStatus({})
-    }
-
     if (item.subItems) {
       // When we are viewing a subItem of this element we just toggle the expand status
       // preventing navigation
@@ -189,21 +183,16 @@ const List = ({ items, safeAddress }: Props): React.ReactElement => {
   }
 
   useEffect(() => {
-    // Reset collapse state when we change from safe
+    // In the current implementation we only want to allow one expanded item at a time
+    // When we click any entry that is not a subItem we want to collapse all current expanded items
     setGroupCollapseStatus({})
-  }, [safeAddress])
-
-  useEffect(() => {
-    if (Object.keys(groupCollapseStatus).length) {
-      return
-    }
 
     items.forEach((item) => {
       if (isSubItemSelected(item)) {
-        setGroupCollapseStatus({ ...groupCollapseStatus, ...{ [item.href]: true } })
+        setGroupCollapseStatus((prevStatus) => ({ ...prevStatus, ...{ [item.href]: true } }))
       }
     })
-  }, [groupCollapseStatus, items])
+  }, [items, history.action, history.location.pathname])
 
   return (
     <ListMui component="nav" aria-labelledby="nested-list-subheader" className={classes.root}>
