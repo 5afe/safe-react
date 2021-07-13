@@ -285,20 +285,13 @@ type TransactionGatewayResult = {
   conflictType: 'HasNext' | 'End' | 'None'
 }
 
-type GatewayResponse = {
-  next: string | null
-  previous: string | null
-}
-
 type HistoryGatewayResult = GatewayDefinitions['TransactionListItem']
 
 type HistoryGatewayResponse = GatewayDefinitions['TransactionListPage']
 
-type QueuedGatewayResult = Label | ConflictHeader | TransactionGatewayResult
+type QueuedGatewayResult = GatewayDefinitions['TransactionListItem']
 
-type QueuedGatewayResponse = GatewayResponse & {
-  results: QueuedGatewayResult[]
-}
+type QueuedGatewayResponse = GatewayDefinitions['TransactionListPage']
 
 export type TransactionDetails = {
   count: number
