@@ -23,7 +23,7 @@ type IsSelectedProps = {
 const isSelected = ({ route, matchSafeWithAction }: IsSelectedProps): boolean => {
   const currentRoute = matchSafeWithAction.url
   const expectedRoute = generatePath(route, {
-    address: matchSafeWithAction.params.safeAddress,
+    safeAddress: matchSafeWithAction.params.safeAddress,
   })
 
   return currentRoute === expectedRoute
