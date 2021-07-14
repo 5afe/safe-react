@@ -16,9 +16,14 @@ describe('fetchTokenCurrenciesBalances', () => {
       selectedCurrency: 'USD',
     })
 
-    expect(getBalances).toHaveBeenCalledWith('RINKEBY', '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf', 'USD', {
-      exclude_spam: true,
-      trusted: false,
-    })
+    expect(getBalances).toHaveBeenCalledWith(
+      'http://localhost:8001/v1',
+      '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf',
+      'USD',
+      {
+        exclude_spam: true,
+        trusted: false,
+      },
+    )
   })
 })

@@ -1,5 +1,5 @@
 import { getBalances, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getNetworkName } from 'src/config'
+import { getClientGatewayUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type TokenBalance = {
@@ -24,7 +24,9 @@ export const fetchTokenCurrenciesBalances = async ({
   excludeSpamTokens = true,
   trustedTokens = false,
 }: FetchTokenCurrenciesBalancesProps): Promise<BalanceEndpoint> => {
-  const network = getNetworkName()
   const address = checksumAddress(safeAddress)
-  return getBalances(network, address, selectedCurrency, { exclude_spam: excludeSpamTokens, trusted: trustedTokens })
+  return getBalances(getClientGatewayUrl(), address, selectedCurrency, {
+    exclude_spam: excludeSpamTokens,
+    trusted: trustedTokens,
+  })
 }

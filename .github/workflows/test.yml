@@ -33,8 +33,6 @@ jobs:
         run: |
           mkdir .yarncache
           yarn install --cache-folder ./.yarncache --frozen-lockfile
-          rm -rf .yarncache
-          yarn cache clean
 
       - run: yarn test:coverage
 
