@@ -25,7 +25,9 @@ const polygon: NetworkConfig = {
     },
     staging: {
       ...baseConfig,
-      safeUrl: 'https://safe-team-polygon.staging.gnosisdev.com/app/',
+      clientGatewayUrl: 'https://safe-client.polygon.gnosis.io/v1',
+      txServiceUrl: 'https://safe-transaction.polygon.gnosis.io/api/v1',
+      safeAppsUrl: 'https://safe-apps.staging.gnosisdev.com',
     },
     production: {
       ...baseConfig,
