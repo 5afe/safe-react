@@ -28,7 +28,7 @@ const useSidebarItems = (): ListItemType[] => {
   }
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithAddress || !featuresEnabled) {
+    if (!matchSafe || !matchSafeWithAddress || !matchSafeWithAction || !featuresEnabled) {
       return []
     }
 
