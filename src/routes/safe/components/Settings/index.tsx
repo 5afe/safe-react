@@ -34,7 +34,7 @@ const useStyles = makeStyles(styles)
 const Settings = (): React.ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
-  const { address, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
 
   const onShow = (action) => () => {
@@ -70,35 +70,35 @@ const Settings = (): React.ReactElement => {
             <Switch>
               <Route
                 path={generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-                  address,
+                  safeAddress,
                 })}
                 exact
                 render={() => <SafeDetails />}
               ></Route>
               <Route
                 path={generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-                  address,
+                  safeAddress,
                 })}
                 exact
                 render={() => <ManageOwners granted={granted} owners={owners} />}
               ></Route>
               <Route
                 path={generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-                  address,
+                  safeAddress,
                 })}
                 exact
                 render={() => <ThresholdSettings />}
               ></Route>
               <Route
                 path={generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-                  address,
+                  safeAddress,
                 })}
                 exact
                 render={() => <SpendingLimitSettings />}
               ></Route>
               <Route
                 path={generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-                  address,
+                  safeAddress,
                 })}
                 exact
                 render={() => <Advanced />}

@@ -210,7 +210,7 @@ const Open = (): ReactElement => {
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
       pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        address: safeProps.address,
+        safeAddress: safeProps.address,
       }),
       state: {
         name,

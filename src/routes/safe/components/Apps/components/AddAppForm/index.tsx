@@ -82,7 +82,7 @@ interface AddAppProps {
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    address: safeAddress,
+    safeAddress,
   })
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()

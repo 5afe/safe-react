@@ -39,7 +39,7 @@ export const UnsavedAddress = ({ address, onClick, children }: Props): ReactElem
 
       <Link
         to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-          address,
+          safeAddress: address,
         })}
         onClick={onClick}
       >

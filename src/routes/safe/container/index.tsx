@@ -27,10 +27,10 @@ const Container = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const featuresEnabled = useSelector(currentSafeFeaturesEnabled)
   const balancesBaseRoute = generatePath(SAFE_ROUTES.ASSETS_BASE_ROUTE, {
-    address: safeAddress,
+    safeAddress,
   })
   const settingsBaseRoute = generatePath(SAFE_ROUTES.SETTINGS_BASE_ROUTE, {
-    address: safeAddress,
+    safeAddress,
   })
   const [modal, setModal] = useState({
     isOpen: false,
@@ -69,20 +69,20 @@ const Container = (): React.ReactElement => {
         <Route
           exact
           path={generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            address: safeAddress,
+            safeAddress,
           })}
           render={() => wrapInSuspense(<TxList />, null)}
         />
         <Route
           exact
           path={generatePath(SAFE_ROUTES.APPS, {
-            address: safeAddress,
+            safeAddress,
           })}
           render={({ history }) => {
             if (!featuresEnabled.includes(FEATURES.SAFE_APPS)) {
               history.push(
                 generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                  address: safeAddress,
+                  safeAddress,
                 }),
               )
             }
@@ -93,13 +93,13 @@ const Container = (): React.ReactElement => {
         <Route
           exact
           path={generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-            address: safeAddress,
+            safeAddress,
           })}
           render={() => wrapInSuspense(<AddressBookTable />, null)}
         />
         <Redirect
           to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            address: safeAddress,
+            safeAddress,
           })}
         />
       </Switch>

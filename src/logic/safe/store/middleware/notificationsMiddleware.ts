@@ -70,7 +70,7 @@ const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => 
   dispatch(
     push(
       generatePath(SAFE_ROUTES.TRANSACTIONS, {
-        address: safeAddress,
+        safeAddress,
       }),
     ),
   )

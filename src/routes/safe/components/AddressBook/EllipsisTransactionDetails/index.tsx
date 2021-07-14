@@ -65,7 +65,7 @@ export const EllipsisTransactionDetails = ({
     dispatch(
       push(
         generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-          address: currentSafeAddress,
+          safeAddress: currentSafeAddress,
         }),
       ),
     )

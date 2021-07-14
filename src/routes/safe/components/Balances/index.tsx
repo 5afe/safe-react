@@ -44,9 +44,9 @@ const Balances = (): ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
-  const { address, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
-  useFetchTokens(address)
+  useFetchTokens(safeAddress)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
@@ -94,14 +94,14 @@ const Balances = (): ReactElement => {
         <Switch>
           <Route
             path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-              address,
+              safeAddress,
             })}
             exact
             render={() => {
               return !erc721Enabled ? (
                 <Redirect
                   to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                    address,
+                    safeAddress,
                   })}
                 />
               ) : null
@@ -109,7 +109,7 @@ const Balances = (): ReactElement => {
           />
           <Route
             path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              address,
+              safeAddress,
             })}
             exact
             render={() => {
@@ -125,7 +125,7 @@ const Balances = (): ReactElement => {
       <Switch>
         <Route
           path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-            address,
+            safeAddress,
           })}
           exact
           render={() => {
@@ -137,7 +137,7 @@ const Balances = (): ReactElement => {
         />
         <Route
           path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-            address,
+            safeAddress,
           })}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
@@ -157,7 +157,7 @@ const Balances = (): ReactElement => {
         paperClassName="receive-modal"
         title="Receive Tokens"
       >
-        <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )

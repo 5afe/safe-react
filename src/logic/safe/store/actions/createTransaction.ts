@@ -80,7 +80,7 @@ export const createTransaction =
       dispatch(
         push(
           generatePath(SAFE_ROUTES.TRANSACTIONS, {
-            address: safeAddress,
+            safeAddress,
           }),
         ),
       )

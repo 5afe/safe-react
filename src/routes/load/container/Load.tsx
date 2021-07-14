@@ -88,7 +88,7 @@ const Load = (): ReactElement => {
 
       history.push(
         generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-          address: safeAddress,
+          safeAddress,
         }),
       )
     } catch (error) {

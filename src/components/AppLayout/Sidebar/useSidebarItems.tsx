@@ -34,7 +34,7 @@ const useSidebarItems = (): ListItemType[] => {
   const safeAppsEnabled = isFeatureEnabled(FEATURES.SAFE_APPS)
   const isCollectiblesEnabled = isFeatureEnabled(FEATURES.ERC721)
   const isSpendingLimitEnabled = isFeatureEnabled(FEATURES.SPENDING_LIMIT)
-  const { address, needsUpdate } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, needsUpdate } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
@@ -52,7 +52,7 @@ const useSidebarItems = (): ListItemType[] => {
       label: 'Settings',
       icon: <ListIcon type="settings" />,
       href: generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-        address,
+        safeAddress,
       }),
       subItems: [
         {
@@ -61,7 +61,7 @@ const useSidebarItems = (): ListItemType[] => {
           icon: <ListIcon type="info" />,
           selected: isSelected({ route: SAFE_ROUTES.SETTINGS_DETAILS, matchSafeWithAction }),
           href: generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
-            address,
+            safeAddress,
           }),
         },
         {
@@ -69,7 +69,7 @@ const useSidebarItems = (): ListItemType[] => {
           icon: <ListIcon type="owners" />,
           selected: isSelected({ route: SAFE_ROUTES.SETTINGS_OWNERS, matchSafeWithAction }),
           href: generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
-            address,
+            safeAddress,
           }),
         },
         {
@@ -77,7 +77,7 @@ const useSidebarItems = (): ListItemType[] => {
           icon: <ListIcon type="requiredConfirmations" />,
           selected: isSelected({ route: SAFE_ROUTES.SETTINGS_POLICIES, matchSafeWithAction }),
           href: generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
-            address,
+            safeAddress,
           }),
         },
         {
@@ -86,7 +86,7 @@ const useSidebarItems = (): ListItemType[] => {
           icon: <ListIcon type="fuelIndicator" />,
           selected: isSelected({ route: SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, matchSafeWithAction }),
           href: generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
-            address,
+            safeAddress,
           }),
         },
         {
@@ -94,7 +94,7 @@ const useSidebarItems = (): ListItemType[] => {
           icon: <ListIcon type="settingsTool" />,
           selected: isSelected({ route: SAFE_ROUTES.SETTINGS_ADVANCED, matchSafeWithAction }),
           href: generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
-            address,
+            safeAddress,
           }),
         },
       ],
@@ -105,7 +105,7 @@ const useSidebarItems = (): ListItemType[] => {
         label: 'ASSETS',
         icon: <ListIcon type="assets" />,
         href: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-          address,
+          safeAddress,
         }),
         subItems: [
           {
@@ -113,7 +113,7 @@ const useSidebarItems = (): ListItemType[] => {
             icon: <ListIcon type="assets" />,
             selected: isSelected({ route: SAFE_ROUTES.ASSETS_BALANCES, matchSafeWithAction }),
             href: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              address,
+              safeAddress,
             }),
           },
           {
@@ -122,7 +122,7 @@ const useSidebarItems = (): ListItemType[] => {
             icon: <ListIcon type="collectibles" />,
             selected: isSelected({ route: SAFE_ROUTES.ASSETS_COLLECTIBLES, matchSafeWithAction }),
             href: generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
-              address,
+              safeAddress,
             }),
           },
         ],
@@ -132,7 +132,7 @@ const useSidebarItems = (): ListItemType[] => {
         icon: <ListIcon type="transactionsInactive" />,
         selected: isSelected({ route: SAFE_ROUTES.TRANSACTIONS, matchSafeWithAction }),
         href: generatePath(SAFE_ROUTES.TRANSACTIONS, {
-          address,
+          safeAddress,
         }),
       },
       {
@@ -140,7 +140,7 @@ const useSidebarItems = (): ListItemType[] => {
         icon: <ListIcon type="addressBook" />,
         selected: isSelected({ route: SAFE_ROUTES.ADDRESS_BOOK, matchSafeWithAction }),
         href: generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-          address,
+          safeAddress,
         }),
       },
       {
@@ -149,13 +149,13 @@ const useSidebarItems = (): ListItemType[] => {
         icon: <ListIcon type="apps" />,
         selected: isSelected({ route: SAFE_ROUTES.APPS, matchSafeWithAction }),
         href: generatePath(SAFE_ROUTES.APPS, {
-          address,
+          safeAddress,
         }),
       },
       settingsItem,
     ]
   }, [
-    address,
+    safeAddress,
     granted,
     isCollectiblesEnabled,
     isSpendingLimitEnabled,

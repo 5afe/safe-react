@@ -78,7 +78,7 @@ export const SafeList = ({
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
             onClick={onSafeClick}
             to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-              address: safe.address,
+              safeAddress: safe.address,
             })}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>

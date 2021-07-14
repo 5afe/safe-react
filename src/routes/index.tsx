@@ -76,7 +76,7 @@ const Routes = (): React.ReactElement => {
             return (
               <Redirect
                 to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-                  address: defaultSafe,
+                  safeAddress: defaultSafe,
                 })}
               />
             )

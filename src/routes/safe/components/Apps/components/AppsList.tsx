@@ -87,7 +87,7 @@ const isCustomApp = (appUrl: string, appsList: SafeApp[]) => {
 const AppsList = (): React.ReactElement => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const appsPath = generatePath(SAFE_ROUTES.APPS, {
-    address: safeAddress,
+    safeAddress,
   })
   const { appList, removeApp, isLoading } = useAppList()
   const [isAddAppModalOpen, setIsAddAppModalOpen] = useState<boolean>(false)

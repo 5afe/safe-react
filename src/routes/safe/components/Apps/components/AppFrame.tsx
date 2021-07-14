@@ -97,7 +97,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const redirectToBalance = () =>
     history.push(
       generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
-        address: safeAddress,
+        safeAddress,
       }),
     )
   const timer = useRef<number>()
