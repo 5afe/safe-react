@@ -5,11 +5,13 @@ export const LOAD_ADDRESS = '/load'
 export const WELCOME_ADDRESS = '/welcome'
 
 export enum SAFE_ROUTES {
+  ASSETS_BASE_ROUTE = '/safes/:address/balances',
   ASSETS_BALANCES = '/safes/:address/balances',
   ASSETS_COLLECTIBLES = '/safes/:address/balances/collectibles',
   TRANSACTIONS = '/safes/:address/transactions',
   ADDRESS_BOOK = '/safes/:address/address-book',
   APPS = '/safes/:address/apps',
+  SETTINGS_BASE_ROUTE = '/safes/:address/settings',
   SETTINGS_DETAILS = '/safes/:address/settings/details',
   SETTINGS_OWNERS = '/safes/:address/settings/owners',
   SETTINGS_POLICIES = '/safes/:address/settings/policies',
