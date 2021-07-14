@@ -69,35 +69,35 @@ const Settings = (): React.ReactElement => {
           <Block className={classes.container}>
             <Switch>
               <Route
-                path={generatePath(SAFE_ROUTES.DETAILS, {
+                path={generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
                   address,
                 })}
                 exact
                 render={() => <SafeDetails />}
               ></Route>
               <Route
-                path={generatePath(SAFE_ROUTES.OWNERS, {
+                path={generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
                   address,
                 })}
                 exact
                 render={() => <ManageOwners granted={granted} owners={owners} />}
               ></Route>
               <Route
-                path={generatePath(SAFE_ROUTES.POLICIES, {
+                path={generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
                   address,
                 })}
                 exact
                 render={() => <ThresholdSettings />}
               ></Route>
               <Route
-                path={generatePath(SAFE_ROUTES.SPENDING_LIMIT, {
+                path={generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
                   address,
                 })}
                 exact
                 render={() => <SpendingLimitSettings />}
               ></Route>
               <Route
-                path={generatePath(SAFE_ROUTES.ADVANCED, {
+                path={generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
                   address,
                 })}
                 exact

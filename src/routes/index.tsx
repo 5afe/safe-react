@@ -1,8 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
-import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
+import {
+  LOAD_ADDRESS,
+  OPEN_ADDRESS,
+  SAFELIST_ADDRESS,
+  SAFE_PARAM_ADDRESS,
+  SAFE_ROUTES,
+  WELCOME_ADDRESS,
+} from './routes'
 
 import { Loader } from '@gnosis.pm/safe-react-components'
 import { defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
@@ -69,7 +76,13 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe) {
-            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
+            return (
+              <Redirect
+                to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                  address: defaultSafe,
+                })}
+              />
+            )
           }
 
           return <Redirect to={WELCOME_ADDRESS} />

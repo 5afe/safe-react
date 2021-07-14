@@ -1,7 +1,7 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router-dom'
+import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
 import { styles } from './style'
@@ -10,7 +10,7 @@ import Modal from 'src/components/Modal'
 import Col from 'src/components/layout/Col'
 
 import Row from 'src/components/layout/Row'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -93,14 +93,24 @@ const Balances = (): ReactElement => {
       <Row align="center" className={controls}>
         <Switch>
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+            path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+              address,
+            })}
             exact
             render={() => {
-              return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
+              return !erc721Enabled ? (
+                <Redirect
+                  to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                    address,
+                  })}
+                />
+              ) : null
             }}
           />
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances`}
+            path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              address,
+            })}
             exact
             render={() => {
               return (
@@ -114,7 +124,9 @@ const Balances = (): ReactElement => {
       </Row>
       <Switch>
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+          path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+            address,
+          })}
           exact
           render={() => {
             if (erc721Enabled) {
@@ -124,7 +136,9 @@ const Balances = (): ReactElement => {
           }}
         />
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances`}
+          path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+            address,
+          })}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
