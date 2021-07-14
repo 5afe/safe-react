@@ -38,7 +38,6 @@ const useSidebarItems = (): ListItemType[] => {
   const granted = useSelector(grantedSelector)
 
   const matchSafe = useRouteMatch({ path: `${SAFELIST_ADDRESS}`, strict: false })
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const matchSafeWithAction = useRouteMatch({
     path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
   }) as SafeRouteWithAction
@@ -59,7 +58,7 @@ const useSidebarItems = (): ListItemType[] => {
   )
 
   return useMemo((): ListItemType[] => {
-    if (!matchSafe || !matchSafeWithAddress || !featuresEnabled) {
+    if (!matchSafe || !matchSafeWithAction || !featuresEnabled) {
       return []
     }
 
@@ -144,7 +143,7 @@ const useSidebarItems = (): ListItemType[] => {
     isSpendingLimitEnabled,
     makeEntryItem,
     matchSafe,
-    matchSafeWithAddress,
+    matchSafeWithAction,
     needsUpdate,
     safeAppsEnabled,
   ])
