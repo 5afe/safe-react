@@ -1862,9 +1862,9 @@
   resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-deployments/-/safe-deployments-1.1.0.tgz#63133f4576c5d5f2779f61d322e1e449fb701b1c"
   integrity sha512-eIH4gvBQLEksQXFN2vOG+JZpdSCR+q6uoZD7n8Jx/PF2nIaWVYV1CWo6kbWDwfwzgAQkDddM+8WBjnc84fbB+Q==
 
-"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#17058d4":
+"@gnosis.pm/safe-react-components@https://github.com/gnosis/safe-react-components.git#a26e22f":
   version "0.6.0"
-  resolved "https://github.com/gnosis/safe-react-components.git#17058d4d6e219ccc9c20eb5007fa0eafa1dd6118"
+  resolved "https://github.com/gnosis/safe-react-components.git#a26e22fa90a8a9b43fce3d053c9d9f3cac7792df"
   dependencies:
     classnames "^2.2.6"
     react-media "^1.10.0"

@@ -6,8 +6,19 @@ export const styles = createStyles({
     alignItems: 'center',
     boxSizing: 'border-box',
     justifyContent: 'space-between',
-    minHeight: '56px',
     padding: `${md} 0`,
+  },
+  assetTabs: {
+    alignItems: 'center',
+    display: 'flex',
+    order: 2,
+
+    [`@media (min-width: ${screenSm}px)`]: {
+      order: '1',
+    },
+  },
+  breadCrumb: {
+    padding: '0 !important',
   },
   tokenControls: {
     alignItems: 'center',
@@ -20,13 +31,6 @@ export const styles = createStyles({
       justifyContent: 'flex-end',
       order: '2',
       padding: '0',
-    },
-  },
-  manageTokensButton: {
-    marginLeft: 'auto',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      marginLeft: '0',
     },
   },
   send: {

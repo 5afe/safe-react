@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch } from 'react-router-dom'
+import { Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
 import { styles } from './style'
@@ -85,12 +86,18 @@ const Balances = (): ReactElement => {
     }))
   }
 
-  const { controls, tokenControls } = classes
+  const { assetTabs, breadCrumb, controls, tokenControls } = classes
   const { erc721Enabled, sendFunds, showReceive } = state
 
   return (
     <>
       <Row align="center" className={controls}>
+        <Col className={assetTabs} sm={6} start="sm" xs={12}>
+          <Breadcrumb className={breadCrumb}>
+            <BreadcrumbElement iconType="assets" text="ASSETS" color="primary" />
+            <BreadcrumbElement text="COINS" color="placeHolder" />
+          </Breadcrumb>
+        </Col>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
@@ -104,7 +111,7 @@ const Balances = (): ReactElement => {
             exact
             render={() => {
               return (
-                <Col className={tokenControls} end="sm" xs={12}>
+                <Col className={tokenControls} end="sm" sm={6} xs={12}>
                   <CurrencyDropdown />
                 </Col>
               )

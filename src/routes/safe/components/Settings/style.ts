@@ -123,7 +123,7 @@ export const styles = createStyles({
     padding: `${md} 0`,
     maxHeight: '54px', // to make it the same as row in Balances component
     boxSizing: 'border-box',
-    justifyContent: 'flex-end',
+    // justifyContent: 'flex-end',
   },
   links: {
     textDecoration: 'underline',

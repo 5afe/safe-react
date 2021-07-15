@@ -1,4 +1,4 @@
-import { Loader, Icon } from '@gnosis.pm/safe-react-components'
+import { Loader, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
@@ -54,6 +54,11 @@ const Settings = (): React.ReactElement => {
   ) : (
     <>
       <Row className={classes.message}>
+        <Col sm={6} start="sm" xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="settings" text="SETTINGS"></BreadcrumbElement>
+          </Breadcrumb>
+        </Col>
         {!loadedViaUrl && (
           <>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
