@@ -2,8 +2,8 @@ import maticLogo from 'src/config/assets/token_matic.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.polygon.gnosis.io/v1',
-  txServiceUrl: 'https://safe-transaction.polygon.gnosis.io/api/v1',
+  clientGatewayUrl: 'https://safe-client-polygon.staging.gnosisdev.com/v1',
+  txServiceUrl: 'https://safe-transaction-polygon.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://polygon.gnosis-safe.io/app',
   safeAppsUrl: 'https://safe-apps-polygon.staging.gnosisdev.com',
   gasPriceOracle: {
@@ -29,6 +29,8 @@ const polygon: NetworkConfig = {
     },
     production: {
       ...baseConfig,
+      clientGatewayUrl: 'https://safe-client.polygon.gnosis.io/v1',
+      txServiceUrl: 'https://safe-transaction.polygon.gnosis.io/api/v1',
       safeAppsUrl: 'https://apps-polygon.gnosis-safe.io',
     },
   },
