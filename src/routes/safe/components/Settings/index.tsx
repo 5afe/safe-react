@@ -1,9 +1,10 @@
-import { Loader, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
+import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Route, Switch } from 'react-router-dom'
+import { Route, Switch, useRouteMatch } from 'react-router-dom'
+import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -11,7 +12,6 @@ import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -22,6 +22,10 @@ const ManageOwners = React.lazy(() => import('./ManageOwners'))
 const RemoveSafeModal = React.lazy(() => import('./RemoveSafeModal'))
 const SafeDetails = React.lazy(() => import('./SafeDetails'))
 const ThresholdSettings = React.lazy(() => import('./ThresholdSettings'))
+
+const StyledMenu = styled(Menu)`
+  justify-content: space-between;
+`
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -36,6 +40,38 @@ const Settings = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const { address, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
+  const matchSafeWithAction = useRouteMatch({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+  }) as {
+    url: string
+    params: Record<string, string>
+  }
+
+  let settingsSection
+  switch (matchSafeWithAction.url) {
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/settings/details`:
+      settingsSection = 'Safe Details'
+      break
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/settings/owners`:
+      settingsSection = 'Owners'
+      break
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/settings/policies`:
+      settingsSection = 'Policies'
+      break
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/settings/spending-limit`:
+      settingsSection = 'Spending Limit'
+      break
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/settings/advanced`:
+      settingsSection = 'Advanced'
+      break
+    default:
+      settingsSection = ''
+  }
 
   const onShow = (action) => () => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
@@ -53,12 +89,11 @@ const Settings = (): React.ReactElement => {
     </LoadingContainer>
   ) : (
     <>
-      <Row className={classes.message}>
-        <Col sm={6} start="sm" xs={12}>
-          <Breadcrumb>
-            <BreadcrumbElement iconType="settings" text="SETTINGS"></BreadcrumbElement>
-          </Breadcrumb>
-        </Col>
+      <StyledMenu>
+        <Breadcrumb>
+          <BreadcrumbElement iconType="settings" text="SETTINGS" />
+          <BreadcrumbElement text={settingsSection} color="placeHolder" />
+        </Breadcrumb>
         {!loadedViaUrl && (
           <>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
@@ -68,7 +103,7 @@ const Settings = (): React.ReactElement => {
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
           </>
         )}
-      </Row>
+      </StyledMenu>
       <Block className={classes.root}>
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>

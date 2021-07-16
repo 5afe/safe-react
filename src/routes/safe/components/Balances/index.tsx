@@ -1,16 +1,12 @@
-import { makeStyles } from '@material-ui/core/styles'
+import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch } from 'react-router-dom'
-import { Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
-
-import ReceiveModal from 'src/components/App/ReceiveModal'
-import { styles } from './style'
+import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import styled from 'styled-components'
 
 import Modal from 'src/components/Modal'
-import Col from 'src/components/layout/Col'
+import ReceiveModal from 'src/components/App/ReceiveModal'
 
-import Row from 'src/components/layout/Row'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
@@ -22,6 +18,10 @@ import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
+
+const StyledMenu = styled(Menu)`
+  justify-content: space-between;
+`
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -39,11 +39,14 @@ const INITIAL_STATE = {
 export const COINS_LOCATION_REGEX = /\/balances\/?$/
 export const COLLECTIBLES_LOCATION_REGEX = /\/balances\/collectibles$/
 
-const useStyles = makeStyles(styles)
-
 const Balances = (): ReactElement => {
-  const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
+  const matchSafeWithAction = useRouteMatch({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+  }) as {
+    url: string
+    params: Record<string, string>
+  }
 
   const { address, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
@@ -86,18 +89,29 @@ const Balances = (): ReactElement => {
     }))
   }
 
-  const { assetTabs, breadCrumb, controls, tokenControls } = classes
   const { erc721Enabled, sendFunds, showReceive } = state
+
+  let balancesSection
+  switch (matchSafeWithAction.url) {
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/balances`:
+      balancesSection = 'Coins'
+      break
+    // FIXME should use global routes enum once PR #2536 is merged
+    case `${SAFELIST_ADDRESS}/${address}/balances/collectibles`:
+      balancesSection = 'Collectibles'
+      break
+    default:
+      balancesSection = ''
+  }
 
   return (
     <>
-      <Row align="center" className={controls}>
-        <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          <Breadcrumb className={breadCrumb}>
-            <BreadcrumbElement iconType="assets" text="ASSETS" color="primary" />
-            <BreadcrumbElement text="COINS" color="placeHolder" />
-          </Breadcrumb>
-        </Col>
+      <StyledMenu>
+        <Breadcrumb>
+          <BreadcrumbElement iconType="assets" text="ASSETS" color="primary" />
+          <BreadcrumbElement text={balancesSection} color="placeHolder" />
+        </Breadcrumb>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
@@ -106,19 +120,9 @@ const Balances = (): ReactElement => {
               return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
             }}
           />
-          <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances`}
-            exact
-            render={() => {
-              return (
-                <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                  <CurrencyDropdown />
-                </Col>
-              )
-            }}
-          />
+          <Route path={`${SAFELIST_ADDRESS}/${address}/balances`} exact render={() => <CurrencyDropdown />} />
         </Switch>
-      </Row>
+      </StyledMenu>
       <Switch>
         <Route
           path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
