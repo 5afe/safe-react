@@ -2,8 +2,8 @@ import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-compo
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
-import styled from 'styled-components'
 
+import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
 import ReceiveModal from 'src/components/App/ReceiveModal'
 
@@ -18,10 +18,6 @@ import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
 const Coins = React.lazy(() => import('src/routes/safe/components/Balances/Coins'))
-
-const StyledMenu = styled(Menu)`
-  justify-content: space-between;
-`
 
 export const MANAGE_TOKENS_BUTTON_TEST_ID = 'manage-tokens-btn'
 export const BALANCE_ROW_TEST_ID = 'balance-row'
@@ -107,11 +103,13 @@ const Balances = (): ReactElement => {
 
   return (
     <>
-      <StyledMenu>
-        <Breadcrumb>
-          <BreadcrumbElement iconType="assets" text="ASSETS" color="primary" />
-          <BreadcrumbElement text={balancesSection} color="placeHolder" />
-        </Breadcrumb>
+      <Menu>
+        <Col start="sm" sm={6} xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="assets" text="ASSETS" color="primary" />
+            <BreadcrumbElement text={balancesSection} color="placeHolder" />
+          </Breadcrumb>
+        </Col>
         <Switch>
           <Route
             path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
@@ -120,9 +118,17 @@ const Balances = (): ReactElement => {
               return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
             }}
           />
-          <Route path={`${SAFELIST_ADDRESS}/${address}/balances`} exact render={() => <CurrencyDropdown />} />
+          <Route
+            path={`${SAFELIST_ADDRESS}/${address}/balances`}
+            exact
+            render={() => (
+              <Col end="sm" sm={6} xs={12}>
+                <CurrencyDropdown />
+              </Col>
+            )}
+          />
         </Switch>
-      </StyledMenu>
+      </Menu>
       <Switch>
         <Route
           path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}

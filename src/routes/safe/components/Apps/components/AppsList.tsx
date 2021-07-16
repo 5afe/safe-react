@@ -4,6 +4,7 @@ import { useSelector } from 'react-redux'
 import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 
+import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
@@ -19,10 +20,6 @@ const Wrapper = styled.div`
   height: 100%;
   display: flex;
   flex-direction: column;
-`
-
-const StyledMenu = styled(Menu)`
-  justify-content: flex-start;
 `
 
 const StyledLink = styled(Link)`
@@ -103,11 +100,13 @@ const AppsList = (): React.ReactElement => {
   }
   return (
     <Wrapper>
-      <StyledMenu>
-        <Breadcrumb>
-          <BreadcrumbElement iconType="apps" text="Apps" />
-        </Breadcrumb>
-      </StyledMenu>
+      <Menu>
+        <Col start="sm" xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="apps" text="Apps" />
+          </Breadcrumb>
+        </Col>
+      </Menu>
       <ContentWrapper>
         <CardsWrapper>
           <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />

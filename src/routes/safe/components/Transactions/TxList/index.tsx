@@ -1,15 +1,11 @@
 import { Menu, Tab, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import { Item } from '@gnosis.pm/safe-react-components/dist/navigation/Tab'
 import React, { ReactElement, useState } from 'react'
-import styled from 'styled-components'
 
+import Col from 'src/components/layout/Col'
 import { HistoryTransactions } from './HistoryTransactions'
 import { QueueTransactions } from './QueueTransactions'
 import { ContentWrapper, Wrapper } from './styled'
-
-const StyledMenu = styled(Menu)`
-  justify-content: flex-start;
-`
 
 const items: Item[] = [
   { id: 'queue', label: 'Queue' },
@@ -21,11 +17,13 @@ const GatewayTransactions = (): ReactElement => {
 
   return (
     <Wrapper>
-      <StyledMenu>
-        <Breadcrumb>
-          <BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />
-        </Breadcrumb>
-      </StyledMenu>
+      <Menu>
+        <Col start="sm" xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="transactionsInactive" text="TRANSACTIONS" />
+          </Breadcrumb>
+        </Col>
+      </Menu>
       <Tab items={items} onChange={setTab} selectedTab={tab} />
       <ContentWrapper>
         {tab === 'queue' && <QueueTransactions />}

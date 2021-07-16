@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Route, Switch, useRouteMatch } from 'react-router-dom'
-import styled from 'styled-components'
 
 import { styles } from './style'
 
@@ -22,10 +21,6 @@ const ManageOwners = React.lazy(() => import('./ManageOwners'))
 const RemoveSafeModal = React.lazy(() => import('./RemoveSafeModal'))
 const SafeDetails = React.lazy(() => import('./SafeDetails'))
 const ThresholdSettings = React.lazy(() => import('./ThresholdSettings'))
-
-const StyledMenu = styled(Menu)`
-  justify-content: space-between;
-`
 
 export const OWNERS_SETTINGS_TAB_TEST_ID = 'owner-settings-tab'
 
@@ -89,21 +84,23 @@ const Settings = (): React.ReactElement => {
     </LoadingContainer>
   ) : (
     <>
-      <StyledMenu>
-        <Breadcrumb>
-          <BreadcrumbElement iconType="settings" text="SETTINGS" />
-          <BreadcrumbElement text={settingsSection} color="placeHolder" />
-        </Breadcrumb>
+      <Menu>
+        <Col start="sm" sm={6} xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="settings" text="SETTINGS" />
+            <BreadcrumbElement text={settingsSection} color="placeHolder" />
+          </Breadcrumb>
+        </Col>
         {!loadedViaUrl && (
-          <>
+          <Col end="sm" sm={6} xs={12}>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
               <Span className={classes.links}>Remove Safe</Span>
               <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
             </ButtonLink>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
-          </>
+          </Col>
         )}
-      </StyledMenu>
+      </Menu>
       <Block className={classes.root}>
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
