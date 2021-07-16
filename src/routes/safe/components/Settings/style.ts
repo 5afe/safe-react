@@ -1,17 +1,6 @@
 import { createStyles } from '@material-ui/core'
 
-import {
-  background,
-  bolderFont,
-  border,
-  fontColor,
-  largeFontSize,
-  md,
-  screenSm,
-  secondary,
-  sm,
-  xs,
-} from 'src/theme/variables'
+import { border, fontColor, screenSm, sm, xs } from 'src/theme/variables'
 
 export const styles = createStyles({
   root: {
@@ -27,52 +16,8 @@ export const styles = createStyles({
       flexDirection: 'row',
     },
   },
-  settings: {
-    letterSpacing: '-0.5px',
-  },
-  menuWrapper: {
-    display: 'flex',
-    flexDirection: 'row',
-    flexGrow: 0,
-    maxWidth: '100%',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      flexDirection: 'row',
-      maxWidth: 'unset',
-    },
-  },
-  menu: {
-    borderBottom: `solid 2px ${border}`,
-    display: 'flex',
-    flexDirection: 'row',
-    flexGrow: 1,
-    height: '100%',
-    width: '100%',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      borderBottom: 'none',
-      borderRight: `solid 2px ${border}`,
-      flexDirection: 'column',
-      width: '250px',
-    },
-  },
-  active: {
-    backgroundColor: background,
-    color: secondary,
-    fontWeight: bolderFont,
-    '& .fill': {
-      fill: secondary,
-    },
-  },
   contents: {
     width: '100%',
-  },
-  hairline: {
-    display: 'none',
-
-    [`@media (min-width: ${screenSm}px)`]: {
-      display: 'block',
-    },
   },
   container: {
     flexGrow: 1,
