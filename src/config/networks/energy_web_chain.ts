@@ -15,6 +15,7 @@ const baseConfig: EnvironmentSettings = {
   },
   gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
+  safeAppsRpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
   networkExplorerApiUrl: 'https://explorer.energyweb.org/api',

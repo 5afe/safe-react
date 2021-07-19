@@ -12,6 +12,7 @@ const baseConfig: EnvironmentSettings = {
     gweiFactor: '1e9',
   },
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
+  safeAppsRpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
   networkExplorerUrl: 'https://volta-explorer.energyweb.org',
   networkExplorerApiUrl: 'https://volta-explorer.energyweb.org/api',

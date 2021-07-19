@@ -1,6 +1,5 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
 import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
-import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.mainnet.staging.gnosisdev.com/v1',
@@ -12,6 +11,7 @@ const baseConfig: EnvironmentSettings = {
     gasParameter: 'average',
     gweiFactor: '1e8',
   },
+  safeAppsRpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://etherscan.io',

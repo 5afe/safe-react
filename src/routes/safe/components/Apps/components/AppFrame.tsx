@@ -5,16 +5,16 @@ import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload
 import { useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import Web3 from 'web3'
 
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
+import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { SAFELIST_ADDRESS } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
@@ -80,6 +80,10 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   requestId: '',
   params: undefined,
 }
+
+const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), {
+  timeout: 10_000,
+})
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
@@ -186,27 +190,21 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       try {
         const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
-          if (
-            web3ReadOnly.currentProvider !== null &&
-            typeof web3ReadOnly.currentProvider !== 'string' &&
-            'send' in web3ReadOnly.currentProvider
-          ) {
-            web3ReadOnly.currentProvider?.send?.(
-              {
-                jsonrpc: '2.0',
-                method: params.call,
-                params: params.params,
-                id: '1',
-              },
-              (err, res) => {
-                if (err || res?.error) {
-                  reject(err || res?.error)
-                }
+          safeAppWeb3Provider.send(
+            {
+              jsonrpc: '2.0',
+              method: params.call,
+              params: params.params,
+              id: '1',
+            },
+            (err, res) => {
+              if (err || res?.error) {
+                reject(err || res?.error)
+              }
 
-                resolve(res?.result)
-              },
-            )
-          }
+              resolve(res?.result)
+            },
+          )
         })
 
         return response

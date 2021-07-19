@@ -12,6 +12,7 @@ const baseConfig: EnvironmentSettings = {
     gweiFactor: '1e9',
   },
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
+  safeAppsRpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
   networkExplorerUrl: 'https://www.bscscan.com',
   networkExplorerApiUrl: 'https://api.bscscan.com/api',

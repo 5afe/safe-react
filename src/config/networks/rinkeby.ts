@@ -13,6 +13,7 @@ const baseConfig: EnvironmentSettings = {
     gweiFactor: '1e8',
   },
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
+  safeAppsRpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io',
   networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',
