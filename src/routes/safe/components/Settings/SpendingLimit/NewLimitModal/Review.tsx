@@ -71,6 +71,7 @@ const calculateSpendingLimitsTxData = (
   existentSpendingLimit: SpendingLimit | null,
   txToken: Token,
   values: Record<string, string>,
+  isSpendingLimitEnabled: boolean,
   txParameters?: TxParameters,
 ): {
   spendingLimitTxData: CreateTransactionArgs
@@ -83,8 +84,6 @@ const calculateSpendingLimitsTxData = (
     resetBaseMin: number
   }
 } => {
-  // enabled if it's an array with at least one element
-  const isSpendingLimitEnabled = !!spendingLimits?.length
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
@@ -153,7 +152,12 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const dispatch = useDispatch()
 
-  const { address: safeAddress = '', spendingLimits, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const {
+    address: safeAddress = '',
+    spendingLimits,
+    currentVersion: safeVersion = '',
+    spendingLimitEnabled: isSpendingLimitEnabled = false,
+  } = useSelector(currentSafe) ?? {}
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',
@@ -192,9 +196,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       existentSpendingLimit,
       txToken,
       values,
+      isSpendingLimitEnabled,
     )
     setEstimateGasArgs(spendingLimitTxData)
-  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values])
+  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values, isSpendingLimitEnabled])
 
   const handleSubmit = (txParameters: TxParameters): void => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
@@ -213,6 +218,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         existentSpendingLimit,
         txToken,
         values,
+        isSpendingLimitEnabled,
         advancedOptionsTxParameters,
       )
 

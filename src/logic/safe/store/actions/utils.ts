@@ -2,7 +2,7 @@ import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
 import axios from 'axios'
 
-import { LATEST_SAFE_VERSION } from 'src/utils/constants'
+import { LATEST_SAFE_VERSION, SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 import { buildTxServiceUrl } from 'src/logic/safe/transactions/txHistory'
 import { SafeInfo } from 'src/logic/safe/utils/safeInformation'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
@@ -10,6 +10,7 @@ import { getSpendingLimits } from 'src/logic/safe/utils/spendingLimits'
 import { buildModulesLinkedList } from 'src/logic/safe/utils/modules'
 import { enabledFeatures, safeNeedsUpdate } from 'src/logic/safe/utils/safeVersion'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 export const getLastTx = async (safeAddress: string): Promise<TxServiceModel | null> => {
   try {
@@ -72,13 +73,20 @@ export const extractRemoteSafeInfo = async (remoteSafeInfo: SafeInfo): Promise<P
   const safeInfo: Partial<SafeRecordProps> = {
     modules: undefined,
     spendingLimits: undefined,
+    spendingLimitEnabled: false,
   }
   const safeInfoModules = (remoteSafeInfo.modules || []).map(({ value }) => value)
 
   if (safeInfoModules.length) {
     safeInfo.modules = buildModulesLinkedList(safeInfoModules)
+    safeInfo.spendingLimitEnabled =
+      safeInfoModules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
     try {
-      safeInfo.spendingLimits = await getSpendingLimits(safeInfoModules, remoteSafeInfo.address.value)
+      safeInfo.spendingLimits = await getSpendingLimits(
+        safeInfoModules,
+        remoteSafeInfo.address.value,
+        safeInfo.spendingLimitEnabled,
+      )
     } catch (e) {
       e.log()
       safeInfo.spendingLimits = null

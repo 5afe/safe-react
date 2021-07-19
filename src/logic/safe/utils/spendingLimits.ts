@@ -121,9 +121,8 @@ const requestAllowancesByDelegatesAndTokens = async (
 export const getSpendingLimits = async (
   modules: string[] | undefined,
   safeAddress: string,
+  isSpendingLimitEnabled: boolean,
 ): Promise<SpendingLimit[] | null> => {
-  const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
-
   try {
     if (isSpendingLimitEnabled) {
       const delegates = await getSpendingLimitContract().methods.getDelegates(safeAddress, 0, 100).call()

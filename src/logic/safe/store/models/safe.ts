@@ -37,6 +37,7 @@ export type SafeRecordProps = {
   needsUpdate: boolean
   featuresEnabled: Array<FEATURES>
   loadedViaUrl: boolean
+  spendingLimitEnabled: boolean
 }
 
 const makeSafe = Record<SafeRecordProps>({
@@ -54,6 +55,7 @@ const makeSafe = Record<SafeRecordProps>({
   needsUpdate: false,
   featuresEnabled: [],
   loadedViaUrl: true,
+  spendingLimitEnabled: false,
 })
 
 export type SafeRecord = RecordOf<SafeRecordProps>
