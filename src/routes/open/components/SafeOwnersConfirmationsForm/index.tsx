@@ -203,7 +203,7 @@ const SafeOwnersForm = (props): React.ReactElement => {
                   testId={`create-safe-owner-name-field-${index}`}
                 />
               </Col>
-              <Col className={classes.ownerAddress} spellcheck="false" xs={7}>
+              <Col className={classes.ownerAddress} xs={7}>
                 <StyledAddressInput
                   fieldMutator={(newOwnerAddress) => {
                     const newOwnerName = addressBook.find((entry) => sameAddress(entry.address, newOwnerAddress))?.name
@@ -224,6 +224,9 @@ const SafeOwnersForm = (props): React.ReactElement => {
                     }
                   }
                   name={addressName}
+                  type="text"
+                  autoCorrect={false}
+                  spellCheck={false}
                   placeholder="Owner Address*"
                   text="Owner Address"
                   testId={`create-safe-address-field-${index}`}

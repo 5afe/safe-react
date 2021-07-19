@@ -50,6 +50,7 @@ const AddressInput = ({
       testId={testId}
       text={text}
       type="text"
+      spellCheck="false"
       validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
     />
     <OnChange name={name}>
