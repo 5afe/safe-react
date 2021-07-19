@@ -162,3 +162,16 @@ jobs:
           token: ${{ secrets.E2E_RUN_HOOK_ACCESS_TOKEN }}
           repository: gnosis/safe-react-e2e-tests
           event-type: run-e2e-from-safe-react
+          client-payload: 
+  e2ePR:
+    name: Trigger e2e tests on pr
+    if: success() && github.base_ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.E2E_RUN_HOOK_ACCESS_TOKEN }}
+          repository: gnosis/safe-react-e2e-tests
+          event-type: run-e2e-from-safe-react-on-pr
+          client-payload: '{"pr_number": "${{ github.event.number }}"}'
