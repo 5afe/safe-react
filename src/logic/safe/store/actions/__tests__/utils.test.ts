@@ -187,6 +187,7 @@ describe('extractRemoteSafeInfo', () => {
       currentVersion: '1.1.1',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+      spendingLimitEnabled: false,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules)
@@ -206,6 +207,7 @@ describe('extractRemoteSafeInfo', () => {
       currentVersion: '1.1.1',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
+      spendingLimitEnabled: true,
     }
 
     const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules)

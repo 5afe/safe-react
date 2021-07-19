@@ -119,6 +119,7 @@ describe('fetchSafe', () => {
           currentVersion: '1.1.1',
           needsUpdate: false,
           featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
+          spendingLimitEnabled: false,
         },
       },
     ]
