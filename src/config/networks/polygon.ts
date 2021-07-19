@@ -11,7 +11,7 @@ const baseConfig: EnvironmentSettings = {
     gasParameter: 'standard',
     gweiFactor: '1e9',
   },
-  rpcServiceUrl: 'https://rpc-mainnet.matic.network',
+  rpcServiceUrl: 'https://polygon-mainnet.infura.io/v3/',
   safeAppsRpcServiceUrl: 'https://polygon-mainnet.infura.io/v3/',
   networkExplorerName: 'MainNet Matic Explorer',
   networkExplorerUrl: 'https://explorer-mainnet.maticvigil.com',

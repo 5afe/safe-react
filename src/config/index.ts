@@ -35,7 +35,9 @@ export const getNetworkLabel = (id: number): string => {
   return cfg ? cfg.network.label : ''
 }
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
+  getNetworkId(),
+)
 
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
