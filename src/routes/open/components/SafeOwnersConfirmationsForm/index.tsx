@@ -224,9 +224,6 @@ const SafeOwnersForm = (props): React.ReactElement => {
                     }
                   }
                   name={addressName}
-                  type="text"
-                  autoCorrect={false}
-                  spellCheck={false}
                   placeholder="Owner Address*"
                   text="Owner Address"
                   testId={`create-safe-address-field-${index}`}
