@@ -5,7 +5,6 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.bsc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.bsc.gnosis.io/api/v1',
   safeUrl: 'https://bsc.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-bsc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://bscgas.info/gas',
     gasParameter: 'standard',
@@ -29,7 +28,6 @@ const mainnet: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps-bsc.gnosis-safe.io',
     },
   },
   network: {
