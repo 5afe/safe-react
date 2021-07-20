@@ -62,13 +62,11 @@ export const EllipsisTransactionDetails = ({
   const closeMenuHandler = () => setAnchorEl(null)
 
   const addOrEditEntryHandler = () => {
-    dispatch(
-      push(
-        generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
-          safeAddress: currentSafeAddress,
-        }),
-      ),
-    )
+    const addressBookPath = generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
+      safeAddress: currentSafeAddress,
+    })
+
+    dispatch(push(`${addressBookPath}?entryAddress=${address}`))
     closeMenuHandler()
   }
 
