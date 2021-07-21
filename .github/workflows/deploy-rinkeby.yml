@@ -151,3 +151,14 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG}}
           SENTRY_PROJECT: gnosis-safe-multisig-${{ env.REACT_APP_NETWORK }}
+  e2e:
+    name: Trigger e2e tests
+    if: success() && github.ref == 'refs/heads/dev'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Repository Dispatch
+        uses: peter-evans/repository-dispatch@v1
+        with:
+          token: ${{ secrets.E2E_RUN_HOOK_ACCESS_TOKEN }}
+          repository: gnosis/safe-react-e2e-tests
+          event-type: run-e2e-from-safe-react
