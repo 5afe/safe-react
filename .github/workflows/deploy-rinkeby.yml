@@ -165,7 +165,8 @@ jobs:
           client-payload: 
   e2ePR:
     name: Trigger e2e tests on pr
-    if: success() && github.base_ref == 'refs/heads/dev'
+    if: github.event.number
+    needs: deploy
     runs-on: ubuntu-latest
     steps:
       - name: Repository Dispatch

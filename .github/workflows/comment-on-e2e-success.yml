@@ -1,0 +1,15 @@
+name: Confirm E2E tests success
+on:
+  repository_dispatch:
+    types: [comment-pr-on-success]
+jobs:
+  comment:
+    name: Deployment
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create comment
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body: |
+            E2E Tests Passed
