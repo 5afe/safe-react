@@ -4,15 +4,14 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
-  relayApiUrl: 'https://safe-relay.staging.gnosisdev.com/api/v1',
   safeUrl: 'http://localhost:3000/app',
-  safeAppsUrl: 'http://localhost:3002',
   gasPriceOracle: {
     url: 'https://ethgasstation.info/json/ethgasAPI.json',
     gasParameter: 'average',
-    gweiFactor: '1e8'
+    gweiFactor: '1e8',
   },
   rpcServiceUrl: 'http://localhost:4447',
+  safeAppsRpcServiceUrl: 'http://localhost:4447',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://rinkeby.etherscan.io',
   networkExplorerApiUrl: 'https://api-rinkeby.etherscan.io/api',

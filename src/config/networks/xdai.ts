@@ -5,9 +5,9 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.xdai.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
   safeUrl: 'https://xdai.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-xdai.staging.gnosisdev.com',
   gasPrice: 1e9,
   rpcServiceUrl: 'https://dai.poa.network/',
+  safeAppsRpcServiceUrl: 'https://dai.poa.network/',
   networkExplorerName: 'Blockscout',
   networkExplorerUrl: 'https://blockscout.com/poa/xdai',
   networkExplorerApiUrl: 'https://blockscout.com/poa/xdai/api',
@@ -25,7 +25,6 @@ const xDai: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps-xdai.gnosis-safe.io',
     },
   },
   network: {

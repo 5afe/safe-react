@@ -5,13 +5,13 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client-polygon.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction-polygon.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://polygon.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-polygon.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://gasstation-mainnet.matic.network',
     gasParameter: 'standard',
     gweiFactor: '1e9',
   },
-  rpcServiceUrl: 'https://rpc-mainnet.matic.network',
+  rpcServiceUrl: 'https://polygon-mainnet.infura.io/v3/',
+  safeAppsRpcServiceUrl: 'https://polygon-mainnet.infura.io/v3/',
   networkExplorerName: 'MainNet Matic Explorer',
   networkExplorerUrl: 'https://explorer-mainnet.maticvigil.com',
   networkExplorerApiUrl: 'https://api.polygonscan.com/api',
@@ -31,7 +31,6 @@ const polygon: NetworkConfig = {
       ...baseConfig,
       clientGatewayUrl: 'https://safe-client.polygon.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.polygon.gnosis.io/api/v1',
-      safeAppsUrl: 'https://apps-polygon.gnosis-safe.io',
     },
   },
   network: {

@@ -91,11 +91,9 @@ type GasPrice =
 export type EnvironmentSettings = GasPrice & {
   clientGatewayUrl: string
   txServiceUrl: string
-  // TODO: Shall we keep a reference to the relay?
-  relayApiUrl?: string
-  safeAppsUrl: string
   safeUrl: string
   rpcServiceUrl: string
+  safeAppsRpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
   networkExplorerApiUrl: string

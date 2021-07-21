@@ -2,19 +2,19 @@ import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'r
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
-import { useHistory } from 'react-router-dom'
+import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
+import Web3 from 'web3'
 
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
-import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
 import { TIMEOUT } from 'src/utils/constants'
-import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
 
 import { ConfirmTxModal } from './ConfirmTxModal'
 import { useIframeMessageHandler } from '../hooks/useIframeMessageHandler'
@@ -81,6 +81,10 @@ const INITIAL_CONFIRM_TX_MODAL_STATE: ConfirmTransactionModalState = {
   params: undefined,
 }
 
+const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServiceUrl(), {
+  timeout: 10_000,
+})
+
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
   const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
@@ -94,7 +98,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
 
-  const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
+  const redirectToBalance = () =>
+    history.push(
+      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        safeAddress,
+      }),
+    )
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
 
@@ -186,27 +195,21 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
 
       try {
         const response = new Promise<MethodToResponse['rpcCall']>((resolve, reject) => {
-          if (
-            web3ReadOnly.currentProvider !== null &&
-            typeof web3ReadOnly.currentProvider !== 'string' &&
-            'send' in web3ReadOnly.currentProvider
-          ) {
-            web3ReadOnly.currentProvider?.send?.(
-              {
-                jsonrpc: '2.0',
-                method: params.call,
-                params: params.params,
-                id: '1',
-              },
-              (err, res) => {
-                if (err || res?.error) {
-                  reject(err || res?.error)
-                }
+          safeAppWeb3Provider.send(
+            {
+              jsonrpc: '2.0',
+              method: params.call,
+              params: params.params,
+              id: '1',
+            },
+            (err, res) => {
+              if (err || res?.error) {
+                reject(err || res?.error)
+              }
 
-                resolve(res?.result)
-              },
-            )
-          }
+              resolve(res?.result)
+            },
+          )
         })
 
         return response
