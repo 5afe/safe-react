@@ -125,7 +125,9 @@ const Balances = (): ReactElement => {
                     safeAddress,
                   })}
                 />
-              ) : null
+              ) : (
+                <Col end="sm" sm={6} xs={12}></Col>
+              )
             }}
           />
           <Route
