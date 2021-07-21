@@ -7,7 +7,6 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.ewc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
   safeUrl: 'https://ewc.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-ewc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
@@ -32,7 +31,6 @@ const mainnet: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps-ewc.gnosis-safe.io',
     },
   },
   network: {

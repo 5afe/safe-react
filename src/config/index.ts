@@ -93,10 +93,6 @@ export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
-export const getRelayUrl = (): string | undefined => getConfig().relayApiUrl
-
-export const getGnosisSafeAppsUrl = (): string => getConfig().safeAppsUrl
-
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
