@@ -93,6 +93,7 @@ export type EnvironmentSettings = GasPrice & {
   txServiceUrl: string
   safeUrl: string
   rpcServiceUrl: string
+  safeAppsRpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
   networkExplorerApiUrl: string

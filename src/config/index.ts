@@ -11,7 +11,15 @@ import {
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
+import {
+  APP_ENV,
+  ETHERSCAN_API_KEY,
+  GOOGLE_ANALYTICS_ID,
+  INFURA_TOKEN,
+  NETWORK,
+  NODE_ENV,
+  SAFE_APPS_RPC_TOKEN,
+} from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
@@ -27,7 +35,9 @@ export const getNetworkLabel = (id: number): string => {
   return cfg ? cfg.network.label : ''
 }
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
+  getNetworkId(),
+)
 
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
@@ -96,6 +106,9 @@ export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
+
+export const getSafeAppsRpcServiceUrl = (): string =>
+  usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
 
 export const getRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl

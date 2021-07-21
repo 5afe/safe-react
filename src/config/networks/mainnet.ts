@@ -11,6 +11,7 @@ const baseConfig: EnvironmentSettings = {
     gasParameter: 'average',
     gweiFactor: '1e8',
   },
+  safeAppsRpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   rpcServiceUrl: 'https://mainnet.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
   networkExplorerUrl: 'https://etherscan.io',
