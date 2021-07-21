@@ -6,11 +6,12 @@ import MoreHorizIcon from '@material-ui/icons/MoreHoriz'
 import { push } from 'connected-react-router'
 import React from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { generatePath } from 'react-router-dom'
 
 import { sameString } from 'src/utils/strings'
 import { ADDRESS_BOOK_DEFAULT_NAME } from 'src/logic/addressBook/model/addressBook'
 import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { xs } from 'src/theme/variables'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -61,7 +62,11 @@ export const EllipsisTransactionDetails = ({
   const closeMenuHandler = () => setAnchorEl(null)
 
   const addOrEditEntryHandler = () => {
-    dispatch(push(`${SAFELIST_ADDRESS}/${currentSafeAddress}/address-book?entryAddress=${address}`))
+    const addressBookPath = generatePath(SAFE_ROUTES.ADDRESS_BOOK, {
+      safeAddress: currentSafeAddress,
+    })
+
+    dispatch(push(`${addressBookPath}?entryAddress=${address}`))
     closeMenuHandler()
   }
 

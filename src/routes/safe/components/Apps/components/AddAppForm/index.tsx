@@ -1,5 +1,7 @@
 import { Icon, Link, Loader, Text, TextField } from '@gnosis.pm/safe-react-components'
 import React, { useState, ReactElement, useCallback, useEffect } from 'react'
+import { useSelector } from 'react-redux'
+import { generatePath, useHistory } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { SafeApp, StoredSafeApp } from 'src/routes/safe/components/Apps/types'
@@ -12,9 +14,9 @@ import AppUrl, { AppInfoUpdater, appUrlResolver } from './AppUrl'
 import { FormButtons } from './FormButtons'
 import { APPS_STORAGE_KEY, getEmptySafeApp } from 'src/routes/safe/components/Apps/utils'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
-import { useHistory, useRouteMatch } from 'react-router-dom'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 
 const FORM_ID = 'add-apps-form'
 
@@ -78,10 +80,13 @@ interface AddAppProps {
 }
 
 const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
+  const safeAddress = useSelector(safeAddressFromUrl)
+  const appsPath = generatePath(SAFE_ROUTES.APPS, {
+    safeAddress,
+  })
   const [appInfo, setAppInfo] = useState<SafeApp>(DEFAULT_APP_INFO)
   const [fetchError, setFetchError] = useState<string | undefined>()
   const history = useHistory()
-  const matchSafeWithAddress = useRouteMatch<{ safeAddress: string }>({ path: `${SAFELIST_ADDRESS}/:safeAddress` })
   const [isLoading, setIsLoading] = useState(false)
 
   const handleSubmit = useCallback(async () => {
@@ -92,9 +97,9 @@ const AddApp = ({ appList, closeModal }: AddAppProps): ReactElement => {
       ...persistedAppList.map(({ url, disabled }) => ({ url, disabled })),
     ]
     saveToStorage(APPS_STORAGE_KEY, newAppList)
-    const goToApp = `${matchSafeWithAddress?.url}/apps?appUrl=${encodeURI(appInfo.url)}`
+    const goToApp = `${appsPath}?appUrl=${encodeURI(appInfo.url)}`
     history.push(goToApp)
-  }, [appInfo.url, history, matchSafeWithAddress?.url])
+  }, [appInfo.url, history, appsPath])
 
   useEffect(() => {
     if (isLoading) {
