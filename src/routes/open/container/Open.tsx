@@ -3,7 +3,7 @@ import { backOff } from 'exponential-backoff'
 import queryString from 'query-string'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { useLocation } from 'react-router-dom'
+import { generatePath, useLocation } from 'react-router-dom'
 import { TransactionReceipt } from 'web3-core'
 
 import { SafeDeployment } from 'src/routes/opening'
@@ -19,7 +19,7 @@ import {
   getSafeNameFrom,
   getThresholdFrom,
 } from 'src/routes/open/utils/safeDataExtractor'
-import { SAFELIST_ADDRESS, WELCOME_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, WELCOME_ADDRESS } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { loadFromStorage, removeFromStorage, saveToStorage } from 'src/utils/storage'
@@ -209,7 +209,9 @@ const Open = (): ReactElement => {
 
     await removeFromStorage(SAFE_PENDING_CREATION_STORAGE_KEY)
     const url = {
-      pathname: `${SAFELIST_ADDRESS}/${safeProps.address}/balances`,
+      pathname: generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        safeAddress: safeProps.address,
+      }),
       state: {
         name,
         tx: pendingCreation?.txHash,

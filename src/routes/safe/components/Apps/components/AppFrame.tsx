@@ -2,14 +2,14 @@ import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'r
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
 import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
-import { useHistory } from 'react-router-dom'
+import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getTxServiceUrl } from 'src/config'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { isSameURL } from 'src/utils/url'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { LoadingContainer } from 'src/components/LoaderContainer/index'
@@ -94,7 +94,12 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
   const [appIsLoading, setAppIsLoading] = useState<boolean>(true)
   const [safeApp, setSafeApp] = useState<SafeApp | undefined>()
 
-  const redirectToBalance = () => history.push(`${SAFELIST_ADDRESS}/${safeAddress}/balances`)
+  const redirectToBalance = () =>
+    history.push(
+      generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+        safeAddress,
+      }),
+    )
   const timer = useRef<number>()
   const [appTimeout, setAppTimeout] = useState(false)
 

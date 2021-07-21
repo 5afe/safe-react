@@ -1,13 +1,13 @@
 import { Breadcrumb, BreadcrumbElement, Menu } from '@gnosis.pm/safe-react-components'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
+import { generatePath, Redirect, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import Col from 'src/components/layout/Col'
 import Modal from 'src/components/Modal'
 import ReceiveModal from 'src/components/App/ReceiveModal'
 
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
@@ -44,9 +44,9 @@ const Balances = (): ReactElement => {
     params: Record<string, string>
   }
 
-  const { address, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
-  useFetchTokens(address)
+  useFetchTokens(safeAddress)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
@@ -89,12 +89,14 @@ const Balances = (): ReactElement => {
 
   let balancesSection
   switch (matchSafeWithAction.url) {
-    // FIXME should use global routes enum once PR #2536 is merged
-    case `${SAFELIST_ADDRESS}/${address}/balances`:
+    case generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+      safeAddress,
+    }):
       balancesSection = 'Coins'
       break
-    // FIXME should use global routes enum once PR #2536 is merged
-    case `${SAFELIST_ADDRESS}/${address}/balances/collectibles`:
+    case generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+      safeAddress,
+    }):
       balancesSection = 'Collectibles'
       break
     default:
@@ -112,14 +114,24 @@ const Balances = (): ReactElement => {
         </Col>
         <Switch>
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+            path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+              safeAddress,
+            })}
             exact
             render={() => {
-              return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
+              return !erc721Enabled ? (
+                <Redirect
+                  to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                    safeAddress,
+                  })}
+                />
+              ) : null
             }}
           />
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances`}
+            path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              safeAddress,
+            })}
             exact
             render={() => (
               <Col end="sm" sm={6} xs={12}>
@@ -131,7 +143,9 @@ const Balances = (): ReactElement => {
       </Menu>
       <Switch>
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+          path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+            safeAddress,
+          })}
           exact
           render={() => {
             if (erc721Enabled) {
@@ -141,7 +155,9 @@ const Balances = (): ReactElement => {
           }}
         />
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances`}
+          path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+            safeAddress,
+          })}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
@@ -160,7 +176,7 @@ const Balances = (): ReactElement => {
         paperClassName="receive-modal"
         title="Receive Tokens"
       >
-        <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )
