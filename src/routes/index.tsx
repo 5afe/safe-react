@@ -1,21 +1,25 @@
+import { Loader } from '@gnosis.pm/safe-react-components'
 import React, { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
-import { Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
+import { generatePath, Redirect, Route, Switch, useLocation, useRouteMatch } from 'react-router-dom'
 
-import { LOAD_ADDRESS, OPEN_ADDRESS, SAFELIST_ADDRESS, SAFE_PARAM_ADDRESS, WELCOME_ADDRESS } from './routes'
+import {
+  LOAD_ADDRESS,
+  OPEN_ADDRESS,
+  SAFELIST_ADDRESS,
+  SAFE_PARAM_ADDRESS,
+  SAFE_ROUTES,
+  WELCOME_ADDRESS,
+} from 'src/routes/routes'
 
-import { Loader } from '@gnosis.pm/safe-react-components'
-import { defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
-import { useAnalytics } from 'src/utils/googleAnalytics'
-import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
 import { LoadingContainer } from 'src/components/LoaderContainer'
+import { defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
+import { DEFAULT_SAFE_INITIAL_STATE } from 'src/logic/safe/store/reducer/safe'
+import { useAnalytics } from 'src/utils/googleAnalytics'
 
 const Welcome = React.lazy(() => import('./welcome/container'))
-
 const Open = React.lazy(() => import('./open/container/Open'))
-
 const Safe = React.lazy(() => import('./safe/container'))
-
 const Load = React.lazy(() => import('./load/container/Load'))
 
 const SAFE_ADDRESS = `${SAFELIST_ADDRESS}/:${SAFE_PARAM_ADDRESS}`
@@ -69,7 +73,13 @@ const Routes = (): React.ReactElement => {
           }
 
           if (defaultSafe) {
-            return <Redirect to={`${SAFELIST_ADDRESS}/${defaultSafe}/balances`} />
+            return (
+              <Redirect
+                to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                  safeAddress: defaultSafe,
+                })}
+              />
+            )
           }
 
           return <Redirect to={WELCOME_ADDRESS} />

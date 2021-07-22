@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router'
+import { generatePath } from 'react-router-dom'
 import { Action } from 'redux-actions'
 
 import { NOTIFICATIONS, enhanceSnackbarForAction } from 'src/logic/notifications'
@@ -21,6 +22,7 @@ import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.
 import { TransactionListItem, Transaction, TransactionSummary } from 'src/types/gateway/transactions'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
+import { SAFE_ROUTES } from 'src/routes/routes'
 
 const watchedActions = [ADD_OR_UPDATE_SAFE, ADD_QUEUED_TRANSACTIONS, ADD_HISTORY_TRANSACTIONS]
 
@@ -66,7 +68,13 @@ const sendAwaitingTransactionNotification = async (
 
 const onNotificationClicked = (dispatch, notificationKey, safeAddress) => () => {
   dispatch(closeSnackbarAction({ key: notificationKey }))
-  dispatch(push(`/safes/${safeAddress}/transactions`))
+  dispatch(
+    push(
+      generatePath(SAFE_ROUTES.TRANSACTIONS, {
+        safeAddress,
+      }),
+    ),
+  )
 }
 
 const notificationsMiddleware = (store) => (next) => async (action) => {

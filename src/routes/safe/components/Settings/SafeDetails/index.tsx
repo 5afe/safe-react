@@ -152,9 +152,9 @@ const SafeDetails = (): ReactElement => {
           </Block>
           <Block className={classes.formContainer}>
             <Heading tag="h2">Modify Safe name</Heading>
-            <Paragraph size="lg">
-              You can change the name of this Safe. This name is only stored locally <br />
-              and never shared with Gnosis or any third parties.
+            <Paragraph>
+              You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or any
+              third parties.
             </Paragraph>
             <Block className={classes.root}>
               <Field

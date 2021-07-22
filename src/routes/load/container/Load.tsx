@@ -1,5 +1,6 @@
 import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import { generatePath, useParams } from 'react-router-dom'
 
 import Layout from 'src/routes/load/components/Layout'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
@@ -9,7 +10,7 @@ import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
 import Page from 'src/components/layout/Page'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
 import { getAccountsFrom, getNamesFrom } from 'src/routes/open/utils/safeDataExtractor'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { buildSafe } from 'src/logic/safe/store/actions/fetchSafe'
 import { history } from 'src/store'
 import { SafeRecordProps } from 'src/logic/safe/store/models/safe'
@@ -17,7 +18,6 @@ import { checksumAddress } from 'src/utils/checksumAddress'
 import { isValidAddress } from 'src/utils/isValidAddress'
 import { providerNameSelector, userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addOrUpdateSafe } from 'src/logic/safe/store/actions/addOrUpdateSafe'
-import { useParams } from 'react-router'
 
 export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordProps) => void): Promise<void> => {
   const safeProps = await buildSafe(safeAddress)
@@ -86,8 +86,11 @@ const Load = (): ReactElement => {
       safeAddress = checksumAddress(safeAddress)
       await loadSafe(safeAddress, addSafeHandler)
 
-      const url = `${SAFELIST_ADDRESS}/${safeAddress}/balances`
-      history.push(url)
+      history.push(
+        generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+          safeAddress,
+        }),
+      )
     } catch (error) {
       console.error('Error while loading the Safe', error)
     }

@@ -1,23 +1,22 @@
 import { makeStyles } from '@material-ui/core/styles'
 import React, { ReactElement, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
+import { generatePath, Redirect, Route, Switch } from 'react-router-dom'
 
 import ReceiveModal from 'src/components/App/ReceiveModal'
 import { styles } from './style'
 
 import Modal from 'src/components/Modal'
 import Col from 'src/components/layout/Col'
-import Divider from 'src/components/layout/Divider'
 
 import Row from 'src/components/layout/Row'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import SendModal from 'src/routes/safe/components/Balances/SendModal'
 import { CurrencyDropdown } from 'src/routes/safe/components/CurrencyDropdown'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 
 import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 import { useFetchTokens } from 'src/logic/safe/hooks/useFetchTokens'
-import { NavLink, Redirect, Route, Switch } from 'react-router-dom'
 import { FEATURES } from 'src/config/networks/network.d'
 
 const Collectibles = React.lazy(() => import('src/routes/safe/components/Balances/Collectibles'))
@@ -45,9 +44,9 @@ const Balances = (): ReactElement => {
   const classes = useStyles()
   const [state, setState] = useState(INITIAL_STATE)
 
-  const { address, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, featuresEnabled, name: safeName } = useSelector(currentSafeWithNames)
 
-  useFetchTokens(address)
+  useFetchTokens(safeAddress)
 
   useEffect(() => {
     const erc721Enabled = Boolean(featuresEnabled?.includes(FEATURES.ERC721))
@@ -86,55 +85,38 @@ const Balances = (): ReactElement => {
     }))
   }
 
-  const { assetDivider, assetTab, assetTabActive, assetTabs, controls, tokenControls } = classes
+  const { controls, tokenControls } = classes
   const { erc721Enabled, sendFunds, showReceive } = state
 
   return (
     <>
       <Row align="center" className={controls}>
-        <Col className={assetTabs} sm={6} start="sm" xs={12}>
-          <NavLink
-            to={`${SAFELIST_ADDRESS}/${address}/balances`}
-            activeClassName={assetTabActive}
-            className={assetTab}
-            data-testid={'coins-assets-btn'}
-            exact
-          >
-            Coins
-          </NavLink>
-          {erc721Enabled ? (
-            <>
-              <Divider className={assetDivider} />
-              <NavLink
-                to={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
-                activeClassName={assetTabActive}
-                className={assetTab}
-                data-testid={'collectibles-assets-btn'}
-                exact
-              >
-                Collectibles
-              </NavLink>
-            </>
-          ) : null}
-        </Col>
         <Switch>
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+            path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+              safeAddress,
+            })}
             exact
             render={() => {
-              return !erc721Enabled ? <Redirect to={`${SAFELIST_ADDRESS}/${address}/balances`} /> : null
+              return !erc721Enabled ? (
+                <Redirect
+                  to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+                    safeAddress,
+                  })}
+                />
+              ) : null
             }}
           />
           <Route
-            path={`${SAFELIST_ADDRESS}/${address}/balances`}
+            path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              safeAddress,
+            })}
             exact
             render={() => {
               return (
-                <>
-                  <Col className={tokenControls} end="sm" sm={6} xs={12}>
-                    <CurrencyDropdown />
-                  </Col>
-                </>
+                <Col className={tokenControls} end="sm" xs={12}>
+                  <CurrencyDropdown />
+                </Col>
               )
             }}
           />
@@ -142,7 +124,9 @@ const Balances = (): ReactElement => {
       </Row>
       <Switch>
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances/collectibles`}
+          path={generatePath(SAFE_ROUTES.ASSETS_COLLECTIBLES, {
+            safeAddress,
+          })}
           exact
           render={() => {
             if (erc721Enabled) {
@@ -152,7 +136,9 @@ const Balances = (): ReactElement => {
           }}
         />
         <Route
-          path={`${SAFELIST_ADDRESS}/${address}/balances`}
+          path={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+            safeAddress,
+          })}
           render={() => {
             return wrapInSuspense(<Coins showReceiveFunds={() => onShow('Receive')} showSendFunds={showSendFunds} />)
           }}
@@ -171,7 +157,7 @@ const Balances = (): ReactElement => {
         paperClassName="receive-modal"
         title="Receive Tokens"
       >
-        <ReceiveModal safeAddress={address} safeName={safeName} onClose={() => onHide('Receive')} />
+        <ReceiveModal safeAddress={safeAddress} safeName={safeName} onClose={() => onHide('Receive')} />
       </Modal>
     </>
   )

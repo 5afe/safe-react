@@ -1,9 +1,11 @@
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
+import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
+
 import Link from 'src/components/layout/Link'
-import { SAFELIST_ADDRESS, LOAD_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 const Wrapper = styled.div`
@@ -35,7 +37,12 @@ export const UnsavedAddress = ({ address, onClick, children }: Props): ReactElem
     <Wrapper>
       {children}
 
-      <Link to={`${SAFELIST_ADDRESS}/${address}/balances`} onClick={onClick}>
+      <Link
+        to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+          safeAddress: address,
+        })}
+        onClick={onClick}
+      >
         <EthHashInfo hash={address} name={name} showAvatar shortenHash={4} />
       </Link>
 
