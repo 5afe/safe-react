@@ -33,7 +33,6 @@
     "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
     "postinstall": "patch-package && electron-builder install-app-deps && yarn generate-types && yarn copy-gateway-types",
-    "preinstall": "if [ $GITHUB_ACTIONS ]; then yarn config set network-concurrency 2; fi",
     "preelectron-pack": "yarn build",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
