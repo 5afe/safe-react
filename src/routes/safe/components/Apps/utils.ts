@@ -140,16 +140,10 @@ const canLoadAppImage = (path: string, timeout = 10000) =>
     try {
       const image = new Image()
       image.src = path
-      image.addEventListener('load', function () {
-        resolve(true)
-      })
-      image.addEventListener('error', function () {
-        resolve(false)
-      })
+      image.addEventListener('load', () => resolve(true))
+      image.addEventListener('error', () => resolve(false))
 
-      setTimeout(function () {
-        resolve(false)
-      }, timeout)
+      setTimeout(() => resolve(false), timeout)
     } catch (err) {
       console.error(err)
       resolve(false)
