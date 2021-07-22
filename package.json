@@ -146,7 +146,7 @@
     }
   },
   "resolutions": {
-    "@babel/core": "^7.12.0",
+    "@babel/core": "^7.14.0",
     "sass-loader": "^9.0.0"
   },
   "browserslist": {
