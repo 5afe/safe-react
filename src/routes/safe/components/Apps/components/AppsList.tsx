@@ -1,10 +1,11 @@
-import { IconText, Loader, Menu, Text, Icon } from '@gnosis.pm/safe-react-components'
+import { IconText, Loader, Menu, Text, Icon, Breadcrumb, BreadcrumbElement } from '@gnosis.pm/safe-react-components'
 import IconButton from '@material-ui/core/IconButton'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
 import { Link, generatePath } from 'react-router-dom'
 import styled, { css } from 'styled-components'
 
+import Col from 'src/components/layout/Col'
 import { Modal } from 'src/components/Modal'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import AppCard from 'src/routes/safe/components/Apps/components/AppCard'
@@ -54,9 +55,6 @@ const ContentWrapper = styled.div`
   flex-grow: 1;
   align-items: center;
 `
-const Breadcrumb = styled.div`
-  height: 51px;
-`
 
 const IconBtn = styled(IconButton)`
   position: absolute;
@@ -105,10 +103,12 @@ const AppsList = (): React.ReactElement => {
   return (
     <Wrapper>
       <Menu>
-        {/* TODO: Add navigation breadcrumb. Empty for now to give some top margin */}
-        <Breadcrumb />
+        <Col start="sm" xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="apps" text="Apps" />
+          </Breadcrumb>
+        </Col>
       </Menu>
-
       <ContentWrapper>
         <CardsWrapper>
           <AppCard iconUrl={AddAppIcon} onClick={openAddAppModal} buttonText="Add custom app" iconSize="lg" />
