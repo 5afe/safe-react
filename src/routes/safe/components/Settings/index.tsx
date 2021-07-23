@@ -1,17 +1,16 @@
-import { Loader, Icon } from '@gnosis.pm/safe-react-components'
+import { Breadcrumb, BreadcrumbElement, Loader, Icon, Menu } from '@gnosis.pm/safe-react-components'
 import { LoadingContainer } from 'src/components/LoaderContainer'
 import { makeStyles } from '@material-ui/core/styles'
 import React, { useState } from 'react'
 import { useSelector } from 'react-redux'
-import { generatePath, Route, Switch } from 'react-router-dom'
+import { generatePath, Route, Switch, useRouteMatch } from 'react-router-dom'
 
 import { styles } from './style'
 
-import { SAFE_ROUTES } from 'src/routes/routes'
+import { SAFE_ROUTES, SAFELIST_ADDRESS } from 'src/routes/routes'
 import Block from 'src/components/layout/Block'
 import ButtonLink from 'src/components/layout/ButtonLink'
 import Col from 'src/components/layout/Col'
-import Row from 'src/components/layout/Row'
 import Span from 'src/components/layout/Span'
 import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
@@ -36,6 +35,43 @@ const Settings = (): React.ReactElement => {
   const [state, setState] = useState(INITIAL_STATE)
   const { address: safeAddress, owners, loadedViaUrl } = useSelector(currentSafeWithNames)
   const granted = useSelector(grantedSelector)
+  const matchSafeWithAction = useRouteMatch({
+    path: `${SAFELIST_ADDRESS}/:safeAddress/:safeAction/:safeSubaction?`,
+  }) as {
+    url: string
+    params: Record<string, string>
+  }
+
+  let settingsSection
+  switch (matchSafeWithAction.url) {
+    case generatePath(SAFE_ROUTES.SETTINGS_DETAILS, {
+      safeAddress,
+    }):
+      settingsSection = 'Safe Details'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_OWNERS, {
+      safeAddress,
+    }):
+      settingsSection = 'Owners'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_POLICIES, {
+      safeAddress,
+    }):
+      settingsSection = 'Policies'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_SPENDING_LIMIT, {
+      safeAddress,
+    }):
+      settingsSection = 'Spending Limit'
+      break
+    case generatePath(SAFE_ROUTES.SETTINGS_ADVANCED, {
+      safeAddress,
+    }):
+      settingsSection = 'Advanced'
+      break
+    default:
+      settingsSection = ''
+  }
 
   const onShow = (action) => () => {
     setState((prevState) => ({ ...prevState, [`show${action}`]: true }))
@@ -53,17 +89,25 @@ const Settings = (): React.ReactElement => {
     </LoadingContainer>
   ) : (
     <>
-      <Row className={classes.message}>
-        {!loadedViaUrl && (
-          <>
+      <Menu>
+        <Col start="sm" sm={6} xs={12}>
+          <Breadcrumb>
+            <BreadcrumbElement iconType="settings" text="SETTINGS" />
+            <BreadcrumbElement text={settingsSection} color="placeHolder" />
+          </Breadcrumb>
+        </Col>
+        {!loadedViaUrl ? (
+          <Col end="sm" sm={6} xs={12}>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
               <Span className={classes.links}>Remove Safe</Span>
               <Icon size="sm" type="delete" color="error" tooltip="Remove Safe" />
             </ButtonLink>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
-          </>
+          </Col>
+        ) : (
+          <Col end="sm" sm={6} xs={12}></Col>
         )}
-      </Row>
+      </Menu>
       <Block className={classes.root}>
         <Col className={classes.contents} layout="column">
           <Block className={classes.container}>
