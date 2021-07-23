@@ -96,7 +96,7 @@ const Settings = (): React.ReactElement => {
             <BreadcrumbElement text={settingsSection} color="placeHolder" />
           </Breadcrumb>
         </Col>
-        {!loadedViaUrl && (
+        {!loadedViaUrl ? (
           <Col end="sm" sm={6} xs={12}>
             <ButtonLink className={classes.removeSafeBtn} color="error" onClick={onShow('RemoveSafe')} size="lg">
               <Span className={classes.links}>Remove Safe</Span>
@@ -104,6 +104,8 @@ const Settings = (): React.ReactElement => {
             </ButtonLink>
             <RemoveSafeModal isOpen={showRemoveSafe} onClose={onHide('RemoveSafe')} />
           </Col>
+        ) : (
+          <Col end="sm" sm={6} xs={12}></Col>
         )}
       </Menu>
       <Block className={classes.root}>
