@@ -74,7 +74,7 @@ interface DetailsFormProps {
 const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
   const { safeAddress } = useParams<{ safeAddress?: string }>()
-  const safeName = useSelector((state) => (safeAddress ? addressBookName(state, { address: safeAddress }) : ''))
+  const safeName = useSelector((state) => (safeAddress ? addressBookName(state, { address: safeAddress }) : undefined))
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
