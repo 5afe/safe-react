@@ -8,8 +8,14 @@ import {
 } from '../utils'
 
 describe('Address Book file validations', () => {
-  it('Should return wrong file extension error if file extension is not the allowed', () => {
+  it('Should return wrong file extension error if file type is not allowed', () => {
     const file = new File([''], 'file.txt', { type: 'text/plain' })
+    const result = validateFile(file)
+    expect(result).toBe(WRONG_FILE_EXTENSION_ERROR)
+  })
+
+  it('Should return wrong file extension error if file extension is not valid', () => {
+    const file = new File([''], 'file.txt', { type: IMPORT_SUPPORTED_FORMATS[0] })
     const result = validateFile(file)
     expect(result).toBe(WRONG_FILE_EXTENSION_ERROR)
   })
