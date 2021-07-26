@@ -1,23 +1,10 @@
-import {
-  Text,
-  Accordion,
-  AccordionDetails,
-  AccordionSummary,
-  EthHashInfo,
-  IconText,
-} from '@gnosis.pm/safe-react-components'
+import { Text, Accordion, AccordionDetails, AccordionSummary, EthHashInfo } from '@gnosis.pm/safe-react-components'
 import styled, { css } from 'styled-components'
 
 export const Wrapper = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-`
-
-export const Breadcrumb = styled(IconText)`
-  p {
-    font-weight: bold;
-  }
 `
 
 export const ContentWrapper = styled.div`
