@@ -110,5 +110,5 @@ export const safesWithNamesAsMap = createSelector(
 
 export const currentSafeWithNames = createSelector(
   [safesWithNamesAsMap, currentSafe],
-  (safesMap, safe): SafeRecordWithNames => (safe ? safesMap[safe.address] : baseSafeWithName),
+  (safesMap, safe): SafeRecordWithNames => (safe?.address ? safesMap[safe.address] : baseSafeWithName),
 )
