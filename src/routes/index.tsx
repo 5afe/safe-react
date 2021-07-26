@@ -44,6 +44,8 @@ const Routes = (): React.ReactElement => {
         </a>
         {`. Because of the incompatible proxy implementation,
           we suggest users migrate manually by creating a new Safe via a new interface and then move all assets and authorities over.
+          
+          The successful TX may show as cancelled when the transaction volume on BSC is large, please always do double check!
         `}
       </div>
     ),
