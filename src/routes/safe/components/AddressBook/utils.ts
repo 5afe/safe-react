@@ -43,7 +43,7 @@ export const validateCsvData = (data: CsvDataType): string | undefined => {
       return `Invalid address on row ${index + 1}`
     }
     if (
-      Object.keys(ETHEREUM_NETWORK).some((network) => {
+      !Object.keys(ETHEREUM_NETWORK).some((network) => {
         return chainId == ETHEREUM_NETWORK[network]
       })
     ) {
