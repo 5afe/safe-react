@@ -26,7 +26,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).rejects.toThrow(
+      expect(switchNetwork(wallet as Wallet, '1438')).rejects.toThrow(
         'Code 301: Error adding a new wallet network (No such chain)',
       )
     })
@@ -42,7 +42,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).rejects.toThrow(
+      expect(switchNetwork(wallet as Wallet, '1438')).rejects.toThrow(
         'Code 300: Error switching the wallet network (Some error)',
       )
     })
@@ -58,7 +58,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as Wallet, '1438')).resolves.toEqual(undefined)
     })
 
     it('should resolve to undefined if request succeeds', () => {
@@ -68,7 +68,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as Wallet, '1438')).resolves.toEqual(undefined)
     })
   })
 
