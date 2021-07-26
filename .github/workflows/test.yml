@@ -31,8 +31,12 @@ jobs:
 
       - name: Yarn install
         run: |
+          rm -rf .yarncache
+          yarn cache clean
           mkdir .yarncache
           yarn install --cache-folder ./.yarncache --frozen-lockfile
+          rm -rf .yarncache
+          yarn cache clean
 
       - run: yarn test:coverage
 
