@@ -152,8 +152,6 @@ interface ReviewSpendingLimitProps {
 
 export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
   const classes = useStyles()
-  const [safeModules, setSafeModules] = useState<string[]>([])
-
   const dispatch = useDispatch()
 
   const {
@@ -192,14 +190,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  useEffect(() => {
-    if (modules) {
-      const moduleList = modules.map((pair) => {
-        return pair[1]
-      })
-      setSafeModules(moduleList)
-    }
-  }, [modules])
+  const safeModules = useMemo(() => modules?.map((pair) => pair[1]), [modules])
+
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
