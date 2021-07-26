@@ -6,7 +6,7 @@ import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import Link from 'src/components/layout/Link'
 import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
-import { addressBookName } from 'src/logic/addressBook/store/selectors'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 
 const Wrapper = styled.div`
   display: flex;
@@ -31,7 +31,7 @@ type Props = {
 }
 
 export const UnsavedAddress = ({ address, onClick, children }: Props): ReactElement => {
-  const name = useSelector((state) => addressBookName(state, { address }))
+  const name = useSelector((state) => addressBookEntryName(state, { address }))
 
   return (
     <Wrapper>
