@@ -36,9 +36,8 @@ export const safeAddressFromUrl = (state: AppReduxState): string => {
   return ''
 }
 
-export const currentSafe = createSelector(
-  [safesAsMap, safeAddressFromUrl],
-  (safes: SafesMap, address: string): SafeRecord | undefined => safes.get(address),
+export const currentSafe = createSelector([safesAsMap, safeAddressFromUrl], (safes: SafesMap, address: string) =>
+  safes.get(address, baseSafe),
 )
 
 const baseSafe = makeSafe()

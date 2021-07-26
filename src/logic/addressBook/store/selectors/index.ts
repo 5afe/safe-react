@@ -64,19 +64,6 @@ export const addressBookEntryName = createSelector(
   },
 )
 
-export const addressBookName = createSelector(
-  [
-    addressBookAsMap,
-    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: number } => ({
-      address,
-      chainId,
-    }),
-  ],
-  (addressBook, { address, chainId }) => {
-    return getNameByAddress(addressBook, address, chainId)
-  },
-)
-
 /*********************/
 /* Connected Network */
 /*********************/
