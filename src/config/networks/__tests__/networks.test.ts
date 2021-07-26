@@ -92,7 +92,9 @@ describe('Networks config files test', () => {
       const { id } = networkConfig.network
 
       // Then
-      const isValid = ETHEREUM_NETWORK[id]
+      const isValid = Object.keys(ETHEREUM_NETWORK).some((network) => {
+        return id == ETHEREUM_NETWORK[network]
+      })
 
       if (!isValid) {
         console.log(`Invalid value in "${networkFileName}" at network.id:`, id)

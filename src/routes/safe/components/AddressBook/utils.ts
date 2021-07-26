@@ -42,7 +42,11 @@ export const validateCsvData = (data: CsvDataType): string | undefined => {
     if (!isValidAddress(lowerCaseAddress)) {
       return `Invalid address on row ${index + 1}`
     }
-    if (ETHEREUM_NETWORK[chainId] == null) {
+    if (
+      Object.keys(ETHEREUM_NETWORK).some((network) => {
+        return chainId == ETHEREUM_NETWORK[network]
+      })
+    ) {
       return `Invalid chain id on row ${index + 1}`
     }
   }
