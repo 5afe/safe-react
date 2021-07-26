@@ -12,7 +12,6 @@ import Img from 'src/components/layout/Img'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { getExplorerInfo, getNetworkId, getNetworkLabel } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
 import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
@@ -97,7 +96,7 @@ const StyledCard = styled(Card)`
 `
 type Props = {
   connected: boolean
-  network: ETHEREUM_NETWORK
+  network: string
   onDisconnect: () => void
   onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean

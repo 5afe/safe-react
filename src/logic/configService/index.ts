@@ -7,7 +7,7 @@ export type AppData = {
   name?: string
   disabled?: boolean
   description?: string
-  networks: number[]
+  networks: string[]
   custom?: boolean
 }
 

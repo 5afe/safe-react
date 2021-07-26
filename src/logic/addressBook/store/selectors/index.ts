@@ -24,7 +24,7 @@ type AddressBookMap = {
 }
 
 type AddressBookMapByChain = {
-  [chainId: number]: AddressBookMap
+  [chainId: string]: AddressBookMap
 }
 
 export const addressBookAsMap = createSelector([addressBookState], (addressBook): AddressBookMapByChain => {
@@ -42,7 +42,7 @@ export const addressBookAsMap = createSelector([addressBookState], (addressBook)
   return addressBookMap
 })
 
-const getNameByAddress = (addressBook, address: string, chainId: number): string => {
+const getNameByAddress = (addressBook, address: string, chainId: string): string => {
   if (!isValidAddress(address)) {
     return ''
   }
@@ -54,7 +54,7 @@ type GetNameParams = Overwrite<Partial<AddressBookEntry>, { address: string }>
 export const addressBookEntryName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: number } => ({
+    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: string } => ({
       address,
       chainId,
     }),
@@ -67,7 +67,7 @@ export const addressBookEntryName = createSelector(
 export const addressBookName = createSelector(
   [
     addressBookAsMap,
-    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: number } => ({
+    (_, { address, chainId = networkId }: GetNameParams): { address: string; chainId: string } => ({
       address,
       chainId,
     }),

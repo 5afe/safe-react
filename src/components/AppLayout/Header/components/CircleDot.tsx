@@ -3,7 +3,7 @@ import Dot from '@material-ui/icons/FiberManualRecord'
 import { getNetworkConfigById } from 'src/config'
 
 type Props = {
-  networkId: number
+  networkId: string
   className: string
 }
 

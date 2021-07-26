@@ -18,7 +18,7 @@ type UseAppListReturnType = {
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
-  const [customAppList, setCustomAppList] = useState<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(
+  const [customAppList, setCustomAppList] = useState<(StoredSafeApp & { disabled?: boolean; networks?: string[] })[]>(
     [],
   )
   const dispatch = useDispatch()
@@ -61,7 +61,7 @@ const useAppList = (): UseAppListReturnType => {
     const loadApps = async () => {
       // recover apps from storage (third-party apps added by the user)
       let storageAppList =
-        (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: number[]; custom?: boolean })[]>(
+        (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: string[]; custom?: boolean })[]>(
           APPS_STORAGE_KEY,
         )) || []
       storageAppList = storageAppList.map((app) => {

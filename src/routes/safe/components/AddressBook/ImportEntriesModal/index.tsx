@@ -64,7 +64,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
       return {
         address: checksumAddress(data[0].trim()),
         name: data[1].trim(),
-        chainId: parseInt(data[2].trim(), 10),
+        chainId: data[2].trim(),
       }
     })
     setEntryList(formatedList)

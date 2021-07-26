@@ -16,7 +16,7 @@ export const providerNameSelector = createSelector(providerSelector, (provider: 
   return name ? name.toLowerCase() : undefined
 })
 
-export const networkSelector = createSelector(providerSelector, (provider: ProviderState): ETHEREUM_NETWORK => {
+export const networkSelector = createSelector(providerSelector, (provider: ProviderState): string => {
   const networkId = provider.get('network')
 
   return networkId ?? ETHEREUM_NETWORK.UNKNOWN

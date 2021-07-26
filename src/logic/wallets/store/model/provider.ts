@@ -7,7 +7,7 @@ export type ProviderProps = {
   loaded: boolean
   available: boolean
   account: string
-  network: ETHEREUM_NETWORK
+  network: string
   smartContractWallet: boolean
   hardwareWallet: boolean
 }
