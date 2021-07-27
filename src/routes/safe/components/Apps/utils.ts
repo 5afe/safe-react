@@ -80,7 +80,7 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
   }
 
   // the DB origin field has a limit of 100 characters
-  const originFieldSize = 100
+  const originFieldSize = 200
   const jsonDataLength = 20
   const remainingSpace = originFieldSize - res.url.length - jsonDataLength
 
@@ -99,15 +99,9 @@ export const getAppInfoFromUrl = memoize(async (appUrl: string): Promise<SafeApp
     loadingStatus: SAFE_APP_FETCH_STATUS.SUCCESS,
   }
 
-  if (appInfo.data.iconPath) {
-    try {
-      const iconInfo = await axios.get(`${noTrailingSlashUrl}/${appInfo.data.iconPath}`, { timeout: 1000 * 10 })
-      if (/image\/\w/gm.test(iconInfo.headers['content-type'])) {
-        res.iconUrl = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
-      }
-    } catch (error) {
-      console.error(`It was not possible to fetch icon from app ${res.url}`)
-    }
+  const concatenatedImgPath = `${noTrailingSlashUrl}/${appInfo.data.iconPath}`
+  if (await canLoadAppImage(concatenatedImgPath)) {
+    res.iconUrl = concatenatedImgPath
   }
 
   return res
@@ -140,3 +134,18 @@ export const uniqueApp =
     })
     return exists ? 'This app is already registered.' : undefined
   }
+
+const canLoadAppImage = (path: string, timeout = 10000) =>
+  new Promise(function (resolve) {
+    try {
+      const image = new Image()
+      image.src = path
+      image.addEventListener('load', () => resolve(true))
+      image.addEventListener('error', () => resolve(false))
+
+      setTimeout(() => resolve(false), timeout)
+    } catch (err) {
+      console.error(err)
+      resolve(false)
+    }
+  })
