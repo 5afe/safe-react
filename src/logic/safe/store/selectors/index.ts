@@ -37,15 +37,15 @@ export const safeAddressFromUrl = (state: AppReduxState): string => {
 }
 
 export const currentSafe = createSelector([safesAsMap, safeAddressFromUrl], (safes: SafesMap, address: string) =>
-  safes.get(address, baseSafe),
+  safes.get(address, baseSafe(address)),
 )
 
-const baseSafe = makeSafe()
+const baseSafe = (address = '') => makeSafe({ address })
 
 export const safeFieldSelector =
   <K extends keyof SafeRecordProps>(field: K) =>
-  (safe: SafeRecord): SafeRecordProps[K] | undefined =>
-    safe ? safe.get(field, baseSafe.get(field)) : undefined
+  (safe: SafeRecord): SafeRecordProps[K] =>
+    safe.get(field, baseSafe().get(field))
 
 export const currentSafeEthBalance = createSelector(currentSafe, safeFieldSelector('ethBalance'))
 
@@ -72,7 +72,7 @@ export const currentSafeTotalFiatBalance = createSelector(currentSafe, safeField
 /*************************/
 /* With AddressBook Data */
 /*************************/
-const baseSafeWithName = { ...baseSafe.toJS(), name: '' }
+const baseSafeWithName = (address = '') => ({ ...baseSafe(address).toJS(), name: '' })
 
 export type SafeRecordWithNames = Overwrite<SafeRecordProps, { owners: AddressBookEntry[] }> & { name: string }
 
@@ -110,5 +110,5 @@ export const safesWithNamesAsMap = createSelector(
 
 export const currentSafeWithNames = createSelector(
   [safesWithNamesAsMap, currentSafe],
-  (safesMap, safe): SafeRecordWithNames => (safe?.address ? safesMap[safe.address] : baseSafeWithName),
+  (safesMap, safe): SafeRecordWithNames => safesMap[safe.address] || baseSafeWithName(safe.address),
 )
