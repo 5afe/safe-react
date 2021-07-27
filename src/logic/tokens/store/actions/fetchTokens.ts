@@ -1,36 +1,35 @@
-import ERC20 from '@openzeppelin/contracts/build/contracts/ERC20.json'
-import ERC721 from '@openzeppelin/contracts/build/contracts/ERC721.json'
+import ERC20Contract from '@openzeppelin/contracts/build/contracts/ERC20.json'
+import ERC721Contract from '@openzeppelin/contracts/build/contracts/ERC721.json'
 import { List } from 'immutable'
-import contract from '@truffle/contract/index.js'
+import memoize from 'lodash.memoize'
+import { AnyAction } from 'redux'
+import { ThunkDispatch } from 'redux-thunk'
+import { AbiItem } from 'web3-utils'
+
+import { ERC20 } from 'src/types/contracts/ERC20.d'
+import { ERC721 } from 'src/types/contracts/ERC721.d'
 import { addTokens } from 'src/logic/tokens/store/actions/addTokens'
 import { fetchErc20AndErc721AssetsList } from 'src/logic/tokens/api'
 import { makeToken } from 'src/logic/tokens/store/model/token'
 import { tokensSelector } from 'src/logic/tokens/store/selectors'
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
 import { AppReduxState } from 'src/store'
-import { ensureOnce } from 'src/utils/singleton'
-import { ThunkDispatch } from 'redux-thunk'
-import { AnyAction } from 'redux'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 import { TokenResult } from '../../api/fetchErc20AndErc721AssetsList'
 
-const createERC20TokenContract = async () => {
+const createERC20TokenContract = (tokenAddress: string): ERC20 => {
   const web3 = getWeb3()
-  const erc20Token = await contract(ERC20)
-  erc20Token.setProvider(web3.currentProvider)
-  return erc20Token
+  return new web3.eth.Contract(ERC20Contract.abi as AbiItem[], tokenAddress) as unknown as ERC20
 }
 
-const createERC721TokenContract = async () => {
+const createERC721TokenContract = (tokenAddress: string): ERC721 => {
   const web3 = getWeb3()
-  const erc721Token = await contract(ERC721)
-  erc721Token.setProvider(web3.currentProvider)
-  return erc721Token
+  return new web3.eth.Contract(ERC721Contract.abi as AbiItem[], tokenAddress) as unknown as ERC721
 }
 
-export const getERC20TokenContract = ensureOnce(createERC20TokenContract)
+export const getERC20TokenContract = memoize(createERC20TokenContract)
 
-export const getERC721TokenContract = ensureOnce(createERC721TokenContract)
+export const getERC721TokenContract = memoize(createERC721TokenContract)
 
 export const containsMethodByHash = async (contractAddress: string, methodHash: string): Promise<boolean> => {
   const web3 = getWeb3()

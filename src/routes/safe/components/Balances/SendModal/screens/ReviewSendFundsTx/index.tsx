@@ -75,10 +75,9 @@ const useTxData = (
 
       let txData = EMPTY_DATA
       if (!isSendingNativeToken) {
-        const StandardToken = await getERC20TokenContract()
-        const tokenInstance = await StandardToken.at(txToken.address as string)
+        const ERC20TokenInstance = getERC20TokenContract(txToken.address)
         const erc20TransferAmount = toTokenUnit(txAmount, txToken.decimals)
-        txData = tokenInstance.contract.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
+        txData = ERC20TokenInstance.methods.transfer(recipientAddress, erc20TransferAmount).encodeABI()
       }
       setData(txData)
     }
