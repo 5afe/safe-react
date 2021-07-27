@@ -1,7 +1,8 @@
+import { ExecutionInfo } from 'src/types/gateway/transactions'
 import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { ExecutionInfo, isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'

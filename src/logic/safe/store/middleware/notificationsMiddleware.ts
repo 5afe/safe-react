@@ -18,7 +18,8 @@ import * as aboutToExecuteTx from 'src/logic/safe/utils/aboutToExecuteTx'
 import { QueuedPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { safeAddressFromUrl, safesAsMap } from 'src/logic/safe/store/selectors'
 
-import { isTransactionSummary, TransactionGatewayResult } from 'src/logic/safe/store/models/types/gateway.d'
+import { isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
+import { TransactionListItem, Transaction, TransactionSummary } from 'src/types/gateway/transactions'
 import { loadFromStorage, saveToStorage } from 'src/utils/storage'
 import { ADD_OR_UPDATE_SAFE } from '../actions/addOrUpdateSafe'
 import { SAFE_ROUTES } from 'src/routes/routes'
@@ -96,9 +97,9 @@ const notificationsMiddleware = (store) => (next) => async (action) => {
       }
       case ADD_QUEUED_TRANSACTIONS: {
         const { safeAddress, values } = (action as Action<QueuedPayload>).payload
-        const transactions = values
+        const transactions: TransactionSummary[] = values
           .filter((tx) => isTransactionSummary(tx))
-          .map((item: TransactionGatewayResult) => item.transaction)
+          .map((item: TransactionListItem) => (item as Transaction).transaction)
         const userAddress: string = userAccountSelector(state)
         const awaitingTransactions = getAwaitingGatewayTransactions(transactions, userAddress)
 

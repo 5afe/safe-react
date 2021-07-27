@@ -47,18 +47,16 @@ export const generateERC721TransferTxData = async (
 
   const methodToCall = getTransferMethodByContractAddress(tx.assetAddress)
   let transferParams = [tx.recipientAddress, tx.nftTokenId]
-  let NFTTokenContract
+  let NFTTokenInstance
 
   if (methodToCall.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) {
     // we add the `from` param for the `safeTransferFrom` method call
     transferParams = [safeAddress, ...transferParams]
-    NFTTokenContract = await getERC721TokenContract()
+    NFTTokenInstance = getERC721TokenContract(tx.assetAddress)
   } else {
     // we fallback to an ERC20 Token contract whose ABI implements the `transfer` method
-    NFTTokenContract = await getERC20TokenContract()
+    NFTTokenInstance = getERC20TokenContract(tx.assetAddress)
   }
 
-  const tokenInstance = await NFTTokenContract.at(tx.assetAddress)
-
-  return tokenInstance.contract.methods[methodToCall](...transferParams).encodeABI()
+  return NFTTokenInstance.methods[methodToCall](...transferParams).encodeABI()
 }

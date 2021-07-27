@@ -24,6 +24,7 @@ import { TxsInfiniteScrollContext } from './TxsInfiniteScroll'
 import { TxLocationContext } from './TxLocationProvider'
 import { CalculatedVotes } from './TxQueueCollapsed'
 import { getTxTo, isCancelTxDetails } from './utils'
+import { SettingsChange, DisableModule, MultiSend, Custom } from 'src/types/gateway/transactions'
 
 const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isTokenTransferAsset(info)) {
@@ -33,7 +34,7 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
   if (isSettingsChangeTxInfo(info)) {
     const UNKNOWN_MODULE = 'Unknown module'
 
-    switch (info.settingsInfo?.type) {
+    switch ((info as SettingsChange).settingsInfo?.type) {
       case 'SET_FALLBACK_HANDLER':
       case 'ADD_OWNER':
       case 'REMOVE_OWNER':
@@ -43,9 +44,10 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         break
       case 'ENABLE_MODULE':
       case 'DISABLE_MODULE':
+        const disableInfo = (info as SettingsChange).settingsInfo as DisableModule
         return (
           <Text size="xl" as="span">
-            {KNOWN_MODULES[info.settingsInfo.module] ?? UNKNOWN_MODULE}
+            {KNOWN_MODULES[disableInfo.module] ?? UNKNOWN_MODULE}
           </Text>
         )
     }
@@ -55,14 +57,14 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
     if (isMultiSendTxInfo(info)) {
       return (
         <Text size="xl" as="span">
-          {info.actionCount} {`action${info.actionCount > 1 ? 's' : ''}`}
+          {info.actionCount} {`action${(info as MultiSend).actionCount > 1 ? 's' : ''}`}
         </Text>
       )
     }
 
     return (
       <Text size="xl" as="span">
-        {info.methodName}
+        {(info as Custom).methodName}
       </Text>
     )
   }

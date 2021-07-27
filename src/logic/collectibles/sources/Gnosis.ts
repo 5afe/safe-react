@@ -33,8 +33,8 @@ class Gnosis {
 
     try {
       const tokens = await fetchSafeCollectibles(safeAddress)
-      collectibles.erc721Assets = this._getAssetsFromTokens(tokens.data)
-      collectibles.erc721Tokens = tokens.data || []
+      collectibles.erc721Assets = this._getAssetsFromTokens(tokens)
+      collectibles.erc721Tokens = tokens || []
     } catch (error) {
       logError(Errors._604, error.message)
     }

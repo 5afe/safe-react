@@ -3,9 +3,10 @@ import React, { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
-import { Creation, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { NOT_AVAILABLE } from './utils'
 import { InlineEthHashInfo, TxDetailsContainer } from './styled'
+import { Creation } from 'src/types/gateway/transactions'
 
 export const TxInfoCreation = ({ transaction }: { transaction: Transaction }): ReactElement | null => {
   const txInfo = transaction.txInfo as Creation

@@ -75,7 +75,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
 
   const isPending = useMemo(() => !!transaction.txStatus.match(/^PENDING.*/), [transaction.txStatus])
 
-  const signaturePending = addressInList(transaction.executionInfo?.missingSigners)
+  const signaturePending = addressInList(transaction.executionInfo?.missingSigners ?? undefined)
 
   const disabledActions = useMemo(
     () =>

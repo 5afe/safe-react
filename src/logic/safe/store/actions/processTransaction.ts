@@ -29,7 +29,7 @@ import { PayableTx } from 'src/types/contracts/types'
 
 import { updateTransactionStatus } from 'src/logic/safe/store/actions/updateTransactionStatus'
 import { Confirmation } from 'src/logic/safe/store/models/types/confirmation'
-import { Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { Operation, TransactionStatus } from 'src/types/gateway/transactions'
 import { isTxPendingError } from 'src/logic/wallets/getWeb3'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
 
@@ -122,7 +122,9 @@ export const processTransaction =
         if (signature) {
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          dispatch(updateTransactionStatus({ txStatus: 'PENDING', safeAddress, nonce: tx.nonce, id: tx.id }))
+          dispatch(
+            updateTransactionStatus({ txStatus: TransactionStatus.PENDING, safeAddress, nonce: tx.nonce, id: tx.id }),
+          )
           await saveTxToHistory({ ...txArgs, signature })
 
           dispatch(fetchTransactions(safeAddress))
@@ -148,7 +150,7 @@ export const processTransaction =
 
           dispatch(
             updateTransactionStatus({
-              txStatus: 'PENDING',
+              txStatus: TransactionStatus.PENDING,
               safeAddress,
               nonce: tx.nonce,
               // if we provide the tx ID that sole tx will have the _pending_ status.
@@ -171,7 +173,7 @@ export const processTransaction =
         .on('error', () => {
           dispatch(
             updateTransactionStatus({
-              txStatus: 'PENDING_FAILED',
+              txStatus: TransactionStatus.PENDING_FAILED,
               safeAddress,
               nonce: tx.nonce,
               id: tx.id,
@@ -200,7 +202,7 @@ export const processTransaction =
 
       dispatch(
         updateTransactionStatus({
-          txStatus: 'PENDING_FAILED',
+          txStatus: TransactionStatus.PENDING_FAILED,
           safeAddress,
           nonce: tx.nonce,
           id: tx.id,
