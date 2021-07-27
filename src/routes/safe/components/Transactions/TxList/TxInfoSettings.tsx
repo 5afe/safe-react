@@ -1,7 +1,7 @@
 import { Text } from '@gnosis.pm/safe-react-components'
+import { SettingsChange } from 'src/types/gateway/transactions'
 import React, { ReactElement } from 'react'
 
-import { SettingsChange } from 'src/logic/safe/store/models/types/gateway.d'
 import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxInfoDetails } from './TxInfoDetails'

@@ -1,6 +1,6 @@
+import { Transfer } from 'src/types/gateway/transactions'
 import React, { ReactElement, useEffect, useState } from 'react'
 
-import { Transfer } from 'src/logic/safe/store/models/types/gateway.d'
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { TxInfoDetails } from './TxInfoDetails'
 

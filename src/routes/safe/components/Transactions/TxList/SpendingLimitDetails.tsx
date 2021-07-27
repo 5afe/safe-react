@@ -4,10 +4,10 @@ import { sameString } from 'src/utils/strings'
 import styled from 'styled-components'
 
 import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
-import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
+import { DataDecoded } from 'src/types/gateway/transactions'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'
@@ -39,7 +39,7 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     [resetTimeMin],
   )
 
-  const tokenInfo = useTokenInfo(tokenAddress)
+  const tokenInfo = useTokenInfo(tokenAddress as string)
 
   return (
     <>
@@ -49,10 +49,12 @@ export const ModifySpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} />
+        <AddressInfo title="Beneficiary" address={beneficiary as string} />
       </SpendingLimitRow>
       <SpendingLimitRow>
-        {tokenInfo && <TokenInfo amount={fromTokenUnit(amount, tokenInfo.decimals)} title="Amount" token={tokenInfo} />}
+        {tokenInfo && (
+          <TokenInfo amount={fromTokenUnit(amount as string, tokenInfo.decimals)} title="Amount" token={tokenInfo} />
+        )}
       </SpendingLimitRow>
       <SpendingLimitRow>
         <ResetTimeInfo title="Reset Time" label={resetTimeLabel} />
@@ -66,7 +68,7 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
     () => data.parameters?.map(({ value }) => value) ?? [],
     [data.parameters],
   )
-  const tokenInfo = useTokenInfo(tokenAddress)
+  const tokenInfo = useTokenInfo(tokenAddress as string)
 
   return (
     <>
@@ -76,7 +78,7 @@ export const DeleteSpendingLimitDetails = ({ data }: { data: DataDecoded }): Rea
         </Text>
       </SpendingLimitRow>
       <SpendingLimitRow>
-        <AddressInfo title="Beneficiary" address={beneficiary} />
+        <AddressInfo title="Beneficiary" address={beneficiary as string} />
       </SpendingLimitRow>
       <SpendingLimitRow>{tokenInfo && <TokenInfo amount="" title="Token" token={tokenInfo} />}</SpendingLimitRow>
     </>
