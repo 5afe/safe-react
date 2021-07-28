@@ -1,8 +1,6 @@
 import * as React from 'react'
 import styled from 'styled-components'
-import classNames from 'classnames'
 import { makeStyles } from '@material-ui/core/styles'
-import Dot from '@material-ui/icons/FiberManualRecord'
 import { EthHashInfo, Identicon, Card } from '@gnosis.pm/safe-react-components'
 import { createStyles } from '@material-ui/core'
 
@@ -15,8 +13,9 @@ import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { background, connected as connectedBg, lg, md, sm, warning, xs } from 'src/theme/variables'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getExplorerInfo } from 'src/config'
+import { getExplorerInfo, getNetworkId, getNetworkLabel } from 'src/config'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
+import { CircleDot } from 'src/components/AppLayout/Header/components/CircleDot'
 import WalletIcon from '../../assets/wallet.svg'
 
 const styles = createStyles({
@@ -50,6 +49,8 @@ const styles = createStyles({
   labels: {
     fontSize: '12px',
     letterSpacing: '0.5px',
+  },
+  capitalize: {
     textTransform: 'capitalize',
   },
   open: {
@@ -59,19 +60,20 @@ const styles = createStyles({
       cursor: 'pointer',
     },
   },
-  disconnect: {
-    padding: `${md} ${lg}`,
-    '& button': {
-      background: '#f02525',
+  buttonRow: {
+    padding: `${md} ${lg} 0`,
+  },
+  disconnectButton: {
+    marginBottom: `${md}`,
+    '&:hover': {
+      backgroundColor: '#F02525',
+      color: '#fff',
     },
   },
   dashboard: {
     padding: `${md} ${lg} ${xs}`,
   },
   dashboardText: {
-    letterSpacing: '1px',
-  },
-  disconnectText: {
     letterSpacing: '1px',
   },
   logo: {
@@ -97,6 +99,7 @@ type Props = {
   connected: boolean
   network: ETHEREUM_NETWORK
   onDisconnect: () => void
+  onNetworkChange?: () => unknown
   openDashboard?: (() => void | null) | boolean
   provider?: string
   userAddress: string
@@ -106,14 +109,16 @@ const useStyles = makeStyles(styles)
 
 export const UserDetails = ({
   connected,
+  network,
   onDisconnect,
+  onNetworkChange,
   openDashboard,
   provider,
   userAddress,
 }: Props): React.ReactElement => {
-  const status = connected ? 'Connected' : 'Connection error'
-  const color = connected ? 'primary' : 'warning'
   const explorerUrl = getExplorerInfo(userAddress)
+  const networkLabel = getNetworkLabel(network)
+  const desiredNetwork = getNetworkId()
   const classes = useStyles()
 
   return (
@@ -137,23 +142,23 @@ export const UserDetails = ({
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph align="right" className={classes.labels} noMargin>
-          Status
+          Wallet
         </Paragraph>
         <Spacer />
-        <Dot className={classNames(classes.dot, connected ? classes.connected : classes.warning)} />
-        <Paragraph align="right" className={classes.labels} color={color} noMargin weight="bolder">
-          {status}
+        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
+        <Paragraph align="right" className={`${classes.labels} ${classes.capitalize}`} noMargin weight="bolder">
+          {provider}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
       <Row className={classes.details}>
         <Paragraph align="right" className={classes.labels} noMargin>
-          Wallet
+          Connected network
         </Paragraph>
         <Spacer />
-        <Img alt="Wallet icon" className={classes.logo} height={14} src={WalletIcon} />
+        {networkLabel && <CircleDot networkId={network} className={classes.dot} />}
         <Paragraph align="right" className={classes.labels} noMargin weight="bolder">
-          {provider}
+          {networkLabel || 'unknown'}
         </Paragraph>
       </Row>
       <Hairline margin="xs" />
@@ -166,16 +171,26 @@ export const UserDetails = ({
           </Button>
         </Row>
       )}
-      <Row className={classes.disconnect}>
+      {network !== desiredNetwork && onNetworkChange && (
+        <Row className={classes.buttonRow}>
+          <Button fullWidth onClick={onNetworkChange} size="medium" variant="outlined" color="primary">
+            <Paragraph noMargin size="lg">
+              Switch to {getNetworkLabel(desiredNetwork)}
+            </Paragraph>
+          </Button>
+        </Row>
+      )}
+      <Row className={classes.buttonRow}>
         <Button
-          color="primary"
+          className={classes.disconnectButton}
+          color="secondary"
           fullWidth
           onClick={onDisconnect}
           size="medium"
           variant="contained"
           data-testid="disconnect-btn"
         >
-          <Paragraph className={classes.disconnectText} color="white" noMargin size="lg">
+          <Paragraph noMargin size="lg">
             Disconnect
           </Paragraph>
         </Button>

@@ -106,7 +106,7 @@ const migrateAddressBook = ({ states, namespace, namespaceSeparator }: StorageCo
   const migratedAddressBook = (parsedAddressBook as Omit<AddressBookEntry, 'chainId'>[])
     // exclude those addresses with invalid names and addresses
     .filter((item) => {
-      return isValidAddressBookName(item.name) && getWeb3().utils.isAddress(item.address)
+      return item.name && isValidAddressBookName(item.name) && getWeb3().utils.isAddress(item.address)
     })
     .map(({ address, ...entry }) =>
       makeAddressBookEntry({

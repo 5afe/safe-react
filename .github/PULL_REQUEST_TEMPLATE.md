@@ -1,8 +1,8 @@
 ## What it solves
+Resolves #
 
 ## How this PR fixes it
 
 ## How to test it
 
-
-## Any extra information
+## Screenshots

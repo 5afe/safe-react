@@ -7,13 +7,14 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.ewc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
   safeUrl: 'https://ewc.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-ewc.staging.gnosisdev.com',
   gasPriceOracle: {
     url: 'https://station.energyweb.org',
     gasParameter: 'standard',
+    gweiFactor: '1e9',
   },
   gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
+  safeAppsRpcServiceUrl: 'https://rpc.energyweb.org',
   networkExplorerName: 'Energy web explorer',
   networkExplorerUrl: 'https://explorer.energyweb.org',
   networkExplorerApiUrl: 'https://explorer.energyweb.org/api',
@@ -23,13 +24,14 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-ewc.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-ewc.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps-ewc.gnosis-safe.io',
     },
   },
   network: {

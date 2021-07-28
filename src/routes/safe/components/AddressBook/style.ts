@@ -52,12 +52,6 @@ export const styles = createStyles({
   removeEntryButtonNonOwner: {
     cursor: 'pointer',
   },
-  message: {
-    padding: `${md} 0`,
-    maxHeight: '54px',
-    boxSizing: 'border-box',
-    justifyContent: 'flex-end',
-  },
   leftIcon: {
     marginRight: sm,
   },

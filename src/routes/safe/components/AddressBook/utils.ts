@@ -1,18 +1,22 @@
 import { isValidAddress } from 'src/utils/isValidAddress'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 
 export const WRONG_FILE_EXTENSION_ERROR = 'Only CSV files are allowed'
 export const FILE_SIZE_TOO_BIG_ERROR = 'The size of the file is over 1 MB'
 export const FILE_BYTES_LIMIT = 1000000
 export const IMPORT_SUPPORTED_FORMATS = [
+  '',
   'text/csv',
   'application/vnd.ms-excel',
   'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
 ]
 
+const CSV_EXTENSION_REGEX = /([a-zA-Z0-9\s_\\.\-:])+(.csv|.ods|.xls|.xlsx)$/
+
 export type CsvDataType = { data: string[] }[]
 
 export const validateFile = (file: File): string | undefined => {
-  if (!IMPORT_SUPPORTED_FORMATS.includes(file.type)) {
+  if (!IMPORT_SUPPORTED_FORMATS.includes(file.type) || !CSV_EXTENSION_REGEX.test(file.name.toLowerCase())) {
     return WRONG_FILE_EXTENSION_ERROR
   }
 
@@ -41,7 +45,8 @@ export const validateCsvData = (data: CsvDataType): string | undefined => {
     if (!isValidAddress(lowerCaseAddress)) {
       return `Invalid address on row ${index + 1}`
     }
-    if (isNaN(parseInt(chainId))) {
+    const chainIdNum = parseInt(chainId.trim(), 10)
+    if (isNaN(chainIdNum) || ETHEREUM_NETWORK[chainIdNum] == null) {
       return `Invalid chain id on row ${index + 1}`
     }
   }

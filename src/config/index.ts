@@ -5,19 +5,39 @@ import {
   ETHEREUM_NETWORK,
   FEATURES,
   GasPriceOracle,
+  NetworkConfig,
   NetworkInfo,
   NetworkSettings,
   SafeFeatures,
   Wallets,
 } from 'src/config/networks/network.d'
-import { APP_ENV, ETHERSCAN_API_KEY, GOOGLE_ANALYTICS_ID, INFURA_TOKEN, NETWORK, NODE_ENV } from 'src/utils/constants'
+import {
+  APP_ENV,
+  ETHERSCAN_API_KEY,
+  GOOGLE_ANALYTICS_ID,
+  INFURA_TOKEN,
+  NETWORK,
+  NODE_ENV,
+  SAFE_APPS_RPC_TOKEN,
+} from 'src/utils/constants'
 import { ensureOnce } from 'src/utils/singleton'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
 export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
 
-export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY].includes(getNetworkId())
+export const getNetworkConfigById = (id: number): NetworkConfig | undefined => {
+  return Object.values(networks).find((cfg) => cfg.network.id === id)
+}
+
+export const getNetworkLabel = (id: number): string => {
+  const cfg = getNetworkConfigById(id)
+  return cfg ? cfg.network.label : ''
+}
+
+export const usesInfuraRPC = [ETHEREUM_NETWORK.MAINNET, ETHEREUM_NETWORK.RINKEBY, ETHEREUM_NETWORK.POLYGON].includes(
+  getNetworkId(),
+)
 
 const getCurrentEnvironment = (): string => {
   switch (NODE_ENV) {
@@ -66,7 +86,7 @@ const configuration = (): NetworkSpecificConfiguration => {
   }
 }
 
-const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
+export const getConfig: () => NetworkSpecificConfiguration = ensureOnce(configuration)
 
 export const getNetworks = (): NetworkInfo[] => {
   const { local, ...usefulNetworks } = networks
@@ -83,18 +103,15 @@ export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
-export const getRelayUrl = (): string | undefined => getConfig().relayApiUrl
-
-export const getGnosisSafeAppsUrl = (): string => getConfig().safeAppsUrl
-
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
 export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
 
+export const getSafeAppsRpcServiceUrl = (): string =>
+  usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
+
 export const getRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
-
-export const getSafeClientGatewayBaseUrl = (safeAddress: string) => `${getClientGatewayUrl()}/safes/${safeAddress}`
 
 export const getTxDetailsUrl = (clientGatewayTxId: string) =>
   `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`

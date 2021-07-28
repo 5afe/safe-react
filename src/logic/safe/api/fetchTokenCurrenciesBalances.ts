@@ -1,20 +1,15 @@
-import axios from 'axios'
-
-import { getSafeClientGatewayBaseUrl } from 'src/config'
-import { TokenProps } from 'src/logic/tokens/store/model/token'
+import { getBalances, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getClientGatewayUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 export type TokenBalance = {
-  tokenInfo: Omit<TokenProps, 'balance'>
+  tokenInfo: GatewayDefinitions['TokenInfo']
   balance: string
   fiatBalance: string
   fiatConversion: string
 }
 
-export type BalanceEndpoint = {
-  fiatTotal: string
-  items: TokenBalance[]
-}
+export type BalanceEndpoint = GatewayDefinitions['SafeBalanceResponse']
 
 type FetchTokenCurrenciesBalancesProps = {
   safeAddress: string
@@ -23,15 +18,15 @@ type FetchTokenCurrenciesBalancesProps = {
   trustedTokens?: boolean
 }
 
-export const fetchTokenCurrenciesBalances = ({
+export const fetchTokenCurrenciesBalances = async ({
   safeAddress,
   selectedCurrency,
   excludeSpamTokens = true,
   trustedTokens = false,
 }: FetchTokenCurrenciesBalancesProps): Promise<BalanceEndpoint> => {
-  const url = `${getSafeClientGatewayBaseUrl(
-    checksumAddress(safeAddress),
-  )}/balances/${selectedCurrency}/?trusted=${trustedTokens}&exclude_spam=${excludeSpamTokens}`
-
-  return axios.get(url).then(({ data }) => data)
+  const address = checksumAddress(safeAddress)
+  return getBalances(getClientGatewayUrl(), address, selectedCurrency, {
+    exclude_spam: excludeSpamTokens,
+    trusted: trustedTokens,
+  })
 }

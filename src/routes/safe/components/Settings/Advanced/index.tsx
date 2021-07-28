@@ -1,5 +1,5 @@
 import { Text, theme, Title } from '@gnosis.pm/safe-react-components'
-import React, { useEffect } from 'react'
+import React, { ReactElement, useEffect } from 'react'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 
@@ -19,13 +19,13 @@ const Bold = styled.strong`
   color: ${theme.colors.text};
 `
 
-const NoModuleLegend = (): React.ReactElement => (
+const NoModuleLegend = (): ReactElement => (
   <InfoText color="secondaryLight" size="xl">
     No modules enabled
   </InfoText>
 )
 
-export const Advanced = (): React.ReactElement => {
+const Advanced = (): ReactElement => {
   const classes = useStyles()
   const { nonce, modules } = useSelector(currentSafe) ?? {}
   const moduleData = modules ? getModuleData(modules) ?? null : null
@@ -74,3 +74,5 @@ export const Advanced = (): React.ReactElement => {
     </>
   )
 }
+
+export default Advanced

@@ -1,6 +1,5 @@
-import axios, { AxiosResponse } from 'axios'
-
-import { getSafeClientGatewayBaseUrl } from 'src/config'
+import { getTransactionHistory, getTransactionQueue } from '@gnosis.pm/safe-react-gateway-sdk'
+import { getClientGatewayUrl } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
@@ -8,12 +7,7 @@ import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
 /*************/
 /*  HISTORY  */
 /*************/
-const getHistoryTransactionsUrl = (safeAddress: string): string => {
-  const address = checksumAddress(safeAddress)
-  return `${getSafeClientGatewayBaseUrl(address)}/transactions/history/`
-}
-
-const historyPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
+const historyPointers: { [safeAddress: string]: { next?: string; previous?: string } } = {}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -22,7 +16,7 @@ const historyPointers: { [safeAddress: string]: { next: string | null; previous:
  */
 export const loadPagedHistoryTransactions = async (
   safeAddress: string,
-): Promise<{ values: HistoryGatewayResponse['results']; next: string | null } | undefined> => {
+): Promise<{ values: HistoryGatewayResponse['results']; next?: string } | undefined> => {
   // if `historyPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `historyPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!historyPointers[safeAddress]?.next) {
@@ -30,13 +24,13 @@ export const loadPagedHistoryTransactions = async (
   }
 
   try {
-    const {
-      data: { results, ...pointers },
-    } = await axios.get<HistoryGatewayResponse, AxiosResponse<HistoryGatewayResponse>>(
-      historyPointers[safeAddress].next as string,
+    const { results, next, previous } = await getTransactionHistory(
+      getClientGatewayUrl(),
+      checksumAddress(safeAddress),
+      historyPointers[safeAddress].next,
     )
 
-    historyPointers[safeAddress] = pointers
+    historyPointers[safeAddress] = { next, previous }
 
     return { values: results, next: historyPointers[safeAddress].next }
   } catch (e) {
@@ -45,15 +39,11 @@ export const loadPagedHistoryTransactions = async (
 }
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
-  const historyTransactionsUrl = getHistoryTransactionsUrl(safeAddress)
-
   try {
-    const {
-      data: { results, ...pointers },
-    } = await axios.get<HistoryGatewayResponse>(historyTransactionsUrl)
+    const { results, next, previous } = await getTransactionHistory(getClientGatewayUrl(), checksumAddress(safeAddress))
 
     if (!historyPointers[safeAddress]) {
-      historyPointers[safeAddress] = pointers
+      historyPointers[safeAddress] = { next, previous }
     }
 
     return results
@@ -65,12 +55,7 @@ export const loadHistoryTransactions = async (safeAddress: string): Promise<Hist
 /************/
 /*  QUEUED  */
 /************/
-const getQueuedTransactionsUrl = (safeAddress: string): string => {
-  const address = checksumAddress(safeAddress)
-  return `${getSafeClientGatewayBaseUrl(address)}/transactions/queued/`
-}
-
-const queuedPointers: { [safeAddress: string]: { next: string | null; previous: string | null } } = {}
+const queuedPointers: { [safeAddress: string]: { next?: string; previous?: string } } = {}
 
 /**
  * Fetch next page if there is a next pointer for the safeAddress.
@@ -79,7 +64,7 @@ const queuedPointers: { [safeAddress: string]: { next: string | null; previous: 
  */
 export const loadPagedQueuedTransactions = async (
   safeAddress: string,
-): Promise<{ values: QueuedGatewayResponse['results']; next: string | null } | undefined> => {
+): Promise<{ values: QueuedGatewayResponse['results']; next?: string } | undefined> => {
   // if `queuedPointers[safeAddress] is `undefined` it means `loadHistoryTransactions` wasn't called
   // if `queuedPointers[safeAddress].next is `null`, it means it reached the last page in gateway-client
   if (!queuedPointers[safeAddress]?.next) {
@@ -87,13 +72,13 @@ export const loadPagedQueuedTransactions = async (
   }
 
   try {
-    const {
-      data: { results, ...pointers },
-    } = await axios.get<QueuedGatewayResponse, AxiosResponse<QueuedGatewayResponse>>(
-      queuedPointers[safeAddress].next as string,
+    const { results, next, previous } = await getTransactionQueue(
+      getClientGatewayUrl(),
+      checksumAddress(safeAddress),
+      queuedPointers[safeAddress].next,
     )
 
-    queuedPointers[safeAddress] = pointers
+    queuedPointers[safeAddress] = { next, previous }
 
     return { values: results, next: queuedPointers[safeAddress].next }
   } catch (e) {
@@ -102,15 +87,11 @@ export const loadPagedQueuedTransactions = async (
 }
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
-  const queuedTransactionsUrl = getQueuedTransactionsUrl(safeAddress)
-
   try {
-    const {
-      data: { results, ...pointers },
-    } = await axios.get<QueuedGatewayResponse>(queuedTransactionsUrl)
+    const { results, next, previous } = await getTransactionQueue(getClientGatewayUrl(), checksumAddress(safeAddress))
 
     if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
-      queuedPointers[safeAddress] = pointers
+      queuedPointers[safeAddress] = { next, previous }
     }
 
     return results

@@ -4,14 +4,12 @@ name: Deploy to Mainnet network
 on:
   # Pull request hook without any config. Launches for every pull request
   pull_request:
-    branches:
-      - main
   push:
     branches:
       - main
   # Launches build when release is published
   release:
-      types: [published]
+    types: [published]
 
 env:
   REPO_NAME_ALPHANUMERIC: safereact
@@ -20,6 +18,7 @@ env:
   REACT_APP_SENTRY_DSN: ${{ secrets.SENTRY_DSN_MAINNET }}
   REACT_APP_GOOGLE_ANALYTICS: ${{ secrets.REACT_APP_GOOGLE_ANALYTICS_ID_MAINNET }}
   REACT_APP_GNOSIS_APPS_URL: ${{ secrets.REACT_APP_GNOSIS_APPS_URL_PROD }}
+  REACT_APP_ETHGASSTATION_API_KEY: ${{ secrets.REACT_APP_ETHGASSTATION_API_KEY_MAINNET }}
 
 jobs:
   debug:
@@ -46,7 +45,6 @@ jobs:
         run: |
           for apt_file in `grep -lr microsoft /etc/apt/sources.list.d/`; do sudo rm $apt_file; done
       - uses: actions/checkout@v2
-
       - name: Setup Node.js
         uses: actions/setup-node@v2
         with:
@@ -80,6 +78,7 @@ jobs:
           PUBLIC_URL: './'
           REACT_APP_FORTMATIC_KEY: ${{ secrets.REACT_APP_FORTMATIC_KEY }}
           REACT_APP_INFURA_TOKEN: ${{ secrets.REACT_APP_INFURA_TOKEN }}
+          REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN: ${{ secrets.REACT_APP_SAFE_APPS_RPC_INFURA_TOKEN }}
           REACT_APP_PORTIS_ID: ${{ secrets.REACT_APP_PORTIS_ID }}
           REACT_APP_INTERCOM_ID: ${{ secrets.REACT_APP_INTERCOM_ID }}
           REACT_APP_IPFS_GATEWAY: ${{ secrets.REACT_APP_IPFS_GATEWAY }}
@@ -116,7 +115,7 @@ jobs:
       # Script to deploy to the dev environment
       # Mainnet build is never created on the dev branch
 
-       # Script to deploy to staging environment
+      # Script to deploy to staging environment
       - name: 'Deploy to S3: Staging'
         if: github.ref == 'refs/heads/main' # Or refs/heads/main
         run: aws s3 sync build s3://${{ env.STAGING_BUCKET_NAME }}/current/app --delete
@@ -150,4 +149,3 @@ jobs:
           SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
           SENTRY_ORG: ${{ secrets.SENTRY_ORG}}
           SENTRY_PROJECT: gnosis-safe-multisig-${{ env.REACT_APP_NETWORK }}
-

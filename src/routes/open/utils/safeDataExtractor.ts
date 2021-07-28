@@ -11,14 +11,16 @@ export type CreateSafeValues = {
   owners?: number | string
 }
 
-const getByRegexFrom = (regex: RegExp) => (values: CreateSafeValues | LoadFormValues): string[] => {
-  const accounts = Object.keys(values)
-    .sort()
-    .filter((key) => regex.test(key))
+const getByRegexFrom =
+  (regex: RegExp) =>
+  (values: CreateSafeValues | LoadFormValues): string[] => {
+    const accounts = Object.keys(values)
+      .sort()
+      .filter((key) => regex.test(key))
 
-  const numOwners = getNumOwnersFrom(values)
-  return accounts.map((account) => values[account]).slice(0, numOwners)
-}
+    const numOwners = getNumOwnersFrom(values)
+    return accounts.map((account) => values[account]).slice(0, numOwners)
+  }
 
 export const getAccountsFrom = getByRegexFrom(/^owner\d+Address$/)
 

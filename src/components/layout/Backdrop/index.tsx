@@ -1,18 +1,19 @@
 import Backdrop from '@material-ui/core/Backdrop'
 import { makeStyles } from '@material-ui/core/styles'
-import React from 'react'
+import React, { ReactElement } from 'react'
 import ReactDOM from 'react-dom'
 
 const useStyles = makeStyles({
   root: {
     zIndex: 1300,
+    top: '52px',
   },
 })
 
-const BackdropLayout = ({ isOpen = false }) => {
+const BackdropLayout = (props: { isOpen: boolean }): ReactElement | null => {
   const classes = useStyles()
 
-  if (!isOpen) {
+  if (!props.isOpen) {
     return null
   }
 

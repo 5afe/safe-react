@@ -46,13 +46,6 @@ const BodyImage = styled.div`
 const StyledLoader = styled(Loader)`
   margin-right: 5px;
 `
-const StyledCSVLink = styled(CSVDownloader)`
-  height: 100%;
-  display: flex;
-  flex: 1;
-  justify-content: center;
-  align-items: center;
-`
 
 export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps): ReactElement => {
   const dispatch = useDispatch()
@@ -103,6 +96,7 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
       <Modal.Header onClose={onClose}>
         <Modal.Header.Title withoutMargin>Export address book</Modal.Header.Title>
       </Modal.Header>
+
       <Modal.Body withoutPadding>
         <ImageContainer>
           <BodyImage>
@@ -128,20 +122,24 @@ export const ExportEntriesModal = ({ isOpen, onClose }: ExportEntriesModalProps)
           </Text>
         </InfoContainer>
       </Modal.Body>
+
       <Modal.Footer withoutBorder>
         <Button size="md" variant="outlined" onClick={onClose}>
           Cancel
         </Button>
-        <Button color="primary" size="md" disabled={loading} onClick={error ? () => setDoRetry(true) : handleClose}>
-          {!error ? (
-            <StyledCSVLink data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
+
+        {error ? (
+          <Button color="primary" size="md" disabled={loading} onClick={() => setDoRetry(true)}>
+            Retry
+          </Button>
+        ) : (
+          <CSVDownloader data={csvData} bom={true} filename={`gnosis-safe-address-book-${date}`} type="link">
+            <Button color="primary" size="md" disabled={loading} onClick={handleClose}>
               {loading && <StyledLoader color="secondaryLight" size="xs" />}
               Download
-            </StyledCSVLink>
-          ) : (
-            'Retry'
-          )}
-        </Button>
+            </Button>
+          </CSVDownloader>
+        )}
       </Modal.Footer>
     </Modal>
   )

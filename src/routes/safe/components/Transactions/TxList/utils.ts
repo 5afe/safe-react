@@ -1,13 +1,8 @@
+import { TransactionInfo, Transfer } from 'src/types/gateway/transactions'
 import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
-import {
-  isCustomTxInfo,
-  isTransferTxInfo,
-  Transaction,
-  TransactionInfo,
-  Transfer,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
@@ -94,8 +89,10 @@ export const isCancelTxDetails = (txInfo: Transaction['txInfo']): boolean =>
   // flag-based identification
   txInfo.isCancellation
 
-export const addressInList = (list: string[] = []) => (address: string): boolean =>
-  list.some((ownerAddress) => sameAddress(ownerAddress, address))
+export const addressInList =
+  (list: string[] = []) =>
+  (address: string): boolean =>
+    list.some((ownerAddress) => sameAddress(ownerAddress, address))
 
 export const getTxTo = (tx: Transaction): string | undefined => {
   switch (tx.txInfo.type) {

@@ -42,8 +42,13 @@ const AppName = styled(Title)`
 `
 
 const AppDescription = styled(Text)`
-  height: 71px;
   text-align: center;
+  height: 72px;
+  line-height: 24px;
+  overflow: hidden;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
 `
 
 export const setAppImageFallback = (error: SyntheticEvent<HTMLImageElement, Event>): void => {

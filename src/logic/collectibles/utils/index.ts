@@ -1,6 +1,6 @@
 import { getNetworkId } from 'src/config'
 import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
-import { getERC721TokenContract, getStandardTokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
+import { getERC721TokenContract, getERC20TokenContract } from 'src/logic/tokens/store/actions/fetchTokens'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { CollectibleTx } from 'src/routes/safe/components/Balances/SendModal/screens/ReviewCollectible'
 
@@ -47,18 +47,16 @@ export const generateERC721TransferTxData = async (
 
   const methodToCall = getTransferMethodByContractAddress(tx.assetAddress)
   let transferParams = [tx.recipientAddress, tx.nftTokenId]
-  let NFTTokenContract
+  let NFTTokenInstance
 
   if (methodToCall.includes(SAFE_TRANSFER_FROM_WITHOUT_DATA_HASH)) {
     // we add the `from` param for the `safeTransferFrom` method call
     transferParams = [safeAddress, ...transferParams]
-    NFTTokenContract = await getERC721TokenContract()
+    NFTTokenInstance = getERC721TokenContract(tx.assetAddress)
   } else {
     // we fallback to an ERC20 Token contract whose ABI implements the `transfer` method
-    NFTTokenContract = await getStandardTokenContract()
+    NFTTokenInstance = getERC20TokenContract(tx.assetAddress)
   }
 
-  const tokenInstance = await NFTTokenContract.at(tx.assetAddress)
-
-  return tokenInstance.contract.methods[methodToCall](...transferParams).encodeABI()
+  return NFTTokenInstance.methods[methodToCall](...transferParams).encodeABI()
 }

@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core/styles'
 import * as React from 'react'
+import { useSelector } from 'react-redux'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 
 import Col from 'src/components/layout/Col'
@@ -7,6 +8,8 @@ import Paragraph from 'src/components/layout/Paragraph'
 import WalletIcon from '../WalletIcon'
 import { connected as connectedBg, screenSm, sm } from 'src/theme/variables'
 import { KeyRing } from 'src/components/AppLayout/Header/components/KeyRing'
+import { networkSelector } from 'src/logic/wallets/store/selectors'
+import { getNetworkLabel } from 'src/config'
 
 const useStyles = makeStyles({
   network: {
@@ -67,6 +70,8 @@ interface ProviderInfoProps {
 
 const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): React.ReactElement => {
   const classes = useStyles()
+  const currentNetwork = useSelector(networkSelector)
+  const networkName = getNetworkLabel(currentNetwork)
   const addressColor = connected ? 'text' : 'warning'
   return (
     <>
@@ -82,6 +87,7 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
           data-testid="connected-wallet"
         >
           {provider}
+          {networkName ? ` @ ${networkName}` : ''}
         </Paragraph>
         <div className={classes.providerContainer}>
           {connected ? (
@@ -98,10 +104,6 @@ const ProviderInfo = ({ connected, provider, userAddress }: ProviderInfoProps): 
               Connection Error
             </Text>
           )}
-
-          {/* <Paragraph className={classes.address} color={color} noMargin size="xs">
-            {cutAddress}
-          </Paragraph> */}
         </div>
       </Col>
     </>
