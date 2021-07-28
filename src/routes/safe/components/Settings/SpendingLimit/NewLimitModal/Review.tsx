@@ -73,7 +73,7 @@ const calculateSpendingLimitsTxData = (
   existentSpendingLimit: SpendingLimit | null,
   txToken: Token,
   values: Record<string, string>,
-  modules: string[] | null | undefined,
+  modules: string[],
   txParameters?: TxParameters,
 ): {
   spendingLimitTxData: CreateTransactionArgs
@@ -190,7 +190,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
-  const safeModules = useMemo(() => modules?.map((pair) => pair[1]), [modules])
+  const safeModules = useMemo(() => modules?.map((pair) => pair[1]) || [], [modules])
 
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(

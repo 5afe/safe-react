@@ -66,6 +66,6 @@ export const enableModuleTx = ({
   }
 }
 
-export const isModuleEnabled = (modules: string[] | undefined | null, moduleAddress: string): boolean => {
+export const isModuleEnabled = (modules: string[], moduleAddress: string): boolean => {
   return modules?.some((module) => sameAddress(module, moduleAddress)) ?? false
 }

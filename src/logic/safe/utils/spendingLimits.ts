@@ -118,10 +118,7 @@ const requestAllowancesByDelegatesAndTokens = async (
   )
 }
 
-export const getSpendingLimits = async (
-  modules: string[] | undefined,
-  safeAddress: string,
-): Promise<SpendingLimit[] | null> => {
+export const getSpendingLimits = async (modules: string[], safeAddress: string): Promise<SpendingLimit[] | null> => {
   const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
 
   try {
