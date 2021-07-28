@@ -17,7 +17,6 @@ import { Modal } from 'src/components/Modal'
 import WhenFieldChanges from 'src/components/WhenFieldChanges'
 import { currentNetworkAddressBook } from 'src/logic/addressBook/store/selectors'
 import { nftAssetsSelector, nftTokensSelector } from 'src/logic/collectibles/store/selectors'
-import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import SafeInfo from 'src/routes/safe/components/Balances/SendModal/SafeInfo'
 import { AddressBookInput } from 'src/routes/safe/components/Balances/SendModal/screens/AddressBookInput'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
@@ -28,6 +27,7 @@ import { sameString } from 'src/utils/strings'
 import { CollectibleSelectField } from './CollectibleSelectField'
 import { styles } from './style'
 import TokenSelectField from './TokenSelectField'
+import { Erc721Transfer } from 'src/types/gateway/transactions'
 
 const formMutators = {
   setMax: (args, state, utils) => {

@@ -1,9 +1,6 @@
+import { TransactionListItem, Transaction } from 'src/types/gateway/transactions'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
-import {
-  isStatusFailed,
-  isTransactionSummary,
-  TransactionGatewayResult,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { isStatusFailed, isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
 import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { isUserAnOwner } from 'src/logic/wallets/ethAddresses'
@@ -31,7 +28,7 @@ export const getNotification = (
   if (nonce !== undefined) {
     const executedTx = values
       .filter(isTransactionSummary)
-      .map((item: TransactionGatewayResult) => item.transaction)
+      .map((item: TransactionListItem) => (item as Transaction).transaction)
       .find((transaction) => transaction.executionInfo?.nonce === nonce)
 
     // transaction that was pending, was moved into history

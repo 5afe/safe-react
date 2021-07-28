@@ -1,0 +1,23 @@
+name: Confirm E2E tests success
+on:
+  repository_dispatch:
+    types: [comment-pr-on-success]
+jobs:
+  comment:
+    name: Comment on PR#${{ github.event.client_payload.pr_number }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create success comment
+        if: ${{ github.event.client_payload.status == success()}}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body: |
+            E2E Tests Passed
+      - name: Create failure comment
+        if: ${{ github.event.client_payload.status == failure()}}
+        uses: peter-evans/create-or-update-comment@v1
+        with:
+          issue-number: ${{ github.event.client_payload.pr_number }}
+          body: |
+            E2E Tests Failed

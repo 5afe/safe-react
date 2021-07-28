@@ -1,191 +1,21 @@
-type TransferDirection = 'INCOMING' | 'OUTGOING'
-
-type Erc20Transfer = {
-  type: 'ERC20'
-  tokenAddress: string
-  tokenName: string | null
-  tokenSymbol: string | null
-  logoUri: string | null
-  decimals: number | null
-  value: string
-}
-
-type Erc721Transfer = {
-  type: 'ERC721'
-  tokenAddress: string
-  tokenId: string
-  tokenName: string | null
-  tokenSymbol: string | null
-  logoUri: string | null
-  decimals: number | null
-  value: string
-}
-
-type NativeTransfer = {
-  type: 'ETHER'
-  value: string
-  tokenSymbol: string | null
-  decimals: number | null
-}
-
-type TransferInfo = Erc20Transfer | Erc721Transfer | NativeTransfer
-
-type Transfer = {
-  type: 'Transfer'
-  sender: string
-  recipient: string
-  direction?: TransferDirection
-  transferInfo: TransferInfo // Polymorphic: Erc20, Erc721, Ether
-}
+import { GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
+import {
+  DataDecoded,
+  Custom,
+  TransactionSummary,
+  Label,
+  DateLabel,
+  ConflictHeader,
+  Transfer,
+  TransactionStatus as GWTransactionStatus,
+} from 'src/types/gateway/transactions'
 
 export enum Operation {
-  CALL,
-  DELEGATE,
+  CALL = 0,
+  DELEGATE = 1,
 }
 
-type InternalTransaction = {
-  operation: Operation
-  to: string
-  value: number | null
-  data: string | null
-  dataDecoded: DataDecoded | null
-}
-
-type Parameter = {
-  name: string
-  type: string
-  value: string
-  valueDecoded: InternalTransaction[] | null
-}
-
-type DataDecoded = {
-  method: string
-  parameters: Parameter[] | null
-}
-
-type SetFallbackHandler = {
-  type: 'SET_FALLBACK_HANDLER'
-  handler: string
-}
-
-type AddOwner = {
-  type: 'ADD_OWNER'
-  owner: string
-  threshold: number
-}
-
-type RemoveOwner = {
-  type: 'REMOVE_OWNER'
-  owner: string
-  threshold: number
-}
-
-type SwapOwner = {
-  type: 'SWAP_OWNER'
-  oldOwner: string
-  newOwner: string
-}
-
-type ChangeThreshold = {
-  type: 'CHANGE_THRESHOLD'
-  threshold: number
-}
-
-type ChangeImplementation = {
-  type: 'CHANGE_IMPLEMENTATION'
-  implementation: string
-}
-
-type EnableModule = {
-  type: 'ENABLE_MODULE'
-  module: string
-}
-
-type DisableModule = {
-  type: 'DISABLE_MODULE'
-  module: string
-}
-
-type SettingsInfo =
-  | SetFallbackHandler
-  | AddOwner
-  | RemoveOwner
-  | SwapOwner
-  | ChangeThreshold
-  | ChangeImplementation
-  | EnableModule
-  | DisableModule
-
-type SettingsChange = {
-  type: 'SettingsChange'
-  dataDecoded: DataDecoded
-  settingsInfo: SettingsInfo | null
-}
-
-type AddressInfo = {
-  name: string
-  logoUri: string | null
-}
-
-type BaseCustom = {
-  type: 'Custom'
-  to: string
-  dataSize: string
-  value: string
-  isCancellation: boolean
-  toInfo?: AddressInfo
-}
-
-export type Custom = BaseCustom & {
-  methodName: string | null
-}
-
-type MultiSend = BaseCustom & {
-  methodName: 'multiSend'
-  actionCount: number
-}
-
-type Creation = {
-  type: 'Creation'
-  creator: string
-  transactionHash: string
-  implementation: string | null
-  factory: string | null
-}
-
-type TransactionStatus =
-  | 'AWAITING_CONFIRMATIONS'
-  | 'AWAITING_EXECUTION'
-  | 'CANCELLED'
-  | 'FAILED'
-  | 'SUCCESS'
-  | 'PENDING'
-  | 'PENDING_FAILED'
-  | 'WILL_BE_REPLACED'
-
-type TransactionInfo = Transfer | SettingsChange | Custom | MultiSend | Creation
-
-type ExecutionInfo = {
-  nonce: number
-  confirmationsRequired: number
-  confirmationsSubmitted: number
-  missingSigners?: string[]
-}
-
-type SafeAppInfo = {
-  name: string
-  url: string
-  logoUrl: string
-}
-
-type TransactionSummary = {
-  id: string
-  timestamp: number
-  txStatus: TransactionStatus
-  txInfo: TransactionInfo // Polymorphic: Transfer, SettingsChange, Custom, Creation
-  executionInfo: ExecutionInfo | null
-  safeAppInfo: SafeAppInfo | null
-}
+type SafeAppInfo = GatewayDefinitions['SafeAppInfo']
 
 type TransactionData = {
   hexData: string | null
@@ -205,15 +35,12 @@ type MultiSigConfirmations = {
   signature: string | null
 }
 
-export type TokenType = 'ERC721' | 'ERC20' | 'ETHER'
+type TokenInfo = GatewayDefinitions['TokenInfo']
 
-type TokenInfo = {
-  tokenType: TokenType
-  address: string
-  decimals: number | null
-  symbol: string
-  name: string
-  logoUri: string | null
+export type TokenType = TokenInfo['type']
+
+export type Transaction = TransactionSummary & {
+  txDetails?: ExpandedTxDetails
 }
 
 type MultiSigExecutionDetails = {
@@ -235,17 +62,15 @@ type MultiSigExecutionDetails = {
 
 type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails
 
-type ExpandedTxDetails = {
+export type TransactionStatus = GWTransactionStatus
+
+export type ExpandedTxDetails = {
   executedAt: number | null
   txStatus: TransactionStatus
   txInfo: TransactionInfo
   txData: TransactionData | null
   detailedExecutionInfo: DetailedExecutionInfo | null
   txHash: string | null
-}
-
-type Transaction = TransactionSummary & {
-  txDetails?: ExpandedTxDetails
 }
 
 type StoreStructure = {
@@ -260,45 +85,15 @@ type TxQueuedLocation = 'queued.next' | 'queued.queued'
 
 type TxHistoryLocation = 'history'
 
-type TxLocation = TxHistoryLocation | TxQueuedLocation
+export type TxLocation = TxHistoryLocation | TxQueuedLocation
 
-type Label = {
-  type: 'LABEL'
-  label: 'Next' | 'Queued'
-}
+type HistoryGatewayResult = GatewayDefinitions['TransactionListItem']
 
-type DateLabel = {
-  type: 'DATE_LABEL'
-  timestamp: number
-}
+type HistoryGatewayResponse = GatewayDefinitions['TransactionListPage']
 
-type ConflictHeader = {
-  type: 'CONFLICT_HEADER'
-  nonce: number
-}
+type QueuedGatewayResult = GatewayDefinitions['TransactionListItem']
 
-type TransactionGatewayResult = {
-  type: 'TRANSACTION'
-  transaction: TransactionSummary
-  conflictType: 'HasNext' | 'End' | 'None'
-}
-
-type GatewayResponse = {
-  next: string | null
-  previous: string | null
-}
-
-type HistoryGatewayResult = DateLabel | TransactionGatewayResult
-
-type HistoryGatewayResponse = GatewayResponse & {
-  results: HistoryGatewayResult[]
-}
-
-type QueuedGatewayResult = Label | ConflictHeader | TransactionGatewayResult
-
-type QueuedGatewayResponse = GatewayResponse & {
-  results: QueuedGatewayResult[]
-}
+type QueuedGatewayResponse = GatewayDefinitions['TransactionListPage']
 
 export type TransactionDetails = {
   count: number
@@ -321,9 +116,7 @@ export const isConflictHeader = (value: QueuedGatewayResult): value is ConflictH
   return value.type === 'CONFLICT_HEADER'
 }
 
-export const isTransactionSummary = (
-  value: HistoryGatewayResult | QueuedGatewayResult,
-): value is TransactionGatewayResult => {
+export const isTransactionSummary = (value: HistoryGatewayResult | QueuedGatewayResult): value is Transaction => {
   return value.type === 'TRANSACTION'
 }
 

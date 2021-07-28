@@ -3,7 +3,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import React, { Suspense, useEffect, useState } from 'react'
 
 import Modal from 'src/components/Modal'
-import { Erc721Transfer } from 'src/logic/safe/store/models/types/gateway'
 import { CollectibleTx } from './screens/ReviewCollectible'
 import { ReviewCustomTxProps } from './screens/ContractInteraction/ReviewCustomTx'
 import { ContractInteractionTx } from './screens/ContractInteraction'
@@ -11,6 +10,7 @@ import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
+import { Erc721Transfer } from 'src/types/gateway/transactions'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 

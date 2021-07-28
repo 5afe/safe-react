@@ -1,12 +1,7 @@
 import React, { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import {
-  ExpandedTxDetails,
-  isCustomTxInfo,
-  TransactionData,
-  TransactionInfo,
-} from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isCustomTxInfo, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
   DeleteSpendingLimitDetails,
@@ -19,6 +14,7 @@ import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
+import { TransactionInfo } from 'src/types/gateway/transactions'
 
 const { nativeCoin } = getNetworkInfo()
 

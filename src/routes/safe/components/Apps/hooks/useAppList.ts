@@ -88,11 +88,15 @@ const useAppList = (): UseAppListReturnType => {
       apps.forEach((app) => {
         if (!app.name || app.name === 'unknown') {
           // We are using legacy mode, we have to fetch info from manifest
-          getAppInfoFromUrl(app.url).then((appFromUrl) => {
-            const formatedApp = appFromUrl
-            formatedApp.custom = app.custom
-            fetchAppCallback(formatedApp)
-          })
+          getAppInfoFromUrl(app.url)
+            .then((appFromUrl) => {
+              const formatedApp = appFromUrl
+              formatedApp.custom = app.custom
+              fetchAppCallback(formatedApp)
+            })
+            .catch((err) => {
+              logError(Errors._900, `${app.url}, ${err.message}`)
+            })
         } else {
           // We already have manifest information so we directly add the app
           fetchAppCallback(app)

@@ -2,9 +2,9 @@ import { Text } from '@gnosis.pm/safe-react-components'
 import React from 'react'
 import styled from 'styled-components'
 
-import { DataDecoded } from 'src/logic/safe/store/models/types/gateway.d'
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
+import { DataDecoded } from 'src/types/gateway/transactions'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;
@@ -36,7 +36,7 @@ export const MethodDetails = ({ data }: { data: DataDecoded }): React.ReactEleme
           <StyledMethodName size="xl" strong>
             {param.name}({param.type}):
           </StyledMethodName>
-          <Value method={data.method} type={param.type} value={param.value} />
+          <Value method={data.method} type={param.type} value={param.value as string} />
         </TxDetailsMethodParam>
       ))}
     </TxInfo>

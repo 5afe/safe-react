@@ -28,7 +28,7 @@ const TokenInfo = ({ amount, title, token }: TokenInfoProps): ReactElement => {
   return (
     <DataDisplay title={title}>
       <StyledImageName>
-        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri} />
+        <StyledImage alt={token.name} onError={setImageToPlaceholder} src={token.logoUri || ''} />
         <Text size="lg">
           {amount} {token.symbol}
         </Text>
