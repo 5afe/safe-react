@@ -221,7 +221,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
         return err
       }
     })
-    console.log('listending for safe apps requests')
+
     communicator?.on('sendTransactions', (msg) => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
