@@ -10,7 +10,7 @@ const autoUpdater = require('./auto-updater')
 const { app, session, BrowserWindow, shell } = electron
 
 const path = require('path')
-const isDev = require('electron-is-dev')
+const isDev = !app.isPackaged
 
 const options = {
   key: fs.readFileSync(path.join(__dirname, './ssl/server.key')),
