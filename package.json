@@ -62,6 +62,14 @@
     "src/**/*.{js,jsx,ts,tsx}": [
       "eslint --fix",
       "prettier --write"
+    ],
+    "public/**/*.{ts}": [
+      "eslint --fix",
+      "prettier --write"
+    ],
+    "scripts/**/*.{js,jsx,ts,tsx}": [
+      "eslint --fix",
+      "prettier --write"
     ]
   },
   "jest": {
