@@ -24,7 +24,7 @@
     "compile-electron": "rm -rf .public/dist && tsc --project tsconfig.electron.json",
     "copy-gateway-types": "rm -rf src/types/gateway; cp -r node_modules/@gnosis.pm/safe-react-gateway-sdk/dist/types src/types/gateway",
     "eject": "rescripts eject",
-    "electron-build": "electron-builder --mac",
+    "electron-build": "yarn compile-electron && electron-builder --mac",
     "electron-dev": "yarn compile-electron && concurrently \"BROWSER=none REACT_APP_BUILD_FOR_DESKTOP=true yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "format:staged": "lint-staged",
     "generate-types": "yarn generate-types:contracts && yarn generate-types:spendingLimit && yarn generate-types:safeDeployments && yarn generate-types:erc20 && yarn generate-types:erc721",
