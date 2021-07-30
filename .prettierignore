@@ -6,7 +6,6 @@ flow-typed
 flow-typed/npm
 migrations
 node_modules
-public
 src/assets
 src/types/contracts
 test

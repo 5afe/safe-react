@@ -5,9 +5,9 @@ const {
   remote: { app },
 } = require('electron')
 const log = require('electron-log')
-const isDev = !app.isPackaged
 const USB = require('webusb').usb
 
+const isDev = !app.isPackaged
 window.isDesktop = true
 global.navigator.usb.__proto__ = USB
 
