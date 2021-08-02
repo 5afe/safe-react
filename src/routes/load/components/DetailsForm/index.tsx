@@ -25,7 +25,7 @@ import Paragraph from 'src/components/layout/Paragraph'
 import { FIELD_LOAD_ADDRESS, FIELD_LOAD_NAME } from 'src/routes/load/components/fields'
 import { secondary } from 'src/theme/variables'
 import { getSafeInfo } from 'src/logic/safe/utils/safeInformation'
-import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
+import { addressBookName } from 'src/logic/addressBook/store/selectors'
 
 const useStyles = makeStyles({
   root: {
@@ -74,9 +74,7 @@ interface DetailsFormProps {
 const DetailsForm = ({ errors, form }: DetailsFormProps): ReactElement => {
   const classes = useStyles()
   const { safeAddress } = useParams<{ safeAddress?: string }>()
-  const safeName = useSelector((state) =>
-    safeAddress ? addressBookEntryName(state, { address: safeAddress }) : undefined,
-  )
+  const safeName = useSelector((state) => (safeAddress ? addressBookName(state, { address: safeAddress }) : undefined))
 
   const handleScan = (value: string, closeQrModal: () => void): void => {
     form.mutators.setValue(FIELD_LOAD_ADDRESS, value)
