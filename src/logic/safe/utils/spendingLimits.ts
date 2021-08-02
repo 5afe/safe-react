@@ -3,7 +3,7 @@ import { AbiItem } from 'web3-utils'
 
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
-import { enableModuleTx } from 'src/logic/safe/utils/modules'
+import { enableModuleTx, isModuleEnabled } from 'src/logic/safe/utils/modules'
 import SpendingLimitModule from 'src/logic/contracts/artifacts/AllowanceModule.json'
 import generateBatchRequests from 'src/logic/contracts/generateBatchRequests'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
@@ -118,11 +118,8 @@ const requestAllowancesByDelegatesAndTokens = async (
   )
 }
 
-export const getSpendingLimits = async (
-  modules: string[] | undefined,
-  safeAddress: string,
-): Promise<SpendingLimit[] | null> => {
-  const isSpendingLimitEnabled = modules?.some((module) => sameAddress(module, SPENDING_LIMIT_MODULE_ADDRESS)) ?? false
+export const getSpendingLimits = async (modules: string[], safeAddress: string): Promise<SpendingLimit[] | null> => {
+  const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
 
   try {
     if (isSpendingLimitEnabled) {
