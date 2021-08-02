@@ -1,7 +1,7 @@
 import axios from 'axios'
 
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { getSafeServiceBaseUrl } from 'src/config'
+import { getClientGatewayUrl, getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
 const calculateBodyFrom = async (
@@ -16,12 +16,11 @@ const calculateBodyFrom = async (
   gasPrice,
   gasToken,
   refundReceiver,
-  transactionHash,
   sender,
   origin,
   signature,
 ) => {
-  const contractTransactionHash = await safeInstance.methods
+  const safeTxHash = await safeInstance.methods
     .getTransactionHash(to, valueInWei, data, operation, safeTxGas, baseGas, gasPrice, gasToken, refundReceiver, nonce)
     .call()
 
@@ -30,14 +29,13 @@ const calculateBodyFrom = async (
     value: valueInWei,
     data,
     operation,
-    nonce,
-    safeTxGas,
-    baseGas,
+    nonce: nonce.toString(),
+    safeTxGas: safeTxGas.toString(),
+    baseGas: baseGas.toString(),
     gasPrice,
     gasToken,
     refundReceiver,
-    contractTransactionHash,
-    transactionHash,
+    safeTxHash,
     sender: checksumAddress(sender),
     origin,
     signature,
@@ -47,6 +45,11 @@ const calculateBodyFrom = async (
 export const buildTxServiceUrl = (safeAddress: string): string => {
   const address = checksumAddress(safeAddress)
   return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
+}
+
+export const gatewayPostTransactionUrl = (safeAddress: string): string => {
+  const address = checksumAddress(safeAddress)
+  return `${getClientGatewayUrl()}/transactions/${address}/propose`
 }
 
 const SUCCESS_STATUS = 201 // CREATED status
@@ -70,10 +73,9 @@ export const saveTxToHistory = async ({
   sender,
   signature,
   to,
-  txHash,
   valueInWei,
 }: SaveTxToHistoryArgs): Promise<void> => {
-  const url = buildTxServiceUrl(safeInstance.options.address)
+  const url = gatewayPostTransactionUrl(safeInstance.options.address)
   const body = await calculateBodyFrom(
     safeInstance,
     to,
@@ -86,7 +88,6 @@ export const saveTxToHistory = async ({
     gasPrice,
     gasToken,
     refundReceiver,
-    txHash || null,
     sender,
     origin || null,
     signature,

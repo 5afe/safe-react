@@ -160,7 +160,7 @@ export const processTransaction =
           )
 
           try {
-            await saveTxToHistory({ ...txArgs, txHash })
+            await saveTxToHistory({ ...txArgs })
 
             // store the pending transaction's nonce
             isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)

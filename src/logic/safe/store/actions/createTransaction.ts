@@ -160,7 +160,7 @@ export const createTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
+          await saveTxToHistory({ ...txArgs, origin })
 
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
