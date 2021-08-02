@@ -27,7 +27,7 @@ export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 export const getNetworkName = (): string => {
   const networkNames = Object.keys(ETHEREUM_NETWORK)
   const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == getNetworkId())
-  return name || 'UNKNOWN'
+  return name || ''
 }
 
 export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {

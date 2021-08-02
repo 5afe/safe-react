@@ -137,19 +137,19 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
 
 export const instantiateSafeContracts = async () => {
   const web3 = getWeb3()
-  const networkId = await getNetworkIdFrom(web3)
+  const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
 
   // Create ProxyFactory Master Copy
-  proxyFactoryMaster = getProxyFactoryContractInstance(web3, networkId.toString() as ETHEREUM_NETWORK)
+  proxyFactoryMaster = getProxyFactoryContractInstance(web3, networkId)
 
   // Create Safe Master copy
-  safeMaster = getGnosisSafeContractInstance(web3, networkId.toString() as ETHEREUM_NETWORK)
+  safeMaster = getGnosisSafeContractInstance(web3, networkId)
 
   // Create Fallback Handler
-  fallbackHandler = getFallbackHandlerContractInstance(web3, networkId.toString() as ETHEREUM_NETWORK)
+  fallbackHandler = getFallbackHandlerContractInstance(web3, networkId)
 
   // Create MultiSend contract
-  multiSend = getMultiSendContractInstance(web3, networkId.toString() as ETHEREUM_NETWORK)
+  multiSend = getMultiSendContractInstance(web3, networkId)
 }
 
 export const getSafeMasterContract = async () => {

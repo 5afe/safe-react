@@ -1,4 +1,5 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { switchNetwork, shouldSwitchNetwork, canSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 class CodedError extends Error {
@@ -14,6 +15,63 @@ jest.mock('src/config', () => {
 })
 
 describe('src/logic/wallets/utils/network', () => {
+  describe('switchNetwork', () => {
+    it('should try to add a network config if chain is unrecognized', () => {
+      const wallet = {
+        provider: {
+          request: jest.fn(() => {
+            const err = new CodedError('No such chain')
+            err.code = 4902
+            return Promise.reject(err)
+          }),
+        },
+      }
+
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).rejects.toThrow(
+        'Code 301: Error adding a new wallet network (No such chain)',
+      )
+    })
+
+    it('should throw if provider throws', () => {
+      const wallet = {
+        provider: {
+          request: jest.fn(() => {
+            const err = new CodedError('Some error')
+            err.code = 4454
+            return Promise.reject(err)
+          }),
+        },
+      }
+
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).rejects.toThrow(
+        'Code 300: Error switching the wallet network (Some error)',
+      )
+    })
+
+    it('should resolve to undefined when user rejects', () => {
+      const wallet = {
+        provider: {
+          request: jest.fn(() => {
+            const err = new CodedError('User rejected')
+            err.code = 4001
+            return Promise.reject(err)
+          }),
+        },
+      }
+
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).resolves.toEqual(undefined)
+    })
+
+    it('should resolve to undefined if request succeeds', () => {
+      const wallet = {
+        provider: {
+          request: jest.fn(() => Promise.resolve(true)),
+        },
+      }
+
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).resolves.toEqual(undefined)
+    })
+  })
   describe('shouldSwitchNetwork', () => {
     it('should return true when networks mismatch', () => {
       const wallet = {
