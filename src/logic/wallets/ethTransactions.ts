@@ -2,28 +2,34 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getGasPrice, getGasPriceOracle } from 'src/config'
+import { getGasPrice, getGasPriceOracles } from 'src/config'
 
 export const EMPTY_DATA = '0x'
 
 export const calculateGasPrice = async (): Promise<string> => {
   const gasPrice = getGasPrice()
-  const gasPriceOracle = getGasPriceOracle()
+  const gasPriceOracles = getGasPriceOracles()
 
   if (gasPrice) {
     // Fixed gas price in configuration. xDai uses this approach
     return new BigNumber(gasPrice).toString()
-  } else if (gasPriceOracle) {
-    const { url, gasParameter, gweiFactor } = gasPriceOracle
-
-    // Fetch from gas price provider
-    const { data } = await axios.get(url)
-
-    return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
-  } else {
-    const errorMsg = 'gasPrice or gasPriceOracle not set in config'
-    return Promise.reject(errorMsg)
+  } else if (gasPriceOracles) {
+    for (let index = 0; index < gasPriceOracles.length; index++) {
+      const gasPriceOracle = gasPriceOracles[index]
+      const { url, gasParameter, gweiFactor } = gasPriceOracle
+      // Fetch from gas price provider
+      try {
+        const { data: response } = await axios.get(url)
+        const data = response.data || response // Sometimes the data comes with a data parameter
+        return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
+      } catch (err) {
+        // Keep iterating price oracles
+      }
+    }
   }
+  // If no oracle worked we return an error
+  const errorMsg = 'gasPrice or gasPriceOracle not set in config'
+  return Promise.reject(errorMsg)
 }
 
 export const calculateGasOf = async (txConfig: {
