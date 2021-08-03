@@ -7,7 +7,7 @@ import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
 import Web3 from 'web3'
 
-import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
+import { currentSafe } from 'src/logic/safe/store/selectors'
 import { grantedSelector } from 'src/routes/safe/container/selector'
 import { getNetworkId, getNetworkName, getSafeAppsRpcServiceUrl, getTxServiceUrl } from 'src/config'
 import { SAFE_ROUTES } from 'src/routes/routes'
@@ -26,6 +26,7 @@ import { useAppCommunicator } from '../communicator'
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
 import { fetchSafeTransaction } from 'src/logic/safe/transactions/api/fetchSafeTransaction'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { addressBookEntryName } from 'src/logic/addressBook/store/selectors'
 
 const OwnerDisclaimer = styled.div`
   display: flex;
@@ -87,7 +88,8 @@ const safeAppWeb3Provider = new Web3.providers.HttpProvider(getSafeAppsRpcServic
 
 const AppFrame = ({ appUrl }: Props): ReactElement => {
   const granted = useSelector(grantedSelector)
-  const { address: safeAddress, ethBalance, name: safeName } = useSelector(currentSafeWithNames)
+  const { address: safeAddress, ethBalance, owners, threshold } = useSelector(currentSafe)
+  const safeName = useSelector((state) => addressBookEntryName(state, { address: safeAddress }))
   const { trackEvent } = useAnalytics()
   const history = useHistory()
   const { consentReceived, onConsentReceipt } = useLegalConsent()
@@ -180,6 +182,8 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       safeAddress,
       network: NETWORK_NAME,
       chainId: NETWORK_ID,
+      owners,
+      threshold,
     }))
 
     communicator?.on('getSafeBalances', async (msg) => {
@@ -222,7 +226,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })
-  }, [communicator, openConfirmationModal, safeAddress])
+  }, [communicator, openConfirmationModal, safeAddress, owners, threshold])
 
   const onUserTxConfirm = (safeTxHash: string) => {
     // Safe Apps SDK V1 Handler
