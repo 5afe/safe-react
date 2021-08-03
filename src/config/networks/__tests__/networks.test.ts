@@ -95,7 +95,7 @@ describe('Networks config files test', () => {
       const networkName = Object.keys(ETHEREUM_NETWORK).find((network) => {
         return ETHEREUM_NETWORK[network] == id
       })
-      const isValid = ETHEREUM_NETWORK[networkName || '']
+      const isValid = !!networkName
 
       if (!isValid) {
         console.log(`Invalid value in "${networkFileName}" at network.id:`, id)
