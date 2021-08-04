@@ -5,6 +5,8 @@ import { useDispatch } from 'react-redux'
 
 import { styles } from './style'
 
+import { LATEST_SAFE_VERSION } from 'src/utils/constants'
+import Link from 'src/components/layout/Link'
 import GnoForm from 'src/components/forms/GnoForm'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
@@ -109,12 +111,13 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
                       Update now to take advantage of new features and the highest security standards available.
                     </Paragraph>
                     <Block>
-                      This update includes:
-                      <ul>
-                        <li>Compatibility with new asset types (ERC-721 / ERC-1155)</li>
-                        <li>Improved interoperability with modules</li>
-                        <li>Minor security improvements</li>
-                      </ul>
+                      To check details about updates added by this smart contract version please visit{' '}
+                      <Link
+                        target="_blank"
+                        to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}
+                      >
+                        latest Gnosis Safe contracts changelog
+                      </Link>
                     </Block>
                     <Paragraph>
                       You will need to confirm this update just like any other transaction. This means other owners will
