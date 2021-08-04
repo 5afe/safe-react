@@ -10,7 +10,7 @@ import path from 'path'
 const { app, session, BrowserWindow, shell, Menu } = electron
 const isDev = !app.isPackaged
 const DEFAULT_PORT = 5000
-
+app.allowRendererProcessReuse = false
 const options = {
   key: fs.readFileSync(path.join(__dirname, './ssl/server.key')),
   cert: fs.readFileSync(path.join(__dirname, './ssl/server.crt')),

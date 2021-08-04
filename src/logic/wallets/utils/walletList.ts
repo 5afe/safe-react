@@ -11,7 +11,7 @@ type Wallet = WalletInitOptions & {
   desktop: boolean
   walletName: WALLETS
 }
-
+console.log({ transport: (window as any).TransportNodeHid })
 const rpcUrl = getRpcServiceUrl()
 const wallets: Wallet[] = [
   { walletName: WALLETS.METAMASK, preferred: true, desktop: false },

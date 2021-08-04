@@ -5,11 +5,11 @@ const {
   remote: { app },
 } = require('electron')
 const log = require('electron-log')
-const USB = require('webusb').usb
+const TransportNodeHid = require('@ledgerhq/hw-transport-node-hid-singleton').default
 
 const isDev = !app.isPackaged
-window.isDesktop = true
-global.navigator.usb.__proto__ = USB
+global.isDesktop = true
+global.TransportNodeHid = TransportNodeHid
 
 window.addEventListener('DOMContentLoaded', () => {
   const origLog = console.log
