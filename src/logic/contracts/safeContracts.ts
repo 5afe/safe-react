@@ -28,6 +28,8 @@ let fallbackHandler: FallbackManager
 let multiSend: MultiSend
 
 const getSafeContractDeployment = ({ networkId, safeVersion }: { networkId?: ETHEREUM_NETWORK, safeVersion: string }) => {
+  // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
+  const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
   // If version is 1.3.0 we can use instance compatible with L2 for all networks
   const useL2ContractVersion = semverSatisfies(safeVersion, '>=1.3.0')
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
@@ -38,7 +40,11 @@ const getSafeContractDeployment = ({ networkId, safeVersion }: { networkId?: ETH
     }) ||
     getDeployment({
       version: safeVersion,
-    })
+    }) ||
+    // In case we couldn't find a valid deployment and it's a version before 1.0.0 we return v1.0.0 to allow a minimum compatibility
+    (useOldestContractVersion ? getDeployment({
+      version: '1.0.0'
+    }) : undefined)
   )
 }
 
