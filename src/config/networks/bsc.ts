@@ -48,7 +48,6 @@ const mainnet: NetworkConfig = {
   disabledWallets: [
     WALLETS.TREZOR,
     WALLETS.LEDGER,
-    WALLETS.WALLET_CONNECT,
     WALLETS.COINBASE,
     WALLETS.FORTMATIC,
     WALLETS.OPERA,
