@@ -22,10 +22,10 @@ export const remoteSafeInfoWithModules = {
     },
   ],
   implementation: {
-    value: '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F',
-    name: 'Gnosis Safe: Mastercopy 1.1.1',
+    value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
+    name: 'Gnosis Safe: Mastercopy 1.3.0',
     logoUrl:
-      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F.png',
+      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   modules: [
     {
@@ -33,12 +33,12 @@ export const remoteSafeInfoWithModules = {
     },
   ],
   fallbackHandler: {
-    value: '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44',
-    name: 'Gnosis Safe: Default Callback Handler 1.1.1',
+    value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
+    name: 'Gnosis Safe: Default Callback Handler 1.3.0',
     logoUrl:
-      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44.png',
+      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
-  version: '1.1.1',
+  version: '1.3.0',
 }
 export const remoteSafeInfoWithoutModules = {
   address: {
@@ -64,19 +64,19 @@ export const remoteSafeInfoWithoutModules = {
     },
   ],
   implementation: {
-    value: '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F',
-    name: 'Gnosis Safe: Mastercopy 1.1.1',
+    value: '0x3E5c63644E683549055b9Be8653de26E0B4CD36E',
+    name: 'Gnosis Safe: Mastercopy 1.3.0',
     logoUrl:
-      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F.png',
+      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0x3E5c63644E683549055b9Be8653de26E0B4CD36E.png',
   },
   modules: [],
   fallbackHandler: {
-    value: '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44',
-    name: 'Gnosis Safe: Default Callback Handler 1.1.1',
+    value: '0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4',
+    name: 'Gnosis Safe: Default Callback Handler 1.3.0',
     logoUrl:
-      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44.png',
+      'https://safe-transaction-assets.staging.gnosisdev.com/contracts/logos/0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4.png',
   },
-  version: '1.1.1',
+  version: '1.3.0',
 }
 export const localSafesInfo = {
   '0xe414604Ad49602C0b9c0b08D0781ECF96740786a': {
@@ -222,7 +222,7 @@ export const inMemoryPartialSafeInformation = {
     },
   ],
   nonce: 492,
-  currentVersion: '1.1.1',
+  currentVersion: '1.3.0',
   needsUpdate: false,
   featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
 }
