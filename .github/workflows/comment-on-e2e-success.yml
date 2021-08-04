@@ -14,7 +14,7 @@ jobs:
           issue-number: ${{ github.event.client_payload.pr_number }}
           body: |
             E2E Tests Passed
-            Check the results here: https://github.com/gnosis/safe-react-e2e-tests/runs/${{ github.event.client_payload.run_number }}
+            Check the results here: https://github.com/gnosis/safe-react-e2e-tests/actions/runs/${{ github.event.client_payload.run_number }}
       - name: Create failure comment
         if: ${{ github.event.client_payload.status == 'failure' }}
         uses: peter-evans/create-or-update-comment@v1
@@ -22,4 +22,4 @@ jobs:
           issue-number: ${{ github.event.client_payload.pr_number }}
           body: |
             E2E Tests Failed
-            Check the results here: https://github.com/gnosis/safe-react-e2e-tests/runs/${{ github.event.client_payload.run_number }}
+            Check the results here: https://github.com/gnosis/safe-react-e2e-tests/actions/runs/${{ github.event.client_payload.run_number }}
