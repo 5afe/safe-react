@@ -7,6 +7,7 @@ import { getGasPrice, getGasPriceOracle } from 'src/config'
 export const EMPTY_DATA = '0x'
 
 export const calculateGasPrice = async (): Promise<string> => {
+  console.log('TEST')
   const gasPrice = getGasPrice()
   const gasPriceOracle = getGasPriceOracle()
 
