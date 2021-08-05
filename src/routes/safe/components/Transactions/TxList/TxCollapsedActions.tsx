@@ -7,6 +7,7 @@ import { useSelector } from 'react-redux'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
+import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
@@ -34,7 +35,7 @@ export const TxCollapsedActions = ({ transaction }: TxCollapsedActionsProps): Re
 
   const getTitle = () => {
     if (transaction.txStatus === 'AWAITING_EXECUTION') {
-      return transaction.executionInfo?.nonce === nonce
+      return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
     }

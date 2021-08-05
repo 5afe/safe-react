@@ -6,8 +6,10 @@ import {
   Label,
   DateLabel,
   ConflictHeader,
+  ExecutionInfo,
   Transfer,
   TransactionStatus as GWTransactionStatus,
+  MultisigExecutionInfo,
 } from 'src/types/gateway/transactions'
 
 export enum Operation {
@@ -174,4 +176,8 @@ export const isModuleExecutionDetails = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
 ): value is ModuleExecutionDetails => {
   return value?.type === 'MODULE'
+}
+
+export const isMultisigExecutionInfo = (value: ExecutionInfo | undefined): value is MultisigExecutionInfo => {
+  return (value as MultisigExecutionInfo).nonce !== undefined
 }

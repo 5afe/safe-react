@@ -37,7 +37,7 @@ import {
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { Erc20Transfer, Erc721Transfer } from 'src/types/gateway/transactions'
+import { Erc20Transfer, Erc721Transfer, MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -115,7 +115,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
     [],
   )
 
-  const nonce = useMemo(() => t.current.executionInfo?.nonce ?? 0, [])
+  const nonce = useMemo(() => (t.current.executionInfo as MultisigExecutionInfo)?.nonce ?? 0, [])
 
   const refundReceiver = useMemo(
     () =>
@@ -136,7 +136,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const value = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'ETHER') {
+        if (t.current.txInfo.transferInfo.type === 'NATIVE_COIN') {
           return t.current.txInfo.transferInfo.value
         } else {
           return t.current.txDetails.txData?.value ?? '0'
@@ -153,13 +153,13 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const to = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'ETHER') {
-          return t.current.txInfo.recipient
+        if (t.current.txInfo.transferInfo.type === 'NATIVE_COIN') {
+          return t.current.txInfo.recipient.value
         } else {
           return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
         }
       case 'Custom':
-        return t.current.txInfo.to
+        return t.current.txInfo.to.value
       case 'Creation':
       case 'SettingsChange':
       default:
@@ -216,9 +216,10 @@ export const ApproveTxModal = ({
   const classes = useStyles()
   const safeAddress = useSelector(safeAddressFromUrl)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const thresholdReached = !!(transaction.executionInfo && isThresholdReached(transaction.executionInfo))
-  const _threshold = transaction.executionInfo?.confirmationsRequired ?? 0
-  const _countingCurrentConfirmation = (transaction.executionInfo?.confirmationsSubmitted ?? 0) + 1
+  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
+  const thresholdReached = !!(transaction.executionInfo && isThresholdReached(executionInfo))
+  const _threshold = executionInfo?.confirmationsRequired ?? 0
+  const _countingCurrentConfirmation = (executionInfo?.confirmationsSubmitted ?? 0) + 1
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached

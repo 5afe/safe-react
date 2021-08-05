@@ -9,6 +9,7 @@ import {
   isStatusWillBeReplaced,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
+import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 
@@ -33,7 +34,9 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
     } else {
       // AWAITING_EXECUTION, AWAITING_CONFIRMATIONS, PENDING or PENDING_FAILED
       let text: string
-      const signaturePending = addressInList(transaction.executionInfo?.missingSigners ?? undefined)
+      const signaturePending = addressInList(
+        (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
+      )
 
       switch (transaction.txStatus) {
         case 'AWAITING_CONFIRMATIONS':
@@ -51,7 +54,7 @@ export const useTransactionStatus = (transaction: Transaction): TransactionStatu
 
       setStatus({ color: 'rinkeby', text })
     }
-  }, [currentUser, transaction.executionInfo?.missingSigners, transaction.txStatus])
+  }, [currentUser, transaction.executionInfo, transaction.txStatus])
 
   return status
 }

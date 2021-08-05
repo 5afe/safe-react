@@ -23,6 +23,7 @@ import { TxParametersDetail } from 'src/routes/safe/components/Transactions/help
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
 import { ParametersStatus } from 'src/routes/safe/components/Transactions/helpers/utils'
+import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 type Props = {
   isOpen: boolean
@@ -52,7 +53,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
     : ''
 
-  const nonce = gwTransaction.executionInfo?.nonce ?? 0
+  const nonce = (gwTransaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
 
   const sendReplacementTransaction = (txParameters: TxParameters) => {
     dispatch(

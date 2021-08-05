@@ -10,6 +10,7 @@ import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/T
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
+import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 type ActionButtonsHandlers = {
   canCancel: boolean
@@ -75,7 +76,9 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
 
   const isPending = useMemo(() => !!transaction.txStatus.match(/^PENDING.*/), [transaction.txStatus])
 
-  const signaturePending = addressInList(transaction.executionInfo?.missingSigners ?? undefined)
+  const signaturePending = addressInList(
+    (transaction.executionInfo as MultisigExecutionInfo)?.missingSigners ?? undefined,
+  )
 
   const disabledActions = useMemo(
     () =>

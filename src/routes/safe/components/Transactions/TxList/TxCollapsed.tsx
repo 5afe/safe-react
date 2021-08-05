@@ -131,7 +131,7 @@ export const TxCollapsed = ({
   const txCollapsedType = (
     <div className={'tx-type' + willBeReplaced + onChainRejection}>
       <CustomIconText
-        address={toAddress || '0x'}
+        address={toAddress?.value || '0x'}
         iconUrl={type.icon}
         iconUrlFallback={type.fallbackIcon}
         text={type.text}

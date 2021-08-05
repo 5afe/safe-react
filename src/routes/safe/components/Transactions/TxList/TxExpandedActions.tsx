@@ -5,6 +5,7 @@ import { useSelector } from 'react-redux'
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/TxList/hooks/useActionButtonsHandlers'
+import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 type TxExpandedActionsProps = {
   transaction: Transaction
@@ -29,7 +30,7 @@ export const TxExpandedActions = ({ transaction }: TxExpandedActionsProps): Reac
 
   const getConfirmTooltipTitle = () => {
     if (transaction.txStatus === 'AWAITING_EXECUTION') {
-      return transaction.executionInfo?.nonce === nonce
+      return (transaction.executionInfo as MultisigExecutionInfo)?.nonce === nonce
         ? 'Execute'
         : `Transaction with nonce ${nonce} needs to be executed first`
     }

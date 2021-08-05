@@ -23,9 +23,9 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
-  const knownAddress = useKnownAddress(toAddress || '0x', {
-    name: (tx.txInfo as Custom)?.toInfo?.name,
-    image: (tx.txInfo as Custom)?.toInfo?.logoUri || undefined,
+  const knownAddress = useKnownAddress(toAddress?.value || '0x', {
+    name: toAddress?.name || undefined,
+    image: toAddress?.logoUri || undefined,
   })
 
   useEffect(() => {
@@ -60,11 +60,11 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
           break
         }
 
-        const toInfo = tx.txInfo.toInfo
+        const hasKnownName = tx.txInfo.to.name
         setType({
           icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
           fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
-          text: toInfo ? knownAddress.name : 'Contract interaction',
+          text: hasKnownName ? knownAddress.name : 'Contract interaction',
         })
         break
       }

@@ -61,7 +61,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ETHER': {
+        case 'NATIVE_COIN': {
           const { nativeCoin } = getNetworkInfo()
 
           setAsset({
