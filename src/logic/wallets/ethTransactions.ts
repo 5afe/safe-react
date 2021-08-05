@@ -8,6 +8,13 @@ import { CodedException, Errors } from '../exceptions/CodedException'
 
 export const EMPTY_DATA = '0x'
 
+const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
+  const { url, gasParameter, gweiFactor } = gasPriceOracle
+  const { data: response } = await axios.get(url)
+  const data = response.data || response // Sometimes the data comes with a data parameter
+  return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
+}
+
 export const calculateGasPrice = async (): Promise<string> => {
   const gasPrice = getGasPrice()
   const gasPriceOracles = getGasPriceOracles()
@@ -28,13 +35,6 @@ export const calculateGasPrice = async (): Promise<string> => {
   // If no oracle worked we return an error
   const err = new CodedException(Errors._611, 'gasPrice or gasPriceOracle not set in config')
   return Promise.reject(err)
-}
-
-const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
-  const { url, gasParameter, gweiFactor } = gasPriceOracle
-  const { data: response } = await axios.get(url)
-  const data = response.data || response // Sometimes the data comes with a data parameter
-  return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
 }
 
 export const calculateGasOf = async (txConfig: {
