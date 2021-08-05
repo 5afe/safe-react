@@ -99,7 +99,9 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
+export const getRootClientGatewayUrl = (): string => getConfig().clientGatewayUrl
+
+export const getClientGatewayUrl = (): string => `${getRootClientGatewayUrl()}/chains/${getNetworkId()}`
 
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 

@@ -3,7 +3,7 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
+  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://rinkeby.gnosis-safe.io/app',
   gasPriceOracle: {
