@@ -99,9 +99,7 @@ export const getNetworks = (): NetworkInfo[] => {
   }))
 }
 
-export const getRootClientGatewayUrl = (): string => getConfig().clientGatewayUrl
-
-export const getClientGatewayUrl = (): string => `${getRootClientGatewayUrl()}/chains/${getNetworkId()}`
+export const getClientGatewayUrl = (): string => getConfig().clientGatewayUrl
 
 export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
@@ -116,7 +114,7 @@ export const getRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
 export const getTxDetailsUrl = (clientGatewayTxId: string) =>
-  `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
+  `${getClientGatewayUrl()}/chains/${getNetworkId()}/transactions/${clientGatewayTxId}`
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
