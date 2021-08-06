@@ -196,6 +196,10 @@ export const createTransaction =
             await saveTxToHistory({ ...txArgs, origin })
           } catch (err) {
             showError(err)
+
+            if (!isExecution) {
+              return
+            }
           }
 
           // store the pending transaction's nonce
