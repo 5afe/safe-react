@@ -5,7 +5,6 @@ import {
   Custom,
   DataDecoded,
   DateLabel,
-  ExecutionInfo,
   Label,
   ModuleExecutionInfo,
   MultisigExecutionInfo,
