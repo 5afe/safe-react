@@ -100,8 +100,8 @@ function createWindow(port = DEFAULT_PORT) {
   if (isDev) {
     // Open the DevTools.
     //BrowserWindow.addDevToolsExtension('<location to your react chrome extension>');
+    mainWindow.webContents.openDevTools()
   }
-  mainWindow.webContents.openDevTools()
 
   mainWindow.setMenu(null)
   mainWindow.setMenuBarVisibility(false)
