@@ -1,8 +1,7 @@
-import axios from 'axios'
-
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
 import { getClientGatewayUrl, getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
+import { postTransaction } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const calculateBodyFrom = async (
   safeInstance: GnosisSafe,
@@ -47,13 +46,6 @@ export const buildTxServiceUrl = (safeAddress: string): string => {
   return `${getSafeServiceBaseUrl(address)}/multisig-transactions/?has_confirmations=True`
 }
 
-export const gatewayPostTransactionUrl = (safeAddress: string): string => {
-  const address = checksumAddress(safeAddress)
-  return `${getClientGatewayUrl()}/transactions/${address}/propose`
-}
-
-const SUCCESS_STATUS = 201 // CREATED status
-
 interface SaveTxToHistoryArgs {
   safeInstance: GnosisSafe
   [key: string]: any
@@ -75,7 +67,7 @@ export const saveTxToHistory = async ({
   to,
   valueInWei,
 }: SaveTxToHistoryArgs): Promise<void> => {
-  const url = gatewayPostTransactionUrl(safeInstance.options.address)
+  const address = checksumAddress(safeInstance.options.address)
   const body = await calculateBodyFrom(
     safeInstance,
     to,
@@ -92,11 +84,6 @@ export const saveTxToHistory = async ({
     origin || null,
     signature,
   )
-  const response = await axios.post(url, body)
-
-  if (response.status !== SUCCESS_STATUS) {
-    return Promise.reject(new Error('Error submitting the transaction'))
-  }
-
-  return Promise.resolve()
+  await postTransaction(getClientGatewayUrl(), address, body)
+  return
 }
