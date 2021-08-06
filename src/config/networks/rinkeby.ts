@@ -30,7 +30,7 @@ const rinkeby: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.rinkeby.gnosis.io/v1',
+      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
     },
   },
