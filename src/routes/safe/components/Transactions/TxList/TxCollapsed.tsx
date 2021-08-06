@@ -47,7 +47,7 @@ const TxInfo = ({ info }: { info: AssetInfo }) => {
         const disableInfo = (info as SettingsChange).settingsInfo as DisableModule
         return (
           <Text size="xl" as="span">
-            {KNOWN_MODULES[disableInfo.module] ?? UNKNOWN_MODULE}
+            {KNOWN_MODULES[disableInfo.module.value] ?? UNKNOWN_MODULE}
           </Text>
         )
     }

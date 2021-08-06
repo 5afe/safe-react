@@ -37,7 +37,7 @@ const DetailsWithTxInfo = ({ children, txData, txInfo }: DetailsWithTxInfoProps)
   return (
     <>
       <TxInfoDetails
-        address={txData.to}
+        address={txData.to.value}
         name={name}
         avatarUrl={avatarUrl}
         title={`Send ${amount} ${nativeCoin.symbol} to:`}

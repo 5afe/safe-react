@@ -1,15 +1,17 @@
 import { GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
 import {
-  DataDecoded,
-  Custom,
-  TransactionSummary,
-  Label,
-  DateLabel,
+  AddressEx,
   ConflictHeader,
+  Custom,
+  DataDecoded,
+  DateLabel,
   ExecutionInfo,
+  Label,
+  ModuleExecutionInfo,
+  MultisigExecutionInfo,
+  TransactionSummary,
   Transfer,
   TransactionStatus as GWTransactionStatus,
-  MultisigExecutionInfo,
 } from 'src/types/gateway/transactions'
 
 export enum Operation {
@@ -22,18 +24,13 @@ type SafeAppInfo = GatewayDefinitions['SafeAppInfo']
 type TransactionData = {
   hexData: string | null
   dataDecoded: DataDecoded | null
-  to: string
+  to: AddressEx
   value: string | null
   operation: Operation
 }
 
-type ModuleExecutionDetails = {
-  type: 'MODULE'
-  address: string
-}
-
 type MultiSigConfirmations = {
-  signer: string
+  signer: AddressEx
   signature: string | null
 }
 
@@ -55,14 +52,14 @@ type MultiSigExecutionDetails = {
   gasToken: string
   refundReceiver: string
   safeTxHash: string
-  executor: string | null
-  signers: string[]
+  executor: AddressEx | null
+  signers: AddressEx[]
   confirmationsRequired: number
   confirmations: MultiSigConfirmations[]
   gasTokenInfo: TokenInfo | null
 }
 
-type DetailedExecutionInfo = ModuleExecutionDetails | MultiSigExecutionDetails
+type DetailedExecutionInfo = ModuleExecutionInfo | MultiSigExecutionDetails
 
 export type TransactionStatus = GWTransactionStatus
 
@@ -172,9 +169,9 @@ export const isMultiSigExecutionDetails = (
   return value?.type === 'MULTISIG'
 }
 
-export const isModuleExecutionDetails = (
+export const isModuleExecutionInfo = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
-): value is ModuleExecutionDetails => {
+): value is ModuleExecutionInfo => {
   return value?.type === 'MODULE'
 }
 

@@ -22,7 +22,7 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'ADD_OWNER': {
       return (
         <InfoDetails title="Add owner:">
-          <AddressInfo address={settingsInfo.owner} />
+          <AddressInfo address={settingsInfo.owner.value} />
           <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
         </InfoDetails>
       )
@@ -30,7 +30,7 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'REMOVE_OWNER': {
       return (
         <InfoDetails title="Remove owner:">
-          <AddressInfo address={settingsInfo.owner} />
+          <AddressInfo address={settingsInfo.owner.value} />
           <InfoDetails title="Change required confirmations:">{settingsInfo.threshold}</InfoDetails>
         </InfoDetails>
       )
@@ -38,8 +38,8 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'SWAP_OWNER': {
       return (
         <InfoDetails title="Swap owner:">
-          <TxInfoDetails title="Old owner" address={settingsInfo.oldOwner} />
-          <TxInfoDetails title="New owner" address={settingsInfo.newOwner} />
+          <TxInfoDetails title="Old owner" address={settingsInfo.oldOwner.value} />
+          <TxInfoDetails title="New owner" address={settingsInfo.newOwner.value} />
         </InfoDetails>
       )
     }
@@ -58,14 +58,14 @@ export const TxInfoSettings = ({ settingsInfo }: TxInfoSettingsProps): ReactElem
     case 'ENABLE_MODULE': {
       return (
         <InfoDetails title="Enable module:">
-          <AddressInfo address={settingsInfo.module} />
+          <AddressInfo address={settingsInfo.module.value} />
         </InfoDetails>
       )
     }
     case 'DISABLE_MODULE': {
       return (
         <InfoDetails title="Disable module:">
-          <AddressInfo address={settingsInfo.module} />
+          <AddressInfo address={settingsInfo.module.value} />
         </InfoDetails>
       )
     }

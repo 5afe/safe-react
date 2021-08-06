@@ -74,7 +74,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
       t.current.txDetails.detailedExecutionInfo && isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
         ? List(
             t.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-              makeConfirmation({ owner: signer, signature }),
+              makeConfirmation({ owner: signer.value, signature }),
             ),
           )
         : List([]),
