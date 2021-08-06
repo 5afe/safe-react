@@ -27,8 +27,7 @@
     "electron-build": "yarn compile-electron && electron-builder --mac --windows --linux",
     "electron-dev": "yarn compile-electron && concurrently \"BROWSER=none REACT_APP_BUILD_FOR_DESKTOP=true yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "format:staged": "lint-staged",
-    "generate-types": "yarn generate-types:contracts && yarn generate-types:spendingLimit && yarn generate-types:safeDeployments && yarn generate-types:erc20 && yarn generate-types:erc721",
-    "generate-types:contracts": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@gnosis.pm/safe-contracts/build/contracts/*.json'",
+    "generate-types": "yarn generate-types:spendingLimit && yarn generate-types:safeDeployments && yarn generate-types:erc20 && yarn generate-types:erc721",
     "generate-types:erc20": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@openzeppelin/contracts/build/contracts/ERC20.json'",
     "generate-types:erc721": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' './node_modules/@openzeppelin/contracts/build/contracts/ERC721.json'",
     "generate-types:spendingLimit": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./src/logic/contracts/artifacts/*.json",
@@ -170,7 +169,6 @@
   "dependencies": {
     "@gnosis.pm/safe-apps-sdk": "4.1.0",
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
-    "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^0.7.0",
     "@gnosis.pm/safe-react-gateway-sdk": "^1.0.0",
