@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { useStyles } from './style'
 
+import { history } from 'src/store'
 import Modal, { Modal as GenericModal } from 'src/components/Modal'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
@@ -39,10 +40,9 @@ const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.React
     }
 
     onClose()
-    // using native redirect in order to avoid problems in several components
-    // trying to access references of the removed safe.
-    const relativePath = window.location.href.split('/#/')[0]
-    window.location.href = `${relativePath}/#/${WELCOME_ADDRESS}`
+    history.push({
+      pathname: `${WELCOME_ADDRESS}`,
+    })
   }
 
   return (
