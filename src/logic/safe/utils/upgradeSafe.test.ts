@@ -5,7 +5,7 @@ import Web3 from 'web3'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
-import { MultiSend } from 'src/types/contracts/MultiSend.d'
+import { MultiSend } from 'src/types/contracts/multi_send'
 
 const SAFE_MASTER_COPY_ADDRESS = '0x34CfAC646f301356fAa8B21e94227e3583Fe3F5F'
 const DEFAULT_FALLBACK_HANDLER_ADDRESS = '0xd5D82B6aDDc9027B22dCA772Aa68D5d74cdBdF44'
