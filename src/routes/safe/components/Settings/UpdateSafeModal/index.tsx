@@ -45,8 +45,10 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     gasLimit,
     gasEstimation,
   } = useEstimateTransactionGas({
+    txRecipient: getMultisendContractAddress(),
     txData: multiSendCallData,
-    txRecipient: safeAddress,
+    txAmount: '0',
+    operation: DELEGATE_CALL,
   })
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
