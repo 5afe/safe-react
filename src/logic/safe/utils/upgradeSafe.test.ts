@@ -14,7 +14,7 @@ jest.mock('src/logic/contracts/safeContracts', () => ({
   getMultisendContract: jest.fn(),
 }))
 
-describe('Upgrade a Safe', () => {
+describe('Upgrade a < 1.3.0 Safe', () => {
   const safeContracts = require('src/logic/contracts/safeContracts')
 
   it('Calls encodeMultiSendCall with a list of MultiSendTransactionInstanceType and returns the multiSend data encoded', () => {
@@ -34,6 +34,7 @@ describe('Upgrade a Safe', () => {
     const safeMasterContractAddress = SAFE_MASTER_COPY_ADDRESS
     const fallbackHandlerAddress = DEFAULT_FALLBACK_HANDLER_ADDRESS
     const safeInstance = new web3.eth.Contract(safeSingletonDeployment?.abi as AbiItem[]) as unknown as GnosisSafe
+    //@ts-expect-error the method was removed in 1.3.0 contracts
     const updateSafeTxData = safeInstance.methods.changeMasterCopy(safeMasterContractAddress).encodeABI()
     const fallbackHandlerTxData = safeInstance.methods.setFallbackHandler(fallbackHandlerAddress).encodeABI()
     const txs = [
