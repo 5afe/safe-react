@@ -9,15 +9,11 @@ import {
   Label,
   ModuleExecutionInfo,
   MultisigExecutionInfo,
+  Operation,
   TransactionSummary,
   Transfer,
   TransactionStatus as GWTransactionStatus,
 } from 'src/types/gateway/transactions'
-
-export enum Operation {
-  CALL = 0,
-  DELEGATE = 1,
-}
 
 type SafeAppInfo = GatewayDefinitions['SafeAppInfo']
 

@@ -6,7 +6,7 @@ import { useDispatch } from 'react-redux'
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
-import { CALL, DELEGATE_CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
 import { encodeMultiSendCall } from 'src/logic/safe/transactions/multisend'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import { web3ReadOnly } from 'src/logic/wallets/getWeb3'
@@ -27,6 +27,7 @@ import Divider from 'src/components/Divider'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
+import { Operation } from 'src/types/gateway/transactions'
 
 const { nativeCoin } = getNetworkInfo()
 
@@ -98,7 +99,7 @@ export const ReviewConfirm = ({
     () => (isMultiSend ? '0' : txs[0]?.value && parseTxValue(txs[0]?.value)),
     [txs, isMultiSend],
   )
-  const operation = useMemo(() => (isMultiSend ? DELEGATE_CALL : CALL), [isMultiSend])
+  const operation = useMemo(() => (isMultiSend ? Operation.DELEGATE : Operation.CALL), [isMultiSend])
   const [manualSafeTxGas, setManualSafeTxGas] = useState(0)
   const [manualGasPrice, setManualGasPrice] = useState<string | undefined>()
   const [manualGasLimit, setManualGasLimit] = useState<string | undefined>()

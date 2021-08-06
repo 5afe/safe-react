@@ -30,14 +30,9 @@ import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import {
-  ExpandedTxDetails,
-  isMultiSigExecutionDetails,
-  Operation,
-  Transaction,
-} from 'src/logic/safe/store/models/types/gateway.d'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { Erc20Transfer, Erc721Transfer, MultisigExecutionInfo } from 'src/types/gateway/transactions'
+import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Erc20Transfer, Erc721Transfer, MultisigExecutionInfo, Operation } from 'src/types/gateway/transactions'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'

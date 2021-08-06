@@ -7,7 +7,6 @@ import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
-  CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -28,6 +27,7 @@ import { getErrorMessage } from 'src/test/utils/ethereumErrors'
 import fetchTransactions from './transactions/fetchTransactions'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
 import { PayableTx } from 'src/types/contracts/types.d'
+import { Operation } from 'src/types/gateway/transactions'
 import { AppReduxState } from 'src/store'
 import { Dispatch, DispatchReturn } from './types'
 import { checkIfOffChainSignatureIsPossible, getPreValidatedSignatures } from 'src/logic/safe/safeTxSigner'
@@ -64,7 +64,7 @@ export const createTransaction =
       txData = EMPTY_DATA,
       notifiedTransaction,
       txNonce,
-      operation = CALL,
+      operation = Operation.CALL,
       navigateToTransactionsTab = true,
       origin = null,
       safeTxGas: safeTxGasArg,

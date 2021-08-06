@@ -18,11 +18,11 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
+import { Operation } from 'src/types/gateway/transactions'
 
 const useStyles = makeStyles(styles)
 
@@ -70,7 +70,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
-        operation: DELEGATE_CALL,
+        operation: Operation.DELEGATE,
       }),
     )
     onClose()
