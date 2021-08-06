@@ -171,6 +171,6 @@ export const isModuleExecutionInfo = (
   return value?.type === 'MODULE'
 }
 
-export const isMultisigExecutionInfo = (value: ExecutionInfo | undefined): value is MultisigExecutionInfo => {
-  return (value as MultisigExecutionInfo).nonce !== undefined
+export const isMultisigExecutionInfo = (value: TransactionSummary['executionInfo']): value is MultisigExecutionInfo => {
+  return value?.type === 'MULTISIG'
 }
