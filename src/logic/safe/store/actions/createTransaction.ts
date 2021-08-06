@@ -165,11 +165,7 @@ export const createTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
           dispatch(fetchTransactions(safeAddress))
 
-          try {
-            await saveTxToHistory({ ...txArgs, signature, origin })
-          } catch (err) {
-            showError(err)
-          }
+          await saveTxToHistory({ ...txArgs, signature, origin })
           onUserConfirm?.(safeTxHash)
           return
         }
