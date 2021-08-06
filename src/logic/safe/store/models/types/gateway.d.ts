@@ -31,8 +31,6 @@ type MultiSigConfirmations = {
 
 type TokenInfo = GatewayDefinitions['TokenInfo']
 
-export type TokenType = TokenInfo['type']
-
 export type Transaction = TransactionSummary & {
   txDetails?: ExpandedTxDetails
 }

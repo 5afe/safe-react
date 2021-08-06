@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios'
 
 import { getTokensServiceBaseUrl } from 'src/config'
-import { TokenType } from 'src/logic/safe/store/models/types/gateway'
+import { TokenType } from 'src/types/gateway/transactions'
 
 export type TokenResult = {
   address: string

@@ -6,6 +6,7 @@ import Img from 'src/components/layout/Img'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import TokenPlaceholder from 'src/routes/safe/components/Balances/assets/token_placeholder.svg'
 import { TokenTransferAsset } from './hooks/useAssetInfo'
+import { TokenType } from 'src/types/gateway/transactions'
 
 const Amount = styled(Text)`
   margin-left: 10px;
@@ -29,7 +30,7 @@ export const TokenTransferAmount = ({ assetInfo }: TokenTransferAmountProps): Re
         height={26}
         onError={(error) => {
           error.currentTarget.onerror = null
-          error.currentTarget.src = assetInfo.tokenType === 'ERC721' ? NFTIcon : TokenPlaceholder
+          error.currentTarget.src = assetInfo.tokenType === TokenType.ERC721 ? NFTIcon : TokenPlaceholder
         }}
         src={assetInfo.logoUri}
       />

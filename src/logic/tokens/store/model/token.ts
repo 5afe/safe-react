@@ -1,5 +1,5 @@
 import { Record, RecordOf } from 'immutable'
-import { TokenType } from 'src/logic/safe/store/models/types/gateway'
+import { TokenType } from 'src/types/gateway/transactions'
 import { BalanceRecord } from 'src/logic/tokens/store/actions/fetchSafeTokens'
 
 export type TokenProps = {

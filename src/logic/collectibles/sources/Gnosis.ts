@@ -4,8 +4,8 @@ import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
 import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
-import { TokenType } from 'src/logic/safe/store/models/types/gateway.d'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
+import { TokenType } from 'src/types/gateway/transactions'
 
 type FetchResult = {
   erc721Assets: TokenResult[]
@@ -19,7 +19,7 @@ class Gnosis {
       logoUri,
       name: tokenName,
       symbol: tokenSymbol,
-      type: 'ERC721' as TokenType,
+      type: TokenType.ERC721,
     }))
 
     return assets

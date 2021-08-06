@@ -1,7 +1,7 @@
-import { AddressEx, TransactionInfo, Transfer } from 'src/types/gateway/transactions'
 import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
+import { AddressEx, TransactionInfo, Transfer, TokenType } from 'src/types/gateway/transactions'
 import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
@@ -32,7 +32,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 
   switch (txInfo.transferInfo.type) {
-    case 'ERC20':
+    case TokenType.ERC20:
       return getAmountWithSymbol(
         {
           decimals: `${txInfo.transferInfo.decimals ?? 0}`,
@@ -41,10 +41,10 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
         },
         formatted,
       )
-    case 'ERC721':
+    case TokenType.ERC721:
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol}`
-    case 'NATIVE_COIN': {
+    case TokenType.NATIVE_COIN: {
       const { nativeCoin } = getNetworkInfo()
       return getAmountWithSymbol(
         {
@@ -70,13 +70,13 @@ type txTokenData = {
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
   switch (txInfo.transferInfo.type) {
-    case 'ERC20':
+    case TokenType.ERC20:
       return {
         address: txInfo.transferInfo.tokenAddress,
         value: txInfo.transferInfo.value,
         decimals: txInfo.transferInfo.decimals,
       }
-    case 'ERC721':
+    case TokenType.ERC721:
       return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
       return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }

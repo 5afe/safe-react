@@ -1,7 +1,7 @@
-import { Custom, SettingsChange, TransactionInfo, Transfer } from 'src/types/gateway/transactions'
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
+import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from 'src/types/gateway/transactions'
 import { isCustomTxInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
 
@@ -39,7 +39,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
       const directionSign = direction === 'INCOMING' ? '+' : '-'
 
       switch (transferInfo.type) {
-        case 'ERC20': {
+        case TokenType.ERC20: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -50,7 +50,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'ERC721': {
+        case TokenType.ERC721: {
           setAsset({
             type: 'Transfer',
             name: transferInfo.tokenName ?? defaultTokenTransferAsset.name,
@@ -61,7 +61,7 @@ export const useAssetInfo = (txInfo: TransactionInfo): AssetInfo | undefined => 
           })
           break
         }
-        case 'NATIVE_COIN': {
+        case TokenType.NATIVE_COIN: {
           const { nativeCoin } = getNetworkInfo()
 
           setAsset({

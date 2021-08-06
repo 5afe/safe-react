@@ -32,7 +32,13 @@ import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { Erc20Transfer, Erc721Transfer, MultisigExecutionInfo, Operation } from 'src/types/gateway/transactions'
+import {
+  Erc20Transfer,
+  Erc721Transfer,
+  MultisigExecutionInfo,
+  Operation,
+  TokenType,
+} from 'src/types/gateway/transactions'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -131,7 +137,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const value = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'NATIVE_COIN') {
+        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
           return t.current.txInfo.transferInfo.value
         } else {
           return t.current.txDetails.txData?.value ?? '0'
@@ -148,7 +154,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const to = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'NATIVE_COIN') {
+        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
           return t.current.txInfo.recipient.value
         } else {
           return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
