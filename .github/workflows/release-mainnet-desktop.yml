@@ -39,7 +39,7 @@ jobs:
         if: startsWith(matrix.os, 'windows')
         shell: powershell
         run: |
-          yarn global add node-gyp@8.1.0
+          yarn global add node-gyp
           yarn config set node_gyp "$_\node_modules\node-gyp\bin\node-gyp.js"
 
       # Load node_modules cache action
