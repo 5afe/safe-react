@@ -165,7 +165,11 @@ export const createTransaction =
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
           dispatch(fetchTransactions(safeAddress))
 
-          await saveTxToHistory({ ...txArgs, signature, origin })
+          try {
+            await saveTxToHistory({ ...txArgs, signature, origin })
+          } catch (err) {
+            showError(err)
+          }
           onUserConfirm?.(safeTxHash)
           return
         }
@@ -192,7 +196,6 @@ export const createTransaction =
             await saveTxToHistory({ ...txArgs, origin })
           } catch (err) {
             showError(err)
-            return
           }
 
           // store the pending transaction's nonce
