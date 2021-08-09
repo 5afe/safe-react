@@ -1,5 +1,5 @@
 import { isStatusAwaitingConfirmation } from 'src/logic/safe/store/models/types/gateway.d'
-import { TransactionSummary } from 'src/types/gateway/transactions'
+import { TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 
 export const getAwaitingGatewayTransactions = (

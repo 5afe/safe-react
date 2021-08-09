@@ -9,7 +9,7 @@ import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxLocationContext, TxLocationProps } from './TxLocationProvider'
 import { getTxTokenData } from './utils'
-import { Erc721Transfer, Transfer } from 'src/types/gateway/transactions'
+import { Erc721Transfer, Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const SingleRow = styled.div`
   display: flex;
