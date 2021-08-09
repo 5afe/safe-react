@@ -1,5 +1,5 @@
-import { createMuiTheme } from '@material-ui/core/styles'
-import { fade } from '@material-ui/core/styles/colorManipulator'
+import { createTheme } from '@material-ui/core/styles'
+import { alpha } from '@material-ui/core/styles/colorManipulator'
 
 import {
   boldFont,
@@ -45,7 +45,7 @@ const palette = {
 
 // see https://material-ui-next.com/customization/themes/
 // see https://github.com/mui-org/material-ui/blob/v1-beta/src/styles/createMuiTheme.js
-const theme = createMuiTheme({
+const theme = createTheme({
   typography: {
     fontFamily: mainFontFamily,
     useNextVariants: true,
@@ -412,7 +412,7 @@ const theme = createMuiTheme({
     MuiCheckbox: {
       colorSecondary: {
         '&$disabled': {
-          color: fade(secondary, 0.5),
+          color: alpha(secondary, 0.5),
         },
       },
     },

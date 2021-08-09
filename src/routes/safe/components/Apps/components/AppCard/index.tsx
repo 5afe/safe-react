@@ -1,6 +1,6 @@
 import React, { SyntheticEvent } from 'react'
 import styled from 'styled-components'
-import { fade } from '@material-ui/core/styles/colorManipulator'
+import { alpha } from '@material-ui/core/styles/colorManipulator'
 import { Title, Text, Button, Card } from '@gnosis.pm/safe-react-components'
 
 import appsIconSvg from 'src/assets/icons/apps.svg'
@@ -11,14 +11,14 @@ const StyledAppCard = styled(Card)`
   align-items: center;
   flex-direction: column;
   justify-content: space-evenly;
-  box-shadow: 1px 2px 10px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.18)};
+  box-shadow: 1px 2px 10px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.18)};
   height: 232px !important;
   box-sizing: border-box;
   cursor: pointer;
   color: ${({ theme }) => theme.colors.secondary};
 
   :hover {
-    box-shadow: 1px 2px 16px 0 ${({ theme }) => fade(theme.colors.shadow.color, 0.35)};
+    box-shadow: 1px 2px 16px 0 ${({ theme }) => alpha(theme.colors.shadow.color, 0.35)};
     transition: box-shadow 0.3s ease-in-out;
     background-color: ${({ theme }) => theme.colors.background};
     cursor: pointer;

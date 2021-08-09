@@ -1,6 +1,6 @@
 import axios from 'axios'
 
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 
