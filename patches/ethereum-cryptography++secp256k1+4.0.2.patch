@@ -1,170 +1,18 @@
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Makefile b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Makefile
-index f52f12d..2da73b4 100644
---- a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Makefile
-+++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Makefile
-@@ -331,8 +331,8 @@ ifeq ($(strip $(foreach prefix,$(NO_LOAD),\
- endif
- 
- quiet_cmd_regen_makefile = ACTION Regenerating $@
--cmd_regen_makefile = cd $(srcdir); /Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/mmv/Library/Caches/node-gyp/14.17.0" "-Dnode_gyp_dir=/Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp" "-Dnode_lib_file=/Users/mmv/Library/Caches/node-gyp/14.17.0/<(target_arch)/node.lib" "-Dmodule_root_dir=/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/secp256k1" "-Dnode_engine=v8" "--depth=." "-Goutput_dir=." "--generator-output=build" -I/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi -I/Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/addon.gypi -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/common.gypi "--toplevel-dir=." binding.gyp
--Makefile: $(srcdir)/../../../../../../../../../../../Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/addon.gypi $(srcdir)/build/config.gypi $(srcdir)/binding.gyp $(srcdir)/../../../../../../../../../../../Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/common.gypi
-+cmd_regen_makefile = cd $(srcdir); /Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/gyp/gyp_main.py -fmake --ignore-environment "-Dlibrary=shared_library" "-Dvisibility=default" "-Dnode_root_dir=/Users/mmv/Library/Caches/node-gyp/14.17.0" "-Dnode_gyp_dir=/Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp" "-Dnode_lib_file=/Users/mmv/Library/Caches/node-gyp/14.17.0/<(target_arch)/node.lib" "-Dmodule_root_dir=/Users/mmv/projects/gnosis/safe-react/node_modules/ethereum-cryptography/node_modules/secp256k1" "-Dnode_engine=v8" "--depth=." "-Goutput_dir=." "--generator-output=build" -I/Users/mmv/projects/gnosis/safe-react/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi -I/Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/addon.gypi -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/common.gypi "--toplevel-dir=." binding.gyp
-+Makefile: $(srcdir)/binding.gyp $(srcdir)/build/config.gypi $(srcdir)/../../../../../../../.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/addon.gypi $(srcdir)/../../../../../../../Library/Caches/node-gyp/14.17.0/include/node/common.gypi
- 	$(call do_cmd,regen_makefile)
- 
- # "all" is a concatenation of the "all" targets from all the included
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/addon.o.d b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/addon.o.d
-index 18719eb..de374b5 100644
---- a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/addon.o.d
-+++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/addon.o.d
-@@ -1,20 +1,20 @@
--cmd_Release/obj.target/addon/src/addon.o := c++ -o Release/obj.target/addon/src/addon.o ../src/addon.cc '-DNODE_GYP_MODULE_NAME=addon' '-DUSING_UV_SHARED=1' '-DUSING_V8_SHARED=1' '-DV8_DEPRECATION_WARNINGS=1' '-DV8_DEPRECATION_WARNINGS' '-DV8_IMMINENT_DEPRECATION_WARNINGS' '-D_DARWIN_USE_64_BIT_INODE=1' '-D_LARGEFILE_SOURCE' '-D_FILE_OFFSET_BITS=64' '-DOPENSSL_NO_PINSHARED' '-DOPENSSL_THREADS' '-DNAPI_VERSION=3' '-DBUILDING_NODE_EXTENSION' -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node -I/Users/mmv/Library/Caches/node-gyp/14.17.0/src -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/config -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/openssl/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include -I/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api -I../src  -O3 -gdwarf-2 -mmacosx-version-min=10.7 -arch arm64 -Wall -Wendif-labels -W -Wno-unused-parameter -std=gnu++1y -stdlib=libc++ -fno-rtti -fno-strict-aliasing -MMD -MF ./Release/.deps/Release/obj.target/addon/src/addon.o.d.raw   -c
-+cmd_Release/obj.target/addon/src/addon.o := c++ -o Release/obj.target/addon/src/addon.o ../src/addon.cc '-DNODE_GYP_MODULE_NAME=addon' '-DUSING_UV_SHARED=1' '-DUSING_V8_SHARED=1' '-DV8_DEPRECATION_WARNINGS=1' '-DV8_DEPRECATION_WARNINGS' '-DV8_IMMINENT_DEPRECATION_WARNINGS' '-D_DARWIN_USE_64_BIT_INODE=1' '-D_LARGEFILE_SOURCE' '-D_FILE_OFFSET_BITS=64' '-DOPENSSL_NO_PINSHARED' '-DOPENSSL_THREADS' '-DNAPI_VERSION=3' '-DBUILDING_NODE_EXTENSION' -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node -I/Users/mmv/Library/Caches/node-gyp/14.17.0/src -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/config -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/openssl/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include -I/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api -I../src  -O3 -gdwarf-2 -mmacosx-version-min=10.7 -arch arm64 -Wall -Wendif-labels -W -Wno-unused-parameter -std=gnu++1y -stdlib=libc++ -fno-rtti -fno-strict-aliasing -MMD -MF ./Release/.deps/Release/obj.target/addon/src/addon.o.d.raw   -c
- Release/obj.target/addon/src/addon.o: ../src/addon.cc ../src/secp256k1.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api_types.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api_types.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.deprecated.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.deprecated.h \
-   ../src/secp256k1/include/secp256k1.h
- ../src/addon.cc:
- ../src/secp256k1.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api_types.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api_types.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.deprecated.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.deprecated.h:
- ../src/secp256k1/include/secp256k1.h:
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/secp256k1.o.d b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/secp256k1.o.d
-index 801286b..377452d 100644
---- a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/secp256k1.o.d
-+++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/.deps/Release/obj.target/addon/src/secp256k1.o.d
-@@ -1,26 +1,26 @@
--cmd_Release/obj.target/addon/src/secp256k1.o := c++ -o Release/obj.target/addon/src/secp256k1.o ../src/secp256k1.cc '-DNODE_GYP_MODULE_NAME=addon' '-DUSING_UV_SHARED=1' '-DUSING_V8_SHARED=1' '-DV8_DEPRECATION_WARNINGS=1' '-DV8_DEPRECATION_WARNINGS' '-DV8_IMMINENT_DEPRECATION_WARNINGS' '-D_DARWIN_USE_64_BIT_INODE=1' '-D_LARGEFILE_SOURCE' '-D_FILE_OFFSET_BITS=64' '-DOPENSSL_NO_PINSHARED' '-DOPENSSL_THREADS' '-DNAPI_VERSION=3' '-DBUILDING_NODE_EXTENSION' -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node -I/Users/mmv/Library/Caches/node-gyp/14.17.0/src -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/config -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/openssl/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include -I/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api -I../src  -O3 -gdwarf-2 -mmacosx-version-min=10.7 -arch arm64 -Wall -Wendif-labels -W -Wno-unused-parameter -std=gnu++1y -stdlib=libc++ -fno-rtti -fno-strict-aliasing -MMD -MF ./Release/.deps/Release/obj.target/addon/src/secp256k1.o.d.raw   -c
-+cmd_Release/obj.target/addon/src/secp256k1.o := c++ -o Release/obj.target/addon/src/secp256k1.o ../src/secp256k1.cc '-DNODE_GYP_MODULE_NAME=addon' '-DUSING_UV_SHARED=1' '-DUSING_V8_SHARED=1' '-DV8_DEPRECATION_WARNINGS=1' '-DV8_DEPRECATION_WARNINGS' '-DV8_IMMINENT_DEPRECATION_WARNINGS' '-D_DARWIN_USE_64_BIT_INODE=1' '-D_LARGEFILE_SOURCE' '-D_FILE_OFFSET_BITS=64' '-DOPENSSL_NO_PINSHARED' '-DOPENSSL_THREADS' '-DNAPI_VERSION=3' '-DBUILDING_NODE_EXTENSION' -I/Users/mmv/Library/Caches/node-gyp/14.17.0/include/node -I/Users/mmv/Library/Caches/node-gyp/14.17.0/src -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/config -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/openssl/openssl/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib -I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include -I/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api -I../src  -O3 -gdwarf-2 -mmacosx-version-min=10.7 -arch arm64 -Wall -Wendif-labels -W -Wno-unused-parameter -std=gnu++1y -stdlib=libc++ -fno-rtti -fno-strict-aliasing -MMD -MF ./Release/.deps/Release/obj.target/addon/src/secp256k1.o.d.raw   -c
- Release/obj.target/addon/src/secp256k1.o: ../src/secp256k1.cc \
-   ../src/secp256k1.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api_types.h \
-   /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api_types.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.h \
--  /private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.deprecated.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.h \
-+  /Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.deprecated.h \
-   ../src/secp256k1/include/secp256k1.h \
-   ../src/secp256k1/include/secp256k1_ecdh.h \
-   ../src/secp256k1/include/secp256k1_preallocated.h \
-   ../src/secp256k1/include/secp256k1_recovery.h
- ../src/secp256k1.cc:
- ../src/secp256k1.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/js_native_api_types.h:
- /Users/mmv/Library/Caches/node-gyp/14.17.0/include/node/node_api_types.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.h:
--/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api/napi-inl.deprecated.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.h:
-+/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api/napi-inl.deprecated.h:
- ../src/secp256k1/include/secp256k1.h:
- ../src/secp256k1/include/secp256k1_ecdh.h:
- ../src/secp256k1/include/secp256k1_preallocated.h:
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/addon.node b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/addon.node
-index 7a547e5..396a656 100755
-Binary files a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/addon.node and b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/addon.node differ
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/addon.o b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/addon.o
-index 6ee6d2a..50b30cf 100644
-Binary files a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/addon.o and b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/addon.o differ
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/secp256k1.o b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/secp256k1.o
-index f7da5c1..16f1e3f 100644
-Binary files a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/secp256k1.o and b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/addon/src/secp256k1.o differ
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/secp256k1/src/secp256k1/src/secp256k1.o b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/secp256k1/src/secp256k1/src/secp256k1.o
-index 634a262..abc90b5 100644
-Binary files a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/secp256k1/src/secp256k1/src/secp256k1.o and b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/obj.target/secp256k1/src/secp256k1/src/secp256k1.o differ
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/secp256k1.a b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/secp256k1.a
-index 1984f7d..7d44a98 100644
-Binary files a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/secp256k1.a and b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/Release/secp256k1.a differ
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/addon.target.mk b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/addon.target.mk
-index ab9cb1c..5be500a 100644
---- a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/addon.target.mk
-+++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/addon.target.mk
-@@ -56,7 +56,7 @@ INCS_Debug := \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include \
--	-I/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api \
-+	-I/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api \
- 	-I$(srcdir)/src
- 
- DEFS_Release := \
-@@ -110,7 +110,7 @@ INCS_Release := \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/uv/include \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/zlib \
- 	-I/Users/mmv/Library/Caches/node-gyp/14.17.0/deps/v8/include \
--	-I/private/var/folders/dg/4x56qjm56tj80mh8m5pjqhdc0000gn/T/tmp-216827TznTmDB8b2Q/node_modules/ethereum-cryptography/node_modules/node-addon-api \
-+	-I/Users/mmv/projects/gnosis/safe-react/node_modules/node-addon-api \
- 	-I$(srcdir)/src
- 
- OBJS := \
-diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi
-index 2aae61e..8c20dd3 100644
---- a/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi
-+++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/build/config.gypi
-@@ -82,25 +82,18 @@
-     "standalone_static_library": 1,
-     "legacy_peer_deps": "true",
-     "version_git_tag": "true",
--    "metrics_registry": "https://registry.npmjs.org/",
-     "init_license": "MIT",
-     "registry": "https://registry.yarnpkg.com",
--    "globalconfig": "/Users/mmv/.nvm/versions/node/v14.17.0/etc/npmrc",
--    "userconfig": "/Users/mmv/.npmrc",
--    "init_module": "/Users/mmv/.npm-init.js",
-     "version_commit_hooks": "true",
-     "bin_links": "true",
--    "node_gyp": "/Users/mmv/.nvm/versions/node/v14.17.0/lib/node_modules/npm/node_modules/node-gyp/bin/node-gyp.js",
-     "save_prefix": "^",
-     "strict_ssl": "true",
-     "version_git_message": "v%s",
--    "cache": "/Users/mmv/.npm",
--    "user_agent": "yarn/1.22.10 npm/? node/v14.17.0 darwin arm64",
-     "version_git_sign": "",
-     "ignore_scripts": "",
-+    "user_agent": "yarn/1.22.10 npm/? node/v14.17.0 darwin arm64",
-     "init_version": "1.0.0",
-     "ignore_optional": "",
--    "prefix": "/Users/mmv/.nvm/versions/node/v14.17.0",
-     "version_tag_prefix": "v"
-   }
- }
 diff --git a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
-index 8187e17..754b912 100644
+index 8187e17..23b2af0 100644
 --- a/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
 +++ b/node_modules/ethereum-cryptography/node_modules/secp256k1/lib/index.js
 @@ -14,12 +14,21 @@ const errors = {
    ECDH: 'Scalar was invalid (zero or overflow)'
  }
  
+-function assert (cond, msg) {
 +const isNode =
 +  typeof process !== "undefined" &&
 +  process.versions != null &&
 +  process.versions.node != null
 +
- function assert (cond, msg) {
++function assert(cond, msg) {
    if (!cond) throw new Error(msg)
  }
  
