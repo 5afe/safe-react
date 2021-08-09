@@ -48,7 +48,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     txRecipient: getMultisendContractAddress(),
     txData: multiSendCallData,
     txAmount: '0',
-    operation: DELEGATE_CALL,
+    operation: Operation.DELEGATE,
   })
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
