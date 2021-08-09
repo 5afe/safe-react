@@ -1,5 +1,5 @@
 import TableContainer from '@material-ui/core/TableContainer'
-import React, { ReactElement, useEffect, useMemo } from 'react'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { getExplorerInfo, getNetworkInfo } from 'src/config'
 import Block from 'src/components/layout/Block'
 import Col from 'src/components/layout/Col'
@@ -17,10 +17,12 @@ import {
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { useEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
+import { getEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
 import { FormApi } from 'final-form'
 import { StepperPageFormProps } from 'src/components/Stepper'
 import { LoadFormValues } from 'src/routes/load/container/Load'
+import { useSelector } from 'react-redux'
+import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 
 type ReviewComponentProps = {
   values: LoadFormValues
@@ -37,11 +39,29 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
 
   const numOwners = getNumOwnersFrom(values)
   const safeCreationSalt = getSafeCreationSaltFrom(values as CreateSafeValues)
-  const { gasCostFormatted, gasLimit } = useEstimateSafeCreationGas({ addresses, numOwners, safeCreationSalt })
+  const [gasCost, setGasCost] = useState('< 0.001')
+  const [localGasLimit, setLocalGasLimit] = useState(0)
+  const [isEstimating, setIsEstimating] = useState(false)
+  const userAccount = useSelector(userAccountSelector)
 
   useEffect(() => {
-    form.mutators.setValue('gasLimit', gasLimit)
-  }, [gasLimit, form.mutators])
+    const estimateGasPriceAndCost = async () => {
+      setIsEstimating(true)
+      const { gasCostFormatted, gasLimit } = await getEstimateSafeCreationGas({
+        addresses,
+        numOwners,
+        safeCreationSalt,
+        userAccount,
+      })
+      setGasCost(gasCostFormatted)
+      setLocalGasLimit(gasLimit)
+      form.mutators.setValue('gasLimit', gasLimit)
+      setIsEstimating(false)
+    }
+    if (gasCost == '< 0.001' && localGasLimit == 0 && userAccount) {
+      estimateGasPriceAndCost()
+    }
+  }, [localGasLimit, form.mutators, gasCost, isEstimating, userAccount, addresses, numOwners, safeCreationSalt])
 
   return (
     <>
@@ -115,8 +135,8 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
       <Row align="center" className={classes.info}>
         <Paragraph color="primary" noMargin size="lg">
           You&apos;re about to create a new Safe and will have to confirm a transaction with your currently connected
-          wallet. The creation will cost approximately {gasCostFormatted} {nativeCoin.name}. The exact amount will be
-          determined by your wallet.
+          wallet. The creation will cost approximately {gasCost} {nativeCoin.name}. The exact amount will be determined
+          by your wallet.
         </Paragraph>
       </Row>
     </>
