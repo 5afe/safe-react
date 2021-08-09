@@ -4,7 +4,7 @@ import styled from 'styled-components'
 
 import { isArrayParameter } from 'src/routes/safe/components/Balances/SendModal/screens/ContractInteraction/utils'
 import Value from 'src/routes/safe/components/Transactions/TxList/MethodValue'
-import { DataDecoded } from 'src/types/gateway/transactions'
+import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const TxDetailsMethodParam = styled.div<{ isArrayParameter: boolean }>`
   padding-left: 24px;

@@ -1822,10 +1822,10 @@
     classnames "^2.2.6"
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-1.0.0.tgz#ce1b0cf46111f70c781acdc08bd336e2efe720bf"
-  integrity sha512-wS+pXPxlQffE9ckj5Rfcm/FPdMbMtP5iFSc7S94VeKrfXCGLEJ1OJW7JBVnPKGETcqh6+zF55B+CcFl86HUcJQ==
+"@gnosis.pm/safe-react-gateway-sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-1.2.0.tgz#82f2685cbb6695b8c10c9041833bff9652c6914a"
+  integrity sha512-7gnyX++XMDtvvjEhzMGBuBmxiyl8RqlJnDzbYabY1P/3+r3bdr3ncUtCzfgvKMB5DRGf+sjD7Lc7SPe+m7L4LA==
   dependencies:
     unfetch "^4.2.0"
 

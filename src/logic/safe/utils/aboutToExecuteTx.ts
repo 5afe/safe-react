@@ -1,4 +1,4 @@
-import { TransactionListItem, Transaction } from 'src/types/gateway/transactions'
+import { TransactionListItem, Transaction } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getNotificationsFromTxType } from 'src/logic/notifications'
 import { isStatusFailed, isTransactionSummary } from 'src/logic/safe/store/models/types/gateway.d'
 import { HistoryPayload } from 'src/logic/safe/store/reducer/gatewayTransactions'
