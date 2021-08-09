@@ -9,9 +9,13 @@ import { CodedException, Errors } from '../exceptions/CodedException'
 export const EMPTY_DATA = '0x'
 
 const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
+  console.log(1)
   const { url, gasParameter, gweiFactor } = gasPriceOracle
+  console.log(2)
   const { data: response } = await axios.get(url)
+  console.log(3)
   const data = response.data || response // Sometimes the data comes with a data parameter
+  console.log(4)
   return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
 }
 
@@ -26,7 +30,8 @@ export const calculateGasPrice = async (): Promise<string> => {
     for (let index = 0; index < gasPriceOracles.length; index++) {
       const gasPriceOracle = gasPriceOracles[index]
       try {
-        return fetchGasPrice(gasPriceOracle)
+        const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
+        return fetchedGasPrice
       } catch (err) {
         // Keep iterating price oracles
       }
