@@ -167,7 +167,7 @@ export const processTransaction =
 
             dispatch(fetchTransactions(safeAddress))
           } catch (e) {
-            console.error(e)
+            logError(Errors._804, e.message)
           }
         })
         .on('error', () => {

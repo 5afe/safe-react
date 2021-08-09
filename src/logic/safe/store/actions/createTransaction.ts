@@ -127,34 +127,6 @@ export const createTransaction =
       sigs,
     }
 
-    const showError = async (err: Error & { code: number }): Promise<void> => {
-      onError?.()
-
-      const notification = isTxPendingError(err)
-        ? NOTIFICATIONS.TX_PENDING_MSG
-        : {
-            ...notificationsQueue.afterExecutionError,
-            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
-          }
-
-      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
-      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
-
-      logError(Errors._803, err.message)
-
-      if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
-        const executeDataUsedSignatures = safeInstance.methods
-          .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
-          .encodeABI()
-        try {
-          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
-          logError(Errors._803, errMsg)
-        } catch (e) {
-          logError(Errors._803, e.message)
-        }
-      }
-    }
-
     try {
       const safeTxHash = await generateSafeTxHash(safeAddress, safeVersion, txArgs)
 
@@ -191,8 +163,9 @@ export const createTransaction =
           try {
             await saveTxToHistory({ ...txArgs, origin })
           } catch (err) {
-            showError(err)
+            logError(Errors._803, err.message)
 
+            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
             if (!isExecution) {
               return
             }
@@ -209,7 +182,31 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
-      showError(err)
+      onError?.()
+
+      const notification = isTxPendingError(err)
+        ? NOTIFICATIONS.TX_PENDING_MSG
+        : {
+            ...notificationsQueue.afterExecutionError,
+            message: `${notificationsQueue.afterExecutionError.message} - ${err.message}`,
+          }
+
+      dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
+      dispatch(enqueueSnackbar({ key: err.code, ...notification }))
+
+      logError(Errors._803, err.message)
+
+      if (err.code !== METAMASK_REJECT_CONFIRM_TX_ERROR_CODE) {
+        const executeDataUsedSignatures = safeInstance.methods
+          .execTransaction(to, valueInWei, txData, operation, 0, 0, 0, ZERO_ADDRESS, ZERO_ADDRESS, sigs)
+          .encodeABI()
+        try {
+          const errMsg = await getErrorMessage(safeInstance.options.address, 0, executeDataUsedSignatures, from)
+          logError(Errors._803, errMsg)
+        } catch (e) {
+          logError(Errors._803, e.message)
+        }
+      }
     }
 
     return txHash
