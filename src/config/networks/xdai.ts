@@ -53,6 +53,7 @@ const xDai: NetworkConfig = {
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
+    WALLETS.KEYSTONE,
   ],
   disabledFeatures: [FEATURES.DOMAIN_LOOKUP],
 }

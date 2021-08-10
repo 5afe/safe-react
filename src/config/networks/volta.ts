@@ -58,6 +58,7 @@ const mainnet: NetworkConfig = {
     WALLETS.WALLET_LINK,
     WALLETS.AUTHEREUM,
     WALLETS.LATTICE,
+    WALLETS.KEYSTONE,
   ],
 }
 
