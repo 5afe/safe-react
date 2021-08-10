@@ -181,7 +181,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
     communicator?.on('getSafeInfo', () => ({
       safeAddress,
       network: NETWORK_NAME,
-      chainId: NETWORK_ID,
+      chainId: parseInt(NETWORK_ID, 10),
       owners,
       threshold,
     }))
