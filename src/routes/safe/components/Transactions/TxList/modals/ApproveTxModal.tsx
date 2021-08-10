@@ -121,7 +121,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const refundReceiver = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.refundReceiver
+        ? t.current.txDetails.detailedExecutionInfo.refundReceiver.value
         : ZERO_ADDRESS,
     [],
   )

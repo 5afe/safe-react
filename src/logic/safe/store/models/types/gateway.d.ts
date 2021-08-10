@@ -24,9 +24,10 @@ type TransactionData = {
   operation: Operation
 }
 
-type MultiSigConfirmations = {
+type MultiSigConfirmation = {
   signer: AddressEx
   signature: string | null
+  submittedAt: number
 }
 
 type TokenInfo = GatewayDefinitions['TokenInfo']
@@ -43,12 +44,12 @@ type MultiSigExecutionDetails = {
   baseGas: number
   gasPrice: string
   gasToken: string
-  refundReceiver: string
+  refundReceiver: AddressEx
   safeTxHash: string
   executor: AddressEx | null
   signers: AddressEx[]
   confirmationsRequired: number
-  confirmations: MultiSigConfirmations[]
+  confirmations: MultiSigConfirmation[]
   gasTokenInfo: TokenInfo | null
 }
 
