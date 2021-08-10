@@ -1,5 +1,6 @@
 import axios from 'axios'
 import { getNetworkId } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { CONFIG_SERVICE_URL } from 'src/utils/constants'
 
 export type AppData = {
@@ -7,7 +8,7 @@ export type AppData = {
   name?: string
   disabled?: boolean
   description?: string
-  networks: number[]
+  networks: ETHEREUM_NETWORK[]
   custom?: boolean
 }
 

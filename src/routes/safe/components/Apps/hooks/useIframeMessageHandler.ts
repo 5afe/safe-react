@@ -84,7 +84,7 @@ const useIframeMessageHandler = (
             messageId: INTERFACE_MESSAGES.ON_SAFE_INFO,
             data: {
               safeAddress: safeAddress as string,
-              network: NETWORK_NAME.toLowerCase() as LowercaseNetworks,
+              network: (NETWORK_NAME as string).toLowerCase() as LowercaseNetworks,
               ethBalance: ethBalance as string,
             },
           }

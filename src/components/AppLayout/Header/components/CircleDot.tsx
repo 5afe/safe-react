@@ -1,9 +1,10 @@
 import * as React from 'react'
 import Dot from '@material-ui/icons/FiberManualRecord'
 import { getNetworkConfigById } from 'src/config'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 type Props = {
-  networkId: number
+  networkId: ETHEREUM_NETWORK
   className: string
 }
 

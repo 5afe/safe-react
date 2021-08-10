@@ -9,6 +9,7 @@ import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -64,7 +65,7 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
       return {
         address: checksumAddress(data[0].trim()),
         name: data[1].trim(),
-        chainId: parseInt(data[2].trim(), 10),
+        chainId: data[2].trim() as ETHEREUM_NETWORK,
       }
     })
     setEntryList(formatedList)

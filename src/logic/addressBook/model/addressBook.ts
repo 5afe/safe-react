@@ -18,7 +18,7 @@ export const makeAddressBookEntry = ({
 }: {
   address: string
   name: string
-  chainId?: number
+  chainId?: ETHEREUM_NETWORK
 }): AddressBookEntry => ({
   address,
   name,
