@@ -1,8 +1,8 @@
-import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
+import { MultisigExecutionDetails, MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { MultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
+import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useTransactionActions } from './useTransactionActions'
@@ -34,7 +34,7 @@ export const useActionButtonsHandlers = (transaction: Transaction): ActionButton
     (event: ReactMouseEvent<HTMLButtonElement, MouseEvent>) => {
       event.stopPropagation()
       if (transaction.txDetails?.detailedExecutionInfo?.type === 'MULTISIG') {
-        const details = transaction.txDetails?.detailedExecutionInfo as MultiSigExecutionDetails
+        const details = transaction.txDetails?.detailedExecutionInfo as MultisigExecutionDetails
         if (
           (canExecute && details.confirmationsRequired > details.confirmations.length) ||
           (canConfirmThenExecute && details.confirmationsRequired - 1 > details.confirmations.length)

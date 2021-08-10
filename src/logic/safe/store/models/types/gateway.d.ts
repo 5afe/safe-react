@@ -1,34 +1,16 @@
-import { GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
 import {
-  AddressEx,
   ConflictHeader,
   Custom,
-  DataDecoded,
   DateLabel,
+  GatewayDefinitions,
   Label,
-  ModuleExecutionInfo,
+  ModuleExecutionDetails,
+  MultisigExecutionDetails,
   MultisigExecutionInfo,
-  Operation,
   TransactionSummary,
   Transfer,
-  TransactionStatus as GWTransactionStatus,
+  TransactionDetails as GWTransactionDetails,
 } from '@gnosis.pm/safe-react-gateway-sdk'
-
-type SafeAppInfo = GatewayDefinitions['SafeAppInfo']
-
-type TransactionData = {
-  hexData: string | null
-  dataDecoded: DataDecoded | null
-  to: AddressEx
-  value: string | null
-  operation: Operation
-}
-
-type MultiSigConfirmation = {
-  signer: AddressEx
-  signature: string | null
-  submittedAt: number
-}
 
 type TokenInfo = GatewayDefinitions['TokenInfo']
 
@@ -36,35 +18,7 @@ export type Transaction = TransactionSummary & {
   txDetails?: ExpandedTxDetails
 }
 
-type MultiSigExecutionDetails = {
-  type: 'MULTISIG'
-  submittedAt: number
-  nonce: number
-  safeTxGas: number
-  baseGas: number
-  gasPrice: string
-  gasToken: string
-  refundReceiver: AddressEx
-  safeTxHash: string
-  executor: AddressEx | null
-  signers: AddressEx[]
-  confirmationsRequired: number
-  confirmations: MultiSigConfirmation[]
-  gasTokenInfo: TokenInfo | null
-}
-
-type DetailedExecutionInfo = ModuleExecutionInfo | MultiSigExecutionDetails
-
-export type TransactionStatus = GWTransactionStatus
-
-export type ExpandedTxDetails = {
-  executedAt: number | null
-  txStatus: TransactionStatus
-  txInfo: TransactionInfo
-  txData: TransactionData | null
-  detailedExecutionInfo: DetailedExecutionInfo | null
-  txHash: string | null
-}
+export type ExpandedTxDetails = GWTransactionDetails
 
 type StoreStructure = {
   queued: {
@@ -159,13 +113,13 @@ export const isStatusWillBeReplaced = (value: Transaction['txStatus']): value is
 
 export const isMultiSigExecutionDetails = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
-): value is MultiSigExecutionDetails => {
+): value is MultisigExecutionDetails => {
   return value?.type === 'MULTISIG'
 }
 
 export const isModuleExecutionInfo = (
   value: ExpandedTxDetails['detailedExecutionInfo'],
-): value is ModuleExecutionInfo => {
+): value is ModuleExecutionDetails => {
   return value?.type === 'MODULE'
 }
 

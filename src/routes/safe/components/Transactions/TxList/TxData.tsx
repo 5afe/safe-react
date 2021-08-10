@@ -1,7 +1,8 @@
+import { TransactionData } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement, ReactNode } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { ExpandedTxDetails, isCustomTxInfo, TransactionData } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isCustomTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import {
   DeleteSpendingLimitDetails,
