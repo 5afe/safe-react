@@ -184,7 +184,7 @@ describe('extractRemoteSafeInfo', () => {
       spendingLimits: undefined,
       nonce: 492,
       threshold: 2,
-      currentVersion: '1.1.1',
+      currentVersion: '1.3.0',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
     }
@@ -203,7 +203,7 @@ describe('extractRemoteSafeInfo', () => {
       spendingLimits: inMemoryPartialSafeInformation.spendingLimits,
       nonce: 492,
       threshold: 2,
-      currentVersion: '1.1.1',
+      currentVersion: '1.3.0',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
     }

@@ -24,7 +24,7 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
-import { TransactionStatus, TransactionSummary } from 'src/types/gateway/transactions'
+import { TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
