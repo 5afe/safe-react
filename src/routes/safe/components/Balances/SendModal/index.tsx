@@ -10,7 +10,7 @@ import { CustomTxProps } from './screens/ContractInteraction/SendCustomTx'
 import { ReviewTxProp } from './screens/ReviewSendFundsTx'
 import { NFTToken } from 'src/logic/collectibles/sources/collectibles.d'
 import { SendCollectibleTxInfo } from './screens/SendCollectible'
-import { Erc721Transfer } from 'src/types/gateway/transactions'
+import { Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const ChooseTxType = React.lazy(() => import('./screens/ChooseTxType'))
 

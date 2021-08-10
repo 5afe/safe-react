@@ -121,7 +121,7 @@ describe('fetchSafe', () => {
           modules: undefined,
           spendingLimits: undefined,
           nonce: 492,
-          currentVersion: '1.1.1',
+          currentVersion: '1.3.0',
           needsUpdate: false,
           featuresEnabled: ['ERC721', 'ERC1155', 'SAFE_APPS', 'CONTRACT_INTERACTION'],
         },
