@@ -16,6 +16,7 @@ import { wrapInSuspense } from 'src/utils/wrapInSuspense'
 
 import './index.module.scss'
 import './OnboardCustom.module.scss'
+import './KeystoneCustom.module.scss'
 
 const Root = (): React.ReactElement => (
   <ThemeProvider theme={styledTheme}>
