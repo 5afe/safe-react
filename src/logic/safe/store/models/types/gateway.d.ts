@@ -12,7 +12,7 @@ import {
   TransactionSummary,
   Transfer,
   TransactionStatus as GWTransactionStatus,
-} from 'src/types/gateway/transactions'
+} from '@gnosis.pm/safe-react-gateway-sdk'
 
 type SafeAppInfo = GatewayDefinitions['SafeAppInfo']
 

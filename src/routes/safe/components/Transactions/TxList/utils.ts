@@ -1,7 +1,7 @@
+import { AddressEx, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
-import { AddressEx, TransactionInfo, Transfer, TokenType } from 'src/types/gateway/transactions'
 import { isCustomTxInfo, isTransferTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'

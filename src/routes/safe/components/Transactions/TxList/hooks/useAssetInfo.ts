@@ -1,7 +1,7 @@
+import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'
-import { Custom, SettingsChange, TransactionInfo, Transfer, TokenType } from 'src/types/gateway/transactions'
 import { isCustomTxInfo, isSettingsChangeTxInfo, isTransferTxInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import { getTxAmount, NOT_AVAILABLE } from 'src/routes/safe/components/Transactions/TxList/utils'
 

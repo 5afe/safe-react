@@ -1,5 +1,6 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { Operation } from 'src/types/gateway/transactions'
 
 export enum PendingActionType {
   CONFIRM = 'confirm',

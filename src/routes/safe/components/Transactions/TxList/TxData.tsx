@@ -14,7 +14,7 @@ import { sameString } from 'src/utils/strings'
 import { HexEncodedData } from './HexEncodedData'
 import { MethodDetails } from './MethodDetails'
 import { MultiSendDetails } from './MultiSendDetails'
-import { TransactionInfo } from 'src/types/gateway/transactions'
+import { TransactionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const { nativeCoin } = getNetworkInfo()
 

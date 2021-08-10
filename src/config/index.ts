@@ -105,7 +105,7 @@ export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
-export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
+export const getGasPriceOracles = (): GasPriceOracle[] | undefined => getConfig()?.gasPriceOracles
 
 export const getSafeAppsRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl

@@ -1,3 +1,4 @@
+import { Erc721Transfer, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement, useContext, useEffect, useState } from 'react'
 import styled from 'styled-components'
 
@@ -9,7 +10,6 @@ import { AddressInfo } from './AddressInfo'
 import { InfoDetails } from './InfoDetails'
 import { TxLocationContext, TxLocationProps } from './TxLocationProvider'
 import { getTxTokenData } from './utils'
-import { Erc721Transfer, Transfer, TokenType } from 'src/types/gateway/transactions'
 
 const SingleRow = styled.div`
   display: flex;

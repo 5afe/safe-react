@@ -1,7 +1,7 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useContext, useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 import { isCustomTxInfo, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { safeAddressFromUrl } from 'src/logic/safe/store/selectors'
 import { getQueuedTransactionsByNonce } from 'src/logic/safe/store/selectors/gatewayTransactions'

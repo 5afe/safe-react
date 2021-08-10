@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from '@gnosis.pm/safe-react-gateway-sdk'
 import get from 'lodash.get'
 import merge from 'lodash.merge'
 import { Action, handleActions } from 'redux-actions'
@@ -25,7 +26,6 @@ import { AppReduxState } from 'src/store'
 import { getLocalStartOfDate } from 'src/utils/date'
 import { sameString } from 'src/utils/strings'
 import { sortObject } from 'src/utils/objects'
-import { MultisigExecutionInfo, TransactionStatus, TransactionSummary } from 'src/types/gateway/transactions'
 
 export const GATEWAY_TRANSACTIONS_ID = 'gatewayTransactions'
 
