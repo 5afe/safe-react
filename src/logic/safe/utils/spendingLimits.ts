@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 import { AbiItem } from 'web3-utils'
 
@@ -17,7 +18,6 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getBalanceAndDecimalsFromToken, GetTokenByAddress } from 'src/logic/tokens/utils/tokenHelpers'
 import { sameString } from 'src/utils/strings'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
-import { Operation } from 'src/types/gateway/transactions'
 
 export const currentMinutes = (): number => Math.floor(Date.now() / (1000 * 60))
 

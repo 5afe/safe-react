@@ -1,7 +1,8 @@
-import React, { ReactElement, useEffect, useMemo, useState } from 'react'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
-import styled from 'styled-components'
+import React, { ReactElement, useEffect, useMemo, useState } from 'react'
 import { useDispatch } from 'react-redux'
+import styled from 'styled-components'
 
 import ModalTitle from 'src/components/ModalTitle'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
@@ -27,7 +28,6 @@ import Divider from 'src/components/Divider'
 import { ConfirmTxModalProps, DecodedTxDetail } from '.'
 import Hairline from 'src/components/layout/Hairline'
 import { ButtonStatus, Modal } from 'src/components/Modal'
-import { Operation } from 'src/types/gateway/transactions'
 
 const { nativeCoin } = getNetworkInfo()
 

@@ -1,11 +1,11 @@
 import { Button, Tooltip } from '@gnosis.pm/safe-react-components'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement } from 'react'
 import { useSelector } from 'react-redux'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from 'src/routes/safe/components/Transactions/TxList/hooks/useActionButtonsHandlers'
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 type TxExpandedActionsProps = {
   transaction: Transaction

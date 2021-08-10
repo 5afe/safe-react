@@ -1,7 +1,7 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement } from 'react'
 
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 import { useAssetInfo } from './hooks/useAssetInfo'
 import { TransactionActions } from './hooks/useTransactionActions'
 import { useTransactionStatus } from './hooks/useTransactionStatus'

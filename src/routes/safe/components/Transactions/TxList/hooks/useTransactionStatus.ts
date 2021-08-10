@@ -1,4 +1,5 @@
 import { ThemeColors } from '@gnosis.pm/safe-react-components/dist/theme'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 import { useSelector } from 'react-redux'
 
@@ -9,7 +10,6 @@ import {
   isStatusWillBeReplaced,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 import { userAccountSelector } from 'src/logic/wallets/store/selectors'
 import { addressInList } from 'src/routes/safe/components/Transactions/TxList/utils'
 

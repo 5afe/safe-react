@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { MouseEvent as ReactMouseEvent, useCallback, useContext, useMemo, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
@@ -10,7 +11,6 @@ import { TxHoverContext } from 'src/routes/safe/components/Transactions/TxList/T
 import { TxLocationContext } from 'src/routes/safe/components/Transactions/TxList/TxLocationProvider'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 type ActionButtonsHandlers = {
   canCancel: boolean

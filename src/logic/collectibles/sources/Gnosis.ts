@@ -1,3 +1,5 @@
+import { TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
+
 import { Collectibles, NFTAsset, NFTAssets, NFTTokens } from 'src/logic/collectibles/sources/collectibles.d'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import NFTIcon from 'src/routes/safe/components/Balances/assets/nft_icon.png'
@@ -5,7 +7,6 @@ import { fetchSafeCollectibles } from 'src/logic/tokens/api'
 import { TokenResult } from 'src/logic/tokens/api/fetchErc20AndErc721AssetsList'
 import { CollectibleResult } from 'src/logic/tokens/api/fetchSafeCollectibles'
 import { Errors, logError } from 'src/logic/exceptions/CodedException'
-import { TokenType } from 'src/types/gateway/transactions'
 
 type FetchResult = {
   erc721Assets: TokenResult[]

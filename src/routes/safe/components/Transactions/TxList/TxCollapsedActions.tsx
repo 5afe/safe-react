@@ -1,13 +1,13 @@
 import { Icon, Tooltip } from '@gnosis.pm/safe-react-components'
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import { default as MuiIconButton } from '@material-ui/core/IconButton'
 import React, { ReactElement } from 'react'
-import styled from 'styled-components'
 import { useSelector } from 'react-redux'
+import styled from 'styled-components'
 
 import { currentSafeNonce } from 'src/logic/safe/store/selectors'
 import { Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 import { useActionButtonsHandlers } from './hooks/useActionButtonsHandlers'
-import { MultisigExecutionInfo } from 'src/types/gateway/transactions'
 
 const IconButton = styled(MuiIconButton)`
   padding: 8px !important;
