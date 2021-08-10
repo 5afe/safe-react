@@ -5,11 +5,13 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.volta.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
   safeUrl: 'https://volta.gnosis-safe.io/app',
-  gasPriceOracle: {
-    url: 'https://station.energyweb.org',
-    gasParameter: 'standard',
-    gweiFactor: '1e9',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://station.energyweb.org',
+      gasParameter: 'standard',
+      gweiFactor: '1e9',
+    },
+  ],
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   safeAppsRpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
