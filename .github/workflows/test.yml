@@ -36,11 +36,9 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - run: yarn test:coverage
-
-      - name: Upload coverage to Coveralls
-        uses: coverallsapp/github-action@master
+      - uses: mattallty/jest-github-action@@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
-        if: success()
-
+          changes-only: true
+          test-command: "yarn test:ci"

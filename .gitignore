@@ -14,3 +14,4 @@ yalc.lock
 src/types/contracts/
 src/types/gateway/
 tsconfig.tsbuildinfo
+jest.results.json
