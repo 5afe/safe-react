@@ -1,13 +1,12 @@
-import axios from 'axios'
-import { ExpandedTxDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { getTransactionDetails, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
 
-import { getTxDetailsUrl } from 'src/config'
+import { getClientGatewayUrl, getNetworkId } from 'src/config'
+
+export type TransactionDetailsEndpoint = GatewayDefinitions['TransactionDetails']
 
 /**
  * @param {string} clientGatewayTxId safeTxHash or transaction id from client-gateway
  */
-export const fetchSafeTransaction = async (clientGatewayTxId: string): Promise<ExpandedTxDetails> => {
-  const url = getTxDetailsUrl(clientGatewayTxId)
-
-  return axios.get<ExpandedTxDetails>(url).then(({ data }) => data)
+export const fetchSafeTransaction = async (clientGatewayTxId: string): Promise<TransactionDetailsEndpoint> => {
+  return getTransactionDetails(getClientGatewayUrl(), getNetworkId().toString(), clientGatewayTxId)
 }
