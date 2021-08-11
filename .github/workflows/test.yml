@@ -36,10 +36,10 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Test Report
-        uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
-        if: success() || failure()
+      - name: Yarn test
+        run: yarn test:ci
+
+      - name: Coveralls
+        uses: coverallsapp/github-action@master
         with:
-          threshold: 80
           github-token: ${{ secrets.GITHUB_TOKEN }}
-          test-script: "yarn test:ci"
