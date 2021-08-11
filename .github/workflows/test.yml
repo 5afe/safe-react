@@ -36,12 +36,10 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Yarn test
-        run: yarn test:ci
-
       - name: Test Report
-        uses: dorny/test-reporter@v1
+        uses: artiomtr/jest-coverage-report-action@v2.0-rc.1
         if: success() || failure()
         with:
-          name: test-results
-          path: jest-junit.xml
+          threshold: 80
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-script: "yarn test:ci"
