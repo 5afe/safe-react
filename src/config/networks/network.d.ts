@@ -80,12 +80,12 @@ export type GasPriceOracle = {
 type GasPrice =
   | {
       gasPrice: number
-      gasPriceOracle?: GasPriceOracle
+      gasPriceOracles?: GasPriceOracle[]
     }
   | {
       gasPrice?: number
       // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-      gasPriceOracle: GasPriceOracle
+      gasPriceOracles: GasPriceOracle[]
     }
 
 export type EnvironmentSettings = GasPrice & {

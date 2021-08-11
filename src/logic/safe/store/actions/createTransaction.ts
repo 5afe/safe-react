@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { push } from 'connected-react-router'
 import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
@@ -7,7 +8,6 @@ import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
-  CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -64,7 +64,7 @@ export const createTransaction =
       txData = EMPTY_DATA,
       notifiedTransaction,
       txNonce,
-      operation = CALL,
+      operation = Operation.CALL,
       navigateToTransactionsTab = true,
       origin = null,
       safeTxGas: safeTxGasArg,

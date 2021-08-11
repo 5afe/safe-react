@@ -105,16 +105,13 @@ export const getTxServiceUrl = (): string => getConfig().txServiceUrl
 
 export const getGasPrice = (): number | undefined => getConfig()?.gasPrice
 
-export const getGasPriceOracle = (): GasPriceOracle | undefined => getConfig()?.gasPriceOracle
+export const getGasPriceOracles = (): GasPriceOracle[] | undefined => getConfig()?.gasPriceOracles
 
 export const getSafeAppsRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().safeAppsRpcServiceUrl}/${SAFE_APPS_RPC_TOKEN}` : getConfig().safeAppsRpcServiceUrl
 
 export const getRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
-
-export const getTxDetailsUrl = (clientGatewayTxId: string) =>
-  `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
 
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 

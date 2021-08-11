@@ -3,14 +3,21 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 import { ETHGASSTATION_API_KEY } from 'src/utils/constants'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.rinkeby.staging.gnosisdev.com/v1',
+  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction.rinkeby.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://rinkeby.gnosis-safe.io/app',
-  gasPriceOracle: {
-    url: `https://ethgasstation.info/json/ethgasAPI.json?api-key=${ETHGASSTATION_API_KEY}`,
-    gasParameter: 'average',
-    gweiFactor: '1e8',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
+      gasParameter: 'fast',
+      gweiFactor: '1',
+    },
+    {
+      url: 'https://ethgasstation.info/json/ethgasAPI.json',
+      gasParameter: 'fast',
+      gweiFactor: '1e8',
+    },
+  ],
   rpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   safeAppsRpcServiceUrl: 'https://rinkeby.infura.io:443/v3',
   networkExplorerName: 'Etherscan',
@@ -30,7 +37,7 @@ const rinkeby: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.rinkeby.gnosis.io/v1',
+      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.rinkeby.gnosis.io/api/v1',
     },
   },

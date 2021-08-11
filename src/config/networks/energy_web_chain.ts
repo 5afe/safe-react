@@ -4,14 +4,16 @@ import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 's
 // @todo (agustin) we need to use fixed gasPrice because the oracle is not working right now and it's returning 0
 // once the oracle is fixed we need to remove the fixed value
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.ewc.gnosis.io/v1',
+  clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.ewc.gnosis.io/api/v1',
   safeUrl: 'https://ewc.gnosis-safe.io/app',
-  gasPriceOracle: {
-    url: 'https://station.energyweb.org',
-    gasParameter: 'standard',
-    gweiFactor: '1e9',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://station.energyweb.org',
+      gasParameter: 'standard',
+      gweiFactor: '1e9',
+    },
+  ],
   gasPrice: 1e6,
   rpcServiceUrl: 'https://rpc.energyweb.org',
   safeAppsRpcServiceUrl: 'https://rpc.energyweb.org',

@@ -1,4 +1,5 @@
 import { fetchTokenCurrenciesBalances } from 'src/logic/safe/api/fetchTokenCurrenciesBalances'
+import { getNetworkId } from 'src/config'
 import { getBalances } from '@gnosis.pm/safe-react-gateway-sdk'
 
 jest.mock('@gnosis.pm/safe-react-gateway-sdk', () => ({
@@ -17,7 +18,8 @@ describe('fetchTokenCurrenciesBalances', () => {
     })
 
     expect(getBalances).toHaveBeenCalledWith(
-      'http://localhost:8001/v1',
+      `http://localhost:8001/v1`,
+      getNetworkId().toString(),
       '0xdfA693da0D16F5E7E78FdCBeDe8FC6eBEa44f1Cf',
       'USD',
       {
