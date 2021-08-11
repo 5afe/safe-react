@@ -13,7 +13,17 @@ type AsyncValidator = (...args: unknown[]) => Promise<ValidatorReturnType>
 export type Validator = GenericValidatorType | AsyncValidator
 
 export const required = (value?: string): ValidatorReturnType => {
-  return value
+  const required = 'Required'
+
+  if (!value) {
+    return required
+  }
+
+  if (typeof value === 'string' && !value.trim().length) {
+    return required
+  }
+
+  return undefined
 }
 
 export const mustBeInteger = (value: string): ValidatorReturnType =>
