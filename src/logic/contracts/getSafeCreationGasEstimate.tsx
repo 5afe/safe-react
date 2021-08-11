@@ -3,6 +3,7 @@ import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { formatAmount } from 'src/logic/tokens/utils/formatAmount'
 import { getNetworkInfo } from 'src/config'
 import { calculateGasPrice } from 'src/logic/wallets/ethTransactions'
+import { throttle } from 'lodash'
 
 type getEstimateSafeCreationGasProps = {
   addresses: string[]
@@ -18,9 +19,9 @@ type SafeCreationEstimationResult = {
 }
 
 const { nativeCoin } = getNetworkInfo()
+export const DEFAULT_GAS = '< 0.001'
 
-// TODO rename and move file
-export const getEstimateSafeCreationGas = async ({
+const estimateSafeCreationGas = async ({
   addresses,
   numOwners,
   safeCreationSalt,
@@ -29,7 +30,7 @@ export const getEstimateSafeCreationGas = async ({
   if (!addresses.length || !numOwners || !userAccount) {
     return {
       gasEstimation: 0,
-      gasCostFormatted: '< 0.001',
+      gasCostFormatted: DEFAULT_GAS,
       gasLimit: 0,
     }
   }
@@ -44,3 +45,5 @@ export const getEstimateSafeCreationGas = async ({
     gasLimit: gasEstimation,
   }
 }
+
+export const getSafeCreationGasEstimate = throttle(estimateSafeCreationGas, 10000)

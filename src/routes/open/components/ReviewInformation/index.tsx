@@ -17,7 +17,7 @@ import {
 import { FIELD_CONFIRMATIONS, FIELD_NAME, getNumOwnersFrom } from '../fields'
 import { useStyles } from './styles'
 import { EthHashInfo } from '@gnosis.pm/safe-react-components'
-import { getEstimateSafeCreationGas } from 'src/logic/hooks/useEstimateSafeCreationGas'
+import { getSafeCreationGasEstimate, DEFAULT_GAS } from 'src/logic/contracts/getSafeCreationGasEstimate'
 import { FormApi } from 'final-form'
 import { StepperPageFormProps } from 'src/components/Stepper'
 import { LoadFormValues } from 'src/routes/load/container/Load'
@@ -39,7 +39,7 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
 
   const numOwners = getNumOwnersFrom(values)
   const safeCreationSalt = getSafeCreationSaltFrom(values as CreateSafeValues)
-  const [gasCost, setGasCost] = useState('< 0.001')
+  const [gasCost, setGasCost] = useState(DEFAULT_GAS)
   const [localGasLimit, setLocalGasLimit] = useState(0)
   const [isEstimating, setIsEstimating] = useState(false)
   const userAccount = useSelector(userAccountSelector)
@@ -47,18 +47,21 @@ const ReviewComponent = ({ values, form }: ReviewComponentProps): ReactElement =
   useEffect(() => {
     const estimateGasPriceAndCost = async () => {
       setIsEstimating(true)
-      const { gasCostFormatted, gasLimit } = await getEstimateSafeCreationGas({
+      const estimate = await getSafeCreationGasEstimate({
         addresses,
         numOwners,
         safeCreationSalt,
         userAccount,
       })
-      setGasCost(gasCostFormatted)
-      setLocalGasLimit(gasLimit)
-      form.mutators.setValue('gasLimit', gasLimit)
+      if (estimate) {
+        const { gasCostFormatted, gasLimit } = estimate
+        setGasCost(gasCostFormatted)
+        setLocalGasLimit(gasLimit)
+        form.mutators.setValue('gasLimit', gasLimit)
+      }
       setIsEstimating(false)
     }
-    if (gasCost == '< 0.001' && localGasLimit == 0 && userAccount) {
+    if (gasCost == DEFAULT_GAS && localGasLimit == 0 && userAccount && !isEstimating) {
       estimateGasPriceAndCost()
     }
   }, [localGasLimit, form.mutators, gasCost, isEstimating, userAccount, addresses, numOwners, safeCreationSalt])
