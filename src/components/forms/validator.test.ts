@@ -42,7 +42,6 @@ describe('Forms > Validators', () => {
     })
 
     it('Returns an error message for a float number', () => {
-      expect(true).toBe(false)
       expect(mustBeInteger('1.0')).toEqual(MUST_BE_INTEGER_ERROR_MSG)
     })
 
