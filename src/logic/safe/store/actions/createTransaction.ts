@@ -160,15 +160,21 @@ export const createTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
+          try {
+            await saveTxToHistory({ ...txArgs, origin })
+          } catch (err) {
+            logError(Errors._803, err.message)
+
+            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
+            if (!isExecution) {
+              return
+            }
+          }
 
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
           dispatch(fetchTransactions(safeAddress))
-        })
-        .on('error', () => {
-          onError?.()
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(safeAddress))
@@ -176,6 +182,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
+      onError?.()
+
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {
