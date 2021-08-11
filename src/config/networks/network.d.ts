@@ -34,6 +34,11 @@ type Token = {
   logoUri?: string
 }
 
+export enum ETHEREUM_LAYER {
+  L1 = '1',
+  L2 = '2',
+}
+
 export enum ETHEREUM_NETWORK {
   UNKNOWN = 0,
   MAINNET = 1,
@@ -44,10 +49,10 @@ export enum ETHEREUM_NETWORK {
   KOVAN = 42,
   BSC = 56,
   XDAI = 100,
+  POLYGON = 137,
   ENERGY_WEB_CHAIN = 246,
   LOCAL = 4447,
   VOLTA = 73799,
-  POLYGON = 137,
 }
 
 export type NetworkSettings = {
@@ -57,6 +62,7 @@ export type NetworkSettings = {
   textColor: string
   label: string
   isTestNet: boolean
+  ethereumLayer: ETHEREUM_LAYER
   nativeCoin: Token
 }
 
@@ -105,7 +111,7 @@ type SafeEnvironments = {
   production: EnvironmentSettings
 }
 
-export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'nativeCoin'> & { safeUrl: string }
+export type NetworkInfo = Omit<NetworkSettings, 'isTestNet' | 'ethereumLayer' | 'nativeCoin'> & { safeUrl: string }
 
 export interface NetworkConfig {
   network: NetworkSettings
