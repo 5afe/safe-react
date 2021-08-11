@@ -36,9 +36,12 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - uses: mattallty/jest-github-action@v1
+      - name: Yarn test
+        run: yarn test:ci --onlyChanged
+
+      - uses: mattallty/jest-github-action@master
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           changes-only: true
-          test-command: "yarn test:ci"
+          test-command: "echo done"
