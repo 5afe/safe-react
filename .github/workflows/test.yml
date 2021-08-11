@@ -39,9 +39,9 @@ jobs:
       - name: Yarn test
         run: yarn test:ci
 
-      - uses: mattallty/jest-github-action@master
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - name: Test Report
+        uses: dorny/test-reporter@v1
+        if: success() || failure()
         with:
-          changes-only: true
-          test-command: "echo done"
+          name: test-results
+          path: jest-junit.xml
