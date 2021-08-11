@@ -1,4 +1,4 @@
-name: Run app tests
+name: Unit tests & coverage
 on:
   pull_request:
   push:
@@ -36,7 +36,7 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - uses: mattallty/jest-github-action@@v1
+      - uses: mattallty/jest-github-action@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
