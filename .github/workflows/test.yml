@@ -36,11 +36,10 @@ jobs:
           rm -rf .yarncache
           yarn cache clean
 
-      - name: Yarn test
-        run: yarn test --ci --coverage --json --watchAll=false --outputFile=result.json --testLocationInResults
-
-      - name: Coverage report
-        uses: tanmen/jest-reporter@v1
-        if: always()
+      - name: Run tests
+        uses: mattallty/jest-github-action@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          github-token: ${{ secrets.GITHUB_TOKEN }}
+          test-command: "npm run test:coverage -- --outputFile=/home/runner/work/_actions/mattallty/jest-github-action/v1/dist/jest.results.json"
+          #changes-only: true
