@@ -1,5 +1,5 @@
 import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
-import { getClientGatewayUrl, getSafeServiceBaseUrl } from 'src/config'
+import { getClientGatewayUrl, getNetworkId, getSafeServiceBaseUrl } from 'src/config'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { postTransaction } from '@gnosis.pm/safe-react-gateway-sdk'
 
@@ -84,6 +84,6 @@ export const saveTxToHistory = async ({
     origin || null,
     signature,
   )
-  await postTransaction(getClientGatewayUrl(), address, body)
+  await postTransaction(getClientGatewayUrl(), getNetworkId().toString(), address, body)
   return
 }
