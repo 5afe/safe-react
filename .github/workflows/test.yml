@@ -37,11 +37,10 @@ jobs:
           yarn cache clean
 
       - name: Yarn test
-        run: yarn test --ci --coverage --json --watchAll=false
-
-        run: yarn test:ci
+        run: yarn test --ci --coverage --json --watchAll=false --outputFile=result.json --testLocationInResults
 
       - name: Coverage report
-        uses: RedaktionsNetzwerk-Deutschland/action-jest-reporter@main
+        uses: tanmen/jest-reporter@v1
+        if: always()
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}
