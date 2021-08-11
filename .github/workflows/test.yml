@@ -37,7 +37,7 @@ jobs:
           yarn cache clean
 
       - name: Yarn test
-        run: yarn test:ci --onlyChanged
+        run: yarn test:ci
 
       - uses: mattallty/jest-github-action@master
         env:
