@@ -27,6 +27,12 @@ export const validateFile = (file: File): string | undefined => {
   return
 }
 
+const isValidChainId = (chainId) => {
+  return Object.keys(ETHEREUM_NETWORK).some((network) => {
+    return ETHEREUM_NETWORK[network] == chainId
+  })
+}
+
 export const validateCsvData = (data: CsvDataType): string | undefined => {
   for (let index = 0; index < data.length; index++) {
     const entry = data[index]
@@ -45,8 +51,7 @@ export const validateCsvData = (data: CsvDataType): string | undefined => {
     if (!isValidAddress(lowerCaseAddress)) {
       return `Invalid address on row ${index + 1}`
     }
-    const chainIdNum = parseInt(chainId.trim(), 10)
-    if (isNaN(chainIdNum) || ETHEREUM_NETWORK[chainIdNum] == null) {
+    if (!isValidChainId(chainId.trim())) {
       return `Invalid chain id on row ${index + 1}`
     }
   }

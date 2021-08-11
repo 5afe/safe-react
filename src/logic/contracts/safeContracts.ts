@@ -142,7 +142,7 @@ export const getMasterCopyAddressFromProxyAddress = async (proxyAddress: string)
 
 export const instantiateSafeContracts = async () => {
   const web3 = getWeb3()
-  const networkId = await getNetworkIdFrom(web3)
+  const networkId = (await getNetworkIdFrom(web3)).toString() as ETHEREUM_NETWORK
 
   // Create ProxyFactory Master Copy
   proxyFactoryMaster = getProxyFactoryContractInstance(web3, networkId)

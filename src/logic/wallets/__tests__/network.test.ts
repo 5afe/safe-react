@@ -1,4 +1,5 @@
 import { Wallet } from 'bnc-onboard/dist/src/interfaces'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 import { switchNetwork, shouldSwitchNetwork, canSwitchNetwork } from 'src/logic/wallets/utils/network'
 
 class CodedError extends Error {
@@ -26,7 +27,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).rejects.toThrow(
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).rejects.toThrow(
         'Code 301: Error adding a new wallet network (No such chain)',
       )
     })
@@ -42,7 +43,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).rejects.toThrow(
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).rejects.toThrow(
         'Code 300: Error switching the wallet network (Some error)',
       )
     })
@@ -58,7 +59,7 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).resolves.toEqual(undefined)
     })
 
     it('should resolve to undefined if request succeeds', () => {
@@ -68,10 +69,9 @@ describe('src/logic/wallets/utils/network', () => {
         },
       }
 
-      expect(switchNetwork(wallet as Wallet, 1438)).resolves.toEqual(undefined)
+      expect(switchNetwork(wallet as Wallet, '1438' as unknown as ETHEREUM_NETWORK)).resolves.toEqual(undefined)
     })
   })
-
   describe('shouldSwitchNetwork', () => {
     it('should return true when networks mismatch', () => {
       const wallet = {
