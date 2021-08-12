@@ -20,18 +20,31 @@ type SafeCreationEstimationResult = {
 }
 
 const { nativeCoin } = getNetworkInfo()
-
+const DEFAULT_GAS = '< 0.001'
 export const useEstimateSafeCreationGas = ({
   addresses,
   numOwners,
   safeCreationSalt,
 }: EstimateSafeCreationGasProps): SafeCreationEstimationResult => {
-  const [gasEstimation, setGasEstimation] = useState<SafeCreationEstimationResult>({
+  const [gasEstimation, setGasEstimation] = useState({
     gasEstimation: 0,
-    gasCostFormatted: '< 0.001',
     gasLimit: 0,
   })
+  const [gasCostFormatted, setGasCostFormated] = useState<string>(DEFAULT_GAS)
   const userAccount = useSelector(userAccountSelector)
+
+  useEffect(() => {
+    const estimateGasPrice = async () => {
+      const gasPrice = await calculateGasPrice()
+      const estimatedGasCosts = gasEstimation.gasEstimation * parseInt(gasPrice, 10)
+      const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
+      const gasAmount = formatAmount(gasCost)
+      setGasCostFormated(gasAmount)
+    }
+    if (gasEstimation.gasEstimation != 0) {
+      estimateGasPrice()
+    }
+  }, [gasEstimation.gasEstimation])
 
   useEffect(() => {
     const estimateGas = async () => {
@@ -40,14 +53,9 @@ export const useEstimateSafeCreationGas = ({
       }
 
       const gasEstimation = await estimateGasForDeployingSafe(addresses, numOwners, userAccount, safeCreationSalt)
-      const gasPrice = await calculateGasPrice()
-      const estimatedGasCosts = gasEstimation * parseInt(gasPrice, 10)
-      const gasCost = fromTokenUnit(estimatedGasCosts, nativeCoin.decimals)
-      const gasCostFormatted = formatAmount(gasCost)
 
       setGasEstimation({
         gasEstimation,
-        gasCostFormatted,
         gasLimit: gasEstimation,
       })
     }
@@ -55,5 +63,5 @@ export const useEstimateSafeCreationGas = ({
     estimateGas()
   }, [numOwners, userAccount, safeCreationSalt, addresses])
 
-  return gasEstimation
+  return { ...gasEstimation, gasCostFormatted }
 }
