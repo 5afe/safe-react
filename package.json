@@ -45,7 +45,7 @@
     "start": "rescripts start",
     "test": "rescripts test --env=jsdom",
     "test:coverage": "yarn test --coverage --watchAll=false",
-    "coveralls": "cat ./coverage/lcov.info | coveralls",
+    "test:ci": "yarn test --ci --coverage --json --watchAll=false --testLocationInResults --runInBand",
     "storybook": "start-storybook -p 9009 -s public",
     "build-storybook": "build-storybook -s public",
     "sentry-upload-sourcemaps": "sentry-cli --auth-token $SENTRY_AUTH_TOKEN releases -o $SENTRY_ORG -p $SENTRY_PROJECT files $npm_package_version upload-sourcemaps ./build/static/js/"
