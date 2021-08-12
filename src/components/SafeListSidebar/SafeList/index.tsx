@@ -2,7 +2,8 @@ import MuiList from '@material-ui/core/List'
 import ListItem from '@material-ui/core/ListItem'
 import { makeStyles } from '@material-ui/core/styles'
 import { Icon } from '@gnosis.pm/safe-react-components'
-import * as React from 'react'
+import React from 'react'
+import { generatePath } from 'react-router-dom'
 import styled from 'styled-components'
 
 import { DefaultSafe } from 'src/logic/safe/store/reducer/types/safe'
@@ -10,7 +11,7 @@ import Hairline from 'src/components/layout/Hairline'
 import Link from 'src/components/layout/Link'
 import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
 import { UnsavedAddress } from 'src/components/SafeListSidebar/SafeList/UnsavedAddress'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
@@ -76,7 +77,9 @@ export const SafeList = ({
           <Link
             data-testid={SIDEBAR_SAFELIST_ROW_TESTID}
             onClick={onSafeClick}
-            to={`${SAFELIST_ADDRESS}/${safe.address}/balances`}
+            to={generatePath(SAFE_ROUTES.ASSETS_BALANCES, {
+              safeAddress: safe.address,
+            })}
           >
             <ListItem classes={{ root: classes.listItemRoot }}>
               {getLink(safe.address)}

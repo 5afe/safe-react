@@ -3,16 +3,16 @@ import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 
-import { styles } from './style'
+import { useStyles } from './style'
 
-import GnoForm from 'src/components/forms/GnoForm'
+import { LATEST_SAFE_VERSION } from 'src/utils/constants'
+import Link from 'src/components/layout/Link'
 import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
 import { getUpgradeSafeTransactionHash } from 'src/logic/safe/utils/upgradeSafe'
 import { createTransaction } from 'src/logic/safe/store/actions/createTransaction'
-import { makeStyles } from '@material-ui/core'
 import { ButtonStatus, Modal } from 'src/components/Modal'
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
@@ -23,8 +23,6 @@ import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
 import { TxParameters } from 'src/routes/safe/container/hooks/useTransactionParameters'
-
-const useStyles = makeStyles(styles)
 
 type Props = {
   onClose: () => void
@@ -47,8 +45,10 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     gasLimit,
     gasEstimation,
   } = useEstimateTransactionGas({
+    txRecipient: getMultisendContractAddress(),
     txData: multiSendCallData,
-    txRecipient: safeAddress,
+    txAmount: '0',
+    operation: DELEGATE_CALL,
   })
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -100,63 +100,60 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
             </IconButton>
           </Row>
           <Hairline />
-          <GnoForm onSubmit={() => handleSubmit(txParameters)}>
-            {() => (
-              <>
-                <Block className={classes.modalContent}>
-                  <Row>
-                    <Paragraph>
-                      Update now to take advantage of new features and the highest security standards available.
-                    </Paragraph>
-                    <Block>
-                      This update includes:
-                      <ul>
-                        <li>Compatibility with new asset types (ERC-721 / ERC-1155)</li>
-                        <li>Improved interoperability with modules</li>
-                        <li>Minor security improvements</li>
-                      </ul>
-                    </Block>
-                    <Paragraph>
-                      You will need to confirm this update just like any other transaction. This means other owners will
-                      have to confirm the update in case more than one confirmation is required for this Safe.
-                    </Paragraph>
-                  </Row>
-                  {/* Tx Parameters */}
-                  <TxParametersDetail
-                    txParameters={txParameters}
-                    onEdit={toggleEditMode}
-                    compact={false}
-                    isTransactionCreation={isCreation}
-                    isTransactionExecution={isExecution}
-                    isOffChainSignature={isOffChainSignature}
-                  />
-                </Block>
-                {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
-                  <Block className={classes.gasCostsContainer}>
-                    <TransactionFees
-                      gasCostFormatted={gasCostFormatted}
-                      isExecution={isExecution}
-                      isCreation={isCreation}
-                      isOffChainSignature={isOffChainSignature}
-                      txEstimationExecutionStatus={txEstimationExecutionStatus}
-                    />
-                  </Block>
-                )}
-                <Row align="center" className={classes.buttonRow}>
-                  <Modal.Footer.Buttons
-                    cancelButtonProps={{
-                      onClick: onClose,
-                      text: 'Back',
-                    }}
-                    confirmButtonProps={{
-                      status: buttonStatus,
-                      text: confirmButtonText,
-                    }}
-                  />
-                </Row>
-              </>
-            )}
-          </GnoForm>
+          <Block className={classes.modalContent}>
+            <Row>
+              <Paragraph>
+                Update now to take advantage of new features and the highest security standards available.
+              </Paragraph>
+              <Block>
+                To check details about updates added by this smart contract version please visit{' '}
+                <Link
+                  target="_blank"
+                  to={`https://github.com/gnosis/safe-contracts/releases/tag/v${LATEST_SAFE_VERSION}`}
+                >
+                  latest Gnosis Safe contracts changelog
+                </Link>
+              </Block>
+              <Paragraph>
+                You will need to confirm this update just like any other transaction. This means other owners will have
+                to confirm the update in case more than one confirmation is required for this Safe.
+              </Paragraph>
+            </Row>
+            {/* Tx Parameters */}
+            <TxParametersDetail
+              txParameters={txParameters}
+              onEdit={toggleEditMode}
+              compact={false}
+              isTransactionCreation={isCreation}
+              isTransactionExecution={isExecution}
+              isOffChainSignature={isOffChainSignature}
+            />
+          </Block>
+          {txEstimationExecutionStatus === EstimationStatus.LOADING ? null : (
+            <Block className={classes.gasCostsContainer}>
+              <TransactionFees
+                gasCostFormatted={gasCostFormatted}
+                isExecution={isExecution}
+                isCreation={isCreation}
+                isOffChainSignature={isOffChainSignature}
+                txEstimationExecutionStatus={txEstimationExecutionStatus}
+              />
+            </Block>
+          )}
+          {/* Footer */}
+          <Modal.Footer withoutBorder={buttonStatus !== ButtonStatus.LOADING}>
+            <Modal.Footer.Buttons
+              cancelButtonProps={{
+                onClick: onClose,
+                text: 'Cancel',
+              }}
+              confirmButtonProps={{
+                onClick: () => handleSubmit(txParameters),
+                status: buttonStatus,
+                text: confirmButtonText,
+              }}
+            />
+          </Modal.Footer>
         </>
       )}
     </EditableTxParameters>

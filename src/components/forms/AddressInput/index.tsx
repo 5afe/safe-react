@@ -23,6 +23,7 @@ export interface AddressInputProps {
   validators?: Validator[]
   defaultValue?: string
   disabled?: boolean
+  spellCheck?: boolean
   className?: string
 }
 
@@ -50,6 +51,7 @@ const AddressInput = ({
       testId={testId}
       text={text}
       type="text"
+      spellCheck={false}
       validate={composeValidators(required, mustBeEthereumAddress, ...validators)}
     />
     <OnChange name={name}>

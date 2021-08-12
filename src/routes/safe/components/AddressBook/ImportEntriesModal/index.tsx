@@ -4,10 +4,12 @@ import styled from 'styled-components'
 import { Text } from '@gnosis.pm/safe-react-components'
 import { Modal } from 'src/components/Modal'
 import { CSVReader } from 'react-papaparse'
+import { ParseResult } from 'papaparse'
 import { AddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import HelpInfo from 'src/routes/safe/components/AddressBook/HelpInfo'
 import { validateCsvData, validateFile } from 'src/routes/safe/components/AddressBook/utils'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 const ImportContainer = styled.div`
   flex-direction: column;
@@ -43,8 +45,9 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
     importEntryModalHandler(entryList)
   }
 
-  const handleOnDrop = (data, file) => {
-    const slicedData = data.slice(1)
+  const handleOnDrop = (parseResults: ParseResult<string>[], file: File) => {
+    // Remove the header row
+    const slicedData = parseResults.slice(1)
 
     const fileError = validateFile(file)
     if (fileError) {
@@ -58,15 +61,19 @@ const ImportEntriesModal = ({ importEntryModalHandler, isOpen, onClose }: Import
       return
     }
 
-    const formatedList = slicedData.map((entry) => {
-      return { address: checksumAddress(entry.data[0]), name: entry.data[1], chainId: parseInt(entry.data[2]) }
+    const formatedList = slicedData.map(({ data }) => {
+      return {
+        address: checksumAddress(data[0].trim()),
+        name: data[1].trim(),
+        chainId: data[2].trim() as ETHEREUM_NETWORK,
+      }
     })
     setEntryList(formatedList)
     setImportError('')
     setCsvLoaded(true)
   }
 
-  const handleOnError = (error) => {
+  const handleOnError = (error: Error): void => {
     setImportError(error.message)
   }
 

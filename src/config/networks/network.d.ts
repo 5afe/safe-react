@@ -35,20 +35,20 @@ type Token = {
 }
 
 export enum ETHEREUM_NETWORK {
-  UNKNOWN = 0,
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  BSC = 56,
-  XDAI = 100,
-  ARBITRUM = 42161,
-  ENERGY_WEB_CHAIN = 246,
-  LOCAL = 4447,
-  VOLTA = 73799,
-  POLYGON = 137,
+  UNKNOWN = '0',
+  MAINNET = '1',
+  MORDEN = '2',
+  ROPSTEN = '3',
+  RINKEBY = '4',
+  GOERLI = '5',
+  KOVAN = '42',
+  BSC = '56',
+  XDAI = '100',
+  ENERGY_WEB_CHAIN = '246',
+  LOCAL = '4447',
+  VOLTA = '73799',
+  POLYGON = '137',
+  ARBITRUM = '42161',
 }
 
 export type NetworkSettings = {
@@ -81,22 +81,20 @@ export type GasPriceOracle = {
 type GasPrice =
   | {
       gasPrice: number
-      gasPriceOracle?: GasPriceOracle
+      gasPriceOracles?: GasPriceOracle[]
     }
   | {
       gasPrice?: number
       // for infura there's a REST API Token required stored in: `REACT_APP_INFURA_TOKEN`
-      gasPriceOracle: GasPriceOracle
+      gasPriceOracles: GasPriceOracle[]
     }
 
 export type EnvironmentSettings = GasPrice & {
   clientGatewayUrl: string
   txServiceUrl: string
-  // TODO: Shall we keep a reference to the relay?
-  relayApiUrl?: string
-  safeAppsUrl: string
   safeUrl: string
   rpcServiceUrl: string
+  safeAppsRpcServiceUrl: string
   networkExplorerName: string
   networkExplorerUrl: string
   networkExplorerApiUrl: string

@@ -64,7 +64,9 @@ function GnoStepper<V>(props: GnoStepperProps<V>): React.ReactElement {
 
   useEffect(() => {
     if (props.initialValues) {
-      setValues(props.initialValues)
+      setValues((prevState) => {
+        return { ...prevState, ...props.initialValues }
+      })
     }
   }, [props.initialValues])
 

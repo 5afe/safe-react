@@ -23,6 +23,7 @@ enum ErrorCodes {
   _608 = '608: No next page',
   _609 = '609: Failed to retrieve SpendingLimits module information',
   _610 = '610: Error fetching safes by owner',
+  _611 = '608: Error fetching gasPrice',
   _700 = '700: Failed to load a localStorage item',
   _701 = '701: Failed to save a localStorage item',
   _702 = '702: Failed to remove a localStorage item',
@@ -31,9 +32,11 @@ enum ErrorCodes {
   _802 = '802: Error submitting a transaction, safeAddress not found',
   _803 = '803: Error creating a transaction',
   _804 = '804: Error processing a transaction',
+  _805 = '805: TX monitor error',
   _900 = '900: Error loading Safe App',
   _901 = '901: Error processing Safe Apps SDK request',
   _902 = '902: Error loading Safe Apps list',
+  _903 = '903: Error loading Safe App manifest',
 }
 
 export default ErrorCodes

@@ -184,12 +184,12 @@ describe('extractRemoteSafeInfo', () => {
       spendingLimits: undefined,
       nonce: 492,
       threshold: 2,
-      currentVersion: '1.1.1',
+      currentVersion: '1.3.0',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
     }
 
-    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules)
+    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithoutModules as any)
 
     expect(remoteSafeInfo).toStrictEqual(extractedRemoteSafeInfo)
   })
@@ -203,12 +203,12 @@ describe('extractRemoteSafeInfo', () => {
       spendingLimits: inMemoryPartialSafeInformation.spendingLimits,
       nonce: 492,
       threshold: 2,
-      currentVersion: '1.1.1',
+      currentVersion: '1.3.0',
       needsUpdate: false,
       featuresEnabled: [FEATURES.ERC721, FEATURES.ERC1155, FEATURES.SAFE_APPS, FEATURES.CONTRACT_INTERACTION],
     }
 
-    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules)
+    const remoteSafeInfo = await extractRemoteSafeInfo(remoteSafeInfoWithModules as any)
 
     expect(remoteSafeInfo).toStrictEqual(extractedRemoteSafeInfo)
   })

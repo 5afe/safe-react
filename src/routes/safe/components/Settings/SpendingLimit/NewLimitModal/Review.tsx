@@ -33,6 +33,8 @@ import { EditableTxParameters } from 'src/routes/safe/components/Transactions/he
 import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
+import { isModuleEnabled } from 'src/logic/safe/utils/modules'
+import { SPENDING_LIMIT_MODULE_ADDRESS } from 'src/utils/constants'
 
 const useExistentSpendingLimit = ({
   spendingLimits,
@@ -71,6 +73,7 @@ const calculateSpendingLimitsTxData = (
   existentSpendingLimit: SpendingLimit | null,
   txToken: Token,
   values: Record<string, string>,
+  modules: string[],
   txParameters?: TxParameters,
 ): {
   spendingLimitTxData: CreateTransactionArgs
@@ -83,8 +86,7 @@ const calculateSpendingLimitsTxData = (
     resetBaseMin: number
   }
 } => {
-  // enabled if it's an array with at least one element
-  const isSpendingLimitEnabled = !!spendingLimits?.length
+  const isSpendingLimitEnabled = isModuleEnabled(modules, SPENDING_LIMIT_MODULE_ADDRESS)
   const transactions: MultiSendTx[] = []
 
   // is spendingLimit module enabled? -> if not, create the tx to enable it, and encode it
@@ -150,10 +152,14 @@ interface ReviewSpendingLimitProps {
 
 export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: ReviewSpendingLimitProps): ReactElement => {
   const classes = useStyles()
-
   const dispatch = useDispatch()
 
-  const { address: safeAddress = '', spendingLimits, currentVersion: safeVersion = '' } = useSelector(currentSafe) ?? {}
+  const {
+    address: safeAddress = '',
+    spendingLimits,
+    currentVersion: safeVersion = '',
+    modules,
+  } = useSelector(currentSafe) ?? {}
   const existentSpendingLimit = useExistentSpendingLimit({ spendingLimits, txToken, values })
   const [estimateGasArgs, setEstimateGasArgs] = useState<Partial<CreateTransactionArgs>>({
     to: '',
@@ -184,6 +190,8 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
 
+  const safeModules = useMemo(() => modules?.map((pair) => pair[1]) || [], [modules])
+
   useEffect(() => {
     const { spendingLimitTxData } = calculateSpendingLimitsTxData(
       safeAddress,
@@ -192,9 +200,10 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
       existentSpendingLimit,
       txToken,
       values,
+      safeModules,
     )
     setEstimateGasArgs(spendingLimitTxData)
-  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values])
+  }, [safeAddress, safeVersion, spendingLimits, existentSpendingLimit, txToken, values, safeModules])
 
   const handleSubmit = (txParameters: TxParameters): void => {
     const { ethGasPrice, ethGasLimit, ethGasPriceInGWei } = txParameters
@@ -213,6 +222,7 @@ export const ReviewSpendingLimits = ({ onBack, onClose, txToken, values }: Revie
         existentSpendingLimit,
         txToken,
         values,
+        safeModules,
         advancedOptionsTxParameters,
       )
 

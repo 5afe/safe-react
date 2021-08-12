@@ -8,6 +8,8 @@ Besides the Ethereum Mainnet, the following networks are supported:
 
 - [Rinkeby Testnet](https://rinkeby.gnosis-safe.io/app/)
 - [xDai](https://xdai.gnosis-safe.io/app/)
+- [Polygon](https://polygon.gnosis-safe.io/app/)
+- [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
 - [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
 - [Volta Testnet](https://volta.gnosis-safe.io/app/)
 

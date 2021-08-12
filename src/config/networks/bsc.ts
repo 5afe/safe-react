@@ -5,13 +5,15 @@ const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.bsc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.bsc.gnosis.io/api/v1',
   safeUrl: 'https://bsc.gnosis-safe.io/app',
-  safeAppsUrl: 'https://safe-apps-bsc.staging.gnosisdev.com',
-  gasPriceOracle: {
-    url: 'https://bscgas.info/gas',
-    gasParameter: 'standard',
-    gweiFactor: '1e9',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://bscgas.info/gas',
+      gasParameter: 'standard',
+      gweiFactor: '1e9',
+    },
+  ],
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
+  safeAppsRpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
   networkExplorerUrl: 'https://www.bscscan.com',
   networkExplorerApiUrl: 'https://api.bscscan.com/api',
@@ -21,13 +23,14 @@ const mainnet: NetworkConfig = {
   environment: {
     dev: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-bsc.staging.gnosisdev.com/app/',
     },
     staging: {
       ...baseConfig,
+      safeUrl: 'https://safe-team-bsc.staging.gnosisdev.com/app/',
     },
     production: {
       ...baseConfig,
-      safeAppsUrl: 'https://apps-bsc.gnosis-safe.io',
     },
   },
   network: {
@@ -47,7 +50,6 @@ const mainnet: NetworkConfig = {
   disabledWallets: [
     WALLETS.TREZOR,
     WALLETS.LEDGER,
-    WALLETS.WALLET_CONNECT,
     WALLETS.COINBASE,
     WALLETS.FORTMATIC,
     WALLETS.OPERA,

@@ -2,6 +2,7 @@ import { getGnosisSafeInstanceAt, SENTINEL_ADDRESS } from 'src/logic/contracts/s
 import { CreateTransactionArgs } from 'src/logic/safe/store/actions/createTransaction'
 import { ModulePair } from 'src/logic/safe/store/models/safe'
 import { CALL, TX_NOTIFICATION_TYPES } from 'src/logic/safe/transactions'
+import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 /**
  * Builds a collection of tuples with (prev, module) module addresses
@@ -63,4 +64,8 @@ export const enableModuleTx = ({
     txData: safeInstance.methods.enableModule(moduleAddress).encodeABI(),
     notifiedTransaction: TX_NOTIFICATION_TYPES.SETTINGS_CHANGE_TX,
   }
+}
+
+export const isModuleEnabled = (modules: string[], moduleAddress: string): boolean => {
+  return modules?.some((module) => sameAddress(module, moduleAddress)) ?? false
 }

@@ -1,4 +1,5 @@
 import { push } from 'connected-react-router'
+import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
 import { ThunkAction } from 'redux-thunk'
 
@@ -18,7 +19,7 @@ import { currentSafeCurrentVersion } from 'src/logic/safe/store/selectors'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { providerSelector } from 'src/logic/wallets/store/selectors'
-import { SAFELIST_ADDRESS } from 'src/routes/routes'
+import { SAFE_ROUTES } from 'src/routes/routes'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
 import closeSnackbarAction from 'src/logic/notifications/store/actions/closeSnackbar'
 import { generateSafeTxHash } from 'src/logic/safe/store/actions/transactions/utils/transactionHelpers'
@@ -76,7 +77,13 @@ export const createTransaction =
     const state = getState()
 
     if (navigateToTransactionsTab) {
-      dispatch(push(`${SAFELIST_ADDRESS}/${safeAddress}/transactions`))
+      dispatch(
+        push(
+          generatePath(SAFE_ROUTES.TRANSACTIONS, {
+            safeAddress,
+          }),
+        ),
+      )
     }
 
     const ready = await onboardUser()

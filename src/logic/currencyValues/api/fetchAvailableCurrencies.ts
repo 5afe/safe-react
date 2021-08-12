@@ -1,8 +1,6 @@
+import { getFiatCurrencies, GatewayDefinitions } from '@gnosis.pm/safe-react-gateway-sdk'
 import { getClientGatewayUrl } from 'src/config'
-import axios from 'axios'
 
-export const fetchAvailableCurrencies = async (): Promise<string[]> => {
-  const url = `${getClientGatewayUrl()}/balances/supported-fiat-codes`
-
-  return axios.get(url).then(({ data }) => data)
+export const fetchAvailableCurrencies = async (): Promise<GatewayDefinitions['FiatCurrencies']> => {
+  return getFiatCurrencies(getClientGatewayUrl())
 }
