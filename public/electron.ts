@@ -107,7 +107,6 @@ function createWindow(port = DEFAULT_PORT) {
   mainWindow.setMenuBarVisibility(false)
 
   mainWindow.webContents.on('new-window', function (event, url, frameName, disposition, options) {
-    event.preventDefault()
     const win = getOpenedWindow(url, options)
     if (win) {
       win.once('ready-to-show', () => win.show())
