@@ -49,11 +49,13 @@ const ElementWrapper = styled.div`
   margin-bottom: 15px;
 `
 
-export const getByteLength = (data: string): number => {
-  const hexes = data.split(',')
+export const getByteLength = (data: string | string[]): number => {
   try {
+    if (!Array.isArray(data)) {
+      data = data.split(',')
+    }
     // Return the sum of the byte sizes of each hex string
-    return hexes.reduce((result, hex) => {
+    return data.reduce((result, hex) => {
       const bytes = web3.utils.hexToBytes(hex)
       return result + bytes.length
     }, 0)
