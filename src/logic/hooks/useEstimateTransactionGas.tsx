@@ -138,6 +138,21 @@ export const useEstimateTransactionGas = ({
       )
       const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
+      if (!isCreation && !isExecution && !approvalAndExecution) {
+        setGasEstimation({
+          txEstimationExecutionStatus: EstimationStatus.SUCCESS,
+          gasEstimation: 0,
+          gasCost: '0',
+          gasCostFormatted: '< 0.001',
+          gasPrice: '1',
+          gasPriceFormatted: '1',
+          gasLimit: '0',
+          isExecution,
+          isCreation,
+          isOffChainSignature,
+        })
+        return
+      }
       try {
         let safeTxGasEstimation = safeTxGas || 0
         let ethGasLimitEstimation = 0
