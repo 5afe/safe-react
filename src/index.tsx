@@ -24,7 +24,9 @@ Sentry.init({
   dsn: SENTRY_DSN,
   release: `safe-react@${process.env.REACT_APP_APP_VERSION}`,
   integrations: [new Integrations.BrowserTracing()],
-  sampleRate: 0.01,
+  sampleRate: 0.1,
+  // ignore MetaMask errors we don't control
+  ignoreErrors: ['Internal JSON-RPC error', 'JsonRpcEngine', 'Non-Error promise rejection captured with keys: code'],
 })
 
 const root = document.getElementById('root')
