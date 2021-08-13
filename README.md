@@ -2,7 +2,19 @@
 
 The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
 
-This repository contains the code for the frontend code hosted at [https://gnosis-safe.io/app/]
+For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
+
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+
+## Related repos
+
+- [safe-react-e2e-tests](https://github.com/gnosis/safe-react-e2e-tests)
+- [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
+- [safe-react-components](https://github.com/gnosis/safe-react-components)
+
+## Production deployments
+
+This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
 
 Besides the Ethereum Mainnet, the following networks are supported:
 
@@ -12,10 +24,6 @@ Besides the Ethereum Mainnet, the following networks are supported:
 - [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
 - [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
 - [Volta Testnet](https://volta.gnosis-safe.io/app/)
-
-For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
-
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
 
 ## Getting Started
 
@@ -102,7 +110,7 @@ Deployment to production is done manually. Please see the [release procedure](do
 * [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
 * [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
 
-![app diagram](https://user-images.githubusercontent.com/381895/121764528-e5e2e900-cb44-11eb-8643-483d41040349.png)
+![app diagram](https://user-images.githubusercontent.com/381895/129330828-c067425b-d20b-4f67-82c7-c0598deb453a.png)
 
 ## Contributing
 
