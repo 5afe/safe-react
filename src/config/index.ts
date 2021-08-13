@@ -24,13 +24,17 @@ import { ensureOnce } from 'src/utils/singleton'
 
 export const getNetworkId = (): ETHEREUM_NETWORK => ETHEREUM_NETWORK[NETWORK]
 
-export const getNetworkName = (): string => ETHEREUM_NETWORK[getNetworkId()]
+export const getNetworkName = (): string => {
+  const networkNames = Object.keys(ETHEREUM_NETWORK)
+  const name = networkNames.find((networkName) => ETHEREUM_NETWORK[networkName] == getNetworkId())
+  return name || ''
+}
 
-export const getNetworkConfigById = (id: number): NetworkConfig | undefined => {
+export const getNetworkConfigById = (id: ETHEREUM_NETWORK): NetworkConfig | undefined => {
   return Object.values(networks).find((cfg) => cfg.network.id === id)
 }
 
-export const getNetworkLabel = (id: number): string => {
+export const getNetworkLabel = (id: ETHEREUM_NETWORK): string => {
   const cfg = getNetworkConfigById(id)
   return cfg ? cfg.network.label : ''
 }

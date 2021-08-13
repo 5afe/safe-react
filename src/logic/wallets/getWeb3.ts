@@ -8,6 +8,7 @@ import { NODE_ENV } from 'src/utils/constants'
 import { getRpcServiceUrl } from 'src/config'
 import { isValidCryptoDomainName } from 'src/logic/wallets/ethAddresses'
 import { getAddressFromUnstoppableDomain } from './utils/unstoppableDomains'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 // This providers have direct relation with name assigned in bnc-onboard configuration
 export enum WALLET_PROVIDER {
@@ -79,7 +80,7 @@ export const getProviderInfo = async (web3Instance: Web3, providerName = 'Wallet
     available,
     loaded: true,
     account,
-    network,
+    network: network.toString() as ETHEREUM_NETWORK,
     smartContractWallet,
     hardwareWallet,
   }

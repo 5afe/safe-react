@@ -19,7 +19,7 @@ let providerName
 const wallets = getSupportedWallets()
 
 export const onboard = Onboard({
-  networkId,
+  networkId: parseInt(networkId, 10),
   networkName,
   subscriptions: {
     wallet: (wallet) => {

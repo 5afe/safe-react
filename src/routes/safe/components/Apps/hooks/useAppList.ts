@@ -8,6 +8,7 @@ import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackb
 import { NOTIFICATIONS } from 'src/logic/notifications'
 import { useDispatch } from 'react-redux'
 import { logError, Errors } from 'src/logic/exceptions/CodedException'
+import { ETHEREUM_NETWORK } from 'src/config/networks/network'
 
 type UseAppListReturnType = {
   appList: SafeApp[]
@@ -18,9 +19,9 @@ type UseAppListReturnType = {
 const useAppList = (): UseAppListReturnType => {
   const [appList, setAppList] = useState<SafeApp[]>([])
   const [apiAppsList, setApiAppsList] = useState<AppData[]>([])
-  const [customAppList, setCustomAppList] = useState<(StoredSafeApp & { disabled?: boolean; networks?: number[] })[]>(
-    [],
-  )
+  const [customAppList, setCustomAppList] = useState<
+    (StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[] })[]
+  >([])
   const dispatch = useDispatch()
   const [isLoading, setIsLoading] = useState(true)
 
@@ -61,9 +62,9 @@ const useAppList = (): UseAppListReturnType => {
     const loadApps = async () => {
       // recover apps from storage (third-party apps added by the user)
       let storageAppList =
-        (await loadFromStorage<(StoredSafeApp & { disabled?: boolean; networks?: number[]; custom?: boolean })[]>(
-          APPS_STORAGE_KEY,
-        )) || []
+        (await loadFromStorage<
+          (StoredSafeApp & { disabled?: boolean; networks?: ETHEREUM_NETWORK[]; custom?: boolean })[]
+        >(APPS_STORAGE_KEY)) || []
       storageAppList = storageAppList.map((app) => {
         app.custom = true
         return app
