@@ -2,7 +2,19 @@
 
 The most trusted platform to store digital assets on Ethereum. More info at [gnosis-safe.io](https://gnosis-safe.io/)
 
-This repository contains the code for the frontend code hosted at [https://gnosis-safe.io/app/]
+For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
+
+For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
+
+## Related repos
+
+- [safe-react-e2e-tests](https://github.com/gnosis/safe-react-e2e-tests)
+- [safe-react-gateway-sdk](https://github.com/gnosis/safe-react-gateway-sdk)
+- [safe-react-components](https://github.com/gnosis/safe-react-components)
+
+## Production deployments
+
+This repository contains the code for the frontend code hosted at https://gnosis-safe.io/app/
 
 Besides the Ethereum Mainnet, the following networks are supported:
 
@@ -12,10 +24,6 @@ Besides the Ethereum Mainnet, the following networks are supported:
 - [Binance Smart Chain](https://bsc.gnosis-safe.io/app/)
 - [Energy Web Chain](https://ewc.gnosis-safe.io/app/)
 - [Volta Testnet](https://volta.gnosis-safe.io/app/)
-
-For technical information please refer to the [Gnosis Developer Portal](https://docs.gnosis.io/safe/).
-
-For support requests, please open up a [bug issue](https://github.com/gnosis/safe-react/issues/new?template=bug-report.md) or reach out via [Discord](https://discordapp.com/invite/FPMRAwK).
 
 ## Getting Started
 
@@ -27,41 +35,57 @@ We use [yarn](https://yarnpkg.com) in our infrastructure, so we decided to go wi
 Please install yarn globally if you haven't already.
 
 ### Environment variables
+
 The app grabs environment variables from the `.env` file. Copy our template to your own local file:
+
 ```
 cp .env.example .env
 ```
 
 To execute transactions, you'll need to create an [Infura](https://infura.io) project and set the project ID in the `.env` you've just created:
+
 ```
 REACT_APP_INFURA_TOKEN=XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
 ```
+
 Once done, you'll need to restart the app if it's already running.
 
 ### Installing and running
 
 Install dependencies for the project:
+
 ```
 yarn install
 ```
 
 To use the Rinkeby services:
+
 ```
 yarn start
 ```
 
 If you prefer using the Mainnet ones:
+
 ```
 yarn start-mainnet
 ```
 
+If you prefer to use Docker:
+
+```
+docker-compose build && docker-compose up
+```
+
 ### Building
+
 For Rinkeby:
+
 ```
 yarn build
 ```
 
 For Mainnet:
+
 ```
 yarn build-mainnet
 ```
@@ -69,6 +93,7 @@ yarn build-mainnet
 ## Running the tests
 
 To run the tests:
+
 ```
 yarn test
 ```
@@ -84,12 +109,14 @@ yarn lint:fix
 ## Deployment
 
 ### Dev & staging
+
 The code is deployed to a testing website automatically on each push via a GitHub Action.
 The GitHub Action will create a new subdomain and post the link as a comment in the PR.
 
 When pushing to the `main` branch, the code will be automatically deployed to [staging](https://safe-team-rinkeby.staging.gnosisdev.com/).
 
 ### Production
+
 Deployment to production is done manually. Please see the [release procedure](docs/release-procedure.md) notes for details.
 
 ## Configuring the app for running on different networks
@@ -98,11 +125,11 @@ Deployment to production is done manually. Please see the [release procedure](do
 
 ## Built With
 
-* [React](https://reactjs.org/) - A JS library for building user interfaces
-* [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
-* [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
+- [React](https://reactjs.org/) - A JS library for building user interfaces
+- [Material UI 4.X](https://material-ui.com/) - React components that implement Google's Material Design
+- [redux, immutable, reselect, final-form](https://redux.js.org/) - React ecosystem libraries
 
-![app diagram](https://user-images.githubusercontent.com/381895/121764528-e5e2e900-cb44-11eb-8643-483d41040349.png)
+![app diagram](https://user-images.githubusercontent.com/381895/129330828-c067425b-d20b-4f67-82c7-c0598deb453a.png)
 
 ## Contributing
 
