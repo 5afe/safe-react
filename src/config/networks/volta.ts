@@ -1,15 +1,17 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.volta.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
   safeUrl: 'https://volta.gnosis-safe.io/app',
-  gasPriceOracle: {
-    url: 'https://station.energyweb.org',
-    gasParameter: 'standard',
-    gweiFactor: '1e9',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://station.energyweb.org',
+      gasParameter: 'standard',
+      gweiFactor: '1e9',
+    },
+  ],
   rpcServiceUrl: 'https://volta-rpc.energyweb.org',
   safeAppsRpcServiceUrl: 'https://volta-rpc.energyweb.org',
   networkExplorerName: 'Volta explorer',
@@ -37,6 +39,7 @@ const mainnet: NetworkConfig = {
     textColor: '#ffffff',
     label: 'Volta',
     isTestNet: true,
+    ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Volta Token',

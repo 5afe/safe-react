@@ -1822,10 +1822,10 @@
     classnames "^2.2.6"
     react-media "^1.10.0"
 
-"@gnosis.pm/safe-react-gateway-sdk@^1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-1.0.0.tgz#ce1b0cf46111f70c781acdc08bd336e2efe720bf"
-  integrity sha512-wS+pXPxlQffE9ckj5Rfcm/FPdMbMtP5iFSc7S94VeKrfXCGLEJ1OJW7JBVnPKGETcqh6+zF55B+CcFl86HUcJQ==
+"@gnosis.pm/safe-react-gateway-sdk@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@gnosis.pm/safe-react-gateway-sdk/-/safe-react-gateway-sdk-1.2.0.tgz#82f2685cbb6695b8c10c9041833bff9652c6914a"
+  integrity sha512-7gnyX++XMDtvvjEhzMGBuBmxiyl8RqlJnDzbYabY1P/3+r3bdr3ncUtCzfgvKMB5DRGf+sjD7Lc7SPe+m7L4LA==
   dependencies:
     unfetch "^4.2.0"
 
@@ -19525,9 +19525,9 @@ tar-stream@^2.1.4:
     readable-stream "^3.1.1"
 
 tar@^4.0.2:
-  version "4.4.13"
-  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.13.tgz#43b364bc52888d555298637b10d60790254ab525"
-  integrity sha512-w2VwSrBoHa5BsSyH+KxEqeQBAllHhccyMFVHtGtdMpF4W7IRWfZjFiQceJPChOeTsSDVUpER2T8FA93pr0L+QA==
+  version "4.4.15"
+  resolved "https://registry.yarnpkg.com/tar/-/tar-4.4.15.tgz#3caced4f39ebd46ddda4d6203d48493a919697f8"
+  integrity sha512-ItbufpujXkry7bHH9NpQyTXPbJ72iTlXgkBAYsAjDXk3Ds8t/3NfO5P4xZGy7u+sYuQUbimgzswX4uQIEeNVOA==
   dependencies:
     chownr "^1.1.1"
     fs-minipass "^1.2.5"

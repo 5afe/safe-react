@@ -1,4 +1,4 @@
-import { Custom, SettingsChange, TransactionInfo, Transfer } from 'src/types/gateway/transactions'
+import { Custom, SettingsChange, TransactionInfo, Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
 import { useEffect, useState } from 'react'
 
 import { getNetworkInfo } from 'src/config'

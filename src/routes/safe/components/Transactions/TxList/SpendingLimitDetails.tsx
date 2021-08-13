@@ -7,7 +7,7 @@ import useTokenInfo from 'src/logic/safe/hooks/useTokenInfo'
 import { fromTokenUnit } from 'src/logic/tokens/utils/humanReadableValue'
 import { getResetTimeOptions } from 'src/routes/safe/components/Settings/SpendingLimit/FormFields/ResetTime'
 import { AddressInfo, ResetTimeInfo, TokenInfo } from 'src/routes/safe/components/Settings/SpendingLimit/InfoDisplay'
-import { DataDecoded } from 'src/types/gateway/transactions'
+import { DataDecoded } from '@gnosis.pm/safe-react-gateway-sdk'
 
 const SET_ALLOWANCE = 'setAllowance'
 const DELETE_ALLOWANCE = 'deleteAllowance'

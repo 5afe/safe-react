@@ -1,6 +1,6 @@
 {
   "name": "safe-react",
-  "version": "3.11.1",
+  "version": "3.12.0",
   "description": "Allowing crypto users manage funds in a safer way",
   "website": "https://github.com/gnosis/safe-react#readme",
   "bugs": {
@@ -21,7 +21,6 @@
     "build-desktop": "cross-env REACT_APP_BUILD_FOR_DESKTOP=true REACT_APP_ENV=production yarn build-mainnet",
     "build-mainnet": "cross-env REACT_APP_NETWORK=mainnet yarn build",
     "build": "cross-env REACT_APP_APP_VERSION=$npm_package_version rescripts --max-old-space-size=8192 build",
-    "copy-gateway-types": "rm -rf src/types/gateway; cp -r node_modules/@gnosis.pm/safe-react-gateway-sdk/dist/types src/types/gateway",
     "eject": "rescripts eject",
     "electron-build": "electron-builder --mac --windows --linux",
     "electron-dev": "concurrently \"BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
@@ -34,7 +33,7 @@
     "generate-types:safeDeployments": "cross-env typechain --target=web3-v1 --out-dir './src/types/contracts' ./node_modules/@gnosis.pm/safe-deployments/dist/assets/**/*.json",
     "lint:check": "eslint './src/**/*.{js,jsx,ts,tsx}'",
     "lint:fix": "yarn lint:check --fix",
-    "postinstall": "patch-package && electron-builder install-app-deps && yarn generate-types && yarn copy-gateway-types",
+    "postinstall": "patch-package && electron-builder install-app-deps && yarn generate-types",
     "preelectron-pack": "yarn build",
     "prettier:check": "yarn prettier --check",
     "prettier:fix": "yarn prettier --write",
@@ -169,7 +168,7 @@
     "@gnosis.pm/safe-contracts": "1.1.1-dev.2",
     "@gnosis.pm/safe-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^0.7.0",
-    "@gnosis.pm/safe-react-gateway-sdk": "^1.0.0",
+    "@gnosis.pm/safe-react-gateway-sdk": "^1.2.0",
     "@ledgerhq/hw-transport-node-hid-singleton": "5.51.1",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.11.0",

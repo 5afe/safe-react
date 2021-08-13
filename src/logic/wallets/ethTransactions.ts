@@ -2,28 +2,40 @@ import axios from 'axios'
 import { BigNumber } from 'bignumber.js'
 
 import { getWeb3 } from 'src/logic/wallets/getWeb3'
-import { getGasPrice, getGasPriceOracle } from 'src/config'
+import { getGasPrice, getGasPriceOracles } from 'src/config'
+import { GasPriceOracle } from 'src/config/networks/network'
+import { CodedException, Errors } from '../exceptions/CodedException'
 
 export const EMPTY_DATA = '0x'
 
+const fetchGasPrice = async (gasPriceOracle: GasPriceOracle): Promise<string> => {
+  const { url, gasParameter, gweiFactor } = gasPriceOracle
+  const { data: response } = await axios.get(url)
+  const data = response.data || response // Sometimes the data comes with a data parameter
+  return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
+}
+
 export const calculateGasPrice = async (): Promise<string> => {
   const gasPrice = getGasPrice()
-  const gasPriceOracle = getGasPriceOracle()
+  const gasPriceOracles = getGasPriceOracles()
 
   if (gasPrice) {
     // Fixed gas price in configuration. xDai uses this approach
     return new BigNumber(gasPrice).toString()
-  } else if (gasPriceOracle) {
-    const { url, gasParameter, gweiFactor } = gasPriceOracle
-
-    // Fetch from gas price provider
-    const { data } = await axios.get(url)
-
-    return new BigNumber(data[gasParameter]).multipliedBy(gweiFactor).toString()
-  } else {
-    const errorMsg = 'gasPrice or gasPriceOracle not set in config'
-    return Promise.reject(errorMsg)
+  } else if (gasPriceOracles) {
+    for (let index = 0; index < gasPriceOracles.length; index++) {
+      const gasPriceOracle = gasPriceOracles[index]
+      try {
+        const fetchedGasPrice = await fetchGasPrice(gasPriceOracle)
+        return fetchedGasPrice
+      } catch (err) {
+        // Keep iterating price oracles
+      }
+    }
   }
+  // If no oracle worked we return an error
+  const err = new CodedException(Errors._611, 'gasPrice or gasPriceOracle not set in config')
+  return Promise.reject(err)
 }
 
 export const calculateGasOf = async (txConfig: {

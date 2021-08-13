@@ -1,15 +1,17 @@
 import BnbLogo from 'src/config/assets/token_bnb.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.bsc.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.bsc.gnosis.io/api/v1',
   safeUrl: 'https://bsc.gnosis-safe.io/app',
-  gasPriceOracle: {
-    url: 'https://bscgas.info/gas',
-    gasParameter: 'standard',
-    gweiFactor: '1e9',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://bscgas.info/gas',
+      gasParameter: 'standard',
+      gweiFactor: '1e9',
+    },
+  ],
   rpcServiceUrl: 'https://bsc-dataseed.binance.org',
   safeAppsRpcServiceUrl: 'https://bsc-dataseed.binance.org',
   networkExplorerName: 'BscScan',
@@ -37,6 +39,7 @@ const mainnet: NetworkConfig = {
     textColor: '#ffffff',
     label: 'BSC',
     isTestNet: false,
+    ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Binance Coin',
@@ -48,7 +51,6 @@ const mainnet: NetworkConfig = {
   disabledWallets: [
     WALLETS.TREZOR,
     WALLETS.LEDGER,
-    WALLETS.WALLET_CONNECT,
     WALLETS.COINBASE,
     WALLETS.FORTMATIC,
     WALLETS.OPERA,

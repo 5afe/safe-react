@@ -1,15 +1,22 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
   txServiceUrl: 'http://localhost:8000/api/v1',
   safeUrl: 'http://localhost:3000/app',
-  gasPriceOracle: {
-    url: 'https://ethgasstation.info/json/ethgasAPI.json',
-    gasParameter: 'average',
-    gweiFactor: '1e8',
-  },
+  gasPriceOracles: [
+    {
+      url: 'https://www.gasnow.org/api/v3/gas/price?utm_source=:gnosis_safe',
+      gasParameter: 'fast',
+      gweiFactor: '1',
+    },
+    {
+      url: 'https://ethgasstation.info/json/ethgasAPI.json',
+      gasParameter: 'fast',
+      gweiFactor: '1e8',
+    },
+  ],
   rpcServiceUrl: 'http://localhost:4447',
   safeAppsRpcServiceUrl: 'http://localhost:4447',
   networkExplorerName: 'Etherscan',
@@ -29,6 +36,7 @@ const local: NetworkConfig = {
     textColor: '#ffffff',
     label: 'LocalRPC',
     isTestNet: true,
+    ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Ether',
