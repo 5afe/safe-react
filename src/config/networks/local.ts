@@ -1,5 +1,5 @@
 import EtherLogo from 'src/config/assets/token_eth.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
+import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'http://localhost:8001/v1',
@@ -36,6 +36,7 @@ const local: NetworkConfig = {
     textColor: '#ffffff',
     label: 'LocalRPC',
     isTestNet: true,
+    ethereumLayer: ETHEREUM_LAYER.L1,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Ether',
