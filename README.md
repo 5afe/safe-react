@@ -65,7 +65,7 @@ yarn start-mainnet
 If you prefer to use Docker:
 
 ```
-yarn start:docker
+docker-compose build && docker-compose up
 ```
 
 ### Building
