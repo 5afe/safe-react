@@ -138,7 +138,7 @@ const App: React.FC = ({ children }) => {
             selectedToken={sendFunds.selectedToken}
           />
 
-          {safeAddress && safeName && (
+          {safeAddress && (
             <Modal
               description="Receive Tokens Form"
               handleClose={onReceiveHide}

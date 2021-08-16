@@ -10,7 +10,8 @@ import Web3 from 'web3'
 import { AbiItem } from 'web3-utils'
 
 import { LATEST_SAFE_VERSION } from 'src/utils/constants'
-import { ETHEREUM_NETWORK } from 'src/config/networks/network.d'
+import { getNetworkConfigById, getNetworkId } from 'src/config'
+import { ETHEREUM_LAYER, ETHEREUM_NETWORK } from 'src/config/networks/network.d'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { calculateGasOf, EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { getWeb3, getNetworkIdFrom } from 'src/logic/wallets/getWeb3'
@@ -27,22 +28,18 @@ let safeMaster: GnosisSafe
 let fallbackHandler: FallbackManager
 let multiSend: MultiSend
 
-const getSafeContractDeployment = ({
-  networkId,
-  safeVersion,
-}: {
-  networkId?: ETHEREUM_NETWORK
-  safeVersion: string
-}) => {
+const getSafeContractDeployment = ({ safeVersion }: { safeVersion: string }) => {
   // We check if version is prior to v1.0.0 as they are not supported but still we want to keep a minimum compatibility
   const useOldestContractVersion = semverSatisfies(safeVersion, '<1.0.0')
-  // If version is 1.3.0 we can use instance compatible with L2 for all networks
-  const useL2ContractVersion = semverSatisfies(safeVersion, '>=1.3.0')
+  // We have to check if network is L2
+  const networkId = getNetworkId()
+  const networkConfig = getNetworkConfigById(networkId)
+  const useL2ContractVersion = networkConfig?.network.ethereumLayer === ETHEREUM_LAYER.L2
   const getDeployment = useL2ContractVersion ? getSafeL2SingletonDeployment : getSafeSingletonDeployment
   return (
     getDeployment({
       version: safeVersion,
-      network: networkId?.toString(),
+      network: networkId.toString(),
     }) ||
     getDeployment({
       version: safeVersion,
@@ -62,7 +59,7 @@ const getSafeContractDeployment = ({
  * @param {ETHEREUM_NETWORK} networkId
  */
 const getGnosisSafeContractInstance = (web3: Web3, networkId: ETHEREUM_NETWORK): GnosisSafe => {
-  const safeSingletonDeployment = getSafeContractDeployment({ networkId, safeVersion: LATEST_SAFE_VERSION })
+  const safeSingletonDeployment = getSafeContractDeployment({ safeVersion: LATEST_SAFE_VERSION })
 
   const contractAddress =
     safeSingletonDeployment?.networkAddresses[networkId] ?? safeSingletonDeployment?.defaultAddress
