@@ -70,8 +70,7 @@ const AddressInput = ({
         } else {
           // A regular address hash
           let checkedAddress = address
-          // If the address has no upper-case symbols, try to checksum it automatically
-          // Otherwise, we assume it's already checksummed
+          // Automatically checksum valid (either already checksummed, or lowercase addresses)
           if (isValidAddress(address)) {
             try {
               checkedAddress = checksumAddress(address)
