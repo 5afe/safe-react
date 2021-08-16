@@ -1,5 +1,6 @@
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { getClientGatewayUrl, getNetworkId, getSafeServiceBaseUrl } from 'src/config'
+
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { postTransaction } from '@gnosis.pm/safe-react-gateway-sdk'
 
