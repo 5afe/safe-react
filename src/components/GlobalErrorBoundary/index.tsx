@@ -45,7 +45,7 @@ const LinkContent = styled.div`
 
 type Props = {
   error: Error
-  componentStack: string
+  componentStack: string | null
   resetError: () => void
 }
 

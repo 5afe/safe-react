@@ -93,7 +93,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
       <Drawer
         classes={{ paper: classes.sidebarPaper }}
         className={classes.sidebar}
-        ModalProps={{ onBackdropClick: toggleSidebar }}
+        ModalProps={{ onClose: toggleSidebar }}
         onKeyDown={handleEsc}
         open={isOpen}
       >
