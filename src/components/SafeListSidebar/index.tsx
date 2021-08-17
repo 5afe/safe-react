@@ -130,7 +130,7 @@ export const SafeListSidebar = ({ children }: Props): ReactElement => {
           defaultSafeAddress={defaultSafe}
           onSafeClick={toggleSidebar}
           safes={filteredSafes}
-          otherSafes={filteredOwnerSafes}
+          ownedSafes={filteredOwnerSafes}
         />
       </Drawer>
       {children}
