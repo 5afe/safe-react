@@ -97,7 +97,7 @@ const Layout: React.FC<Props> = ({
         <Header />
       </HeaderWrapper>
       <BodyWrapper>
-        <SidebarWrapper data-testid="broken-bar-broken">
+        <SidebarWrapper data-testid="sidebar-broken">
           <Sidebar
             items={sidebarItems}
             safeAddress={safeAddress}
