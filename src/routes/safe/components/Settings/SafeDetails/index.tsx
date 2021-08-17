@@ -150,25 +150,27 @@ const SafeDetails = (): ReactElement => {
               </Row>
             ) : null}
           </Block>
-          <Block className={classes.formContainer}>
-            <Heading tag="h2">Modify Safe name</Heading>
-            <Paragraph>
-              You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or any
-              third parties.
-            </Paragraph>
-            <Block className={classes.root}>
-              <Field
-                component={TextField}
-                defaultValue={safeName}
-                name="safeName"
-                placeholder="Safe name*"
-                testId={SAFE_NAME_INPUT_TEST_ID}
-                text="Safe name*"
-                type="text"
-                validate={composeValidators(required, validAddressBookName)}
-              />
+          {safeName && (
+            <Block className={classes.formContainer}>
+              <Heading tag="h2">Modify Safe name</Heading>
+              <Paragraph>
+                You can change the name of this Safe. This name is only stored locally and never shared with Gnosis or
+                any third parties.
+              </Paragraph>
+              <Block className={classes.root}>
+                <Field
+                  component={TextField}
+                  defaultValue={safeName}
+                  name="safeName"
+                  placeholder="Safe name*"
+                  testId={SAFE_NAME_INPUT_TEST_ID}
+                  text="Safe name*"
+                  type="text"
+                  validate={composeValidators(required, validAddressBookName)}
+                />
+              </Block>
             </Block>
-          </Block>
+          )}
           <Row align="end" className={classes.controlsRow} grow>
             <Col end="xs">
               <Button
