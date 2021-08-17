@@ -139,21 +139,21 @@ export const useEstimateTransactionGas = ({
       if (!txData.length) {
         return
       }
-
-      const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
       const isExecution = checkIfTxIsExecution(Number(threshold), preApprovingOwner, txConfirmations?.size, txType)
+      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
+
+      if (isOffChainSignature) {
+        setGasEstimation(getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1'))
+        return
+      }
+      const isCreation = checkIfTxIsCreation(txConfirmations?.size || 0, txType)
       const approvalAndExecution = checkIfTxIsApproveAndExecution(
         Number(threshold),
         txConfirmations?.size || 0,
         txType,
         preApprovingOwner,
       )
-      const isOffChainSignature = checkIfOffChainSignatureIsPossible(isExecution, smartContractWallet, safeVersion)
 
-      if (!isCreation && !isExecution && !approvalAndExecution) {
-        setGasEstimation(getDefaultGasEstimation(EstimationStatus.SUCCESS, '1', '1'))
-        return
-      }
       try {
         let safeTxGasEstimation = safeTxGas || 0
         let ethGasLimitEstimation = 0
