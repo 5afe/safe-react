@@ -1,5 +1,12 @@
 import BnbLogo from 'src/config/assets/token_bnb.svg'
-import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_LAYER,
+  ETHEREUM_NETWORK,
+  FEATURES,
+  NetworkConfig,
+  WALLETS,
+} from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.bsc.gnosis.io/v1',

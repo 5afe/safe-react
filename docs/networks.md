@@ -251,18 +251,18 @@ export default <NETWORK_NAME>
 1) **ETHEREUM_NETWORK**
 ```typescript
 export enum ETHEREUM_NETWORK {
-  MAINNET = 1,
-  MORDEN = 2,
-  ROPSTEN = 3,
-  RINKEBY = 4,
-  GOERLI = 5,
-  KOVAN = 42,
-  BSC = 56,
-  XDAI = 100, -> ADDED XDAI
-  ENERGY_WEB_CHAIN = 246,
-  VOLTA = 73799,
-  UNKNOWN = 0,
-  LOCAL = 4447,
+  MAINNET = '1',
+  MORDEN = '2',
+  ROPSTEN = '3',
+  RINKEBY = '4',
+  GOERLI = '5',
+  KOVAN = '42',
+  BSC = '56',
+  XDAI = '100', -> ADDED XDAI
+  ENERGY_WEB_CHAIN = '246',
+  VOLTA = '73799',
+  UNKNOWN = '0',
+  LOCAL = '4447',
 }
 ```
 

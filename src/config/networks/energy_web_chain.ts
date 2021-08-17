@@ -1,5 +1,11 @@
 import EwcLogo from 'src/config/assets/token_ewc.svg'
-import { EnvironmentSettings, ETHEREUM_LAYER, ETHEREUM_NETWORK, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_LAYER,
+  ETHEREUM_NETWORK,
+  NetworkConfig,
+  WALLETS,
+} from 'src/config/networks/network.d'
 
 // @todo (agustin) we need to use fixed gasPrice because the oracle is not working right now and it's returning 0
 // once the oracle is fixed we need to remove the fixed value
