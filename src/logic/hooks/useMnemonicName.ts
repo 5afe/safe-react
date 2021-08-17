@@ -8,13 +8,13 @@ const getRandomItem = <T>(arr: T[]): T => {
   return arr[Math.floor(arr.length * Math.random())]
 }
 
-export const getRandomName = () => {
+export const getRandomName = (): string => {
   const adj = getRandomItem<string>(adjectives)
   const noun = getRandomItem<string>(animals)
   return `${adj}-${noun}`
 }
 
-export const useMnemonicName = () => {
+export const useMnemonicName = (): string => {
   const name = useRef<string>('')
 
   if (!name.current) {
@@ -24,7 +24,7 @@ export const useMnemonicName = () => {
   return name.current
 }
 
-export const useMnemonicSafeName = () => {
+export const useMnemonicSafeName = (): string => {
   const name = useMnemonicName()
   return `${name}-safe`
 }

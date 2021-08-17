@@ -45,7 +45,9 @@ export const SAFE_ADDRESS_NOT_VALID = 'Address given is not a valid Safe address
 // In case of an error here, it will be swallowed by final-form
 // So if you're experiencing any strang behaviours like freeze or hanging
 // Don't mind to check if everything is OK inside this function :)
-export const safeFieldsValidation = async (values): Promise<Record<string, string>> => {
+export const safeFieldsValidation = async (values: {
+  [FIELD_LOAD_ADDRESS]: string
+}): Promise<Record<string, string>> => {
   const errors = {}
   const address = values[FIELD_LOAD_ADDRESS]
 

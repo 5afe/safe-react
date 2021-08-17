@@ -32,7 +32,7 @@ const { useEffect } = React
 
 const getSteps = () => ['Name', 'Owners and confirmations', 'Review']
 
-export type InitialValuesForm = {
+type InitialSafeFormValues = {
   owner0Address?: string
   owner0Name?: string
   confirmations: string
@@ -40,7 +40,7 @@ export type InitialValuesForm = {
   safeCreationSalt: number
 }
 
-const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialValuesForm => {
+const useInitialValuesFrom = (userAccount: string, safeProps?: SafeProps): InitialSafeFormValues => {
   const ownerName = useSelector((state) => addressBookEntryName(state, { address: userAccount }))
   const randomName = useMnemonicSafeName()
 

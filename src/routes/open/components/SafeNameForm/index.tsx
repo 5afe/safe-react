@@ -9,6 +9,7 @@ import Block from 'src/components/layout/Block'
 import Paragraph from 'src/components/layout/Paragraph'
 import { FIELD_CUSTOM_SAFE_NAME, FIELD_SAFE_NAME } from 'src/routes/open/components/fields'
 import { secondary, sm } from 'src/theme/variables'
+import { LoadFormValues } from 'src/routes/load/container/Load'
 
 const styles = createStyles({
   root: {
@@ -78,7 +79,7 @@ const SafeNameForm = ({ safeName }: { safeName: string }): React.ReactElement =>
 }
 
 const SafeNamePageComponent = () =>
-  function SafeNamePage(controls, { values }): React.ReactElement {
+  function SafeNamePage(controls: React.ReactNode, { values }: { values: LoadFormValues }): React.ReactElement {
     return (
       <OpenPaper controls={controls}>
         <SafeNameForm safeName={values[FIELD_CUSTOM_SAFE_NAME] || values[FIELD_SAFE_NAME]} />
