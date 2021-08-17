@@ -41,7 +41,6 @@ const wallets: Wallet[] = [
   {
     walletName: WALLETS.KEYSTONE,
     desktop: false,
-    preferred: true,
     rpcUrl,
     appName: 'Gnosis Safe',
   },
