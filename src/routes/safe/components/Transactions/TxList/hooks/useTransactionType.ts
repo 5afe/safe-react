@@ -55,7 +55,7 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         if (tx.safeAppInfo) {
-          setType({ icon: tx.safeAppInfo.logoUrl, text: tx.safeAppInfo.name })
+          setType({ icon: tx.safeAppInfo.logoUri, text: tx.safeAppInfo.name })
           break
         }
 
