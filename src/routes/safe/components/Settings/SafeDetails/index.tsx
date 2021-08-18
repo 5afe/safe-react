@@ -28,8 +28,9 @@ import { grantedSelector } from 'src/routes/safe/container/selector'
 import { updateSafe } from 'src/logic/safe/store/actions/updateSafe'
 
 import {
-  currentSafeWithNames,
+  currentSafe,
   latestMasterContractVersion as latestMasterContractVersionSelector,
+  safesWithNamesAsMap,
 } from 'src/logic/safe/store/selectors'
 import { useAnalytics, SAFE_NAVIGATION_EVENT } from 'src/utils/googleAnalytics'
 import { fetchMasterCopies, MasterCopy, MasterCopyDeployer } from 'src/logic/contracts/api/masterCopies'
@@ -56,10 +57,12 @@ const SafeDetails = (): ReactElement => {
   const latestMasterContractVersion = useSelector(latestMasterContractVersionSelector)
   const {
     address: safeAddress,
-    name: safeName,
     needsUpdate: safeNeedsUpdate,
     currentVersion: safeCurrentVersion,
-  } = useSelector(currentSafeWithNames)
+  } = useSelector(currentSafe)
+  const safeNamesMap = useSelector(safesWithNamesAsMap)
+  const safeName = safeNamesMap[safeAddress]?.name
+
   const dispatch = useDispatch()
   const { trackEvent } = useAnalytics()
 
@@ -150,7 +153,7 @@ const SafeDetails = (): ReactElement => {
               </Row>
             ) : null}
           </Block>
-          {safeName && (
+          {safeName != null && (
             <Block className={classes.formContainer}>
               <Heading tag="h2">Modify Safe name</Heading>
               <Paragraph>
