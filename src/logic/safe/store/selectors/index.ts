@@ -18,8 +18,6 @@ export const safesAsMap = (state: AppReduxState): SafesMap => safesState(state).
 
 export const safesAsList = createSelector(safesAsMap, (safes): List<SafeRecord> => safes.toList())
 
-export const defaultSafe = createSelector(safesState, (safeState) => safeState.get('defaultSafe'))
-
 export const latestMasterContractVersion = createSelector(safesState, (safeState) =>
   safeState.get('latestMasterContractVersion'),
 )

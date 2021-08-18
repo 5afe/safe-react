@@ -7,13 +7,17 @@ import { EthHashInfo, Text } from '@gnosis.pm/safe-react-components'
 import Link from 'src/components/layout/Link'
 import { SAFE_ROUTES, LOAD_ADDRESS } from 'src/routes/routes'
 import { addressBookName } from 'src/logic/addressBook/store/selectors'
+import { background, border } from 'src/theme/variables'
 
 const Wrapper = styled.div`
   display: flex;
   align-items: center;
-  padding: 5px 0;
-  margin-right: 28px;
-  border-bottom: 1px solid #e8e7e6;
+  padding: 5px 16px;
+  border-bottom: 1px solid ${border};
+
+  &:hover {
+    background-color: ${background};
+  }
 
   & > a:first-of-type {
     flex: 1;

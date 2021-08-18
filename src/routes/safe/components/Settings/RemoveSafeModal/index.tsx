@@ -12,11 +12,9 @@ import Block from 'src/components/layout/Block'
 import Hairline from 'src/components/layout/Hairline'
 import Paragraph from 'src/components/layout/Paragraph'
 import Row from 'src/components/layout/Row'
-import { currentSafeWithNames, defaultSafe as defaultSafeSelector } from 'src/logic/safe/store/selectors'
+import { currentSafeWithNames } from 'src/logic/safe/store/selectors'
 import { WELCOME_ADDRESS } from 'src/routes/routes'
 import removeSafe from 'src/logic/safe/store/actions/removeSafe'
-import setDefaultSafe from 'src/logic/safe/store/actions/setDefaultSafe'
-import { sameAddress } from 'src/logic/wallets/ethAddresses'
 
 import { getExplorerInfo } from 'src/config'
 import Col from 'src/components/layout/Col'
@@ -29,15 +27,10 @@ type RemoveSafeModalProps = {
 const RemoveSafeModal = ({ isOpen, onClose }: RemoveSafeModalProps): React.ReactElement => {
   const classes = useStyles()
   const { address: safeAddress, name: safeName } = useSelector(currentSafeWithNames)
-  const defaultSafe = useSelector(defaultSafeSelector)
   const dispatch = useDispatch()
 
   const onRemoveSafeHandler = async () => {
     dispatch(removeSafe(safeAddress))
-
-    if (sameAddress(safeAddress, defaultSafe)) {
-      dispatch(setDefaultSafe(''))
-    }
 
     onClose()
     history.push({
