@@ -54,7 +54,7 @@ type Props = {
 }
 
 const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean => {
-  return addedSafes.some((addr) => sameAddress(addr.address, address))
+  return addedSafes.some((safe) => sameAddress(safe.address, address))
 }
 
 export const SafeList = ({
