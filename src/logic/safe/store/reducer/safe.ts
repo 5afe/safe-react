@@ -70,7 +70,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
       const safe = action.payload
       const safeAddress = safe.address
 
-      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
+      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]) as SafeRecordProps)
 
       return shouldUpdate
         ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
@@ -86,7 +86,7 @@ export default handleActions<AppReduxState['safes'], Payloads>(
         return state.setIn(['safes', safeAddress], makeSafe(safe))
       }
 
-      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]))
+      const shouldUpdate = shouldSafeStoreBeUpdated(safe, state.getIn(['safes', safeAddress]) as SafeRecordProps)
       return shouldUpdate
         ? state.updateIn(['safes', safeAddress], makeSafe({ address: safeAddress }), (prevSafe) =>
             updateSafeProps(prevSafe, safe),
@@ -107,5 +107,5 @@ export default handleActions<AppReduxState['safes'], Payloads>(
     defaultSafe: DEFAULT_SAFE_INITIAL_STATE,
     safes: Map(),
     latestMasterContractVersion: '',
-  }) as AppReduxState['safes'],
+  }) as unknown as AppReduxState['safes'],
 )

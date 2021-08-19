@@ -1,4 +1,4 @@
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { TxServiceModel } from './transactions/fetchTransactions/loadOutgoingTransactions'
 import axios from 'axios'
 

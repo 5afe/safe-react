@@ -1,5 +1,12 @@
 import BnbLogo from 'src/config/assets/token_bnb.svg'
-import { EnvironmentSettings, ETHEREUM_NETWORK, FEATURES, NetworkConfig, WALLETS } from 'src/config/networks/network.d'
+import {
+  EnvironmentSettings,
+  ETHEREUM_LAYER,
+  ETHEREUM_NETWORK,
+  FEATURES,
+  NetworkConfig,
+  WALLETS,
+} from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
   clientGatewayUrl: 'https://safe-client.bsc.gnosis.io/v1',
@@ -39,6 +46,7 @@ const mainnet: NetworkConfig = {
     textColor: '#ffffff',
     label: 'BSC',
     isTestNet: false,
+    ethereumLayer: ETHEREUM_LAYER.L2,
     nativeCoin: {
       address: '0x0000000000000000000000000000000000000000',
       name: 'Binance Coin',

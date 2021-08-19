@@ -1,7 +1,7 @@
 import { List, Map, RecordOf } from 'immutable'
 
 import { Confirmation } from './confirmation'
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 import { DataDecoded, DecodedParams, Transfer } from './transactions.d'
 import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 

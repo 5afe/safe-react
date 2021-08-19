@@ -1,7 +1,13 @@
 import React, { ReactElement, useState, useRef, useCallback, useEffect } from 'react'
 import styled from 'styled-components'
 import { FixedIcon, Loader, Title, Card } from '@gnosis.pm/safe-react-components'
-import { GetBalanceParams, GetTxBySafeTxHashParams, MethodToResponse, RPCPayload } from '@gnosis.pm/safe-apps-sdk'
+import {
+  GetBalanceParams,
+  GetTxBySafeTxHashParams,
+  MethodToResponse,
+  RPCPayload,
+  Methods,
+} from '@gnosis.pm/safe-apps-sdk'
 import { generatePath, useHistory } from 'react-router-dom'
 import { useSelector } from 'react-redux'
 import { INTERFACE_MESSAGES, Transaction, RequestId, LowercaseNetworks } from '@gnosis.pm/safe-apps-sdk-v1'
@@ -170,7 +176,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       txServiceUrl: getTxServiceUrl(),
     }))
 
-    communicator?.on('getTxBySafeTxHash', async (msg) => {
+    communicator?.on(Methods.getTxBySafeTxHash, async (msg) => {
       const { safeTxHash } = msg.data.params as GetTxBySafeTxHashParams
 
       const tx = await fetchSafeTransaction(safeTxHash)
@@ -178,7 +184,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return tx
     })
 
-    communicator?.on('getSafeInfo', () => ({
+    communicator?.on(Methods.getSafeInfo, () => ({
       safeAddress,
       network: NETWORK_NAME,
       chainId: parseInt(NETWORK_ID, 10),
@@ -186,7 +192,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       threshold,
     }))
 
-    communicator?.on('getSafeBalances', async (msg) => {
+    communicator?.on(Methods.getSafeBalances, async (msg) => {
       const { currency = 'usd' } = msg.data.params as GetBalanceParams
 
       const balances = await fetchTokenCurrenciesBalances({ safeAddress, selectedCurrency: currency })
@@ -194,7 +200,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       return balances
     })
 
-    communicator?.on('rpcCall', async (msg) => {
+    communicator?.on(Methods.rpcCall, async (msg) => {
       const params = msg.data.params as RPCPayload
 
       try {
@@ -222,7 +228,7 @@ const AppFrame = ({ appUrl }: Props): ReactElement => {
       }
     })
 
-    communicator?.on('sendTransactions', (msg) => {
+    communicator?.on(Methods.sendTransactions, (msg) => {
       // @ts-expect-error explore ways to fix this
       openConfirmationModal(msg.data.params.txs as Transaction[], msg.data.params.params, msg.data.id)
     })

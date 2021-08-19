@@ -180,8 +180,8 @@ class GnoTable extends React.Component<any, any> {
             component="div"
             count={size}
             nextIconButtonProps={nextProps}
-            onChangePage={this.handleChangePage}
-            onChangeRowsPerPage={this.handleChangeRowsPerPage}
+            onPageChange={this.handleChangePage}
+            onRowsPerPageChange={this.handleChangeRowsPerPage}
             page={page}
             rowsPerPage={displayRows}
             rowsPerPageOptions={[5, 10, 25, 50, 100]}

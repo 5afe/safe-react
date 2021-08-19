@@ -6,9 +6,8 @@ on:
     branches:
       - main
   pull_request:
-    # FIXME Uncomment this temporary removal when we deploy to staging
-    # branches:
-    #   - main
+    branches:
+      - main
   # Launches build when release is published
   release:
       types: [published]

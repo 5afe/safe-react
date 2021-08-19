@@ -1,6 +1,6 @@
 import { NonPayableTransactionObject } from 'src/types/contracts/types.d'
 import { TxArgs } from 'src/logic/safe/store/models/types/transaction'
-import { GnosisSafe } from 'src/types/contracts/GnosisSafe.d'
+import { GnosisSafe } from 'src/types/contracts/gnosis_safe.d'
 
 export const CALL = 0
 export const DELEGATE_CALL = 1
