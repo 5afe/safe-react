@@ -42,7 +42,12 @@ export const history = createHashHistory()
 
 const composeEnhancers = (window as any).__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose
 
-const localStorageConfig = { states: [ADDRESS_BOOK_REDUCER_ID], namespace: 'SAFE', namespaceSeparator: '__' }
+const localStorageConfig = {
+  states: [ADDRESS_BOOK_REDUCER_ID],
+  namespace: 'SAFE',
+  namespaceSeparator: '__',
+  disableWarnings: true,
+}
 
 const finalCreateStore = composeEnhancers(
   applyMiddleware(
