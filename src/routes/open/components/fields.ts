@@ -2,10 +2,10 @@ import { LoadFormValues } from 'src/routes/load/container/Load'
 import { padOwnerIndex } from 'src/routes/open/utils/padOwnerIndex'
 import { CreateSafeValues } from 'src/routes/open/utils/safeDataExtractor'
 
-export const FIELD_NAME = 'name'
 export const FIELD_CONFIRMATIONS = 'confirmations'
 export const FIELD_OWNERS = 'owners'
 export const FIELD_SAFE_NAME = 'safeName'
+export const FIELD_CUSTOM_SAFE_NAME = 'customSafeName'
 export const FIELD_CREATION_PROXY_SALT = 'safeCreationSalt'
 
 export const getOwnerNameBy = (index: number): string => `owner${padOwnerIndex(index)}Name`

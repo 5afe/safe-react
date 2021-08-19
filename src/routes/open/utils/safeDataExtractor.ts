@@ -1,9 +1,10 @@
 import { LoadFormValues } from 'src/routes/load/container/Load'
-import { getNumOwnersFrom } from 'src/routes/open/components/fields'
+import { FIELD_CUSTOM_SAFE_NAME, FIELD_SAFE_NAME, getNumOwnersFrom } from 'src/routes/open/components/fields'
 
 export type CreateSafeValues = {
   confirmations: string
-  name: string
+  [FIELD_SAFE_NAME]: string
+  [FIELD_CUSTOM_SAFE_NAME]?: string
   owner0Address?: string
   owner0Name?: string
   safeCreationSalt: number
@@ -28,6 +29,7 @@ export const getNamesFrom = getByRegexFrom(/^owner\d+Name$/)
 
 export const getThresholdFrom = (values: CreateSafeValues): number => Number(values.confirmations)
 
-export const getSafeNameFrom = (values: CreateSafeValues): string => values.name
+export const getSafeNameFrom = (values: CreateSafeValues): string =>
+  values[FIELD_CUSTOM_SAFE_NAME] || values[FIELD_SAFE_NAME]
 
 export const getSafeCreationSaltFrom = (values: CreateSafeValues): number => values.safeCreationSalt
