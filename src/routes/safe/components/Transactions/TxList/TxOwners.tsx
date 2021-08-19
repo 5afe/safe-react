@@ -3,7 +3,7 @@ import React, { ReactElement } from 'react'
 import styled from 'styled-components'
 
 import Img from 'src/components/layout/Img'
-import { ExpandedTxDetails, isModuleExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isModuleExecutionInfo } from 'src/logic/safe/store/models/types/gateway.d'
 import TransactionListActive from './assets/transactions-list-active.svg'
 import TransactionListInactive from './assets/transactions-list-inactive.svg'
 import { OwnerRow } from './OwnerRow'
@@ -18,7 +18,7 @@ const StyledImg = styled(Img)`
 export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElement | null => {
   const { txInfo, detailedExecutionInfo } = txDetails
 
-  if (!detailedExecutionInfo || isModuleExecutionDetails(detailedExecutionInfo)) {
+  if (!detailedExecutionInfo || isModuleExecutionInfo(detailedExecutionInfo)) {
     return null
   }
 
@@ -52,7 +52,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
     <OwnerList>
       {CreationNode}
       {detailedExecutionInfo.confirmations.map(({ signer }) => (
-        <OwnerListItem key={signer}>
+        <OwnerListItem key={signer.value}>
           <span className="icon">
             <Icon size="sm" type="circleCheck" color="primary" />
           </span>
@@ -60,7 +60,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               Confirmed
             </Text>
-            <OwnerRow address={signer} />
+            <OwnerRow address={signer.value} />
           </div>
         </OwnerListItem>
       ))}
@@ -77,7 +77,7 @@ export const TxOwners = ({ txDetails }: { txDetails: ExpandedTxDetails }): React
             <Text color="primary" size="xl" strong>
               {detailedExecutionInfo.executor ? 'Executed' : 'Execute'}
             </Text>
-            {detailedExecutionInfo.executor && <OwnerRow address={detailedExecutionInfo.executor} />}
+            {detailedExecutionInfo.executor && <OwnerRow address={detailedExecutionInfo.executor.value} />}
           </div>
         </OwnerListItem>
       ) : (

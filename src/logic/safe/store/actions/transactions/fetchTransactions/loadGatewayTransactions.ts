@@ -1,5 +1,5 @@
 import { getTransactionHistory, getTransactionQueue } from '@gnosis.pm/safe-react-gateway-sdk'
-import { getClientGatewayUrl } from 'src/config'
+import { getClientGatewayUrl, getNetworkId } from 'src/config'
 import { HistoryGatewayResponse, QueuedGatewayResponse } from 'src/logic/safe/store/models/types/gateway'
 import { checksumAddress } from 'src/utils/checksumAddress'
 import { Errors, CodedException } from 'src/logic/exceptions/CodedException'
@@ -26,6 +26,7 @@ export const loadPagedHistoryTransactions = async (
   try {
     const { results, next, previous } = await getTransactionHistory(
       getClientGatewayUrl(),
+      getNetworkId().toString(),
       checksumAddress(safeAddress),
       historyPointers[safeAddress].next,
     )
@@ -40,7 +41,11 @@ export const loadPagedHistoryTransactions = async (
 
 export const loadHistoryTransactions = async (safeAddress: string): Promise<HistoryGatewayResponse['results']> => {
   try {
-    const { results, next, previous } = await getTransactionHistory(getClientGatewayUrl(), checksumAddress(safeAddress))
+    const { results, next, previous } = await getTransactionHistory(
+      getClientGatewayUrl(),
+      getNetworkId().toString(),
+      checksumAddress(safeAddress),
+    )
 
     if (!historyPointers[safeAddress]) {
       historyPointers[safeAddress] = { next, previous }
@@ -74,6 +79,7 @@ export const loadPagedQueuedTransactions = async (
   try {
     const { results, next, previous } = await getTransactionQueue(
       getClientGatewayUrl(),
+      getNetworkId().toString(),
       checksumAddress(safeAddress),
       queuedPointers[safeAddress].next,
     )
@@ -88,7 +94,11 @@ export const loadPagedQueuedTransactions = async (
 
 export const loadQueuedTransactions = async (safeAddress: string): Promise<QueuedGatewayResponse['results']> => {
   try {
-    const { results, next, previous } = await getTransactionQueue(getClientGatewayUrl(), checksumAddress(safeAddress))
+    const { results, next, previous } = await getTransactionQueue(
+      getClientGatewayUrl(),
+      getNetworkId().toString(),
+      checksumAddress(safeAddress),
+    )
 
     if (!queuedPointers[safeAddress] || queuedPointers[safeAddress].next === null) {
       queuedPointers[safeAddress] = { next, previous }

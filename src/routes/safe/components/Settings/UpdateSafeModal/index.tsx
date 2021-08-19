@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React, { useEffect, useState } from 'react'
@@ -18,7 +19,6 @@ import { TransactionFees } from 'src/components/TransactionsFees'
 import { EstimationStatus, useEstimateTransactionGas } from 'src/logic/hooks/useEstimateTransactionGas'
 import { useEstimationStatus } from 'src/logic/hooks/useEstimationStatus'
 import { getMultisendContractAddress } from 'src/logic/contracts/safeContracts'
-import { DELEGATE_CALL } from 'src/logic/safe/transactions'
 import { EMPTY_DATA } from 'src/logic/wallets/ethTransactions'
 import { TxParametersDetail } from 'src/routes/safe/components/Transactions/helpers/TxParametersDetail'
 import { EditableTxParameters } from 'src/routes/safe/components/Transactions/helpers/EditableTxParameters'
@@ -48,7 +48,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
     txRecipient: getMultisendContractAddress(),
     txData: multiSendCallData,
     txAmount: '0',
-    operation: DELEGATE_CALL,
+    operation: Operation.DELEGATE,
   })
 
   const [buttonStatus] = useEstimationStatus(txEstimationExecutionStatus)
@@ -70,7 +70,7 @@ export const UpdateSafeModal = ({ onClose, safeAddress, safeCurrentVersion }: Pr
         safeTxGas: txParameters.safeTxGas ? Number(txParameters.safeTxGas) : undefined,
         ethParameters: txParameters,
         notifiedTransaction: 'STANDARD_TX',
-        operation: DELEGATE_CALL,
+        operation: Operation.DELEGATE,
       }),
     )
     onClose()

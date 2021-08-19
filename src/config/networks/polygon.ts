@@ -9,7 +9,7 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client-polygon.staging.gnosisdev.com/v1',
+  clientGatewayUrl: 'https://safe-client.staging.gnosisdev.com/v1',
   txServiceUrl: 'https://safe-transaction-polygon.staging.gnosisdev.com/api/v1',
   safeUrl: 'https://polygon.gnosis-safe.io/app',
   gasPriceOracles: [
@@ -38,7 +38,7 @@ const polygon: NetworkConfig = {
     },
     production: {
       ...baseConfig,
-      clientGatewayUrl: 'https://safe-client.polygon.gnosis.io/v1',
+      clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
       txServiceUrl: 'https://safe-transaction.polygon.gnosis.io/api/v1',
     },
   },

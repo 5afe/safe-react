@@ -8,7 +8,7 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.volta.gnosis.io/v1',
+  clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.volta.gnosis.io/api/v1',
   safeUrl: 'https://volta.gnosis-safe.io/app',
   gasPriceOracles: [
