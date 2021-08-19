@@ -10,7 +10,6 @@ import OutgoingTxIcon from 'src/routes/safe/components/Transactions/TxList/asset
 import SettingsTxIcon from 'src/routes/safe/components/Transactions/TxList/assets/settings.svg'
 import { getTxTo } from 'src/routes/safe/components/Transactions/TxList/utils'
 import { useKnownAddress } from './useKnownAddress'
-import { Custom } from '@gnosis.pm/safe-react-gateway-sdk'
 
 export type TxTypeProps = {
   icon?: string
@@ -23,9 +22,9 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
   const safeAddress = useSelector(safeAddressFromUrl)
   const toAddress = getTxTo(tx)
   // Fixed casting because known address only works for Custom tx
-  const knownAddress = useKnownAddress(toAddress || '0x', {
-    name: (tx.txInfo as Custom)?.toInfo?.name,
-    image: (tx.txInfo as Custom)?.toInfo?.logoUri || undefined,
+  const knownAddress = useKnownAddress(toAddress?.value || '0x', {
+    name: toAddress?.name || undefined,
+    image: toAddress?.logoUri || undefined,
   })
 
   useEffect(() => {
@@ -56,15 +55,15 @@ export const useTransactionType = (tx: Transaction): TxTypeProps => {
         }
 
         if (tx.safeAppInfo) {
-          setType({ icon: tx.safeAppInfo.logoUrl, text: tx.safeAppInfo.name })
+          setType({ icon: tx.safeAppInfo.logoUri, text: tx.safeAppInfo.name })
           break
         }
 
-        const toInfo = tx.txInfo.toInfo
+        const hasKnownName = tx.txInfo.to.name
         setType({
           icon: knownAddress.isAddressBook ? CustomTxIcon : knownAddress.image || CustomTxIcon,
           fallbackIcon: knownAddress.isAddressBook ? undefined : CustomTxIcon,
-          text: toInfo ? knownAddress.name : 'Contract interaction',
+          text: hasKnownName ? knownAddress.name : 'Contract interaction',
         })
         break
       }

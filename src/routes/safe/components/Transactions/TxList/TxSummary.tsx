@@ -1,9 +1,10 @@
 import { Text } from '@gnosis.pm/safe-react-components'
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import React, { ReactElement } from 'react'
 
 import { getExplorerInfo } from 'src/config'
 import { formatDateTime } from 'src/utils/date'
-import { ExpandedTxDetails, isMultiSigExecutionDetails, Operation } from 'src/logic/safe/store/models/types/gateway.d'
+import { ExpandedTxDetails, isMultiSigExecutionDetails } from 'src/logic/safe/store/models/types/gateway.d'
 import { InlineEthHashInfo } from './styled'
 import { NOT_AVAILABLE } from './utils'
 

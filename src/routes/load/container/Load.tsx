@@ -1,11 +1,16 @@
 import React, { ReactElement } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { generatePath, useParams } from 'react-router-dom'
+import { generatePath } from 'react-router-dom'
 
 import Layout from 'src/routes/load/components/Layout'
 import { AddressBookEntry, makeAddressBookEntry } from 'src/logic/addressBook/model/addressBook'
 import { addressBookSafeLoad } from 'src/logic/addressBook/store/actions'
-import { FIELD_LOAD_ADDRESS } from 'src/routes/load/components/fields'
+import {
+  FIELD_LOAD_SAFE_NAME,
+  FIELD_LOAD_CUSTOM_SAFE_NAME,
+  FIELD_LOAD_ADDRESS,
+  THRESHOLD,
+} from 'src/routes/load/components/fields'
 
 import Page from 'src/components/layout/Page'
 import { saveSafes, loadStoredSafes } from 'src/logic/safe/utils'
@@ -32,16 +37,18 @@ export const loadSafe = async (safeAddress: string, addSafe: (safe: SafeRecordPr
 
 interface ReviewSafeCreationValues {
   confirmations: string
-  name: string
+  [FIELD_LOAD_SAFE_NAME]: string
+  [FIELD_LOAD_CUSTOM_SAFE_NAME]?: string
   owner0Address: string
   owner0Name: string
   safeCreationSalt: number
 }
 
 interface LoadForm {
-  name: string
-  address: string
-  threshold: string
+  [FIELD_LOAD_SAFE_NAME]: string
+  [FIELD_LOAD_CUSTOM_SAFE_NAME]?: string
+  [FIELD_LOAD_ADDRESS]: string
+  [THRESHOLD]: string
   owner0Address: string
   owner0Name: string
 }
@@ -52,7 +59,6 @@ const Load = (): ReactElement => {
   const dispatch = useDispatch()
   const provider = useSelector(providerNameSelector)
   const userAddress = useSelector(userAccountSelector)
-  const { safeAddress } = useParams<{ safeAddress?: string }>()
 
   const addSafeHandler = async (safe: SafeRecordProps) => {
     await dispatch(addOrUpdateSafe(safe))
@@ -79,7 +85,10 @@ const Load = (): ReactElement => {
       }
       return acc
     }, [] as AddressBookEntry[])
-    const safe = makeAddressBookEntry({ address: safeAddress, name: values.name })
+    const safe = makeAddressBookEntry({
+      address: safeAddress,
+      name: values[FIELD_LOAD_CUSTOM_SAFE_NAME] || values[FIELD_LOAD_SAFE_NAME],
+    })
     await dispatch(addressBookSafeLoad([...owners, safe]))
 
     try {
@@ -98,7 +107,7 @@ const Load = (): ReactElement => {
 
   return (
     <Page>
-      <Layout onLoadSafeSubmit={onLoadSafeSubmit} userAddress={userAddress} provider={provider} key={safeAddress} />
+      <Layout onLoadSafeSubmit={onLoadSafeSubmit} userAddress={userAddress} provider={provider} />
     </Page>
   )
 }

@@ -1,4 +1,11 @@
 import { List } from 'immutable'
+import {
+  Erc20Transfer,
+  Erc721Transfer,
+  MultisigExecutionInfo,
+  Operation,
+  TokenType,
+} from '@gnosis.pm/safe-react-gateway-sdk'
 import Checkbox from '@material-ui/core/Checkbox'
 import FormControlLabel from '@material-ui/core/FormControlLabel'
 import IconButton from '@material-ui/core/IconButton'
@@ -30,14 +37,8 @@ import { Overwrite } from 'src/types/helpers'
 import { ZERO_ADDRESS } from 'src/logic/wallets/ethAddresses'
 import { makeConfirmation } from 'src/logic/safe/store/models/confirmation'
 import { NOTIFICATIONS } from 'src/logic/notifications'
-import {
-  ExpandedTxDetails,
-  isMultiSigExecutionDetails,
-  Operation,
-  Transaction,
-} from 'src/logic/safe/store/models/types/gateway.d'
 import enqueueSnackbar from 'src/logic/notifications/store/actions/enqueueSnackbar'
-import { Erc20Transfer, Erc721Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { ExpandedTxDetails, isMultiSigExecutionDetails, Transaction } from 'src/logic/safe/store/models/types/gateway.d'
 
 export const APPROVE_TX_MODAL_SUBMIT_BTN_TEST_ID = 'approve-tx-modal-submit-btn'
 export const REJECT_TX_MODAL_SUBMIT_BTN_TEST_ID = 'reject-tx-modal-submit-btn'
@@ -74,7 +75,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
       t.current.txDetails.detailedExecutionInfo && isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
         ? List(
             t.current.txDetails.detailedExecutionInfo.confirmations.map(({ signer, signature }) =>
-              makeConfirmation({ owner: signer, signature }),
+              makeConfirmation({ owner: signer.value, signature }),
             ),
           )
         : List([]),
@@ -115,12 +116,12 @@ const useTxInfo = (transaction: Props['transaction']) => {
     [],
   )
 
-  const nonce = useMemo(() => t.current.executionInfo?.nonce ?? 0, [])
+  const nonce = useMemo(() => (t.current.executionInfo as MultisigExecutionInfo)?.nonce ?? 0, [])
 
   const refundReceiver = useMemo(
     () =>
       isMultiSigExecutionDetails(t.current.txDetails.detailedExecutionInfo)
-        ? t.current.txDetails.detailedExecutionInfo.refundReceiver
+        ? t.current.txDetails.detailedExecutionInfo.refundReceiver.value
         : ZERO_ADDRESS,
     [],
   )
@@ -136,7 +137,7 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const value = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'ETHER') {
+        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
           return t.current.txInfo.transferInfo.value
         } else {
           return t.current.txDetails.txData?.value ?? '0'
@@ -153,13 +154,13 @@ const useTxInfo = (transaction: Props['transaction']) => {
   const to = useMemo(() => {
     switch (t.current.txInfo.type) {
       case 'Transfer':
-        if (t.current.txInfo.transferInfo.type === 'ETHER') {
-          return t.current.txInfo.recipient
+        if (t.current.txInfo.transferInfo.type === TokenType.NATIVE_COIN) {
+          return t.current.txInfo.recipient.value
         } else {
           return (t.current.txInfo.transferInfo as Erc20Transfer | Erc721Transfer).tokenAddress
         }
       case 'Custom':
-        return t.current.txInfo.to
+        return t.current.txInfo.to.value
       case 'Creation':
       case 'SettingsChange':
       default:
@@ -216,9 +217,10 @@ export const ApproveTxModal = ({
   const classes = useStyles()
   const safeAddress = useSelector(safeAddressFromUrl)
   const [approveAndExecute, setApproveAndExecute] = useState(canExecute)
-  const thresholdReached = !!(transaction.executionInfo && isThresholdReached(transaction.executionInfo))
-  const _threshold = transaction.executionInfo?.confirmationsRequired ?? 0
-  const _countingCurrentConfirmation = (transaction.executionInfo?.confirmationsSubmitted ?? 0) + 1
+  const executionInfo = transaction.executionInfo as MultisigExecutionInfo
+  const thresholdReached = !!(transaction.executionInfo && isThresholdReached(executionInfo))
+  const _threshold = executionInfo?.confirmationsRequired ?? 0
+  const _countingCurrentConfirmation = (executionInfo?.confirmationsSubmitted ?? 0) + 1
   const { description, title } = getModalTitleAndDescription(thresholdReached, isCancelTx)
   const oneConfirmationLeft = !thresholdReached && _countingCurrentConfirmation === _threshold
   const isTheTxReadyToBeExecuted = oneConfirmationLeft ? true : thresholdReached

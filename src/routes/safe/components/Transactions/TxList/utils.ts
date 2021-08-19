@@ -1,4 +1,4 @@
-import { TransactionInfo, Transfer } from '@gnosis.pm/safe-react-gateway-sdk'
+import { AddressEx, TransactionInfo, Transfer, TokenType } from '@gnosis.pm/safe-react-gateway-sdk'
 import { BigNumber } from 'bignumber.js'
 
 import { getNetworkInfo } from 'src/config'
@@ -32,7 +32,7 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
   }
 
   switch (txInfo.transferInfo.type) {
-    case 'ERC20':
+    case TokenType.ERC20:
       return getAmountWithSymbol(
         {
           decimals: `${txInfo.transferInfo.decimals ?? 0}`,
@@ -41,10 +41,10 @@ export const getTxAmount = (txInfo?: TransactionInfo, formatted = true): string 
         },
         formatted,
       )
-    case 'ERC721':
+    case TokenType.ERC721:
       // simple workaround to avoid displaying unexpected values for incoming NFT transfer
       return `1 ${txInfo.transferInfo.tokenSymbol}`
-    case 'ETHER': {
+    case TokenType.NATIVE_COIN: {
       const { nativeCoin } = getNetworkInfo()
       return getAmountWithSymbol(
         {
@@ -70,14 +70,14 @@ type txTokenData = {
 
 export const getTxTokenData = (txInfo: Transfer): txTokenData => {
   switch (txInfo.transferInfo.type) {
-    case 'ERC20':
+    case TokenType.ERC20:
       return {
         address: txInfo.transferInfo.tokenAddress,
         value: txInfo.transferInfo.value,
         decimals: txInfo.transferInfo.decimals,
       }
-    case 'ERC721':
-      return { address: txInfo.transferInfo.tokenAddress, value: txInfo.transferInfo.value, decimals: 0 }
+    case TokenType.ERC721:
+      return { address: txInfo.transferInfo.tokenAddress, value: '1', decimals: 0 }
     default:
       return { address: nativeCoin.address, value: txInfo.transferInfo.value, decimals: nativeCoin.decimals }
   }
@@ -90,11 +90,11 @@ export const isCancelTxDetails = (txInfo: Transaction['txInfo']): boolean =>
   txInfo.isCancellation
 
 export const addressInList =
-  (list: string[] = []) =>
+  (list: AddressEx[] = []) =>
   (address: string): boolean =>
-    list.some((ownerAddress) => sameAddress(ownerAddress, address))
+    list.some((ownerAddress) => sameAddress(ownerAddress.value, address))
 
-export const getTxTo = (tx: Transaction): string | undefined => {
+export const getTxTo = (tx: Transaction): AddressEx | undefined => {
   switch (tx.txInfo.type) {
     case 'Transfer': {
       return tx.txInfo.recipient

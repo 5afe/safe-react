@@ -13,7 +13,7 @@ import Collapse from 'src/components/Collapse'
 import { sameAddress } from 'src/logic/wallets/ethAddresses'
 import { SAFE_ROUTES } from 'src/routes/routes'
 import { AddressWrapper } from 'src/components/SafeListSidebar/SafeList/AddressWrapper'
-import { UnsavedAddress } from 'src/components/SafeListSidebar/SafeList/UnsavedAddress'
+import { OwnedAddress } from 'src/components/SafeListSidebar/SafeList/OwnedAddress'
 import { SafeRecordWithNames } from 'src/logic/safe/store/selectors'
 
 export const SIDEBAR_SAFELIST_ROW_TESTID = 'SIDEBAR_SAFELIST_ROW_TESTID'
@@ -49,8 +49,12 @@ type Props = {
   currentSafeAddress: string | undefined
   defaultSafeAddress: DefaultSafe
   safes: SafeRecordWithNames[]
-  otherSafes: string[]
+  ownedSafes: string[]
   onSafeClick: () => void
+}
+
+const isAddressAdded = (addedSafes: SafeRecordWithNames[], address: string): boolean => {
+  return addedSafes.some((safe) => sameAddress(safe.address, address))
 }
 
 export const SafeList = ({
@@ -58,10 +62,12 @@ export const SafeList = ({
   defaultSafeAddress,
   onSafeClick,
   safes,
-  otherSafes,
+  ownedSafes,
 }: Props): React.ReactElement => {
   const classes = useStyles()
-  const ownedSafesExpanded = otherSafes.some((address) => address === currentSafeAddress)
+  const ownedSafesExpanded = ownedSafes.some((address) => {
+    return address === currentSafeAddress && !isAddressAdded(safes, address)
+  })
 
   const getLink = (address: string): React.ReactElement =>
     sameAddress(currentSafeAddress, address) ? (
@@ -90,15 +96,20 @@ export const SafeList = ({
         </React.Fragment>
       ))}
 
-      {otherSafes.length > 0 && (
+      {ownedSafes.length > 0 && (
         <ListItem classes={{ root: classes.listItemRoot }}>
           <div className={classes.noIcon}>placeholder</div>
 
-          <Collapse title={`Owned Safes (${otherSafes.length})`} defaultExpanded={ownedSafesExpanded}>
-            {otherSafes.map((address) => (
-              <UnsavedAddress address={address} key={address} onClick={onSafeClick}>
+          <Collapse title={`All owned Safes (${ownedSafes.length})`} defaultExpanded={ownedSafesExpanded}>
+            {ownedSafes.map((address: string) => (
+              <OwnedAddress
+                address={address}
+                key={address}
+                onClick={onSafeClick}
+                isAdded={isAddressAdded(safes, address)}
+              >
                 {getLink(address)}
-              </UnsavedAddress>
+              </OwnedAddress>
             ))}
           </Collapse>
         </ListItem>

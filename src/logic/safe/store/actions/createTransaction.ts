@@ -1,3 +1,4 @@
+import { Operation } from '@gnosis.pm/safe-react-gateway-sdk'
 import { push } from 'connected-react-router'
 import { generatePath } from 'react-router-dom'
 import { AnyAction } from 'redux'
@@ -7,7 +8,6 @@ import { onboardUser } from 'src/components/ConnectButton'
 import { getGnosisSafeInstanceAt } from 'src/logic/contracts/safeContracts'
 import { getNotificationsFromTxType, NOTIFICATIONS } from 'src/logic/notifications'
 import {
-  CALL,
   getApprovalTransaction,
   getExecutionTransaction,
   saveTxToHistory,
@@ -64,7 +64,7 @@ export const createTransaction =
       txData = EMPTY_DATA,
       notifiedTransaction,
       txNonce,
-      operation = CALL,
+      operation = Operation.CALL,
       navigateToTransactionsTab = true,
       origin = null,
       safeTxGas: safeTxGasArg,
@@ -160,15 +160,21 @@ export const createTransaction =
           txHash = hash
           dispatch(closeSnackbarAction({ key: beforeExecutionKey }))
 
-          await saveTxToHistory({ ...txArgs, txHash, origin })
+          try {
+            await saveTxToHistory({ ...txArgs, origin })
+          } catch (err) {
+            logError(Errors._803, err.message)
+
+            // If we're just signing but not executing the tx, it's crucial that the request above succeeds
+            if (!isExecution) {
+              return
+            }
+          }
 
           // store the pending transaction's nonce
           isExecution && aboutToExecuteTx.setNonce(txArgs.nonce)
 
           dispatch(fetchTransactions(safeAddress))
-        })
-        .on('error', () => {
-          onError?.()
         })
         .then(async (receipt) => {
           dispatch(fetchTransactions(safeAddress))
@@ -176,6 +182,8 @@ export const createTransaction =
           return receipt.transactionHash
         })
     } catch (err) {
+      onError?.()
+
       const notification = isTxPendingError(err)
         ? NOTIFICATIONS.TX_PENDING_MSG
         : {

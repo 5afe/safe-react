@@ -1,3 +1,4 @@
+import { MultisigExecutionInfo } from '@gnosis.pm/safe-react-gateway-sdk'
 import IconButton from '@material-ui/core/IconButton'
 import Close from '@material-ui/icons/Close'
 import React from 'react'
@@ -52,7 +53,7 @@ export const RejectTxModal = ({ isOpen, onClose, gwTransaction }: Props): React.
     ? JSON.stringify({ name: gwTransaction.safeAppInfo.name, url: gwTransaction.safeAppInfo.url })
     : ''
 
-  const nonce = gwTransaction.executionInfo?.nonce ?? 0
+  const nonce = (gwTransaction.executionInfo as MultisigExecutionInfo)?.nonce ?? 0
 
   const sendReplacementTransaction = (txParameters: TxParameters) => {
     dispatch(

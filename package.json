@@ -171,7 +171,7 @@
     "@gnosis.pm/safe-apps-sdk-v1": "npm:@gnosis.pm/safe-apps-sdk@0.4.2",
     "@gnosis.pm/safe-deployments": "^1.0.0",
     "@gnosis.pm/safe-react-components": "^0.7.0",
-    "@gnosis.pm/safe-react-gateway-sdk": "^1.2.0",
+    "@gnosis.pm/safe-react-gateway-sdk": "^2.0.1",
     "@ledgerhq/hw-transport-node-hid-singleton": "6.3.0",
     "@material-ui/core": "^4.11.0",
     "@material-ui/icons": "^4.11.0",

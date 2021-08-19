@@ -9,7 +9,7 @@ import {
 } from 'src/config/networks/network.d'
 
 const baseConfig: EnvironmentSettings = {
-  clientGatewayUrl: 'https://safe-client.xdai.gnosis.io/v1',
+  clientGatewayUrl: 'https://safe-client.gnosis.io/v1',
   txServiceUrl: 'https://safe-transaction.xdai.gnosis.io/api/v1',
   safeUrl: 'https://xdai.gnosis-safe.io/app',
   gasPrice: 1e9,

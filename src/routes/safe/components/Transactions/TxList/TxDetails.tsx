@@ -6,9 +6,9 @@ import styled from 'styled-components'
 import {
   ExpandedTxDetails,
   isMultiSendTxInfo,
+  isMultiSigExecutionDetails,
   isSettingsChangeTxInfo,
   isTransferTxInfo,
-  MultiSigExecutionDetails,
   Transaction,
 } from 'src/logic/safe/store/models/types/gateway.d'
 import { TransactionActions } from './hooks/useTransactionActions'
@@ -32,8 +32,8 @@ const TxDataGroup = ({ txDetails }: { txDetails: ExpandedTxDetails }): ReactElem
     return <TxInfo txInfo={txDetails.txInfo} />
   }
 
-  if (isCancelTxDetails(txDetails.txInfo)) {
-    const txNonce = `${(txDetails.detailedExecutionInfo as MultiSigExecutionDetails).nonce ?? NOT_AVAILABLE}`
+  if (isCancelTxDetails(txDetails.txInfo) && isMultiSigExecutionDetails(txDetails.detailedExecutionInfo)) {
+    const txNonce = `${txDetails.detailedExecutionInfo.nonce ?? NOT_AVAILABLE}`
     const isTxExecuted = txDetails.executedAt
 
     // executed rejection transaction

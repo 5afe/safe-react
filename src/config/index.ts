@@ -117,9 +117,6 @@ export const getSafeAppsRpcServiceUrl = (): string =>
 export const getRpcServiceUrl = (): string =>
   usesInfuraRPC ? `${getConfig().rpcServiceUrl}/${INFURA_TOKEN}` : getConfig().rpcServiceUrl
 
-export const getTxDetailsUrl = (clientGatewayTxId: string) =>
-  `${getClientGatewayUrl()}/transactions/${clientGatewayTxId}`
-
 export const getSafeServiceBaseUrl = (safeAddress: string) => `${getTxServiceUrl()}/safes/${safeAddress}`
 
 export const getTokensServiceBaseUrl = () => `${getTxServiceUrl()}/tokens`
